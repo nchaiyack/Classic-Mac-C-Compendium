@@ -1,1 +1,95 @@
-Softkiss is a device driver/control panel for the macintosh.  It letsyou use a cheap modem to get your mac on packet.  See oct 92 editionof 73 magazine for more details. Softkiss was written byAaron Wohl (n3liw+@cmu.edu).  The major changes since 1.2.x are, supportfor kiss parameter changes and fixes/debugging support for a lockupproblem.Jim Van Peursem (jvp@cpre1.ee.iastate.edu) just started shipping savant.It is an all new mac program to do ax25 connections with a tnc inkiss mode.  I switched to using savant from macnet and like it a lot.Softkiss is available via anonymous ftp from hostakutaktak.andrew.cmu.edu [128.2.35.1]./aw0g/softkiss.1.6.sit.hqx       - Get this to run softkiss/aw0g/softkiss.src.1.6.sit.hqx   - Get this to modify softkiss sources*** I recieved zillions of mail messages about softkiss and *** suggested changes to the user manua.  I am*** only now digging out of the pile sorry for the delayChanges in 1.6 March 20 1993  Allow numbers to be type in as hex eg $a  Rewrite transmit interupt handling  Have scc abort outgoing packet if interupts are off for two long  	Variable xmit_overrun displays the number of times this has happened  Fix debug output code to handle large monitors  Fix: Sometimes kiss mode wouldn't work unless tnc mode was used first  Copy 8530.h from KA9Q's nos to get nice names for the scc registers/values  Users have reported lockups after running SoftKiss for a while.  The SE/30 and FX I work on don't lock up for me.   I rewrote some of  the interupt code mentioned above and enabled the debug command described bellow.  Hopefully the lockup problem is fixed, if not turn on debugging and let me know  what you see when it locks up.  Perhaps it is still getting interupts (perhaps  continously causing the lockup).  Enable debug command, used as debug_level 1    Only turn debugging if the primary monitor is in two bit mode    With debugging on the driver writes output to the screen memory from      interupt level.  Move your windows over to the right so you can read      the softkiss output.    Each softkiss channel has it's own area of the screen for output.    As the finite state machine changes state the state numbers are written    	out.  State numbers:			0 port offline			1 RX mode			2 RX of packet in progress			3 RX but throw away data			4 waiting for dwait/slottime to expire			5 keying up, sending flags			6 transmiting			7 sending trailer	On an external/status interupt the active status info is written out:		a - abort		u - transmit underrun		c - cts (carrier detect on HSKi input)		h - hunt mode fount sync character		d - DCR input (GPI input or mouse on mac+ or ...)		z - Zero count in baud rate generator	On a recieve interupt the recieved character is written out	On a transmit interupt the sent character is written out	On a special interupt 'S' is written out 	If you are changing the SoftKiss sources you will need to make	a StrictMacHeaders file.  Copy the "Mac #includes.c" file that comes	with think c and in the line:#define SIMPLIFY_PROTOTYPES		1	change the 1 to a zero.  Use the "Preproces..." command from the source	menu and save the result in the same folder as MacHeaders but call	it StrictMacHeaders.  When softkiss is built this is used to be as picky	as possible in reporting type mismatches.	If you are adding new commands to softkiss let me know, it pretty	strange right now and I haven't documented it.Wish list:Finish updates to manualComm toolbox supportFinish single character foreign language supportFinish digipeat and cross channel digipeatFinish .ax25_packet driver interfaceChanges in 1.4 Support kiss commands for savantChanges in 1.2.3a0Users where running macnet then trying to run an emulator at the same time.  So if a serial port is already open refuse to open again.Check the port in use bytes sooner so we don't fight with appletalk.Partial foriegn language support, move all strings from driver to resource.Changes in 1.2.2a0Add a wireing diagram for Tigertronics BayPac modemFix DCD interupt handling so the mouse works on a mac+
+Softkiss is a device driver/control panel for the macintosh.  It lets
+you use a cheap modem to get your mac on packet.  See oct 92 edition
+of 73 magazine for more details. Softkiss was written by
+Aaron Wohl (n3liw+@cmu.edu).  The major changes since 1.2.x are, support
+for kiss parameter changes and fixes/debugging support for a lockup
+problem.
+
+Jim Van Peursem (jvp@cpre1.ee.iastate.edu) just started shipping savant.
+It is an all new mac program to do ax25 connections with a tnc in
+kiss mode.  I switched to using savant from macnet and like it a lot.
+
+Softkiss is available via anonymous ftp from host
+akutaktak.andrew.cmu.edu [128.2.35.1].
+
+/aw0g/softkiss.1.6.sit.hqx       - Get this to run softkiss
+/aw0g/softkiss.src.1.6.sit.hqx   - Get this to modify softkiss sources
+
+*** I recieved zillions of mail messages about softkiss and 
+*** suggested changes to the user manua.  I am
+*** only now digging out of the pile sorry for the delay
+
+Changes in 1.6 March 20 1993
+  Allow numbers to be type in as hex eg $a
+  Rewrite transmit interupt handling
+  Have scc abort outgoing packet if interupts are off for two long
+  	Variable xmit_overrun displays the number of times this has happened
+  Fix debug output code to handle large monitors
+  Fix: Sometimes kiss mode wouldn't work unless tnc mode was used first
+  Copy 8530.h from KA9Q's nos to get nice names for the scc registers/values
+
+  Users have reported lockups after running SoftKiss for a while.
+  The SE/30 and FX I work on don't lock up for me.   I rewrote some of
+  the interupt code mentioned above and enabled the debug command described bellow.
+  Hopefully the lockup problem is fixed, if not turn on debugging and let me know
+  what you see when it locks up.  Perhaps it is still getting interupts (perhaps
+  continously causing the lockup).
+
+  Enable debug command, used as debug_level 1
+    Only turn debugging if the primary monitor is in two bit mode
+    With debugging on the driver writes output to the screen memory from
+      interupt level.  Move your windows over to the right so you can read
+      the softkiss output.
+    Each softkiss channel has it's own area of the screen for output.
+    As the finite state machine changes state the state numbers are written
+    	out.  State numbers:
+			0 port offline
+			1 RX mode
+			2 RX of packet in progress
+			3 RX but throw away data
+			4 waiting for dwait/slottime to expire
+			5 keying up, sending flags
+			6 transmiting
+			7 sending trailer
+	On an external/status interupt the active status info is written out:
+		a - abort
+		u - transmit underrun
+		c - cts (carrier detect on HSKi input)
+		h - hunt mode fount sync character
+		d - DCR input (GPI input or mouse on mac+ or ...)
+		z - Zero count in baud rate generator
+	On a recieve interupt the recieved character is written out
+	On a transmit interupt the sent character is written out
+	On a special interupt 'S' is written out
+ 
+	If you are changing the SoftKiss sources you will need to make
+	a StrictMacHeaders file.  Copy the "Mac #includes.c" file that comes
+	with think c and in the line:
+#define SIMPLIFY_PROTOTYPES		1
+	change the 1 to a zero.  Use the "Preproces..." command from the source
+	menu and save the result in the same folder as MacHeaders but call
+	it StrictMacHeaders.  When softkiss is built this is used to be as picky
+	as possible in reporting type mismatches.
+
+	If you are adding new commands to softkiss let me know, it pretty
+	strange right now and I haven't documented it.
+
+Wish list:
+Finish updates to manual
+Comm toolbox support
+Finish single character foreign language support
+Finish digipeat and cross channel digipeat
+Finish .ax25_packet driver interface
+
+Changes in 1.4
+ Support kiss commands for savant
+
+Changes in 1.2.3a0
+Users where running macnet then trying to run an emulator at the same time.
+  So if a serial port is already open refuse to open again.
+Check the port in use bytes sooner so we don't fight with appletalk.
+Partial foriegn language support, move all strings from driver to resource.
+
+Changes in 1.2.2a0
+Add a wireing diagram for Tigertronics BayPac modem
+Fix DCD interupt handling so the mouse works on a mac+

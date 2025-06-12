@@ -1,1 +1,2 @@
-gdiff +recursive boot:mm boot:mm.out >+! boot:gdiff.out
+gdiff +recursive boot:mm boot:mm.out >+! boot:gdiff.out
+

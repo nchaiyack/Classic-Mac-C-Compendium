@@ -1,1 +1,55 @@
-Êversion 1.0recursive cosmic fractal flames©1994 j.t.judgeThis module is based on the "flame" module in the xlock screensaver for X windows. The original xlock code is ©1988-91 by Patrick J. Naughton. - clut resource for 2-bit (4-colors) depth mode. I only did it for this color-depth since it's system color table only has 3 non-black, ugly colors from which to choose.  The first entry in the new table is not white so you may notice slight strangeness in demo mode and a color flash (look fast) when the module starts in that depth. Also, the control panel is not white in demo-mode - it's yellow :) Does anyone actually leave their monitor in 4-color mode?	All other bit depths are supported ... and use the normal system 'clut'. I didn't have to add any resources to muck with those color tables. Even the 1-bit depth (B&W) Macs are supported. But, it just doesn't look as nice in B&W.- Since the module recurses a lot and I'm too lazy to re-architect the code ... I check for mouse movement or click to wake up the module. The recursion is a bit of a pig. So, if you need to have this module give as much time back to the system - try setting the total number of points low and the timeout value low. I tried to make sure that it acts as AfterDark-normal as possible in the demo- and about- modes. But, you may not be able to wake it with a very quick click or a very short movement. This also leads to interesting activity: 	*in demo-mode, click in the control panel area (not the <stop> button!) to force the module to stop it's current recursive session and move on (it changes colors and starts a new recursion). Hold down for worse behaviour.	*in normal screensaving mode, if you move the mouse *very* slightly it will also force the module to discontinue the current recursion session and start a new one (changing colors, starting new recursion).- The "Rainbow bits?" checkbox started as a debugging option. But, it looked interesting enough ... so I left it in!  It has the module change color at the time it plots each batch of pixels - instead of per-recursion session. It helped show what is being plotted when it doesn't seem to be making any progress.- added a slider to control how many total maximum points are drawn in one recursion session.  This limits how many points a single recursion session will draw on-screen.- added a slider to control how many points are "batched" up before being plotted. Lower values will let you see small numbers of points being plotted ... over time you will see the "flame" emerge. Higher values will "burst" more of the image on-screen at each plotting session.- added a slider to control how long a recursion session will last. Lower values will be nicer to your system by giving time back to the Mac more often. Higher values will let the image fully develop ... but in some "flames", this doesn't let background processes get any cpu time for a while.Like this module? If so, read the about box in the module and send my son a postcard.If not, join the unofficial AfterDarkª programmers mailing list and make something better. Send email to afterdark-request@emsr.att.com to join.		- joejudge@oucsace.cs.ohiou.eduJosephJ1@aol.comj.t.judge@att.com
+
+
+Ê
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+version 1.0
+recursive cosmic fractal flames
+©1994 j.t.judge
+
+This module is based on the "flame" module in the xlock screensaver for X windows. The original xlock code is ©1988-91 by Patrick J. Naughton. 
+
+- clut resource for 2-bit (4-colors) depth mode. I only did it for this color-depth since it's system color table only has 3 non-black, ugly colors from which to choose.  The first entry in the new table is not white so you may notice slight strangeness in demo mode and a color flash (look fast) when the module starts in that depth. Also, the control panel is not white in demo-mode - it's yellow :) 
+
+Does anyone actually leave their monitor in 4-color mode?
+
+	All other bit depths are supported ... and use the normal system 'clut'. I didn't have to add any resources to muck with those color tables. Even the 1-bit depth (B&W) Macs are supported. But, it just doesn't look as nice in B&W.
+
+- Since the module recurses a lot and I'm too lazy to re-architect the code ... I check for mouse movement or click to wake up the module. 
+
+The recursion is a bit of a pig. So, if you need to have this module give as much time back to the system - try setting the total number of points low and the timeout value low. 
+
+I tried to make sure that it acts as AfterDark-normal as possible in the demo- and about- modes. But, you may not be able to wake it with a very quick click or a very short movement. This also leads to interesting activity: 
+
+	*in demo-mode, click in the control panel area (not the <stop> button!) to force the module to stop it's current recursive session and move on (it changes colors and starts a new recursion). Hold down for worse behaviour.
+
+	*in normal screensaving mode, if you move the mouse *very* slightly it will also force the module to discontinue the current recursion session and start a new one (changing colors, starting new recursion).
+
+- The "Rainbow bits?" checkbox started as a debugging option. But, it looked interesting enough ... so I left it in!  It has the module change color at the time it plots each batch of pixels - instead of per-recursion session. It helped show what is being plotted when it doesn't seem to be making any progress.
+
+- added a slider to control how many total maximum points are drawn in one recursion session.  This limits how many points a single recursion session will draw on-screen.
+
+- added a slider to control how many points are "batched" up before being plotted. Lower values will let you see small numbers of points being plotted ... over time you will see the "flame" emerge. Higher values will "burst" more of the image on-screen at each plotting session.
+
+- added a slider to control how long a recursion session will last. Lower values will be nicer to your system by giving time back to the Mac more often. Higher values will let the image fully develop ... but in some "flames", this doesn't let background processes get any cpu time for a while.
+
+
+Like this module? If so, read the about box in the module and send my son a postcard.
+If not, join the unofficial AfterDarkª programmers mailing list and make something better. Send email to afterdark-request@emsr.att.com to join.
+
+		- joe
+judge@oucsace.cs.ohiou.edu
+JosephJ1@aol.com
+j.t.judge@att.com

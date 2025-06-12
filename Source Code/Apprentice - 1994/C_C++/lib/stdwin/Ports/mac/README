@@ -1,1 +1,42 @@
-Notes for the 0.9.7 releaseThis release has been fixed to work with Think C 5.0, and might alsowork with MPW 3.2.  The notes below still apply, more or less.  Note:the only file you need from the Gen directory is wtextbreak.c!Using STDWIN on the MacThis assumes THINK C 4.0.  I believe you can make it work for THINK C3.0, check for the symbol THINK_C_3_0 (especially in H/stdwconf.h).It also works for MPW 2.0, see ../mac_mpw.Copy the files from the following directories to the Mac:	H	Tools	Gen	Ports/mac	Packs/textedit	Appls/miniedit (for testing)Make two projects, stdwin.<pi> and textedit.<pi> (<pi> is the letterpi, Option-p).  All of STDWIN together is too big for one segment, andthe textedit module is not used by all applications.Project stdwin.<pi> receives all sources from Tools, Gen andPorts/mac; textedit.<pi> receives those from Packs/textedit.Turn off <MacHeaders>; the sources know exactly which files to include.(To speed up compilation you can rename "macwin.h" and precompile it,placing the output in "macwin.h".  This is completely optional.)Compile the sources in each project.  Don't attempt to link.To test, make a project miniedit.<pi> and add all sources fromAppls/miniedit.  Add the ANSI and MacTraps libraries and thestdwin.<pi> and textedit.<pi> projects you just created.  (Probablyeverything in its own segment.)  You now have a simple editor withregular expression search facility.  Study the source to learn moreabout using stdwin.Good luck!
+Notes for the 0.9.7 release
+
+This release has been fixed to work with Think C 5.0, and might also
+work with MPW 3.2.  The notes below still apply, more or less.  Note:
+the only file you need from the Gen directory is wtextbreak.c!
+
+
+Using STDWIN on the Mac
+
+This assumes THINK C 4.0.  I believe you can make it work for THINK C
+3.0, check for the symbol THINK_C_3_0 (especially in H/stdwconf.h).
+It also works for MPW 2.0, see ../mac_mpw.
+
+Copy the files from the following directories to the Mac:
+	H
+	Tools
+	Gen
+	Ports/mac
+	Packs/textedit
+	Appls/miniedit (for testing)
+
+Make two projects, stdwin.<pi> and textedit.<pi> (<pi> is the letter
+pi, Option-p).  All of STDWIN together is too big for one segment, and
+the textedit module is not used by all applications.
+
+Project stdwin.<pi> receives all sources from Tools, Gen and
+Ports/mac; textedit.<pi> receives those from Packs/textedit.
+
+Turn off <MacHeaders>; the sources know exactly which files to include.
+(To speed up compilation you can rename "macwin.h" and precompile it,
+placing the output in "macwin.h".  This is completely optional.)
+
+Compile the sources in each project.  Don't attempt to link.
+
+To test, make a project miniedit.<pi> and add all sources from
+Appls/miniedit.  Add the ANSI and MacTraps libraries and the
+stdwin.<pi> and textedit.<pi> projects you just created.  (Probably
+everything in its own segment.)  You now have a simple editor with
+regular expression search facility.  Study the source to learn more
+about using stdwin.
+
+Good luck!

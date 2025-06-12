@@ -1,1 +1,198 @@
-MRTEST(1)                USER COMMANDS                  MRTEST(1)NAME     mrtest, mrtestv - test-driver for the mrandom() routinesSYNOPSIS     mrtest [ nnn ] [ -dnnnn ] [ -S[n[,n ... ]] ] [ -mnnnnn  ]  [     -Mnn ] [ -q ] [ -t ] [ -e ] [ -f ] [ -v ] [ -p ]DESCRIPTION     mrtest generates random integers, using any one  of  several     possible  random  number  generation  (RNG) algorithms, then     tests these integers for ``randomness''.OPTIONS     nnn  sets the number  of  random  generates  to  be  tested.          Default is 10.     -dnnnn          discards nnnn generates between tested values.  Default          is 0.     -S[n[,n[,n[,n[,n]]]]] initializes an RNG, as follows:          The first parameter sets the RNG algorithm, default  1,          as          0.   an additive linear scheme (for testing only);          1.   4.3bsd random;          2.   Knuth/Bentley prand();          3.   L'Ecuyer's portable combined multiplicative RNG;          4.   4.3bsd nrandom48;          5.   4.3bsd rand;          6.   Press and Teukolsky's ran0;          7.   Press and Teukolsky's ran1;          8.   Press and Teukolsky's ran2; and          9.   Maraglia's Ultra.          The second parameter sets the first RNG  seed,  default          1.          The third parameter sets the second RNG  seed,  default          1.   Note  that  most  RNG  algorithms will ignore this          value.Sun Release 4.1       Last change: 5/28/93                      1MRTEST(1)                USER COMMANDS                  MRTEST(1)          The fourth parameter sets the number of times to  cycle          the  RNG  before  starting  the  tests,  mod 1 billion.          Default is 0.          The fifth parameter of -S sets the number of  times  to          cycle the RNG before starting the tests, div 1 billion.          Default is 0.     -mnnnnn          or -Mnn sets the range  of  the  RNG  to  be  nnnnn  or          2^(nn), respectively.  At most one of these two options          should be selected.  Default is -m100.     -q   or -quiet turns off the (default) printing of each ran-          dom integer, as it is generated.     -t   eliminates most RNG tests, for timing measurements.     -e   echos the command line.  Useful in scripts.     -f   or -p selects one of  two  non-default  methods,  other          than mrandom(), for generating random integers.  The -f          option uses (int)(frandom()*m), which is slightly  fas-          ter, but also slightly biased.  The -p uses xrandom()%m          to generate integers, a poor method for many RNGs.     -v   uses the vectorized interface, mrandomrv().     Note: the last three options are unavailable in the  version     of  the  code,  mrtestv,  compiled  with  -DVECTORIZED.   In     mrtestv, the mrandomrv() call is always used.     The script file supplied with the software distribution con-     tains  a  number  of csh-level calls to mrtest, illustrating     its use as well as demonstrating various problems  with  the     4.3bsd random number generators rand() and nrand48().AUTHOR     Clark Thomborson, cthombor@ub.d.umn.eduDIAGNOSTICS     If error-checking code in _i_n_i_t__r_n_g, _r_e_s_t_a_r_t__r_n_g, or _s_a_v_e__r_n_g     discovers  a  problem,  an  error  message is printed on the     stderr stream.SEE ALSO     random(3), rand(3C), drand48(3), mrandom(3)Sun Release 4.1       Last change: 5/28/93                      2MRTEST(1)                USER COMMANDS                  MRTEST(1)BUGS     The estimated standard deviations are merely estimates,  and     not  very  accurate  ones  at  that, especially on the upper     tail.  A better X-squared analysis routine would help.THEORY     For more information on the X-squared  analysis  implemented     in  this code, see "Tools for Randomized Experimentation" by     Clark Thomborson, to appear in the Proceedings of  the  25th     Symposium  on  the  Interface: Computing Science and Statis-     tics, 1993.Sun Release 4.1       Last change: 5/28/93                      3
+
+
+
+MRTEST(1)                USER COMMANDS                  MRTEST(1)
+
+
+
+NAME
+     mrtest, mrtestv - test-driver for the mrandom() routines
+
+SYNOPSIS
+     mrtest [ nnn ] [ -dnnnn ] [ -S[n[,n ... ]] ] [ -mnnnnn  ]  [
+     -Mnn ] [ -q ] [ -t ] [ -e ] [ -f ] [ -v ] [ -p ]
+
+DESCRIPTION
+     mrtest generates random integers, using any one  of  several
+     possible  random  number  generation  (RNG) algorithms, then
+     tests these integers for ``randomness''.
+
+
+OPTIONS
+     nnn  sets the number  of  random  generates  to  be  tested.
+          Default is 10.
+
+     -dnnnn
+          discards nnnn generates between tested values.  Default
+          is 0.
+
+     -S[n[,n[,n[,n[,n]]]]] initializes an RNG, as follows:
+
+          The first parameter sets the RNG algorithm, default  1,
+          as
+
+          0.   an additive linear scheme (for testing only);
+
+          1.   4.3bsd random;
+
+          2.   Knuth/Bentley prand();
+
+          3.   L'Ecuyer's portable combined multiplicative RNG;
+
+          4.   4.3bsd nrandom48;
+
+          5.   4.3bsd rand;
+
+          6.   Press and Teukolsky's ran0;
+
+          7.   Press and Teukolsky's ran1;
+
+          8.   Press and Teukolsky's ran2; and
+
+          9.   Maraglia's Ultra.
+
+          The second parameter sets the first RNG  seed,  default
+          1.
+
+          The third parameter sets the second RNG  seed,  default
+          1.   Note  that  most  RNG  algorithms will ignore this
+          value.
+
+
+
+Sun Release 4.1       Last change: 5/28/93                      1
+
+
+
+
+
+
+MRTEST(1)                USER COMMANDS                  MRTEST(1)
+
+
+
+          The fourth parameter sets the number of times to  cycle
+          the  RNG  before  starting  the  tests,  mod 1 billion.
+          Default is 0.
+
+          The fifth parameter of -S sets the number of  times  to
+          cycle the RNG before starting the tests, div 1 billion.
+          Default is 0.
+
+     -mnnnnn
+          or -Mnn sets the range  of  the  RNG  to  be  nnnnn  or
+          2^(nn), respectively.  At most one of these two options
+          should be selected.  Default is -m100.
+
+     -q   or -quiet turns off the (default) printing of each ran-
+          dom integer, as it is generated.
+
+     -t   eliminates most RNG tests, for timing measurements.
+
+     -e   echos the command line.  Useful in scripts.
+
+     -f   or -p selects one of  two  non-default  methods,  other
+          than mrandom(), for generating random integers.  The -f
+          option uses (int)(frandom()*m), which is slightly  fas-
+          ter, but also slightly biased.  The -p uses xrandom()%m
+          to generate integers, a poor method for many RNGs.
+
+     -v   uses the vectorized interface, mrandomrv().
+
+     Note: the last three options are unavailable in the  version
+     of  the  code,  mrtestv,  compiled  with  -DVECTORIZED.   In
+     mrtestv, the mrandomrv() call is always used.
+
+     The script file supplied with the software distribution con-
+     tains  a  number  of csh-level calls to mrtest, illustrating
+     its use as well as demonstrating various problems  with  the
+     4.3bsd random number generators rand() and nrand48().
+
+
+AUTHOR
+     Clark Thomborson, cthombor@ub.d.umn.edu
+
+
+DIAGNOSTICS
+     If error-checking code in _i_n_i_t__r_n_g, _r_e_s_t_a_r_t__r_n_g, or _s_a_v_e__r_n_g
+     discovers  a  problem,  an  error  message is printed on the
+     stderr stream.
+
+
+SEE ALSO
+     random(3), rand(3C), drand48(3), mrandom(3)
+
+
+
+
+
+Sun Release 4.1       Last change: 5/28/93                      2
+
+
+
+
+
+
+MRTEST(1)                USER COMMANDS                  MRTEST(1)
+
+
+
+BUGS
+     The estimated standard deviations are merely estimates,  and
+     not  very  accurate  ones  at  that, especially on the upper
+     tail.  A better X-squared analysis routine would help.
+
+
+THEORY
+     For more information on the X-squared  analysis  implemented
+     in  this code, see "Tools for Randomized Experimentation" by
+     Clark Thomborson, to appear in the Proceedings of  the  25th
+     Symposium  on  the  Interface: Computing Science and Statis-
+     tics, 1993.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sun Release 4.1       Last change: 5/28/93                      3
+
+
+

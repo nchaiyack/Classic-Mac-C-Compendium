@@ -1,1 +1,37 @@
-View25 25 7         - Eye point0 0 0           - Look point0 1 0           - Up vector30 30           - View anglesColors0.196 0.6 0.8   - Background (Sky Blue)0.1 0.1 0.1     - Ambient lightLights1 0 60 60 0.9 0.9 0.9   - Point Light 11 20 40 -7 0.9 0.9 0.9  - Point Light 2Surfaces1 0.6 0.8 0.196 0.99 0.99 0.99 0 0 0 0 0 0 0 0             - Yellow Green1 0.9 0.9 0.9 0.5 0.5 0.5 0.5 0.5 0.5 50 1 0 0 0           - White1 0.5 0.5 0.5 0.1 0.1 0.1 0.1 0.1 0.1 200 0.7 0.8 0.8 0.8  - Grey1 0.9 0.2 0.2 0.99 0.99 0.99 0 0 0 0 0 0 0 0               - RedObjects5 1 1.0 0 0 0 15 15 15  - Polygon4 1 2 3 41 0 11 0 -1-1 0 -1-1 0 11 4 1.0 7 15 -7 3       - SphereTextures2 1 2 0 0 0 0 2 0 0 0 0 2 0 0 0 0 1 0.4 4                 - Blotch4 2 5 0 0 0 0 5 0 0 0 0 5 0 0 0 0 1                       - Marble5 4 10 0 0 0 1 10 0 0 1 1 10 0 0 0 0 1 0 0.6 0.5 2 0.1 6  - FBM BumpEndpyr / 23-Jul-1992 / Reid Judd 
+View
+25 25 7         - Eye point
+0 0 0           - Look point
+0 1 0           - Up vector
+30 30           - View angles
+Colors
+0.196 0.6 0.8   - Background (Sky Blue)
+0.1 0.1 0.1     - Ambient light
+Lights
+1 0 60 60 0.9 0.9 0.9   - Point Light 1
+1 20 40 -7 0.9 0.9 0.9  - Point Light 2
+
+Surfaces
+1 0.6 0.8 0.196 0.99 0.99 0.99 0 0 0 0 0 0 0 0             - Yellow Green
+1 0.9 0.9 0.9 0.5 0.5 0.5 0.5 0.5 0.5 50 1 0 0 0           - White
+1 0.5 0.5 0.5 0.1 0.1 0.1 0.1 0.1 0.1 200 0.7 0.8 0.8 0.8  - Grey
+1 0.9 0.2 0.2 0.99 0.99 0.99 0 0 0 0 0 0 0 0               - Red
+
+Objects
+5 1 1.0 0 0 0 15 15 15  - Polygon
+4 1 2 3 4
+
+1 0 1
+1 0 -1
+-1 0 -1
+-1 0 1
+
+1 4 1.0 7 15 -7 3       - Sphere
+
+Textures
+2 1 2 0 0 0 0 2 0 0 0 0 2 0 0 0 0 1 0.4 4                 - Blotch
+4 2 5 0 0 0 0 5 0 0 0 0 5 0 0 0 0 1                       - Marble
+5 4 10 0 0 0 1 10 0 0 1 1 10 0 0 0 0 1 0 0.6 0.5 2 0.1 6  - FBM Bump
+
+End
+pyr / 23-Jul-1992 / Reid Judd 
+

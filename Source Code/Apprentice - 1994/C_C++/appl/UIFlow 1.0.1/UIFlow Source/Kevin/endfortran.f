@@ -1,1 +1,4 @@
-      subroutine ENDFORT      Call DoMenu("File","Quit")	  return	  end
+      subroutine ENDFORT
+      Call DoMenu("File","Quit")
+	  return
+	  end

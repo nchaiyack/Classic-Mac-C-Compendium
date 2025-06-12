@@ -1,1 +1,6 @@
-#	File rel.##	Build release version of Sample.Delete -i SampleBuildProgram Sample -e -d COptions='-mbg off -sym off -r' -d LDebugOptions=''
+#	File rel.
+#
+#	Build release version of Sample.
+
+Delete -i Sample
+BuildProgram Sample -e -d COptions='-mbg off -sym off -r' -d LDebugOptions=''

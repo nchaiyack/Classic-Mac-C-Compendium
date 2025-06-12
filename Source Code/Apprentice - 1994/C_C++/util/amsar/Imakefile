@@ -1,1 +1,33 @@
-/* * $Header: /afs/andrew.cmu.edu/usr13/aw0g/amsar/RCS/Imakefile,v 1.2 90/04/30 17:41:06 aw0g Exp $ */LOCALINCLUDES	=	-I${BASEDIR}/include/ams -I/usr/includeSTD_DEFINES =  -O    PRODUCTS 	=	amsarOBJS=amsar.o bufgetn.o massdelete.oLIBS		=	${BASEDIR}/lib/libmail.a ${BASEDIR}/lib/liberrors.a \			${MALLOCLIB} ${UTILLIB} ${RESOLVLIB}/* * NOSNAPLIBS	=	${BASEDIR}/lib/libcui.a ${BASEDIR}/lib/libcuin.a \ *			${BASEDIR}/lib/libmssrv.a ${BASEDIR}/lib/libmsshr.a \ *			${BASEDIR}/lib/libeli.a ${BASEDIR}/lib/librxp.a \ *			${LIBS}	${PRSLIB} */NOSNAPLIBS	=	${BASEDIR}/lib/libcui.a ${BASEDIR}/lib/libcuin.a \			${BASEDIR}/lib/libmssrv.a ${BASEDIR}/lib/libmsshr.a \			${BASEDIR}/lib/libeli.a ${BASEDIR}/lib/librxp.a \			${LIBS}	${PRSLIB}NormalObjectRule()ProgramTarget(amsar, ${OBJS}, ${NOSNAPLIBS}, )InstallMultiple(${PRODUCTS}, $(INSTPROGFLAGS), ${DESTDIR}/bin)DependTarget()CleanTarget(PRODUCTS)
+/*
+ * $Header: /afs/andrew.cmu.edu/usr13/aw0g/amsar/RCS/Imakefile,v 1.2 90/04/30 17:41:06 aw0g Exp $
+ */
+
+LOCALINCLUDES	=	-I${BASEDIR}/include/ams -I/usr/include
+
+STD_DEFINES =  -O
+
+    PRODUCTS 	=	amsar
+
+OBJS=amsar.o bufgetn.o massdelete.o
+
+LIBS		=	${BASEDIR}/lib/libmail.a ${BASEDIR}/lib/liberrors.a \
+			${MALLOCLIB} ${UTILLIB} ${RESOLVLIB}
+
+/*
+ * NOSNAPLIBS	=	${BASEDIR}/lib/libcui.a ${BASEDIR}/lib/libcuin.a \
+ *			${BASEDIR}/lib/libmssrv.a ${BASEDIR}/lib/libmsshr.a \
+ *			${BASEDIR}/lib/libeli.a ${BASEDIR}/lib/librxp.a \
+ *			${LIBS}	${PRSLIB}
+ */
+
+NOSNAPLIBS	=	${BASEDIR}/lib/libcui.a ${BASEDIR}/lib/libcuin.a \
+			${BASEDIR}/lib/libmssrv.a ${BASEDIR}/lib/libmsshr.a \
+			${BASEDIR}/lib/libeli.a ${BASEDIR}/lib/librxp.a \
+			${LIBS}	${PRSLIB}
+
+NormalObjectRule()
+ProgramTarget(amsar, ${OBJS}, ${NOSNAPLIBS}, )
+InstallMultiple(${PRODUCTS}, $(INSTPROGFLAGS), ${DESTDIR}/bin)
+DependTarget()
+CleanTarget(PRODUCTS)
+

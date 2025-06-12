@@ -1,1 +1,103 @@
------- This is ircle Users Manual part 2 ------ircle Menus-----------Although ircle is controlled by command lines like traditional IRC clients, there are some features to be controlled by menus in the standard Macintosh manner. These are the menus: Apple: contains the standard About information box. File: Open connection connects to the server if no connection is established, which can happen after an error.Close window does just that, beware of accidentally leaving channels!Load command file interprets a file's contents as commands.Save Set generates a file containing following parameters: settings from the Preferences dialog, currently open windows (channels and query) with position, preferred font, defined shortcuts, notify and ignore list.Preferences pops up the yet familiar dialog, to change your default settings.Start/stop logging lets you log all conversation to a file. When not logging, you can enter the file name. When logging, this stops logging and closes the file. Note that all messages go into one log file, regardless of the window. (This will be changed in future versions.)Flush server output: Some commands get responses consisting of long lists. If you don't want to see them completely, with this you can cancel the list. Note that the messages still get sent to the client, only not displayed. This can be rather slow.Quit quits the program. When connected, an alert gives you the chance to cancel. Edit: Copy copies the selection range from any window to the clipboard. Paste processes clipboard contents as it were typed, usually sending the clipboard to a channel. (Do not paste large amounts of text at once - some people might get angry on you.) Select all selects a whole window. Commands: These items are just shortcuts for important commands. They do nothing but paste the command name into the input line. For some commands (like /whois), a reasonable default parameter is also presented. Shortcuts: Define opens up a dialog that lets you define 10 strings to be pasted into the input line via Command-1 through Command-0. Uses for this are frequently used channel names, nicknames or greetings.  Font: You can select your favorite font and size of text windows. The status and input lines are always Monaco-9 as they have to be a fixed size font. Note that IRC was devised on text terminals and sometimes needs fixed size fonts, e.g. by users sending 'big fonts' (composed of several lines) or the /list command. These things look best in a fixed size font such as Monaco or Courier. Windows: Contains all channel, query and DCC windows for direct selection. These have no shortcuts, but Command-comma rotates windows so that you never have to use the mouse.Almost all menu commands have shortcut keys. They are as closely as possible oriented on Macintosh standards. There is no Save command needed and Command-S is used for the /whois command.(Those of you who know the ancient pre-releases of ircle, beware! Cmd-W will  now close a window!)Further Reading---------------If you don't know it already, please read the file 'COPYING'.New users of IRC should read the texts from various sources I have included in the file 'Advice on IRC'. Some notes on etiquette may look pedantic but they are needed, as they are all too often broken. Hold on to that rules and make IRC life friendlier to all users.All regular users of IRC wo have access to Usenet should watch the alt.irc newsgroup.There is a wonderful paper on IRC by Elizabeth Reid, available on may FTP servers under names like 'IRC-Thesis' (originally titled: 'Electropolis'.) This can also be recommended to read for people who want to know about IRC but are not actively involved. Recently another scholarly piece about IRC has been published, but I don't know the source. (Pointers, anyone?)Nicolas Pioch has written a paper 'A short IRCprimer' which is as far as I know the best introductory manual on IRC currently available. (It is a bit biased towards Un*x, however.)Some more material on IRC can be found on cs.bu.edu:/irc/support.Beware of Pitfalls-----------------Known bugs and limitations of this client:- This client is designed for server versions 2.7 and 2.8. By now, all older servers are taken off the network. - The protocol as published in RFC1459 defines that the ASCII 7-bit character set is to be used on IRC. However, the ISO8859-1 charset gets more and more in use by international users and is the standard supported by most Un*x clients, so ircle maps characters between that and the Macintosh charset. (Both the Mac charset and ISO8859-1 are supersets of ASCII so this doesn't contradict the protocol.) However, there are in both sets characters which have no representation in the other set. These are mapped to nonsensically-looking characters. The most importantspecial characters, however,  are the accented vowels, which are all correctly mapped. The mapping is done by the tables also used by Peter Lewis' FTPd. (Scandinavian users sometimes use the {\} characters as accented letters, but these can't be translated without breaking ASCII, sorry.)- DCC filetransfer, as it was originally conceived, uses transparent (binary) transfer mode. As DCC is often used for text files, ircle has also a text transfer mode which maps characters to the ISO set (see above) and CRs (on the Mac) to LFs (on transmission), to be compatible with Un*x. But this may fail in more exotic environments.- A KILL by an operator includes a sometimes long 'path' argument, which will not be displayed in the alert (as it is of interest to other operators only). Unfortunately, this may result in the rest of the line, which gives a reason for the kill, being truncated. (I am one of those who think no good of operator kills anyway and who support the kill command being abolished, so I didn't bother fixing it - this would require much more software effort.)- Very long lines generated by some users and certain commands get broken into two lines, most times midway through a word :-)What is still to be done---------------------- that I have work left for the next version :-)Perhaps, a list of all users on a channel which is permanently displayed and updated. The inevitable legal stuff-----------------------This program is Copyright (C) 1992,93 Olaf Titz (e-Mail: s_titz@ira.uka.de)Portions Copyright (C) 1992 Peter N. Lewis.Portions Copyright (C) 1988 Symantec Corporation.This program is free software; you can redistribute it and/or modifyit under the terms of the GNU General Public License as published bythe Free Software Foundation; either version 2 or (at your option)any later version. See the file COPYING.This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See theGNU General Public License for more details.You should have received a copy of the GNU General Public Licensealong with this program; if not, write to the Free SoftwareFoundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.(Note that I am in no way connected to the FSF other than by supporting their idea of free software.)Some names mentioned in this manual are registered trademarks of the respective owners.Credits-------Thanks to all the people who have supported me writing this program bycontributing ideas, advice, documentation and beta-bug hunting.Especially I'd like to mention the following: Peter N. Lewis (peter@cujo.curtin.edu.au) Matthias Urlichs (urlichs@smurf.sub.org) Frank Simon (terra@sol.ccc.de) Klaus Zeuge (sojge@minsk.docs.uu.se) Martin Allert (et_aller@rzmain.rz.uni-ulm.de) Jussi-Pekka Mantere (Jussi-Pekka.Mantere@apple.fi)and the authors of the server and the IRCII client: Jarkko Oikarinen (jto@tolsun.oulu.fi) Darren Reed (avalon@coombs.anu.edu.au) Michael Sandrof Troy Rollo (troy@plod.cbme.unsw.oz.au)and others who are not mentioned here but are not forgotten.   :-)---------------------------------------------------------------------
+------ This is ircle Users Manual part 2 ------
+
+ircle Menus
+-----------
+
+Although ircle is controlled by command lines like traditional IRC clients, there are some features to be controlled by menus in the standard Macintosh manner. These are the menus:
+
+ Apple: contains the standard About information box.
+
+ File: Open connection connects to the server if no connection is established, which can happen after an error.
+Close window does just that, beware of accidentally leaving channels!
+Load command file interprets a file's contents as commands.
+Save Set generates a file containing following parameters: settings from the Preferences dialog, currently open windows (channels and query) with position, preferred font, defined shortcuts, notify and ignore list.
+Preferences pops up the yet familiar dialog, to change your default settings.
+Start/stop logging lets you log all conversation to a file. When not logging, you can enter the file name. When logging, this stops logging and closes the file. Note that all messages go into one log file, regardless of the window. (This will be changed in future versions.)
+Flush server output: Some commands get responses consisting of long lists. If you don't want to see them completely, with this you can cancel the list. Note that the messages still get sent to the client, only not displayed. This can be rather slow.
+Quit quits the program. When connected, an alert gives you the chance to cancel.
+
+ Edit: Copy copies the selection range from any window to the clipboard. Paste processes clipboard contents as it were typed, usually sending the clipboard to a channel. (Do not paste large amounts of text at once - some people might get angry on you.) Select all selects a whole window.
+
+ Commands: These items are just shortcuts for important commands. They do nothing but paste the command name into the input line. For some commands (like /whois), a reasonable default parameter is also presented.
+
+ Shortcuts: Define opens up a dialog that lets you define 10 strings to be pasted into the input line via Command-1 through Command-0. Uses for this are frequently used channel names, nicknames or greetings. 
+
+ Font: You can select your favorite font and size of text windows. The status and input lines are always Monaco-9 as they have to be a fixed size font. Note that IRC was devised on text terminals and sometimes needs fixed size fonts, e.g. by users sending 'big fonts' (composed of several lines) or the /list command. These things look best in a fixed size font such as Monaco or Courier.
+
+ Windows: Contains all channel, query and DCC windows for direct selection. These have no shortcuts, but Command-comma rotates windows so that you never have to use the mouse.
+
+Almost all menu commands have shortcut keys. They are as closely as possible oriented on Macintosh standards. There is no Save command needed and Command-S is used for the /whois command.
+(Those of you who know the ancient pre-releases of ircle, beware! Cmd-W will  now close a window!)
+
+Further Reading
+---------------
+
+If you don't know it already, please read the file 'COPYING'.
+New users of IRC should read the texts from various sources I have included in the file 'Advice on IRC'. Some notes on etiquette may look pedantic but they are needed, as they are all too often broken. Hold on to that rules and make IRC life friendlier to all users.
+All regular users of IRC wo have access to Usenet should watch the alt.irc newsgroup.
+There is a wonderful paper on IRC by Elizabeth Reid, available on may FTP servers under names like 'IRC-Thesis' (originally titled: 'Electropolis'.) This can also be recommended to read for people who want to know about IRC but are not actively involved. Recently another scholarly piece about IRC has been published, but I don't know the source. (Pointers, anyone?)
+Nicolas Pioch has written a paper 'A short IRCprimer' which is as far as I know the best introductory manual on IRC currently available. (It is a bit biased towards Un*x, however.)
+Some more material on IRC can be found on cs.bu.edu:/irc/support.
+
+Beware of Pitfalls
+-----------------
+
+Known bugs and limitations of this client:
+
+- This client is designed for server versions 2.7 and 2.8. By now, all older servers are taken off the network. 
+- The protocol as published in RFC1459 defines that the ASCII 7-bit character set is to be used on IRC. However, the ISO8859-1 charset gets more and more in use by international users and is the standard supported by most Un*x clients, so ircle maps characters between that and the Macintosh charset. (Both the Mac charset and ISO8859-1 are supersets of ASCII so this doesn't contradict the protocol.) However, there are in both sets characters which have no representation in the other set. These are mapped to nonsensically-looking characters. The most importantspecial characters, however,  are the accented vowels, which are all correctly mapped. The mapping is done by the tables also used by Peter Lewis' FTPd. (Scandinavian users sometimes use the {\} characters as accented letters, but these can't be translated without breaking ASCII, sorry.)
+- DCC filetransfer, as it was originally conceived, uses transparent (binary) transfer mode. As DCC is often used for text files, ircle has also a text transfer mode which maps characters to the ISO set (see above) and CRs (on the Mac) to LFs (on transmission), to be compatible with Un*x. But this may fail in more exotic environments.
+- A KILL by an operator includes a sometimes long 'path' argument, which will not be displayed in the alert (as it is of interest to other operators only). Unfortunately, this may result in the rest of the line, which gives a reason for the kill, being truncated. (I am one of those who think no good of operator kills anyway and who support the kill command being abolished, so I didn't bother fixing it - this would require much more software effort.)
+- Very long lines generated by some users and certain commands get broken into two lines, most times midway through a word :-)
+
+What is still to be done
+---------------------
+
+- that I have work left for the next version :-)
+Perhaps, a list of all users on a channel which is permanently displayed and updated. 
+
+The inevitable legal stuff
+-----------------------
+
+This program is Copyright (C) 1992,93 Olaf Titz 
+(e-Mail: s_titz@ira.uka.de)
+Portions Copyright (C) 1992 Peter N. Lewis.
+Portions Copyright (C) 1988 Symantec Corporation.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 or (at your option)
+any later version. See the file COPYING.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+(Note that I am in no way connected to the FSF other than by supporting their idea of free software.)
+
+Some names mentioned in this manual are registered trademarks of the respective owners.
+
+Credits
+-------
+
+Thanks to all the people who have supported me writing this program by
+contributing ideas, advice, documentation and beta-bug hunting.
+Especially I'd like to mention the following:
+ Peter N. Lewis (peter@cujo.curtin.edu.au)
+ Matthias Urlichs (urlichs@smurf.sub.org)
+ Frank Simon (terra@sol.ccc.de)
+ Klaus Zeuge (sojge@minsk.docs.uu.se)
+ Martin Allert (et_aller@rzmain.rz.uni-ulm.de)
+ Jussi-Pekka Mantere (Jussi-Pekka.Mantere@apple.fi)
+and the authors of the server and the IRCII client:
+ Jarkko Oikarinen (jto@tolsun.oulu.fi)
+ Darren Reed (avalon@coombs.anu.edu.au)
+ Michael Sandrof
+ Troy Rollo (troy@plod.cbme.unsw.oz.au)
+and others who are not mentioned here but are not forgotten.   :-)
+---------------------------------------------------------------------

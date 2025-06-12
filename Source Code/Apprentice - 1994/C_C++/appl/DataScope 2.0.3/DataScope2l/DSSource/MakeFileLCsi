@@ -1,1 +1,107 @@
-##################################	Makefile for DataScope##############################LDIR	=	::DSLibs:TDIR	=	::TCPIncludes:IDIR	=	::DSIncludes:SDIR	=	::DSSource:HDIR	=	::HDFpartial:#COPTS	=	-sym on		¶			-w			¶			-i	{TDIR}	¶			-i	{IDIR}	¶			-i	{SDIR}	¶			-i	{HDIR}	¶			-mc68020#COPTS1	=	-sym on		¶			-w			¶			-d	MAC		¶			-i	{TDIR}	¶			-i	{IDIR}	¶			-i	{SDIR}	¶			-i	{HDIR}	¶			-mc68020#txtOBJ = 	{LDIR}vdevice.c.o	{LDIR}fdlog.c.o		¶			{LDIR}fget.c.o		{LDIR}fconfig.c.o	¶			{LDIR}ftwin.c.o		{LDIR}fnet.c.o#cmpOBJ = 	{LDIR}fcmp1.c.o		{LDIR}fcmp2.c.o		¶			{LDIR}fcmp3.c.o##############################all					Ä	{LDIR}txtlib.o		¶						{LDIR}fparse.y.c.o	¶						{LDIR}cmplib.o		¶						{LDIR}fview.c.o		¶						{LDIR}f2view.c.o#{LDIR}txtlib.o 		Ä {txtOBJ}	Lib		-w					¶			-sg txt=Main		¶			-o {LDIR}txtlib.o	¶			{txtOBJ}#{LDIR}cmplib.o 		Ä {cmpOBJ}	Lib		-w					¶			-sg cmp=Main		¶			-o {LDIR}cmplib.o	¶			{cmpOBJ}#{LDIR}fdlog.c.o		Ä	{SDIR}fdlog.c			¶						{IDIR}macfview.h		¶						{IDIR}DSversion.h	C	{COPTS} {SDIR}fdlog.c	-o {LDIR}fdlog.c.o#{LDIR}f2view.c.o	Ä	{SDIR}f2view.c			¶						{IDIR}fview.h	C	{COPTS} {SDIR}f2view.c	-o {LDIR}f2view.c.o#{LDIR}fview.c.o		Ä	{SDIR}fview.c			¶						{IDIR}fview.h	C	{COPTS} {SDIR}fview.c	-o {LDIR}fview.c.o#{LDIR}ftwin.c.o		Ä	{SDIR}ftwin.c			¶						{IDIR}fview.h	C	{COPTS} {SDIR}ftwin.c	-o {LDIR}ftwin.c.o#{LDIR}vdevice.c.o	Ä	{SDIR}vdevice.c			¶						{IDIR}vdevice.h	C	{COPTS} {SDIR}vdevice.c	-o {LDIR}vdevice.c.o#{LDIR}fget.c.o		Ä	{SDIR}fget.c			¶						{IDIR}macfview.h		¶						{HDIR}df.h	C	{COPTS1} {SDIR}fget.c		-o {LDIR}fget.c.o#{LDIR}fconfig.c.o	Ä	{SDIR}fconfig.c			¶						{HDIR}df.h	C	{COPTS1} {SDIR}fconfig.c	-o {LDIR}fconfig.c.o#{LDIR}fparse.y.c.o	Ä	{SDIR}fparse.y.c		¶						{IDIR}DScope.h			¶						{IDIR}macfview.h		¶						{SDIR}fparse.l.c		¶						{SDIR}fcomp.c			¶						{SDIR}fn_fcomp.c	C	-s calc	{COPTS} {SDIR}fparse.y.c -o {LDIR}fparse.y.c.o#{LDIR}fcmp1.c.o		Ä	{SDIR}fcmp1.c	C	{COPTS} {SDIR}fcmp1.c	-o {LDIR}fcmp1.c.o#{LDIR}fcmp2.c.o		Ä	{SDIR}fcmp2.c	C	{COPTS} {SDIR}fcmp2.c	-o {LDIR}fcmp2.c.o#{LDIR}fcmp3.c.o		Ä	{SDIR}fcmp3.c	C	{COPTS} {SDIR}fcmp3.c	-o {LDIR}fcmp3.c.o#{LDIR}fnet.c.o		Ä	{SDIR}fnet.c		¶						{IDIR}macfview.h	¶						{IDIR}DScope.h		¶						{TDIR}whatami.h		¶						{TDIR}hostform.h	C	{COPTS} {SDIR}fnet.c -o {LDIR}fnet.c.o#
+##############################
+####	Makefile for DataScope
+##############################
+LDIR	=	::DSLibs:
+TDIR	=	::TCPIncludes:
+IDIR	=	::DSIncludes:
+SDIR	=	::DSSource:
+HDIR	=	::HDFpartial:
+#
+COPTS	=	-sym on		¶
+			-w			¶
+			-i	{TDIR}	¶
+			-i	{IDIR}	¶
+			-i	{SDIR}	¶
+			-i	{HDIR}	¶
+			-mc68020
+#
+
+COPTS1	=	-sym on		¶
+			-w			¶
+			-d	MAC		¶
+			-i	{TDIR}	¶
+			-i	{IDIR}	¶
+			-i	{SDIR}	¶
+			-i	{HDIR}	¶
+			-mc68020
+#
+
+txtOBJ = 	{LDIR}vdevice.c.o	{LDIR}fdlog.c.o		¶
+			{LDIR}fget.c.o		{LDIR}fconfig.c.o	¶
+			{LDIR}ftwin.c.o		{LDIR}fnet.c.o
+#
+cmpOBJ = 	{LDIR}fcmp1.c.o		{LDIR}fcmp2.c.o		¶
+			{LDIR}fcmp3.c.o
+##############################
+all					Ä	{LDIR}txtlib.o		¶
+						{LDIR}fparse.y.c.o	¶
+						{LDIR}cmplib.o		¶
+						{LDIR}fview.c.o		¶
+						{LDIR}f2view.c.o
+#
+{LDIR}txtlib.o 		Ä {txtOBJ}
+	Lib		-w					¶
+			-sg txt=Main		¶
+			-o {LDIR}txtlib.o	¶
+			{txtOBJ}
+#
+{LDIR}cmplib.o 		Ä {cmpOBJ}
+	Lib		-w					¶
+			-sg cmp=Main		¶
+			-o {LDIR}cmplib.o	¶
+			{cmpOBJ}
+#
+{LDIR}fdlog.c.o		Ä	{SDIR}fdlog.c			¶
+						{IDIR}macfview.h		¶
+						{IDIR}DSversion.h
+	C	{COPTS} {SDIR}fdlog.c	-o {LDIR}fdlog.c.o
+#
+{LDIR}f2view.c.o	Ä	{SDIR}f2view.c			¶
+						{IDIR}fview.h
+	C	{COPTS} {SDIR}f2view.c	-o {LDIR}f2view.c.o
+#
+{LDIR}fview.c.o		Ä	{SDIR}fview.c			¶
+						{IDIR}fview.h
+	C	{COPTS} {SDIR}fview.c	-o {LDIR}fview.c.o
+#
+{LDIR}ftwin.c.o		Ä	{SDIR}ftwin.c			¶
+						{IDIR}fview.h
+	C	{COPTS} {SDIR}ftwin.c	-o {LDIR}ftwin.c.o
+#
+{LDIR}vdevice.c.o	Ä	{SDIR}vdevice.c			¶
+						{IDIR}vdevice.h
+	C	{COPTS} {SDIR}vdevice.c	-o {LDIR}vdevice.c.o
+#
+{LDIR}fget.c.o		Ä	{SDIR}fget.c			¶
+						{IDIR}macfview.h		¶
+						{HDIR}df.h
+	C	{COPTS1} {SDIR}fget.c		-o {LDIR}fget.c.o
+#
+{LDIR}fconfig.c.o	Ä	{SDIR}fconfig.c			¶
+						{HDIR}df.h
+	C	{COPTS1} {SDIR}fconfig.c	-o {LDIR}fconfig.c.o
+#
+{LDIR}fparse.y.c.o	Ä	{SDIR}fparse.y.c		¶
+						{IDIR}DScope.h			¶
+						{IDIR}macfview.h		¶
+						{SDIR}fparse.l.c		¶
+						{SDIR}fcomp.c			¶
+						{SDIR}fn_fcomp.c
+	C	-s calc	{COPTS} {SDIR}fparse.y.c -o {LDIR}fparse.y.c.o
+#
+{LDIR}fcmp1.c.o		Ä	{SDIR}fcmp1.c
+	C	{COPTS} {SDIR}fcmp1.c	-o {LDIR}fcmp1.c.o
+#
+{LDIR}fcmp2.c.o		Ä	{SDIR}fcmp2.c
+	C	{COPTS} {SDIR}fcmp2.c	-o {LDIR}fcmp2.c.o
+#
+{LDIR}fcmp3.c.o		Ä	{SDIR}fcmp3.c
+	C	{COPTS} {SDIR}fcmp3.c	-o {LDIR}fcmp3.c.o
+#
+{LDIR}fnet.c.o		Ä	{SDIR}fnet.c		¶
+						{IDIR}macfview.h	¶
+						{IDIR}DScope.h		¶
+						{TDIR}whatami.h		¶
+						{TDIR}hostform.h
+	C	{COPTS} {SDIR}fnet.c -o {LDIR}fnet.c.o
+#

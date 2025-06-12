@@ -1,1 +1,18 @@
-This directory contains the source code for my Mac Ph client.You will need MPW C 3.2 to build the program.The directory "MacTCP" contains the MacTCP 1.1 header files and libraries needed for the build.The directory "Lib" contains my general-purpose reusable code modules. Ph makes extensive use of these modules.The directory "PhClient" contains the source code for the Ph client.To do a full build, first build the "all" target in the Lib directory. The build the "ph" target in the PhClient directory.See the makefiles in the Lib and PhClient directories for more details on how all the pieces fit together.John NorstadAcademic Computing and Network ServicesNorthwestern Universityj-norstad@nwu.edu
+This directory contains the source code for my Mac Ph client.
+
+You will need MPW C 3.2 to build the program.
+
+The directory "MacTCP" contains the MacTCP 1.1 header files and libraries needed for the build.
+
+The directory "Lib" contains my general-purpose reusable code modules. Ph makes extensive use of these modules.
+
+The directory "PhClient" contains the source code for the Ph client.
+
+To do a full build, first build the "all" target in the Lib directory. The build the "ph" target in the PhClient directory.
+
+See the makefiles in the Lib and PhClient directories for more details on how all the pieces fit together.
+
+John Norstad
+Academic Computing and Network Services
+Northwestern University
+j-norstad@nwu.edu

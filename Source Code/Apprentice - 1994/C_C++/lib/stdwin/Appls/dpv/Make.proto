@@ -1,1 +1,25 @@
-## Makefile prototype for dpv application#DPV=		$(APPLS)/dpvSRCS=		\		$(DPV)/dpv.c \		$(DPV)/dpvcontrol.c \		$(DPV)/dpvfonts.c \		$(DPV)/dpvfunny.c \		$(DPV)/dpvmachine.c \		$(DPV)/dpvoutput.c \		$(DPV)/dpvparse.c \		$(DPV)/dpvrestart.cSRCLIBS=	$(LIBMATH)all:		dpv choose_bootstrap:	@putprogmf dpv $(SRCS)	@putprogmf choose $(DPV)/choose.c
+
+#
+# Makefile prototype for dpv application
+#
+
+DPV=		$(APPLS)/dpv
+
+SRCS=		\
+		$(DPV)/dpv.c \
+		$(DPV)/dpvcontrol.c \
+		$(DPV)/dpvfonts.c \
+		$(DPV)/dpvfunny.c \
+		$(DPV)/dpvmachine.c \
+		$(DPV)/dpvoutput.c \
+		$(DPV)/dpvparse.c \
+		$(DPV)/dpvrestart.c
+
+SRCLIBS=	$(LIBMATH)
+
+all:		dpv choose
+
+_bootstrap:
+	@putprogmf dpv $(SRCS)
+	@putprogmf choose $(DPV)/choose.c
+

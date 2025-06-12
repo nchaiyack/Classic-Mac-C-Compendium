@@ -1,1 +1,187 @@
-unit UDPStuff;interface	uses		TCPTypes;	const		UDPDefaultBufferSize = 4048;	type		UDPConnectionRecord = record				magic: OSType;	{ A magic number to try and avoid problems with released connection IDs. }				stream: StreamPtr;				outstanding: integer;			end;		UDPConnectionPtr = ^UDPConnectionRecord;	function UDPInit: OSErr;	procedure UDPFinish;	function UDPCreate (var connection: UDPConnectionPtr; buffer_size: longInt; localport: integer): OSErr;	function UDPCreateDynamic (var connection: UDPConnectionPtr; buffer_size: longInt; var localport: integer): OSErr;	function UDPRead (connection: UDPConnectionPtr; timeout: integer; var remoteIP: longInt; var remoteport: integer;{}									var datap: ptr; var datalen: integer): OSErr;	function UDPReturnBuffer (connection: UDPConnectionPtr; datap: ptr): OSErr;	function UDPDatagramsAvailable (connection: UDPConnectionPtr): integer;	function UDPWrite (connection: UDPConnectionPtr; remoteIP: longInt; remoteport: integer;{}									datap: ptr; datalen: integer; checksum: boolean): OSErr;	function UDPRelease (var connection: UDPConnectionPtr): OSErr;	function UDPMTU (remoteIP: longInt; var mtu: integer): OSErr;implementation	const		UDPMagic = 'UDPM';		UDPBad = '????';	var		driver_refnum: integer;	procedure ZeroCB (var cb: UDPControlBlock; stream: StreamPtr; call: integer);	{ Zero out the control block parameters. }		var			i: integer;			p: longInt;	begin		for p := longInt(@cb) to longInt(@cb) + SizeOf(UDPControlBlock) - 1 do			ptr(p)^ := 0;		cb.udpStream := stream;		cb.ioCRefNum := driver_refnum;		cb.csCode := call;	end;	function UDPInit: OSErr;		var			oe: OSErr;			i: integer;	begin		oe := OpenDriver('.IPP', driver_refnum);		UDPInit := oe;	end;	procedure UDPFinish;	begin	end;	procedure MyNotify (stream: streamPtr; eventCode: integer; connection: UDPConnectionPtr; icmpMsg: ptr);	begin		if eventCode = UDPDataArrival then			if connection^.magic = UDPMagic then				connection^.outstanding := connection^.outstanding + 1;	end;	function UDPCreateX (var connection: UDPConnectionPtr; buffer_size: longInt; var localport: integer): OSErr;		var			oe: OSErr;			cb: UDPControlBlock;	begin		if buffer_size = 0 then			buffer_size := UDPDefaultBufferSize;		connection := UDPConnectionPtr(NewPtr(SizeOf(UDPConnectionRecord) + buffer_size));		oe := MemError;		if connection <> nil then begin			connection^.magic := UDPMagic;			ZeroCB(cb, nil, UDPcsCreate);			cb.create.rcvBuff := ptr(longInt(connection) + SizeOf(UDPConnectionRecord));			cb.create.rcvBuffLen := buffer_size;			cb.create.notifyProc := @MyNotify;			cb.create.userDataPtr := ptr(connection);			cb.create.localport := localport;			oe := PBControl(@cb, false);			localport := cb.create.localport;			connection^.stream := cb.udpStream;			connection^.outstanding := 0;		end;		UDPCreateX := oe;	end;	function UDPCreate (var connection: UDPConnectionPtr; buffer_size: longInt; localport: integer): OSErr;	begin		UDPCreate := UDPCreateX(connection, buffer_size, localport);	end;	function UDPCreateDynamic (var connection: UDPConnectionPtr; buffer_size: longInt; var localport: integer): OSErr;	begin		localport := 0;		UDPCreateDynamic := UDPCreateX(connection, buffer_size, localport);	end;	function UDPRead (connection: UDPConnectionPtr; timeout: integer; var remoteIP: longInt; var remoteport: integer;{}									var datap: ptr; var datalen: integer): OSErr;		var			oe: OSErr;			cb: UDPControlBlock;	begin		ZeroCB(cb, connection^.stream, UDPcsRead);		cb.receive.timeout := timeout;		oe := PBControl(@cb, false);		if oe = noErr then			connection^.outstanding := connection^.outstanding - 1;		remoteIP := cb.receive.remoteIP;		remoteport := cb.receive.remoteport;		datap := cb.receive.rcvBuff;		datalen := cb.receive.rcvBuffLen;		UDPRead := oe;	end;	function UDPReturnBuffer (connection: UDPConnectionPtr; datap: ptr): OSErr;		var			oe: OSErr;			cb: UDPControlBlock;	begin		ZeroCB(cb, connection^.stream, UDPcsBfrReturn);		cb.return.rcvBuff := datap;		oe := PBControl(@cb, false);		UDPReturnBuffer := oe;	end;	function UDPDatagramsAvailable (connection: UDPConnectionPtr): integer;	begin		UDPDatagramsAvailable := connection^.outstanding;	end;	function UDPWrite (connection: UDPConnectionPtr; remoteIP: longInt; remoteport: integer;{}									datap: ptr; datalen: integer; checksum: boolean): OSErr;		var			oe: OSErr;			cb: UDPControlBlock;			wds: wdsType;	begin		ZeroCB(cb, connection^.stream, UDPcsWrite);		cb.send.remoteIP := remoteIP;		cb.send.remotePort := remoteport;		wds.size := datalen;		wds.buffer := datap;		wds.term := 0;		cb.send.wds := @wds;		cb.send.checksum := ord(checksum);		oe := PBControl(@cb, false);		UDPWrite := oe;	end;	function UDPRelease (var connection: UDPConnectionPtr): OSErr;		var			oe: OSErr;			cb: UDPControlBlock;	begin		ZeroCB(cb, connection^.stream, UDPcsRelease);		oe := PBControl(@cb, false);		connection^.magic := UDPBad;		DisposPtr(ptr(connection));		UDPRelease := oe;	end;	function UDPMTU (remoteIP: longInt; var mtu: integer): OSErr;		var			oe: OSErr;			cb: UDPControlBlock;	begin		ZeroCB(cb, nil, UDPcsMaxMTUSize);		cb.mtu.remoteIP := remoteIP;		oe := PBControl(@cb, false);		mtu := cb.mtu.mtuSize;		UDPMTU := oe;	end;end.
+unit UDPStuff;
+
+interface
+
+	uses
+		TCPTypes;
+
+	const
+		UDPDefaultBufferSize = 4048;
+
+	type
+		UDPConnectionRecord = record
+				magic: OSType;	{ A magic number to try and avoid problems with released connection IDs. }
+				stream: StreamPtr;
+				outstanding: integer;
+			end;
+		UDPConnectionPtr = ^UDPConnectionRecord;
+
+	function UDPInit: OSErr;
+	procedure UDPFinish;
+	function UDPCreate (var connection: UDPConnectionPtr; buffer_size: longInt; localport: integer): OSErr;
+	function UDPCreateDynamic (var connection: UDPConnectionPtr; buffer_size: longInt; var localport: integer): OSErr;
+	function UDPRead (connection: UDPConnectionPtr; timeout: integer; var remoteIP: longInt; var remoteport: integer;{}
+									var datap: ptr; var datalen: integer): OSErr;
+	function UDPReturnBuffer (connection: UDPConnectionPtr; datap: ptr): OSErr;
+	function UDPDatagramsAvailable (connection: UDPConnectionPtr): integer;
+	function UDPWrite (connection: UDPConnectionPtr; remoteIP: longInt; remoteport: integer;{}
+									datap: ptr; datalen: integer; checksum: boolean): OSErr;
+	function UDPRelease (var connection: UDPConnectionPtr): OSErr;
+	function UDPMTU (remoteIP: longInt; var mtu: integer): OSErr;
+
+implementation
+
+	const
+		UDPMagic = 'UDPM';
+		UDPBad = '????';
+
+	var
+		driver_refnum: integer;
+
+	procedure ZeroCB (var cb: UDPControlBlock; stream: StreamPtr; call: integer);
+	{ Zero out the control block parameters. }
+		var
+			i: integer;
+			p: longInt;
+	begin
+		for p := longInt(@cb) to longInt(@cb) + SizeOf(UDPControlBlock) - 1 do
+			ptr(p)^ := 0;
+		cb.udpStream := stream;
+		cb.ioCRefNum := driver_refnum;
+		cb.csCode := call;
+	end;
+
+	function UDPInit: OSErr;
+		var
+			oe: OSErr;
+			i: integer;
+	begin
+		oe := OpenDriver('.IPP', driver_refnum);
+		UDPInit := oe;
+	end;
+
+	procedure UDPFinish;
+	begin
+	end;
+
+	procedure MyNotify (stream: streamPtr; eventCode: integer; connection: UDPConnectionPtr; icmpMsg: ptr);
+	begin
+		if eventCode = UDPDataArrival then
+			if connection^.magic = UDPMagic then
+				connection^.outstanding := connection^.outstanding + 1;
+	end;
+
+	function UDPCreateX (var connection: UDPConnectionPtr; buffer_size: longInt; var localport: integer): OSErr;
+		var
+			oe: OSErr;
+			cb: UDPControlBlock;
+	begin
+		if buffer_size = 0 then
+			buffer_size := UDPDefaultBufferSize;
+		connection := UDPConnectionPtr(NewPtr(SizeOf(UDPConnectionRecord) + buffer_size));
+		oe := MemError;
+		if connection <> nil then begin
+			connection^.magic := UDPMagic;
+			ZeroCB(cb, nil, UDPcsCreate);
+			cb.create.rcvBuff := ptr(longInt(connection) + SizeOf(UDPConnectionRecord));
+			cb.create.rcvBuffLen := buffer_size;
+			cb.create.notifyProc := @MyNotify;
+			cb.create.userDataPtr := ptr(connection);
+			cb.create.localport := localport;
+			oe := PBControl(@cb, false);
+			localport := cb.create.localport;
+			connection^.stream := cb.udpStream;
+			connection^.outstanding := 0;
+		end;
+		UDPCreateX := oe;
+	end;
+
+	function UDPCreate (var connection: UDPConnectionPtr; buffer_size: longInt; localport: integer): OSErr;
+	begin
+		UDPCreate := UDPCreateX(connection, buffer_size, localport);
+	end;
+
+	function UDPCreateDynamic (var connection: UDPConnectionPtr; buffer_size: longInt; var localport: integer): OSErr;
+	begin
+		localport := 0;
+		UDPCreateDynamic := UDPCreateX(connection, buffer_size, localport);
+	end;
+
+	function UDPRead (connection: UDPConnectionPtr; timeout: integer; var remoteIP: longInt; var remoteport: integer;{}
+									var datap: ptr; var datalen: integer): OSErr;
+		var
+			oe: OSErr;
+			cb: UDPControlBlock;
+	begin
+		ZeroCB(cb, connection^.stream, UDPcsRead);
+		cb.receive.timeout := timeout;
+		oe := PBControl(@cb, false);
+		if oe = noErr then
+			connection^.outstanding := connection^.outstanding - 1;
+		remoteIP := cb.receive.remoteIP;
+		remoteport := cb.receive.remoteport;
+		datap := cb.receive.rcvBuff;
+		datalen := cb.receive.rcvBuffLen;
+		UDPRead := oe;
+	end;
+
+	function UDPReturnBuffer (connection: UDPConnectionPtr; datap: ptr): OSErr;
+		var
+			oe: OSErr;
+			cb: UDPControlBlock;
+	begin
+		ZeroCB(cb, connection^.stream, UDPcsBfrReturn);
+		cb.return.rcvBuff := datap;
+		oe := PBControl(@cb, false);
+		UDPReturnBuffer := oe;
+	end;
+
+	function UDPDatagramsAvailable (connection: UDPConnectionPtr): integer;
+	begin
+		UDPDatagramsAvailable := connection^.outstanding;
+	end;
+
+	function UDPWrite (connection: UDPConnectionPtr; remoteIP: longInt; remoteport: integer;{}
+									datap: ptr; datalen: integer; checksum: boolean): OSErr;
+		var
+			oe: OSErr;
+			cb: UDPControlBlock;
+			wds: wdsType;
+	begin
+		ZeroCB(cb, connection^.stream, UDPcsWrite);
+		cb.send.remoteIP := remoteIP;
+		cb.send.remotePort := remoteport;
+		wds.size := datalen;
+		wds.buffer := datap;
+		wds.term := 0;
+		cb.send.wds := @wds;
+		cb.send.checksum := ord(checksum);
+		oe := PBControl(@cb, false);
+		UDPWrite := oe;
+	end;
+
+	function UDPRelease (var connection: UDPConnectionPtr): OSErr;
+		var
+			oe: OSErr;
+			cb: UDPControlBlock;
+	begin
+		ZeroCB(cb, connection^.stream, UDPcsRelease);
+		oe := PBControl(@cb, false);
+		connection^.magic := UDPBad;
+		DisposPtr(ptr(connection));
+		UDPRelease := oe;
+	end;
+
+	function UDPMTU (remoteIP: longInt; var mtu: integer): OSErr;
+		var
+			oe: OSErr;
+			cb: UDPControlBlock;
+	begin
+		ZeroCB(cb, nil, UDPcsMaxMTUSize);
+		cb.mtu.remoteIP := remoteIP;
+		oe := PBControl(@cb, false);
+		mtu := cb.mtu.mtuSize;
+		UDPMTU := oe;
+	end;
+
+end.

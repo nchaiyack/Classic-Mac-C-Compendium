@@ -1,1 +1,133 @@
-	Sketchy documentation for beta test gnuucp	John Gilmore	25 September 1987This directory contains source for gnuucp, a free program thatimplements the Unix uucp file transfer protocol on Unix systems andon a variety of non-Unix systems.Gnuucp is not derived from any AT&T or Unix code.  It is a furtherdevelopment of the "uuslave" program, which was certified by AT&T to beunlicensed.  (See the file ATT.CERTIFICATION in this directory.)Gnuucp can be freely given to anyone, whether they have a Unix licenseor not.  Gnuucp is copyright by the Free Software Foundation and canonly be distributed under the rules of the "GNU Emacs General PublicLicense".  Basically, you can give it to anyone, for free or for money,but you have to provide source code, and the recipients must be able toredistribute it.Currently gnuucp consists of these source files:	gnuucp.c	main routine, high level protocol	gio.c		"g" packet protocol implementation	uumisc.c	miscellaneous subroutines	locking.c	subroutines for multitask interlocking	sysdep.c	this is a link to, or copy of, a file from below.The system dependent part of gnuucp comes in a different file for eachsupported system type.  You link or copy the right sysdep.foo fileto "sysdep.c" before compiling.  Pick one of these, or make your own:	sysdep.unix	BSD and Sys V Unix	sysdep.msdos	MSDOS	sysdep.st	Atari ST	sysdep.cpm	CP/M-80	sysdep.amiga	Commodore Amiga	sysdep.vms	DEC VMSSome of these ports have not been tested in a while, and will need work.There are also some header files:	uucp.h		General uucp information and configuration	sysdep.h	Definitions of the routines in sysdep.c	includes.h	System include files, #ifdef'd for each systemThere are two more files for MSDOS systems, comport.h and comport.asm, whichcontain an interrupt-driven routine for handling the serial port.Compiling gnuucp on a supported systemPick which system you are on, and copy or link sysdep.whatever tosysdep.c.Edit the Makefile to change the DEFS variable for the options youwant.  First, the system you're compiling for:	-DBSD	Berkeley Unix	-DSYSV	Unix System V	-DCPM	CP/M-80	-DMSDOS	Mess-Dos	-DST	Atari ST	-DVMS	-DAMIGAIt also has some other options:	-DSUBDIR (Unix only) Keep queue files in subdirectories like 4.2BSDFor msdos, you have to assemble comport.asm and link with it too.An MSDOS makefile will eventually be included.VMS users see README.VMS and VMS.COM.Running gnuucpGnuucp can be run in several modes.  One way is designed for small microsand such; gnuucp will sit and wait for someone to call on the modem,and will then prompt them with "login: " and "Password:" and check theanswers.  When another machine calls in and supplies the right loginand password, it will run the uucp protocol to talk to that machine.Then it hangs up the phone and goes back to listening for another call.You get this mode by giving gnuucp an argument, which is the devicename of the serial port that it should listen on.The other mode is for larger machines where there already existprograms to listen for callers on the phones.  When such a programdecides that the caller is a uucp machine, it can run gnuucp with noarguments, the same way Unix runs uucico.  Gnuucp will immediatelybegin the uucp protocol negotiations on its standard input.  When it isdone transferring files, it will hang up the phone and exit.  In thisrole, it acts much like the Unix "uucico" program which implementsuucp, and which is called when another machine logs in to your machinewith a login like "uucp" or "Uhoptoad".Gnuucp can also be run in "master" mode, where it will call out on anautodial modem.  If you run "gnuucp -S", it will call any system thatthere is work queued up for.  If you run "gnuucp -Ssystem" it willonly call one system.  Currently there are no utilities for queueingup transfers for other systems (on Unix, the "uucp" and "uux" programsdo this).  Anybody want to write free portable versions of them?Except when listening for logins, gnuucp will change directories toa standard place (/usr/spool/uucp on Unix systems) and will leave itsdebugging logs in "gnuucp.log" in that directory.A control file, (/usr/lib/uucp/gnuucp.ctl on Unix systems) is a textfile containing parameters like your system name, the name of thegnuucp spool directory, the default debugging level, a list ofwhich serial ports exist, what baud rates work on them, and what kindof dialers they have, etc.  You will need to edit it.Gnuucp takes an -xN option, where N is a number, to control the amountof debugging output produced.  Specifying -x5, for example, gives youall the output for levels 0 through 5.	-1	no output (default)	0	error messages and a copy of the LOGFILE output	1	login trace -- errors only	2	login trace -- full trace	3	file transfer commands -- errors only	4	file transfer commands -- full trace	5	packets -- errors only	6	packets -- full trace	7	file name munging trace	8	file directory scanning trace	9	every byte that goes over the serial portFor hints on debugging and porting gnuucp, see the file PORTING.Copyright 1987 John Gilmore; you can redistribute only if your recipients can.{sun,ptsfa,lll-crg,ihnp4,ucbvax}!hoptoad!gnu	     		 gnu@toad.com
+	Sketchy documentation for beta test gnuucp
+
+	John Gilmore
+	25 September 1987
+
+This directory contains source for gnuucp, a free program that
+implements the Unix uucp file transfer protocol on Unix systems and
+on a variety of non-Unix systems.
+
+Gnuucp is not derived from any AT&T or Unix code.  It is a further
+development of the "uuslave" program, which was certified by AT&T to be
+unlicensed.  (See the file ATT.CERTIFICATION in this directory.)
+Gnuucp can be freely given to anyone, whether they have a Unix license
+or not.  Gnuucp is copyright by the Free Software Foundation and can
+only be distributed under the rules of the "GNU Emacs General Public
+License".  Basically, you can give it to anyone, for free or for money,
+but you have to provide source code, and the recipients must be able to
+redistribute it.
+
+Currently gnuucp consists of these source files:
+
+	gnuucp.c	main routine, high level protocol
+	gio.c		"g" packet protocol implementation
+	uumisc.c	miscellaneous subroutines
+	locking.c	subroutines for multitask interlocking
+	sysdep.c	this is a link to, or copy of, a file from below.
+
+The system dependent part of gnuucp comes in a different file for each
+supported system type.  You link or copy the right sysdep.foo file
+to "sysdep.c" before compiling.  Pick one of these, or make your own:
+
+	sysdep.unix	BSD and Sys V Unix
+	sysdep.msdos	MSDOS
+	sysdep.st	Atari ST
+	sysdep.cpm	CP/M-80
+	sysdep.amiga	Commodore Amiga
+	sysdep.vms	DEC VMS
+
+Some of these ports have not been tested in a while, and will need work.
+
+There are also some header files:
+
+	uucp.h		General uucp information and configuration
+	sysdep.h	Definitions of the routines in sysdep.c
+	includes.h	System include files, #ifdef'd for each system
+
+There are two more files for MSDOS systems, comport.h and comport.asm, which
+contain an interrupt-driven routine for handling the serial port.
+
+
+Compiling gnuucp on a supported system
+
+Pick which system you are on, and copy or link sysdep.whatever to
+sysdep.c.
+
+Edit the Makefile to change the DEFS variable for the options you
+want.  First, the system you're compiling for:
+
+	-DBSD	Berkeley Unix
+	-DSYSV	Unix System V
+	-DCPM	CP/M-80
+	-DMSDOS	Mess-Dos
+	-DST	Atari ST
+	-DVMS
+	-DAMIGA
+
+It also has some other options:
+
+	-DSUBDIR (Unix only) Keep queue files in subdirectories like 4.2BSD
+
+For msdos, you have to assemble comport.asm and link with it too.
+An MSDOS makefile will eventually be included.
+VMS users see README.VMS and VMS.COM.
+
+
+Running gnuucp
+
+Gnuucp can be run in several modes.  One way is designed for small micros
+and such; gnuucp will sit and wait for someone to call on the modem,
+and will then prompt them with "login: " and "Password:" and check the
+answers.  When another machine calls in and supplies the right login
+and password, it will run the uucp protocol to talk to that machine.
+Then it hangs up the phone and goes back to listening for another call.
+You get this mode by giving gnuucp an argument, which is the device
+name of the serial port that it should listen on.
+
+The other mode is for larger machines where there already exist
+programs to listen for callers on the phones.  When such a program
+decides that the caller is a uucp machine, it can run gnuucp with no
+arguments, the same way Unix runs uucico.  Gnuucp will immediately
+begin the uucp protocol negotiations on its standard input.  When it is
+done transferring files, it will hang up the phone and exit.  In this
+role, it acts much like the Unix "uucico" program which implements
+uucp, and which is called when another machine logs in to your machine
+with a login like "uucp" or "Uhoptoad".
+
+Gnuucp can also be run in "master" mode, where it will call out on an
+autodial modem.  If you run "gnuucp -S", it will call any system that
+there is work queued up for.  If you run "gnuucp -Ssystem" it will
+only call one system.  Currently there are no utilities for queueing
+up transfers for other systems (on Unix, the "uucp" and "uux" programs
+do this).  Anybody want to write free portable versions of them?
+
+Except when listening for logins, gnuucp will change directories to
+a standard place (/usr/spool/uucp on Unix systems) and will leave its
+debugging logs in "gnuucp.log" in that directory.
+
+A control file, (/usr/lib/uucp/gnuucp.ctl on Unix systems) is a text
+file containing parameters like your system name, the name of the
+gnuucp spool directory, the default debugging level, a list of
+which serial ports exist, what baud rates work on them, and what kind
+of dialers they have, etc.  You will need to edit it.
+
+Gnuucp takes an -xN option, where N is a number, to control the amount
+of debugging output produced.  Specifying -x5, for example, gives you
+all the output for levels 0 through 5.
+
+	-1	no output (default)
+	0	error messages and a copy of the LOGFILE output
+	1	login trace -- errors only
+	2	login trace -- full trace
+	3	file transfer commands -- errors only
+	4	file transfer commands -- full trace
+	5	packets -- errors only
+	6	packets -- full trace
+	7	file name munging trace
+	8	file directory scanning trace
+	9	every byte that goes over the serial port
+
+For hints on debugging and porting gnuucp, see the file PORTING.
+
+Copyright 1987 John Gilmore; you can redistribute only if your recipients can.
+{sun,ptsfa,lll-crg,ihnp4,ucbvax}!hoptoad!gnu	     		 gnu@toad.com

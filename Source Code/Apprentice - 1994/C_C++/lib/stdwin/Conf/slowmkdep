@@ -1,1 +1,6 @@
-#! /bin/sh# This script should eventually update the Makefile to contain# dependencies.  For now, call Todd Brunhoff's makedepend.makedepend -Dunix $*
+#! /bin/sh
+
+# This script should eventually update the Makefile to contain
+# dependencies.  For now, call Todd Brunhoff's makedepend.
+
+makedepend -Dunix $*

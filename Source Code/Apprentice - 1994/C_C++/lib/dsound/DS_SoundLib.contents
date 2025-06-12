@@ -1,1 +1,14 @@
-/* FUNCTION PROTOTYPES */OSErr	DS_InitSound( void );void	DS_DisposeSound( void );void	DS_SetSoundFlag( short flag );void	DS_SetMusicFlag( short flag );			// start music?void	DS_LoadMusic( Str255 musicRsrcName );	// clobber existing?void	DS_MusicPlay( void );					// called internally, don't use!!void	DS_SoundPlay( Str255 soundRsrcName, short clobber );Boolean	DS_SoundBusy( void );void	DS_WaitForQuiet( void );void	DS_ClobberSound( void );void	DS_ClobberMusic( void );pascal void 	DS_SoundCallBack( SndChannel *Chan, SndCommand cmd );pascal void 	DS_MusicCallBack( SndChannel *Chan, SndCommand cmd );
+/* FUNCTION PROTOTYPES */
+OSErr	DS_InitSound( void );
+void	DS_DisposeSound( void );
+void	DS_SetSoundFlag( short flag );
+void	DS_SetMusicFlag( short flag );			// start music?
+void	DS_LoadMusic( Str255 musicRsrcName );	// clobber existing?
+void	DS_MusicPlay( void );					// called internally, don't use!!
+void	DS_SoundPlay( Str255 soundRsrcName, short clobber );
+Boolean	DS_SoundBusy( void );
+void	DS_WaitForQuiet( void );
+void	DS_ClobberSound( void );
+void	DS_ClobberMusic( void );
+pascal void 	DS_SoundCallBack( SndChannel *Chan, SndCommand cmd );
+pascal void 	DS_MusicCallBack( SndChannel *Chan, SndCommand cmd );

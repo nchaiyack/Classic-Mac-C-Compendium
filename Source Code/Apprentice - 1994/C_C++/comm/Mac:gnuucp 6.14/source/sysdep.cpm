@@ -1,1 +1,154 @@
-/* * @(#)sysdep.cpm 1.3 87/09/23	Copyright 1987 Free Software Foundation, Inc. * * Copying and use of this program are controlled by the terms of the * GNU Emacs General Public License. */#ifndef lintchar sysdep_version[] = "@(#)sysdep.cpm gnuucp Version hoptoad-1.3";#endif/* * Split out of uuslave.c by John Gilmore, 8 August 1987. */#include "includes.h"#include "uucp.h"#include "sysdep.h"/* CP/M-80 */#include <stdio.h>#include <ctype.h>#include <fcntl.h>#define	NAMESIZE	50		/* No directories... *//* Our variables */int	fdtty;				/* File descriptor for tty line */void sigint();				/* Forward declaration *//* * Open the serial line for an incoming call. * Argument of NULL or empty string means stdin. */voidopenline(ttynam)	char	*ttynam;{	int ontheline = !(ttynam && ttynam[0]);	/* FIXME, this is garbage */#ifdef COMPORT	if ((get_msr() & CD) == 0)	  ontheline = 0;	else		 ontheline = 1;	if (!ontheline){		sleep(2);       /* take two to wait for the modem to				reset in case this programme is 				 recycled. */	printf("uucico : master mode\n");	set_tty(COMM1, B1200, CS8, MENBL);	printf("uucico : initializing modem.\n");	xwrite(fdtty, hayesinit, sizeof(hayesinit)-1);	}#endif	/* FIXME, we should implement ontheline here */	sioinit();}/* * Basement level I/O routines * * xwrite() writes a character string to the serial port * xgetc() returns a character from the serial port, or an EOF for timeout. * sigint() restores the state of the serial port on exit. */#define	abort()	exit(1)extern xgetc(), xwrite(), sioinit();voidsigint(){	/* Restore terminal settings on dialout line */	exit(0);}/* CP/M and MSDOS and ST need these routines.  Probably should use * the new names, but for now... */bzero(s, cnt)register char	*s;register int	cnt;{	register int	i;	for (i = 0; i < cnt; i++) {		*s++ = '\0';	}}bcopy(from, to, cnt)register char	*from;register char	*to;register int	cnt;{	register int	i;	for (i = 0; i < cnt; i++) {		*to++ = *from++;	}}/* * Create a temporary file name for receiving a file into. * "name" is the name we will actually eventually want to use for the file. * We currently ignore it, but some OS's that can't move files around * easily might want to e.g. put the temp file into the same directory * that this file is going into. * * FIXME: * This interface should be able to return a "possible" filename, and * be re-called if the name is already in use, to get another. * This avoids checking here whether the name is good -- saving system calls. */char *temp_filename(name)	register char *name;{	static char tname[NAMESIZE];#ifdef DEBUG	printf("Using temp file %s\n", tname);#endif	return tname;}/* * Transform a filename from a uucp packet (in Unix format) into a local * filename that will work in the local file system. */char *munge_filename(name)	register char *name;{	register char *p;#ifdef DEBUG	printf("Munge_filename  input: %s\n", name);#endif	for (p = name + strlen(name); p != name && *(p-1) != '/'; p--) ;#ifdef DEBUG	printf("Munge_filename output: %s\n", p);#endif	return p;}
+/*
+ * @(#)sysdep.cpm 1.3 87/09/23	Copyright 1987 Free Software Foundation, Inc.
+ *
+ * Copying and use of this program are controlled by the terms of the
+ * GNU Emacs General Public License.
+ */
+
+#ifndef lint
+char sysdep_version[] = "@(#)sysdep.cpm gnuucp Version hoptoad-1.3";
+#endif
+
+/*
+ * Split out of uuslave.c by John Gilmore, 8 August 1987.
+ */
+
+#include "includes.h"
+#include "uucp.h"
+#include "sysdep.h"
+
+/* CP/M-80 */
+#include <stdio.h>
+#include <ctype.h>
+#include <fcntl.h>
+
+#define	NAMESIZE	50		/* No directories... */
+
+/* Our variables */
+
+int	fdtty;				/* File descriptor for tty line */
+
+void sigint();				/* Forward declaration */
+
+/*
+ * Open the serial line for an incoming call.
+ * Argument of NULL or empty string means stdin.
+ */
+void
+openline(ttynam)
+	char	*ttynam;
+{
+	int ontheline = !(ttynam && ttynam[0]);	/* FIXME, this is garbage */
+
+#ifdef COMPORT
+	if ((get_msr() & CD) == 0)
+	  ontheline = 0;
+	else
+		 ontheline = 1;
+
+	if (!ontheline){
+		sleep(2);       /* take two to wait for the modem to
+				reset in case this programme is 
+				 recycled. */
+
+	printf("uucico : master mode\n");
+	set_tty(COMM1, B1200, CS8, MENBL);
+	printf("uucico : initializing modem.\n");
+	xwrite(fdtty, hayesinit, sizeof(hayesinit)-1);
+	}
+#endif
+
+	/* FIXME, we should implement ontheline here */
+	sioinit();
+}
+
+/*
+ * Basement level I/O routines
+ *
+ * xwrite() writes a character string to the serial port
+ * xgetc() returns a character from the serial port, or an EOF for timeout.
+ * sigint() restores the state of the serial port on exit.
+ */
+
+#define	abort()	exit(1)
+extern xgetc(), xwrite(), sioinit();
+
+void
+sigint()
+{
+	/* Restore terminal settings on dialout line */
+	exit(0);
+}
+
+
+/* CP/M and MSDOS and ST need these routines.  Probably should use
+ * the new names, but for now...
+ */
+bzero(s, cnt)
+register char	*s;
+register int	cnt;
+{
+	register int	i;
+	for (i = 0; i < cnt; i++) {
+		*s++ = '\0';
+	}
+}
+
+bcopy(from, to, cnt)
+register char	*from;
+register char	*to;
+register int	cnt;
+{
+	register int	i;
+	for (i = 0; i < cnt; i++) {
+		*to++ = *from++;
+	}
+}
+
+
+/*
+ * Create a temporary file name for receiving a file into.
+ * "name" is the name we will actually eventually want to use for the file.
+ * We currently ignore it, but some OS's that can't move files around
+ * easily might want to e.g. put the temp file into the same directory
+ * that this file is going into.
+ *
+ * FIXME:
+ * This interface should be able to return a "possible" filename, and
+ * be re-called if the name is already in use, to get another.
+ * This avoids checking here whether the name is good -- saving system calls.
+ */
+char *
+temp_filename(name)
+	register char *name;
+{
+	static char tname[NAMESIZE];
+
+#ifdef DEBUG
+	printf("Using temp file %s\n", tname);
+#endif
+	return tname;
+}
+
+
+/*
+ * Transform a filename from a uucp packet (in Unix format) into a local
+ * filename that will work in the local file system.
+ */
+char *
+munge_filename(name)
+	register char *name;
+{
+	register char *p;
+
+#ifdef DEBUG
+	printf("Munge_filename  input: %s\n", name);
+#endif
+
+	for (p = name + strlen(name); p != name && *(p-1) != '/'; p--) ;
+
+#ifdef DEBUG
+	printf("Munge_filename output: %s\n", p);
+#endif
+	return p;
+}

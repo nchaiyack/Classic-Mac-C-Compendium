@@ -1,1 +1,109 @@
-Conf subdirectory-----------------This directory contains tools (scrips) and data (Makefile fragments)used to build various ports of stdwin and applications that use it onvarious UNIX-based platforms.An explanation of some of the terms used may be in order:A "port" of stdwin consists of code that implements the portable stdwininterface on top of a particular lower-level interface, e.g., there is aport for X11, called "x11", and a port for ASCII terminals using thetermcap library, called "alfa"; there are also ports to the Macintoshand the Atari ST, etc.  Ports can share code; in particular, somelibrary packages built on top of stdwin (like "textedit") are used withall ports, and some low-level routines (like "strdup") are used by allports.  Ports are structured as libraries that must be linked withapplications.A "platform" is a combination of operating system and machinearchitecture on which you might want to use stdwin.  The x11 and alfaports work on many platforms, and most of those platforms support bothports.  The current set-up identifies platforms with architectures;while several operating systems are used on multiple architectures(e.g., SunOS on sun3 and sun4 architectures), few architectures offer achoice of operating system.  (If this simplification becomes a realproblem, we'll simply change the maning of architecture identifiers intoplatform identifiers, so we might have platforms "ultvax" and "bsdvax"for a VAX under Ultrix and a VAX under BSD, respectively.)A "component" is either a port library, a package library, or anapplication program.  Components are the smallest units that haveMakefiles.  There is one set of sources for a particular component, usedon all platforms.  Package and application components are also used withdifferent ports, again using the same set of sources.Objects live in a different part of the stdwin tree than sources.  Thissubtree is rooted at the Build subdirectory of the tree.  We certainlyneed a subtree per port, since two or more ports can co-exist on mostplatforms; but we also need a subtree per platform, since, through thewonders of NFS, a single file system containing the stdwin tree may bemounted on totally different systems.  Hence, the Build subtree has twolevels of subdirectories before we are getting to business, one perarchitecture (really per platform), one per port.  The scripts have afew provisions to create build trees in nonstandard places if you needmore freedom.The subtree structure under Build is as follows:Build/<arch>/			subtree for a particular architecture				or platform (<arch> can be sun3, sun4,				vax etc.)Build/<arch>/<port>/		subtree for a particular port				(<port> can be alfa or x11)Build/<arch>/<port>/lib/	the main library component for the port				is built hereBuild/<arch>/<port>/lib/lib.a	library file to link with applicationsBuild/<arch>/<port>/<pack>/Build/<arch>/<port>/<appl>/	each application or package library				component is built in its own				subdirectoryThe Makefiles are all generated automatically by scripts that live inthe Conf subdirectory.  They are created from four sources:a)	The concatenation of Makefile fragments that contain definitions	specific to:		- the port		- the architecture (or platform)		- the operating system	These fragments live in the Conf subdirectory.  Fragments for	all supported ports, and platforms are provided, as well as	templates that can be used to create new fragments.  These serve	as documentation for the fragments as well.b)	A Makefile fragment specific to the component being built.	It defines which sources are needed and how they must be	combined.  The sources can come form any number of directories	besides the component's main source directory.  The object names	are derived from the source names.  There are two methods of	combining objects right now: libraries are created with "ar"	(and optionally "ranlib"), applications are created by linking	all objects together.  These Makefile fragments live in the main	source directory of the component (library or application) being	built.  The actual rules for building and creating the objects	are not contained in the fragments; rather, a bit of "bootstrap	magic" is used.c)	The bootstrap magic consists of a Make rule in the	component-specific fragment.  This rule calls a program	"putprogmf" or "putlibmf" (depending on the component type) with	the list of source files used; the output is concatenated with	the Makefile fragments listed previously to produce a Makefile	that can build the component on the given platform using the	given port library (in case of an application).d)	Full dependencies are added to the Makefile later.  Each	Makefile contains a rule "depend" which updates the Makefile	(in place!) with the current dependencies.  This should be run	once after the Makefile is built, and later when the dependency	structure of the sources is changed.  The dependencies are not	added when the Makefile is created initially, since the script	that computes dependencies *must* run on the platform where the	component is actually being built, while the Makefile can be	created (through NFS) from another platform.
+Conf subdirectory
+-----------------
+
+This directory contains tools (scrips) and data (Makefile fragments)
+used to build various ports of stdwin and applications that use it on
+various UNIX-based platforms.
+
+An explanation of some of the terms used may be in order:
+
+A "port" of stdwin consists of code that implements the portable stdwin
+interface on top of a particular lower-level interface, e.g., there is a
+port for X11, called "x11", and a port for ASCII terminals using the
+termcap library, called "alfa"; there are also ports to the Macintosh
+and the Atari ST, etc.  Ports can share code; in particular, some
+library packages built on top of stdwin (like "textedit") are used with
+all ports, and some low-level routines (like "strdup") are used by all
+ports.  Ports are structured as libraries that must be linked with
+applications.
+
+A "platform" is a combination of operating system and machine
+architecture on which you might want to use stdwin.  The x11 and alfa
+ports work on many platforms, and most of those platforms support both
+ports.  The current set-up identifies platforms with architectures;
+while several operating systems are used on multiple architectures
+(e.g., SunOS on sun3 and sun4 architectures), few architectures offer a
+choice of operating system.  (If this simplification becomes a real
+problem, we'll simply change the maning of architecture identifiers into
+platform identifiers, so we might have platforms "ultvax" and "bsdvax"
+for a VAX under Ultrix and a VAX under BSD, respectively.)
+
+A "component" is either a port library, a package library, or an
+application program.  Components are the smallest units that have
+Makefiles.  There is one set of sources for a particular component, used
+on all platforms.  Package and application components are also used with
+different ports, again using the same set of sources.
+
+Objects live in a different part of the stdwin tree than sources.  This
+subtree is rooted at the Build subdirectory of the tree.  We certainly
+need a subtree per port, since two or more ports can co-exist on most
+platforms; but we also need a subtree per platform, since, through the
+wonders of NFS, a single file system containing the stdwin tree may be
+mounted on totally different systems.  Hence, the Build subtree has two
+levels of subdirectories before we are getting to business, one per
+architecture (really per platform), one per port.  The scripts have a
+few provisions to create build trees in nonstandard places if you need
+more freedom.
+
+The subtree structure under Build is as follows:
+
+Build/<arch>/			subtree for a particular architecture
+				or platform (<arch> can be sun3, sun4,
+				vax etc.)
+
+Build/<arch>/<port>/		subtree for a particular port
+				(<port> can be alfa or x11)
+
+Build/<arch>/<port>/lib/	the main library component for the port
+				is built here
+
+Build/<arch>/<port>/lib/lib.a	library file to link with applications
+
+Build/<arch>/<port>/<pack>/
+Build/<arch>/<port>/<appl>/	each application or package library
+				component is built in its own
+				subdirectory
+
+The Makefiles are all generated automatically by scripts that live in
+the Conf subdirectory.  They are created from four sources:
+
+a)	The concatenation of Makefile fragments that contain definitions
+	specific to:
+		- the port
+		- the architecture (or platform)
+		- the operating system
+	These fragments live in the Conf subdirectory.  Fragments for
+	all supported ports, and platforms are provided, as well as
+	templates that can be used to create new fragments.  These serve
+	as documentation for the fragments as well.
+
+b)	A Makefile fragment specific to the component being built.
+	It defines which sources are needed and how they must be
+	combined.  The sources can come form any number of directories
+	besides the component's main source directory.  The object names
+	are derived from the source names.  There are two methods of
+	combining objects right now: libraries are created with "ar"
+	(and optionally "ranlib"), applications are created by linking
+	all objects together.  These Makefile fragments live in the main
+	source directory of the component (library or application) being
+	built.  The actual rules for building and creating the objects
+	are not contained in the fragments; rather, a bit of "bootstrap
+	magic" is used.
+
+c)	The bootstrap magic consists of a Make rule in the
+	component-specific fragment.  This rule calls a program
+	"putprogmf" or "putlibmf" (depending on the component type) with
+	the list of source files used; the output is concatenated with
+	the Makefile fragments listed previously to produce a Makefile
+	that can build the component on the given platform using the
+	given port library (in case of an application).
+
+d)	Full dependencies are added to the Makefile later.  Each
+	Makefile contains a rule "depend" which updates the Makefile
+	(in place!) with the current dependencies.  This should be run
+	once after the Makefile is built, and later when the dependency
+	structure of the sources is changed.  The dependencies are not
+	added when the Makefile is created initially, since the script
+	that computes dependencies *must* run on the platform where the
+	component is actually being built, while the Makefile can be
+	created (through NFS) from another platform.

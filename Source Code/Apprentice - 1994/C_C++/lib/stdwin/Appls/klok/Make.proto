@@ -1,1 +1,18 @@
-## Makefile prototype for klok application#KLOK=		$(APPLS)/klokSRCS=		\		$(KLOK)/klok.c \		$(KLOK)/bsdsetdate.cSRCLIBS=	$(LIBMATH)all:		klok_bootstrap:	@putprogmf klok $(SRCS)
+
+#
+# Makefile prototype for klok application
+#
+
+KLOK=		$(APPLS)/klok
+
+SRCS=		\
+		$(KLOK)/klok.c \
+		$(KLOK)/bsdsetdate.c
+
+SRCLIBS=	$(LIBMATH)
+
+all:		klok
+
+_bootstrap:
+	@putprogmf klok $(SRCS)
+

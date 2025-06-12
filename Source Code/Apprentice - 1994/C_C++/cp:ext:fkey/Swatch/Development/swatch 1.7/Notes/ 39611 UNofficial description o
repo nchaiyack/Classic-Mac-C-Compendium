@@ -1,1 +1,125 @@
-Path: adobe!decwrl!olivea!uunet!usc!elroy.jpl.nasa.gov!ames!agate!ucbvax!isoftfr.isoft.fr!huguesFrom: hugues@isoftfr.isoft.fr (Hugues Marty)Newsgroups: comp.sys.mac.programmerSubject: UNofficial description of 2 Layer Manager callsMessage-ID: <9208280811.AA00780@isoftfr.isoft.fr>Date: 28 Aug 92 08:11:24 GMTSender: daemon@ucbvax.BERKELEY.EDULines: 115This post contains a header and an example of how to use some calls ofthe UNDOCUMENTED (as long as I know) Layer Manager which comes alongwith System 7.  Of course, this is NOT an official document, and ishere for information only. I don't have News access at the moment (I'msending this via e-mail), so please send mail me copies if you postfollow-ups.PS: it only describes 2 calls of the LayerDispatch trap (0xA829).PPS: seems to work under 7.1 beta.---- C #include file following/* Layers.h *//* Part of the undocumented Layer Manager structures and calls * Information found with the help of MacsBug under MacOS 7.0. * Please note that using this information may make your mac * explode (hey, this could be a subject for a QuickTime moovie !); * so use at your own risks, this may break in the future, * etc.. (usual disclaimeer). * I only wish that Apple will document this manager in a very near * future (let's dream...). * * What I found was that a layer is associated with each running * applications (if it has a user-interface), which groups all * windows of that application. This is how you can hide an application * (remember 'applications' menu under system 7) and get the list of * other applications windows. Have fun. * * PS : If you have more information on the Layer Manager, please * let me know! You can join me at hugues@isoft.fr */#include <PasStrs.h>// LayerRecord is similar to a WindowRecord.typedef WindowRecord LayerRecord;typedef WindowPeek LayerPtr;// This records some information on the process which owns// the layer... Most of it is not clear (there are pointers// to other LayerRecords, to a heap zone, etc. in the unknown// parts)typedef struct {   long	unknown1;   OSType    signature;           // The process sig.   OSType    creator;             // The process creator   char      unknown2[24];   ProcessSerialNumber layerPSN;  // The process PSN   char      unknown3[40];   Handle    moreLayerInfo;       // This handle is 212 bytes sized.} LayerInfo, *LayerInfoPtr;// This function returns a pointer to the first layer record// of the front layer on screen (front application).// Other ones are then accessed by the GetNextLayer macro.pascal LayerPtr GetFirstLayer(void)    = {0x7003, 0xA829};// This function returns a pointer to the first window record// in the windows list of this layer.pascal WindowPtr GetFirstLayerWindow(LayerPtr aLayer)    = {0x7006, 0xa829};// Some macros to access other information, and to hide and show a layer#define GetNextLayer(aLayer) (aLayer->nextWindow)#define GetLayerInfo(aLayer) ((LayerInfoPtr)aLayer->refCon)#define HideLayer(aLayer) HideWindow((WindowPtr)aLayer)#define ShowLayer(aLayer) ShowWindow((WindowPtr)aLayer)#define ShowHideLayer(aLayer,showFlag) ShowHide((WindowPtr)aLayer, showFlag)#define HiddenLayer(aLayer) aLayer->visible// GetLayerName will return an address in a handle. Be aware of that.#define GetLayerName(aLayer) \(unsigned char *) ( (*GetLayerInfo(aLayer)->moreLayerInfo) + 0x38)/** Some sample code to show how to put the list of layers and their ** windows names in a styled text with TextEdit. **   TEHandle hTE;  LayerPtr theLayer;  Str255 name;  TextStyle style;  WindowPeek window;  LayerInfoPtr info;	  hTE = TEStylNew(&windowRect, &windowRect);  theLayer = GetFirstLayer();  do {    style.tsFace = bold;    TESetStyle(doFace, &style, false, hTE);    Pstrcpy(name, GetLayerName(theLayer));    TEInsert(name+1, name[0], hTE);    TEInsert("\015", 1, hTE);    style.tsFace = 0;    TESetStyle(doFace, &style, false, hTE);    window = (WindowPeek) GetFirstLayerWindow(theLayer);    while(window) {      if (StripAddress(window->titleHandle) && StripAddress(*window->titleHandle)) {        Pstrcpy(name, *window->titleHandle);	TEInsert(name+1, name[0], hTE);	TEInsert("\015", 1, hTE);      }      window = window->nextWindow;    }  } while (theLayer = GetNextLayer(theLayer));**  The End */--Hugues MARTY - ISoft, Chemin de Moulon, F-91190 Gif-sur-Yvette FRANCEe-mail: hugues@isoft.fr
+Path: adobe!decwrl!olivea!uunet!usc!elroy.jpl.nasa.gov!ames!agate!ucbvax!isoftfr.isoft.fr!hugues
+From: hugues@isoftfr.isoft.fr (Hugues Marty)
+Newsgroups: comp.sys.mac.programmer
+Subject: UNofficial description of 2 Layer Manager calls
+Message-ID: <9208280811.AA00780@isoftfr.isoft.fr>
+Date: 28 Aug 92 08:11:24 GMT
+Sender: daemon@ucbvax.BERKELEY.EDU
+Lines: 115
+
+
+
+This post contains a header and an example of how to use some calls of
+the UNDOCUMENTED (as long as I know) Layer Manager which comes along
+with System 7.  Of course, this is NOT an official document, and is
+here for information only. I don't have News access at the moment (I'm
+sending this via e-mail), so please send mail me copies if you post
+follow-ups.
+
+PS: it only describes 2 calls of the LayerDispatch trap (0xA829).
+PPS: seems to work under 7.1 beta.
+
+---- C #include file following
+
+/* Layers.h */
+
+/* Part of the undocumented Layer Manager structures and calls
+ * Information found with the help of MacsBug under MacOS 7.0.
+ * Please note that using this information may make your mac
+ * explode (hey, this could be a subject for a QuickTime moovie !);
+ * so use at your own risks, this may break in the future,
+ * etc.. (usual disclaimeer).
+ * I only wish that Apple will document this manager in a very near
+ * future (let's dream...).
+ *
+ * What I found was that a layer is associated with each running
+ * applications (if it has a user-interface), which groups all
+ * windows of that application. This is how you can hide an application
+ * (remember 'applications' menu under system 7) and get the list of
+ * other applications windows. Have fun.
+ *
+ * PS : If you have more information on the Layer Manager, please
+ * let me know! You can join me at hugues@isoft.fr
+ */
+
+#include <PasStrs.h>
+
+// LayerRecord is similar to a WindowRecord.
+typedef WindowRecord LayerRecord;
+typedef WindowPeek LayerPtr;
+
+// This records some information on the process which owns
+// the layer... Most of it is not clear (there are pointers
+// to other LayerRecords, to a heap zone, etc. in the unknown
+// parts)
+typedef struct {
+   long	unknown1;
+   OSType    signature;           // The process sig.
+   OSType    creator;             // The process creator
+   char      unknown2[24];
+   ProcessSerialNumber layerPSN;  // The process PSN
+   char      unknown3[40];
+   Handle    moreLayerInfo;       // This handle is 212 bytes sized.
+} LayerInfo, *LayerInfoPtr;
+
+// This function returns a pointer to the first layer record
+// of the front layer on screen (front application).
+// Other ones are then accessed by the GetNextLayer macro.
+pascal LayerPtr GetFirstLayer(void)
+    = {0x7003, 0xA829};
+
+// This function returns a pointer to the first window record
+// in the windows list of this layer.
+pascal WindowPtr GetFirstLayerWindow(LayerPtr aLayer)
+    = {0x7006, 0xa829};
+
+// Some macros to access other information, and to hide and show a layer
+#define GetNextLayer(aLayer) (aLayer->nextWindow)
+#define GetLayerInfo(aLayer) ((LayerInfoPtr)aLayer->refCon)
+#define HideLayer(aLayer) HideWindow((WindowPtr)aLayer)
+#define ShowLayer(aLayer) ShowWindow((WindowPtr)aLayer)
+#define ShowHideLayer(aLayer,showFlag) ShowHide((WindowPtr)aLayer, showFlag)
+#define HiddenLayer(aLayer) aLayer->visible
+
+// GetLayerName will return an address in a handle. Be aware of that.
+#define GetLayerName(aLayer) \
+(unsigned char *) ( (*GetLayerInfo(aLayer)->moreLayerInfo) + 0x38)
+
+
+/** Some sample code to show how to put the list of layers and their
+ ** windows names in a styled text with TextEdit.
+ **
+ 
+  TEHandle hTE;
+  LayerPtr theLayer;
+  Str255 name;
+  TextStyle style;
+  WindowPeek window;
+  LayerInfoPtr info;
+	
+  hTE = TEStylNew(&windowRect, &windowRect);
+  theLayer = GetFirstLayer();
+  do {
+    style.tsFace = bold;
+    TESetStyle(doFace, &style, false, hTE);
+    Pstrcpy(name, GetLayerName(theLayer));
+    TEInsert(name+1, name[0], hTE);
+    TEInsert("\015", 1, hTE);
+    style.tsFace = 0;
+    TESetStyle(doFace, &style, false, hTE);
+    window = (WindowPeek) GetFirstLayerWindow(theLayer);
+    while(window) {
+      if (StripAddress(window->titleHandle) && StripAddress(*window->titleHandle)) {
+        Pstrcpy(name, *window->titleHandle);
+	TEInsert(name+1, name[0], hTE);
+	TEInsert("\015", 1, hTE);
+      }
+      window = window->nextWindow;
+    }
+  } while (theLayer = GetNextLayer(theLayer));
+
+**  The End */
+--
+Hugues MARTY - ISoft, Chemin de Moulon, F-91190 Gif-sur-Yvette FRANCE
+e-mail: hugues@isoft.fr
+

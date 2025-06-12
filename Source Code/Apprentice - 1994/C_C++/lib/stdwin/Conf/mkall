@@ -1,1 +1,10 @@
-echo + mkmf $*mkmf $*for dir in `ls ../Appls`do	if test -f ../Appls/$dir/Make.proto	then		echo + mkmf $* $dir		mkmf $* $dir	fidone
+echo + mkmf $*
+mkmf $*
+for dir in `ls ../Appls`
+do
+	if test -f ../Appls/$dir/Make.proto
+	then
+		echo + mkmf $* $dir
+		mkmf $* $dir
+	fi
+done

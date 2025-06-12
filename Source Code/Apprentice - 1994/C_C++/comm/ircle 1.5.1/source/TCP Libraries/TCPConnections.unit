@@ -1,1 +1,655 @@
-unit TCPConnections;{ From Peter's PNL Libraries }{ Copyright 1992 Peter N Lewis }{ This source may be used for any non-commercial purposes as long as I get a mention }{ in the About box and Docs of any derivative program.  It may not be used in any commercial }{ application without my permission }interfaceuses	TCPTypes, TCPStuff;const  { Tuning parameters }	max_connections = 20;	tooManyConnections = -23099;	TO_FindAddress = 40 * 60;	TO_FindName = 40 * 60;	TO_ActiveOpen = 20 * 60;	TO_Closing = 20 * 60;	TO_PassiveOpen = longInt(10) * 365 * 24 * 3600 * 60;  { Ten years should be safe enough right? :-) }const	any_connection = 0;	{ Pass to GetConnectionEvent }	no_connection = -1;	{ Guaranteed invalid connection }type	connectionIndex = longInt;	connectionEvent = (C_NoEvent, C_Found, C_SearchFailed, C_NameFound, C_NameSearchFailed,{}		C_Established, C_FailedToOpen, C_Closing, C_Closed, C_CharsAvailable, C_HeartBeat);	connectionEventRecord = record			event: connectionEvent;			connection: connectionIndex;			tcpc: TCPConnectionPtr;			dataptr: ptr;			value: longInt;			timedout: boolean;		end;function InitConnections: OSErr;procedure CloseConnections;procedure TerminateConnections;function CanQuit: boolean;{ After Terminate, keep calling GetConnectionEvent(any_connection,cer) until CanQuit is true, then Finish }procedure FinishConnections;procedure FinishEverything;  { Or just call FinishEverything }function FindAddress (var cp: connectionIndex; hostName: str255; dataptr: univ ptr): OSErr;function FindName (var cp: connectionIndex; hostIP: longInt; dataptr: univ ptr): OSErr;procedure FindString (hostIP: longInt; var s: str255);function NewPassiveConnection (var cp: connectionIndex; buffersize: longInt; localport: integer; remotehost: longInt; remoteport: integer; dataptr: univ ptr): OSErr;function NewActiveConnection (var cp: connectionIndex; buffersize: longInt; remotehost: longInt; remoteport: integer; dataptr: univ ptr): OSErr;procedure CloseConnection (cp: connectionIndex);procedure AbortConnection (cp: connectionIndex); { Violently close connection }function GetConnectionEvent (cp: connectionIndex; var cer: connectionEventRecord): boolean;{ Pass any_connection for any event, otherwise cp specifies the event }procedure SetDataPtr (cp: connectionIndex; dataptr: univ ptr);procedure GetDataPtr (cp: connectionIndex; var dataptr: univ ptr);procedure SetConnectionTimeout (cp: connectionIndex; timeout: longInt);procedure GetConnectionTimeout (cp: connectionIndex; var timeout: longInt);procedure GetConnectionTCPC (cp: connectionIndex; var tcpc: TCPConnectionPtr);procedure SetHeartBeat (cp: connectionIndex; n: longInt); { Send C_HeartBeat every n ticks, 0 disables heartbeat }implementationconst	TCPCMagic = 'TCPC';	TCPCBadMagic = 'badc';type	myHostInfo = record			hi: hostInfo;			done: signedByte;		end;	myHostInfoPtr = ^myHostInfo;	statusType = (CS_None, CS_Searching, CS_NameSearching, CS_Opening, CS_Established, CS_Closing);	connectionRecord = record			magic: OSType;			conmagic: longInt;			tcpc: TCPConnectionPtr;			laststate: TCPStateType; { DEBUG }			status: statusType;			cacheFaultReturnP: myHostInfoPtr;			closedone: boolean;			timeout: longInt;			dataptr: ptr;			heartbeat: longInt; { Time for next heartbeat }			period: longInt; { Ticks per heartbeat }			tcpstates: packed array[TCPStateType] of boolean; { DEBUG }			constates: packed array[connectionEvent] of boolean; { DEBUG }		end;var	connections: array[1..max_connections] of connectionRecord;	connectionItem: connectionIndex;	dnrptr: ptr;	connectionmagic: longInt;function ValidConnectionSafe (var cp: connectionIndex): boolean;	var		ocp: longInt;		vc: boolean;	begin		vc := false;		ocp := cp;		cp := cp mod (max_connections + 1);		if cp > 0 then			if connections[cp].magic = TCPCMagic then				if connections[cp].conmagic = ocp then					vc := true;		ValidConnectionSafe := vc;	end;function ValidConnection (var cp: connectionIndex): boolean;	var		vc: boolean;	begin		vc := ValidConnectionSafe(cp);		if not vc then			DebugStr('Invalid Connection');		ValidConnection := vc;	end;procedure SetDataPtr (cp: connectionIndex; dataptr: univ ptr);	begin		if ValidConnection(cp) then			connections[cp].dataptr := dataptr;	end;procedure GetDataPtr (cp: connectionIndex; var dataptr: univ ptr);	begin		if ValidConnectionSafe(cp) then			dataptr := connections[cp].dataptr		else			dataptr := nil;	end;procedure SetConnectionTimeout (cp: connectionIndex; timeout: longInt);	begin		if ValidConnection(cp) then			connections[cp].timeout := timeout;	end;procedure GetConnectionTimeout (cp: connectionIndex; var timeout: longInt);	begin		if ValidConnection(cp) then			timeout := connections[cp].timeout		else			timeout := -1;	end;procedure SetHeartBeat (cp: connectionIndex; n: longInt); { Send C_HeartBeat every n ticks }	begin		if ValidConnection(cp) then begin			if (n < 1) or (n = maxLongInt) then begin				connections[cp].period := maxLongInt;				connections[cp].heartbeat := maxLongInt;			end			else begin				connections[cp].period := n;				connections[cp].heartbeat := TickCount + n;			end;		end;	end;procedure GetConnectionTCPC (cp: connectionIndex; var tcpc: TCPConnectionPtr);	begin		if ValidConnectionSafe(cp) then			tcpc := connections[cp].tcpc		else			tcpc := nil;	end;function MyTCPState (con: TCPConnectionPtr): TCPStateType;	begin		if con = nil then			MyTCPState := T_Closed		else			MyTCPState := TCPState(con);	end;{$S Init}function InitConnections: OSErr;	var		oe, ooe: OSErr;		i: connectionIndex;	begin		for i := 1 to max_connections do			connections[i].magic := TCPCBadMagic;		connectionmagic := 0;		connectionItem := 1;		oe := TCPInit;		if oe = noErr then begin			oe := TCPOpenResolver(dnrptr);			if oe <> noErr then				TCPFinish;		end;		InitConnections := oe;	end;{$S Term}procedure TerminateConnections;	var		i: connectionIndex;		oe: OSErr;	begin		for i := 1 to max_connections do			with connections[i] do				if magic = TCPCMagic then					if (status = CS_Established) or (status = CS_Opening) or (status = CS_Closing) then						if TCPState(tcpc) <> T_Closed then							oe := TCPAbort(tcpc);	end;{$S Term}procedure CloseConnections;	var		i: connectionIndex;		oe: OSErr;	begin		for i := 1 to max_connections do			with connections[i] do				if magic = TCPCMagic then					if (status = CS_Established) or (status = CS_Opening) or (status = CS_Closing) then						if TCPState(tcpc) <> T_Closed then							oe := TCPClose(tcpc, nil);	end;{$S Term}function CanQuit: boolean;	var		i: connectionIndex;	begin		CanQuit := true;		for i := 1 to max_connections do			if connections[i].magic = TCPCMagic then				CanQuit := false;	end;{$S Term}procedure FinishConnections;	begin		TCPCloseResolver(dnrptr);		TCPFinish;	end;{$S Term}procedure FinishEverything;	var		cer: connectionEventRecord;		dummy: boolean;		er: eventrecord;		oe: OSErr;	begin		TerminateConnections;		while not CanQuit do begin			if GetConnectionEvent(any_connection, cer) then begin				dummy := WaitNextEvent(everyEvent, er, 0, nil);			end			else				dummy := WaitNextEvent(everyEvent, er, 5, nil);		end;		FinishConnections;	end;{$S}function CreateConnection (var cp: connectionIndex; dp: ptr): OSErr;	var		ts: TCPStateType;		ce: connectionEvent;	begin		connectionmagic := connectionmagic + max_connections + 1;		cp := 1;		while (connections[cp].magic = TCPCMagic) and (cp < max_connections) do			cp := cp + 1;		with connections[cp] do begin			if magic = TCPCMagic then				CreateConnection := tooManyConnections			else begin				magic := TCPCMagic;				conmagic := cp + connectionmagic;				closedone := false;				tcpc := nil;				status := CS_None;				cacheFaultReturnP := nil;				timeout := maxlongInt;				dataptr := dp;				period := maxLongInt;				heartbeat := maxLongInt;				CreateConnection := noErr;				cp := cp + connectionmagic;				for ce := C_NoEvent to C_HeartBeat do					constates[ce] := false;				for ts := T_WaitingForOpen to T_Unknown do					tcpstates[ts] := false;			end;		end;	end;procedure DestroyConnection (var cp: connectionIndex);	begin		if ValidConnection(cp) then			connections[cp].magic := TCPCBadMagic;		cp := -1;	end;function FindAddress (var cp: connectionIndex; hostName: str255; dataptr: univ ptr): OSErr;	var		oe: OSErr;		cpi: connectionIndex;	begin		oe := CreateConnection(cp, dataptr);		if oe = noErr then begin			cpi := cp;			if ValidConnection(cpi) then begin				with connections[cpi] do begin					cacheFaultReturnP := myHostInfoPtr(NewPtr(SizeOf(myHostInfo)));					if cacheFaultReturnP = nil then						oe := memFullErr					else begin						cacheFaultReturnP^.done := 0;						oe := TCPStrToAddr(dnrptr, hostName, cacheFaultReturnP^.hi, cacheFaultReturnP^.done);						if oe = cacheFault then begin							timeout := TickCount + TO_FindAddress;							oe := noErr;						end						else begin							cacheFaultReturnP^.done := -1;							cacheFaultReturnP^.hi.rtnCode := oe;						end;						status := CS_Searching;					end;					if oe <> noErr then begin						if cacheFaultReturnP <> nil then							DisposPtr(ptr(cacheFaultReturnP));						DestroyConnection(cp);					end;				end;			end;		end;		FindAddress := oe;	end;procedure FindString (hostIP: longInt; var s: str255);	begin		TCPAddrToStr(dnrptr, hostIP, s);	end;function FindName (var cp: connectionIndex; hostIP: longInt; dataptr: univ ptr): OSErr;	var		oe: OSErr;		cpi: connectionIndex;	begin		oe := CreateConnection(cp, dataptr);		if oe = noErr then begin			cpi := cp;			if ValidConnection(cpi) then begin				with connections[cpi] do begin					cacheFaultReturnP := myHostInfoPtr(NewPtr(SizeOf(myHostInfo)));					if cacheFaultReturnP = nil then						oe := memFullErr					else begin						cacheFaultReturnP^.done := 0;						oe := TCPAddrToName(dnrptr, hostIP, cacheFaultReturnP^.hi, cacheFaultReturnP^.done);						if oe = cacheFault then begin							timeout := TickCount + TO_FindName;							oe := noErr;						end						else begin							cacheFaultReturnP^.done := -1;							cacheFaultReturnP^.hi.rtnCode := oe;						end;						status := CS_NameSearching;					end;					if oe <> noErr then begin						if cacheFaultReturnP <> nil then							DisposPtr(ptr(cacheFaultReturnP));						DestroyConnection(cp);					end;				end;			end;		end;		FindName := oe;	end;function NewPassiveConnection (var cp: connectionIndex; buffersize: longInt; localport: integer; remotehost: longInt; remoteport: integer; dataptr: univ ptr): OSErr;	var		oe: OSErr;		cpi: connectionIndex;	begin		oe := CreateConnection(cp, dataptr);		if oe = noErr then begin			cpi := cp;			if ValidConnection(cpi) then				with connections[cpi] do begin					oe := TCPPassiveOpen(tcpc, buffersize, localPort, remotehost, remoteport, nil);					timeout := TickCount + TO_PassiveOpen;					status := CS_Opening;					if oe <> noErr then						DestroyConnection(cp);				end;		end;		NewPassiveConnection := oe;	end;function NewActiveConnection (var cp: connectionIndex; buffersize: longInt; remotehost: longInt; remoteport: integer; dataptr: univ ptr): OSErr;	var		oe: OSErr;		cpi: connectionIndex;	begin		oe := CreateConnection(cp, dataptr);		if oe = noErr then begin			cpi := cp;			if ValidConnection(cpi) then				with connections[cpi] do begin					oe := TCPActiveOpen(tcpc, buffersize, 0, remotehost, remoteport, nil);					timeout := TickCount + TO_ActiveOpen;					status := CS_Opening;					if oe <> noErr then						DestroyConnection(cp);				end;		end;		NewActiveConnection := oe;	end;procedure CloseConnection (cp: connectionIndex);	var		oe: OSErr;	begin		if ValidConnection(cp) then			with connections[cp] do begin				if not closedone then begin					if MyTCPState(tcpc) <> T_Closed then begin						oe := TCPClose(tcpc, nil);					end;					closedone := true;				end;				status := CS_Closing;				timeout := TickCount + TO_Closing;			end;	end;procedure AbortConnection (cp: connectionIndex);	var		oe: OSErr;	begin		if ValidConnection(cp) then			with connections[cp] do begin				if MyTCPState(tcpc) <> T_Closed then					oe := TCPAbort(tcpc);				status := CS_Closing;				timeout := TickCount + TO_Closing;			end;	end;function GetConnectionEvent (cp: connectionIndex; var cer: connectionEventRecord): boolean;	procedure HandleConnection (cp: connectionIndex);		var			oe: OSErr;			dummysp: stringPtr;			l: integer;			rcp: connectionIndex;		begin			with connections[cp] do begin				rcp := conmagic;				cer.connection := rcp;				cer.tcpc := tcpc;				cer.dataptr := dataptr;				cer.timedout := false;				case status of					CS_NameSearching: 						with cacheFaultReturnP^, hi do begin							if done <> 0 then begin								if rtnCode = noErr then begin									cer.event := C_NameFound;									SanitizeHostName(rtnHostName);									stringHandle(cer.value) := NewString(rtnHostName);								end								else begin									cer.event := C_NameSearchFailed;									cer.value := rtnCode;								end							end							else if TickCount > timeout then begin								cer.event := C_NameSearchFailed;								cer.value := 1;								cer.timedout := true;							end;							if cer.event <> C_NoEvent then begin  { Destroy the connection now }								if done <> 0 then  { If we timed out, then we'll just have to abandon this block.  Oh well }									DisposPtr(ptr(cacheFaultReturnP));								cacheFaultReturnP := nil;								DestroyConnection(rcp);							end; {if}						end; {with}					CS_Searching: 						with cacheFaultReturnP^, hi do begin							if rtnCode = noErr then begin								cer.event := C_Found;								cer.value := addrs[1];							end							else if done <> 0 then begin								cer.event := C_SearchFailed;								cer.value := rtnCode;							end							else if TickCount > timeout then begin								cer.event := C_SearchFailed;								cer.value := 1;								cer.timedout := true;							end;							if cer.event <> C_NoEvent then begin  { Destroy the connection now }								if done <> 0 then  { If we timed out, then we'll just have to abandon this block.  Oh well }									DisposPtr(ptr(cacheFaultReturnP));								cacheFaultReturnP := nil;								DestroyConnection(rcp);							end; {if}						end; {with}					CS_Opening: 						begin						laststate := MyTCPState(tcpc);						tcpstates[laststate] := true;						case laststate of							T_WaitingForOpen, T_Opening, T_Listening: 								if TickCount > timeout then begin									CloseConnection(rcp);									cer.event := C_FailedToOpen;									cer.timedout := true;								end;							T_Established: 								begin								cer.event := C_Established;								status := CS_Established;								timeout := maxLongInt;							end;							T_PleaseClose, T_Closing: 								begin								CloseConnection(rcp);								cer.value := 1;								cer.event := C_FailedToOpen;								timeout := TickCount + TO_Closing;							end;							T_Closed: 								begin								status := CS_Closing;								cer.value := 2;								cer.event := C_FailedToOpen;								timeout := TickCount + TO_Closing;							end;							otherwise								;						end; {case }					end;					CS_Established: 						begin						laststate := MyTCPState(tcpc);						tcpstates[laststate] := true;						case laststate of							T_Established: 								begin								cer.value := TCPCharsAvailable(tcpc);								if cer.value > 0 then									cer.event := C_CharsAvailable;							end;							T_PleaseClose, T_Closing: 								begin								cer.value := TCPCharsAvailable(tcpc);								if cer.value > 0 then									cer.event := C_CharsAvailable								else begin{    CloseConnection(rcp);}									status := CS_Closing;									cer.event := C_Closing;									timeout := TickCount + TO_Closing;								end;							end;							T_Closed: 								begin								status := CS_Closing;								cer.event := C_Closing;								timeout := TickCount + TO_Closing;							end;							otherwise								;						end;					end;					CS_Closing: 						begin						laststate := MyTCPState(tcpc);						tcpstates[laststate] := true;						case laststate of							T_WaitingForOpen, T_Opening, T_Listening: 								DebugStr('Strange State 2');							T_PleaseClose, T_Closing, T_Established: 								begin								cer.value := TCPCharsAvailable(tcpc);								if cer.value > 0 then									cer.event := C_CharsAvailable								else if TickCount > timeout then begin									cer.event := C_Closed;									if tcpc <> nil then begin										oe := TCPAbort(tcpc);										oe := TCPRelease(tcpc);									end;									cer.timedout := true;									DestroyConnection(rcp);								end;							end;							T_Closed: 								begin								cer.event := C_Closed;								if tcpc <> nil then									oe := TCPRelease(tcpc);								DestroyConnection(rcp);							end;							otherwise								;						end;					end;					otherwise						;				end;				if (cer.event = C_NoEvent) & (TickCount > heartbeat) then begin					cer.event := C_HeartBeat;					heartbeat := TickCount + period;				end;				if cer.event <> C_NoEvent then					constates[cer.event] := true;			end;{with}		end;{HandleConnection}		var			oci: connectionIndex;	begin		cer.event := C_NoEvent;		if cp <> any_connection then begin			if ValidConnection(cp) then				HandleConnection(cp);		end		else begin			oci := connectionItem;			repeat				if connections[connectionItem].magic = TCPCMagic then begin					HandleConnection(connectionItem);				end;{if}				if connectionItem = max_connections then					connectionItem := 1				else					connectionItem := connectionItem + 1;			until (oci = connectionItem) or (cer.event <> C_NoEvent);		end;{if}		GetConnectionEvent := cer.event <> C_NoEvent;	end;{GetConnectionEvent}end.
+unit TCPConnections;
+
+{ From Peter's PNL Libraries }
+{ Copyright 1992 Peter N Lewis }
+{ This source may be used for any non-commercial purposes as long as I get a mention }
+{ in the About box and Docs of any derivative program.  It may not be used in any commercial }
+{ application without my permission }
+
+interface
+
+uses
+	TCPTypes, TCPStuff;
+
+const  { Tuning parameters }
+	max_connections = 20;
+	tooManyConnections = -23099;
+	TO_FindAddress = 40 * 60;
+	TO_FindName = 40 * 60;
+	TO_ActiveOpen = 20 * 60;
+	TO_Closing = 20 * 60;
+	TO_PassiveOpen = longInt(10) * 365 * 24 * 3600 * 60;  { Ten years should be safe enough right? :-) }
+
+const
+	any_connection = 0;	{ Pass to GetConnectionEvent }
+	no_connection = -1;	{ Guaranteed invalid connection }
+
+type
+	connectionIndex = longInt;
+	connectionEvent = (C_NoEvent, C_Found, C_SearchFailed, C_NameFound, C_NameSearchFailed,{}
+		C_Established, C_FailedToOpen, C_Closing, C_Closed, C_CharsAvailable, C_HeartBeat);
+	connectionEventRecord = record
+			event: connectionEvent;
+			connection: connectionIndex;
+			tcpc: TCPConnectionPtr;
+			dataptr: ptr;
+			value: longInt;
+			timedout: boolean;
+		end;
+
+function InitConnections: OSErr;
+procedure CloseConnections;
+procedure TerminateConnections;
+function CanQuit: boolean;
+{ After Terminate, keep calling GetConnectionEvent(any_connection,cer) until CanQuit is true, then Finish }
+procedure FinishConnections;
+procedure FinishEverything;  { Or just call FinishEverything }
+function FindAddress (var cp: connectionIndex; hostName: str255; dataptr: univ ptr): OSErr;
+function FindName (var cp: connectionIndex; hostIP: longInt; dataptr: univ ptr): OSErr;
+procedure FindString (hostIP: longInt; var s: str255);
+function NewPassiveConnection (var cp: connectionIndex; buffersize: longInt; localport: integer; remotehost: longInt; remoteport: integer; dataptr: univ ptr): OSErr;
+function NewActiveConnection (var cp: connectionIndex; buffersize: longInt; remotehost: longInt; remoteport: integer; dataptr: univ ptr): OSErr;
+procedure CloseConnection (cp: connectionIndex);
+procedure AbortConnection (cp: connectionIndex); { Violently close connection }
+function GetConnectionEvent (cp: connectionIndex; var cer: connectionEventRecord): boolean;
+{ Pass any_connection for any event, otherwise cp specifies the event }
+procedure SetDataPtr (cp: connectionIndex; dataptr: univ ptr);
+procedure GetDataPtr (cp: connectionIndex; var dataptr: univ ptr);
+procedure SetConnectionTimeout (cp: connectionIndex; timeout: longInt);
+procedure GetConnectionTimeout (cp: connectionIndex; var timeout: longInt);
+procedure GetConnectionTCPC (cp: connectionIndex; var tcpc: TCPConnectionPtr);
+procedure SetHeartBeat (cp: connectionIndex; n: longInt); { Send C_HeartBeat every n ticks, 0 disables heartbeat }
+
+implementation
+
+const
+	TCPCMagic = 'TCPC';
+	TCPCBadMagic = 'badc';
+
+type
+	myHostInfo = record
+			hi: hostInfo;
+			done: signedByte;
+		end;
+	myHostInfoPtr = ^myHostInfo;
+	statusType = (CS_None, CS_Searching, CS_NameSearching, CS_Opening, CS_Established, CS_Closing);
+	connectionRecord = record
+			magic: OSType;
+			conmagic: longInt;
+			tcpc: TCPConnectionPtr;
+			laststate: TCPStateType; { DEBUG }
+			status: statusType;
+			cacheFaultReturnP: myHostInfoPtr;
+			closedone: boolean;
+			timeout: longInt;
+			dataptr: ptr;
+			heartbeat: longInt; { Time for next heartbeat }
+			period: longInt; { Ticks per heartbeat }
+			tcpstates: packed array[TCPStateType] of boolean; { DEBUG }
+			constates: packed array[connectionEvent] of boolean; { DEBUG }
+		end;
+
+var
+	connections: array[1..max_connections] of connectionRecord;
+	connectionItem: connectionIndex;
+	dnrptr: ptr;
+	connectionmagic: longInt;
+
+function ValidConnectionSafe (var cp: connectionIndex): boolean;
+	var
+		ocp: longInt;
+		vc: boolean;
+	begin
+		vc := false;
+		ocp := cp;
+		cp := cp mod (max_connections + 1);
+		if cp > 0 then
+			if connections[cp].magic = TCPCMagic then
+				if connections[cp].conmagic = ocp then
+					vc := true;
+		ValidConnectionSafe := vc;
+	end;
+
+function ValidConnection (var cp: connectionIndex): boolean;
+	var
+		vc: boolean;
+	begin
+		vc := ValidConnectionSafe(cp);
+		if not vc then
+			DebugStr('Invalid Connection');
+		ValidConnection := vc;
+	end;
+
+procedure SetDataPtr (cp: connectionIndex; dataptr: univ ptr);
+	begin
+		if ValidConnection(cp) then
+			connections[cp].dataptr := dataptr;
+	end;
+
+procedure GetDataPtr (cp: connectionIndex; var dataptr: univ ptr);
+	begin
+		if ValidConnectionSafe(cp) then
+			dataptr := connections[cp].dataptr
+		else
+			dataptr := nil;
+	end;
+
+procedure SetConnectionTimeout (cp: connectionIndex; timeout: longInt);
+	begin
+		if ValidConnection(cp) then
+			connections[cp].timeout := timeout;
+	end;
+
+procedure GetConnectionTimeout (cp: connectionIndex; var timeout: longInt);
+	begin
+		if ValidConnection(cp) then
+			timeout := connections[cp].timeout
+		else
+			timeout := -1;
+	end;
+
+procedure SetHeartBeat (cp: connectionIndex; n: longInt); { Send C_HeartBeat every n ticks }
+	begin
+		if ValidConnection(cp) then begin
+			if (n < 1) or (n = maxLongInt) then begin
+				connections[cp].period := maxLongInt;
+				connections[cp].heartbeat := maxLongInt;
+			end
+			else begin
+				connections[cp].period := n;
+				connections[cp].heartbeat := TickCount + n;
+			end;
+		end;
+	end;
+
+procedure GetConnectionTCPC (cp: connectionIndex; var tcpc: TCPConnectionPtr);
+	begin
+		if ValidConnectionSafe(cp) then
+			tcpc := connections[cp].tcpc
+		else
+			tcpc := nil;
+	end;
+
+function MyTCPState (con: TCPConnectionPtr): TCPStateType;
+	begin
+		if con = nil then
+			MyTCPState := T_Closed
+		else
+			MyTCPState := TCPState(con);
+	end;
+
+{$S Init}
+function InitConnections: OSErr;
+	var
+		oe, ooe: OSErr;
+		i: connectionIndex;
+	begin
+		for i := 1 to max_connections do
+			connections[i].magic := TCPCBadMagic;
+		connectionmagic := 0;
+		connectionItem := 1;
+		oe := TCPInit;
+		if oe = noErr then begin
+			oe := TCPOpenResolver(dnrptr);
+			if oe <> noErr then
+				TCPFinish;
+		end;
+		InitConnections := oe;
+	end;
+
+{$S Term}
+procedure TerminateConnections;
+	var
+		i: connectionIndex;
+		oe: OSErr;
+	begin
+		for i := 1 to max_connections do
+			with connections[i] do
+				if magic = TCPCMagic then
+					if (status = CS_Established) or (status = CS_Opening) or (status = CS_Closing) then
+						if TCPState(tcpc) <> T_Closed then
+							oe := TCPAbort(tcpc);
+	end;
+
+{$S Term}
+procedure CloseConnections;
+	var
+		i: connectionIndex;
+		oe: OSErr;
+	begin
+		for i := 1 to max_connections do
+			with connections[i] do
+				if magic = TCPCMagic then
+					if (status = CS_Established) or (status = CS_Opening) or (status = CS_Closing) then
+						if TCPState(tcpc) <> T_Closed then
+							oe := TCPClose(tcpc, nil);
+	end;
+
+{$S Term}
+function CanQuit: boolean;
+	var
+		i: connectionIndex;
+	begin
+		CanQuit := true;
+		for i := 1 to max_connections do
+			if connections[i].magic = TCPCMagic then
+				CanQuit := false;
+	end;
+
+{$S Term}
+procedure FinishConnections;
+	begin
+		TCPCloseResolver(dnrptr);
+		TCPFinish;
+	end;
+
+{$S Term}
+procedure FinishEverything;
+	var
+		cer: connectionEventRecord;
+		dummy: boolean;
+		er: eventrecord;
+		oe: OSErr;
+	begin
+		TerminateConnections;
+		while not CanQuit do begin
+			if GetConnectionEvent(any_connection, cer) then begin
+				dummy := WaitNextEvent(everyEvent, er, 0, nil);
+			end
+			else
+				dummy := WaitNextEvent(everyEvent, er, 5, nil);
+		end;
+		FinishConnections;
+	end;
+
+{$S}
+function CreateConnection (var cp: connectionIndex; dp: ptr): OSErr;
+	var
+		ts: TCPStateType;
+		ce: connectionEvent;
+	begin
+		connectionmagic := connectionmagic + max_connections + 1;
+		cp := 1;
+		while (connections[cp].magic = TCPCMagic) and (cp < max_connections) do
+			cp := cp + 1;
+		with connections[cp] do begin
+			if magic = TCPCMagic then
+				CreateConnection := tooManyConnections
+			else begin
+				magic := TCPCMagic;
+				conmagic := cp + connectionmagic;
+				closedone := false;
+				tcpc := nil;
+				status := CS_None;
+				cacheFaultReturnP := nil;
+				timeout := maxlongInt;
+				dataptr := dp;
+				period := maxLongInt;
+				heartbeat := maxLongInt;
+				CreateConnection := noErr;
+				cp := cp + connectionmagic;
+
+				for ce := C_NoEvent to C_HeartBeat do
+					constates[ce] := false;
+				for ts := T_WaitingForOpen to T_Unknown do
+					tcpstates[ts] := false;
+			end;
+		end;
+	end;
+
+procedure DestroyConnection (var cp: connectionIndex);
+	begin
+		if ValidConnection(cp) then
+			connections[cp].magic := TCPCBadMagic;
+		cp := -1;
+	end;
+
+function FindAddress (var cp: connectionIndex; hostName: str255; dataptr: univ ptr): OSErr;
+	var
+		oe: OSErr;
+		cpi: connectionIndex;
+	begin
+		oe := CreateConnection(cp, dataptr);
+		if oe = noErr then begin
+			cpi := cp;
+			if ValidConnection(cpi) then begin
+				with connections[cpi] do begin
+					cacheFaultReturnP := myHostInfoPtr(NewPtr(SizeOf(myHostInfo)));
+					if cacheFaultReturnP = nil then
+						oe := memFullErr
+					else begin
+						cacheFaultReturnP^.done := 0;
+						oe := TCPStrToAddr(dnrptr, hostName, cacheFaultReturnP^.hi, cacheFaultReturnP^.done);
+						if oe = cacheFault then begin
+							timeout := TickCount + TO_FindAddress;
+							oe := noErr;
+						end
+						else begin
+							cacheFaultReturnP^.done := -1;
+							cacheFaultReturnP^.hi.rtnCode := oe;
+						end;
+						status := CS_Searching;
+					end;
+					if oe <> noErr then begin
+						if cacheFaultReturnP <> nil then
+							DisposPtr(ptr(cacheFaultReturnP));
+						DestroyConnection(cp);
+					end;
+				end;
+			end;
+		end;
+		FindAddress := oe;
+	end;
+
+procedure FindString (hostIP: longInt; var s: str255);
+	begin
+		TCPAddrToStr(dnrptr, hostIP, s);
+	end;
+
+function FindName (var cp: connectionIndex; hostIP: longInt; dataptr: univ ptr): OSErr;
+	var
+		oe: OSErr;
+		cpi: connectionIndex;
+	begin
+		oe := CreateConnection(cp, dataptr);
+		if oe = noErr then begin
+			cpi := cp;
+			if ValidConnection(cpi) then begin
+				with connections[cpi] do begin
+					cacheFaultReturnP := myHostInfoPtr(NewPtr(SizeOf(myHostInfo)));
+					if cacheFaultReturnP = nil then
+						oe := memFullErr
+					else begin
+						cacheFaultReturnP^.done := 0;
+						oe := TCPAddrToName(dnrptr, hostIP, cacheFaultReturnP^.hi, cacheFaultReturnP^.done);
+						if oe = cacheFault then begin
+							timeout := TickCount + TO_FindName;
+							oe := noErr;
+						end
+						else begin
+							cacheFaultReturnP^.done := -1;
+							cacheFaultReturnP^.hi.rtnCode := oe;
+						end;
+						status := CS_NameSearching;
+					end;
+					if oe <> noErr then begin
+						if cacheFaultReturnP <> nil then
+							DisposPtr(ptr(cacheFaultReturnP));
+						DestroyConnection(cp);
+					end;
+				end;
+			end;
+		end;
+		FindName := oe;
+	end;
+
+function NewPassiveConnection (var cp: connectionIndex; buffersize: longInt; localport: integer; remotehost: longInt; remoteport: integer; dataptr: univ ptr): OSErr;
+	var
+		oe: OSErr;
+		cpi: connectionIndex;
+	begin
+		oe := CreateConnection(cp, dataptr);
+		if oe = noErr then begin
+			cpi := cp;
+			if ValidConnection(cpi) then
+				with connections[cpi] do begin
+					oe := TCPPassiveOpen(tcpc, buffersize, localPort, remotehost, remoteport, nil);
+					timeout := TickCount + TO_PassiveOpen;
+					status := CS_Opening;
+					if oe <> noErr then
+						DestroyConnection(cp);
+				end;
+		end;
+		NewPassiveConnection := oe;
+	end;
+
+function NewActiveConnection (var cp: connectionIndex; buffersize: longInt; remotehost: longInt; remoteport: integer; dataptr: univ ptr): OSErr;
+	var
+		oe: OSErr;
+		cpi: connectionIndex;
+	begin
+		oe := CreateConnection(cp, dataptr);
+		if oe = noErr then begin
+			cpi := cp;
+			if ValidConnection(cpi) then
+				with connections[cpi] do begin
+					oe := TCPActiveOpen(tcpc, buffersize, 0, remotehost, remoteport, nil);
+					timeout := TickCount + TO_ActiveOpen;
+					status := CS_Opening;
+					if oe <> noErr then
+						DestroyConnection(cp);
+				end;
+		end;
+		NewActiveConnection := oe;
+	end;
+
+procedure CloseConnection (cp: connectionIndex);
+	var
+		oe: OSErr;
+	begin
+		if ValidConnection(cp) then
+			with connections[cp] do begin
+				if not closedone then begin
+					if MyTCPState(tcpc) <> T_Closed then begin
+						oe := TCPClose(tcpc, nil);
+					end;
+					closedone := true;
+				end;
+				status := CS_Closing;
+				timeout := TickCount + TO_Closing;
+			end;
+	end;
+
+procedure AbortConnection (cp: connectionIndex);
+	var
+		oe: OSErr;
+	begin
+		if ValidConnection(cp) then
+			with connections[cp] do begin
+				if MyTCPState(tcpc) <> T_Closed then
+					oe := TCPAbort(tcpc);
+				status := CS_Closing;
+				timeout := TickCount + TO_Closing;
+			end;
+	end;
+
+function GetConnectionEvent (cp: connectionIndex; var cer: connectionEventRecord): boolean;
+	procedure HandleConnection (cp: connectionIndex);
+		var
+			oe: OSErr;
+			dummysp: stringPtr;
+			l: integer;
+			rcp: connectionIndex;
+		begin
+			with connections[cp] do begin
+				rcp := conmagic;
+				cer.connection := rcp;
+				cer.tcpc := tcpc;
+				cer.dataptr := dataptr;
+				cer.timedout := false;
+				case status of
+					CS_NameSearching: 
+						with cacheFaultReturnP^, hi do begin
+							if done <> 0 then begin
+								if rtnCode = noErr then begin
+									cer.event := C_NameFound;
+									SanitizeHostName(rtnHostName);
+									stringHandle(cer.value) := NewString(rtnHostName);
+								end
+								else begin
+									cer.event := C_NameSearchFailed;
+									cer.value := rtnCode;
+								end
+							end
+							else if TickCount > timeout then begin
+								cer.event := C_NameSearchFailed;
+								cer.value := 1;
+								cer.timedout := true;
+							end;
+							if cer.event <> C_NoEvent then begin  { Destroy the connection now }
+								if done <> 0 then  { If we timed out, then we'll just have to abandon this block.  Oh well }
+									DisposPtr(ptr(cacheFaultReturnP));
+								cacheFaultReturnP := nil;
+								DestroyConnection(rcp);
+							end; {if}
+						end; {with}
+					CS_Searching: 
+						with cacheFaultReturnP^, hi do begin
+							if rtnCode = noErr then begin
+								cer.event := C_Found;
+								cer.value := addrs[1];
+							end
+							else if done <> 0 then begin
+								cer.event := C_SearchFailed;
+								cer.value := rtnCode;
+							end
+							else if TickCount > timeout then begin
+								cer.event := C_SearchFailed;
+								cer.value := 1;
+								cer.timedout := true;
+							end;
+							if cer.event <> C_NoEvent then begin  { Destroy the connection now }
+								if done <> 0 then  { If we timed out, then we'll just have to abandon this block.  Oh well }
+									DisposPtr(ptr(cacheFaultReturnP));
+								cacheFaultReturnP := nil;
+								DestroyConnection(rcp);
+							end; {if}
+						end; {with}
+					CS_Opening: 
+						begin
+						laststate := MyTCPState(tcpc);
+						tcpstates[laststate] := true;
+						case laststate of
+							T_WaitingForOpen, T_Opening, T_Listening: 
+								if TickCount > timeout then begin
+									CloseConnection(rcp);
+									cer.event := C_FailedToOpen;
+									cer.timedout := true;
+								end;
+							T_Established: 
+								begin
+								cer.event := C_Established;
+								status := CS_Established;
+								timeout := maxLongInt;
+							end;
+							T_PleaseClose, T_Closing: 
+								begin
+								CloseConnection(rcp);
+								cer.value := 1;
+								cer.event := C_FailedToOpen;
+								timeout := TickCount + TO_Closing;
+							end;
+							T_Closed: 
+								begin
+								status := CS_Closing;
+								cer.value := 2;
+								cer.event := C_FailedToOpen;
+								timeout := TickCount + TO_Closing;
+							end;
+							otherwise
+								;
+						end; {case }
+					end;
+					CS_Established: 
+						begin
+						laststate := MyTCPState(tcpc);
+						tcpstates[laststate] := true;
+						case laststate of
+							T_Established: 
+								begin
+								cer.value := TCPCharsAvailable(tcpc);
+								if cer.value > 0 then
+									cer.event := C_CharsAvailable;
+							end;
+							T_PleaseClose, T_Closing: 
+								begin
+								cer.value := TCPCharsAvailable(tcpc);
+								if cer.value > 0 then
+									cer.event := C_CharsAvailable
+								else begin
+{    CloseConnection(rcp);}
+									status := CS_Closing;
+									cer.event := C_Closing;
+									timeout := TickCount + TO_Closing;
+								end;
+							end;
+
+							T_Closed: 
+								begin
+								status := CS_Closing;
+								cer.event := C_Closing;
+								timeout := TickCount + TO_Closing;
+							end;
+							otherwise
+								;
+						end;
+					end;
+					CS_Closing: 
+						begin
+						laststate := MyTCPState(tcpc);
+						tcpstates[laststate] := true;
+						case laststate of
+							T_WaitingForOpen, T_Opening, T_Listening: 
+								DebugStr('Strange State 2');
+							T_PleaseClose, T_Closing, T_Established: 
+								begin
+								cer.value := TCPCharsAvailable(tcpc);
+								if cer.value > 0 then
+									cer.event := C_CharsAvailable
+								else if TickCount > timeout then begin
+									cer.event := C_Closed;
+									if tcpc <> nil then begin
+										oe := TCPAbort(tcpc);
+										oe := TCPRelease(tcpc);
+									end;
+									cer.timedout := true;
+									DestroyConnection(rcp);
+								end;
+							end;
+							T_Closed: 
+								begin
+								cer.event := C_Closed;
+								if tcpc <> nil then
+									oe := TCPRelease(tcpc);
+								DestroyConnection(rcp);
+							end;
+							otherwise
+								;
+						end;
+					end;
+					otherwise
+						;
+				end;
+
+				if (cer.event = C_NoEvent) & (TickCount > heartbeat) then begin
+					cer.event := C_HeartBeat;
+					heartbeat := TickCount + period;
+				end;
+				if cer.event <> C_NoEvent then
+					constates[cer.event] := true;
+			end;{with}
+		end;{HandleConnection}
+		var
+			oci: connectionIndex;
+	begin
+		cer.event := C_NoEvent;
+		if cp <> any_connection then begin
+			if ValidConnection(cp) then
+				HandleConnection(cp);
+		end
+		else begin
+			oci := connectionItem;
+			repeat
+				if connections[connectionItem].magic = TCPCMagic then begin
+					HandleConnection(connectionItem);
+				end;{if}
+				if connectionItem = max_connections then
+					connectionItem := 1
+				else
+					connectionItem := connectionItem + 1;
+			until (oci = connectionItem) or (cer.event <> C_NoEvent);
+		end;{if}
+		GetConnectionEvent := cer.event <> C_NoEvent;
+	end;{GetConnectionEvent}
+
+end.

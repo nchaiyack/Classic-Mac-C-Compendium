@@ -1,1 +1,126 @@
-Technical Notes for Macintosh Tracker 1.2.0This document describes what I did to get Tracker 4.0 to run on the Macintosh.  This information should help you if you want to get any future versions of Tracker to run.  Please see the file "Tracker AEIMP Protocol" to see how the programs communicate.The program was build with Think C 6.0.  I've included everything necessary to build the server for Tracker 4.0.If you are going to work with the Tracker source code, PLEASE read this document COMPLETELY before starting.¥	Macintosh FilesHere's a description of the special files I created to work with the Macintosh (and modifications to other files):"audio.c"The function called "resample" has been commented out because I replace it with my own in a different part of the program.  The "/ oversample" in the function "create_step_table" has been removed.  This is necessary because the Macintosh port doesn't support oversampling.  Instead I use antialiasing.  But to keep things portable, I did not change any other part of the program dealing with oversampling, so the tracker thinks it's doing oversampling.  You'll know immediately if you forgot to do this:  everything will be played one octave lower.  The local array "chan" and variable "allocated" are made global so they can be imported in "mac_audio.c"."mac_audio.c"This is the Macintosh specific audio driver file.  It contains my modified version of "resample" as well as the standard audio control functions used by the program.  Check out "linux_audio.c", "sgi_audio.c", and "ss10_audio.c" in the original tracker source folder to see how this code interacts with the rest of Tracker on a general level.Note that there are lots of extra functions in "mac_audio.c" which I needed to add."mac_events.c"This contains the tools used to send and receive Apple Events with the client program, as well as an event function used to release the processor to other programs and look for more Apple Events."mac_hack.c"This is the granddaddy file.  It contains the real "main" function which sets up the fake command line to be sent to the tracker's "main" function.  It contains degenerate versions of many of the ANSI functions tracker uses as well as functional replacements for the important functions, such as "fopen".  "mac_hack.c" also includes the necessary functions for the tracker which were contained in "termio.c".  Since the Macintosh doesn't deal with terminals, I just eliminated it and put degenerate forms of the functions in."mac_hack.h"This is what I use to override the ANSI functions.  It includes the standard ANSI headers and then uses the #define directive to redefine the standard functions to my own functions.  Note in "mac_hack.h" I redefine the function "main" so that MY main function gets called.  Also note in "mac_hack.c" how I #undef main before declaring the function so that it has the proper name for the linker (so I don't get hoist by my own petard).  All this is great compiler hackery."read.c"See note below about "Antialiasing".¥	LibrariesIn order to build tracker, you need some libraries.  Specifically, the following:"ANSI-small int=4""MacTraps""MacTraps2""SANE"The only problem is the first one.  To create this, make a copy of the "ANSI-small" library that came with your THINK C 6.0 package.  Open it.  Under "Options...Compiler Settings", ENABLE 4-byte integers (because Tracker assumes it runs under UNIX where sizeof(int)==4).  Then rebuild the library.¥	Fake "standard" header filesTracker assumes that the header file <malloc.h> is available.  Since it isn't standard ANSI, make a <malloc.h> file containing the following line:#include <stdlib.h>Then put it in the "headers" folder in the THINK C search path.  This will include the true malloc prototypes, which is what the source code is expecting.¥	Other settingsJust as the ANSI library must have 4-byte integers on, the entire program needs 4-byte integers.  My project file has this set properly, but if you are using MPW, you will have to make your own, so take note of this.68020 instructions are ON.  FPU instructions are OFF.  For MPW people:  the code conditionally compiles 68020 or 68000 instructions in "mac_audio.c" depending on whether or not the option is set in the "Options..." dialog of THINK C.  I don't know if the #if directives I used will work under MPW, so you may have to go and put your equivalent directives in.  There's a couple of conditional compilation directives in "mac_hack.h" as well involving this.Finally, the source code assumes that the following occurs in the prefix header:#include <MacHeaders>#include "mac_hack.h"This sets up the mac_hackery without requiring alteration of each source file.¥	What happens with a new version?First, if it uses ANSI or UNIX functions which the current version doesn't, they will call out to the real ANSI-small library instead of my mac_hackery.  This could cause serious problems.  To find out if there are any new functions, REMOVE the ANSI-small library from the project and choose "Check Link" from the Project menu.  The following functions ARE used from the ANSI library (otherwise it wouldn't be required):[This is a dump of my "Link Failed" window]undefined: atexit (mac_hack.c)undefined: exit (mac_hack.c)undefined: sscanf (main.c, tools.c)undefined: sprintf (open.c, mac_hack.c)undefined: strlen (dump_song.c, getopt.c, open.c, read.c)undefined: strcmp (main.c)undefined: strncmp (dump_song.c)undefined: strchr (open.c)undefined: tolower (getopt.c, open.c)undefined: strcpy (open.c, read.c)undefined: strncpy (open.c)WATCH FOR ANY UNDEFINED FUNCTIONS OTHER THAN THESE!!!  If there are other undefined functions than these, you will have to use your judgement as to what you should do.  Generally:a)  If the function is an "internal" function (such as the string functions above), which don't "touch" things outside of the program, it is OK to use the ANSI version.b)  If the function "touches" part of the operating system (such as fopen, fgetc, and printf), you'll have to write your own version which works with the framework I've established.USE YOUR JUDGEMENT!c)	Note that he has some functions (such as for adjusting the UNIX terminal modes) which don't make sense on a Macintosh, and therefore I've provided dummy versions which don't do anything.¥	Note about Antialiasing (i.e. changes to the file "read.c")Antialiasing works by doing a linear interpolation between the sample point immediately to the left of the index into the sample (round down) and the one immediately to the right (round up).  Espie's code ensures that the rounded DOWN value of the pointer will never exceed the length of the sample.  However, rounding up may violate this.  As a result, when antialiasing is used, an undefined byte immediately after the last valid sample byte may be touched.  This is not too serious, but to make things work perfectly, I have modified one of the functions in "read.c".  The function is "read_sample".  Find it and replace it with this version:LOCAL void read_sample(struct sample_info *info, struct exfile *f)  {    if (info->start)      {        obtain_sample(info->start, info->length, file_handle(f));        if (info->rp_start)          {            /* if sample loops, then append first loop sample to end */            info->start[info->length] = info->start[info->rp_offset];          }         else          {            /* otherwise, append last sample */            info->start[info->length] = info->start[info->length - 1];          }      }  }In order to do this without corrupting the heap, one must also change the way the sample tables are allocated.  However, my replacement for "calloc" always allocates one extra byte, so this shouldn't be a problem.----------------Thomas R. Lawrencetomlaw@world.std.com
+Technical Notes for Macintosh Tracker 1.2.0
+
+
+This document describes what I did to get Tracker 4.0 to run on the Macintosh.  This information should help you if you want to get any future versions of Tracker to run.  Please see the file "Tracker AEIMP Protocol" to see how the programs communicate.
+
+The program was build with Think C 6.0.  I've included everything necessary to build the server for Tracker 4.0.
+
+If you are going to work with the Tracker source code, PLEASE read this document COMPLETELY before starting.
+
+
+¥	Macintosh Files
+
+Here's a description of the special files I created to work with the Macintosh (and modifications to other files):
+
+"audio.c"
+The function called "resample" has been commented out because I replace it with my own in a different part of the program.  The "/ oversample" in the function "create_step_table" has been removed.  This is necessary because the Macintosh port doesn't support oversampling.  Instead I use antialiasing.  But to keep things portable, I did not change any other part of the program dealing with oversampling, so the tracker thinks it's doing oversampling.  You'll know immediately if you forgot to do this:  everything will be played one octave lower.  The local array "chan" and variable "allocated" are made global so they can be imported in "mac_audio.c".
+
+"mac_audio.c"
+This is the Macintosh specific audio driver file.  It contains my modified version of "resample" as well as the standard audio control functions used by the program.  Check out "linux_audio.c", "sgi_audio.c", and "ss10_audio.c" in the original tracker source folder to see how this code interacts with the rest of Tracker on a general level.
+Note that there are lots of extra functions in "mac_audio.c" which I needed to add.
+
+"mac_events.c"
+This contains the tools used to send and receive Apple Events with the client program, as well as an event function used to release the processor to other programs and look for more Apple Events.
+
+"mac_hack.c"
+This is the granddaddy file.  It contains the real "main" function which sets up the fake command line to be sent to the tracker's "main" function.  It contains degenerate versions of many of the ANSI functions tracker uses as well as functional replacements for the important functions, such as "fopen".  "mac_hack.c" also includes the necessary functions for the tracker which were contained in "termio.c".  Since the Macintosh doesn't deal with terminals, I just eliminated it and put degenerate forms of the functions in.
+
+"mac_hack.h"
+This is what I use to override the ANSI functions.  It includes the standard ANSI headers and then uses the #define directive to redefine the standard functions to my own functions.  Note in "mac_hack.h" I redefine the function "main" so that MY main function gets called.  Also note in "mac_hack.c" how I #undef main before declaring the function so that it has the proper name for the linker (so I don't get hoist by my own petard).  All this is great compiler hackery.
+
+"read.c"
+See note below about "Antialiasing".
+
+
+¥	Libraries
+
+In order to build tracker, you need some libraries.  Specifically, the following:
+
+"ANSI-small int=4"
+"MacTraps"
+"MacTraps2"
+"SANE"
+
+The only problem is the first one.  To create this, make a copy of the "ANSI-small" library that came with your THINK C 6.0 package.  Open it.  Under "Options...Compiler Settings", ENABLE 4-byte integers (because Tracker assumes it runs under UNIX where sizeof(int)==4).  Then rebuild the library.
+
+
+¥	Fake "standard" header files
+
+Tracker assumes that the header file <malloc.h> is available.  Since it isn't standard ANSI, make a <malloc.h> file containing the following line:
+
+#include <stdlib.h>
+
+Then put it in the "headers" folder in the THINK C search path.  This will include the true malloc prototypes, which is what the source code is expecting.
+
+
+¥	Other settings
+
+Just as the ANSI library must have 4-byte integers on, the entire program needs 4-byte integers.  My project file has this set properly, but if you are using MPW, you will have to make your own, so take note of this.
+
+68020 instructions are ON.  FPU instructions are OFF.  For MPW people:  the code conditionally compiles 68020 or 68000 instructions in "mac_audio.c" depending on whether or not the option is set in the "Options..." dialog of THINK C.  I don't know if the #if directives I used will work under MPW, so you may have to go and put your equivalent directives in.  There's a couple of conditional compilation directives in "mac_hack.h" as well involving this.
+
+Finally, the source code assumes that the following occurs in the prefix header:
+
+#include <MacHeaders>
+#include "mac_hack.h"
+
+This sets up the mac_hackery without requiring alteration of each source file.
+
+
+¥	What happens with a new version?
+
+First, if it uses ANSI or UNIX functions which the current version doesn't, they will call out to the real ANSI-small library instead of my mac_hackery.  This could cause serious problems.  To find out if there are any new functions, REMOVE the ANSI-small library from the project and choose "Check Link" from the Project menu.  The following functions ARE used from the ANSI library (otherwise it wouldn't be required):
+
+[This is a dump of my "Link Failed" window]
+undefined: atexit (mac_hack.c)
+undefined: exit (mac_hack.c)
+undefined: sscanf (main.c, tools.c)
+undefined: sprintf (open.c, mac_hack.c)
+undefined: strlen (dump_song.c, getopt.c, open.c, read.c)
+undefined: strcmp (main.c)
+undefined: strncmp (dump_song.c)
+undefined: strchr (open.c)
+undefined: tolower (getopt.c, open.c)
+undefined: strcpy (open.c, read.c)
+undefined: strncpy (open.c)
+
+WATCH FOR ANY UNDEFINED FUNCTIONS OTHER THAN THESE!!!  If there are other undefined functions than these, you will have to use your judgement as to what you should do.  Generally:
+
+a)  If the function is an "internal" function (such as the string functions above), which don't "touch" things outside of the program, it is OK to use the ANSI version.
+
+b)  If the function "touches" part of the operating system (such as fopen, fgetc, and printf), you'll have to write your own version which works with the framework I've established.
+
+USE YOUR JUDGEMENT!
+
+c)	Note that he has some functions (such as for adjusting the UNIX terminal modes) which don't make sense on a Macintosh, and therefore I've provided dummy versions which don't do anything.
+
+
+¥	Note about Antialiasing (i.e. changes to the file "read.c")
+
+Antialiasing works by doing a linear interpolation between the sample point immediately to the left of the index into the sample (round down) and the one immediately to the right (round up).  Espie's code ensures that the rounded DOWN value of the pointer will never exceed the length of the sample.  However, rounding up may violate this.  As a result, when antialiasing is used, an undefined byte immediately after the last valid sample byte may be touched.  This is not too serious, but to make things work perfectly, I have modified one of the functions in "read.c".  The function is "read_sample".  Find it and replace it with this version:
+
+LOCAL void read_sample(struct sample_info *info, struct exfile *f)
+  {
+    if (info->start)
+      {
+        obtain_sample(info->start, info->length, file_handle(f));
+        if (info->rp_start)
+          {
+            /* if sample loops, then append first loop sample to end */
+            info->start[info->length] = info->start[info->rp_offset];
+          }
+         else
+          {
+            /* otherwise, append last sample */
+            info->start[info->length] = info->start[info->length - 1];
+          }
+      }
+  }
+
+In order to do this without corrupting the heap, one must also change the way the sample tables are allocated.  However, my replacement for "calloc" always allocates one extra byte, so this shouldn't be a problem.
+
+
+----------------
+Thomas R. Lawrence
+
+tomlaw@world.std.com

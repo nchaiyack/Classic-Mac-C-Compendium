@@ -1,1 +1,312 @@
-\begindata{text,268677556}\textdsversion{12}\template{application}\chapter{\center{AMSAR: Andrew Message System Archiver}}\smaller{\chapter{\center{_______________________________________}}\center{}}\smaller{\chapter{\center{/USR/CONTRIBUTED CAVEAT}}The software and documentation in /usr/contributed are supported by users on campus rather than by the central support organizations.  That is, they are *not* supported by Academic Computing or the ITC.  Questions or comments about the contents of /usr/contributed should be send to the support person for the particular application, library, or information file.  The support person is cited in the Support Person field at the end of the documentation for the particular topic.\chapter{\center{_______________________________________}}}\section{What AMSAR is}\leftindent{AMSAR is a utility program that will allow you to pack and unpack archives of AMS messages.  It is useful in storing old mail messages in a compressed and easily movable format.  By packing messages and then compressing the pak file it is possible to reduce the amount of disk space mail messages take up.}\section{Starting AMSAR}\leftindent{To use AMSAR first make sure the /usr/contributed is in your PATH.  To run AMSAR just type\typewriter{amsar <command> <foldername | filename> <expr>}When ever AMSAR wants the name of a file to use, replacing it with a single dash('-') will cause the standard input or output to be used.}\section{Commands}\leftindent{AMSAR has a very verbose command language that will require some work to get used to.  Each command is described below:\bold{list}\typewriter{	Usage: amsar list <foldername> <expr>}	This command will list all the headers that match the <expr> that are in the folder <foldername>.\bold{dir}\typewriter{	Usage: amsar dir <pakfilename> <expr>}	This command will list all the headers that match the <expr> that are contained in the pakfile <pakfilename>.\bold{delete}\typewriter{	Usage: amsar delete <foldername> <expr>}		This command will delete from the folder <foldername> all messages matching the expression <expr>.\bold{unpack}\typewriter{	Usage: amsar unpack [-create] <foldername> <pakfile> <expr>}	This command will unpack messages stored in the pakfile <pakfile> that match the expression <expr> and restore them to the folder <foldername>.  If the -create flag is used and the folder <foldername> does not exist it will be created.\bold{pack}\typewriter{	Usage: amsar pack [-delete] <foldername> <pakfile> <expr>}	This command will select and pack messages from folder <foldername> that match the expression <expr> into a pakfile called <pakfile>. If the -delete option is used then the selected messages are also deleted from the folder.\bold{create}\typewriter{	Usage: amsar create <foldername>}	This command will create an empty AMS folder called <foldername>\bold{rmfolder}\typewriter{	Usage: amsar rmfolder <foldername>}	This command will remove an empty folder.}\section{Expressions}	When AMSAR wants an expression to match a message it must be in the following form:	<term>	<expr> OR <term>	<expr> AND <term>	A term consists of the following:	ALL		-- Match everything.	FIRST <number>	-- The First <number> messages.	LAST <number>	-- The Last <number> messages.	SINCE <date>	-- Messages on or after <date>. 	BEFORE <date>	-- Message sent before <date>.	FROM <text>	-- Messages that have the text <text> in the From field.	SUBJECT <text>	-- Messages that have the text <text> in the Subject field.	NOT <term>	-- Negates the value of the term.	Expressions match the text that is in the message caption, so data that is not included there is not matchable.  This includes the TO: field.  Whenever any text is needed for an expression it is of the same form as a Unix regular expression.  For help on regular expressions see \italic{ed.  }Some characters will need to be quoted in order to be passed from the shell, these include : * () [] \\.	Dates for use with the SINCE and BEFORE qualifiers can be of several forms including:	day-month-year	Example:  1-jan-90	month/day/year	Example:  3/1/90	In addition to the [-delete] and [-create] options in the pack and unpack commands the following modifiers can be added before any command to affect the action of AMSAR:	-yescase		Makes expression matching case sensitive.	-quiet		Don't print anything unless there is an error.\section{Quick reference}	Examples:	To save the first 100 messages in your mail folder to a pak file called mail.ar:\example{	amsar pack mail mail.ar first 100}	To save all mail messages from jack or bob into a pak file called mail.ar and delete the messages from the mail folder.	\example{amsar pack -delete mail mail.ar from jack or from bob}	To unpack all messages in the pak file mail.ar and restore them to your folder call mail	\example{amsar unpack mail mail.ar all}	To list the last 5 messages in your mail folder\example{	amsar list mail last 5}	To list all messages in the pakfile mail.ar that are from "bobo the clown"	\example{amsar dir mail.ar from "bobo the clown"}	Use compress to archive all your mail before March 1, 1990 into a compressed pack file.\example{	amsar pack mail - all | compress > mail.ar.Z}	To restore your mail from a compressed pack file.	\example{zcat mail.ar.Z | amsar unpack mail - all}\section{Warnings}	It is not recommend that you use the -delete option when piping the AMSAR program through to other utilities such as compress as a vice failure can cause a loss of messages during this time.  Also the use of times in the date comparison is not valuable due to the fact that message captions do not have time of day fields.	Commands and operators are not case sensitive.  All text to be matched is converted to lowercase before the expression compare unless the -yescase flag is used.  Each term of an expression is one command line argument so be careful to quote multi word arguments to the shell, such as \example{	amsar list mail subject "meeting tuesday"}	And be sure and quote using the left backslash all parenthesis as in:	\example{amsar list mail not \\(from aaron or from advisor \\)}When packing and then unpacking a folder it may not be returned to the \bold{exact }same state dues to the fact that you will be the writer of the restored file.  If the message directory ever needs to be rebuilt the message rebuilder may think that you are faking mail and make you the sender of the message.  This should not happen to any personal mail folders only bboards not restored by postman.  In addition to the changing of ownership of the messages the table that associates replies to messages will be lost, however this table is not in use by any AMS clients and should not cause any trouble.\section{Machine Types}	AMSAR runs all the following system types		\italic{sun3_35, sun4_40, rt_r4, vax_3, pmax_3	}\section{Related tools}  Select (put a box around) one of the italicized names and choose "Get Help on Selected Word" from the pop-up menu to see the help file for:\italic{	AMS}\section{Support Person}If you have questions or problems with this application, please send mail to: 	Aaron Wohl (aw0g+@andrew.cmu.edu)\chapter{}\smaller{\chapter{\center{________________________________________}}}\smaller{\chapter{\center{/USR/CONTRIBUTED CAVEAT}}The software and documentation in /usr/contributed are supported by users on campus rather than by the central support organizations.  That is, they are *not* supported by Academic Computing or the ITC.  Questions or comments about the contents of /usr/contributed should be send to the support person for the particular application, library, or information file.  The support person is cited in the Support Person field at the end of the documentation for the particular topic.\chapter{\center{_______________________________________}}}\enddata{text,268677556}
+\begindata{text,268677556}
+\textdsversion{12}
+\template{application}
+
+
+
+\chapter{\center{AMSAR: Andrew Message System Archiver}
+
+
+}\smaller{\chapter{\center{_______________________________________}}\center{
+
+}}\smaller{
+\chapter{\center{/USR/CONTRIBUTED CAVEAT}}
+
+
+The software and documentation in /usr/contributed are supported by users on 
+campus rather than by the central support organizations.  That is, they are 
+*not* supported by Academic Computing or the ITC.  Questions or comments about 
+the contents of /usr/contributed should be send to the support person for the 
+particular application, library, or information file.  The support person is 
+cited in the Support Person field at the end of the documentation for the 
+particular topic.
+
+\chapter{\center{_______________________________________}}
+
+}
+
+\section{What AMSAR is}
+
+
+\leftindent{AMSAR is a utility program that will allow you to pack and unpack 
+archives of AMS messages.  It is useful in storing old mail messages in a 
+compressed and easily movable format.  By packing messages and then 
+compressing the pak file it is possible to reduce the amount of disk space 
+mail messages take up.}
+
+
+\section{Starting AMSAR}
+
+
+\leftindent{To use AMSAR first make sure the /usr/contributed is in your PATH. 
+ To run AMSAR just type\typewriter{
+
+
+amsar <command> <foldername | filename> <expr>
+
+}
+When ever AMSAR wants the name of a file to use, replacing it with a single 
+dash('-') will cause the standard input or output to be used.
+
+
+}
+\section{Commands}
+
+
+\leftindent{AMSAR has a very verbose command language that will require some 
+work to get used to.  Each command is described below:
+
+
+\bold{list}
+
+\typewriter{	Usage: amsar list <foldername> <expr>
+
+}
+	This command will list all the headers that match the <expr> that are in the 
+folder <foldername>.
+
+
+\bold{dir}
+
+\typewriter{	Usage: amsar dir <pakfilename> <expr>
+
+}
+	This command will list all the headers that match the <expr> that are 
+contained in the pakfile <pakfilename>.
+
+
+\bold{delete}
+
+\typewriter{	Usage: amsar delete <foldername> <expr>
+
+}	
+
+	This command will delete from the folder <foldername> all messages matching 
+the expression <expr>.
+
+
+\bold{unpack}
+
+\typewriter{	Usage: amsar unpack [-create] <foldername> <pakfile> <expr>
+
+}
+	This command will unpack messages stored in the pakfile <pakfile> that match 
+the expression <expr> and restore them to the folder <foldername>.  If the 
+-create flag is used and the folder <foldername> does not exist it will be 
+created.
+
+
+\bold{pack}
+
+\typewriter{	Usage: amsar pack [-delete] <foldername> <pakfile> <expr>
+
+}
+	This command will select and pack messages from folder <foldername> that 
+match the expression <expr> into a pakfile called <pakfile>. If the -delete 
+option is used then the selected messages are also deleted from the folder.
+
+
+\bold{create}
+
+\typewriter{	Usage: amsar create <foldername>
+
+}
+	This command will create an empty AMS folder called <foldername>
+
+
+\bold{rmfolder}
+
+\typewriter{	Usage: amsar rmfolder <foldername>
+
+
+}	This command will remove an empty folder.}
+
+
+\section{Expressions}
+
+
+	When AMSAR wants an expression to match a message it must be in the following 
+form:
+
+
+	<term>
+
+	<expr> OR <term>
+
+	<expr> AND <term>
+
+
+	A term consists of the following:
+
+
+	ALL		-- Match everything.
+
+	FIRST <number>	-- The First <number> messages.
+
+	LAST <number>	-- The Last <number> messages.
+
+	SINCE <date>	-- Messages on or after <date>. 
+
+	BEFORE <date>	-- Message sent before <date>.
+
+	FROM <text>	-- Messages that have the text <text> in the From field.
+
+	SUBJECT <text>	-- Messages that have the text <text> in the Subject field.
+
+	NOT <term>	-- Negates the value of the term.
+
+
+	Expressions match the text that is in the message caption, so data that is 
+not included there is not matchable.  This includes the TO: field.  Whenever 
+any text is needed for an expression it is of the same form as a Unix regular 
+expression.  For help on regular expressions see \italic{ed.  }Some characters 
+will need to be quoted in order to be passed from the shell, these include : * 
+() [] \\.
+
+
+	Dates for use with the SINCE and BEFORE qualifiers can be of several forms 
+including:
+
+
+	day-month-year	Example:  1-jan-90
+
+	month/day/year	Example:  3/1/90
+
+
+
+	In addition to the [-delete] and [-create] options in the pack and unpack 
+commands the following modifiers can be added before any command to affect the 
+action of AMSAR:
+
+
+	-yescase		Makes expression matching case sensitive.
+
+	-quiet		Don't print anything unless there is an error.
+
+\section{
+Quick reference}
+
+
+	Examples:
+
+
+	To save the first 100 messages in your mail folder to a pak file called 
+mail.ar:
+
+\example{	amsar pack mail mail.ar first 100
+
+
+}	To save all mail messages from jack or bob into a pak file called mail.ar 
+and delete the messages from the mail folder.
+
+	\example{amsar pack -delete mail mail.ar from jack or from bob
+
+
+}	To unpack all messages in the pak file mail.ar and restore them to your 
+folder call mail
+
+	\example{amsar unpack mail mail.ar all
+
+
+}	To list the last 5 messages in your mail folder
+
+\example{	amsar list mail last 5}
+
+
+	To list all messages in the pakfile mail.ar that are from "bobo the clown"
+
+	\example{amsar dir mail.ar from "bobo the clown"}
+
+
+	Use compress to archive all your mail before March 1, 1990 into a compressed 
+pack file.
+
+\example{	amsar pack mail - all | compress > mail.ar.Z
+
+
+}	To restore your mail from a compressed pack file.
+
+	\example{zcat mail.ar.Z | amsar unpack mail - all}
+
+
+\section{Warnings}
+
+
+	It is not recommend that you use the -delete option when piping the AMSAR 
+program through to other utilities such as compress as a vice failure can 
+cause a loss of messages during this time.  Also the use of times in the date 
+comparison is not valuable due to the fact that message captions do not have 
+time of day fields.
+
+
+	Commands and operators are not case sensitive.  All text to be matched is 
+converted to lowercase before the expression compare unless the -yescase flag 
+is used.  Each term of an expression is one command line argument so be 
+careful to quote multi word arguments to the shell, such as 
+
+\example{	amsar list mail subject "meeting tuesday"
+
+}
+	And be sure and quote using the left backslash all parenthesis as in:
+
+
+	\example{amsar list mail not \\(from aaron or from advisor \\)
+
+
+}When packing and then unpacking a folder it may not be returned to the 
+\bold{exact }same state dues to the fact that you will be the writer of the 
+restored file.  If the message directory ever needs to be rebuilt the message 
+rebuilder may think that you are faking mail and make you the sender of the 
+message.  This should not happen to any personal mail folders only bboards not 
+restored by postman.  In addition to the changing of ownership of the messages 
+the table that associates replies to messages will be lost, however this table 
+is not in use by any AMS clients and should not cause any trouble.
+
+
+\section{Machine Types}
+
+
+	AMSAR runs all the following system types
+
+
+		\italic{sun3_35, sun4_40, rt_r4, vax_3, pmax_3	}
+
+
+\section{Related tools}  
+
+
+Select (put a box around) one of the italicized names and choose "Get Help on 
+
+Selected Word" from the pop-up menu to see the help file for:
+
+
+\italic{	AMS}
+
+
+
+\section{Support Person}
+
+
+If you have questions or problems with this application, please send mail to: 
+
+
+	Aaron Wohl (aw0g+@andrew.cmu.edu)
+
+\chapter{
+}\smaller{\chapter{\center{________________________________________}}
+
+}\smaller{
+\chapter{\center{/USR/CONTRIBUTED CAVEAT}}
+
+
+The software and documentation in /usr/contributed are supported by users on 
+campus rather than by the central support organizations.  That is, they are 
+*not* supported by Academic Computing or the ITC.  Questions or comments about 
+the contents of /usr/contributed should be send to the support person for the 
+particular application, library, or information file.  The support person is 
+cited in the Support Person field at the end of the documentation for the 
+particular topic.
+
+\chapter{\center{_______________________________________}}
+
+}\enddata{text,268677556}

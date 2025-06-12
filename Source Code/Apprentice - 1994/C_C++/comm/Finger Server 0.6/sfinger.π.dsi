@@ -1,1 +1,3 @@
-=FlagsInst1_BKpt = 1;=End
+=Flags
+Inst1_BKpt = 1;
+=End

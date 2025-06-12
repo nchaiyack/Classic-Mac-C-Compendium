@@ -1,1 +1,157 @@
-/*************************************************************************************************StandardGetFolder.doc -- Copyright Chris Larson 1993, All rights reserved.                       *************************************************************************************************/Why Did I Do This?------------------In the course of working on a project, I happened to download the existing code samplesfor folder selection via the standard file package. After examining the code in each anddiscovering errors and/or omissions in all of them, I decided it was time to write my own.This package is the result of my efforts.Features:---------o Internal error checking.	Other packages performed no error checking. I use standard file’s internal error mechanism for  reporting errors when the user selects an invalid item (e.g. an alias which cannot be resolved).  The _only_ ways the StandardGetFolder function exits (barring an out of memory or resource not  found error -- which will both be reported if I detect them) is by the user selecting a valid  folder or by canceling -- just like calling StandardGetFile to select a file.o Deals correctly with activate/update events for standard file dialogs and allows the application  to handle these events for its windows while standard file dialogs are active.    	The other packages do not even handle updating the standard file dialogs correctly. My routines  will update the dialogs correctly and provides a callback mechanism that allows the host program  to update its windows while the standard file dialogs are active.  o Complete support for Balloon Help.	This was absent from all other packages. Customized help text is provided for every element  of the StandardGetFolder dialog.o Easy to localize.	Other packages had string literals within the code and other localization problems. I have  stored all string literals as resources and employed the International Utilities and Script  Manager where appropriate (as opposed to using strcmp() for example).o Low network traffic when selecting folders from remote volumes.	Other packages were querying the volume catalog almost every pass through the event loop,  resulting in a measurable amount of network activity when the user is idle. My routines are  designed to query for information only when necessary, thus dramatically reducing the network  activity when selecting a folder from a remote volume.o Does not require the ANSI libraries.	All work is done by calls to the toolbox, thus eliminating the need for use of the ANSI library.  Partly done for localization purposes and partly for space purposes, but in any case, no calls to  the ANSI library exist and only the MacTraps library is needed.Problems:---------o Currently does not support selection of a folder for which only write privileges are  granted.    	This is a by-product of using standard file’s internal mechanisms for error checking. If  selection of write-only folders on remote volumes is important for users of this package,  I will work it into a future release.How To Use:-----------The StandardGetFolder.c file contains the source code for the entire package. It employs the threeheader files (SGF.h, StandardGetFolder.h, and PStrings.h). To use this package, simply add the fileStandardGetFolder.c to your project, and #include the StandardGetFolder.h file in any source fileof yours which references a StandardFolderReply record or the StandardGetFolder() call. The twoother header files contain definitions required by the StandardGetFolder.c file -- they should notbe required for use in any other portion of your code.Refer to the file StandardGetFolder.h for a definition of the StandardFolderReply record andthe StandardGetFolder prototype. A brief explanation follows.The StandardFolderReply works much like a StandardFileReply: on exit, the sfGood field indicateswhether the contained information is valid or not (invalid means the user canceled the operation).If sfGood is true, the directory ID and volume reference number of the selected directory arecontained within the record. The contents are undefined if sfGood is false.The returned directory ID and volume reference number _should_ be canonical (i.e. no workingdirectory reference numbers) but when using them one should call FSMakeFSSpec(), or anotherappropriate routine, instead of simply filling in an FSSpec record directly.As for the StandardGetFolder call, the parameters work as follows:	prompt -- Str255 containing a string to be displayed atop the folder selection dialog box. Pass	          in either NULL or the empty string if no prompt is desired.		reply -- Points to the StandardFolderReply record to be used.		windowProc -- Points to a routine for handling activate and update events for application	              windows. Pass NULL to disable this feature.All extremely straightforward except for the windowProc. windowProc is a pointer to a functiondeclared as follows:void WindowProc (EventRecord* theEvent);That is, a function which returns void and has a single parameter which is a pointer to the eventto handle. This function _should_ only receive activate and update events and these _should_ onlybe for application windows (This is true of System 7.0.1 and 7.1) but the function should checkto make sure before handling an event.If this explanation is as clear as mud, refer to the included examples. The TestGetFolder.πsample is a bare-bones usage of the StandardGetFolder call to create an empty file withinthe selected directory. The bullseye.π sample is a modified version of the bullseye sampleincluded with THINK C 6.0 which demonstrates the use of a windowProc to handle applicationwindows (nothing is done to the selected folder in this sample -- it was used for cosmetictesting only). Please refer to these examples and to the liberally commented source code withinthe StandardGetFolder.c file if any questions remain.If none of that clears it up, feel free to E-mail me at the given address below and I will attemptto help a little more.As always, bug reports and comments are also welcome at the given E-mail address.Other Info:-----------Requirements:  This package was designed with System 7 facilities, thus it requires System 7 to               operate correctly.Testing:  This package has been tested on a Macintosh IIci, LC, Plus, Classic, Centris 610, and          Powerbook 160, with Systems 7.1 and 7.0.1. It has been tested with SuperBoomerang 4.0.1          (well, the demo version anyway -- I don’t know anyone who has the full version) but not          with Norton Directory Assistance or any other such products.Usage Rules:  This package (source code and compiled derivatives) may be used in any shareware			  product (or other such stuff: freeware, beerware, postcardware, etc.) as long as you			  mention me in your credits. This package is _not_ in the public domain and may _not_			  be used in any public domain product in any fashion. (There is one exception to this			  rule: the PStringCopy routine contained within the file "PStrings.h" was placed into			  the public domain by Christopher Tate. This routine remains in the public domain			  and may be used as such.) This package may not be used in commercial product without			  the expressed, written consent of the author.Legal Stuff:  This package is Copyright 1993 Chris Larson, all rights reserved (Again, except for			  the PStringCopy routine). I have made a great effort to ensure that this package is			  bug free but I make no warranty, either implied or stated, as to the functioning of			  this package. By using this package, the user assumes all responsibility for damages			  caused, either directly or indirectly, by its use.           Author:  Chris Larson         7009 Morton Court         Stockton, CA  95219                  Internet E-Mail (Preferred): cklarson@engr.ucdavis.eduVersion History:----------------1.0 -- (8/93) Initial Release.
+/*************************************************************************************************
+
+StandardGetFolder.doc -- Copyright Chris Larson 1993, All rights reserved.
+                       
+*************************************************************************************************/
+
+Why Did I Do This?
+------------------
+
+In the course of working on a project, I happened to download the existing code samples
+for folder selection via the standard file package. After examining the code in each and
+discovering errors and/or omissions in all of them, I decided it was time to write my own.
+This package is the result of my efforts.
+
+Features:
+---------
+
+o Internal error checking.
+
+	Other packages performed no error checking. I use standard file’s internal error mechanism for
+  reporting errors when the user selects an invalid item (e.g. an alias which cannot be resolved).
+  The _only_ ways the StandardGetFolder function exits (barring an out of memory or resource not
+  found error -- which will both be reported if I detect them) is by the user selecting a valid
+  folder or by canceling -- just like calling StandardGetFile to select a file.
+
+o Deals correctly with activate/update events for standard file dialogs and allows the application
+  to handle these events for its windows while standard file dialogs are active.
+  
+  	The other packages do not even handle updating the standard file dialogs correctly. My routines
+  will update the dialogs correctly and provides a callback mechanism that allows the host program
+  to update its windows while the standard file dialogs are active.
+  
+o Complete support for Balloon Help.
+
+	This was absent from all other packages. Customized help text is provided for every element
+  of the StandardGetFolder dialog.
+
+o Easy to localize.
+
+	Other packages had string literals within the code and other localization problems. I have
+  stored all string literals as resources and employed the International Utilities and Script
+  Manager where appropriate (as opposed to using strcmp() for example).
+
+o Low network traffic when selecting folders from remote volumes.
+
+	Other packages were querying the volume catalog almost every pass through the event loop,
+  resulting in a measurable amount of network activity when the user is idle. My routines are
+  designed to query for information only when necessary, thus dramatically reducing the network
+  activity when selecting a folder from a remote volume.
+
+o Does not require the ANSI libraries.
+
+	All work is done by calls to the toolbox, thus eliminating the need for use of the ANSI library.
+  Partly done for localization purposes and partly for space purposes, but in any case, no calls to
+  the ANSI library exist and only the MacTraps library is needed.
+
+Problems:
+---------
+
+o Currently does not support selection of a folder for which only write privileges are
+  granted.
+  
+  	This is a by-product of using standard file’s internal mechanisms for error checking. If
+  selection of write-only folders on remote volumes is important for users of this package,
+  I will work it into a future release.
+
+How To Use:
+-----------
+
+The StandardGetFolder.c file contains the source code for the entire package. It employs the three
+header files (SGF.h, StandardGetFolder.h, and PStrings.h). To use this package, simply add the file
+StandardGetFolder.c to your project, and #include the StandardGetFolder.h file in any source file
+of yours which references a StandardFolderReply record or the StandardGetFolder() call. The two
+other header files contain definitions required by the StandardGetFolder.c file -- they should not
+be required for use in any other portion of your code.
+
+Refer to the file StandardGetFolder.h for a definition of the StandardFolderReply record and
+the StandardGetFolder prototype. A brief explanation follows.
+
+The StandardFolderReply works much like a StandardFileReply: on exit, the sfGood field indicates
+whether the contained information is valid or not (invalid means the user canceled the operation).
+If sfGood is true, the directory ID and volume reference number of the selected directory are
+contained within the record. The contents are undefined if sfGood is false.
+
+The returned directory ID and volume reference number _should_ be canonical (i.e. no working
+directory reference numbers) but when using them one should call FSMakeFSSpec(), or another
+appropriate routine, instead of simply filling in an FSSpec record directly.
+
+As for the StandardGetFolder call, the parameters work as follows:
+
+	prompt -- Str255 containing a string to be displayed atop the folder selection dialog box. Pass
+	          in either NULL or the empty string if no prompt is desired.
+	
+	reply -- Points to the StandardFolderReply record to be used.
+	
+	windowProc -- Points to a routine for handling activate and update events for application
+	              windows. Pass NULL to disable this feature.
+
+All extremely straightforward except for the windowProc. windowProc is a pointer to a function
+declared as follows:
+
+void WindowProc (EventRecord* theEvent);
+
+That is, a function which returns void and has a single parameter which is a pointer to the event
+to handle. This function _should_ only receive activate and update events and these _should_ only
+be for application windows (This is true of System 7.0.1 and 7.1) but the function should check
+to make sure before handling an event.
+
+If this explanation is as clear as mud, refer to the included examples. The TestGetFolder.π
+sample is a bare-bones usage of the StandardGetFolder call to create an empty file within
+the selected directory. The bullseye.π sample is a modified version of the bullseye sample
+included with THINK C 6.0 which demonstrates the use of a windowProc to handle application
+windows (nothing is done to the selected folder in this sample -- it was used for cosmetic
+testing only). Please refer to these examples and to the liberally commented source code within
+the StandardGetFolder.c file if any questions remain.
+
+If none of that clears it up, feel free to E-mail me at the given address below and I will attempt
+to help a little more.
+
+As always, bug reports and comments are also welcome at the given E-mail address.
+
+Other Info:
+-----------
+
+Requirements:  This package was designed with System 7 facilities, thus it requires System 7 to
+               operate correctly.
+
+Testing:  This package has been tested on a Macintosh IIci, LC, Plus, Classic, Centris 610, and
+          Powerbook 160, with Systems 7.1 and 7.0.1. It has been tested with SuperBoomerang 4.0.1
+          (well, the demo version anyway -- I don’t know anyone who has the full version) but not
+          with Norton Directory Assistance or any other such products.
+
+Usage Rules:  This package (source code and compiled derivatives) may be used in any shareware
+			  product (or other such stuff: freeware, beerware, postcardware, etc.) as long as you
+			  mention me in your credits. This package is _not_ in the public domain and may _not_
+			  be used in any public domain product in any fashion. (There is one exception to this
+			  rule: the PStringCopy routine contained within the file "PStrings.h" was placed into
+			  the public domain by Christopher Tate. This routine remains in the public domain
+			  and may be used as such.) This package may not be used in commercial product without
+			  the expressed, written consent of the author.
+
+Legal Stuff:  This package is Copyright 1993 Chris Larson, all rights reserved (Again, except for
+			  the PStringCopy routine). I have made a great effort to ensure that this package is
+			  bug free but I make no warranty, either implied or stated, as to the functioning of
+			  this package. By using this package, the user assumes all responsibility for damages
+			  caused, either directly or indirectly, by its use.
+           
+Author:  Chris Larson
+         7009 Morton Court
+         Stockton, CA  95219
+         
+         Internet E-Mail (Preferred): cklarson@engr.ucdavis.edu
+
+Version History:
+----------------
+
+1.0 -- (8/93) Initial Release.

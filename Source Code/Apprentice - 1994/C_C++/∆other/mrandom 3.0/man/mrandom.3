@@ -1,1 +1,606 @@
-.\" mrandom.3 3.1 5/28/93.TH MRANDOM 3 "5/28/93".SH NAMEinit_rng, kill_rng, \dxrandomrv, dxrandomr, dxrandomv, dxrandom, \fxrandomrv, fxrandomr, fxrandomv, fxrandom, \lxrandomrv, lxrandomr, lxrandomv, lxrandom, \bxrandomrv, bxrandomr, bxrandomv, bxrandom, \bxrandomrv_f, bxrandomr_f, bxrandomv_f, bxrandom_f, \drandomrv, drandomr, drandomv, drandom, \frandomrv, frandomr, frandomv, frandom, \lrandomrv, lrandomr, lrandomv, lrandom, \brandomrv, brandomr, brandomv, brandom, \brandomrv_f, brandomr_f, brandomv_f, brandom_f, \mrandomrv, mrandomr, mrandomv, mrandom, \flush_rng, save_rng, restart_rng, seed_rng, check_rng, \describe_rng, mralg_rng, split_rng, range_rng \\- a uniform interface to several random number generators.SH SYNOPSIS.nf.B RNGdata *init_rng(alg, mrandom_alg, seed, count1, count2, bufsize).B long alg, mrandom_alg, *seed, count1, count2, bufsize;.LP.B int kill_rng(rng).B RNGdata *rng;.LP.B double dxrandomrv(rng, n, v).B RNGdata *rng;.B long n;.B double v[];.LP.B float fxrandomrv(rng, n, v).B RNGdata *rng;.B long n;.B float v[];.LP.B long lxrandomrv(rng, n, v).B RNGdata *rng;.B long n;.B long v[];.LP.B long lxrandomv(n, v).B long n;.B long v[];.LP.B int bxrandomrv(rng, n, v).B RNGdata *rng;.B long n;.B int v[];.LP.B int bxrandomrv_f(rng, n, v).B RNGdata *rng;.B long n;.B int v[];.LP.B double drandomrv(rng, n, v).B RNGdata *rng;.B long n;.B double v[];.LP.B float frandomrv(rng, n, v).B RNGdata *rng;.B long n;.B float v[];.LP.B long lrandomrv(rng, n, v).B RNGdata *rng;.B long n;.B long v[];.LP.B int brandomrv(rng, n, v).B RNGdata *rng;.B long n;.B int v[];.LP.B int brandomrv_f(rng, n, v).B RNGdata *rng;.B long n;.B int v[];.LP.B long mrandomrv(rng, m, n, v).B RNGdata *rng;.B long m;.B long n;.B long v[];.LP.B int save_rng(rng, filename).B RNGdata *rng;.B char *filename;.LP .B RNGdata *restart_rng(rng, filename).B char *filename;.LP.B void seed_rng(rng, seed).B RNGdata *rng;.B long *seed;.LP.B int check_rng(rng);.B RNGdata *rng;.LP.B char *describe_rng(rng, rngid).B RNGdata *rng;.B char rngid[RNGIDSTRLEN];.LP.B int mralg_rng(rng,new_value).B RNGdata *rng;.B long new_value;.LP.B int split_rng(rng, new_value).B RNGdata *rng;.B long new_value;.LP.B double range_rng(rng).B RNGdata *rng;.fi.IX  "init_rng()"  ""  "\fLinit_rng\fP \(em initialize random generator".IX  "kill_rng()"  ""  "\fLkill_rng\fP \(em kill random generator".IX  "dxrandomrv()"  ""  "\fldxrandomrv\fP \(em generate vector of \	random doubles".IX  "fxrandomrv()"  ""  "\flfxrandomrv\fP \(em generate vector of \	random floats".IX  "lxrandomrv()"  ""  "\fllxrandomrv\fP \(em generate vector of \	random longs".IX  "bxrandomrv()"  ""  "\flbxrandomrv\fP \(em generate vector of \	random bits, one bit from each generate".IX  "bxrandomrv_f()"  ""  "\flbxrandomrv_f\fP \(em generate vector of \	random bits, 32 bits from each generate".IX  "dxrandomrv()"  ""  "\fldxrandomrv\fP \(em generate buffered vector of \	random doubles".IX  "fxrandomrv()"  ""  "\flfxrandomrv\fP \(em generate buffered vector of \	random floats".IX  "lxrandomrv()"  ""  "\fllxrandomrv\fP \(em generate buffered vector of \	random longs".IX  "bxrandomrv()"  ""  "\flbxrandomrv\fP \(em generate buffered vector of \	random bits, one bit from each generate".IX  "bxrandomrv_f()"  ""  "\flbxrandomrv_f\fP \(em generate buffered \	vector of random bits, 32 bits from each generate".IX  "mrandomrv()"  ""  "\fLmrandomrv\fP \(em generate vector of \	random integers mod m".IX  "save_rng()"  "" "\fLsave_rng\fP \(em save random generator to file".IX  "restart_rng()"  "" \	"\fLrestart_rng\fP \(em restart random generator from file".IX  "seed_rng()"  ""  "\fLseed_rng\fP \(em seed random generator".IX  "check_rng()"  ""  "\fLcheck_rng\fP \(em check integrity of \	random generator".IX  "describe_rng()"  "" \	"\fLdescribe_rng\fP \(em construct short string describing \	 generator state" .IX  "mralg_rng()"  ""  "\fLmralg_rng\fP \(em set mrandomrv algorithm \	number".IX  "split_rng()"  ""  "\fLsplit_rng\fP \(em set generator split value".IX  "range_rng()"  ""  "\fLrange_rng\fP \(em return generator range".IX  "random number generator"  "\fLinit_rng()\fP".IX  "random number generator"  "\fLkill_rng()\fP".IX  "random number generator"  "\fLdxrandomrv()\fP".IX  "random number generator"  "\fLfxrandomrv()\fP".IX  "random number generator"  "\fLlxrandomrv()\fP".IX  "random number generator"  "\fLbxrandomrv()\fP".IX  "random number generator"  "\fLbxrandomrv_f()\fP".IX  "random number generator"  "\fLdrandomrv()\fP".IX  "random number generator"  "\fLfrandomrv()\fP".IX  "random number generator"  "\fLlrandomrv()\fP".IX  "random number generator"  "\fLbrandomrv()\fP".IX  "random number generator"  "\fLbrandomrv_f()\fP".IX  "random number generator"  "\fLmrandomrv()\fP".IX  "random number generator"  "\fLdxrandomrv()\fP".IX  "random number generator"  "\fLfxrandomrv()\fP".IX  "random number generator"  "\fLlxrandomrv()\fP".IX  "random number generator"  "\fLbxrandomrv()\fP".IX  "random number generator"  "\fLflush_rng()\fP".IX  "random number generator"  "\fLsave_rng()\fP".IX  "random number generator"  "\fLrestart_rng()\fP".IX  "random number generator"  "\fLseed_rng()\fP".IX  "random number generator"  "\fLcheck_rng()\fP".IX  "random number generator"  "\fLdescribe_rng()\fP".IX  "random number generator"  "\fLmralg_rng()\fP".IX  "random number generator"  "\fLsplit_rng()\fP".IX  "random number generator"  "\fLrange_rng()\fP".IX  "generate random numbers"  "\fLinit_rng()\fP".IX  "generate random numbers"  "\fLkill_rng()\fP".IX  "generate random numbers"  "\fLdxrandomrv()\fP".IX  "generate random numbers"  "\fLfxrandomrv()\fP".IX  "generate random numbers"  "\fLlxrandomrv()\fP".IX  "generate random numbers"  "\fLbxrandomrv()\fP".IX  "generate random numbers"  "\fLbxrandomrv_f()\fP".IX  "generate random numbers"  "\fLdrandomrv()\fP".IX  "generate random numbers"  "\fLfrandomrv()\fP".IX  "generate random numbers"  "\fLlrandomrv()\fP".IX  "generate random numbers"  "\fLbrandomrv()\fP".IX  "generate random numbers"  "\fLbrandomrv_f()\fP".IX  "generate random numbers"  "\fLmrandomrv()\fP".IX  "generate random numbers"  "\fLdxrandomrv()\fP".IX  "generate random numbers"  "\fLfxrandomrv()\fP".IX  "generate random numbers"  "\fLlxrandomrv()\fP".IX  "generate random numbers"  "\fLbxrandomrv()\fP".IX  "generate random numbers"  "\fLflush_rng()\fP".IX  "generate random numbers"  "\fLsave_rng()\fP".IX  "generate random numbers"  "\fLrestart_rng()\fP".IX  "generate random numbers"  "\fLseed_rng()\fP".IX  "generate random numbers"  "\fLcheck_rng()\fP".IX  "generate random numbers"  "\fLdescribe_rng()\fP".IX  "generate random numbers"  "\fLmralg_rng()\fP".IX  "generate random numbers"  "\fLsplit_rng()\fP".IX  "generate random numbers"  "\fLrange_rng()\fP".SH DESCRIPTION.LP.I mrandomrv(rng,m,n,v)generates n random integers in the range 0 to m-1, using the generatorrng, and storing them in vector v.An initialization routine,.I init_rng(),described below, allows you to select an appropriate generator.Using this package, instead of direct calls to random() or someother RNG code, offers the following advantages..IP 1.You can switch to another RNG, and re-run aportion of your experiment to check its validity,without changing any of your code otherthan a single parameter in your.Iinit_rng()call..IP 2.You can use my unbiased method for generating random integersin the range 0..m-1.  By contrast, the typical integer-generating codes"random()%m" or "(int) m * ((double) random()/MAXLONG)"have a slight bias for large m..IP 3.Floating point numbers, uniformly distributed in [0.0, 1.0),are available (as on most RNG interfaces)..IP 4.As with most RNG interfaces, you can have many simultaneously-active RNGs.(Unfortunately, I was unable to find an efficient work-around for 4.3bsdrandom()'s state-saving bug; you'll have to use one of the other generatorsif you want to use multiple RNG streams in a single program invocation.).IP 5.Time-efficient vectorized calls, returning multiple uniform variates,are available..IP 6The ability to "split" RNGs to produce parallet output streams using the"leapfrog" method..IP 7.The package offers a shorthand notation for completely specifying thealgorithm and current state of your RNG(s),in an 80-character human-readable ASCII string.This is very useful in experimental documentation and replication..IP 8.A complete RNG state can be (serially) reconstructed from itsshorthand notation, and.IP 9.A file-I/O interface allows fast saves and restarts of completeRNG state vectors, without the time overhead of serial reconstruction..LPAlso included in this software release is a (unsupported) driver routine.I mrtest.c.This routine implements some of the simpler tests ofrandomness, e.g. equidistribution, pairwise (both short-and long-range) correlation, and 3-tuple correlation [Marsaglia, 1985].These tests were chosen to illustrate the use of the componentsof the .I mrandom()package, as well as to exhibit the knowndefects of the 4.3bsd generators rand() and nrand48().See the man page on .I mrtestfor more details.Another use for.I mrtest.cis as a template for your own calls to the mrandom() package.(I, for one, like to program by example...)Below are detailed descriptions of the interfaces to thevarious C-language functions in the mrandom() package.For technical details, consult the file.I mrandom.tex,also included in this distribution.In order to use an RNG, it must first be initialized.  Thisis accomplished by first declaring a pointer to an RNGdatastructure, and then calling.I init_rng(), which allocates memory forthe RNG and readies it for use by the other routines in thepackage..I init_rng()returns a pointer to an initialized RNG.  A pointerreturned by.I init_rng() is valid for use by all other mrandom routines.In an init_rng() call, the.I algparameter should have a value between 0 and 9, to indicate which RNGalgorithm is desired:.IP 1.4.3bsd random(), a non-linear additive feedback RNG,.IP 2.The Knuth/Bentley prand(), a lagged-Fibonnacci generatorwith a state table of size 55 [Bentley, 1992], .IP 3.4.3bsd nrand48(),a 48-bit multiplicative congruential RNG,.IP 4.L'Ecuyer's ``portable combined'' 32-bit multiplicative congruentialgenerator [L'Ecuyer, 1988],.IP 5.4.3bsd rand(),the discredited 32-bit multiplicative congruential RNG, and.IP 6-8.Press & Teukolsky's ran0, ran1, and ran2, respectively [Press &Teukolsky, 1992],.IP 9.Marsaglia's subtract-with-borrow Ultra generator [Marsaglia and Zaman, 1991],.IP 0.for testing purposes,a linear additive generator, "long state=seed1; state += seed2",capable of generating any 32-bit constant or any arithmetic sequence..I mrandom_algis the algorithm to be used by.I mrandomrv() whencalled with the RNG..LPThe seed and count parameters are used for initialization and``cycling'' of the generator before control is returned to the callingprogram.  The generator will be cycled count1+(1.0e9)*count2 times, sobeware: if count2 is non-zero, the underlying RNG will be calledbillions of times before control is returned to the calling program!Most generators take just one 32-bit seed, but the.I seedparameters points to a vector of seeds, whose length is determined bythe needs of the underlying generator..I init_rng()returns a pointer to the allocated and initialized RNG..I bufsizeis the size of the RNG's main buffer.  A non-positive value of.I bufsize will be interpreted as a value of 1..I kill_rng()destroys the RNG, making it invalid for use.  This procedurede-allocates the space used by the RNG, and should therefore be used tokill RNGs which will no longer be used.Do.I notuse an.I RNGdatapointer which points to an active RNG to store the return value of .Iinit_rng().  In order to initialize an RNG, you should either declare anew.I RNGdatapointer, and then use it to store the return value of.I init_rng(),or, use.I kill_rng()to de-initialize an.I RNGdatapointer which points to an active RNG, and then use that pointer tostore the return value of.I init_rng()In general, I believe that users should extend the sequence of an existing RNG,whenever possible, instead of seeding a new one.I suggest this methodology because it is so difficult to properly seedan RNG when performing multiple program runs during a single experiment.Where, after all, can you get truly random seeds?To use the time of day, or a process ID, is to invite disaster in the formof subtle experimental correlations or the (often not-so-subtle) effects ofinadvertent reuse of a seed.Note that if you use a ``perfectly random'' RNG to generate seedsuniformly distributed in 0..2^{31}-1,you will are very likely to reuse a seed -- and thus risk a duplicatedprogram run -- after running, say, thirty thousand experiments.Accordingly, my package makes it easy to save and restart RNGs,to minimize the attraction of reseeding with init_rng() calls.The call .I save_rng(rng, filename)will write a complete state table to the specified file.The files are in human-readable ASCII,and are never more than about 1000 characters.The return value of save_rng is 1 if the file is successfully created;0 otherwise.The call.I restart_rng(filename)reads the specified fileinto and returns a pointer to the RNG constructed from the file.A null pointer is returned, and a message is printed to stderr,if the restart fails due to a garbled or unreadable statefile.Otherwise restart_rng returns the value 1. A major advantage of using restart_rnginstead of init_rngis that the time required to initialize the RNG is independentof the value of the count1, count2 parameters..LPSeveral routines are available for generating pseudorandom numbers.Both buffered and unbuffered routines are provided.  Unbuffered routinescall the underlying RNG only as many times as are needed to produce therequested number of generates, while buffered routines maintain buffersof generates, so that generates may be produced efficiently even whenrequested in small quantities.  Roughly, buffered routines arepreferable when generates are requested one at a time or in smallquantities, while unbuffered routines are preferable when generates arerequested in large quantities.  For detailed information aboutbuffering, seed mrandom.tex, included in this distribution.The name of a routine denotes the type of the value which the routinereturns and whether the routine is buffered or unbuffered. The firstletter of a routine denotes the type of value which it returns: ``d''for double precision and ``f'' for single precision floating point inthe range [0,1); ``l'' for long integer in the range0..(range_rng(rng)-1), and ``b'' for bit (either a 0 or a 1).  If thesecond letter of the routine's name is an ``x'', then the routine isunbuffered.  Otherwise, the routine is buffered.For convenience in user programming, we also provide a number of macrosthat supply default parameter values.  The last two letters of all ourfundamental routines is ``rv''.  This means that they must be providedwith both a pointer to an RNGdata structure and a vector to fill withgenerates from the RNG.  Macros whose names do not contain an ``r'' havethe RNGdata pointer omitted from their parameter list; they use themost-recently initialized or restarted RNG to produce generates.  Macroswhose names do not contain a ``v'' have the vector and number ofgenerates omitted from their parameter list; they produce and return asingle generate.All generating routines abort with a message to stderr if calledwith an invalid RNGdata pointer.The two routines for generating bits deserve some extra attention..I bxrandomrv()and.I brandomrv()each use one generate from the RNG to generate each bit..I bxrandomrv_f()and.I brandomrv_f()use each generate to produce 32 bits.  These two routines can only beused with 32-bit generators; they return -1 otherwise..I mrandomrv()fills the vector v with n generates in the range 0..m-1.  Ifrange_rng(rng) < m, the program aborts with an error.The algorithm used by.I mrandomrv()to fill v is set by.I init_rngor by .I mralg_rng.Algorithm 0 is Thomborson's unbiased method, which produces unbiasedlong integers in the range [0..m).  The algorithm discards any outputsfrom rng which are larger than r-(r mod m), where r is equal torange_rng(rng).  At worst, this code will discard (on long-term average)at most one value of r for every one that is useful.  This worst case isonly encountered for extremely large m; for fixed and moderate m, thiscode will rarely discard a value, and thus will run essentially as fastas algorithm 1.  When the value of m changes on each call to.I mrandomrv(), however, this code is slower than algorithm 1, due to thenecessity of recomputing r-(r mod m).The program aborts with an error message to stderr if rng is behaving sonon-randomly that Algorithm 0 must make an excessive number of calls torng in order to produce the requested number of generates.Algorithm 1 is the standard (long)(m*dxrandomr(rng)).  This algorithmmay be biased: for large m, some results may be be more likely thanothers.  The bias is (r mod m)/m, which is upper-bounded by 0.1% if m isless than a million and the range r of rng is at least a billion.We do not support, and indeed we actively discourage, generatingrestricted-range integers with lrandomr(rng)%m.  Many RNGs have poorbehavior under this transformation, most noticeably when m is a power of2.  When m is not a power of 2, fixed-point division required by an``%'' operation is time-consuming on many workstations..SH NOTESThe mrandomrv procedure is capable of generating long integers in thefull range of any RNG for which 1 <= range_rng(rng) <= 2^32.  In orderto accomplish this, with the parameter m a signed long integer, thefollowing mapping is used:Range(mrandom(m)) = 0..m-1		if 1 <= m < 2^31		    0.. 2^32-1  	if m=0		    0..(2^31-m-1)	if -2^31 <= m < 0.LP.I seed_rng()seeds rng with the seed table pointed to by seed.  The RNG's counter isreset to 0..LP.I check_rng()checks the integrity of the RNG, in order to determine whether it can beused by the other mrandom library routines..LP.I describe_rng()places a human-readable description of rng in the string rngid..LP.I mralg_rng()sets the mrandom algorithm number of rng..LP.I split_rng()sets the split value of rng..LP range_rng()returns the range of rng..SH AUTHORRobert Plotkin, rplotkin@athena.mit.edu and Clark Thomborson,cthombor@ub.d.umn.edu.SH DIAGNOSTICSIf error-checking code in any of the routines discovers a problem, anerror message is printed on the stderr stream..SH "SEE ALSO"random(3), rand(3C), drand48(3), mrtest(1).SH BUGSA little slower than.I random().A source-code rewrite of random() would allow efficient, bug-free,state-saving and restarting.  As things stand, you can get"non-random" and "non-restartable" RNG streams by callinginit_rng() several times with alg=1.  Perhaps I should add code togenerate an error message in this case..SH THEORYAside from the bug with multiple simultaneous generators,I know of no reason to choose4.3bsd random() over the Knuth/Bentley RNG.Both are likely to fail Marsaglia's Birthday-Spacings test,although I don't know that this has been tested (and I don't seethat this is likely to pose a problem in any ``real'' application).The portable-combined RNG is noticeably slower, but arguably superiorto both the above.The defects of 4.3bsd rand() and nrandom() are fairly well-known,and they are only included in this package for reasons ofbackward compatibility and testing.For more information on this package, see the LaTex files mrandom.texand soda.tex included with this distribution..SH REFERENCESJon Louis Bentley,``The software exploratorium: Some random thoughts.''.I UNIX Review 10,Number 6, June 1992.Pierre L'Ecuyer,``Efficient and portable combined random number generators.''.I Communications of the ACM, 31(6):742--774, June 1988.George Marsaglia,``A current view of random number generators.''In L. Billard, editor,.I Computer Science and Statistics: The Interface,pages 3--10. Elsevier Science Publishers, 1985.George Marsaglia and Arif Zaman,``A New Class of Random Number Generators.''.I The Annals of Applied Probability, 1(3):1991.Ora E. Percus and Malvin H. Kalos,``Random number generators for MIMD parallel processors.''.I Journal of Parallel and Distributed Computing, 6:477--497, 1989.William H. Press and Saul A. Teukolsky,``Portable Random Number Generators.''.I Computers in Physics, 6(5):Sept/Oct. 1992.Robert Sedgewick,.I Algorithms in C,Addison-Wesley, 1990.Clark Thomborson, "Tools for Randomized Experimentation," to appear in the .I Proceedings of the 25th Symposium on the Interface:.I Computing Science and Statistics,1993.Clark Thomborson.``Mrandom (version 1).''.I Comp.sources.unix 25(23),December 1991.
+.\" mrandom.3 3.1 5/28/93
+.TH MRANDOM 3 "5/28/93"
+.SH NAME
+init_rng, kill_rng, \
+dxrandomrv, dxrandomr, dxrandomv, dxrandom, \
+fxrandomrv, fxrandomr, fxrandomv, fxrandom, \
+lxrandomrv, lxrandomr, lxrandomv, lxrandom, \
+bxrandomrv, bxrandomr, bxrandomv, bxrandom, \
+bxrandomrv_f, bxrandomr_f, bxrandomv_f, bxrandom_f, \
+drandomrv, drandomr, drandomv, drandom, \
+frandomrv, frandomr, frandomv, frandom, \
+lrandomrv, lrandomr, lrandomv, lrandom, \
+brandomrv, brandomr, brandomv, brandom, \
+brandomrv_f, brandomr_f, brandomv_f, brandom_f, \
+mrandomrv, mrandomr, mrandomv, mrandom, \
+flush_rng, save_rng, restart_rng, seed_rng, check_rng, \
+describe_rng, mralg_rng, split_rng, range_rng \
+\- a uniform interface to several random number generators
+.SH SYNOPSIS
+.nf
+.B RNGdata *init_rng(alg, mrandom_alg, seed, count1, count2, bufsize)
+.B long alg, mrandom_alg, *seed, count1, count2, bufsize;
+.LP
+.B int kill_rng(rng)
+.B RNGdata *rng;
+.LP
+.B double dxrandomrv(rng, n, v)
+.B RNGdata *rng;
+.B long n;
+.B double v[];
+.LP
+.B float fxrandomrv(rng, n, v)
+.B RNGdata *rng;
+.B long n;
+.B float v[];
+.LP
+.B long lxrandomrv(rng, n, v)
+.B RNGdata *rng;
+.B long n;
+.B long v[];
+.LP
+.B long lxrandomv(n, v)
+.B long n;
+.B long v[];
+.LP
+.B int bxrandomrv(rng, n, v)
+.B RNGdata *rng;
+.B long n;
+.B int v[];
+.LP
+.B int bxrandomrv_f(rng, n, v)
+.B RNGdata *rng;
+.B long n;
+.B int v[];
+.LP
+.B double drandomrv(rng, n, v)
+.B RNGdata *rng;
+.B long n;
+.B double v[];
+.LP
+.B float frandomrv(rng, n, v)
+.B RNGdata *rng;
+.B long n;
+.B float v[];
+.LP
+.B long lrandomrv(rng, n, v)
+.B RNGdata *rng;
+.B long n;
+.B long v[];
+.LP
+.B int brandomrv(rng, n, v)
+.B RNGdata *rng;
+.B long n;
+.B int v[];
+.LP
+.B int brandomrv_f(rng, n, v)
+.B RNGdata *rng;
+.B long n;
+.B int v[];
+.LP
+.B long mrandomrv(rng, m, n, v)
+.B RNGdata *rng;
+.B long m;
+.B long n;
+.B long v[];
+.LP
+.B int save_rng(rng, filename)
+.B RNGdata *rng;
+.B char *filename;
+.LP 
+.B RNGdata *restart_rng(rng, filename)
+.B char *filename;
+.LP
+.B void seed_rng(rng, seed)
+.B RNGdata *rng;
+.B long *seed;
+.LP
+.B int check_rng(rng);
+.B RNGdata *rng;
+.LP
+.B char *describe_rng(rng, rngid)
+.B RNGdata *rng;
+.B char rngid[RNGIDSTRLEN];
+.LP
+.B int mralg_rng(rng,new_value)
+.B RNGdata *rng;
+.B long new_value;
+.LP
+.B int split_rng(rng, new_value)
+.B RNGdata *rng;
+.B long new_value;
+.LP
+.B double range_rng(rng)
+.B RNGdata *rng;
+.fi
+.IX  "init_rng()"  ""  "\fLinit_rng\fP \(em initialize random generator"
+.IX  "kill_rng()"  ""  "\fLkill_rng\fP \(em kill random generator"
+.IX  "dxrandomrv()"  ""  "\fldxrandomrv\fP \(em generate vector of \
+	random doubles"
+.IX  "fxrandomrv()"  ""  "\flfxrandomrv\fP \(em generate vector of \
+	random floats"
+.IX  "lxrandomrv()"  ""  "\fllxrandomrv\fP \(em generate vector of \
+	random longs"
+.IX  "bxrandomrv()"  ""  "\flbxrandomrv\fP \(em generate vector of \
+	random bits, one bit from each generate"
+.IX  "bxrandomrv_f()"  ""  "\flbxrandomrv_f\fP \(em generate vector of \
+	random bits, 32 bits from each generate"
+.IX  "dxrandomrv()"  ""  "\fldxrandomrv\fP \(em generate buffered vector of \
+	random doubles"
+.IX  "fxrandomrv()"  ""  "\flfxrandomrv\fP \(em generate buffered vector of \
+	random floats"
+.IX  "lxrandomrv()"  ""  "\fllxrandomrv\fP \(em generate buffered vector of \
+	random longs"
+.IX  "bxrandomrv()"  ""  "\flbxrandomrv\fP \(em generate buffered vector of \
+	random bits, one bit from each generate"
+.IX  "bxrandomrv_f()"  ""  "\flbxrandomrv_f\fP \(em generate buffered \
+	vector of random bits, 32 bits from each generate"
+.IX  "mrandomrv()"  ""  "\fLmrandomrv\fP \(em generate vector of \
+	random integers mod m"
+.IX  "save_rng()"  "" "\fLsave_rng\fP \(em save random generator to file"
+.IX  "restart_rng()"  "" \
+	"\fLrestart_rng\fP \(em restart random generator from file"
+.IX  "seed_rng()"  ""  "\fLseed_rng\fP \(em seed random generator"
+.IX  "check_rng()"  ""  "\fLcheck_rng\fP \(em check integrity of \
+	random generator"
+.IX  "describe_rng()"  "" \
+	"\fLdescribe_rng\fP \(em construct short string describing \
+	 generator state" 
+.IX  "mralg_rng()"  ""  "\fLmralg_rng\fP \(em set mrandomrv algorithm \
+	number"
+.IX  "split_rng()"  ""  "\fLsplit_rng\fP \(em set generator split value"
+.IX  "range_rng()"  ""  "\fLrange_rng\fP \(em return generator range"
+.IX  "random number generator"  "\fLinit_rng()\fP"
+.IX  "random number generator"  "\fLkill_rng()\fP"
+.IX  "random number generator"  "\fLdxrandomrv()\fP"
+.IX  "random number generator"  "\fLfxrandomrv()\fP"
+.IX  "random number generator"  "\fLlxrandomrv()\fP"
+.IX  "random number generator"  "\fLbxrandomrv()\fP"
+.IX  "random number generator"  "\fLbxrandomrv_f()\fP"
+.IX  "random number generator"  "\fLdrandomrv()\fP"
+.IX  "random number generator"  "\fLfrandomrv()\fP"
+.IX  "random number generator"  "\fLlrandomrv()\fP"
+.IX  "random number generator"  "\fLbrandomrv()\fP"
+.IX  "random number generator"  "\fLbrandomrv_f()\fP"
+.IX  "random number generator"  "\fLmrandomrv()\fP"
+.IX  "random number generator"  "\fLdxrandomrv()\fP"
+.IX  "random number generator"  "\fLfxrandomrv()\fP"
+.IX  "random number generator"  "\fLlxrandomrv()\fP"
+.IX  "random number generator"  "\fLbxrandomrv()\fP"
+.IX  "random number generator"  "\fLflush_rng()\fP"
+.IX  "random number generator"  "\fLsave_rng()\fP"
+.IX  "random number generator"  "\fLrestart_rng()\fP"
+.IX  "random number generator"  "\fLseed_rng()\fP"
+.IX  "random number generator"  "\fLcheck_rng()\fP"
+.IX  "random number generator"  "\fLdescribe_rng()\fP"
+.IX  "random number generator"  "\fLmralg_rng()\fP"
+.IX  "random number generator"  "\fLsplit_rng()\fP"
+.IX  "random number generator"  "\fLrange_rng()\fP"
+.IX  "generate random numbers"  "\fLinit_rng()\fP"
+.IX  "generate random numbers"  "\fLkill_rng()\fP"
+.IX  "generate random numbers"  "\fLdxrandomrv()\fP"
+.IX  "generate random numbers"  "\fLfxrandomrv()\fP"
+.IX  "generate random numbers"  "\fLlxrandomrv()\fP"
+.IX  "generate random numbers"  "\fLbxrandomrv()\fP"
+.IX  "generate random numbers"  "\fLbxrandomrv_f()\fP"
+.IX  "generate random numbers"  "\fLdrandomrv()\fP"
+.IX  "generate random numbers"  "\fLfrandomrv()\fP"
+.IX  "generate random numbers"  "\fLlrandomrv()\fP"
+.IX  "generate random numbers"  "\fLbrandomrv()\fP"
+.IX  "generate random numbers"  "\fLbrandomrv_f()\fP"
+.IX  "generate random numbers"  "\fLmrandomrv()\fP"
+.IX  "generate random numbers"  "\fLdxrandomrv()\fP"
+.IX  "generate random numbers"  "\fLfxrandomrv()\fP"
+.IX  "generate random numbers"  "\fLlxrandomrv()\fP"
+.IX  "generate random numbers"  "\fLbxrandomrv()\fP"
+.IX  "generate random numbers"  "\fLflush_rng()\fP"
+.IX  "generate random numbers"  "\fLsave_rng()\fP"
+.IX  "generate random numbers"  "\fLrestart_rng()\fP"
+.IX  "generate random numbers"  "\fLseed_rng()\fP"
+.IX  "generate random numbers"  "\fLcheck_rng()\fP"
+.IX  "generate random numbers"  "\fLdescribe_rng()\fP"
+.IX  "generate random numbers"  "\fLmralg_rng()\fP"
+.IX  "generate random numbers"  "\fLsplit_rng()\fP"
+.IX  "generate random numbers"  "\fLrange_rng()\fP"
+.SH DESCRIPTION
+.LP
+.I mrandomrv(rng,m,n,v)
+generates n random integers in the range 0 to m-1, using the generator
+rng, and storing them in vector v.
+An initialization routine,
+.I init_rng(),
+described below, allows you to select an appropriate generator.
+
+Using this package, instead of direct calls to random() or some
+other RNG code, offers the following advantages.
+.IP 1.
+You can switch to another RNG, and re-run a
+portion of your experiment to check its validity,
+without changing any of your code other
+than a single parameter in your
+.I
+init_rng()
+call.
+.IP 2.
+You can use my unbiased method for generating random integers
+in the range 0..m-1.  By contrast, the typical integer-generating codes
+"random()%m" or "(int) m * ((double) random()/MAXLONG)"
+have a slight bias for large m.
+.IP 3.
+Floating point numbers, uniformly distributed in [0.0, 1.0),
+are available (as on most RNG interfaces).
+.IP 4.
+As with most RNG interfaces, you can have many simultaneously-active RNGs.
+(Unfortunately, I was unable to find an efficient work-around for 4.3bsd
+random()'s state-saving bug; you'll have to use one of the other generators
+if you want to use multiple RNG streams in a single program invocation.)
+.IP 5.
+Time-efficient vectorized calls, returning multiple uniform variates,
+are available.
+.IP 6
+The ability to "split" RNGs to produce parallet output streams using the
+"leapfrog" method.
+.IP 7.
+The package offers a shorthand notation for completely specifying the
+algorithm and current state of your RNG(s),
+in an 80-character human-readable ASCII string.
+This is very useful in experimental documentation and replication.
+.IP 8.
+A complete RNG state can be (serially) reconstructed from its
+shorthand notation, and
+.IP 9.
+A file-I/O interface allows fast saves and restarts of complete
+RNG state vectors, without the time overhead of serial reconstruction.
+
+.LP
+Also included in this software release is a (unsupported) driver routine
+.I mrtest.c.
+This routine implements some of the simpler tests of
+randomness, e.g. equidistribution, pairwise (both short-
+and long-range) correlation, and 3-tuple correlation [Marsaglia, 1985].
+These tests were chosen to illustrate the use of the components
+of the 
+.I mrandom()
+package, as well as to exhibit the known
+defects of the 4.3bsd generators rand() and nrand48().
+See the man page on 
+.I mrtest
+for more details.
+
+Another use for
+.I mrtest.c
+is as a template for your own calls to the mrandom() package.
+(I, for one, like to program by example...)
+
+Below are detailed descriptions of the interfaces to the
+various C-language functions in the mrandom() package.
+For technical details, consult the file
+.I mrandom.tex,
+also included in this distribution.
+
+In order to use an RNG, it must first be initialized.  This
+is accomplished by first declaring a pointer to an RNGdata
+structure, and then calling
+.I init_rng()
+, which allocates memory for
+the RNG and readies it for use by the other routines in the
+package.
+
+.I init_rng()
+returns a pointer to an initialized RNG.  A pointer
+returned by
+.I init_rng() is valid for use by all other mrandom routines.
+
+In an init_rng() call, the
+.I alg
+parameter should have a value between 0 and 9, to indicate which RNG
+algorithm is desired:
+.IP 1.
+4.3bsd random(), a non-linear additive feedback RNG,
+.IP 2.
+The Knuth/Bentley prand(), a lagged-Fibonnacci generator
+with a state table of size 55 [Bentley, 1992], 
+.IP 3.
+4.3bsd nrand48(),
+a 48-bit multiplicative congruential RNG,
+.IP 4.
+L'Ecuyer's ``portable combined'' 32-bit multiplicative congruential
+generator [L'Ecuyer, 1988],
+.IP 5.
+4.3bsd rand(),
+the discredited 32-bit multiplicative congruential RNG, and
+.IP 6-8.
+Press & Teukolsky's ran0, ran1, and ran2, respectively [Press &
+Teukolsky, 1992],
+.IP 9.
+Marsaglia's subtract-with-borrow Ultra generator [Marsaglia and Zaman, 1991],
+.IP 0.
+for testing purposes,
+a linear additive generator, "long state=seed1; state += seed2",
+capable of generating any 32-bit constant or any arithmetic sequence.
+
+.I mrandom_alg
+is the algorithm to be used by
+.I mrandomrv() when
+called with the RNG.
+
+.LP
+The seed and count parameters are used for initialization and
+``cycling'' of the generator before control is returned to the calling
+program.  The generator will be cycled count1+(1.0e9)*count2 times, so
+beware: if count2 is non-zero, the underlying RNG will be called
+billions of times before control is returned to the calling program!
+Most generators take just one 32-bit seed, but the
+.I seed
+parameters points to a vector of seeds, whose length is determined by
+the needs of the underlying generator.
+
+.I init_rng()
+returns a pointer to the allocated and initialized RNG.
+
+.I bufsize
+is the size of the RNG's main buffer.  A non-positive value of
+.I bufsize will be interpreted as a value of 1.
+
+.I kill_rng()
+destroys the RNG, making it invalid for use.  This procedure
+de-allocates the space used by the RNG, and should therefore be used to
+kill RNGs which will no longer be used.
+
+Do
+.I not
+use an
+.I RNGdata
+
+pointer which points to an active RNG to store the return value of .I
+init_rng().  In order to initialize an RNG, you should either declare a
+new
+.I RNGdata
+pointer, and then use it to store the return value of
+.I init_rng(),
+or, use
+.I kill_rng()
+to de-initialize an
+.I RNGdata
+pointer which points to an active RNG, and then use that pointer to
+store the return value of
+.I init_rng()
+
+In general, I believe that users should extend the sequence of an existing RNG,
+whenever possible, instead of seeding a new one.
+I suggest this methodology because it is so difficult to properly seed
+an RNG when performing multiple program runs during a single experiment.
+Where, after all, can you get truly random seeds?
+To use the time of day, or a process ID, is to invite disaster in the form
+of subtle experimental correlations or the (often not-so-subtle) effects of
+inadvertent reuse of a seed.
+Note that if you use a ``perfectly random'' RNG to generate seeds
+uniformly distributed in 0..2^{31}-1,
+you will are very likely to reuse a seed -- and thus risk a duplicated
+program run -- after running, say, thirty thousand experiments.
+
+Accordingly, my package makes it easy to save and restart RNGs,
+to minimize the attraction of reseeding with init_rng() calls.
+The call 
+.I save_rng(rng, filename)
+will write a complete state table to the specified file.
+The files are in human-readable ASCII,
+and are never more than about 1000 characters.
+The return value of save_rng is 1 if the file is successfully created;
+0 otherwise.
+
+The call
+.I restart_rng(filename)
+reads the specified file
+into and returns a pointer to the RNG constructed from the file.
+A null pointer is returned, and a message is printed to stderr,
+if the restart fails due to a garbled or unreadable statefile.
+Otherwise restart_rng returns the value 1. 
+
+A major advantage of using restart_rng
+instead of init_rng
+is that the time required to initialize the RNG is independent
+of the value of the count1, count2 parameters.
+
+.LP
+Several routines are available for generating pseudorandom numbers.
+Both buffered and unbuffered routines are provided.  Unbuffered routines
+call the underlying RNG only as many times as are needed to produce the
+requested number of generates, while buffered routines maintain buffers
+of generates, so that generates may be produced efficiently even when
+requested in small quantities.  Roughly, buffered routines are
+preferable when generates are requested one at a time or in small
+quantities, while unbuffered routines are preferable when generates are
+requested in large quantities.  For detailed information about
+buffering, seed mrandom.tex, included in this distribution.
+
+The name of a routine denotes the type of the value which the routine
+returns and whether the routine is buffered or unbuffered. The first
+letter of a routine denotes the type of value which it returns: ``d''
+for double precision and ``f'' for single precision floating point in
+the range [0,1); ``l'' for long integer in the range
+0..(range_rng(rng)-1), and ``b'' for bit (either a 0 or a 1).  If the
+second letter of the routine's name is an ``x'', then the routine is
+unbuffered.  Otherwise, the routine is buffered.
+
+For convenience in user programming, we also provide a number of macros
+that supply default parameter values.  The last two letters of all our
+fundamental routines is ``rv''.  This means that they must be provided
+with both a pointer to an RNGdata structure and a vector to fill with
+generates from the RNG.  Macros whose names do not contain an ``r'' have
+the RNGdata pointer omitted from their parameter list; they use the
+most-recently initialized or restarted RNG to produce generates.  Macros
+whose names do not contain a ``v'' have the vector and number of
+generates omitted from their parameter list; they produce and return a
+single generate.
+
+All generating routines abort with a message to stderr if called
+with an invalid RNGdata pointer.
+
+The two routines for generating bits deserve some extra attention.
+.I bxrandomrv()
+and
+.I brandomrv()
+each use one generate from the RNG to generate each bit.
+.I bxrandomrv_f()
+and
+.I brandomrv_f()
+use each generate to produce 32 bits.  These two routines can only be
+used with 32-bit generators; they return -1 otherwise.
+
+.I mrandomrv()
+fills the vector v with n generates in the range 0..m-1.  If
+range_rng(rng) < m, the program aborts with an error.
+
+The algorithm used by
+.I mrandomrv()
+to fill v is set by
+.I init_rng
+or by 
+.I mralg_rng.
+
+Algorithm 0 is Thomborson's unbiased method, which produces unbiased
+long integers in the range [0..m).  The algorithm discards any outputs
+from rng which are larger than r-(r mod m), where r is equal to
+range_rng(rng).  At worst, this code will discard (on long-term average)
+at most one value of r for every one that is useful.  This worst case is
+only encountered for extremely large m; for fixed and moderate m, this
+code will rarely discard a value, and thus will run essentially as fast
+as algorithm 1.  When the value of m changes on each call to
+.I mrandomrv()
+, however, this code is slower than algorithm 1, due to the
+necessity of recomputing r-(r mod m).
+
+The program aborts with an error message to stderr if rng is behaving so
+non-randomly that Algorithm 0 must make an excessive number of calls to
+rng in order to produce the requested number of generates.
+
+Algorithm 1 is the standard (long)(m*dxrandomr(rng)).  This algorithm
+may be biased: for large m, some results may be be more likely than
+others.  The bias is (r mod m)/m, which is upper-bounded by 0.1% if m is
+less than a million and the range r of rng is at least a billion.
+
+We do not support, and indeed we actively discourage, generating
+restricted-range integers with lrandomr(rng)%m.  Many RNGs have poor
+behavior under this transformation, most noticeably when m is a power of
+2.  When m is not a power of 2, fixed-point division required by an
+``%'' operation is time-consuming on many workstations.
+
+.SH NOTES
+The mrandomrv procedure is capable of generating long integers in the
+full range of any RNG for which 1 <= range_rng(rng) <= 2^32.  In order
+to accomplish this, with the parameter m a signed long integer, the
+following mapping is used:
+
+Range(mrandom(m)) = 0..m-1		if 1 <= m < 2^31
+		    0.. 2^32-1  	if m=0
+		    0..(2^31-m-1)	if -2^31 <= m < 0
+
+.LP
+.I seed_rng()
+seeds rng with the seed table pointed to by seed.  The RNG's counter is
+reset to 0.
+
+.LP
+.I check_rng()
+checks the integrity of the RNG, in order to determine whether it can be
+used by the other mrandom library routines.
+
+.LP
+.I describe_rng()
+places a human-readable description of rng in the string rngid.
+
+.LP
+.I mralg_rng()
+sets the mrandom algorithm number of rng.
+
+.LP
+.I split_rng()
+sets the split value of rng.
+
+.LP range_rng()
+returns the range of rng.
+
+.SH AUTHOR
+Robert Plotkin, rplotkin@athena.mit.edu and Clark Thomborson,
+cthombor@ub.d.umn.edu
+.SH DIAGNOSTICS
+If error-checking code in any of the routines discovers a problem, an
+error message is printed on the stderr stream.
+
+.SH "SEE ALSO"
+random(3), rand(3C), drand48(3), mrtest(1)
+
+.SH BUGS
+A little slower than
+.I random().
+
+A source-code rewrite of random() would allow efficient, bug-free,
+state-saving and restarting.  As things stand, you can get
+"non-random" and "non-restartable" RNG streams by calling
+init_rng() several times with alg=1.  Perhaps I should add code to
+generate an error message in this case.
+
+.SH THEORY
+Aside from the bug with multiple simultaneous generators,
+I know of no reason to choose
+4.3bsd random() over the Knuth/Bentley RNG.
+Both are likely to fail Marsaglia's Birthday-Spacings test,
+although I don't know that this has been tested (and I don't see
+that this is likely to pose a problem in any ``real'' application).
+The portable-combined RNG is noticeably slower, but arguably superior
+to both the above.
+The defects of 4.3bsd rand() and nrandom() are fairly well-known,
+and they are only included in this package for reasons of
+backward compatibility and testing.
+
+For more information on this package, see the LaTex files mrandom.tex
+and soda.tex included with this distribution.
+
+.SH REFERENCES
+
+Jon Louis Bentley,
+``The software exploratorium: Some random thoughts.''
+.I UNIX Review 10,
+Number 6, June 1992.
+
+Pierre L'Ecuyer,
+``Efficient and portable combined random number generators.''
+.I Communications of the ACM, 31(6):
+742--774, June 1988.
+
+George Marsaglia,
+``A current view of random number generators.''
+In L. Billard, editor,
+.I Computer Science and Statistics: The Interface,
+pages 3--10. Elsevier Science Publishers, 1985.
+
+George Marsaglia and Arif Zaman,
+``A New Class of Random Number Generators.''
+.I The Annals of Applied Probability, 1(3):
+1991.
+
+Ora E. Percus and Malvin H. Kalos,
+``Random number generators for MIMD parallel processors.''
+.I Journal of Parallel and Distributed Computing, 6:
+477--497, 1989.
+
+William H. Press and Saul A. Teukolsky,
+``Portable Random Number Generators.''
+.I Computers in Physics, 6(5):
+Sept/Oct. 1992.
+
+Robert Sedgewick,
+.I Algorithms in C,
+Addison-Wesley, 1990.
+
+Clark Thomborson, "Tools for Randomized Experimentation," to appear in the 
+.I Proceedings of the 25th Symposium on the Interface:
+.I Computing Science and Statistics,
+1993.
+
+Clark Thomborson.
+``Mrandom (version 1).''
+.I Comp.sources.unix 25(23),
+December 1991.
+

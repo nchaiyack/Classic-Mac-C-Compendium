@@ -1,1 +1,43 @@
-5/94Miscellaneous source codes from Brent Burton, brentb@math.tamu.edu.Many of the codes included in this directory were started a few yearsago and never finished or polished.  I love programming, but once Iget a certain hack accomplished I run to the next interesting problem.At least that's how I handle my Mac programming, since my regular jobdoesn't have opportunity for me to develop code for the Mac.  Machacking has always been done during late-night sessions or during finalsto get me away from classes.Some of the code may be useful, some not.  Some may be interesting,and others won't be.  Feel free to use whatever you need and send therest to the bit bucket.Think C 5.0.x was used to develop some of the earlier code, whileThink C 6.0 ("Symantec C++ 6.0 for Macintosh") was used for later codes.You may have to do some bittwiddling to get the codes to compile properlyunder whatever compiler you use.Any statements that remain in the source codes concerning copyrightsor usage will be superseded by the following as of today, May 5, 1994:"This code is freely distributable and modifiable and is, in no way,accompanied by a warranty or guarantee of fitness for any purpose.  Therecipient of this code accepts the source code as-is, with whateverproblems or bugs exist.  All code is Copyright 1991-1994 by Brent Burton."I don't know what kind of legal prowess is embedded in that, but dowhatever you want with the code while keeping in mind that I am nota professional Mac developer.Anyway, have fun and feel free to email me.Old email addresses (do not use anymore):brentb@tamsun.tamu.edubpb9204@tamsun.tamu.edubrentb@cs.tamu.eduAll email should now be sent to me at brentb@math.tamu.edu.   5/5/94
+
+5/94
+
+Miscellaneous source codes from Brent Burton, brentb@math.tamu.edu.
+
+Many of the codes included in this directory were started a few years
+ago and never finished or polished.  I love programming, but once I
+get a certain hack accomplished I run to the next interesting problem.
+At least that's how I handle my Mac programming, since my regular job
+doesn't have opportunity for me to develop code for the Mac.  Mac
+hacking has always been done during late-night sessions or during finals
+to get me away from classes.
+
+Some of the code may be useful, some not.  Some may be interesting,
+and others won't be.  Feel free to use whatever you need and send the
+rest to the bit bucket.
+
+Think C 5.0.x was used to develop some of the earlier code, while
+Think C 6.0 ("Symantec C++ 6.0 for Macintosh") was used for later codes.
+You may have to do some bittwiddling to get the codes to compile properly
+under whatever compiler you use.
+
+Any statements that remain in the source codes concerning copyrights
+or usage will be superseded by the following as of today, May 5, 1994:
+
+"This code is freely distributable and modifiable and is, in no way,
+accompanied by a warranty or guarantee of fitness for any purpose.  The
+recipient of this code accepts the source code as-is, with whatever
+problems or bugs exist.  All code is Copyright 1991-1994 by Brent Burton."
+
+I don't know what kind of legal prowess is embedded in that, but do
+whatever you want with the code while keeping in mind that I am not
+a professional Mac developer.
+
+Anyway, have fun and feel free to email me.
+
+Old email addresses (do not use anymore):
+brentb@tamsun.tamu.edu
+bpb9204@tamsun.tamu.edu
+brentb@cs.tamu.edu
+
+All email should now be sent to me at brentb@math.tamu.edu.   5/5/94
+

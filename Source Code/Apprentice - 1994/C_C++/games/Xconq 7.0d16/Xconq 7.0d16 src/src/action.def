@@ -1,1 +1,74 @@
-/* The definitions of all the types of actions. */DEF_ACTION("none", A_NONE, "", do_none_action,  "The non-action (not used, but maybe a good placeholder)")DEF_ACTION("move", A_MOVE, "xyz", do_move_action,  "Change position to the given cell and altitude")DEF_ACTION("enter", A_ENTER, "U", do_enter_action,  "Enter a transport")DEF_ACTION("attack", A_ATTACK, "Un", do_attack_action,  "Attack a given unit")DEF_ACTION("overrun", A_OVERRUN, "xyzn", do_overrun_action,  "Attack everything in a cell and occupy if possible")DEF_ACTION("fire-at", A_FIRE_AT, "Um", do_fire_at_action,  "Throw a given material at a given unit")DEF_ACTION("fire-into", A_FIRE_INTO, "xyzm", do_fire_into_action,  "Throw a given material at a given cell")DEF_ACTION("detonate", A_DETONATE, "xyz", do_detonate_action,  "Damage or destroy self in a violent fashion")DEF_ACTION("capture", A_CAPTURE, "U", do_capture_action,  "Take a unit prisoner")DEF_ACTION("produce", A_PRODUCE, "mn", do_produce_action,  "Produce a quantity of a material")DEF_ACTION("transfer", A_TRANSFER, "mnU", do_transfer_action,  "Transfer a quantity of a material between two units")DEF_ACTION("research", A_RESEARCH, "u", do_research_action,  "Study how to build the given type")DEF_ACTION("toolup", A_TOOL_UP, "u", do_toolup_action,  "Prepare tools to build the given type")DEF_ACTION("create-in", A_CREATE_IN, "uU", do_create_in_action,  "Start construction of a unit inside (or outside?) another unit")DEF_ACTION("create-at", A_CREATE_AT, "uxyz", do_create_at_action,  "Start construction of a unit at a given location")DEF_ACTION("build", A_BUILD, "U", do_build_action,  "Make progress on the given unit")DEF_ACTION("repair", A_REPAIR, "U", do_repair_action,  "Repair a given unit")DEF_ACTION("disband", A_DISBAND, "", do_disband_action,  "Dismantle the given unit completely")DEF_ACTION("transfer-part", A_TRANSFER_PART, "nU", do_transfer_part_action,  "Split a part of self into another unit")DEF_ACTION("change-type", A_CHANGE_TYPE, "u", do_change_type_action,  "Change self to a different unit type")DEF_ACTION("change-side", A_CHANGE_SIDE, "S", do_change_side_action,  "Change to a given side")DEF_ACTION("alter-terrain", A_ALTER_TERRAIN, "xyt", do_alter_cell_action,  "Alter cell terrain")DEF_ACTION("add-terrain", A_ADD_TERRAIN, "xydt", do_add_terrain_action,  "Add border/connection/coating terrain")DEF_ACTION("remove-terrain", A_REMOVE_TERRAIN, "xydt", do_remove_terrain_action,  "Remove border/connection/coating terrain")
+/* The definitions of all the types of actions. */
+
+DEF_ACTION("none", A_NONE, "", do_none_action,
+  "The non-action (not used, but maybe a good placeholder)")
+
+DEF_ACTION("move", A_MOVE, "xyz", do_move_action,
+  "Change position to the given cell and altitude")
+
+DEF_ACTION("enter", A_ENTER, "U", do_enter_action,
+  "Enter a transport")
+
+DEF_ACTION("attack", A_ATTACK, "Un", do_attack_action,
+  "Attack a given unit")
+
+DEF_ACTION("overrun", A_OVERRUN, "xyzn", do_overrun_action,
+  "Attack everything in a cell and occupy if possible")
+
+DEF_ACTION("fire-at", A_FIRE_AT, "Um", do_fire_at_action,
+  "Throw a given material at a given unit")
+
+DEF_ACTION("fire-into", A_FIRE_INTO, "xyzm", do_fire_into_action,
+  "Throw a given material at a given cell")
+
+DEF_ACTION("detonate", A_DETONATE, "xyz", do_detonate_action,
+  "Damage or destroy self in a violent fashion")
+
+DEF_ACTION("capture", A_CAPTURE, "U", do_capture_action,
+  "Take a unit prisoner")
+
+DEF_ACTION("produce", A_PRODUCE, "mn", do_produce_action,
+  "Produce a quantity of a material")
+
+DEF_ACTION("transfer", A_TRANSFER, "mnU", do_transfer_action,
+  "Transfer a quantity of a material between two units")
+
+DEF_ACTION("research", A_RESEARCH, "u", do_research_action,
+  "Study how to build the given type")
+
+DEF_ACTION("toolup", A_TOOL_UP, "u", do_toolup_action,
+  "Prepare tools to build the given type")
+
+DEF_ACTION("create-in", A_CREATE_IN, "uU", do_create_in_action,
+  "Start construction of a unit inside (or outside?) another unit")
+
+DEF_ACTION("create-at", A_CREATE_AT, "uxyz", do_create_at_action,
+  "Start construction of a unit at a given location")
+
+DEF_ACTION("build", A_BUILD, "U", do_build_action,
+  "Make progress on the given unit")
+
+DEF_ACTION("repair", A_REPAIR, "U", do_repair_action,
+  "Repair a given unit")
+
+DEF_ACTION("disband", A_DISBAND, "", do_disband_action,
+  "Dismantle the given unit completely")
+
+DEF_ACTION("transfer-part", A_TRANSFER_PART, "nU", do_transfer_part_action,
+  "Split a part of self into another unit")
+
+DEF_ACTION("change-type", A_CHANGE_TYPE, "u", do_change_type_action,
+  "Change self to a different unit type")
+
+DEF_ACTION("change-side", A_CHANGE_SIDE, "S", do_change_side_action,
+  "Change to a given side")
+
+DEF_ACTION("alter-terrain", A_ALTER_TERRAIN, "xyt", do_alter_cell_action,
+  "Alter cell terrain")
+
+DEF_ACTION("add-terrain", A_ADD_TERRAIN, "xydt", do_add_terrain_action,
+  "Add border/connection/coating terrain")
+
+DEF_ACTION("remove-terrain", A_REMOVE_TERRAIN, "xydt", do_remove_terrain_action,
+  "Remove border/connection/coating terrain")
+

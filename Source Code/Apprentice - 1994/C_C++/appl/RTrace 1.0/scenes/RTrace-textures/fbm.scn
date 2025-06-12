@@ -1,1 +1,10 @@
-eye  1.6  1.6  1.6 light directional -1 -1 1 whitesurface matte Yellow % this is a strange texture and difficult to control% it should be transformed by a scale to look good (0.01 to 0.5)% the 'octaves' should be greater than 5% the 'threshold' should be greater than 0.5 normallyfbm 0 1 0.5 1 0.8 8 scale 0.05sphere 0 0 0 1           % sphere object
+eye  1.6  1.6  1.6 
+light directional -1 -1 1 white
+surface matte Yellow 
+% this is a strange texture and difficult to control
+% it should be transformed by a scale to look good (0.01 to 0.5)
+% the 'octaves' should be greater than 5
+% the 'threshold' should be greater than 0.5 normally
+fbm 0 1 0.5 1 0.8 8 scale 0.05
+sphere 0 0 0 1           % sphere object
+

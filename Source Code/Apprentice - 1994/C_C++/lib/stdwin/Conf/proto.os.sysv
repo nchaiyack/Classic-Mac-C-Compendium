@@ -1,1 +1,28 @@
-## Definitions pertaining to generic System V## Disclaimer: this was only tested on a Silicon Graphics under IRIX 3.2## The name of this O.S.#OS=		sysv# Defines to make various bits of code happy:#	-DSYSV is the general test for System V.#	-Datt is used at least by some X internal headers (and what else?)#OSDEFS=		-DSYSV -Datt# The mkdep using /lib/cpp | sed ... is the safest to try...#MKDEP=		$(CONF)/slowmkdep# The system libraries to link with programs that use termcap and X11# are in proto.arch.* instead.# Similar for the math library#LIBMATH=	-lm
+
+#
+# Definitions pertaining to generic System V
+#
+# Disclaimer: this was only tested on a Silicon Graphics under IRIX 3.2
+#
+
+# The name of this O.S.
+#
+OS=		sysv
+
+# Defines to make various bits of code happy:
+#	-DSYSV is the general test for System V.
+#	-Datt is used at least by some X internal headers (and what else?)
+#
+OSDEFS=		-DSYSV -Datt
+
+# The mkdep using /lib/cpp | sed ... is the safest to try...
+#
+MKDEP=		$(CONF)/slowmkdep
+
+# The system libraries to link with programs that use termcap and X11
+# are in proto.arch.* instead.
+
+# Similar for the math library
+#
+LIBMATH=	-lm
+

@@ -1,1 +1,23 @@
-set HDN "Plyds' HD"set TheMAC "Plyds"choose -u Datalogi -pw "" "RUC Datalogi:{{TheMAC}}"cp :¥{1}Debug:Nuntius "{{HDN}}:Desktop Folder:" -y	flushunmount "{{HDN}}:"if 0	choose -u Datalogi -pw "" "RUC Datalogi:Garfield"		cp :¥{1}Debug:Nuntius "GarfieldsHD:Desktop Folder:" -y		flush	unmount "GarfieldsHD:"end
+
+
+set HDN "Plyds' HD"
+set TheMAC "Plyds"
+
+
+choose -u Datalogi -pw "" "RUC Datalogi:{{TheMAC}}"
+cp :¥{1}Debug:Nuntius "{{HDN}}:Desktop Folder:" -y
+	
+flush
+unmount "{{HDN}}:"
+
+
+
+
+if 0
+	choose -u Datalogi -pw "" "RUC Datalogi:Garfield"
+	
+	cp :¥{1}Debug:Nuntius "GarfieldsHD:Desktop Folder:" -y
+	
+	flush
+	unmount "GarfieldsHD:"
+end

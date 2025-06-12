@@ -1,1 +1,21 @@
-This is the source code to a SCSI HD formatter, sort of.Well, the story goes that I bought this old Seagate ST225N and itwouldn't format with the Apple HD Setup programs (even the hackedones that were supposed to work with all manufacturer's drives).Some experimenting showed that the drive really was formatting fine,except for the LAST block on the disk, which was somehow write-protected (probably from the days when everyone had proprietarydrivers, etc., and manufacturers hid secret id codes in placeslike the last block of the drive).  This was a real pain, soI finally hit upon the solution of just copying the first 256blocks from my internal HD to the Seagate, effectively creatinga working partitioned drive, which runs fine now (a little moretinkering was necessary, and the drive had to be erased by theFinder/MacOS before being used).There is a lot of junk in here, but it may be useful to someoneelse.....-Roy Wood (rrwood@io.org)
+This is the source code to a SCSI HD formatter, sort of.
+
+Well, the story goes that I bought this old Seagate ST225N and it
+wouldn't format with the Apple HD Setup programs (even the hacked
+ones that were supposed to work with all manufacturer's drives).
+
+Some experimenting showed that the drive really was formatting fine,
+except for the LAST block on the disk, which was somehow write-
+protected (probably from the days when everyone had proprietary
+drivers, etc., and manufacturers hid secret id codes in places
+like the last block of the drive).  This was a real pain, so
+I finally hit upon the solution of just copying the first 256
+blocks from my internal HD to the Seagate, effectively creating
+a working partitioned drive, which runs fine now (a little more
+tinkering was necessary, and the drive had to be erased by the
+Finder/MacOS before being used).
+
+There is a lot of junk in here, but it may be useful to someone
+else.....
+
+-Roy Wood (rrwood@io.org)

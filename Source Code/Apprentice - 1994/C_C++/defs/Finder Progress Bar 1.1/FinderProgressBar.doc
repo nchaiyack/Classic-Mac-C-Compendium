@@ -1,1 +1,86 @@
-/******************************************************************************************************                                                                                                    ** FinderProgressBar.doc - Copyright 1993 - 1994 Chris Larson, All rights reserved                    **                                                                                                    ** Documentation file of a CDEF which mimics the progress bar used in the Finder. This source file    ** and its compiled derivatives may be freely used within any freeware/shareware/postcardware/… as    ** long as you mention my name in your credits. Neither this source nor its compiled derivatives are  ** in the public domain and may not be use in any form in public domain software. Neither this source ** nor its compiled derivatives may be used in any form in a commercial product without the expressed,** written consent of the author (me).                                                                **                                                                                                    ** Version 1.1 -- April 28, 1994.                                                                     **                                                                                                    ******************************************************************************************************/This CDEF implements a progress bar that mimics the one used by Finder. It should be extremelyeasy to use: simply set the control’s minimum and maximum to whatever values you wish, set thecontrol value somewhere in-between (endpoints inclusive) and the CDEF will draw appropriately.A couple of things to note:1)	This CDEF is currently limited in its function -- I wrote it for an application I’m    working on and didn’t worry about features I wouldn’t need (for example if you hilite it    with value 255 (supposed to dim a control) it looks the same: my app doeesn’t need to    dim any progress bars). If you find that extra functionality is a need, drop me a line    via e-mail and I’ll see what I can do.2)  This was intended as an EXACT copy (visually at least) of the progress bars used in the    Finder. As a result, the colors are hard-coded and no AuxCtlRec is ever examined. (This    really falls under (1) above but I thought it worth mentioning seperately.)3)	I haven’t had time to test this as extensively as I would have liked, (notably I haven’t	run it on a Mac without color quickdraw -- I believe the code to be correct but it remains	untested). As with added features, please send bug reports via e-mail.4)	If memory serves, the progress bars used by Finder are 11 pixels tall.Porting Notes:--------------Only a couple things are worth mentioning here, as I have endevoured to make the C portion ofthis code as portable as possible. (My apologies if this is not the case -- I don’t have anyother C compilers to test this hypothesis.)1)	THINK C stores global variables (and static local variables) as offsets from the A4 register,	which is supposed to point to the top of the code resource. This necessitates the use of	MySetUpA4(), which stores the old value of A4 and points it to the top of the code resource, and	MyRestoreA4(), which restores the old value of A4. If porting to another compiler, these calls	may not be necessary depending on how static local variables are accessed -- consult your	documentation.2)	The CalculateBarBoundry function is implemented as inline assembly with register based	parameter passing. It follows the style of similar functions in the header files, so should	be portable to other compilers generating 68000 code. For porting to the PowerPC, this function	will likely need to be rewritten in C. I have provided ample documentation about exactly what	each instruction does and why I coded it the way I did. There shouldn’t be much difficulty in	constructing a C version. (I only wrote it in assembly so I could use the mulu.w and divu.w	instructions instead of a 32 bit multiplication and division library on the 68000 -- see the	header file.)Legal Stuff:------------You know the rules: I have tried to make this as error free as possible but by using it, you takefull responsibility for anything that goes wrong.Author:-------Chris Larson7009 Morton CourtStockton, CA  95219Internet E-Mail (Preferred) : cklarson@engr.ucdavis.eduVersion History:----------------Version 1.1 -- April 28, 1994	• Fixed a nasty bug which could cause the control to draw improperly if given a nonzero	  contrlMin.		• Updated documentation of the inline assembly functions.Version 1.0 -- August 27, 1993	• Initial Release
+/*****************************************************************************************************
+*                                                                                                    *
+* FinderProgressBar.doc - Copyright 1993 - 1994 Chris Larson, All rights reserved                    *
+*                                                                                                    *
+* Documentation file of a CDEF which mimics the progress bar used in the Finder. This source file    *
+* and its compiled derivatives may be freely used within any freeware/shareware/postcardware/… as    *
+* long as you mention my name in your credits. Neither this source nor its compiled derivatives are  *
+* in the public domain and may not be use in any form in public domain software. Neither this source *
+* nor its compiled derivatives may be used in any form in a commercial product without the expressed,*
+* written consent of the author (me).                                                                *
+*                                                                                                    *
+* Version 1.1 -- April 28, 1994.                                                                     *
+*                                                                                                    *
+*****************************************************************************************************/
+
+This CDEF implements a progress bar that mimics the one used by Finder. It should be extremely
+easy to use: simply set the control’s minimum and maximum to whatever values you wish, set the
+control value somewhere in-between (endpoints inclusive) and the CDEF will draw appropriately.
+
+A couple of things to note:
+
+1)	This CDEF is currently limited in its function -- I wrote it for an application I’m
+    working on and didn’t worry about features I wouldn’t need (for example if you hilite it
+    with value 255 (supposed to dim a control) it looks the same: my app doeesn’t need to
+    dim any progress bars). If you find that extra functionality is a need, drop me a line
+    via e-mail and I’ll see what I can do.
+
+2)  This was intended as an EXACT copy (visually at least) of the progress bars used in the
+    Finder. As a result, the colors are hard-coded and no AuxCtlRec is ever examined. (This
+    really falls under (1) above but I thought it worth mentioning seperately.)
+
+3)	I haven’t had time to test this as extensively as I would have liked, (notably I haven’t
+	run it on a Mac without color quickdraw -- I believe the code to be correct but it remains
+	untested). As with added features, please send bug reports via e-mail.
+
+4)	If memory serves, the progress bars used by Finder are 11 pixels tall.
+
+Porting Notes:
+--------------
+
+Only a couple things are worth mentioning here, as I have endevoured to make the C portion of
+this code as portable as possible. (My apologies if this is not the case -- I don’t have any
+other C compilers to test this hypothesis.)
+
+1)	THINK C stores global variables (and static local variables) as offsets from the A4 register,
+	which is supposed to point to the top of the code resource. This necessitates the use of
+	MySetUpA4(), which stores the old value of A4 and points it to the top of the code resource, and
+	MyRestoreA4(), which restores the old value of A4. If porting to another compiler, these calls
+	may not be necessary depending on how static local variables are accessed -- consult your
+	documentation.
+
+2)	The CalculateBarBoundry function is implemented as inline assembly with register based
+	parameter passing. It follows the style of similar functions in the header files, so should
+	be portable to other compilers generating 68000 code. For porting to the PowerPC, this function
+	will likely need to be rewritten in C. I have provided ample documentation about exactly what
+	each instruction does and why I coded it the way I did. There shouldn’t be much difficulty in
+	constructing a C version. (I only wrote it in assembly so I could use the mulu.w and divu.w
+	instructions instead of a 32 bit multiplication and division library on the 68000 -- see the
+	header file.)
+
+Legal Stuff:
+------------
+
+You know the rules: I have tried to make this as error free as possible but by using it, you take
+full responsibility for anything that goes wrong.
+
+Author:
+-------
+
+Chris Larson
+7009 Morton Court
+Stockton, CA  95219
+
+Internet E-Mail (Preferred) : cklarson@engr.ucdavis.edu
+
+Version History:
+----------------
+
+Version 1.1 -- April 28, 1994
+	• Fixed a nasty bug which could cause the control to draw improperly if given a nonzero
+	  contrlMin.
+	
+	• Updated documentation of the inline assembly functions.
+
+Version 1.0 -- August 27, 1993
+	• Initial Release

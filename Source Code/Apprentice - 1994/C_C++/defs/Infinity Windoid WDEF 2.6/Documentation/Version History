@@ -1,1 +1,185 @@
-V E R S I O N   H I S T O R Y-----------------------------by Troy GaulInfinity SystemsMarch 1994Version 2.6: (March 94) ¥  Fixed a problem with compiling under Metrowerks Code Warrior which 	caused mixed colors to be calculated incorrectly. Started including	a Code Warrior project file for compiling the WDEF. ¥  Added a one-pixel slop to the hit testing on the titlebar gadgets to 	make them easier to hit. ¥  The appearance of the titlebar when dimmed with a custom window color 	table now matches that of the System WDEF.  A handful of other changes	were also made to the code to make the appearance with custom wctb's	approximate that of the System WDEF. ¥	Made the titlebar revert to black-and-white on those PowerBooks in which 	this is necessary to make the appearance match that of the Apple WDEF. ¥	Added an option to have the zoom box be positioned so that it always 	hits the pattern the same way as the close box. ¥  Added an option to make a small version of the grow box  ¥	Now uses UniversalProcPtrs to support PowerPC  ¥	MPW Makefile now has support for making a fat binary version of the  	Infinity Windoid WDEF (provided you have the Apple tools for doing so).	Support for this was derived from the article about Standalone Code on 	PowerPC in Develop issue 17; help provided by Aaron Giles.		To compile one of these versions of the WDEF, use one of the following:		buildprogram "Infinity Windoid/Fat"		buildprogram "Infinity Windoid/PPC"Version 2.5.1: (January 94) ¥  Fixed a bug that would cause the titlebar to be 'transparent' very    occasionally when the WDEF was compiled with THINK C. ¥  Fixed a bug where the grow box wouldn't be drawn inside a window that    had a color GrafPort.Version 2.5: (January 94) ¥	Support for System 6 color windows (using Kolor or a similar Control    Panel device. ¥  Source code was split between two files with a header file,     WindoidDefines.h defining the options, constants, and structures     used in the WDEF ¥	Added a variation of the titlebar that is two pixels taller and has    tinges on the edges. This titlebar style looks better with a title    string and/or with a grow box than the old style. ¥	Added option to build a windoid with a title string in the titlebar.    (Although I personally do not like this, as it makes the windoid look    too much like a document window, it has been often requested.) ¥  Put in OurDeviceLoop routine. This implements a DeviceLoop on System 6    machines with Color QuickDraw. Simplifies code in the two drawing    routines. ¥  Didn't need to set the port away from the Window Manager port all    the times I had been. ¥  Added code to handle a grow box. (Provided by Jim Petrick, modifications     by me to work with old black-and-white ports on color monitors and to use    DeviceLoop)  ¥  Fixed a problem with window color tables that did not have as many    entries as the windoid expected. (Fix provided by Jim Petrick.)  ¥  Made a few simplification changes inspired by code from Jim Petrick. Version 2.3: (June 93) ¥  Now calculates correctly whether to do the System 7 shading on a     display with less than 8 bits that is set to color mode.     ¥  When drawing the titlebar background, will no longer draw over the    top of the gadgets, causing them to flash. ¥  Zoom code no longer is always specific to MicroFrontier products. Now,     zoomed in/out state can be fully controlled by application    (this can be done by setting the usrState and stdState as is    described in Inside Macintosh).     ¥  Added a header file for application use, to simplify incorporation. ¥  Synchronizes the color window manager port to the black-and-white    one. Useful for WDrawGIcon message, safer. ¥  Uses different, simpler logic for creating the properly aligned    pattern for titlebar (from Mac Prog. Secrets) ¥  Now gets the aux. window record for colors from the window being    considered rather than just getting the default one. ¥  Changed formatting to conform to my changed style used in other code. ¥  Put in dummy routines for handling the grow box. ¥  Got rid of some unneeded temporary variables from the CalcWRgn    selector routine. ¥  Changed the zoom-handling code to use the spareFlag as a flag    telling whether there's a zoom box, as per a suggestion in _Inside     Macintosh: Toolbox Essentials_. ¥  Fixed a bug where, if a window didn't have a close box, the    windoid would still send the application a hit in the close box    if that area of the titlebar was clicked.Version 2.2: (March 93) ¥  First publicly distributed version. ¥  Extensive comments added to facilitate understanding and    modification by others. ¥  Added support for MacApp-style varcodes. ¥  Bug in way inColor was determined (needed to do a bit-shift    before anding with gdFlags) fixed. ¥  Removed StuffHex of strings used for title bar pattern, now    calculates these values. ¥  Fixed bug in logic of how MixColor was calculating the mixture. ¥  Support for compilation in THINK C 5.0. ¥  Added way to build so the window are always hilightedVersion 2.1: (November 92) ¥  Reduced code size by making sure no extra code was being linked    by MPW. ¥  Removed use of Gestalt for code size reasons. ¥  Ended the use of function pointers since no advantage was being    gained by their use. ¥  Added support for determining if enough different colors were    available to do System 7-style color like Apple's does.Version 2.0: (January 92) ¥  Rewritten in C. ¥  Conditional compilation of some features to facilitate a     reduced-size version and one that could be distributed.Version 1.2: (June 91) ¥  System 6 color support added. This feature was suggested by    Richard R. Harms. ¥  DeviceLoop support added. (Thanks, MacDTS.)Version 1.1: (May 91) ¥  Support for System 7-style color titlebars.Version 1.0: (May 91) ¥  Original version, written in Pascal and based on original    assembly language, black-and-white windoid WDEF used in    MicroFrontier products, which was written by Tom Pinkerton.
+V E R S I O N   H I S T O R Y
+-----------------------------
+by Troy Gaul
+Infinity Systems
+March 1994
+
+
+Version 2.6: (March 94)
+ ¥  Fixed a problem with compiling under Metrowerks Code Warrior which
+ 	caused mixed colors to be calculated incorrectly. Started including
+	a Code Warrior project file for compiling the WDEF.
+
+ ¥  Added a one-pixel slop to the hit testing on the titlebar gadgets to
+ 	make them easier to hit.
+
+ ¥  The appearance of the titlebar when dimmed with a custom window color
+ 	table now matches that of the System WDEF.  A handful of other changes
+	were also made to the code to make the appearance with custom wctb's
+	approximate that of the System WDEF.
+
+ ¥	Made the titlebar revert to black-and-white on those PowerBooks in which
+ 	this is necessary to make the appearance match that of the Apple WDEF.
+
+ ¥	Added an option to have the zoom box be positioned so that it always
+ 	hits the pattern the same way as the close box.
+
+ ¥  Added an option to make a small version of the grow box
+ 
+ ¥	Now uses UniversalProcPtrs to support PowerPC
+ 
+ ¥	MPW Makefile now has support for making a fat binary version of the 
+ 	Infinity Windoid WDEF (provided you have the Apple tools for doing so).
+	Support for this was derived from the article about Standalone Code on 
+	PowerPC in Develop issue 17; help provided by Aaron Giles.
+	
+	To compile one of these versions of the WDEF, use one of the following:
+		buildprogram "Infinity Windoid/Fat"
+		buildprogram "Infinity Windoid/PPC"
+
+
+Version 2.5.1: (January 94)
+
+ ¥  Fixed a bug that would cause the titlebar to be 'transparent' very
+    occasionally when the WDEF was compiled with THINK C.
+
+ ¥  Fixed a bug where the grow box wouldn't be drawn inside a window that
+    had a color GrafPort.
+
+
+Version 2.5: (January 94)
+
+ ¥	Support for System 6 color windows (using Kolor or a similar Control
+    Panel device.
+
+ ¥  Source code was split between two files with a header file, 
+    WindoidDefines.h defining the options, constants, and structures 
+    used in the WDEF
+
+ ¥	Added a variation of the titlebar that is two pixels taller and has
+    tinges on the edges. This titlebar style looks better with a title
+    string and/or with a grow box than the old style.
+
+ ¥	Added option to build a windoid with a title string in the titlebar.
+    (Although I personally do not like this, as it makes the windoid look
+    too much like a document window, it has been often requested.)
+
+ ¥  Put in OurDeviceLoop routine. This implements a DeviceLoop on System 6
+    machines with Color QuickDraw. Simplifies code in the two drawing
+    routines.
+
+ ¥  Didn't need to set the port away from the Window Manager port all
+    the times I had been.
+
+ ¥  Added code to handle a grow box. (Provided by Jim Petrick, modifications 
+    by me to work with old black-and-white ports on color monitors and to use
+    DeviceLoop)
+ 
+ ¥  Fixed a problem with window color tables that did not have as many
+    entries as the windoid expected. (Fix provided by Jim Petrick.)
+ 
+ ¥  Made a few simplification changes inspired by code from Jim Petrick.
+ 
+
+Version 2.3: (June 93)
+
+ ¥  Now calculates correctly whether to do the System 7 shading on a 
+    display with less than 8 bits that is set to color mode.
+    
+ ¥  When drawing the titlebar background, will no longer draw over the
+    top of the gadgets, causing them to flash.
+
+ ¥  Zoom code no longer is always specific to MicroFrontier products. Now, 
+    zoomed in/out state can be fully controlled by application
+    (this can be done by setting the usrState and stdState as is
+    described in Inside Macintosh).
+    
+ ¥  Added a header file for application use, to simplify incorporation.
+
+ ¥  Synchronizes the color window manager port to the black-and-white
+    one. Useful for WDrawGIcon message, safer.
+
+ ¥  Uses different, simpler logic for creating the properly aligned
+    pattern for titlebar (from Mac Prog. Secrets)
+
+ ¥  Now gets the aux. window record for colors from the window being
+    considered rather than just getting the default one.
+
+ ¥  Changed formatting to conform to my changed style used in other code.
+
+ ¥  Put in dummy routines for handling the grow box.
+
+ ¥  Got rid of some unneeded temporary variables from the CalcWRgn
+    selector routine.
+
+ ¥  Changed the zoom-handling code to use the spareFlag as a flag
+    telling whether there's a zoom box, as per a suggestion in _Inside 
+    Macintosh: Toolbox Essentials_.
+
+ ¥  Fixed a bug where, if a window didn't have a close box, the
+    windoid would still send the application a hit in the close box
+    if that area of the titlebar was clicked.
+
+
+Version 2.2: (March 93)
+
+ ¥  First publicly distributed version.
+
+ ¥  Extensive comments added to facilitate understanding and
+    modification by others.
+
+ ¥  Added support for MacApp-style varcodes.
+
+ ¥  Bug in way inColor was determined (needed to do a bit-shift
+    before anding with gdFlags) fixed.
+
+ ¥  Removed StuffHex of strings used for title bar pattern, now
+    calculates these values.
+
+ ¥  Fixed bug in logic of how MixColor was calculating the mixture.
+
+ ¥  Support for compilation in THINK C 5.0.
+
+ ¥  Added way to build so the window are always hilighted
+
+
+Version 2.1: (November 92)
+
+ ¥  Reduced code size by making sure no extra code was being linked
+    by MPW.
+
+ ¥  Removed use of Gestalt for code size reasons.
+
+ ¥  Ended the use of function pointers since no advantage was being
+    gained by their use.
+
+ ¥  Added support for determining if enough different colors were
+    available to do System 7-style color like Apple's does.
+
+
+Version 2.0: (January 92)
+
+ ¥  Rewritten in C.
+
+ ¥  Conditional compilation of some features to facilitate a 
+    reduced-size version and one that could be distributed.
+
+
+Version 1.2: (June 91)
+
+ ¥  System 6 color support added. This feature was suggested by
+    Richard R. Harms.
+
+ ¥  DeviceLoop support added. (Thanks, MacDTS.)
+
+
+Version 1.1: (May 91)
+
+ ¥  Support for System 7-style color titlebars.
+
+
+Version 1.0: (May 91)
+
+ ¥  Original version, written in Pascal and based on original
+    assembly language, black-and-white windoid WDEF used in
+    MicroFrontier products, which was written by Tom Pinkerton.

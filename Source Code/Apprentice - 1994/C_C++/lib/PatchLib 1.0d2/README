@@ -1,1 +1,176 @@
-===========Description-----------Patch Library is used to manage patches to traps. Installing and removingpatches is simpler than using the Toolbox routines NSetTrapAddress andNGetTrapAddress. In addition, macros are provided that setup and restorethe environment for the patch routine. C source code is provided.(c) Copyright 1994 Ari Halberstadt. See the file Distribution fordistribution terms.============================What is in this Distribution----------------------------Distribution	Distribution policy, copyright notice, my addressPatchLib	Folder containing the source code for Patch LibraryPatchTest	Folder containing the source code and compiled object code	for a simple application that demonstrates Patch LibraryREADME	This documentVersion History	Documents the changes made to each version of Patch Library===================Using Patch Library-------------------Patch Library is used to manage patches to traps. You can create as manypatches as you like. Each patch is created as a non-relocatable block inthe heap. Under Finder (but not MultiFinder) you must remove all patchesbefore exiting the application. All patches are tracked in a linked-listof patches, so that you can easily remove all of the patches whenexiting.The patch function must be declared with the same prototype as thetrap that it is patching. The parameters that are passed to the functionare the same parameters on the stack that were passed in the call tothe trap. This allows you to change the values of the parameters beforeyou call the original trap routine. You should call PATCH_ENTER at thestart of your patch function, and call PATCH_RETURN at the end of yourpatch function. The PATCH_ENTER macro saves registers d0-d7/a0-a7 andsets up register a5. The PATCH_RETURN macro restores all saved registersand calls the address of the original trap routine.You can temporarily remove the patch with PatchRemove and reinstall it withPatchInstall. To permanently remove the patch and dispose of the memory itoccupies call PatchEnd.This library is meant to be used with an application. It could be modifiedto work with a system extension, but you would have to allocate thepatches with NewPtrSysClear instead of NewPtr. Additional changes mightalso be needed.Functional Interface--------------------	void PatchInstall(PatchType patch)* PatchInstall installs the patch.	void PatchRemove(PatchType patch)* PatchRemove removes the patch.	void PatchRemoveAll(void)* PatchRemoveAll removes all patches.	PatchType PatchBegin(void *addr, short num)* PatchBegin creates and installs a patch, and returns a pointer to thepatch structure, or NULL if the patch couldn't be created.	void PatchEnd(PatchType patch)* PatchEnd removes and disposes of the patch.	void PatchEndAll(void)* PatchEndAll removes and disposes of all patches.EXAMPLES--------The following routine patches the trap HiliteWindow. I have used thispatch for an implementation of floating windows. For reference, thedeclaration of HiliteWindow is:	pascal void HiliteWindow(WindowPtr theWindow,Boolean fHilite)   			= 0xA91C; The patch routine, and the relevant definitions, are:	#define WIN_KIND_APPLICATION (userKind + 1) // unique windowKind	static PatchType gPatchHiliteWindow; // data for patch to HiliteWindow	// Prevent hiliting of our application's windows by the Window Manager.	static pascal void PatchHiliteWindow(WindowPtr window, Boolean hilite)	{		PATCH_ENTER();		if (((WindowPeek) window)->windowKind >= WIN_KIND_APPLICATION) {			// it's one of our windows, so make sure hilite doesn't change			hilite = (((WindowPeek) window)->hilited ? true : false);		}		PATCH_RETURN(gPatchHiliteWindow);	}When you want to hilite one of your application's windows, you calla function WinHilite:	// WinHilite hilites the window.	void WinHilite(WindowType window, Boolean hilite)	{		require(WinValid(window));		// temporarily remove the patch so the window will be hilited		PatchRemove(gPatchHiliteWindow);		// hilite the window		HiliteWindow(window->macwindow, hilite);		// reinstall the patch		PatchInstall(gPatchHiliteWindow);	}When the application starts up, you install the patch:	// Initialize window library.	void WinInit(void)	{		// create and install patch		if (! gPatchHiliteWindow)			gPatchHiliteWindow = PatchBegin(PatchHiliteWindow, _HiliteWindow);	}Before exiting the application, you remove all patches:	// Terminate application.	void AppExit(void)	{		PatchEndAll();		ExitToShell();	} The folder "PatchTest" also contains source code for an application thatdemonstrates the use of Patch Library.=======PORTING-------This library was developed using THINK C 5.0.4. The C code should beportable to other compilers, though the assembly code in the PATCH_ENTERand PATCH_RETURN macros may require modification. Porting to a nativePowerPC implementation would involve universal procedure pointersand modification, or removal, of the assembly language glue.==============Known Problems--------------There are no known problems.=====To Do-----Make a native PowerPC implementation.=======Credits-------Suggest something and have your name placed here! :-)
+===========
+Description
+-----------
+
+Patch Library is used to manage patches to traps. Installing and removing
+patches is simpler than using the Toolbox routines NSetTrapAddress and
+NGetTrapAddress. In addition, macros are provided that setup and restore
+the environment for the patch routine. C source code is provided.
+
+(c) Copyright 1994 Ari Halberstadt. See the file Distribution for
+distribution terms.
+
+============================
+What is in this Distribution
+----------------------------
+
+Distribution
+	Distribution policy, copyright notice, my address
+PatchLib
+	Folder containing the source code for Patch Library
+PatchTest
+	Folder containing the source code and compiled object code
+	for a simple application that demonstrates Patch Library
+README
+	This document
+Version History
+	Documents the changes made to each version of Patch Library
+
+===================
+Using Patch Library
+-------------------
+
+Patch Library is used to manage patches to traps. You can create as many
+patches as you like. Each patch is created as a non-relocatable block in
+the heap. Under Finder (but not MultiFinder) you must remove all patches
+before exiting the application. All patches are tracked in a linked-list
+of patches, so that you can easily remove all of the patches when
+exiting.
+
+The patch function must be declared with the same prototype as the
+trap that it is patching. The parameters that are passed to the function
+are the same parameters on the stack that were passed in the call to
+the trap. This allows you to change the values of the parameters before
+you call the original trap routine. You should call PATCH_ENTER at the
+start of your patch function, and call PATCH_RETURN at the end of your
+patch function. The PATCH_ENTER macro saves registers d0-d7/a0-a7 and
+sets up register a5. The PATCH_RETURN macro restores all saved registers
+and calls the address of the original trap routine.
+
+You can temporarily remove the patch with PatchRemove and reinstall it with
+PatchInstall. To permanently remove the patch and dispose of the memory it
+occupies call PatchEnd.
+
+This library is meant to be used with an application. It could be modified
+to work with a system extension, but you would have to allocate the
+patches with NewPtrSysClear instead of NewPtr. Additional changes might
+also be needed.
+
+Functional Interface
+--------------------
+
+	void PatchInstall(PatchType patch)
+
+* PatchInstall installs the patch.
+
+	void PatchRemove(PatchType patch)
+
+* PatchRemove removes the patch.
+
+	void PatchRemoveAll(void)
+
+* PatchRemoveAll removes all patches.
+
+	PatchType PatchBegin(void *addr, short num)
+
+* PatchBegin creates and installs a patch, and returns a pointer to the
+patch structure, or NULL if the patch couldn't be created.
+
+	void PatchEnd(PatchType patch)
+
+* PatchEnd removes and disposes of the patch.
+
+	void PatchEndAll(void)
+
+* PatchEndAll removes and disposes of all patches.
+
+EXAMPLES
+--------
+
+The following routine patches the trap HiliteWindow. I have used this
+patch for an implementation of floating windows. For reference, the
+declaration of HiliteWindow is:
+
+	pascal void HiliteWindow(WindowPtr theWindow,Boolean fHilite)
+   			= 0xA91C; 
+
+The patch routine, and the relevant definitions, are:
+
+	#define WIN_KIND_APPLICATION (userKind + 1) // unique windowKind
+	static PatchType gPatchHiliteWindow; // data for patch to HiliteWindow
+
+	// Prevent hiliting of our application's windows by the Window Manager.
+	static pascal void PatchHiliteWindow(WindowPtr window, Boolean hilite)
+	{
+		PATCH_ENTER();
+		if (((WindowPeek) window)->windowKind >= WIN_KIND_APPLICATION) {
+			// it's one of our windows, so make sure hilite doesn't change
+			hilite = (((WindowPeek) window)->hilited ? true : false);
+		}
+		PATCH_RETURN(gPatchHiliteWindow);
+	}
+
+When you want to hilite one of your application's windows, you call
+a function WinHilite:
+
+	// WinHilite hilites the window.
+	void WinHilite(WindowType window, Boolean hilite)
+	{
+		require(WinValid(window));
+		// temporarily remove the patch so the window will be hilited
+		PatchRemove(gPatchHiliteWindow);
+		// hilite the window
+		HiliteWindow(window->macwindow, hilite);
+		// reinstall the patch
+		PatchInstall(gPatchHiliteWindow);
+	}
+
+When the application starts up, you install the patch:
+
+	// Initialize window library.
+	void WinInit(void)
+	{
+		// create and install patch
+		if (! gPatchHiliteWindow)
+			gPatchHiliteWindow = PatchBegin(PatchHiliteWindow, _HiliteWindow);
+	}
+
+Before exiting the application, you remove all patches:
+
+	// Terminate application.
+	void AppExit(void)
+	{
+		PatchEndAll();
+		ExitToShell();
+	}
+ 
+The folder "PatchTest" also contains source code for an application that
+demonstrates the use of Patch Library.
+
+=======
+PORTING
+-------
+
+This library was developed using THINK C 5.0.4. The C code should be
+portable to other compilers, though the assembly code in the PATCH_ENTER
+and PATCH_RETURN macros may require modification. Porting to a native
+PowerPC implementation would involve universal procedure pointers
+and modification, or removal, of the assembly language glue.
+
+==============
+Known Problems
+--------------
+
+There are no known problems.
+
+=====
+To Do
+-----
+
+Make a native PowerPC implementation.
+
+=======
+Credits
+-------
+
+Suggest something and have your name placed here! :-)

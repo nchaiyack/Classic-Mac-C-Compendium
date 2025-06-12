@@ -1,1 +1,24 @@
-# Makefile for adventCC = tccO=objOBJS   = advent.$O database.$O english.$O initial.$O itverb.$O score.$O\	travel.$O turn.$O utility.$O verb.$O advent.exe:	$(OBJS)	$(CC) $(CFLAGS) $(OBJS)setup.exe: setup.c	$(CC) setup.c advtext.h: setup.exe advent1.txt advent2.txt advent3.txt advent4.txt	setupadvent.$O: advent.h advword.h advtext.h advdef.hdatabase.$O: advent.h advdec.h advcave.hinitial.$O english.$O itverb.$O score.$O travel.$O utility.$O\	turn.$O verb.$O: advent.h advdec.hclean:		@rm *.$O *.bak advent.exe
+# Makefile for advent
+
+CC = tcc
+O=obj
+
+OBJS   = advent.$O database.$O english.$O initial.$O itverb.$O score.$O\
+	travel.$O turn.$O utility.$O verb.$O 
+
+advent.exe:	$(OBJS)
+	$(CC) $(CFLAGS) $(OBJS)
+
+setup.exe: setup.c
+	$(CC) setup.c
+ 
+advtext.h: setup.exe advent1.txt advent2.txt advent3.txt advent4.txt
+	setup
+
+advent.$O: advent.h advword.h advtext.h advdef.h
+database.$O: advent.h advdec.h advcave.h
+initial.$O english.$O itverb.$O score.$O travel.$O utility.$O\
+	turn.$O verb.$O: advent.h advdec.h
+
+clean:	
+	@rm *.$O *.bak advent.exe

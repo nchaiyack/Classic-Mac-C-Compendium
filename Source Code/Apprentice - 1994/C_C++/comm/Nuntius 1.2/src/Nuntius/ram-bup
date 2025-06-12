@@ -1,1 +1,9 @@
-FlushVolsset exit 0save -abackup -a -c -from {RamKilde}Nuntius: -to {kilde}nuntius: > {tmp}set exit 1{tmp}FlushVolsBeep 2D,15,128
+FlushVols
+set exit 0
+save -a
+backup -a -c -from {RamKilde}Nuntius: -to {kilde}nuntius: > {tmp}
+set exit 1
+{tmp}
+FlushVols
+Beep 2D,15,128
+

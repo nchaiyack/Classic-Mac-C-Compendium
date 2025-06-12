@@ -1,1 +1,31 @@
-What is 3D GrafSys 2.0======================GrafSys is a hierarchical object-oriented class library for THINK Pascal. It isdesigned to facilitate easy 3D graphics and animations in your programs. GrafSyssupports full 3D control of graphical objects and electronic eye. Graphicalobjects can be independently rotated (around arbitrary axes), translated andscaled. Objects can inherit transformations (rotation, scaling and translation)from other objects. GrafSys supports dynamic (i.e. on-the-fly) and multipleinheritance of transformations and an unlimited number of so-called operators(matrices) per object.The GrafSys provides objects for 3D points, lines and whole objects that cancontain up to 8000 lines in full RGB color and more than 250'000 points. GrafSysalso supports ultra-fast polygon filling using the triangulation approach. Withit you can easily implement hidden-surface removal.Designed for fast and simple to program animations, GrafSys supports anAutoErase feature where the object automatically erases its previous imagebefore redrawing itself. For flicker-free animations GrafSys also provides easyto use Off-Screen bit map handling.GrafSys is a combination of procedures and a powerful, extensible class librarythat can be easily curtailed to your specific needs. For example  thegeneral-purpose 3D object 'TSObject3D' understands over fifty messages for suchdiverse things as building a point/line database, rotating and drawing itself.The 2.0 version comes with full source code.Christian Franz
+What is 3D GrafSys 2.0
+======================
+
+GrafSys is a hierarchical object-oriented class library for THINK Pascal. It is
+designed to facilitate easy 3D graphics and animations in your programs. GrafSys
+supports full 3D control of graphical objects and electronic eye. Graphical
+objects can be independently rotated (around arbitrary axes), translated and
+scaled. Objects can inherit transformations (rotation, scaling and translation)
+from other objects. GrafSys supports dynamic (i.e. on-the-fly) and multiple
+inheritance of transformations and an unlimited number of so-called operators
+(matrices) per object.
+
+The GrafSys provides objects for 3D points, lines and whole objects that can
+contain up to 8000 lines in full RGB color and more than 250'000 points. GrafSys
+also supports ultra-fast polygon filling using the triangulation approach. With
+it you can easily implement hidden-surface removal.
+
+Designed for fast and simple to program animations, GrafSys supports an
+AutoErase feature where the object automatically erases its previous image
+before redrawing itself. For flicker-free animations GrafSys also provides easy
+to use Off-Screen bit map handling.
+
+GrafSys is a combination of procedures and a powerful, extensible class library
+that can be easily curtailed to your specific needs. For example  the
+general-purpose 3D object 'TSObject3D' understands over fifty messages for such
+diverse things as building a point/line database, rotating and drawing itself.
+
+The 2.0 version comes with full source code.
+
+Christian Franz
+

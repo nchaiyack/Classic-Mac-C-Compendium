@@ -1,1 +1,16 @@
-#! /bin/sh## Construct rules to build individual .o files# usage: puttargets $(SRCS)for filedo	case $file in	*.c)	obj=`basename $file .c`.o		echo		echo "$obj: $file"		echo "	\$(CC) -c \$(CFLAGS) $file"		#     ^^this is a tab!		;;	esacdone
+#! /bin/sh
+#
+# Construct rules to build individual .o files
+# usage: puttargets $(SRCS)
+
+for file
+do
+	case $file in
+	*.c)	obj=`basename $file .c`.o
+		echo
+		echo "$obj: $file"
+		echo "	\$(CC) -c \$(CFLAGS) $file"
+		#     ^^this is a tab!
+		;;
+	esac
+done

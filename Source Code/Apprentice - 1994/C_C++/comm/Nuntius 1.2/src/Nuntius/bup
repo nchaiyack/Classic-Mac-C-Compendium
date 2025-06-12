@@ -1,1 +1,51 @@
-set dir {K_Nuntius}set disk 'Nuntius BUP:'set resFile Nuntius.ResEditset folder1 {df2}NuntiusDataset folder2 tools#-------------------------cd "{dir}"set exit 0if `exists -d "{disk}"` !~ /"{disk}"/	alert "Please insert the disk ∂"{disk}∂" first"	exitendset exit 1cat `f -t TEXT` > {tmp}set exit 0cd "{disk}"#ll Sourcefor f in ≈Source≈	set exit 1	mv "{f}" a"{f}"endset exit 1cd "{dir}"loop	set freeSpace "`Volumes -l -q | see "/•∂"{disk}∂" +[0-9]+ +[0-9]+K +([0-9]+)®1K +[0-9]+ + [0-9]+∞/ pr ®1"`"	set neededSpaceExp "``f -x k -n "{tmp}" "{resFile}" | see '/([0-9]+)®1K∞/ pr -n ®1" ∂∂∂∂∂+ "'`` 0"	if `ev {{neededSpaceExp}}` < {freeSpace}		break	end	set exit 0	for f in "{disk}"≈Source		set exit 1		rm "{f}"≈		break	end	set exit 1endsetfile -m . "{disk}"cp -d {tmp} "{disk}Source"cp -r {resFile} "{disk}Source.ResEdit"#cp    {folder1}  "{disk}Source.Folder1"#cp    {folder2}  "{disk}Source.Folder2"eject "{disk}"#echo -n > {tmp}cd "{dir}"
+set dir {K_Nuntius}
+set disk 'Nuntius BUP:'
+set resFile Nuntius.ResEdit
+set folder1 {df2}NuntiusData
+set folder2 tools
+#-------------------------
+cd "{dir}"
+
+set exit 0
+if `exists -d "{disk}"` !~ /"{disk}"/
+	alert "Please insert the disk ∂"{disk}∂" first"
+	exit
+end
+
+set exit 1
+cat `f -t TEXT` > {tmp}
+
+set exit 0
+cd "{disk}"
+#ll Source
+for f in ≈Source≈
+	set exit 1
+	mv "{f}" a"{f}"
+end
+set exit 1
+cd "{dir}"
+
+loop
+	set freeSpace "`Volumes -l -q | see "/•∂"{disk}∂" +[0-9]+ +[0-9]+K +([0-9]+)®1K +[0-9]+ + [0-9]+∞/ pr ®1"`"
+	set neededSpaceExp "``f -x k -n "{tmp}" "{resFile}" | see '/([0-9]+)®1K∞/ pr -n ®1" ∂∂∂∂∂+ "'`` 0"
+	if `ev {{neededSpaceExp}}` < {freeSpace}
+		break
+	end
+	set exit 0
+	for f in "{disk}"≈Source
+		set exit 1
+		rm "{f}"≈
+		break
+	end
+	set exit 1
+end
+setfile -m . "{disk}"
+
+cp -d {tmp} "{disk}Source"
+cp -r {resFile} "{disk}Source.ResEdit"
+#cp    {folder1}  "{disk}Source.Folder1"
+#cp    {folder2}  "{disk}Source.Folder2"
+eject "{disk}"
+
+#echo -n > {tmp}
+cd "{dir}"

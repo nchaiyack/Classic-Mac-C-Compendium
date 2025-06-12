@@ -1,1 +1,21 @@
-## Definitions pertaining to the alphanumeric port (using termcap)## Define the name of this port.# This is used as a subdirectory name where all the objects for this# port for a given architecture live: $(TOP)/Build/$(ARCH)/$(PORT)#PORT=		alfa# Libraries to link with for the X11 port.# The first part is boilerplate, the rest depends on which other# libraries your port needs.#PORTOWNLIBS=	$(PORTBUILD)/lib/lib.aPORTSYSLIBS=	$(LIBTERMCAP)PORTLIBS=	$(PORTOWNLIBS) $(PORTSYSLIBS)# NB: -ltermcap is really OS-specific, sigh.
+
+#
+# Definitions pertaining to the alphanumeric port (using termcap)
+#
+
+# Define the name of this port.
+# This is used as a subdirectory name where all the objects for this
+# port for a given architecture live: $(TOP)/Build/$(ARCH)/$(PORT)
+#
+PORT=		alfa
+
+# Libraries to link with for the X11 port.
+# The first part is boilerplate, the rest depends on which other
+# libraries your port needs.
+#
+PORTOWNLIBS=	$(PORTBUILD)/lib/lib.a
+PORTSYSLIBS=	$(LIBTERMCAP)
+PORTLIBS=	$(PORTOWNLIBS) $(PORTSYSLIBS)
+
+# NB: -ltermcap is really OS-specific, sigh.
+

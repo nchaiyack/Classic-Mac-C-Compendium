@@ -1,1 +1,48 @@
-  File:   0 "MacTraps"  File:   1 "MyOtherCard.c"  File:   2 "ANSIÑsmall"Segment "%GlobalData" size=$0002AC	qd								-$0002AC(A5)				file="MacTraps"	randSeed						-$000260(A5)	screenBits						-$00025C(A5)	arrow							-$00024E(A5)	dkGray							-$00020A(A5)	ltGray							-$000202(A5)	gray							-$0001FA(A5)	black							-$0001F2(A5)	white							-$0001EA(A5)	thePort							-$0001E2(A5)	aboutW							-$0001DA(A5)				file="MyOtherCard.c"	aRect							-$0001D6(A5)	cRect							-$0001CE(A5)	aStr							-$0001C6(A5)	aboutEvt						-$0000C6(A5)	aboutDone						-$0000B6(A5)	fract							-$0000B4(A5)Segment "Seg2" size=$0006B4 rsrcid=2	drawabout						$000004	NewAbout						$0001EA	Blend							$0002CC	zoomrect						$000326	ltog							$0004A0	zoomport						$0004D8	centerwindow					$0005BA	centerrect						$000628	InitMacintosh					$000688	main							$0006AA	  JT=$000072(A5)Segment "Seg3" size=$000132 rsrcid=3	strcpy							$000004	  JT=$00007A(A5)	file="ANSIÑsmall"	strcat							$000014	strcmp							$00002A	strchr							$000048	strcspn							$000060	strpbrk							$00007A	strrchr							$000096	strspn							$0000AC	strstr							$0000C8	strtok							$0000E6	strlen							$000124
+  File:   0 "MacTraps"
+  File:   1 "MyOtherCard.c"
+  File:   2 "ANSIÑsmall"
+
+Segment "%GlobalData" size=$0002AC
+	qd								-$0002AC(A5)				file="MacTraps"
+	randSeed						-$000260(A5)
+	screenBits						-$00025C(A5)
+	arrow							-$00024E(A5)
+	dkGray							-$00020A(A5)
+	ltGray							-$000202(A5)
+	gray							-$0001FA(A5)
+	black							-$0001F2(A5)
+	white							-$0001EA(A5)
+	thePort							-$0001E2(A5)
+	aboutW							-$0001DA(A5)				file="MyOtherCard.c"
+	aRect							-$0001D6(A5)
+	cRect							-$0001CE(A5)
+	aStr							-$0001C6(A5)
+	aboutEvt						-$0000C6(A5)
+	aboutDone						-$0000B6(A5)
+	fract							-$0000B4(A5)
+
+Segment "Seg2" size=$0006B4 rsrcid=2
+	drawabout						$000004
+	NewAbout						$0001EA
+	Blend							$0002CC
+	zoomrect						$000326
+	ltog							$0004A0
+	zoomport						$0004D8
+	centerwindow					$0005BA
+	centerrect						$000628
+	InitMacintosh					$000688
+	main							$0006AA	  JT=$000072(A5)
+
+Segment "Seg3" size=$000132 rsrcid=3
+	strcpy							$000004	  JT=$00007A(A5)	file="ANSIÑsmall"
+	strcat							$000014
+	strcmp							$00002A
+	strchr							$000048
+	strcspn							$000060
+	strpbrk							$00007A
+	strrchr							$000096
+	strspn							$0000AC
+	strstr							$0000C8
+	strtok							$0000E6
+	strlen							$000124
+

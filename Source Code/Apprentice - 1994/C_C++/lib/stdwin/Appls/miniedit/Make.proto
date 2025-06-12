@@ -1,1 +1,17 @@
-## Makefile prototype for miniedit application#MINIEDIT=	$(APPLS)/minieditSRCS=		\		$(MINIEDIT)/miniedit.c \		$(MINIEDIT)/regexp.c \		$(MINIEDIT)/regsub.call:		miniedit_bootstrap:	@putprogmf miniedit $(SRCS)
+
+#
+# Makefile prototype for miniedit application
+#
+
+MINIEDIT=	$(APPLS)/miniedit
+
+SRCS=		\
+		$(MINIEDIT)/miniedit.c \
+		$(MINIEDIT)/regexp.c \
+		$(MINIEDIT)/regsub.c
+
+all:		miniedit
+
+_bootstrap:
+	@putprogmf miniedit $(SRCS)
+

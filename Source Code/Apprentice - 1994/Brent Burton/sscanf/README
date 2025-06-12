@@ -1,1 +1,61 @@
-5/94 - Since this code was created some time ago, it's performance maynot compare in the same way with the Think libraries.  Therefore, Icannot claim with such confidence as I did in the past that this codeis such-in-such faster than the default routines.------------------------README  for the freely-distributable sscanf() implementation.For any questions, feel free to email me atbrentb@math.tamu.edu.----------------------------------------------What is this?    This mess of code is a freely-distributable sscanf() implementationthat I needed, felt others would need/want, and is something thatI enjoyed writing.  Always using the built-in sscanf functionalityin my own programs made me often wonder how you do something like this.From my experience with NFAs and more importantly DFAs, I knew how youcould approach the scanning problem, but how do you do it quickly?This sscanf() implementation offers a few advantages over the standardThink C provided function:* No globals used at all.  (No a5 worries & can be used in stand-alone code)* Register independent     (again, no problems with a4/a5 worlds)* Fast scanning times  - This is the main goal I had in mind.  I wanted to write something that    was quicker.  The basic string/integer conversions I wrote were     definitely quicker, but my original floating point scanning was    plain garbage.  Fortunately, Stepan Riha took that part over and     greatly increased the conversions by rewriting all of the floating     point-related code.* The Think C routines, if used, relied on all sorts of extra garbage     from the ANSI libraries.  If you needed the sscanf function, you had to    put up with an extra 18K of fairly unused code.    If you need something to help you over the above obstacles, then youmay want to try this code.  For performance measurements, see the beginning60 lines or so of mysscanf.c.The CodeThe code was developed with Think C and *should* be totally portable toany other ANSI C compiler.There is a file, sprintf.c, that I did not write.  Tim Endres sent me thatcopy with permission to redistribute it with my sscanf() code.  His codeimplements the, you guessed it, sprintf() counterpart.---------------------As always, if you find a bug or other undocumented feature in the code,please email me.  I'd like to know about any anomalies you believe arethere.Enjoy!  Brent Burton  brentb@math.tamu.edu
+5/94 - Since this code was created some time ago, it's performance may
+not compare in the same way with the Think libraries.  Therefore, I
+cannot claim with such confidence as I did in the past that this code
+is such-in-such faster than the default routines.
+
+------------------------
+
+README  for the freely-distributable sscanf() implementation.
+
+For any questions, feel free to email me at
+brentb@math.tamu.edu.
+----------------------------------------------
+
+What is this?
+  
+  This mess of code is a freely-distributable sscanf() implementation
+that I needed, felt others would need/want, and is something that
+I enjoyed writing.  Always using the built-in sscanf functionality
+in my own programs made me often wonder how you do something like this.
+From my experience with NFAs and more importantly DFAs, I knew how you
+could approach the scanning problem, but how do you do it quickly?
+
+This sscanf() implementation offers a few advantages over the standard
+Think C provided function:
+
+* No globals used at all.  (No a5 worries & can be used in stand-alone code)
+* Register independent     (again, no problems with a4/a5 worlds)
+* Fast scanning times
+  - This is the main goal I had in mind.  I wanted to write something that
+    was quicker.  The basic string/integer conversions I wrote were 
+    definitely quicker, but my original floating point scanning was
+    plain garbage.  Fortunately, Stepan Riha took that part over and 
+    greatly increased the conversions by rewriting all of the floating 
+    point-related code.
+* The Think C routines, if used, relied on all sorts of extra garbage 
+    from the ANSI libraries.  If you needed the sscanf function, you had to
+    put up with an extra 18K of fairly unused code.
+    
+If you need something to help you over the above obstacles, then you
+may want to try this code.  For performance measurements, see the beginning
+60 lines or so of mysscanf.c.
+
+The Code
+
+The code was developed with Think C and *should* be totally portable to
+any other ANSI C compiler.
+
+There is a file, sprintf.c, that I did not write.  Tim Endres sent me that
+copy with permission to redistribute it with my sscanf() code.  His code
+implements the, you guessed it, sprintf() counterpart.
+
+---------------------
+
+As always, if you find a bug or other undocumented feature in the code,
+please email me.  I'd like to know about any anomalies you believe are
+there.
+
+Enjoy!
+  Brent Burton
+  brentb@math.tamu.edu
+

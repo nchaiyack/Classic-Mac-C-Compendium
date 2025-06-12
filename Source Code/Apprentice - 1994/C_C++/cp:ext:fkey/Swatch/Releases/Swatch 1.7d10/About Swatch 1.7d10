@@ -1,1 +1,27 @@
-8 Jan 1993Swatch 1.7d10 is a stable prelim version of a new Swatch I'm working on. Here's what it does:+ displays the MultiFinder heap (where apps are allocated).+ toggles on/off the checking of individual heaps. Why: because Swatch checks *every* block of *every* heap *every* time it updates. Turning some heaps off makes Swatch run faster and causes much less VM thrashing if VM is on.+ identifies blocks as resources and gives resource info. For example, clicking on a code resource in someone's heap displays something like: $0132B4D0 $069E  CODE 3 '%EntryVector'. This shows address of block, resource file id, resource type and number, resource name.+ displays the number of bytes visible in the window for the current zoom factor.+ uses MultiFinder memory for its list of heaps--about 30K for every heap shown in the Swatch window.+ displays the number of islands in a heap. An island is a locked block surrounded by unlocked blocks. They're bad.Here's what it doesn't do:+ doesn't (really) identify memory in the MultiFinder heap.+ only identifies system resources in the system heap.+ doesn't let you change it's update frequency (this used to be stored in a resource).+ doesn't run on System 6.+ doesn't do window zooming.Changes since 1.7d9:+ now identifies application resources 100% of the time.+ resources not in an app's current resource chain are labeled 'unidentifiable resource'.Changes since 1.7d8:+ fixed an update bug: numbers in columns are now erased completely when they change./joe
+8 Jan 1993
+
+Swatch 1.7d10 is a stable prelim version of a new Swatch I'm working on. Here's what it does:
+
++ displays the MultiFinder heap (where apps are allocated).
++ toggles on/off the checking of individual heaps. Why: because Swatch checks *every* block of *every* heap *every* time it updates. Turning some heaps off makes Swatch run faster and causes much less VM thrashing if VM is on.
++ identifies blocks as resources and gives resource info. For example, clicking on a code resource in someone's heap displays something like: $0132B4D0 $069E  CODE 3 '%EntryVector'. This shows address of block, resource file id, resource type and number, resource name.
++ displays the number of bytes visible in the window for the current zoom factor.
++ uses MultiFinder memory for its list of heaps--about 30K for every heap shown in the Swatch window.
++ displays the number of islands in a heap. An island is a locked block surrounded by unlocked blocks. They're bad.
+
+Here's what it doesn't do:
+
++ doesn't (really) identify memory in the MultiFinder heap.
++ only identifies system resources in the system heap.
++ doesn't let you change it's update frequency (this used to be stored in a resource).
++ doesn't run on System 6.
++ doesn't do window zooming.
+
+Changes since 1.7d9:
++ now identifies application resources 100% of the time.
++ resources not in an app's current resource chain are labeled 'unidentifiable resource'.
+
+Changes since 1.7d8:
++ fixed an update bug: numbers in columns are now erased completely when they change.
+
+/joe

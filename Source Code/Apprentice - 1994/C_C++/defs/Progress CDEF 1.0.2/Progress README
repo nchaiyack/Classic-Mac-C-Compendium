@@ -1,1 +1,62 @@
-Progress CDEF version 1.0.2===========================by Paul Celestin20 March 1994Copyright © 1994 by Celestin CompanyAll Rights ReservedProgress is a CDEF (control definition) that allows you to display a thermometer progress bar, similar to the one the Finder uses when it shows you a file copy in progress. You can use it just about anywhere. I've tested it on various machines and it seems to work fine.VERSION HISTORY---------------1.0.2 - added ability to set color of thermometer1.0.1 - bug fixes1.0.0 - initial releaseINSTRUCTIONS------------To use the CDEF, create a CNTL with the following settings:The BoundsRect should correspond to where you want the progress thermometer to be displayed in your dialog. Usually, a thermometer is wide and short.Value is the starting value of the thermometer. This is usually set in your program.Visible should be set to true.Max and Min should be set to number like 100 and 0 respectively.ProcID should be set to (CDEF ID * 16) + Variation. I've set the CDEF ID to 37, so in most cases, the ProcID should be set to 576. There are no additional variations available.RefCon should be set to the color you want for the thermometer. To make life easy, the CDEF only supports the old-style colors:1 - red2 - green3 - blue4 - cyan5 - magenta6 - yellow7 - whiteAny other number will set the color of the thermometer to black.Titles are ignored.LEGALESE--------Progress CDEF version 1.0.2 is Copyright © 1994 by Paul Celestin. All Rights Reserved. It may be freely distributed and used in any public domain, freeware, shareware, or commercial product. It also may be included in any collection including CD-ROM compilations. However, it must include this README, unaltered. I would appreciate a copy of any product in which it is included. Credit would also be nice, though I don't require it. Celestin Company makes no warranty of any kind as to the fitness of this CDEF. Use it at your own risk.Source code is available. Please email me for details. Bugs, gripes, comments, etc. should be sent to me (Paul Celestin) at one of the following addresses:Internet (preferred): celestin@pt.olympus.netAOL: CelestinCompuServe: 71630,650Snail mail:Paul CelestinCelestin Company1152 Hastings AvenuePort Townsend, WA  98368
+Progress CDEF version 1.0.2
+===========================
+by Paul Celestin
+20 March 1994
+
+Copyright © 1994 by Celestin Company
+All Rights Reserved
+
+Progress is a CDEF (control definition) that allows you to display a thermometer progress bar, similar to the one the Finder uses when it shows you a file copy in progress. You can use it just about anywhere. I've tested it on various machines and it seems to work fine.
+
+VERSION HISTORY
+---------------
+1.0.2 - added ability to set color of thermometer
+
+1.0.1 - bug fixes
+
+1.0.0 - initial release
+
+INSTRUCTIONS
+------------
+To use the CDEF, create a CNTL with the following settings:
+
+The BoundsRect should correspond to where you want the progress thermometer to be displayed in your dialog. Usually, a thermometer is wide and short.
+
+Value is the starting value of the thermometer. This is usually set in your program.
+
+Visible should be set to true.
+
+Max and Min should be set to number like 100 and 0 respectively.
+
+ProcID should be set to (CDEF ID * 16) + Variation. I've set the CDEF ID to 37, so in most cases, the ProcID should be set to 576. There are no additional variations available.
+
+RefCon should be set to the color you want for the thermometer. To make life easy, the CDEF only supports the old-style colors:
+
+1 - red
+2 - green
+3 - blue
+4 - cyan
+5 - magenta
+6 - yellow
+7 - white
+
+Any other number will set the color of the thermometer to black.
+
+Titles are ignored.
+
+LEGALESE
+--------
+Progress CDEF version 1.0.2 is Copyright © 1994 by Paul Celestin. All Rights Reserved. It may be freely distributed and used in any public domain, freeware, shareware, or commercial product. It also may be included in any collection including CD-ROM compilations. However, it must include this README, unaltered. I would appreciate a copy of any product in which it is included. Credit would also be nice, though I don't require it. Celestin Company makes no warranty of any kind as to the fitness of this CDEF. Use it at your own risk.
+
+Source code is available. Please email me for details. Bugs, gripes, comments, etc. should be sent to me (Paul Celestin) at one of the following addresses:
+
+Internet (preferred): celestin@pt.olympus.net
+AOL: Celestin
+CompuServe: 71630,650
+
+Snail mail:
+
+Paul Celestin
+Celestin Company
+1152 Hastings Avenue
+Port Townsend, WA  98368

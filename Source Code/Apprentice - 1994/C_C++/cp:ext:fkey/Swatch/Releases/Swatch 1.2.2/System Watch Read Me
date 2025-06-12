@@ -1,1 +1,60 @@
-System Watch, version 1.2.221 November 1991[informally called “Swatch,” a trademark of you-know-who]WHAT IS SWATCH?Swatch helps you track down heap bugs. It’s also lotso fun to watch.  It’s intended for programmers; however, normal people might enjoy it, too.INSTALLING SWATCHTo install Swatch, move Swatch INIT and Swatch Riff into your System Folder and reboot.  For System 7 installation, just move the Swatch Riff into your Preferences folder—the INIT is not needed (hurrah!).  Actually, the Riff isn't really needed, either. Heck, just run Swatch and watch.USING SWATCHColors indicate the four different heap blocks shown.  Red is for non-relocatable (NewPtr) or relocatable-but-locked blocks.  Yellow is for relocatable blocks.  Orange is for purgeable relocatable blocks (essentially free).  Green is free memory. (If you are using black & white, the colors are replaced by the patterns black, gray, barbershop and white.)Red is bad.  The more red you see in an application’s heap, the less memory you have to do real work.  Lots of little red pieces with other colors in between in really bad.  There’s not much you can do about it, however, except complain to the people who wrote it (or if you wrote it, learn what MoveHHi() does).  Lots of green, though, might not necessarily be a good thing, either.  If you see that you’re only using about half the green available in any one application, that’s a sign that you can lower that application’s memory size and still get the work done that you want to do. And that means more memory for other applications.You can zoom in on a heap by clicking on it (the magnifying glass cursor).  Hold the option key down and click to zoom out.  Hold the command key down and click to display the memory address at that location (more on this later).You can click on a heap name (System, Finder, etc.) to purge and compact its heap.  Surprisingly, my machine still behaves after doing this to the System heap (ouch)!The MacsBug icon in the lower-left is visible only if you have a debugger installed.  Click on it to drop into MacsBug and display some useful info.  With a zone address showing next to the bomb, MacsBug will switch to that heap upon entering (“;HX zone”).  With a memory address showing, MacsBug will switch to that heap and give you some info about that address (“;HX zone;WH address”).  This is great for tracking down unknown blocks.GORY DETAILSSwatch saves your window’s location and heap zoom factor in a file called “Swatch Prefs” in your System Folder (Preferences for you System 7 types).  If Swatch’s window is on a monitor with less than 16 colors, Swatch will use the black and white patterns for the heap graphs.The Swatch INIT patches _OpenResFile and _CloseResFile in order to watch applications start up and shut down.  It is small and very unobtrusive.  The INIT is not necessary with System 7 because System 7 provides this functionality through the nifty Process Manager.  Swatch Riff is used for Swatch’s (excessive) about box.  Swatch works fine without it, in case hard disk free space is a concern.Change the values in the ‘WNE ’ resource to affect how often Swatch updates.  The numbers are in 60ths of a second.  I use the values 2 (30 times a second) and 15 (4 times a second) and leave Swatch running on my second monitor.  The graphs update only when Swatch gets time from MultiFinder.  If you’re debugging an application and would like Swatch to update at various places in your code, just insert calls to EventAvail() at those locations.  Changing the ‘WNE ’ values to 0 and 0 will ensure that Swatch updates every time.The Swatch partition size can be increased to monitor more applications at once.  At its default setting of 50K, Swatch should be able to watch about ten.  You’ll know that Swatch has run out of memory when it only displays the System heap (also, Swatch’s free memory displayed for itself will be loooow.  Oooh, self-reference!  Actually, Swatch was very helpful in writing Swatch.  I couldn’t bloody well have a cluttered heap, now, could I?).I’d like to add the ability to show certain resource types with special colors in the heap display (all CODE resources as purple, for example).  I’d also like to add some kind of memory manager trap recording so that you can tell who created a block.  I’d also like to add the display of zones created within heaps or on the stack.  I’d also like to find the luggage I lost on a flight to San Diego.  If you have any ideas, please let me know.HISTORYSwatch 1.0 was never released.Swatch 1.1 didn’t work under System 7.Swatch 1.2 does.Swatch 1.2.1 does 32-bit mode as well.Swatch 1.2.2 does colors a bit better.Have fun.  Swatch is free.joe holtAdobe Systems Inc.P.S.  This is not an Adobe product, so please don’t bother our fine technical support people.  If you have questions, contact me:America Online: JholtAppleLink: ADOBE.JHOLTInternet: jholt@adobe.com(415) 962-2097
+System Watch, version 1.2.2
+21 November 1991
+[informally called “Swatch,” a trademark of you-know-who]
+
+WHAT IS SWATCH?
+
+Swatch helps you track down heap bugs. It’s also lotso fun to watch.  It’s intended for programmers; however, normal people might enjoy it, too.
+
+
+INSTALLING SWATCH
+
+To install Swatch, move Swatch INIT and Swatch Riff into your System Folder and reboot.  For System 7 installation, just move the Swatch Riff into your Preferences folder—the INIT is not needed (hurrah!).  Actually, the Riff isn't really needed, either. Heck, just run Swatch and watch.
+
+
+USING SWATCH
+
+Colors indicate the four different heap blocks shown.  Red is for non-relocatable (NewPtr) or relocatable-but-locked blocks.  Yellow is for relocatable blocks.  Orange is for purgeable relocatable blocks (essentially free).  Green is free memory. (If you are using black & white, the colors are replaced by the patterns black, gray, barbershop and white.)
+
+Red is bad.  The more red you see in an application’s heap, the less memory you have to do real work.  Lots of little red pieces with other colors in between in really bad.  There’s not much you can do about it, however, except complain to the people who wrote it (or if you wrote it, learn what MoveHHi() does).  Lots of green, though, might not necessarily be a good thing, either.  If you see that you’re only using about half the green available in any one application, that’s a sign that you can lower that application’s memory size and still get the work done that you want to do. And that means more memory for other applications.
+
+You can zoom in on a heap by clicking on it (the magnifying glass cursor).  Hold the option key down and click to zoom out.  Hold the command key down and click to display the memory address at that location (more on this later).
+
+You can click on a heap name (System, Finder, etc.) to purge and compact its heap.  Surprisingly, my machine still behaves after doing this to the System heap (ouch)!
+
+The MacsBug icon in the lower-left is visible only if you have a debugger installed.  Click on it to drop into MacsBug and display some useful info.  With a zone address showing next to the bomb, MacsBug will switch to that heap upon entering (“;HX zone”).  With a memory address showing, MacsBug will switch to that heap and give you some info about that address (“;HX zone;WH address”).  This is great for tracking down unknown blocks.
+
+
+GORY DETAILS
+
+Swatch saves your window’s location and heap zoom factor in a file called “Swatch Prefs” in your System Folder (Preferences for you System 7 types).  If Swatch’s window is on a monitor with less than 16 colors, Swatch will use the black and white patterns for the heap graphs.
+
+The Swatch INIT patches _OpenResFile and _CloseResFile in order to watch applications start up and shut down.  It is small and very unobtrusive.  The INIT is not necessary with System 7 because System 7 provides this functionality through the nifty Process Manager.  Swatch Riff is used for Swatch’s (excessive) about box.  Swatch works fine without it, in case hard disk free space is a concern.
+
+Change the values in the ‘WNE ’ resource to affect how often Swatch updates.  The numbers are in 60ths of a second.  I use the values 2 (30 times a second) and 15 (4 times a second) and leave Swatch running on my second monitor.  The graphs update only when Swatch gets time from MultiFinder.  If you’re debugging an application and would like Swatch to update at various places in your code, just insert calls to EventAvail() at those locations.  Changing the ‘WNE ’ values to 0 and 0 will ensure that Swatch updates every time.
+
+The Swatch partition size can be increased to monitor more applications at once.  At its default setting of 50K, Swatch should be able to watch about ten.  You’ll know that Swatch has run out of memory when it only displays the System heap (also, Swatch’s free memory displayed for itself will be loooow.  Oooh, self-reference!  Actually, Swatch was very helpful in writing Swatch.  I couldn’t bloody well have a cluttered heap, now, could I?).
+
+I’d like to add the ability to show certain resource types with special colors in the heap display (all CODE resources as purple, for example).  I’d also like to add some kind of memory manager trap recording so that you can tell who created a block.  I’d also like to add the display of zones created within heaps or on the stack.  I’d also like to find the luggage I lost on a flight to San Diego.  If you have any ideas, please let me know.
+
+
+HISTORY
+
+Swatch 1.0 was never released.
+Swatch 1.1 didn’t work under System 7.
+Swatch 1.2 does.
+Swatch 1.2.1 does 32-bit mode as well.
+Swatch 1.2.2 does colors a bit better.
+
+Have fun.  Swatch is free.
+
+joe holt
+Adobe Systems Inc.
+
+
+P.S.  This is not an Adobe product, so please don’t bother our fine technical support people.  If you have questions, contact me:
+
+America Online: Jholt
+AppleLink: ADOBE.JHOLT
+Internet: jholt@adobe.com
+(415) 962-2097

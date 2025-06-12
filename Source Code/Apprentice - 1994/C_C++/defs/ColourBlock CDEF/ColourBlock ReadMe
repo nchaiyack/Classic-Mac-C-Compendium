@@ -1,1 +1,40 @@
-ColourBlock ReadMe------------------ColourBlock is a CDEF for retrieving a block of colour from the user. THINK C 6.0 source and a compiledversion are included in this archive.	• CNTL resources which use this CDEF should use a proc ID of 14000. The resource ID of	  the ColourBlock CDEF is 900 - there are no variation codes.  	• The colour is held in a data structure attached to each control, a handle to which is left	  in the contrlData field of the control. Your app should read/set the value in this structure,	  and call Draw1Control when it wants to update the on-screen value. See ColourBlock.h for	  the format.	• The CDEF *assumes* that Colour Quickdraw is present.	• The CDEF will return inCheckBox when the control is selected.	• The CDEF doesn't attempt to be sensible when it's placed on a display with a small colour	  depth. Disable the control if it's not feasible to use it to  pick colours with. It also doesn't	  attempt to dither the colour blocks.  	• The source code, and the CDEF, are freeware - you may use them, without notice, in	  anything you write.	• If you find any bugs, or have any comments, feel free to send me some email. This was	  just done as a quick hack, so there may well be some.	• You can reach me by email as grantd@dcs.gla.ac.uk, and by post with:		Dair Grant,		11 Garrioch Quadrant,		North Kelvinside,		Glasgow		G20 8RT-dair
+ColourBlock ReadMe
+------------------
+
+ColourBlock is a CDEF for retrieving a block of colour from the user. THINK C 6.0 source and a compiled
+version are included in this archive.
+
+
+	• CNTL resources which use this CDEF should use a proc ID of 14000. The resource ID of
+	  the ColourBlock CDEF is 900 - there are no variation codes.
+  
+	• The colour is held in a data structure attached to each control, a handle to which is left
+	  in the contrlData field of the control. Your app should read/set the value in this structure,
+	  and call Draw1Control when it wants to update the on-screen value. See ColourBlock.h for
+	  the format.
+
+	• The CDEF *assumes* that Colour Quickdraw is present.
+
+	• The CDEF will return inCheckBox when the control is selected.
+
+	• The CDEF doesn't attempt to be sensible when it's placed on a display with a small colour
+	  depth. Disable the control if it's not feasible to use it to  pick colours with. It also doesn't
+	  attempt to dither the colour blocks.
+  
+	• The source code, and the CDEF, are freeware - you may use them, without notice, in
+	  anything you write.
+
+	• If you find any bugs, or have any comments, feel free to send me some email. This was
+	  just done as a quick hack, so there may well be some.
+
+	• You can reach me by email as grantd@dcs.gla.ac.uk, and by post with:
+
+		Dair Grant,
+		11 Garrioch Quadrant,
+		North Kelvinside,
+		Glasgow
+		G20 8RT
+
+
+
+-dair

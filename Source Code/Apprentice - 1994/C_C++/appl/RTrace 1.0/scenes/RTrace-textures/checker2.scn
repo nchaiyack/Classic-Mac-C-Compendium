@@ -1,1 +1,6 @@
-eye 1.6  1.6  1.6light directional -1 -1 1 whitesurface matte Yellow checkers surface matte Magenta scale 0.4sphere 0 0 0 1           % sphere object
+eye 1.6  1.6  1.6
+light directional -1 -1 1 white
+surface matte Yellow 
+checkers surface matte Magenta scale 0.4
+sphere 0 0 0 1           % sphere object
+

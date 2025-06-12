@@ -1,1 +1,62 @@
-"Monitor sense pins.note"From Compuserve, May, 1992.The sensing of monitor type is through pins 4, 7, and 10. The sensing pins should be grounded or left unconnected. You can ground a pin by connecting it to Pin 11.Display                       Pixels         Hz     Pins groundedApple Hi Res Monochrome     480 x 640       67 Hz    4Apple Hi Res RGB            480 x 640       67 Hz    4Apple 12" RGB               512 x 384       67 Hz    4, 10Apple 15" Portrait          640 x 870       75 Hz    7, 10Apple 2-Page Monochrome    1152 x 870       75 Hz   10VGA                         480 x 640               10RS-170A (interlaced)        480 x 640      60 Hz     4, 7Sources:Apple Macintosh Technical Note 144: Macintosh Color Monitor Connections.Apple Macintosh Developer Notes: Macintosh Display Card 8¥24 GC.Message: #27362, S/2  Mac Tech QuestionsDate:    Tue, May 12, 1992 8:21:16 PMSubject: LC technical questionFrom:    Kevin Norris [AsstSysop] 75410,1674To:      Ken Settle  76556,753 (received)Reply:   #27441 (1 reply)Mac LC video connector pinouts: Pin Number    Signal Name         Signal Description 1             RED.GND             Red ground 2             RED.VID             Red video signal 3,15          /CSYNC or /HSYNC    Composite synchronization signal if                                   Apple monitor. Horizontal                                   synchronization signal if VGA                                     monitor. 4             SENSE0              Monitor sense signal 0 5             GRN.VID             Green video signal 6             GRN.GND             Green ground 7             SENSE1              Monitor sense signal 1 (grounded                                   internally) 8             n.c.                Not connected 9             BLU.VID             Blue video signal 10            SENSE2              Monitor sense signal 2 11            C&VSYNC.GND         Ground for CSYNC and VSYNC 12            /VSYNC              Vertical synchronization signal 13            BLU.GND             Blue ground 14            HSYNC.GND           HSYNC ground Shell         CHASSIS.GND         Chassis groundA "/" at the beginning of a signal name indicates that the signal is active low.The Macintosh LC does not supply vertical synchronization with the Green video signal (pin~5). The vertical synchronization signal is supplied on pin 12.The Macintosh LC requires that pin 4 (SENSE0) be connected to Ground to signal the connection of a 640 x 480 monitor. The Macintosh LC requires that pin 4 and 10 (SENSE0 and SENSE2) be connected to Ground to signal the connection of a 512 x 384 monitor (i.e., the Macintosh 12" RGB Display). The Macintosh LC requires that pin 10 (SENSE2) be connected to Ground to signal the connection of a VGA monitor. Pin 7 (SENSE1) is grounded in the Macintosh LC.
+"Monitor sense pins.note"
+From Compuserve, May, 1992.
+
+The sensing of monitor type is through pins 4, 7, and 10. The sensing pins should be 
+grounded or left unconnected. You can ground a pin by connecting it to Pin 11.
+
+Display                       Pixels         Hz     Pins grounded
+Apple Hi Res Monochrome     480 x 640       67 Hz    4
+Apple Hi Res RGB            480 x 640       67 Hz    4
+Apple 12" RGB               512 x 384       67 Hz    4, 10
+Apple 15" Portrait          640 x 870       75 Hz    7, 10
+Apple 2-Page Monochrome    1152 x 870       75 Hz   10
+VGA                         480 x 640               10
+RS-170A (interlaced)        480 x 640      60 Hz     4, 7
+
+Sources:
+Apple Macintosh Technical Note 144: Macintosh Color Monitor Connections.
+Apple Macintosh Developer Notes: Macintosh Display Card 8¥24 GC.
+
+
+Message: #27362, S/2  Mac Tech Questions
+Date:    Tue, May 12, 1992 8:21:16 PM
+Subject: LC technical question
+From:    Kevin Norris [AsstSysop] 75410,1674
+To:      Ken Settle  76556,753 (received)
+Reply:   #27441 (1 reply)
+
+Mac LC video connector pinouts:
+
+ Pin Number    Signal Name         Signal Description
+ 1             RED.GND             Red ground
+ 2             RED.VID
+             Red video signal
+ 3,15          /CSYNC or /HSYNC    Composite synchronization signal if
+                                   Apple monitor. Horizontal
+                                   synchronization signal if VGA  
+                                   monitor.
+ 4             SENSE0              Monitor sense signal 0
+ 5             GRN.VID             Green video signal
+ 6             GRN.GND             Green ground
+ 7             SENSE1              Monitor sense signal 1 (grounded
+                                   internally)
+ 8             n.c.                Not connected
+ 9             BLU.VID             Blue video signal
+ 10            SENSE2              Monitor sense signal 2
+ 11            C&VSYNC.GND         Ground for CSYNC and VSYNC
+ 12            /VSYNC              Vertical synchronization signal
+ 13            BLU.GND             Blue ground
+ 14            HSYNC.GND           HSYNC ground
+ Shell         CHASSIS.GND         Chassis ground
+
+A "/" at the beginning of a signal name indicates that the signal is active low.
+
+The Macintosh LC does not supply vertical synchronization with the Green video signal 
+(pin~5). The vertical synchronization signal is supplied on pin 12.
+
+The Macintosh LC requires that pin 4 (SENSE0) be connected to Ground to signal the 
+connection of a 640 x 480 monitor. The Macintosh LC requires that pin 4 and 10 
+(SENSE0 and SENSE2) be connected to Ground to signal the connection of a 512 x 384 
+monitor (i.e., the Macintosh 12" RGB Display). The Macintosh LC requires that pin 10 
+(SENSE2) be connected to Ground to signal the connection of a VGA monitor. Pin 7 
+(SENSE1) is grounded in the Macintosh LC.

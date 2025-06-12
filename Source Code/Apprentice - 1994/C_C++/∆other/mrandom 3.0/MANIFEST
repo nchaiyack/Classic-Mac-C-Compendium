@@ -1,1 +1,38 @@
-   File Name		Archive #	Description----------------------------------------------------------- MANIFEST                   1	 README                     1	 doc                        1	 doc/latexinfo.sty          1	 doc/mrandom.ps.1           6	 doc/mrandom.ps.2           5	 doc/mrandom.tex            4	 doc/mrandom.txt            3	 man                        1	 man/mrandom.3              2	 man/mrandom.3.txt          2	 man/mrtest.1               1	 man/mrtest.1.txt           1	 src                        1	 src/bentley.c              1	 src/bentley.h              1	 src/makefile               1	 src/mrandom.c              3	 src/mrandom.h              2	 src/mrtest.c               2	 src/newrng.c               1	 src/newrng.h               1	 src/pcrand.c               1	 src/pcrand.h               1	 src/ran0.c                 1	 src/ran0.h                 1	 src/ran1.c                 1	 src/ran1.h                 1	 src/ran2.c                 1	 src/ran2.h                 1	 src/rngs.h                 1	 src/script                 1	 src/ultra.c                1	 src/ultra.h                1	 src/xsq.c                  1	 src/xsq.h                  1	
+   File Name		Archive #	Description
+-----------------------------------------------------------
+ MANIFEST                   1	
+ README                     1	
+ doc                        1	
+ doc/latexinfo.sty          1	
+ doc/mrandom.ps.1           6	
+ doc/mrandom.ps.2           5	
+ doc/mrandom.tex            4	
+ doc/mrandom.txt            3	
+ man                        1	
+ man/mrandom.3              2	
+ man/mrandom.3.txt          2	
+ man/mrtest.1               1	
+ man/mrtest.1.txt           1	
+ src                        1	
+ src/bentley.c              1	
+ src/bentley.h              1	
+ src/makefile               1	
+ src/mrandom.c              3	
+ src/mrandom.h              2	
+ src/mrtest.c               2	
+ src/newrng.c               1	
+ src/newrng.h               1	
+ src/pcrand.c               1	
+ src/pcrand.h               1	
+ src/ran0.c                 1	
+ src/ran0.h                 1	
+ src/ran1.c                 1	
+ src/ran1.h                 1	
+ src/ran2.c                 1	
+ src/ran2.h                 1	
+ src/rngs.h                 1	
+ src/script                 1	
+ src/ultra.c                1	
+ src/ultra.h                1	
+ src/xsq.c                  1	
+ src/xsq.h                  1	

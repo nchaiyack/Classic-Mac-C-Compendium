@@ -1,1 +1,234 @@
-17 April 1993Overview--------MacGS_2.5.2b3_Runtime.cpt contains a self-contained runtimeenvironment for version 2.5.2 Beta 3 of Macintosh Ghostscript thatruns on a Macintosh with at least 2 Megabytes of memory.MacGS_2.5.2b3_RT_No_Fonts.cpt is identical toMacGS_2.5.2b3_Runtime.cpt except it does *not* contain the Ghostscriptfonts.  This file was specifically created for those who are upgradingfrom a previous version of MacGS 2.5.x and who wish to avoid the costof transferring Ghostscript's fonts.  Please do *not* obtain thisarchive unless you are upgrading from a previous version of MacGS2.5.x.MacGS_2.5.2b3_Dev.cpt contains the development environment for version2.5.2 Beta 3 of Macintosh Ghostscript.  Because it does *not* containall of the Ghostscript fonts, you must also obtain and unarchiveMacGS_2.5.2b3_Runtime.cpt to obtain a complete Ghostscript runtimeenvironment.  However, this archive contains sufficient files to runstandalone.This implemention does *not* require 32-bit Color QuickDraw and runsunder both System 6 and System 7.  It should even run on black-and-white displays.One version does *not* presuppose a 68020 or better processor, nordoes it presuppose the existence of a 68881 FPU.  The FPU version(which is 20% faster) does *not* check that these hardwarerequirements have been satisfied.Getting Started------- -------Once Ghostscript is initialized, use the MacGS menu item Open File...to select a file to preview.  I suggest your opening one of the filesin gs:(Tests).  Also note that most of the files in the (macGS Tests)folder assume that the Laserprep file was previously loaded.  Use theMacGS menu item Resume to continue.Because MacGS used hardcoded relative paths, I *strongly* suggest thatyou neither rename nor move files contained within the MacGS folder.If you do, you risk of having MacGS fail during initialization andprematurely terminating.Mac-Specific Features------------ --------Once Ghostscript is initialized, you can open and display PostScriptfiles via the MacGS menu.  This menu also allows you to save yourPostScript output as a PICT file.You can Cut and Copy the rendered image to the clipboard.The arrow keys will scroll the graphics window.  On an extendedkeyboard, the Page Up/Down and Home/End keys will scroll the imageappropriately; the addition of the Option key alternatively specifiesthe horizontal scrollbar.Beta 3 Enhancements and Bug Fixes---- - ------------ --- --- -----Because MacGS now correctly responds to page size and resolutionchanges specified via the GS' putdeviceprops operator (seelanguage.doc), it will also change the size of its displayable area tomatch the paper sizes specified in gs_statd.ps.  Also, the file300dpi.ps, located in (macGS Tests), shows how to change the displayedoutput resolution to 300 dpi.MacGS will open PS files of type 'EPSF' as well as those of type'TEXT'.Beta 2 Enhancements---- - ------------The MacGS menu is now immediately available without having to bringthe Graphics Window frontmost.  The command-key equivalents of theMacGS menu items are also honored.  (This entailed selectivelypre-empting THINK C's console driver *without* changing any ofSymantec's code.)  As there have been reports of menu problems withBeta 1, these changes may ameliorate those problems.You may now select alternative device drivers via MacGS' Configure...menu item.  In the near future (RSN :-), I'll look into providing aGUI to allow you to specify device-specific attributes.  Please notethat most of the other drivers (viz., GIF and PBMPlus) create scratchfiles, some which need to be deleted and others which need to berenamed.  However, this behavior seems to be a consequence of howthese drivers were originally implemented.You may interactively select a region to save to a file or copy to theclipboard.  Although this feature has been successfully tested withescher.ps, tiger.ps, and golfer.ps with a 2 Mbyte memory partition,depending upon the complexity of your image, you may need to increaseMacGS' memory size.When MacGS is rendering via the Open File... menu item, the cursor ischanged to a spinning watch.Under System 7, background processes are now given cycles.showpage always requires the use of MacGS' Resume menu item.If PICT recording runs out of memory, MacGS returns VMError.To accommodate MacGS and intialization file interdependencies,gs_mac.ps checks MacGS' version.Beta 1 Enhancements and Bug Fixes---- - ------------ --- --- -----You may now interrupt the execution of a large PS file by invokingStop from the MacGS menu when GS pauses at the end of a page after ashowpage.The name of the Laserprep file has been moved from MacGS' resourcefile to the gs_mac.ps initialization file.Runtime errors sometimes caused MacGS to terminate abnormally with atypecheck error if the Ghostscript interpretor was implicitly invokedvia the Open File... menu item (-- matmesh2.ps did this).  This wascaused by PS programs which did not restore the operand and dictionarystacks to their previous non-empty states.  The .macrunfile procedurein gs_mac.ps has been modified to accommodate this ... *antisocial*behavior.In Beta zero, the Open File... command did not work the very firsttime it was used.Limitations (Caveat emptor!)----------- ------- --------Both BeHierarchic and MenuChoice conflict with MacGS.  Because most ofMacGS' GUI is implemented as a device driver, and because both ofthese INITs patch menu-related traps and don't necessarily restore thecurrent resource file context, I strongly suggest that you not installthese INITs when running MacGS.  (For you Mac hackers, the reason thatMacGS' GUI is implemented as a device driver is because THINK C's*unmodified* stdio routines are implicitly running MacGS' event loop-- talk about tails wagging dogs!  Thus, MacGS is *unable* to save andrestore the resource file context because it *never* calls MenuSelect().)There is no way to gracefully interrupt MacGS while it is rendering.Although I've implemented preliminary code (-- MacGS actually detectsCommand-. key presses), this feature relies on GS using the returnvalue from gp_check_interrupts ().  Peter says that this is on hislist of things to fix for GS 2.6.MacGS 2.5.2 is *absymally* slow when rendering snowflak.ps.  This isbecause Peter eliminated the use of driver-specific fill trapezoidroutines.  (MacGS *2.2* is actually very much faster.  Oh, well -- onestep forward, two steps back....)  Peter's suggestion is to create animage device and let Ghostscript do the rendering.  However, thetradeoff is that a resultant picture is comprised of a monolithicbitmap and not composite, and editable, QD picture elements.Printing appears to work for LaserWriters and DeskWriters.  However,because MacGS is printing a backing-store QD picture, the resolutionis limited to 72 dpi (the Macintosh screen density).  In order toaccommodate laserprinter resolutions (e.g., 300 dpi or whatever),MacGS would need to re-render the image at a higher resolution.  Thisis better done with a dedicated (TBD) MacGS printer driver.Bugs----On a black-and-white (viz., 1-bit deep) display, some PS files makethe initial contents of the graphics window black; scrolling thewindow sometimes ameliorates this problem.There is a problem with GS 2.5.2 (which MacGS inherits) renderingscreen.ps.  Peter is fixing this in GS 2.6.There have been reports of INIT/cdev conflicts (Menubar Pattern,Window Shade, MenuChoice, and BeHierarchic).  If you suspect thatMacGS is failing because of an INIT conflict, please drop me a noteindicating the suspect extension.  If the extension is either freewareor shareware, please indicate its availability and I'll attempt toobtain a copy for testing.MacGS appears to suffer from memory lossage.  Symptoms include partialrendering to the screen, lack of backing-store, etc..  If this occurs,quit and restart MacGS.  If this problem persists, increase MacGS'memory size.  If it still persists, please drop me a note.THINK C Configuration Issues----- - ------------- ------Because THINK C's development environment only approximates a unixsystem, you need to create an empty file named "sys/types.h" and putit in THINK C's system header file path (viz., where THINK C searchesfor "<.h>" files).  In addition, you'll need to create an alias (-- ora copy, for those of you still using System 6) of stdlib.h named"malloc.h" and also put it in THINK C's system header file path.Resource Hacking-------- -------I've created a 'pref' resource (the associated TMPL resource isincluded) that defines the size of the graphics output window.  If youwant MacGS to use something other than your screen's maximum size,select the "Use resource" flag and change the resource's width andheight fields.  Also, if you're both adventurous and curious, thisresource contains additional fields whose values you may change foryour runtime enjoyment.You may also change MacGS' default paths by modifying the first stringin the STR# 128 resource.  Caveat emptor!Potential Futures--------- -------An automatic printing driver.Perhaps someone will be adventurous and create a PostScript-to-EPSdriver using MacGS as a starting point.  :-)Drag and drop preview/printing.PAP level printing to PS printers.  Issues include what to do aboutmissing fonts.Distribution Caveats------------ -------Even though I've not necessarily included the caveat in all of MacGS'source code, the distribution of the source code is controlled by theGNU General License....Martin Fong				mwfong@nisc.sri.com
+17 April 1993
+
+Overview
+--------
+MacGS_2.5.2b3_Runtime.cpt contains a self-contained runtime
+environment for version 2.5.2 Beta 3 of Macintosh Ghostscript that
+runs on a Macintosh with at least 2 Megabytes of memory.
+
+MacGS_2.5.2b3_RT_No_Fonts.cpt is identical to
+MacGS_2.5.2b3_Runtime.cpt except it does *not* contain the Ghostscript
+fonts.  This file was specifically created for those who are upgrading
+from a previous version of MacGS 2.5.x and who wish to avoid the cost
+of transferring Ghostscript's fonts.  Please do *not* obtain this
+archive unless you are upgrading from a previous version of MacGS
+2.5.x.
+
+MacGS_2.5.2b3_Dev.cpt contains the development environment for version
+2.5.2 Beta 3 of Macintosh Ghostscript.  Because it does *not* contain
+all of the Ghostscript fonts, you must also obtain and unarchive
+MacGS_2.5.2b3_Runtime.cpt to obtain a complete Ghostscript runtime
+environment.  However, this archive contains sufficient files to run
+standalone.
+
+This implemention does *not* require 32-bit Color QuickDraw and runs
+under both System 6 and System 7.  It should even run on black-and-
+white displays.
+
+One version does *not* presuppose a 68020 or better processor, nor
+does it presuppose the existence of a 68881 FPU.  The FPU version
+(which is 20% faster) does *not* check that these hardware
+requirements have been satisfied.
+
+
+Getting Started
+------- -------
+Once Ghostscript is initialized, use the MacGS menu item Open File...
+to select a file to preview.  I suggest your opening one of the files
+in gs:(Tests).  Also note that most of the files in the (macGS Tests)
+folder assume that the Laserprep file was previously loaded.  Use the
+MacGS menu item Resume to continue.
+
+Because MacGS used hardcoded relative paths, I *strongly* suggest that
+you neither rename nor move files contained within the MacGS folder.
+If you do, you risk of having MacGS fail during initialization and
+prematurely terminating.
+
+
+Mac-Specific Features
+------------ --------
+Once Ghostscript is initialized, you can open and display PostScript
+files via the MacGS menu.  This menu also allows you to save your
+PostScript output as a PICT file.
+
+You can Cut and Copy the rendered image to the clipboard.
+
+The arrow keys will scroll the graphics window.  On an extended
+keyboard, the Page Up/Down and Home/End keys will scroll the image
+appropriately; the addition of the Option key alternatively specifies
+the horizontal scrollbar.
+
+
+Beta 3 Enhancements and Bug Fixes
+---- - ------------ --- --- -----
+Because MacGS now correctly responds to page size and resolution
+changes specified via the GS' putdeviceprops operator (see
+language.doc), it will also change the size of its displayable area to
+match the paper sizes specified in gs_statd.ps.  Also, the file
+300dpi.ps, located in (macGS Tests), shows how to change the displayed
+output resolution to 300 dpi.
+
+MacGS will open PS files of type 'EPSF' as well as those of type
+'TEXT'.
+
+
+Beta 2 Enhancements
+---- - ------------
+The MacGS menu is now immediately available without having to bring
+the Graphics Window frontmost.  The command-key equivalents of the
+MacGS menu items are also honored.  (This entailed selectively
+pre-empting THINK C's console driver *without* changing any of
+Symantec's code.)  As there have been reports of menu problems with
+Beta 1, these changes may ameliorate those problems.
+
+You may now select alternative device drivers via MacGS' Configure...
+menu item.  In the near future (RSN :-), I'll look into providing a
+GUI to allow you to specify device-specific attributes.  Please note
+that most of the other drivers (viz., GIF and PBMPlus) create scratch
+files, some which need to be deleted and others which need to be
+renamed.  However, this behavior seems to be a consequence of how
+these drivers were originally implemented.
+
+You may interactively select a region to save to a file or copy to the
+clipboard.  Although this feature has been successfully tested with
+escher.ps, tiger.ps, and golfer.ps with a 2 Mbyte memory partition,
+depending upon the complexity of your image, you may need to increase
+MacGS' memory size.
+
+When MacGS is rendering via the Open File... menu item, the cursor is
+changed to a spinning watch.
+
+Under System 7, background processes are now given cycles.
+
+showpage always requires the use of MacGS' Resume menu item.
+
+If PICT recording runs out of memory, MacGS returns VMError.
+
+To accommodate MacGS and intialization file interdependencies,
+gs_mac.ps checks MacGS' version.
+
+
+Beta 1 Enhancements and Bug Fixes
+---- - ------------ --- --- -----
+You may now interrupt the execution of a large PS file by invoking
+Stop from the MacGS menu when GS pauses at the end of a page after a
+showpage.
+
+The name of the Laserprep file has been moved from MacGS' resource
+file to the gs_mac.ps initialization file.
+
+Runtime errors sometimes caused MacGS to terminate abnormally with a
+typecheck error if the Ghostscript interpretor was implicitly invoked
+via the Open File... menu item (-- matmesh2.ps did this).  This was
+caused by PS programs which did not restore the operand and dictionary
+stacks to their previous non-empty states.  The .macrunfile procedure
+in gs_mac.ps has been modified to accommodate this ... *antisocial*
+behavior.
+
+In Beta zero, the Open File... command did not work the very first
+time it was used.
+
+
+Limitations (Caveat emptor!)
+----------- ------- --------
+Both BeHierarchic and MenuChoice conflict with MacGS.  Because most of
+MacGS' GUI is implemented as a device driver, and because both of
+these INITs patch menu-related traps and don't necessarily restore the
+current resource file context, I strongly suggest that you not install
+these INITs when running MacGS.  (For you Mac hackers, the reason that
+MacGS' GUI is implemented as a device driver is because THINK C's
+*unmodified* stdio routines are implicitly running MacGS' event loop
+-- talk about tails wagging dogs!  Thus, MacGS is *unable* to save and
+restore the resource file context because it *never* calls MenuSelect
+().)
+
+There is no way to gracefully interrupt MacGS while it is rendering.
+Although I've implemented preliminary code (-- MacGS actually detects
+Command-. key presses), this feature relies on GS using the return
+value from gp_check_interrupts ().  Peter says that this is on his
+list of things to fix for GS 2.6.
+
+MacGS 2.5.2 is *absymally* slow when rendering snowflak.ps.  This is
+because Peter eliminated the use of driver-specific fill trapezoid
+routines.  (MacGS *2.2* is actually very much faster.  Oh, well -- one
+step forward, two steps back....)  Peter's suggestion is to create an
+image device and let Ghostscript do the rendering.  However, the
+tradeoff is that a resultant picture is comprised of a monolithic
+bitmap and not composite, and editable, QD picture elements.
+
+Printing appears to work for LaserWriters and DeskWriters.  However,
+because MacGS is printing a backing-store QD picture, the resolution
+is limited to 72 dpi (the Macintosh screen density).  In order to
+accommodate laserprinter resolutions (e.g., 300 dpi or whatever),
+MacGS would need to re-render the image at a higher resolution.  This
+is better done with a dedicated (TBD) MacGS printer driver.
+
+
+Bugs
+----
+On a black-and-white (viz., 1-bit deep) display, some PS files make
+the initial contents of the graphics window black; scrolling the
+window sometimes ameliorates this problem.
+
+There is a problem with GS 2.5.2 (which MacGS inherits) rendering
+screen.ps.  Peter is fixing this in GS 2.6.
+
+There have been reports of INIT/cdev conflicts (Menubar Pattern,
+Window Shade, MenuChoice, and BeHierarchic).  If you suspect that
+MacGS is failing because of an INIT conflict, please drop me a note
+indicating the suspect extension.  If the extension is either freeware
+or shareware, please indicate its availability and I'll attempt to
+obtain a copy for testing.
+
+MacGS appears to suffer from memory lossage.  Symptoms include partial
+rendering to the screen, lack of backing-store, etc..  If this occurs,
+quit and restart MacGS.  If this problem persists, increase MacGS'
+memory size.  If it still persists, please drop me a note.
+
+
+THINK C Configuration Issues
+----- - ------------- ------
+Because THINK C's development environment only approximates a unix
+system, you need to create an empty file named "sys/types.h" and put
+it in THINK C's system header file path (viz., where THINK C searches
+for "<.h>" files).  In addition, you'll need to create an alias (-- or
+a copy, for those of you still using System 6) of stdlib.h named
+"malloc.h" and also put it in THINK C's system header file path.
+
+
+Resource Hacking
+-------- -------
+I've created a 'pref' resource (the associated TMPL resource is
+included) that defines the size of the graphics output window.  If you
+want MacGS to use something other than your screen's maximum size,
+select the "Use resource" flag and change the resource's width and
+height fields.  Also, if you're both adventurous and curious, this
+resource contains additional fields whose values you may change for
+your runtime enjoyment.
+
+You may also change MacGS' default paths by modifying the first string
+in the STR# 128 resource.  Caveat emptor!
+
+
+Potential Futures
+--------- -------
+An automatic printing driver.
+
+Perhaps someone will be adventurous and create a PostScript-to-EPS
+driver using MacGS as a starting point.  :-)
+
+Drag and drop preview/printing.
+
+PAP level printing to PS printers.  Issues include what to do about
+missing fonts.
+
+
+Distribution Caveats
+------------ -------
+Even though I've not necessarily included the caveat in all of MacGS'
+source code, the distribution of the source code is controlled by the
+GNU General License.
+
+
+...Martin Fong				mwfong@nisc.sri.com
+

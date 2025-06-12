@@ -1,1 +1,60 @@
-if !"{cps_inited}"	if "{IsShuttingDown}"		Alert "quit¥cps is missing basic definitions, aborting"		exit 1	end	exitendset exit 0If "``rshell -status``"	set exit 0	confirm "You have RShell requests that have not yet completed.  Really Quit?" -t 	If {status} != 0 		exit "-9"	EndEndif !"{IsShuttingDown}" || !"{HasRamDisk}" # bruges til at fjerne RamMPW	set exit 0	SendAE -t ToolServer -e aevtquit ·· dev:null	set exit 1else	SendAE -t ToolServer -e abcdefgh ·· dev:null && RShell -b Flush # only if runningendbegin	echo "begin"	echo "set exit 0";	windows -o	echo "close {mpw}Worksheet ·· dev:null"	echo -n "directory "	directory	echo "end ·· dev:null"end > {mpw}Userstartup¥Windowssave_all -objsclose -a -ycd {mpw}if "{TmpDir}"	if "{HasRamDisk}"		echo -n > {tmp} # avoid "No match for file name pattern" error from MPW_Shell		rm {tmp}[0-9]* # {tmp} {tmp2} {tmp3} ...	else		rm -y {TmpDir}	endendif "{IsShuttingDown}"	if "{HasRamDisk}"		rm -y -i {TmpDir}		if !"{IsMiniEnviroment}"			rm -y -i {RamKilde}			RShell -b {TSF}RamRemoveMPW			exit		end	end	{mpw}Tools:SendAE -e FNDRshut -t Finder -m 1end
+if !"{cps_inited}"
+	if "{IsShuttingDown}"
+		Alert "quit¥cps is missing basic definitions, aborting"
+		exit 1
+	end
+	exit
+end
+
+set exit 0
+
+If "``rshell -status``"
+	set exit 0
+	confirm "You have RShell requests that have not yet completed.  Really Quit?" -t 
+	If {status} != 0 
+		exit "-9"
+	End
+End
+if !"{IsShuttingDown}" || !"{HasRamDisk}" # bruges til at fjerne RamMPW
+	set exit 0
+	SendAE -t ToolServer -e aevtquit ·· dev:null
+	set exit 1
+else
+	SendAE -t ToolServer -e abcdefgh ·· dev:null && RShell -b Flush # only if running
+end
+
+begin
+	echo "begin"
+	echo "set exit 0";
+	windows -o
+	echo "close {mpw}Worksheet ·· dev:null"
+	echo -n "directory "
+	directory
+	echo "end ·· dev:null"
+end > {mpw}Userstartup¥Windows
+
+save_all -objs
+close -a -y
+
+cd {mpw}
+
+if "{TmpDir}"
+	if "{HasRamDisk}"
+		echo -n > {tmp} # avoid "No match for file name pattern" error from MPW_Shell
+		rm {tmp}[0-9]* # {tmp} {tmp2} {tmp3} ...
+	else
+		rm -y {TmpDir}
+	end
+end
+
+if "{IsShuttingDown}"
+	if "{HasRamDisk}"
+		rm -y -i {TmpDir}
+		if !"{IsMiniEnviroment}"
+			rm -y -i {RamKilde}
+			RShell -b {TSF}RamRemoveMPW
+			exit
+		end
+	end
+	{mpw}Tools:SendAE -e FNDRshut -t Finder -m 1
+end

@@ -1,1 +1,198 @@
-diff +recursive +context boot:gdiff:alloca.c boot:gdiff.orig:alloca.c*** boot:gdiff:alloca.c Wed Jun 17 08:42:36 1992--- boot:gdiff.orig:alloca.c    Thu Jun 18 11:59:41 1992****************** 51,59 ****  typedef char  *pointer;               /* generic pointer type */  #endif  - #ifndef NULL  #define       NULL    0                       /* null pointer constant */- #endif    extern void   free();  extern pointer        xmalloc();--- 51,57 ----diff +recursive +context boot:gdiff:diff.c boot:gdiff.orig:diff.c*** boot:gdiff:diff.c   Wed Jun 17 08:42:21 1992--- boot:gdiff.orig:diff.c      Thu Jun 18 11:59:26 1992****************** 473,480 ****    if (name1 == 0)      name1 = name0;  !   inf[0].name = dir0 == 0 ? name0 : concat (dir0, DIRECTORY_SEPERATOR_STRING, name0);!   inf[1].name = dir1 == 0 ? name1 : concat (dir1, DIRECTORY_SEPERATOR_STRING, name1);      /* Stat the files.  Record whether they are directories.       Record in stat_result whether stat fails.  */--- 473,480 ----    if (name1 == 0)      name1 = name0;  !   inf[0].name = dir0 == 0 ? name0 : concat (dir0, "/", name0);!   inf[1].name = dir1 == 0 ? name1 : concat (dir1, "/", name1);      /* Stat the files.  Record whether they are directories.       Record in stat_result whether stat fails.  */****************** 587,594 ****          int dir_arg = (inf[0].dir_p ? 0 : 1);        int fnm_arg = (inf[0].dir_p ? 1 : 0);!       char *p = rindex (inf[fnm_arg].name, DIRECTORY_SEPERATOR_CHAR);!       char *filename = concat (inf[dir_arg].name,  DIRECTORY_SEPERATOR_STRING,                               (p ? p+1 : inf[fnm_arg].name));          if (inf[fnm_arg].name == Standard_Input)--- 587,594 ----          int dir_arg = (inf[0].dir_p ? 0 : 1);        int fnm_arg = (inf[0].dir_p ? 1 : 0);!       char *p = rindex (inf[fnm_arg].name, '/');!       char *filename = concat (inf[dir_arg].name,  "/",                               (p ? p+1 : inf[fnm_arg].name));          if (inf[fnm_arg].name == Standard_Input)diff +recursive +context boot:gdiff:diff.h boot:gdiff.orig:diff.h*** boot:gdiff:diff.h   Wed Jun 17 08:42:28 1992--- boot:gdiff.orig:diff.h      Thu Jun 18 11:59:32 1992****************** 47,53 ****  #ifdef USG  /* Define needed BSD functions in terms of sysV library.  */  ! #define BTHINGS  #ifndef XENIX  #define dup2(f,t)     (close(t),fcntl((f),F_DUPFD,(t)))  #endif--- 47,56 ----  #ifdef USG  /* Define needed BSD functions in terms of sysV library.  */  ! #define bcopy(s,d,n)  memcpy((d),(s),(n))! #define bcmp(s1,s2,n) memcmp((s1),(s2),(n))! #define bzero(s,n)    memset((s),0,(n))!   #ifndef XENIX  #define dup2(f,t)     (close(t),fcntl((f),F_DUPFD,(t)))  #endif****************** 57,85 ****  #define rindex        strrchr  #endif  - #ifdef MAC- #define BTHINGS- #include <stdlib.h>- #define main gdiff_main- #define open xx_open- #include "unix.h"- #undef open- #define DIRECTORY_SEPERATOR_STRING ":"- #define DIRECTORY_SEPERATOR_CHAR ':'- #endif- - #ifndef DIRECTORY_SEPERATOR_STRING- #define DIRECTORY_SEPERATOR_STRING "/"- #define DIRECTORY_SEPERATOR_CHAR '/'- #endif- - #ifdef BTHINGS- #include <string.h>- #define bcopy(s,d,n)  memcpy((d),(s),(n))- #define bcmp(s1,s2,n) memcmp((s1),(s2),(n))- #define bzero(s,n)    memset((s),0,(n))- #endif-   #ifdef sparc  /* vfork clobbers registers on the Sparc, so don't use it.  */  #define vfork fork--- 60,65 ----****************** 91,102 ****  extern char    *sys_errlist[];    #define       EOS             (0)- #ifndef FALSE  #define       FALSE           (0)- #endif- #ifndef TRUE  #define TRUE          1- #endif    #define min(a,b) ((a) <= (b) ? (a) : (b))  #define max(a,b) ((a) >= (b) ? (a) : (b))--- 71,78 ----****************** 342,348 ****    /* Describe the two files currently being compared.  */  ! EXTERN struct file_data files[2];  /* Queue up one-line messages to be printed at the end,     when -l is specified.  Each message is recorded with a `struct msg'.  */--- 318,324 ----    /* Describe the two files currently being compared.  */  ! struct file_data files[2];  /* Queue up one-line messages to be printed at the end,     when -l is specified.  Each message is recorded with a `struct msg'.  */diff +recursive +context boot:gdiff:getopt.c boot:gdiff.orig:getopt.c*** boot:gdiff:getopt.c Wed Jun 17 08:42:35 1992--- boot:gdiff.orig:getopt.c    Thu Jun 18 11:59:39 1992****************** 60,66 ****  #define bcopy(s, d, n) memcpy ((d), (s), (n))  #define index strchr  #else! #if (defined(VMS)||defined(MAC))  #include <string.h>  #else  #include <strings.h>--- 60,66 ----  #define bcopy(s, d, n) memcpy ((d), (s), (n))  #define index strchr  #else! #ifdef VMS  #include <string.h>  #else  #include <strings.h>Only in boot:gdiff: macintoshdiff +recursive +context boot:gdiff:regex.c boot:gdiff.orig:regex.c*** boot:gdiff:regex.c  Wed Jun 17 08:42:28 1992--- boot:gdiff.orig:regex.c     Thu Jun 18 11:59:33 1992****************** 353,369 ****          }                                                             \    }  - void store_jump_n(-      char *from,-      int opcode,-      char *to,-      unsigned n);- void insert_jump_n(int op, char *from,char *to,char *current_end,unsigned n);- -   /* Subroutines for re_compile_pattern.  */! static void store_jump (), insert_jump (),!            insert_op_2 ();      /* re_compile_pattern takes a regular-expression string--- 353,361 ----          }                                                             \    }    /* Subroutines for re_compile_pattern.  */! static void store_jump (), insert_jump (), store_jump_n (),!           insert_jump_n (), insert_op_2 ();      /* re_compile_pattern takes a regular-expression string
+diff +recursive +context boot:gdiff:alloca.c boot:gdiff.orig:alloca.c
+*** boot:gdiff:alloca.c Wed Jun 17 08:42:36 1992
+--- boot:gdiff.orig:alloca.c    Thu Jun 18 11:59:41 1992
+***************
+*** 51,59 ****
+  typedef char  *pointer;               /* generic pointer type */
+  #endif
+  
+- #ifndef NULL
+  #define       NULL    0                       /* null pointer constant */
+- #endif
+  
+  extern void   free();
+  extern pointer        xmalloc();
+--- 51,57 ----
+diff +recursive +context boot:gdiff:diff.c boot:gdiff.orig:diff.c
+*** boot:gdiff:diff.c   Wed Jun 17 08:42:21 1992
+--- boot:gdiff.orig:diff.c      Thu Jun 18 11:59:26 1992
+***************
+*** 473,480 ****
+    if (name1 == 0)
+      name1 = name0;
+  
+!   inf[0].name = dir0 == 0 ? name0 : concat (dir0, DIRECTORY_SEPERATOR_STRING, 
+name0);
+!   inf[1].name = dir1 == 0 ? name1 : concat (dir1, DIRECTORY_SEPERATOR_STRING, 
+name1);
+  
+    /* Stat the files.  Record whether they are directories.
+       Record in stat_result whether stat fails.  */
+--- 473,480 ----
+    if (name1 == 0)
+      name1 = name0;
+  
+!   inf[0].name = dir0 == 0 ? name0 : concat (dir0, "/", name0);
+!   inf[1].name = dir1 == 0 ? name1 : concat (dir1, "/", name1);
+  
+    /* Stat the files.  Record whether they are directories.
+       Record in stat_result whether stat fails.  */
+***************
+*** 587,594 ****
+  
+        int dir_arg = (inf[0].dir_p ? 0 : 1);
+        int fnm_arg = (inf[0].dir_p ? 1 : 0);
+!       char *p = rindex (inf[fnm_arg].name, DIRECTORY_SEPERATOR_CHAR);
+!       char *filename = concat (inf[dir_arg].name,  DIRECTORY_SEPERATOR_STRING,
+                               (p ? p+1 : inf[fnm_arg].name));
+  
+        if (inf[fnm_arg].name == Standard_Input)
+--- 587,594 ----
+  
+        int dir_arg = (inf[0].dir_p ? 0 : 1);
+        int fnm_arg = (inf[0].dir_p ? 1 : 0);
+!       char *p = rindex (inf[fnm_arg].name, '/');
+!       char *filename = concat (inf[dir_arg].name,  "/",
+                               (p ? p+1 : inf[fnm_arg].name));
+  
+        if (inf[fnm_arg].name == Standard_Input)
+diff +recursive +context boot:gdiff:diff.h boot:gdiff.orig:diff.h
+*** boot:gdiff:diff.h   Wed Jun 17 08:42:28 1992
+--- boot:gdiff.orig:diff.h      Thu Jun 18 11:59:32 1992
+***************
+*** 47,53 ****
+  #ifdef USG
+  /* Define needed BSD functions in terms of sysV library.  */
+  
+! #define BTHINGS
+  #ifndef XENIX
+  #define dup2(f,t)     (close(t),fcntl((f),F_DUPFD,(t)))
+  #endif
+--- 47,56 ----
+  #ifdef USG
+  /* Define needed BSD functions in terms of sysV library.  */
+  
+! #define bcopy(s,d,n)  memcpy((d),(s),(n))
+! #define bcmp(s1,s2,n) memcmp((s1),(s2),(n))
+! #define bzero(s,n)    memset((s),0,(n))
+! 
+  #ifndef XENIX
+  #define dup2(f,t)     (close(t),fcntl((f),F_DUPFD,(t)))
+  #endif
+***************
+*** 57,85 ****
+  #define rindex        strrchr
+  #endif
+  
+- #ifdef MAC
+- #define BTHINGS
+- #include <stdlib.h>
+- #define main gdiff_main
+- #define open xx_open
+- #include "unix.h"
+- #undef open
+- #define DIRECTORY_SEPERATOR_STRING ":"
+- #define DIRECTORY_SEPERATOR_CHAR ':'
+- #endif
+- 
+- #ifndef DIRECTORY_SEPERATOR_STRING
+- #define DIRECTORY_SEPERATOR_STRING "/"
+- #define DIRECTORY_SEPERATOR_CHAR '/'
+- #endif
+- 
+- #ifdef BTHINGS
+- #include <string.h>
+- #define bcopy(s,d,n)  memcpy((d),(s),(n))
+- #define bcmp(s1,s2,n) memcmp((s1),(s2),(n))
+- #define bzero(s,n)    memset((s),0,(n))
+- #endif
+- 
+  #ifdef sparc
+  /* vfork clobbers registers on the Sparc, so don't use it.  */
+  #define vfork fork
+--- 60,65 ----
+***************
+*** 91,102 ****
+  extern char    *sys_errlist[];
+  
+  #define       EOS             (0)
+- #ifndef FALSE
+  #define       FALSE           (0)
+- #endif
+- #ifndef TRUE
+  #define TRUE          1
+- #endif
+  
+  #define min(a,b) ((a) <= (b) ? (a) : (b))
+  #define max(a,b) ((a) >= (b) ? (a) : (b))
+--- 71,78 ----
+***************
+*** 342,348 ****
+  
+  /* Describe the two files currently being compared.  */
+  
+! EXTERN struct file_data files[2];
+
+  /* Queue up one-line messages to be printed at the end,
+     when -l is specified.  Each message is recorded with a `struct msg'.  */
+--- 318,324 ----
+  
+  /* Describe the two files currently being compared.  */
+  
+! struct file_data files[2];
+
+  /* Queue up one-line messages to be printed at the end,
+     when -l is specified.  Each message is recorded with a `struct msg'.  */
+diff +recursive +context boot:gdiff:getopt.c boot:gdiff.orig:getopt.c
+*** boot:gdiff:getopt.c Wed Jun 17 08:42:35 1992
+--- boot:gdiff.orig:getopt.c    Thu Jun 18 11:59:39 1992
+***************
+*** 60,66 ****
+  #define bcopy(s, d, n) memcpy ((d), (s), (n))
+  #define index strchr
+  #else
+! #if (defined(VMS)||defined(MAC))
+  #include <string.h>
+  #else
+  #include <strings.h>
+--- 60,66 ----
+  #define bcopy(s, d, n) memcpy ((d), (s), (n))
+  #define index strchr
+  #else
+! #ifdef VMS
+  #include <string.h>
+  #else
+  #include <strings.h>
+Only in boot:gdiff: macintosh
+diff +recursive +context boot:gdiff:regex.c boot:gdiff.orig:regex.c
+*** boot:gdiff:regex.c  Wed Jun 17 08:42:28 1992
+--- boot:gdiff.orig:regex.c     Thu Jun 18 11:59:33 1992
+***************
+*** 353,369 ****
+          }                                                             \
+    }
+  
+- void store_jump_n(
+-      char *from,
+-      int opcode,
+-      char *to,
+-      unsigned n);
+- void insert_jump_n(int op, char *from,char *to,char *current_end,unsigned n);
+- 
+- 
+  /* Subroutines for re_compile_pattern.  */
+! static void store_jump (), insert_jump (),
+!            insert_op_2 ();
+  
+  
+  /* re_compile_pattern takes a regular-expression string
+--- 353,361 ----
+          }                                                             \
+    }
+  
+  /* Subroutines for re_compile_pattern.  */
+! static void store_jump (), insert_jump (), store_jump_n (),
+!           insert_jump_n (), insert_op_2 ();
+  
+  
+  /* re_compile_pattern takes a regular-expression string

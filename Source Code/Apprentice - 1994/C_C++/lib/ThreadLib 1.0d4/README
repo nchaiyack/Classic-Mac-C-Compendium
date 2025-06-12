@@ -1,1 +1,651 @@
-===========Description-----------Thread Library implements nonpreemptive multiple thread execution withina single application. It does not require any extensions, should workwith all Macintosh models (from the Plus on up), and works withsystems 6.0 (tested on 6.0.5) under Finder or MultiFinder, andsystem 7.0. Thread Library compiles into a small library of under 3K,so it won't add much overhead to your application. A simple testapplication and THINK C project demonstrate how threads are used.Another simple test application compares the speed of Thread Librarywith the speed of Apple's Thread Manager. (Thread Library is about2 to 3 times faster!) Best of all, the source code, entirely in C,is free.Every thread has its own stack, and there are no restrictions on theobjects that can be allocated on a thread's stack. All other globalapplication data are shared by the threads. Context switches are veryefficient since they involve only a few operations to save the currentthread's state, followed by a longjmp to the new thread, and a fewinstructions to restore the thread's state.Thread Library was written using THINK C 5.0.4. Some minor changes maybe needed to port it to other compilers. All suggestions and enhancementsare welcome.(c) Copyright 1994 Ari Halberstadt. See the file Distribution fordistribution terms.============================What is in this Distribution----------------------------Demos	Applications that demonstrate the use of Thread LibraryDemos:ThreadsTest:	Demonstrates how to use threads in an applicationDemos:ThreadsTimed:	Times threads using Thread Library and Thread ManagerDistribution	Distribution policy, copyright notice, my addressREADME	This documentThreadLib	Folder containing the source code for Thread LibraryVersion History	Documents the changes made to each version of Thread Library====================Using Thread Library--------------------To add threads to your application, you need to add the file "ThreadLib.c"to your project. The segment containing Thread Library must be kept inmemory so that the calls to longjmp will work.	WARNING: The segment containing the thread library must not be unloaded	while there are any threads.The source code is heavily commented, so you should be able to follow howto use threads and how threads are implemented. This README file containscomments extracted from the source code that describe the functional interfaceto Thread Library. The file "ThreadsTest.c" contains the code for theThreadsTest application; you can look at it to see how threads are used in asimple application. You can also examine the file "ThreadsTimed.c", whichcontains the source to the ThreadsTimed application. At a minimum, you shouldread this README file before trying to use Thread Library in your application.Before you use Thread Library, you should run the ThreadsTest application(in the "Demos" folder). The test application displays a dialog with fourlines. The first two lines contain two counters, each incremented in its ownthread. The dialog is updated once a second by a third thread; the third lineshows the number of ticks elapsed between updates, and should be close to60 ticks. The fourth line shows the number of ticks remaining until the testends. If Thread Manager is installed, then the test is first run using ThreadManager; this test is used to determine if there is a problem with ThreadLibrary or with threads in general. If the test of Thread Library doesn't runcorrectly, then you should disable all extensions and try running the testapplication again. If the application still doesn't run correctly, then youmay have discovered a bug in Thread Library; please contact me (my address isin the file "Distribution") and I'll try to figure out what's wrong. I wouldalso like to know if Thread Library is incompatible with any extensions orcontrol panels.Functional Interface--------------------*** Stack SnifferWhen you define THREAD_STACK_SNIFFER as 1, Thread Library installs aVBL task that checks for stack overflow every tick. This is similar to thestack sniffer VBL task installed by the system. It is a good idea toenable the stack sniffer during debugging. The stack sniffer is enabledby default if THREAD_STACK_SNIFFER is not already defined and THREAD_DEBUGis not zero.*** Error Handling	OSErr ThreadError(void)* ThreadError returns the last error that occurred, or noErr if the lastroutine completed successfully.*** Thread Serial NumbersEvery thread is assigned a unique serial number. Serial numbers are usedto refer to threads, rather than using a pointer, since there is alwaysthe possiblity that a thread may have terminated before a thread pointeris used, which would make the thread pointer invalid. The specificassignment of serial numbers to threads is not defined by the interface,though every valid thread is guaranteed a non-zero serial number. Youshould not assume that any thread will have a specific serial number.*** Accessing the Queue of Threads	short ThreadCount(void)* ThreadCount returns the number of threads in the queue.	ThreadType ThreadMain(void)* ThreadMain returns the main thread, or THREAD_NONE if there are no threads.	ThreadType ThreadActive(void)* ThreadActive returns the currently active thread, or THREAD_NONE ifthere are no threads.	ThreadType ThreadFirst(void)* ThreadFirst returns the first thread in the queue of threads, orTHREAD_NONE if there are no threads.	ThreadType ThreadNext(ThreadType thread)* ThreadNext returns the next thread in the circular queue of threads.*** Thread Status	ThreadStatusType ThreadStatus(ThreadType thread)* ThreadStatus returns the status of the thread as set with ThreadStatusSet.A new thread is initially assigned THREAD_STATUS_NORMAL. You can callThreadStatus periodically from within each thread (passing the result ofThreadActive as the thread parameter) and should take whatever action isspecified by the return value. For instance, if ThreadStatus returnsTHREAD_STATUS_QUIT, it means that the application is quitting and youshould exit the thread. Depending on the operation the thread isperforming, you may want to display an alert asking the user ifthe thread should be exited.	void ThreadStatusSet(ThreadType thread, ThreadStatusType status)* ThreadStatusSet sets the status code for the thread. It is theresponsibility of each thread to call ThreadStatus to determine whataction should be taken. For instance, when the user quits the application,the application should call ThreadStatusSet with a THREAD_STATUS_QUITparameter for each thread in the queue of threads. Then, the applicationshould call ThreadYield, waiting for all other threads to exit before theapplication itself exits. If you prefer not use the thread's status toindicate to a thread that it should quit, then you could use some globalvariable, say gQuitting, which the thread could check periodically.Status values from THREAD_STATUS_NORMAL through THREAD_STATUS_RESERVED arereserved for use by Thread Library. All other values can be used by theapplication for its own purposes.*** Application Defined Data	void *ThreadData(ThreadType thread)* ThreadData returns the data field of the thread. The application canuse the thread's data field for its own purposes.	void ThreadDataSet(ThreadType thread, void *data)* ThreadDataSet sets the data field of the thread. The application canuse the thread's data field for its own purposes.*** Information About the Stack	size_t ThreadStackMinimum(void)* ThreadStackMinimum returns the recommended minimum stack size fora thread. Thread Library doesn't enforce a lower limit on thestack size, but it is a good idea to allow at least this many bytesfor a thread's stack.	size_t ThreadStackDefault(void)* ThreadStackDefault returns the default stack size for a thread. Thisis the amount of stack space reserved for a thread if a zero stack sizeis passed to ThreadBegin.	size_t ThreadStackSpace(ThreadType thread)* ThreadStackSpace returns the amount of stack space remaining in thespecified thread. There are at least the returned number of bytesbetween the thread's stack pointer and the bottom of the thread'sstack, though slightly more space may be available to the applicationdue to overhead from Thread Library.	NOTE: The trap StackSpace will return incorrect results if called from	any thread other than the main thread. Likewise, using ApplLimit, HeapEnd,	or CurStackBase to determine the bounds of a thread's stack will produce	incorrect results when used outside of the main thread. Instead of calling	StackSpace, use ThreadStackSpace to determine the amount of free stack	space in a thread.	*** Support for Segmentation	void ThreadStackFrame(ThreadType thread, ThreadStackFrameType *frame)* ThreadStackFrame returns information about the specified thread'sstack and stack frame. This information is needed for executinga stack trace during automatic segment unloading in "SegmentLib.c",which is part of Winter Shell. You should never need to call thisfunction. This function will work correctly even if no threads exist.*** SchedulingThe three functions ThreadSchedule, ThreadActivate, and ThreadYieldhandle the scheduling and context switching of threads. These functionswill be executed the most often of any of the functions in this file, andtherefore will have the greatest impact on the efficiency of ThreadLibrary. If you find Thread Library's context switches too slow, tryimproving the efficiency of these functions.	void ThreadSleepSet(ThreadType thread, ThreadTicksType sleep)* ThreadSleepSet sets the amount of time that the specified thread willremain inactive.  The 'sleep' parameter specifies the maximum amountof time that the thread can remain inactive. The larger the sleep value,the more time is available for execution of other threads. When calledfrom the main thread, you can pass a sleep parameter equal to the maximuminterval between null events; if no null events are needed, you can passa sleep value of THREAD_TICKS_MAX. The main thread will continue to receiveprocessing time whenever an event is pending and when no other threads arescheduled (see ThreadSchedule). If the thread is already active, the sleeptime specified will be used when the thread is inactive and is thus eligiblefor scheduling by ThreadSchedule. ThreadSleepSet is normally called byThreadYield, but you may need to use it if you call ThreadSchedule orThreadActivate.	ThreadType ThreadSchedule(void)* ThreadSchedule returns the next thread to activate. Threads are maintainedin a queue and are scheduled in a round-robbin fashion. Starting with thecurrent thread, the queue of threads is searched for the next thread whosewake time has arrived. The first such thread found is returned. 	In addition to the round-robbin scheduling shared with all threads, themain thread will also be activated if any events are pending in the eventqueue. The application can then immediately handle the events, allowingthe application to remain responsive to user actions such as mouse clicks.The main thread will also be activated if no other threads are scheduledfor activation, which allows the application either to continue withits main processing or to call WaitNextEvent and sleep until a threadneeds to be activated or some other task or event needs to be handled.Since ThreadSchedule calls EventAvail (via EventPending), backgroundapplications will continue to receive processing time, even if the mainthread is never activated while some compute intensive thread is executing.But, since EventAvail can be a slow trap (especially when it yields theprocessor to another application), it is only executed every few ticks.Note: if I figure out a faster way to test for events then the callto EventAvail may be removed, and background applications won'tget time when ThreadSchedule is called. (OSEventAvail won't worksince it doesn't return update or activate events.)	void ThreadActivate(ThreadType thread)* ThreadActivate activates the specified thread. The context switch isaccomplished by saving the CPU context with setjmp and then callinglongjmp, which jumps to the environment saved with setjmp when the threadbeing activated was last suspended. We don't have to do any assemblylanguage glue since setjmp saved the value of the stack pointer, whichat the time of the call to setjmp pointed somewhere in the thread's stack.The longjmp instruction will restore the value of the stack pointer andwill jump to the statement from which to resume the thread. Longjmp alsohandles the saving and restoring of all registers.	void ThreadYield(ThreadTicksType sleep)* ThreadYield activates the next scheduled thread as determined byThreadSchedule. The 'sleep' parameter has the same meaning as theparameter to ThreadSleepSet.	ThreadTicksType ThreadYieldInterval(void)* ThreadYieldInterval returns the maximum time till the next call toThreadYield. The interval is computed by subtracting the current timefrom each thread's wake time, giving the amount of time that eachthread can remain inactive. The minimum of these times gives themaximum amount of time till the next call to ThreadYield. The waketime of the current thread is ignored, since the thread is alreadyactive. You can use the returned value to determine the maximum sleepvalue to pass to WaitNextEvent.*** Thread Creation and Destruction	void ThreadEnd(ThreadType thread)* ThreadEnd removes the thread from the queue and disposes of the memoryallocated for the thread. If the thread is the active thread then thenext scheduled thread is activated. All threads (other than the mainthread) must be disposed of before the main thread can be disposed of.	ThreadType ThreadBeginMain(ThreadProcType suspend, ThreadProcType resume,		void *data)* ThreadBeginMain creates the main application thread and returns the mainthread's serial number. You must call this function before creating anyother threads with ThreadBegin. You must also call MaxApplZone before callingthis function. The 'resume', 'suspend', and 'data' parameters have thesame meanings as the parameters to ThreadBegin.There are several important differences between the main thread andall subsequently created threads.- The main thread is responsible for handling events sent to theapplication, and is therefore scheduled differently than other threads;see ThreadSchedule for details.- While other threads don't begin executing until they're scheduled toexecute, the main thread is made the active thread and starts to run assoon as ThreadBeginMain returns.- Since other threads have a special entry point, they are automaticallydisposed of when that entry point returns. The main thread, lackingany special entry point, must be disposed of by the application. Youshould call ThreadEnd, passing it the thread returned by ThreadBeginMain,before exiting your application.- The main thread uses the application's stack and context; no privatestack is allocated for the main thread. Initially, there is thereforeno need to change the context to start executing the thread, andno special entry point is required. But, like all other threads, the mainthread's context will be saved whenever it is suspended to allow anotherthread to execute, and its context will be restored when it is resumed.	ThreadType ThreadBegin(ThreadProcType entry,		ThreadProcType suspend, ThreadProcType resume,		void *data, size_t stack_size)* ThreadBegin creates a new thread and returns the thread's serial number.You must create the main thread with ThreadBeginMain before you can callThreadBegin. The 'entry' parameter is a pointer to a function that iscalled to start executing the thread. The 'suspend' parameter is a pointerto a function called whenever the thread is suspended. You can use the'suspend' function to save additional application defined context forthe thread. The 'resume' parameter is a pointer to a function calledwhenever the thread is resumed. You can use the 'resume' function torestore additional application defined context for the thread. The'data' parameter is passed to the 'entry', 'suspend', and 'resume'functions and may contain any application defined data.The 'stack_size' parameter specifies the size of the stack needed bythe thread. The requested stack size should be large enough to containall function calls, local variables and parameters, and any operatingsystem routines that may be called while the thread is active (includinginterrupt driven routines). If 'stack_size' is zero then the defaultstack size returned by ThreadStackDefault is used. It is a good idea toset the stack size to at least the value returned by ThreadStackMinimum;otherwise, your application is likely to crash somewhere inside theoperating system. If your thread crashes try increasing the thread's stacksize. You can enable the stack sniffer VBL task (see Stack Sniffer above)to help detect insufficient stack space. In addition, a stack overflowwill often result in a corrupted heap, since the stack is allocated asa nonrelocatable block in the heap and overflow usually overwrites theblock's header. For this reason, you can often detect stack overflow byenabling a "heap check" option in a low-level debugger such as TMON orMacsBug.The new thread is appended to the end of the thread queue, making iteligible for scheduling whenever ThreadYield is called. ThreadBeginreturns immediately after creating the new thread. The thread, however,is not executed immediately, but rather is executed whenever it isscheduled to execute. At that time, the function specified in the 'entry'parameter is called. When the function has returned, the thread is removedfrom the queue of threads and its stack and any private storage allocatedby ThreadBegin are disposed of.Debugging---------When you start using Thread Library, you should disable all optimizationsand should enable all debug code in Thread Library by ensuring that thepreprocessor symbols NDEBUG and THREAD_DEBUG are undefined (THREAD_DEBUGdefaults to true). This will enable a VBL task that will help catch stackoverflow in threads (you can enable the VBL task even when debug code hasbeen disabled; see Stack Sniffer, above). Thread Library also includesnumerous assertions intended to catch run-time errors. These assertions willbe enabled when the debug code is enabled. Once you know that threads workwith your application, you can enable compiler optimizations and test yourapplication again to make sure it still runs.If an assertion fails, the DebugStr trap is executed with a simple message.To help me fix the error, please report the problem to me. Your report shouldinclude a stack crawl generated with your debugger when the assertion failed(to determine where in the code the assertion failed), the version of ThreadLibrary you're using, a description of the operating environment (Macintoshmodel, system software, extensions, etc.) and a description, if possible, ofthe actions preceding the failure.The debug code (mostly assertions) greatly reduces the speed of Thread Library,and also increases the size of the object code. You will therefore probablywant to disable the debug code when you're confident that your threads areoperating correctly. To disable the debug code, define the preprocessorsymbol NDEBUG or define THREAD_DEBUG as zero.	WARNING: Using the THINK C debugger to trace through context switches	may result in corruption of the application's heap followed by a nasty	crash. The problem arrises if you place a breakpoint or try to step	too close to the longjmp that accomplishes the context switch in the	function ThreadActivatePtr in the file "ThreadLib.c". I have used TMON	Professional to successfully trace through the context switches, and	other low-level debuggers (like MacsBug) should also work.	Profiling---------You will probably not be able to profile an application that uses threads.The profiler supplied with THINK C will not work properly when threadsare used, though it could be modified to work correctly with threads.Handling Errors---------------I'm not quite sure of the best way to handle errors. In my own applications Iprefer to use exceptions to handle errors, but, since there is no standardexception handling mechanism, this is not an appropriate error handlingmethod for a reusable library intended to be used in many applications writtenby different people. A more standardized solution is for functions thatcan fail to return an error code. This is a somewhat inelegant solution,as it requires functions to return a mostly useless error code insteadof a meaningful result; an extra temporary variable must often becreated and passed by reference to the function to hold the function'sresult. A problem also arrises if a function that formerly did notreturn an error is modified in a newer version to return an error code.Unless all functions were originally written to return error codes,there is now no way for the application to detect the error.I prefer that functions return some meaningful value (not some uselesserror code), and that procedures return nothing. One solution thataccommodates this preference is to have a special function that returnsthe error code generated by the last function called. This is theapproach taken with managers like the Memory Manager and parts ofthe Resource Manager. For now, this seems like the best solutionfor detecting errors, and it is the one used in the current versionof Thread Library. I do not guarantee that this method of detectingerrors will not change in the future.Handling Errors with Exceptions------------------------------- If your application uses exceptions to handle errors, then you'll need toadd a custom context switching routine to your threads. Most implementationsof exceptions work by modifying the program counter and stack pointer tojump to an exception handling routine. The code needed to raise an exceptiontypically keeps track of which exception handler to jump to in some globalvariables. A problem can occur if the exception implementation attempts tojump to a routine and stack address for an inactive thread. For instance,in the following code:	void thread1(void *data) {	{		TRY { /* this sets up the exception handling environment */			(void) ThreadBegin(thread2, NULL, NULL, NULL, 0);			while (! done)				ThreadYield(0);		} CATCH { /* this is executed on failure */			cleanup();		} ENDTRY; /* this closes up the exception handler */	}		void thread2(void *data)	{		while (! done_allocating_memory()) {			if (! allocate_some_memory())				FailOSErr(memFullErr); /* this raises an exception */			ThreadYield(0);		}	}both thread1 and thread2 have their own private stack and CPU state.When thread2 raises an exception, the exception raising code willattempt to jump to the last exception handler specified. Butthe last exception handler was specified when thread1 wasexecuting. Since the exception raising code does not knowabout other threads or about Thread Library, it can notproperly switch contexts when the exception is raised. Thissituation will probably result in a mysterious crash. Sincethe problem will only occur under extraordinary circumstances(e.g., running out of memory), it will also be hard to reproduceand debug.When you create a thread  you need to allocate memory to save the stateof the exception handler, and you need to install your own custom contextswitching routines. The suspend function must save a copy of the state ofthe exception handler, while the resume function must restore the state ofthe exception handler. Thread Library already includes code to handle theexchange of the exception state for Winter Shell (you'll need WinterShell 1.0d3 or later to use threads; the latest released version iscurrently only 1.0d2).You must also be careful to prevent threads from propagating beyond athread's entry point. For instance, a thread's entry point could bewritten as follows:	void thread(void *data)	{		TRY {			... do stuff ...		} CATCH {			... cleanup ...			NOPROPAGATE; /* this prevents exceptions from propagating */		} ENDTRY;	}when an exception is raised in the thread, it will be prevented frompropagating beyond the thread's entry point by the NOPROPAGATE statement.	Winter Shell Note: The exception handlers in Winter Shell 1.0d3 will	not propagate outside of the entry point, so the NOPROPAGATE statement	is not strictly necessary.==============Known Problems--------------Toolbox-------For all threads other than the main thread, some Maintosh Toolboxroutines may not work correctly if the stack is not between the region ofmemory defined by the low-memory globals CurStackBase and ApplLimit.Possibly prohibited are some QuickDraw calls, but I don't actually knowwhich Toolbox routines will fail. Some simple tests I ran created a dialogwith a progress bar; created, opened, read and wrote files; created aresource file and added resources to it; allocated memory; and did variousother operations, all successfully and without problems.  Since the mainthread uses the application's stack, there are no restrictions onthe Toolbox routines that the main thread may call. I am interestedin whether you encounter (or don't encounter) limitations to Toolbox calls,and would like to know under what conditions the limitations arise.SuperClock----------SuperClock 4.0.4 won't update its numerals every second when EventAvail iscalled from within a thread.  SuperClock will still update the timeranimation when you run the stopwatch, and will update the numerals lessfrequently. This happens both in my Thread Library and in Apple's ThreadManager. You usually won't notice this effect with Apple's Thread Managersince it doesn't call EventAvail (it looks directly at the EventQueuelow-memory global) and since threads rarely need to call EventAvail. MyThread Library needs to call EventAvail, however, since I don't know howto detect all possible events by looking at low-memory globals. I'm notsure if this should be considered a bug in threads or in SuperClock. I'llhave to contact the author of SuperClock to find out what he thinks.At any rate, this appears to be a pretty minor cosmetic problem; it shouldnot interfere with the operation of an application that uses ThreadLibrary. (Thanks to Daniel Sears <sears@netcom.com> for reporting this.)=====To Do-----It shouldn't be too difficult to add preemptive threads to Thread Library.Preemptive threads have a limited utility, however, since they must beexecuted at interrupt time, precluding the use of most of the Macintoshtoolbox. Someday, if there's demand for preemptive threads, I may addthis feature.Some low-memory globals may not be available under A/UX (most notably, theTicks low-memory global). Adding a runtime check for A/UX to determine ifthe Ticks low-memory global is available could marginally slow down accessto the variable, so it may be better to include a conditional compilationoption.=======Credits-------Some ideas on how to use setjmp/longjmp to swap stacks were adaptedfrom the source for Task Manager v2.2.1 by Michael Hecht<Michael_Hecht@mac.sas.com>, available at the info-mac archivesand various other sites.Special thanks to Peter Lewis <peter.lewis@info.curtin.edu.au>, whodid a detailed review of Thread Library and made numerous suggestionsto successive versions, including using serial numbers to refer toall threads, using a sentinel value in the stack-sniffer VBL task,and improving the scheduling of threads.Thanks also to all of the following people for helping me make ThreadLibrary a better product.Anton Rang <rang@icicle.winternet.mpls.mn.us> responded to my query onComp.sys.mac.programmer on how to disable the stack sniffer VBL task.(Several other people also responded, but Anton Rang's reply was thefirst to arrive.)Daniel Sears <sears@netcom.com> reported some problems with Thread Libraryand tried out updated versions I emailed to him.Matthew Xavier Mora <mxmora@unix.sri.com> suggested the SetPort callin TestThreads and helped debug the "update" problem in ThreadsTest.Barry Kirsch <bkirsch@NADC.NADC.NAVY.MIL> reported a problem with compilingThread Library using THINK C's "MacHeaders" precompiled header.==========================Why I Wrote Thread Library--------------------------After the first release on the internet, there was some discussion onthe news group Comp.sys.mac.programmer as to why anyone would bother writingor using an implementation of threads when Apple has already provided theThread Manager. The short answer is that: I wanted to see how hard it would beto implement threads; Thread Library is compatible with system 6.0;Thread Library doesn't require the user to install any extensions; ThreadLibrary is significantly faster than Thread Manager; and Apple charges$200 to license Thread Manager while the source code for Thread Libraryis free, which is especially important to authors of freeware and sharewareapplications.========Epilogue--------If it took me, a single programmer, 6 days to get threads up andrunning (and that not even full-time), why did it take Apple manyyears and a big fancy extension to get around to implementingthreads? This hack isn't very difficult. I had something sort-ofworking the first day, but it took me six days to get it reasonablystable and to put in all the verbose comments. It would have beeneven easier to implement had I had access to proprietary Appleinformation. If you look at the Thread Manager extension, it's reallyvery simple, and it doesn't do much more than what this library does.(I developed this library prior to examining what the Thread Managerdoes and did not try to copy the Thread Manager.)Since the initial release (v1.0d1), I've spent some more time tweakingThread Library and have received assistance from people on the internet.Some features were added, other features were removed, the size of theobject code was reduced, it was made faster, and more documentation wasadded.
+===========
+Description
+-----------
+
+Thread Library implements nonpreemptive multiple thread execution within
+a single application. It does not require any extensions, should work
+with all Macintosh models (from the Plus on up), and works with
+systems 6.0 (tested on 6.0.5) under Finder or MultiFinder, and
+system 7.0. Thread Library compiles into a small library of under 3K,
+so it won't add much overhead to your application. A simple test
+application and THINK C project demonstrate how threads are used.
+Another simple test application compares the speed of Thread Library
+with the speed of Apple's Thread Manager. (Thread Library is about
+2 to 3 times faster!) Best of all, the source code, entirely in C,
+is free.
+
+Every thread has its own stack, and there are no restrictions on the
+objects that can be allocated on a thread's stack. All other global
+application data are shared by the threads. Context switches are very
+efficient since they involve only a few operations to save the current
+thread's state, followed by a longjmp to the new thread, and a few
+instructions to restore the thread's state.
+
+Thread Library was written using THINK C 5.0.4. Some minor changes may
+be needed to port it to other compilers. All suggestions and enhancements
+are welcome.
+
+(c) Copyright 1994 Ari Halberstadt. See the file Distribution for
+distribution terms.
+
+============================
+What is in this Distribution
+----------------------------
+
+Demos
+	Applications that demonstrate the use of Thread Library
+Demos:ThreadsTest:
+	Demonstrates how to use threads in an application
+Demos:ThreadsTimed:
+	Times threads using Thread Library and Thread Manager
+Distribution
+	Distribution policy, copyright notice, my address
+README
+	This document
+ThreadLib
+	Folder containing the source code for Thread Library
+Version History
+	Documents the changes made to each version of Thread Library
+
+====================
+Using Thread Library
+--------------------
+
+To add threads to your application, you need to add the file "ThreadLib.c"
+to your project. The segment containing Thread Library must be kept in
+memory so that the calls to longjmp will work.
+
+	WARNING: The segment containing the thread library must not be unloaded
+	while there are any threads.
+
+The source code is heavily commented, so you should be able to follow how
+to use threads and how threads are implemented. This README file contains
+comments extracted from the source code that describe the functional interface
+to Thread Library. The file "ThreadsTest.c" contains the code for the
+ThreadsTest application; you can look at it to see how threads are used in a
+simple application. You can also examine the file "ThreadsTimed.c", which
+contains the source to the ThreadsTimed application. At a minimum, you should
+read this README file before trying to use Thread Library in your application.
+
+Before you use Thread Library, you should run the ThreadsTest application
+(in the "Demos" folder). The test application displays a dialog with four
+lines. The first two lines contain two counters, each incremented in its own
+thread. The dialog is updated once a second by a third thread; the third line
+shows the number of ticks elapsed between updates, and should be close to
+60 ticks. The fourth line shows the number of ticks remaining until the test
+ends. If Thread Manager is installed, then the test is first run using Thread
+Manager; this test is used to determine if there is a problem with Thread
+Library or with threads in general. If the test of Thread Library doesn't run
+correctly, then you should disable all extensions and try running the test
+application again. If the application still doesn't run correctly, then you
+may have discovered a bug in Thread Library; please contact me (my address is
+in the file "Distribution") and I'll try to figure out what's wrong. I would
+also like to know if Thread Library is incompatible with any extensions or
+control panels.
+
+Functional Interface
+--------------------
+
+*** Stack Sniffer
+
+When you define THREAD_STACK_SNIFFER as 1, Thread Library installs a
+VBL task that checks for stack overflow every tick. This is similar to the
+stack sniffer VBL task installed by the system. It is a good idea to
+enable the stack sniffer during debugging. The stack sniffer is enabled
+by default if THREAD_STACK_SNIFFER is not already defined and THREAD_DEBUG
+is not zero.
+
+*** Error Handling
+
+	OSErr ThreadError(void)
+
+* ThreadError returns the last error that occurred, or noErr if the last
+routine completed successfully.
+
+*** Thread Serial Numbers
+
+Every thread is assigned a unique serial number. Serial numbers are used
+to refer to threads, rather than using a pointer, since there is always
+the possiblity that a thread may have terminated before a thread pointer
+is used, which would make the thread pointer invalid. The specific
+assignment of serial numbers to threads is not defined by the interface,
+though every valid thread is guaranteed a non-zero serial number. You
+should not assume that any thread will have a specific serial number.
+
+*** Accessing the Queue of Threads
+
+	short ThreadCount(void)
+
+* ThreadCount returns the number of threads in the queue.
+
+	ThreadType ThreadMain(void)
+
+* ThreadMain returns the main thread, or THREAD_NONE if there are no threads.
+
+	ThreadType ThreadActive(void)
+
+* ThreadActive returns the currently active thread, or THREAD_NONE if
+there are no threads.
+
+	ThreadType ThreadFirst(void)
+
+* ThreadFirst returns the first thread in the queue of threads, or
+THREAD_NONE if there are no threads.
+
+	ThreadType ThreadNext(ThreadType thread)
+
+* ThreadNext returns the next thread in the circular queue of threads.
+
+*** Thread Status
+
+	ThreadStatusType ThreadStatus(ThreadType thread)
+
+* ThreadStatus returns the status of the thread as set with ThreadStatusSet.
+A new thread is initially assigned THREAD_STATUS_NORMAL. You can call
+ThreadStatus periodically from within each thread (passing the result of
+ThreadActive as the thread parameter) and should take whatever action is
+specified by the return value. For instance, if ThreadStatus returns
+THREAD_STATUS_QUIT, it means that the application is quitting and you
+should exit the thread. Depending on the operation the thread is
+performing, you may want to display an alert asking the user if
+the thread should be exited.
+
+	void ThreadStatusSet(ThreadType thread, ThreadStatusType status)
+
+* ThreadStatusSet sets the status code for the thread. It is the
+responsibility of each thread to call ThreadStatus to determine what
+action should be taken. For instance, when the user quits the application,
+the application should call ThreadStatusSet with a THREAD_STATUS_QUIT
+parameter for each thread in the queue of threads. Then, the application
+should call ThreadYield, waiting for all other threads to exit before the
+application itself exits. If you prefer not use the thread's status to
+indicate to a thread that it should quit, then you could use some global
+variable, say gQuitting, which the thread could check periodically.
+
+Status values from THREAD_STATUS_NORMAL through THREAD_STATUS_RESERVED are
+reserved for use by Thread Library. All other values can be used by the
+application for its own purposes.
+
+*** Application Defined Data
+
+	void *ThreadData(ThreadType thread)
+
+* ThreadData returns the data field of the thread. The application can
+use the thread's data field for its own purposes.
+
+	void ThreadDataSet(ThreadType thread, void *data)
+
+* ThreadDataSet sets the data field of the thread. The application can
+use the thread's data field for its own purposes.
+
+*** Information About the Stack
+
+	size_t ThreadStackMinimum(void)
+
+* ThreadStackMinimum returns the recommended minimum stack size for
+a thread. Thread Library doesn't enforce a lower limit on the
+stack size, but it is a good idea to allow at least this many bytes
+for a thread's stack.
+
+	size_t ThreadStackDefault(void)
+
+* ThreadStackDefault returns the default stack size for a thread. This
+is the amount of stack space reserved for a thread if a zero stack size
+is passed to ThreadBegin.
+
+	size_t ThreadStackSpace(ThreadType thread)
+
+* ThreadStackSpace returns the amount of stack space remaining in the
+specified thread. There are at least the returned number of bytes
+between the thread's stack pointer and the bottom of the thread's
+stack, though slightly more space may be available to the application
+due to overhead from Thread Library.
+
+	NOTE: The trap StackSpace will return incorrect results if called from
+	any thread other than the main thread. Likewise, using ApplLimit, HeapEnd,
+	or CurStackBase to determine the bounds of a thread's stack will produce
+	incorrect results when used outside of the main thread. Instead of calling
+	StackSpace, use ThreadStackSpace to determine the amount of free stack
+	space in a thread.
+	
+*** Support for Segmentation
+
+	void ThreadStackFrame(ThreadType thread, ThreadStackFrameType *frame)
+
+* ThreadStackFrame returns information about the specified thread's
+stack and stack frame. This information is needed for executing
+a stack trace during automatic segment unloading in "SegmentLib.c",
+which is part of Winter Shell. You should never need to call this
+function. This function will work correctly even if no threads exist.
+
+*** Scheduling
+
+The three functions ThreadSchedule, ThreadActivate, and ThreadYield
+handle the scheduling and context switching of threads. These functions
+will be executed the most often of any of the functions in this file, and
+therefore will have the greatest impact on the efficiency of Thread
+Library. If you find Thread Library's context switches too slow, try
+improving the efficiency of these functions.
+
+	void ThreadSleepSet(ThreadType thread, ThreadTicksType sleep)
+
+* ThreadSleepSet sets the amount of time that the specified thread will
+remain inactive.  The 'sleep' parameter specifies the maximum amount
+of time that the thread can remain inactive. The larger the sleep value,
+the more time is available for execution of other threads. When called
+from the main thread, you can pass a sleep parameter equal to the maximum
+interval between null events; if no null events are needed, you can pass
+a sleep value of THREAD_TICKS_MAX. The main thread will continue to receive
+processing time whenever an event is pending and when no other threads are
+scheduled (see ThreadSchedule). If the thread is already active, the sleep
+time specified will be used when the thread is inactive and is thus eligible
+for scheduling by ThreadSchedule. ThreadSleepSet is normally called by
+ThreadYield, but you may need to use it if you call ThreadSchedule or
+ThreadActivate.
+
+	ThreadType ThreadSchedule(void)
+
+* ThreadSchedule returns the next thread to activate. Threads are maintained
+in a queue and are scheduled in a round-robbin fashion. Starting with the
+current thread, the queue of threads is searched for the next thread whose
+wake time has arrived. The first such thread found is returned. 
+	
+In addition to the round-robbin scheduling shared with all threads, the
+main thread will also be activated if any events are pending in the event
+queue. The application can then immediately handle the events, allowing
+the application to remain responsive to user actions such as mouse clicks.
+The main thread will also be activated if no other threads are scheduled
+for activation, which allows the application either to continue with
+its main processing or to call WaitNextEvent and sleep until a thread
+needs to be activated or some other task or event needs to be handled.
+
+Since ThreadSchedule calls EventAvail (via EventPending), background
+applications will continue to receive processing time, even if the main
+thread is never activated while some compute intensive thread is executing.
+But, since EventAvail can be a slow trap (especially when it yields the
+processor to another application), it is only executed every few ticks.
+
+Note: if I figure out a faster way to test for events then the call
+to EventAvail may be removed, and background applications won't
+get time when ThreadSchedule is called. (OSEventAvail won't work
+since it doesn't return update or activate events.)
+
+	void ThreadActivate(ThreadType thread)
+
+* ThreadActivate activates the specified thread. The context switch is
+accomplished by saving the CPU context with setjmp and then calling
+longjmp, which jumps to the environment saved with setjmp when the thread
+being activated was last suspended. We don't have to do any assembly
+language glue since setjmp saved the value of the stack pointer, which
+at the time of the call to setjmp pointed somewhere in the thread's stack.
+The longjmp instruction will restore the value of the stack pointer and
+will jump to the statement from which to resume the thread. Longjmp also
+handles the saving and restoring of all registers.
+
+	void ThreadYield(ThreadTicksType sleep)
+
+* ThreadYield activates the next scheduled thread as determined by
+ThreadSchedule. The 'sleep' parameter has the same meaning as the
+parameter to ThreadSleepSet.
+
+	ThreadTicksType ThreadYieldInterval(void)
+
+* ThreadYieldInterval returns the maximum time till the next call to
+ThreadYield. The interval is computed by subtracting the current time
+from each thread's wake time, giving the amount of time that each
+thread can remain inactive. The minimum of these times gives the
+maximum amount of time till the next call to ThreadYield. The wake
+time of the current thread is ignored, since the thread is already
+active. You can use the returned value to determine the maximum sleep
+value to pass to WaitNextEvent.
+
+*** Thread Creation and Destruction
+
+	void ThreadEnd(ThreadType thread)
+
+* ThreadEnd removes the thread from the queue and disposes of the memory
+allocated for the thread. If the thread is the active thread then the
+next scheduled thread is activated. All threads (other than the main
+thread) must be disposed of before the main thread can be disposed of.
+
+	ThreadType ThreadBeginMain(ThreadProcType suspend, ThreadProcType resume,
+		void *data)
+
+* ThreadBeginMain creates the main application thread and returns the main
+thread's serial number. You must call this function before creating any
+other threads with ThreadBegin. You must also call MaxApplZone before calling
+this function. The 'resume', 'suspend', and 'data' parameters have the
+same meanings as the parameters to ThreadBegin.
+
+There are several important differences between the main thread and
+all subsequently created threads.
+
+- The main thread is responsible for handling events sent to the
+application, and is therefore scheduled differently than other threads;
+see ThreadSchedule for details.
+
+- While other threads don't begin executing until they're scheduled to
+execute, the main thread is made the active thread and starts to run as
+soon as ThreadBeginMain returns.
+
+- Since other threads have a special entry point, they are automatically
+disposed of when that entry point returns. The main thread, lacking
+any special entry point, must be disposed of by the application. You
+should call ThreadEnd, passing it the thread returned by ThreadBeginMain,
+before exiting your application.
+
+- The main thread uses the application's stack and context; no private
+stack is allocated for the main thread. Initially, there is therefore
+no need to change the context to start executing the thread, and
+no special entry point is required. But, like all other threads, the main
+thread's context will be saved whenever it is suspended to allow another
+thread to execute, and its context will be restored when it is resumed.
+
+	ThreadType ThreadBegin(ThreadProcType entry,
+		ThreadProcType suspend, ThreadProcType resume,
+		void *data, size_t stack_size)
+
+* ThreadBegin creates a new thread and returns the thread's serial number.
+You must create the main thread with ThreadBeginMain before you can call
+ThreadBegin. The 'entry' parameter is a pointer to a function that is
+called to start executing the thread. The 'suspend' parameter is a pointer
+to a function called whenever the thread is suspended. You can use the
+'suspend' function to save additional application defined context for
+the thread. The 'resume' parameter is a pointer to a function called
+whenever the thread is resumed. You can use the 'resume' function to
+restore additional application defined context for the thread. The
+'data' parameter is passed to the 'entry', 'suspend', and 'resume'
+functions and may contain any application defined data.
+
+The 'stack_size' parameter specifies the size of the stack needed by
+the thread. The requested stack size should be large enough to contain
+all function calls, local variables and parameters, and any operating
+system routines that may be called while the thread is active (including
+interrupt driven routines). If 'stack_size' is zero then the default
+stack size returned by ThreadStackDefault is used. It is a good idea to
+set the stack size to at least the value returned by ThreadStackMinimum;
+otherwise, your application is likely to crash somewhere inside the
+operating system. If your thread crashes try increasing the thread's stack
+size. You can enable the stack sniffer VBL task (see Stack Sniffer above)
+to help detect insufficient stack space. In addition, a stack overflow
+will often result in a corrupted heap, since the stack is allocated as
+a nonrelocatable block in the heap and overflow usually overwrites the
+block's header. For this reason, you can often detect stack overflow by
+enabling a "heap check" option in a low-level debugger such as TMON or
+MacsBug.
+
+The new thread is appended to the end of the thread queue, making it
+eligible for scheduling whenever ThreadYield is called. ThreadBegin
+returns immediately after creating the new thread. The thread, however,
+is not executed immediately, but rather is executed whenever it is
+scheduled to execute. At that time, the function specified in the 'entry'
+parameter is called. When the function has returned, the thread is removed
+from the queue of threads and its stack and any private storage allocated
+by ThreadBegin are disposed of.
+
+Debugging
+---------
+
+When you start using Thread Library, you should disable all optimizations
+and should enable all debug code in Thread Library by ensuring that the
+preprocessor symbols NDEBUG and THREAD_DEBUG are undefined (THREAD_DEBUG
+defaults to true). This will enable a VBL task that will help catch stack
+overflow in threads (you can enable the VBL task even when debug code has
+been disabled; see Stack Sniffer, above). Thread Library also includes
+numerous assertions intended to catch run-time errors. These assertions will
+be enabled when the debug code is enabled. Once you know that threads work
+with your application, you can enable compiler optimizations and test your
+application again to make sure it still runs.
+
+If an assertion fails, the DebugStr trap is executed with a simple message.
+To help me fix the error, please report the problem to me. Your report should
+include a stack crawl generated with your debugger when the assertion failed
+(to determine where in the code the assertion failed), the version of Thread
+Library you're using, a description of the operating environment (Macintosh
+model, system software, extensions, etc.) and a description, if possible, of
+the actions preceding the failure.
+
+The debug code (mostly assertions) greatly reduces the speed of Thread Library,
+and also increases the size of the object code. You will therefore probably
+want to disable the debug code when you're confident that your threads are
+operating correctly. To disable the debug code, define the preprocessor
+symbol NDEBUG or define THREAD_DEBUG as zero.
+
+	WARNING: Using the THINK C debugger to trace through context switches
+	may result in corruption of the application's heap followed by a nasty
+	crash. The problem arrises if you place a breakpoint or try to step
+	too close to the longjmp that accomplishes the context switch in the
+	function ThreadActivatePtr in the file "ThreadLib.c". I have used TMON
+	Professional to successfully trace through the context switches, and
+	other low-level debuggers (like MacsBug) should also work.
+	
+Profiling
+---------
+
+You will probably not be able to profile an application that uses threads.
+The profiler supplied with THINK C will not work properly when threads
+are used, though it could be modified to work correctly with threads.
+
+Handling Errors
+---------------
+
+I'm not quite sure of the best way to handle errors. In my own applications I
+prefer to use exceptions to handle errors, but, since there is no standard
+exception handling mechanism, this is not an appropriate error handling
+method for a reusable library intended to be used in many applications written
+by different people. A more standardized solution is for functions that
+can fail to return an error code. This is a somewhat inelegant solution,
+as it requires functions to return a mostly useless error code instead
+of a meaningful result; an extra temporary variable must often be
+created and passed by reference to the function to hold the function's
+result. A problem also arrises if a function that formerly did not
+return an error is modified in a newer version to return an error code.
+Unless all functions were originally written to return error codes,
+there is now no way for the application to detect the error.
+
+I prefer that functions return some meaningful value (not some useless
+error code), and that procedures return nothing. One solution that
+accommodates this preference is to have a special function that returns
+the error code generated by the last function called. This is the
+approach taken with managers like the Memory Manager and parts of
+the Resource Manager. For now, this seems like the best solution
+for detecting errors, and it is the one used in the current version
+of Thread Library. I do not guarantee that this method of detecting
+errors will not change in the future.
+
+Handling Errors with Exceptions
+-------------------------------
+ 
+If your application uses exceptions to handle errors, then you'll need to
+add a custom context switching routine to your threads. Most implementations
+of exceptions work by modifying the program counter and stack pointer to
+jump to an exception handling routine. The code needed to raise an exception
+typically keeps track of which exception handler to jump to in some global
+variables. A problem can occur if the exception implementation attempts to
+jump to a routine and stack address for an inactive thread. For instance,
+in the following code:
+
+	void thread1(void *data) {
+	{
+		TRY { /* this sets up the exception handling environment */
+			(void) ThreadBegin(thread2, NULL, NULL, NULL, 0);
+			while (! done)
+				ThreadYield(0);
+		} CATCH { /* this is executed on failure */
+			cleanup();
+		} ENDTRY; /* this closes up the exception handler */
+	}
+	
+	void thread2(void *data)
+	{
+		while (! done_allocating_memory()) {
+			if (! allocate_some_memory())
+				FailOSErr(memFullErr); /* this raises an exception */
+			ThreadYield(0);
+		}
+	}
+
+both thread1 and thread2 have their own private stack and CPU state.
+When thread2 raises an exception, the exception raising code will
+attempt to jump to the last exception handler specified. But
+the last exception handler was specified when thread1 was
+executing. Since the exception raising code does not know
+about other threads or about Thread Library, it can not
+properly switch contexts when the exception is raised. This
+situation will probably result in a mysterious crash. Since
+the problem will only occur under extraordinary circumstances
+(e.g., running out of memory), it will also be hard to reproduce
+and debug.
+
+When you create a thread  you need to allocate memory to save the state
+of the exception handler, and you need to install your own custom context
+switching routines. The suspend function must save a copy of the state of
+the exception handler, while the resume function must restore the state of
+the exception handler. Thread Library already includes code to handle the
+exchange of the exception state for Winter Shell (you'll need Winter
+Shell 1.0d3 or later to use threads; the latest released version is
+currently only 1.0d2).
+
+You must also be careful to prevent threads from propagating beyond a
+thread's entry point. For instance, a thread's entry point could be
+written as follows:
+
+	void thread(void *data)
+	{
+		TRY {
+			... do stuff ...
+		} CATCH {
+			... cleanup ...
+			NOPROPAGATE; /* this prevents exceptions from propagating */
+		} ENDTRY;
+	}
+
+when an exception is raised in the thread, it will be prevented from
+propagating beyond the thread's entry point by the NOPROPAGATE statement.
+
+	Winter Shell Note: The exception handlers in Winter Shell 1.0d3 will
+	not propagate outside of the entry point, so the NOPROPAGATE statement
+	is not strictly necessary.
+
+==============
+Known Problems
+--------------
+
+Toolbox
+-------
+
+For all threads other than the main thread, some Maintosh Toolbox
+routines may not work correctly if the stack is not between the region of
+memory defined by the low-memory globals CurStackBase and ApplLimit.
+Possibly prohibited are some QuickDraw calls, but I don't actually know
+which Toolbox routines will fail. Some simple tests I ran created a dialog
+with a progress bar; created, opened, read and wrote files; created a
+resource file and added resources to it; allocated memory; and did various
+other operations, all successfully and without problems.  Since the main
+thread uses the application's stack, there are no restrictions on
+the Toolbox routines that the main thread may call. I am interested
+in whether you encounter (or don't encounter) limitations to Toolbox calls,
+and would like to know under what conditions the limitations arise.
+
+SuperClock
+----------
+
+SuperClock 4.0.4 won't update its numerals every second when EventAvail is
+called from within a thread.  SuperClock will still update the timer
+animation when you run the stopwatch, and will update the numerals less
+frequently. This happens both in my Thread Library and in Apple's Thread
+Manager. You usually won't notice this effect with Apple's Thread Manager
+since it doesn't call EventAvail (it looks directly at the EventQueue
+low-memory global) and since threads rarely need to call EventAvail. My
+Thread Library needs to call EventAvail, however, since I don't know how
+to detect all possible events by looking at low-memory globals. I'm not
+sure if this should be considered a bug in threads or in SuperClock. I'll
+have to contact the author of SuperClock to find out what he thinks.
+At any rate, this appears to be a pretty minor cosmetic problem; it should
+not interfere with the operation of an application that uses Thread
+Library. (Thanks to Daniel Sears <sears@netcom.com> for reporting this.)
+
+=====
+To Do
+-----
+
+It shouldn't be too difficult to add preemptive threads to Thread Library.
+Preemptive threads have a limited utility, however, since they must be
+executed at interrupt time, precluding the use of most of the Macintosh
+toolbox. Someday, if there's demand for preemptive threads, I may add
+this feature.
+
+Some low-memory globals may not be available under A/UX (most notably, the
+Ticks low-memory global). Adding a runtime check for A/UX to determine if
+the Ticks low-memory global is available could marginally slow down access
+to the variable, so it may be better to include a conditional compilation
+option.
+
+=======
+Credits
+-------
+
+Some ideas on how to use setjmp/longjmp to swap stacks were adapted
+from the source for Task Manager v2.2.1 by Michael Hecht
+<Michael_Hecht@mac.sas.com>, available at the info-mac archives
+and various other sites.
+
+Special thanks to Peter Lewis <peter.lewis@info.curtin.edu.au>, who
+did a detailed review of Thread Library and made numerous suggestions
+to successive versions, including using serial numbers to refer to
+all threads, using a sentinel value in the stack-sniffer VBL task,
+and improving the scheduling of threads.
+
+Thanks also to all of the following people for helping me make Thread
+Library a better product.
+
+Anton Rang <rang@icicle.winternet.mpls.mn.us> responded to my query on
+Comp.sys.mac.programmer on how to disable the stack sniffer VBL task.
+(Several other people also responded, but Anton Rang's reply was the
+first to arrive.)
+
+Daniel Sears <sears@netcom.com> reported some problems with Thread Library
+and tried out updated versions I emailed to him.
+
+Matthew Xavier Mora <mxmora@unix.sri.com> suggested the SetPort call
+in TestThreads and helped debug the "update" problem in ThreadsTest.
+
+Barry Kirsch <bkirsch@NADC.NADC.NAVY.MIL> reported a problem with compiling
+Thread Library using THINK C's "MacHeaders" precompiled header.
+
+==========================
+Why I Wrote Thread Library
+--------------------------
+
+After the first release on the internet, there was some discussion on
+the news group Comp.sys.mac.programmer as to why anyone would bother writing
+or using an implementation of threads when Apple has already provided the
+Thread Manager. The short answer is that: I wanted to see how hard it would be
+to implement threads; Thread Library is compatible with system 6.0;
+Thread Library doesn't require the user to install any extensions; Thread
+Library is significantly faster than Thread Manager; and Apple charges
+$200 to license Thread Manager while the source code for Thread Library
+is free, which is especially important to authors of freeware and shareware
+applications.
+
+========
+Epilogue
+--------
+
+If it took me, a single programmer, 6 days to get threads up and
+running (and that not even full-time), why did it take Apple many
+years and a big fancy extension to get around to implementing
+threads? This hack isn't very difficult. I had something sort-of
+working the first day, but it took me six days to get it reasonably
+stable and to put in all the verbose comments. It would have been
+even easier to implement had I had access to proprietary Apple
+information. If you look at the Thread Manager extension, it's really
+very simple, and it doesn't do much more than what this library does.
+(I developed this library prior to examining what the Thread Manager
+does and did not try to copy the Thread Manager.)
+
+Since the initial release (v1.0d1), I've spent some more time tweaking
+Thread Library and have received assistance from people on the internet.
+Some features were added, other features were removed, the size of the
+object code was reduced, it was made faster, and more documentation was
+added.

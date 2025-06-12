@@ -1,1 +1,11 @@
-ColorStarsThis is an interesting "warp" source in that it draws 3x3 antialiased stars. Control movement by mouseLoc and speed/direction by '+' and '-' keys.  'q' or click quits. Mouse left or right of center acts like an aileron effect - not true space flight simulation. Run in 1 bit mode the stars are 1x1.This was sent to me by a cyberspace buddy on the net.  It's PD and nothing unique or special (warp programs are abundant).For non-FPU, reduce num_stars for more speed.  Star colors come from a 'clut' in the res. file.  The resfile in binhexed and pasted at the end of the .c file (only 6k unhexed).Enjoy!Ken Long
+ColorStars
+
+This is an interesting "warp" source in that it draws 3x3 antialiased stars. Control movement by mouseLoc and speed/direction by '+' and '-' keys.  'q' or click quits. Mouse left or right of center acts like an aileron effect - not true space flight simulation. Run in 1 bit mode the stars are 1x1.
+
+This was sent to me by a cyberspace buddy on the net.  It's PD and nothing unique or special (warp programs are abundant).
+
+For non-FPU, reduce num_stars for more speed.  Star colors come from a 'clut' in the res. file.  The resfile in binhexed and pasted at the end of the .c file (only 6k unhexed).
+
+Enjoy!
+
+Ken Long

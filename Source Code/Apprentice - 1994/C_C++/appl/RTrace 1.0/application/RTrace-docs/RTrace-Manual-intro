@@ -1,1 +1,143 @@
-                                                                              RTrace 1.0                                         by Antonio Costa                           Mac Port by Reid Judd and Greg FerrarIntroductionA Brief Description of RTraceRTrace is a full-featured Ray Tracing program for the Macintosh computer.  It can generate both still images and animation sequences.System RequirementsRTrace will work on any Macintosh running 6.0.4 or later.  Its preferred setup is:   •	Fast Macintosh (68020 or better)   •	Math Coprocessor   •	4 Meg RAM   •	32-bit QuickDraw   •	System 7   •	QuickTimeHowever, it will run on a 68000-based Macintosh without a Math Coprocessor, 32-bit QuickDraw, or System 7, and it can run in as small as a 500K partition.On a 68000-based Macintosh, or on a Macintosh without a Math Coprocessor, you should use the application called “RTrace/68000.”  Otherwise, use the application called “RTrace.”  From now on, both programs will be referred to as “RTrace.”On a Macintosh with only 8-bit Color QuickDraw, RTrace will run, but you will not be able to use the Clipboard to copy images from the Image Window, and the Image Window will not be updated.  On a Macintosh with 1-bit (Original) QuickDraw, the image window will not appear at all.RTrace does not require System 7, but it takes advantage of some of System 7’s features if they are present.  It also will take advantage of QuickTime, if it is present.A Brief Description of Ray TracingRay Tracing is a process which generates a realistic image from a mathematical description of a scene.  It is called “Ray Tracing” because it generates these images by tracing the paths that an actual light ray would take in the scene.  By mathematically tracing the paths of thousands of light rays, a ray tracing program is able to create a photographic three-dimensional image of a scene.  Since generating a single ray-traced image can take hundreds of thousands of complex mathematical operations, ray-tracing is a slow process.  On a very fast Macintosh, images will be generated fairly quickly.  However, if you are using a slower Macintosh (like a Mac Plus), be prepared to wait a long time.The Fine PrintRTrace is absolutely free!!!   The only requirements are that you not sell it, or distribute it without its documentation.  RTrace may not be distributed with any collection of shareware or freeware without the written consent of the authors.  However, we’d like to see this program spread as far as possible, so please do contact one of us if such distribution is desired.About the AuthorsThe original author of RTrace is Antonio Costa, who wrote it for Unix, Vax, PC's, and other systems.  The Macintosh port was made by Reid Judd.  Greg Ferrar wrote most of the Macintosh user interface, and Reid Judd wrote the rest.Contacting the AuthorsAntonio Costa may be contacted:		by email at acc@asterix.inescn.pt.	by “snail mail” at		 INESC		   	Largo Mompilher 22			   4100 Porto PORTUGAL	or by telephone at +351+02+321006Reid Judd may be contacted:	by email at ILLUMINATI@AppleLink.Apple.COM.	by “snail mail” at	 	ILLUMINATI			 	2617 Sweetbriar Road			 	Durham, NC  27704	or by telephone at (919)-683-2424Greg Ferrar may be contacted:		by email at gregt@function.mps.ohio-state.edu,	by “snail mail” at	 	2300 North High Street				 Columbus, OH   43202-2902,	or by telephone at (614) 267-8754Hopes for the FutureRTrace is far from done.  We had to stop somewhere, so here’s Version 1.0.  Here’s a sampling of what we have in mind for later versions:•	Support for more powerful animation.  In other words, it will be possible to have objects in the scene move, rotate, contort..whatever you want.  Animation is currently limited to changing the viewpoint to fly around or through an unmoving scene.•	Converters to/from popular modeling and rendering packages so that RTrace may import scene data files in much the same way Macintosh word processors can import text files.•	Powerful System-7 features.  We hope to eventually separate the ray-tracing part from the interface part, so you can run the math-intensive code on a powerful computer while you use the interface on another (networked) computer.•	And much, much more!All we can do right now is guess what our users will want.  If you have suggestion, let us know!  RTrace will be an ongoing project.  If you're a programmer with access to Think C and would like to donate time and energy to make this program even better, please contact us.  And if you have a bug report, please let us know!Getting Later Versions of RTraceThe latest version of RTrace will always be available from asterix.inescn.pt via anonymous ftp, in the /pub/RTrace directory.  The Macintosh version will be located in the file(s) in /pub/RTrace/Macintosh/rtrace*.hqx.A Message from the AuthorHere is the README file which is distributed with the unix version of RTrace, written by Antonio Costa.  Let’s have a big hand for Antonio for writing this fabulous ray-tracer and donating it to the world!- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -This represents the 7th formal release of the `rtrace' Raytracer.  It was written to help me understand how raytracing works, to generate cute images, and generally because I like to program.  Feel free to use it for any purpose, I am releasing it into the public domain.The input format to this ray tracer is called "SFF" or Simple File Format, after using "NFF" or Neutral File Format, which was invented by Eric Haines' for his Standard Procedural Database.  The SPD was designed to allow programmers to test their raytracers on databases of varying sizes.  While not the end-all to object file formats, it has served me well.If anyone uses or wants to use NFF, I can send a NFF to SFF converter.SFF supports the following concepts and primitives:   •	point lights   •	directional lights   •	spot lights with fall-off   •	extended lights   •	2 ways of defining surfaces   •	spheres   •	axis-aligned parallelepipeds   •	cylinders   •	cones   •	bicubic patches   •	polygons   •	polygonal patches (normals are interpolated from corner points)   •	3D text with high quality   •	CSG operations   •	4x4 matrix transformations   •	textures   •	depth of field   •	diffuse distribution   •	stereoscopic pair creationThe `rtrace' raytracer supports all of these primitives, with the minor limitation that polygonal patches must be triangles (have only three vertices).Procedural textures (with 4x4 matrix transformations) are also supported:   •	checkerboard   •	color blotches   •	marble   •	bump map   •	fbm   •	fbm bump map   •	wood   •	gloss   •	image mapping   •	waves   •	(and many others...)The output from the raytracer is very simple, and not directly tied to any specific device.   It consists of a single line, with format in C style of "%c%c%c%c", which gives the resolution of the image (Width LSByte, Width MSByte, Height LSByte, Height MSByte).  It is then followed by Width*Height sets of (red green blue) bytes.I have lots of filters source code for displaying the ".pic" files, as well as interesting objects that I run across.  Filters already exist to display images on Suns, to convert to PostScript, as well as X11 bitmaps for xwud.I advise you to get a package called the "Fuzzy Bitmap Package" (FBM), that has lots of useful programs for simple image processing, conversion, etc. The author is Michael Mauldin <mlm@nl.cs.cmu.edu>.  The Utah Raster Toolkit is also a very good graphics package.  Also good is Eric Haines' SPD source code, so you can generate your own fractal spheres, mountains, gears, etc.Also thanks to the numerous authors whose research into raytracing has seen implementation in this raytracer.   Antonio Costa.
+                                
+                                              RTrace 1.0
+                                         by Antonio Costa
+
+                           Mac Port by Reid Judd and Greg Ferrar
+
+Introduction
+
+A Brief Description of RTrace
+
+RTrace is a full-featured Ray Tracing program for the Macintosh computer.  It can generate both still images and animation sequences.
+System Requirements
+
+RTrace will work on any Macintosh running 6.0.4 or later.  Its preferred setup is:
+
+   •	Fast Macintosh (68020 or better)
+   •	Math Coprocessor
+   •	4 Meg RAM
+   •	32-bit QuickDraw
+   •	System 7
+   •	QuickTime
+
+However, it will run on a 68000-based Macintosh without a Math Coprocessor, 32-bit QuickDraw, or System 7, and it can run in as small as a 500K partition.
+
+On a 68000-based Macintosh, or on a Macintosh without a Math Coprocessor, you should use the application called “RTrace/68000.”  Otherwise, use the application called “RTrace.”  From now on, both programs will be referred to as “RTrace.”
+
+On a Macintosh with only 8-bit Color QuickDraw, RTrace will run, but you will not be able to use the Clipboard to copy images from the Image Window, and the Image Window will not be updated.  On a Macintosh with 1-bit (Original) QuickDraw, the image window will not appear at all.
+
+RTrace does not require System 7, but it takes advantage of some of System 7’s features if they are present.  It also will take advantage of QuickTime, if it is present.
+
+A Brief Description of Ray Tracing
+
+Ray Tracing is a process which generates a realistic image from a mathematical description of a scene.  It is called “Ray Tracing” because it generates these images by tracing the paths that an actual light ray would take in the scene.  By mathematically tracing the paths of thousands of light rays, a ray tracing program is able to create a photographic three-dimensional image of a scene.  Since generating a single ray-traced image can take hundreds of thousands of complex mathematical operations, ray-tracing is a slow process.  On a very fast Macintosh, images will be generated fairly quickly.  However, if you are using a slower Macintosh (like a Mac Plus), be prepared to wait a long time.
+
+The Fine Print
+
+RTrace is absolutely free!!!   The only requirements are that you not sell it, or distribute it without its documentation.  RTrace may not be distributed with any collection of shareware or freeware without the written consent of the authors.  However, we’d like to see this program spread as far as possible, so please do contact one of us if such distribution is desired.
+
+About the Authors
+
+The original author of RTrace is Antonio Costa, who wrote it for Unix, Vax, PC's, and other systems.  The Macintosh port was made by Reid Judd.  Greg Ferrar wrote most of the Macintosh user interface, and Reid Judd wrote the rest.
+
+Contacting the Authors
+Antonio Costa may be contacted:	
+	by email at acc@asterix.inescn.pt.
+	by “snail mail” at
+		 INESC		
+   	Largo Mompilher 22		
+	   4100 Porto PORTUGAL
+	or by telephone at +351+02+321006
+
+Reid Judd may be contacted:
+	by email at ILLUMINATI@AppleLink.Apple.COM.
+	by “snail mail” at
+	 	ILLUMINATI		
+	 	2617 Sweetbriar Road		
+	 	Durham, NC  27704
+	or by telephone at (919)-683-2424
+
+Greg Ferrar may be contacted:	
+	by email at gregt@function.mps.ohio-state.edu,
+	by “snail mail” at
+	 	2300 North High Street		
+		 Columbus, OH   43202-2902,
+	or by telephone at (614) 267-8754
+
+Hopes for the Future
+
+RTrace is far from done.  We had to stop somewhere, so here’s Version 1.0.  Here’s a sampling of what we have in mind for later versions:
+
+•	Support for more powerful animation.  In other words, it will be possible to have objects in the scene move, rotate, contort..whatever you want.  Animation is currently limited to changing the viewpoint to fly around or through an unmoving scene.
+
+•	Converters to/from popular modeling and rendering packages so that RTrace may import scene data files in much the same way Macintosh word processors can import text files.
+
+•	Powerful System-7 features.  We hope to eventually separate the ray-tracing part from the interface part, so you can run the math-intensive code on a powerful computer while you use the interface on another (networked) computer.
+
+•	And much, much more!
+All we can do right now is guess what our users will want.  If you have suggestion, let us know!  RTrace will be an ongoing project.  If you're a programmer with access to Think C and would like to donate time and energy to make this program even better, please contact us.  And if you have a bug report, please let us know!
+
+
+Getting Later Versions of RTrace
+
+The latest version of RTrace will always be available from asterix.inescn.pt via anonymous ftp, in the /pub/RTrace directory.  The Macintosh version will be located in the file(s) in /pub/RTrace/Macintosh/rtrace*.hqx.
+
+A Message from the Author
+
+Here is the README file which is distributed with the unix version of RTrace, written by Antonio Costa.  Let’s have a big hand for Antonio for writing this fabulous ray-tracer and donating it to the world!
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+This represents the 7th formal release of the `rtrace' Raytracer.  It was written to help me understand how raytracing works, to generate cute images, and generally because I like to program.  Feel free to use it for any purpose, I am releasing it into the public domain.
+
+The input format to this ray tracer is called "SFF" or Simple File Format, after using "NFF" or Neutral File Format, which was invented by Eric Haines' for his Standard Procedural Database.  The SPD was designed to allow programmers to test their raytracers on databases of varying sizes.  While not the end-all to object file formats, it has served me well.
+
+If anyone uses or wants to use NFF, I can send a NFF to SFF converter.
+
+SFF supports the following concepts and primitives:
+
+   •	point lights
+   •	directional lights
+   •	spot lights with fall-off
+   •	extended lights
+   •	2 ways of defining surfaces
+   •	spheres
+   •	axis-aligned parallelepipeds
+   •	cylinders
+   •	cones
+   •	bicubic patches
+   •	polygons
+   •	polygonal patches (normals are interpolated from corner points)
+   •	3D text with high quality
+   •	CSG operations
+   •	4x4 matrix transformations
+   •	textures
+   •	depth of field
+   •	diffuse distribution
+   •	stereoscopic pair creation
+
+The `rtrace' raytracer supports all of these primitives, with the minor limitation that polygonal patches must be triangles (have only three vertices).
+
+Procedural textures (with 4x4 matrix transformations) are also supported:
+
+   •	checkerboard
+   •	color blotches
+   •	marble
+   •	bump map
+   •	fbm
+   •	fbm bump map
+   •	wood
+   •	gloss
+   •	image mapping
+   •	waves
+   •	(and many others...)
+
+The output from the raytracer is very simple, and not directly tied to any specific device.   It consists of a single line, with format in C style of "%c%c%c%c", which gives the resolution of the image (Width LSByte, Width MSByte, Height LSByte, Height MSByte).  It is then followed by Width*Height sets of (red green blue) bytes.
+
+I have lots of filters source code for displaying the ".pic" files, as well as interesting objects that I run across.  Filters already exist to display images on Suns, to convert to PostScript, as well as X11 bitmaps for xwud.
+
+I advise you to get a package called the "Fuzzy Bitmap Package" (FBM), that has lots of useful programs for simple image processing, conversion, etc. The author is Michael Mauldin <mlm@nl.cs.cmu.edu>.  The Utah Raster Toolkit is also a very good graphics package.  Also good is Eric Haines' SPD source code, so you can generate your own fractal spheres, mountains, gears, etc.
+
+Also thanks to the numerous authors whose research into raytracing has seen implementation in this raytracer.
+
+   Antonio Costa.
+

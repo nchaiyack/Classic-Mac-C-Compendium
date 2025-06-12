@@ -1,1 +1,485 @@
-/* Definitions of unit type properties, in alphabetical order. */DEF_UPROP_I("acp-at-midsummer", u_acp_midsummer,	"",	acpmidsummer, 0, 0, 9999)DEF_UPROP_I("acp-at-midwinter", u_acp_midwinter,	"",	acpmidwinter, 0, 0, 9999)DEF_UPROP_L("acp-damage-effect", u_acp_damage_effect,	"",	acpdamageeffect)DEF_UPROP_I("acp-max", u_acp_max,	"How many actions can be saved up.  -1 == u_acp",	acpmax, -1, -1, 9999)DEF_UPROP_I("acp-min", u_acp_min,	"This lets unit acp go negative by some amount",	acpmin, -9999, 0, 9999)DEF_UPROP_I("acp-per-turn", u_acp,	"The base number of actions that this type can do in one turn",	acp, 0, 0, 9999)DEF_UPROP_I("acp-per-turn-max", u_acp_turn_max,	"",	acpturnmax, 0, 0, 9999)DEF_UPROP_I("acp-per-turn-min", u_acp_turn_min,	"",	acpturnmin, 0, 0, 9999)DEF_UPROP_I("acp-to-change-side", u_acp_to_change_side,	"Action points used up by side change",	acptochangeside, 0, 0, 9999)DEF_UPROP_I("acp-to-detonate", u_acp_to_detonate,	"Action points used up by detonating",	acptodetonate, 0, 0, 9999)DEF_UPROP_I("acp-to-disband", u_acp_to_disband,	"Action points used up by disbanding",	acptodisband, 0, 0, 9999)DEF_UPROP_I("acp-to-fire", u_acp_to_fire,	"Action points used up by firing",	acptofire, 0, 0, 9999)DEF_UPROP_I("acp-to-move", u_acp_to_move,	"Action points used up by one move",	acptomove, 0, 1, 9999)DEF_UPROP_I("acp-to-transfer-part", u_acp_to_transfer_part,	"Action points used to transfer unit parts",	acptotransferpart, 0, 0, 9999)DEF_UPROP_I("action-priority", u_action_priority,	"Relative order in which the unit acts",	actionpriority, 0, 0, 9999)DEF_UPROP_I("already-seen", u_already_seen,	"Chance the unit is seen initially if its cell is",	alreadyseen, 0, 0, 100)DEF_UPROP_I("already-seen-independent", u_already_seen_indep,	"Chance the independent unit is seen initially if its cell is",	alreadyseenindep, 0, 0, 100)DEF_UPROP_I("assign-number", u_assign_number,	"True if unit type should be given a number",	assignnumber, 0, 1, 1)DEF_UPROP_I("attitudes-max", u_attitudes_max,	"",	attitudesmax, 0, 0, MAXSIDES)DEF_UPROP_I("available", u_available,	"Is type defn actually used",	available, 0, 1, 1)DEF_UPROP_I("can-be-self", u_can_be_self,	"True if this type can be a self-unit",	canbeself, 0, 0, 1)DEF_UPROP_I("capacity", u_capacity,	"space for occupants shared by all types",	capacity, 0, 0, 9999)DEF_UPROP_S("char", u_uchar,	"",	uchar, "")DEF_UPROP_L("cloud-vision-effect", u_cloud_vision_effect,	"",	cloudvisioneffect)DEF_UPROP_S("color", u_color,	"Color scheme of this unit type",	color, "")DEF_UPROP_I("country-units-max", u_country_units_max,	"Max number of units in the entire country",	countryunitsmax, -1, -1, 9999)DEF_UPROP_I("cp", u_cp,	"Number of construction points to complete a new unit",	cp, 1, 1, 9999)DEF_UPROP_I("comfort-zone-max", u_comfort_max,	"",	comfortmax, -9999, 9999, 9999)DEF_UPROP_I("comfort-zone-min", u_comfort_min,	"",	comfortmin, -9999, -9999, 9999)DEF_UPROP_I("cp-per-self-build", u_cp_per_self_build,	"Number of construction points per enable self completion",	cpperselfbuild, 0, 0, 0)DEF_UPROP_I("cp-to-self-build", u_cp_to_self_build,	"Number of construction points to enable self completion",	cptoselfbuild, 0, 0, 0)DEF_UPROP_I("cxp-max", u_cxp_max,	"",	cxpmax, 0, 0, 9999)DEF_UPROP_I("cxp-on-capture", u_cxp_on_capture,	"",	cxponcapture, 0, 0, 9999)DEF_UPROP_L("description", u_description,	"",	description)DEF_UPROP_I("detonate-on-death", u_detonate_on_death,	"Chance that a unit will detonate when about to die",	detonateondepth, 0, 0, 100)DEF_UPROP_I("elevation-at-max-range", u_elev_at_max_range,	"Elevation of fire when shooting at maximum range",	elevatmaxrange, 0, 0, 9999)DEF_UPROP_L("extensions", u_extensions,	"Hook for extra properties",	extensions)DEF_UPROP_I("free-acp", u_free_acp,	"Extra action points available",	freeacp, 0, 0, 9999)DEF_UPROP_I("free-mp", u_free_mp,	"Extra moves available",	freemp, 0, 1, 9999)DEF_UPROP_S("generic-name", u_generic_name,	"a non-unique name for the type",	genericname, "")DEF_UPROP_S("help", u_help,	"Brief description of this type",	help, "")DEF_UPROP_I("hit-falloff-range", u_hit_falloff_range,	"",	hitfalloffrange, 0, 9999, 9999)/* (should be replaced by damage effect lists) */DEF_UPROP_I("hp-at-max-acp-per-turn", u_hp_at_max_acp_turn,	"Minimum hp that achieves max acp",	hpatmaxacpturn, 0, 0, 0)DEF_UPROP_I("hp-at-min-acp-per-turn", u_hp_at_min_acp_turn,	"Maximum hp that causes min acp in hexes/turn",	hpatminacpturn, 0, 0, 9999)DEF_UPROP_I("hp-at-max-speed", u_hp_at_max_speed,	"Minimum hp that achieves max speed",	hpatmaxspeed, 0, 0, 0)DEF_UPROP_I("hp-at-min-speed", u_hp_at_min_speed,	"Maximum hp that causes min speed in hexes/turn",	hpatminspeed, 0, 0, 9999)DEF_UPROP_I("hp-max", u_hp_max,	"Max number of hit points",	hpmax, 0, 1, 9999)DEF_UPROP_I("hp-per-disband", u_hp_per_disband,	"HP lost by one disband action",	hpperdisband, 0, 0, 0)DEF_UPROP_I("hp-per-detonation", u_hp_per_detonation,	"HP lost by one detonate action",	hpperdetonation, 0, 0, 9999)DEF_UPROP_I("hp-recovery", u_hp_recovery,	"number of hit points restored automatically each turn",	hprecovery, 0, 0, 9999)DEF_UPROP_S("image-name", u_image_name,	"ways to specify what a unit looks like",	imagename, "")DEF_UPROP_I("independent-growth-chance", u_indep_growth,	"",	indepgrowth, 0, 0, 10000)DEF_UPROP_I("independent-near-start", u_indep_near_start,	"Number of independent units within the min radius of the country",	indepnearstart, 0, 0, 9999)DEF_UPROP_I("independent-takeover-chance", u_indep_takeover,	"",	indeptakeover, 0, 0, 10000)DEF_UPROP_I("initial-seen-radius", u_seen_radius,	"The radius around one's initial units that is seen initially",	seenradius, 0, 1, 9999)DEF_UPROP_I("lockon-chance", u_lockon_chance,	"Chance that unit remains seen when no longer covered",	lockonchance, 0, 0, 100)DEF_UPROP_S("long-name", u_long_name,	"A completely expanded-out name for the type",	longname, "")DEF_UPROP_I("move-range", u_move_range,	"Distance that a unit can jump in one move",	moverange, 0, 1, 9999)DEF_UPROP_I("mp-to-leave-world", u_mp_to_leave_world,	"Movement points needed to leave the world entirely",	mptoleaveworld, -1, -1, 9999)DEF_UPROP_S("namer", u_namer,	"The namer or naming method for this type",	namer, "")DEF_UPROP_S("name", u_type_name,	"",	name, "")DEF_UPROP_S("name-internal", u_internal_name,	"",	iname, "")DEF_UPROP_L("notes", u_notes,	"",	notes)DEF_UPROP_I("occupant-total-max", u_occ_total_max,	"",	occtotalmax, -1, -1, 9999)DEF_UPROP_I("point-value", u_point_value,	"An arbitrary number that assigns a value to a unit type",	pointvalue, 0, 1, 9999)DEF_UPROP_I("parts-max", u_parts,	"Max number of subparts in one unit",	partsmax, 1, 1, 9999)DEF_UPROP_L("possible-sides", u_possible_sides,	"Side(s) (class(es)) to which this type can belong",	possiblesides)DEF_UPROP_I("range", u_range,	"Maximum possible distance to fire",	range, 0, 1, 9999)DEF_UPROP_I("range-min", u_range_min,	"Minimum possible distance to fire",	rangemin, 0, 0, 9999)DEF_UPROP_I("revolt-chance", u_revolt,	"Inclination to revolt",	revolt, 0, 0, 10000)DEF_UPROP_I("see-action", u_see_action,	"True if unit might be spotted if it acts",	seeaction, 0, 0, 1)DEF_UPROP_I("see-combat", u_see_combat,	"True if unit might be spotted if it fights",	seecombat, 0, 0, 1)DEF_UPROP_I("see-always", u_see_always,	"True if unit view always up-to-date",	seealways, 0, 0, 1)DEF_UPROP_I("see-movement", u_see_movement,	"True if unit might be spotted if it moves",	seemovement, 0, 1, 1)DEF_UPROP_I("see-occupants", u_see_occupants,	"",	seeoccs, 0, 0, 1)DEF_UPROP_I("self-changeable", u_self_changeable,	"",	selfchangeable, 0, 0, 1)DEF_UPROP_I("self-resurrects", u_self_resurrects,	"",	selfresurrects, 0, 0, 1)DEF_UPROP_S("short-name", u_short_name,	"An abbreviated but still informative name string",	shortname, "")DEF_UPROP_I("speed", u_speed,	"Normal acp/move ratio",	speed, 0, 100, 9999)DEF_UPROP_I("speed-max", u_speed_max,	"Maximum possible acp/move ratio",	speedmax, 0, 100, 9999)DEF_UPROP_L("speed-damage-effect", u_speed_damage_effect,	"",	speeddamageeffect)DEF_UPROP_I("speed-min", u_speed_min,	"Minimum acp/move ratio",	speedmin, 0, 100, 9999)DEF_UPROP_I("spy-chance", u_spy_chance,	"",	spychance, 0, 0, 10000)DEF_UPROP_I("spy-range", u_spy_range,	"",	spyrange, 0, 0, 9999)DEF_UPROP_I("stack-order", u_stack_order,	"Relative priority of unit within stack, 0 = highest",	stackorder, 0, 0, 0)DEF_UPROP_I("start-with", u_start_with,	"Number of units within the initial area",	startwith, 0, 0, 9999)DEF_UPROP_I("storage", u_storage,	"space for materials shared by all types",	storage, 0, 0, 9999)DEF_UPROP_I("survival-zone-max", u_survival_max,	"",	survivalmax, -9999, 9999, 9999)DEF_UPROP_I("survival-zone-min", u_survival_min,	"",	survivalmin, -9999, -9999, 9999)DEF_UPROP_I("tech-from-dissection", u_tech_from_dissection,	"",	techfromdissection, 0, 0, 9999)DEF_UPROP_I("tech-leakage", u_tech_leakage,	"",	techleakage, 0, 0, 9999)DEF_UPROP_I("tech-max", u_tech_max,	"Maximum possible tech for this type",	techmax, 0, 0, 9999)DEF_UPROP_I("tech-per-turn-max", u_tech_per_turn_max,	"",	techperturnmax, 0, 9999, 9999)DEF_UPROP_I("tech-to-build", u_tech_to_build,	"",	techtobuild, 0, 0, 9999)DEF_UPROP_I("tech-to-dissect", u_tech_to_dissect,	"",	techtodissect, 0, 0, 9999)DEF_UPROP_I("tech-to-see", u_tech_to_see,	"",	techtosee, 0, 0, 9999)DEF_UPROP_I("tech-to-use", u_tech_to_use,	"",	techtouse, 0, 0, 9999)DEF_UPROP_I("type-in-game-max", u_type_in_game_max,	"Maximum number (for all sides summed) units of this type allowed",	typeingamemax, 0, -1, 9999)DEF_UPROP_I("type-per-side-max", u_type_per_side_max,	"Maximum number of this type for each side",	typepersidemax, 0, -1, 9999)DEF_UPROP_I("unit-growth-chance", u_unit_growth,	"",	unitgrowth, 0, 0, 9999)DEF_UPROP_I("unit-takeover-chance", u_unit_takeover,	"",	unittakeover, 0, 0, 9999)DEF_UPROP_I("vision-range", u_vision_range,	"Range out to which a unit can observe the terrain",	visionrange, 0, 1, 9999)DEF_UPROP_I("vision-bend", u_vision_bend,	"",	visionbend, 0, 100, 100)DEF_UPROP_I("vision-at", u_vision_at,	"",	visionat, 0, 1, 9999)DEF_UPROP_I("vision-adjacent", u_vision_adj,	"",	visionone, 0, 1, 9999)DEF_UPROP_I("vision-at-max-range", u_vision_at_max_range,	"",	visionatmaxrange, 0, 1, 9999)DEF_UPROP_I("weather-vision-range", u_weather_vision_range,	"Range out to which a unit can observe the weather",	weathervisionrange, 0, 1, 9999)DEF_UPROP_L("wind-angle-effect", u_wind_angle_effect,	"",	windangleeffect)DEF_UPROP_L("wind-speed-effect", u_wind_speed_effect,	"",	windspeedeffect)DEF_UPROP_I("wrecked-type", u_wrecked_type,	"A unit type to turn into if hp = 0",	wreckedtype, 0, NONUTYPE, MAXUTYPES)/* Used by AIs only. */DEF_UPROP_I("zzz-mrs", u_min_region_size,	"",	min_region_size, 0, 0, 0)DEF_UPROP_I("zzz-b", u_is_base,	"",	is_base, 0, 0, 0)DEF_UPROP_I("zzz-bb", u_is_base_builder,	"",	is_base_builder, 0, 0, 0)DEF_UPROP_I("zzz-transport", u_is_transport,	"",	is_transport, 0, 0, 0)DEF_UPROP_I("zzz-c", u_is_carrier,	"",	is_carrier, 0, 0, 0)DEF_UPROP_I("zzz-cm", u_can_make,	"",	can_make, 0, 0, 0)DEF_UPROP_I("zzz-cc", u_can_capture,	"",	can_capture, 0, 0, 0)DEF_UPROP_I("zzz-uh", u_unit_hexes,	"mor machine player slots",	unithexes, 0, 0, 0)DEF_UPROP_I("zzz-bw", u_bw,	"",	bw, 0, 0, 0)DEF_UPROP_I("zzz-abt", u_ave_build_time,	"",	abt, 0, 0, 0)
+/* Definitions of unit type properties, in alphabetical order. */
+
+DEF_UPROP_I("acp-at-midsummer", u_acp_midsummer,
+	"",
+	acpmidsummer, 0, 0, 9999)
+
+DEF_UPROP_I("acp-at-midwinter", u_acp_midwinter,
+	"",
+	acpmidwinter, 0, 0, 9999)
+
+DEF_UPROP_L("acp-damage-effect", u_acp_damage_effect,
+	"",
+	acpdamageeffect)
+
+DEF_UPROP_I("acp-max", u_acp_max,
+	"How many actions can be saved up.  -1 == u_acp",
+	acpmax, -1, -1, 9999)
+
+DEF_UPROP_I("acp-min", u_acp_min,
+	"This lets unit acp go negative by some amount",
+	acpmin, -9999, 0, 9999)
+
+DEF_UPROP_I("acp-per-turn", u_acp,
+	"The base number of actions that this type can do in one turn",
+	acp, 0, 0, 9999)
+
+DEF_UPROP_I("acp-per-turn-max", u_acp_turn_max,
+	"",
+	acpturnmax, 0, 0, 9999)
+
+DEF_UPROP_I("acp-per-turn-min", u_acp_turn_min,
+	"",
+	acpturnmin, 0, 0, 9999)
+
+DEF_UPROP_I("acp-to-change-side", u_acp_to_change_side,
+	"Action points used up by side change",
+	acptochangeside, 0, 0, 9999)
+
+DEF_UPROP_I("acp-to-detonate", u_acp_to_detonate,
+	"Action points used up by detonating",
+	acptodetonate, 0, 0, 9999)
+
+DEF_UPROP_I("acp-to-disband", u_acp_to_disband,
+	"Action points used up by disbanding",
+	acptodisband, 0, 0, 9999)
+
+DEF_UPROP_I("acp-to-fire", u_acp_to_fire,
+	"Action points used up by firing",
+	acptofire, 0, 0, 9999)
+
+DEF_UPROP_I("acp-to-move", u_acp_to_move,
+	"Action points used up by one move",
+	acptomove, 0, 1, 9999)
+
+DEF_UPROP_I("acp-to-transfer-part", u_acp_to_transfer_part,
+	"Action points used to transfer unit parts",
+	acptotransferpart, 0, 0, 9999)
+
+DEF_UPROP_I("action-priority", u_action_priority,
+	"Relative order in which the unit acts",
+	actionpriority, 0, 0, 9999)
+
+DEF_UPROP_I("already-seen", u_already_seen,
+	"Chance the unit is seen initially if its cell is",
+	alreadyseen, 0, 0, 100)
+
+DEF_UPROP_I("already-seen-independent", u_already_seen_indep,
+	"Chance the independent unit is seen initially if its cell is",
+	alreadyseenindep, 0, 0, 100)
+
+DEF_UPROP_I("assign-number", u_assign_number,
+	"True if unit type should be given a number",
+	assignnumber, 0, 1, 1)
+
+DEF_UPROP_I("attitudes-max", u_attitudes_max,
+	"",
+	attitudesmax, 0, 0, MAXSIDES)
+
+DEF_UPROP_I("available", u_available,
+	"Is type defn actually used",
+	available, 0, 1, 1)
+
+DEF_UPROP_I("can-be-self", u_can_be_self,
+	"True if this type can be a self-unit",
+	canbeself, 0, 0, 1)
+
+DEF_UPROP_I("capacity", u_capacity,
+	"space for occupants shared by all types",
+	capacity, 0, 0, 9999)
+
+DEF_UPROP_S("char", u_uchar,
+	"",
+	uchar, "")
+
+DEF_UPROP_L("cloud-vision-effect", u_cloud_vision_effect,
+	"",
+	cloudvisioneffect)
+
+DEF_UPROP_S("color", u_color,
+	"Color scheme of this unit type",
+	color, "")
+
+DEF_UPROP_I("country-units-max", u_country_units_max,
+	"Max number of units in the entire country",
+	countryunitsmax, -1, -1, 9999)
+
+DEF_UPROP_I("cp", u_cp,
+	"Number of construction points to complete a new unit",
+	cp, 1, 1, 9999)
+
+DEF_UPROP_I("comfort-zone-max", u_comfort_max,
+	"",
+	comfortmax, -9999, 9999, 9999)
+
+DEF_UPROP_I("comfort-zone-min", u_comfort_min,
+	"",
+	comfortmin, -9999, -9999, 9999)
+
+DEF_UPROP_I("cp-per-self-build", u_cp_per_self_build,
+	"Number of construction points per enable self completion",
+	cpperselfbuild, 0, 0, 0)
+
+DEF_UPROP_I("cp-to-self-build", u_cp_to_self_build,
+	"Number of construction points to enable self completion",
+	cptoselfbuild, 0, 0, 0)
+
+DEF_UPROP_I("cxp-max", u_cxp_max,
+	"",
+	cxpmax, 0, 0, 9999)
+
+DEF_UPROP_I("cxp-on-capture", u_cxp_on_capture,
+	"",
+	cxponcapture, 0, 0, 9999)
+
+DEF_UPROP_L("description", u_description,
+	"",
+	description)
+
+DEF_UPROP_I("detonate-on-death", u_detonate_on_death,
+	"Chance that a unit will detonate when about to die",
+	detonateondepth, 0, 0, 100)
+
+DEF_UPROP_I("elevation-at-max-range", u_elev_at_max_range,
+	"Elevation of fire when shooting at maximum range",
+	elevatmaxrange, 0, 0, 9999)
+
+DEF_UPROP_L("extensions", u_extensions,
+	"Hook for extra properties",
+	extensions)
+
+DEF_UPROP_I("free-acp", u_free_acp,
+	"Extra action points available",
+	freeacp, 0, 0, 9999)
+
+DEF_UPROP_I("free-mp", u_free_mp,
+	"Extra moves available",
+	freemp, 0, 1, 9999)
+
+DEF_UPROP_S("generic-name", u_generic_name,
+	"a non-unique name for the type",
+	genericname, "")
+
+DEF_UPROP_S("help", u_help,
+	"Brief description of this type",
+	help, "")
+
+DEF_UPROP_I("hit-falloff-range", u_hit_falloff_range,
+	"",
+	hitfalloffrange, 0, 9999, 9999)
+
+/* (should be replaced by damage effect lists) */
+
+DEF_UPROP_I("hp-at-max-acp-per-turn", u_hp_at_max_acp_turn,
+	"Minimum hp that achieves max acp",
+	hpatmaxacpturn, 0, 0, 0)
+
+DEF_UPROP_I("hp-at-min-acp-per-turn", u_hp_at_min_acp_turn,
+	"Maximum hp that causes min acp in hexes/turn",
+	hpatminacpturn, 0, 0, 9999)
+
+DEF_UPROP_I("hp-at-max-speed", u_hp_at_max_speed,
+	"Minimum hp that achieves max speed",
+	hpatmaxspeed, 0, 0, 0)
+
+DEF_UPROP_I("hp-at-min-speed", u_hp_at_min_speed,
+	"Maximum hp that causes min speed in hexes/turn",
+	hpatminspeed, 0, 0, 9999)
+
+DEF_UPROP_I("hp-max", u_hp_max,
+	"Max number of hit points",
+	hpmax, 0, 1, 9999)
+
+DEF_UPROP_I("hp-per-disband", u_hp_per_disband,
+	"HP lost by one disband action",
+	hpperdisband, 0, 0, 0)
+
+DEF_UPROP_I("hp-per-detonation", u_hp_per_detonation,
+	"HP lost by one detonate action",
+	hpperdetonation, 0, 0, 9999)
+
+DEF_UPROP_I("hp-recovery", u_hp_recovery,
+	"number of hit points restored automatically each turn",
+	hprecovery, 0, 0, 9999)
+
+DEF_UPROP_S("image-name", u_image_name,
+	"ways to specify what a unit looks like",
+	imagename, "")
+
+DEF_UPROP_I("independent-growth-chance", u_indep_growth,
+	"",
+	indepgrowth, 0, 0, 10000)
+
+DEF_UPROP_I("independent-near-start", u_indep_near_start,
+	"Number of independent units within the min radius of the country",
+	indepnearstart, 0, 0, 9999)
+
+DEF_UPROP_I("independent-takeover-chance", u_indep_takeover,
+	"",
+	indeptakeover, 0, 0, 10000)
+
+DEF_UPROP_I("initial-seen-radius", u_seen_radius,
+	"The radius around one's initial units that is seen initially",
+	seenradius, 0, 1, 9999)
+
+DEF_UPROP_I("lockon-chance", u_lockon_chance,
+	"Chance that unit remains seen when no longer covered",
+	lockonchance, 0, 0, 100)
+
+DEF_UPROP_S("long-name", u_long_name,
+	"A completely expanded-out name for the type",
+	longname, "")
+
+DEF_UPROP_I("move-range", u_move_range,
+	"Distance that a unit can jump in one move",
+	moverange, 0, 1, 9999)
+
+DEF_UPROP_I("mp-to-leave-world", u_mp_to_leave_world,
+	"Movement points needed to leave the world entirely",
+	mptoleaveworld, -1, -1, 9999)
+
+DEF_UPROP_S("namer", u_namer,
+	"The namer or naming method for this type",
+	namer, "")
+
+DEF_UPROP_S("name", u_type_name,
+	"",
+	name, "")
+
+DEF_UPROP_S("name-internal", u_internal_name,
+	"",
+	iname, "")
+
+DEF_UPROP_L("notes", u_notes,
+	"",
+	notes)
+
+DEF_UPROP_I("occupant-total-max", u_occ_total_max,
+	"",
+	occtotalmax, -1, -1, 9999)
+
+DEF_UPROP_I("point-value", u_point_value,
+	"An arbitrary number that assigns a value to a unit type",
+	pointvalue, 0, 1, 9999)
+
+DEF_UPROP_I("parts-max", u_parts,
+	"Max number of subparts in one unit",
+	partsmax, 1, 1, 9999)
+
+DEF_UPROP_L("possible-sides", u_possible_sides,
+	"Side(s) (class(es)) to which this type can belong",
+	possiblesides)
+
+DEF_UPROP_I("range", u_range,
+	"Maximum possible distance to fire",
+	range, 0, 1, 9999)
+
+DEF_UPROP_I("range-min", u_range_min,
+	"Minimum possible distance to fire",
+	rangemin, 0, 0, 9999)
+
+DEF_UPROP_I("revolt-chance", u_revolt,
+	"Inclination to revolt",
+	revolt, 0, 0, 10000)
+
+DEF_UPROP_I("see-action", u_see_action,
+	"True if unit might be spotted if it acts",
+	seeaction, 0, 0, 1)
+
+DEF_UPROP_I("see-combat", u_see_combat,
+	"True if unit might be spotted if it fights",
+	seecombat, 0, 0, 1)
+
+DEF_UPROP_I("see-always", u_see_always,
+	"True if unit view always up-to-date",
+	seealways, 0, 0, 1)
+
+DEF_UPROP_I("see-movement", u_see_movement,
+	"True if unit might be spotted if it moves",
+	seemovement, 0, 1, 1)
+
+DEF_UPROP_I("see-occupants", u_see_occupants,
+	"",
+	seeoccs, 0, 0, 1)
+
+DEF_UPROP_I("self-changeable", u_self_changeable,
+	"",
+	selfchangeable, 0, 0, 1)
+
+DEF_UPROP_I("self-resurrects", u_self_resurrects,
+	"",
+	selfresurrects, 0, 0, 1)
+
+DEF_UPROP_S("short-name", u_short_name,
+	"An abbreviated but still informative name string",
+	shortname, "")
+
+DEF_UPROP_I("speed", u_speed,
+	"Normal acp/move ratio",
+	speed, 0, 100, 9999)
+
+DEF_UPROP_I("speed-max", u_speed_max,
+	"Maximum possible acp/move ratio",
+	speedmax, 0, 100, 9999)
+
+DEF_UPROP_L("speed-damage-effect", u_speed_damage_effect,
+	"",
+	speeddamageeffect)
+
+DEF_UPROP_I("speed-min", u_speed_min,
+	"Minimum acp/move ratio",
+	speedmin, 0, 100, 9999)
+
+DEF_UPROP_I("spy-chance", u_spy_chance,
+	"",
+	spychance, 0, 0, 10000)
+
+DEF_UPROP_I("spy-range", u_spy_range,
+	"",
+	spyrange, 0, 0, 9999)
+
+DEF_UPROP_I("stack-order", u_stack_order,
+	"Relative priority of unit within stack, 0 = highest",
+	stackorder, 0, 0, 0)
+
+DEF_UPROP_I("start-with", u_start_with,
+	"Number of units within the initial area",
+	startwith, 0, 0, 9999)
+
+DEF_UPROP_I("storage", u_storage,
+	"space for materials shared by all types",
+	storage, 0, 0, 9999)
+
+DEF_UPROP_I("survival-zone-max", u_survival_max,
+	"",
+	survivalmax, -9999, 9999, 9999)
+
+DEF_UPROP_I("survival-zone-min", u_survival_min,
+	"",
+	survivalmin, -9999, -9999, 9999)
+
+DEF_UPROP_I("tech-from-dissection", u_tech_from_dissection,
+	"",
+	techfromdissection, 0, 0, 9999)
+
+DEF_UPROP_I("tech-leakage", u_tech_leakage,
+	"",
+	techleakage, 0, 0, 9999)
+
+DEF_UPROP_I("tech-max", u_tech_max,
+	"Maximum possible tech for this type",
+	techmax, 0, 0, 9999)
+
+DEF_UPROP_I("tech-per-turn-max", u_tech_per_turn_max,
+	"",
+	techperturnmax, 0, 9999, 9999)
+
+DEF_UPROP_I("tech-to-build", u_tech_to_build,
+	"",
+	techtobuild, 0, 0, 9999)
+
+DEF_UPROP_I("tech-to-dissect", u_tech_to_dissect,
+	"",
+	techtodissect, 0, 0, 9999)
+
+DEF_UPROP_I("tech-to-see", u_tech_to_see,
+	"",
+	techtosee, 0, 0, 9999)
+
+DEF_UPROP_I("tech-to-use", u_tech_to_use,
+	"",
+	techtouse, 0, 0, 9999)
+
+DEF_UPROP_I("type-in-game-max", u_type_in_game_max,
+	"Maximum number (for all sides summed) units of this type allowed",
+	typeingamemax, 0, -1, 9999)
+
+DEF_UPROP_I("type-per-side-max", u_type_per_side_max,
+	"Maximum number of this type for each side",
+	typepersidemax, 0, -1, 9999)
+
+DEF_UPROP_I("unit-growth-chance", u_unit_growth,
+	"",
+	unitgrowth, 0, 0, 9999)
+
+DEF_UPROP_I("unit-takeover-chance", u_unit_takeover,
+	"",
+	unittakeover, 0, 0, 9999)
+
+DEF_UPROP_I("vision-range", u_vision_range,
+	"Range out to which a unit can observe the terrain",
+	visionrange, 0, 1, 9999)
+
+DEF_UPROP_I("vision-bend", u_vision_bend,
+	"",
+	visionbend, 0, 100, 100)
+
+DEF_UPROP_I("vision-at", u_vision_at,
+	"",
+	visionat, 0, 1, 9999)
+
+DEF_UPROP_I("vision-adjacent", u_vision_adj,
+	"",
+	visionone, 0, 1, 9999)
+
+DEF_UPROP_I("vision-at-max-range", u_vision_at_max_range,
+	"",
+	visionatmaxrange, 0, 1, 9999)
+
+DEF_UPROP_I("weather-vision-range", u_weather_vision_range,
+	"Range out to which a unit can observe the weather",
+	weathervisionrange, 0, 1, 9999)
+
+DEF_UPROP_L("wind-angle-effect", u_wind_angle_effect,
+	"",
+	windangleeffect)
+
+DEF_UPROP_L("wind-speed-effect", u_wind_speed_effect,
+	"",
+	windspeedeffect)
+
+DEF_UPROP_I("wrecked-type", u_wrecked_type,
+	"A unit type to turn into if hp = 0",
+	wreckedtype, 0, NONUTYPE, MAXUTYPES)
+
+/* Used by AIs only. */
+
+DEF_UPROP_I("zzz-mrs", u_min_region_size,
+	"",
+	min_region_size, 0, 0, 0)
+
+DEF_UPROP_I("zzz-b", u_is_base,
+	"",
+	is_base, 0, 0, 0)
+
+DEF_UPROP_I("zzz-bb", u_is_base_builder,
+	"",
+	is_base_builder, 0, 0, 0)
+
+DEF_UPROP_I("zzz-transport", u_is_transport,
+	"",
+	is_transport, 0, 0, 0)
+
+DEF_UPROP_I("zzz-c", u_is_carrier,
+	"",
+	is_carrier, 0, 0, 0)
+
+DEF_UPROP_I("zzz-cm", u_can_make,
+	"",
+	can_make, 0, 0, 0)
+
+DEF_UPROP_I("zzz-cc", u_can_capture,
+	"",
+	can_capture, 0, 0, 0)
+
+DEF_UPROP_I("zzz-uh", u_unit_hexes,
+	"mor machine player slots",
+	unithexes, 0, 0, 0)
+
+DEF_UPROP_I("zzz-bw", u_bw,
+	"",
+	bw, 0, 0, 0)
+
+DEF_UPROP_I("zzz-abt", u_ave_build_time,
+	"",
+	abt, 0, 0, 0)

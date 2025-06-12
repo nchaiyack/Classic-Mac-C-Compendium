@@ -1,1 +1,49 @@
-"Connection Tool Skeleton in C" for the Communications Toolbox Copyright © 1994 Peter J. CreathAll Rights Reserved Worldwide=============================================================================Since the only real CTB reference has its examples written in Pascal (and since Ihaven't been able to find any on-disk source code snippets for CTB period), I wentthrough the steps of how to create a CTB Connection Tool.Unfortunately, I don't have time to fully explain all the intricate details of creatinga CTB tool, and such an effort would be futile, considering that the CTB will shortlybe superceded by the OpenTransport Interface.Again, this isn't a replacement for Inside the Macintosh¨ Communications Toolbox,published by Addison Wesley.  There are still all the CTB function calls you need toknow as well as small details of wrapping up the final package.Hopefully this source code will help you on your way and will be of some use.  Itcontains all the necessary source files and projects to generate a CTB connectiontool (which is made up of 5 code resources and 1 bundle resource).  I've documentedthe source code reasonably well, explaining what needs to be done in a generic sensein response to the various messages passed to your tool.  I've created a ResEdittemplate to aid you in creating the bundle resource.There's still a lot of technical junk you'll need to look up, but this should save youa few days of work (including translating from Pascal, removing annoying Pascalidiomatic peculiarities, documenting, etc.)NOTE: This will NOT compile to a fully functional connection tool.  There are manysmall details (implementation-specific) which have not been actually written.They are instead written as inline comments (ie: "Open physical connection layer").However, all the generic parts are there.  Just customize and go...This source code is freely distributable.  I only ask that you send me a finishedcopy (fully registered, free of charge) of anything you create with it.  And if youcreate a whole telecom program, using this for some of the tools in it, I'dappreciate your extending that to the whole shebang.You may not charge for the source code.  You may not restrict anyone's use of thiscode in any way (including, but not limited to, copyrighting derivative works).Other than that, enjoy it, and if you have any suggestions or (God forbid!) bugreports, feel free to e-mail me.Peter J. CreathFebruary 19, 1994peterc@gnu.ai.mit.edu (year-round)pjcreath@phoenix.princeton.edu (school year)
+"Connection Tool Skeleton in C" for the Communications Toolbox
+ 
+Copyright © 1994 Peter J. Creath
+All Rights Reserved Worldwide
+=============================================================================
+
+Since the only real CTB reference has its examples written in Pascal (and since I
+haven't been able to find any on-disk source code snippets for CTB period), I went
+through the steps of how to create a CTB Connection Tool.
+
+Unfortunately, I don't have time to fully explain all the intricate details of creating
+a CTB tool, and such an effort would be futile, considering that the CTB will shortly
+be superceded by the OpenTransport Interface.
+
+Again, this isn't a replacement for Inside the Macintosh¨ Communications Toolbox,
+published by Addison Wesley.  There are still all the CTB function calls you need to
+know as well as small details of wrapping up the final package.
+
+Hopefully this source code will help you on your way and will be of some use.  It
+contains all the necessary source files and projects to generate a CTB connection
+tool (which is made up of 5 code resources and 1 bundle resource).  I've documented
+the source code reasonably well, explaining what needs to be done in a generic sense
+in response to the various messages passed to your tool.  I've created a ResEdit
+template to aid you in creating the bundle resource.
+
+There's still a lot of technical junk you'll need to look up, but this should save you
+a few days of work (including translating from Pascal, removing annoying Pascal
+idiomatic peculiarities, documenting, etc.)
+
+NOTE: This will NOT compile to a fully functional connection tool.  There are many
+small details (implementation-specific) which have not been actually written.
+They are instead written as inline comments (ie: "Open physical connection layer").
+However, all the generic parts are there.  Just customize and go...
+
+This source code is freely distributable.  I only ask that you send me a finished
+copy (fully registered, free of charge) of anything you create with it.  And if you
+create a whole telecom program, using this for some of the tools in it, I'd
+appreciate your extending that to the whole shebang.
+
+You may not charge for the source code.  You may not restrict anyone's use of this
+code in any way (including, but not limited to, copyrighting derivative works).
+
+Other than that, enjoy it, and if you have any suggestions or (God forbid!) bug
+reports, feel free to e-mail me.
+
+Peter J. Creath
+February 19, 1994
+peterc@gnu.ai.mit.edu (year-round)
+pjcreath@phoenix.princeton.edu (school year)

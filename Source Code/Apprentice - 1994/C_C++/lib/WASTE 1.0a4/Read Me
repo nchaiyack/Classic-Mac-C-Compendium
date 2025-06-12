@@ -1,1 +1,29 @@
-About WASTEWASTE is a text editing library for Macintosh programmers, much like TextEdit (the text engine built in the Macintosh system software), but without the 32K barrier.This document is provided mainly to give you an opportunity to play with the WASTE Demo application; the real documentation (in Microsoft Word format) is in a separate file.Send comments and suggestions to the author at the following address:Marco PiovanelliMail: 26, via del Sebino — 25126 Brescia — ItalyInternet: piovanel@dsi.unimi.itPS: I read my Internet mail only once or twice a week, so don’t expect prompt replies.DistributionAll future updates to the WASTE package will be available for ftp access from:ftp://ghost.dsi.unimi.it/pub2/papers/piovanel/Known problems• The offscreen drawing feature may not work correctly on 68000 machines.The following “features” of WASTE may be considered bugs, but they make sense to me when viewed in the general scheme, so I’m not going to change them.• When text is centered or right-aligned, triple-clicking a line also highlights a portion of the following line, up to its first character.  I think this can be useful to stress the fact that the selection range includes every character up to the first character of the following line, including the carriage return, when present.• When a non-Roman script is enabled, WASTE assumes that words are confined on a single line, in order to speed up the search for script run boundaries.
+
+About WASTE
+
+WASTE is a text editing library for Macintosh programmers, much like TextEdit (the text engine built in the Macintosh system software), but without the 32K barrier.
+This document is provided mainly to give you an opportunity to play with the WASTE Demo application; the real documentation (in Microsoft Word format) is in a separate file.
+Send comments and suggestions to the author at the following address:
+
+Marco Piovanelli
+Mail: 26, via del Sebino — 25126 Brescia — Italy
+Internet: piovanel@dsi.unimi.it
+
+PS: I read my Internet mail only once or twice a week, so don’t expect prompt replies.
+
+
+Distribution
+
+All future updates to the WASTE package will be available for ftp access from:
+
+ftp://ghost.dsi.unimi.it/pub2/papers/piovanel/
+
+
+Known problems
+
+• The offscreen drawing feature may not work correctly on 68000 machines.
+
+The following “features” of WASTE may be considered bugs, but they make sense to me when viewed in the general scheme, so I’m not going to change them.
+
+• When text is centered or right-aligned, triple-clicking a line also highlights a portion of the following line, up to its first character.  I think this can be useful to stress the fact that the selection range includes every character up to the first character of the following line, including the carriage return, when present.
+• When a non-Roman script is enabled, WASTE assumes that words are confined on a single line, in order to speed up the search for script run boundaries.

@@ -1,1 +1,35 @@
-/* Definitions of all the task types. */DEF_TASK("none", NO_TASK, "", do_none_task)/* In alphabetical order... */DEF_TASK("approach", APPROACH_TASK, "Un", do_approach_task)DEF_TASK("build", BUILD_TASK, "uUnn", do_build_task)DEF_TASK("research", RESEARCH_TASK, "un", do_research_task)DEF_TASK("capture", CAPTURE_UNIT_TASK, "uS", do_capture_unit_task)DEF_TASK("do-action", DO_ACTION_TASK, "na****", do_action_task)DEF_TASK("hit-position", HIT_POSITION_TASK, "xyz", do_hit_position_task)DEF_TASK("hit-unit", HIT_UNIT_TASK, "US", do_hit_unit_task)DEF_TASK("move-dir", MOVEDIR_TASK, "dn", do_movedir_task)DEF_TASK("move-to", MOVETO_TASK, "xyzn", do_moveto_task)DEF_TASK("occupy", OCCUPY_TASK, "U", do_occupy_task)DEF_TASK("pickup", PICKUP_TASK, "U", do_pickup_task)DEF_TASK("repair", REPAIR_TASK, "U", do_repair_task)DEF_TASK("resupply", RESUPPLY_TASK, "mU", do_resupply_task)DEF_TASK("sentry", SENTRY_TASK, "n", do_sentry_task)DEF_TASK("ask-side", ASK_SIDE_TASK, "n", do_ask_side_task)
+/* Definitions of all the task types. */
+
+DEF_TASK("none", NO_TASK, "", do_none_task)
+
+/* In alphabetical order... */
+
+DEF_TASK("approach", APPROACH_TASK, "Un", do_approach_task)
+
+DEF_TASK("build", BUILD_TASK, "uUnn", do_build_task)
+
+DEF_TASK("research", RESEARCH_TASK, "un", do_research_task)
+
+DEF_TASK("capture", CAPTURE_UNIT_TASK, "uS", do_capture_unit_task)
+
+DEF_TASK("do-action", DO_ACTION_TASK, "na****", do_action_task)
+
+DEF_TASK("hit-position", HIT_POSITION_TASK, "xyz", do_hit_position_task)
+
+DEF_TASK("hit-unit", HIT_UNIT_TASK, "US", do_hit_unit_task)
+
+DEF_TASK("move-dir", MOVEDIR_TASK, "dn", do_movedir_task)
+
+DEF_TASK("move-to", MOVETO_TASK, "xyzn", do_moveto_task)
+
+DEF_TASK("occupy", OCCUPY_TASK, "U", do_occupy_task)
+
+DEF_TASK("pickup", PICKUP_TASK, "U", do_pickup_task)
+
+DEF_TASK("repair", REPAIR_TASK, "U", do_repair_task)
+
+DEF_TASK("resupply", RESUPPLY_TASK, "mU", do_resupply_task)
+
+DEF_TASK("sentry", SENTRY_TASK, "n", do_sentry_task)
+
+DEF_TASK("ask-side", ASK_SIDE_TASK, "n", do_ask_side_task)

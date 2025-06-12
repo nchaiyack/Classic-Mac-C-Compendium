@@ -1,1 +1,8 @@
-set text '// Copyright © 1992 Peter Speck, speck@dat.ruc.dk. All rights reserved.'¶nfor f in `{nuntius}tools:MyFiles`	echo {f} ·· {worksheet}	echo -n "{{text}}" > {tmp}	cat {f} >> {tmp}	mv -y {tmp} {f}end
+set text '// Copyright © 1992 Peter Speck, speck@dat.ruc.dk. All rights reserved.'¶n
+
+for f in `{nuntius}tools:MyFiles`
+	echo {f} ·· {worksheet}
+	echo -n "{{text}}" > {tmp}
+	cat {f} >> {tmp}
+	mv -y {tmp} {f}
+end

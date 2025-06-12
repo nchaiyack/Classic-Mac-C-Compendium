@@ -1,1 +1,22 @@
-UIFlow was created using MPW 3.2 & MacApp 2.0.  The code is written in C++ & Fortran.The fortran compiler used for this project was Language Systems 3.0.The version of MPW C++ used was 3.2d17.It requires the following libraries:	VSet 2.0	HDF3.1 release 4	and a Solver written by Kevin Cope UIFlowvs.f	To Compile:	cd 'Garfield:Projects:Kevin:'	fortran uiflowvs.f -MC68881 -opt=1 -bkg=0	cd 'Garfield:Projects:CFDFront:'	MABuild UIFlow -Link -fThe Directory structure is:Projects  CDDFront  Kevin  HDF3.1r4  VSet2.0  
+UIFlow was created using MPW 3.2 & MacApp 2.0.  The code is written in C++ & Fortran.
+The fortran compiler used for this project was Language Systems 3.0.
+The version of MPW C++ used was 3.2d17.
+
+It requires the following libraries:
+	VSet 2.0
+	HDF3.1 release 4
+	and a Solver written by Kevin Cope UIFlowvs.f
+	
+To Compile:
+	cd 'Garfield:Projects:Kevin:'
+	fortran uiflowvs.f -MC68881 -opt=1 -bkg=0
+	cd 'Garfield:Projects:CFDFront:'
+	MABuild UIFlow -Link -f
+
+The Directory structure is:
+Projects
+  CDDFront
+  Kevin
+  HDF3.1r4
+  VSet2.0
+  

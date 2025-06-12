@@ -1,1 +1,11 @@
-set exit 1MakeAutoMake dnr.c Å.cp > {tmp}set f Nuntius.MAMaketarget {f}find ¥ {f}clear /¥¶#MakeAutoMakeDep¶+ ¶¶¶n/Æ:Æ/¥¶#MakeAutoMakeDep¶- ¶¶°/ {f}cat {tmp} >> {f}.¤find ¥ {f}clear /¥¶#MakeAutoMakeObj¶+ ¶¶¶n/Æ:Æ/¥¶#MakeAutoMakeObj¶- ¶¶°/ {f}f dnr.c UThread.a Å.cp | see '/Å/ print "¶t¶t¶"¶{ObjApp¶}" . ".o¶" ¶¶"' > {f}.¤close -y {f}
+set exit 1
+MakeAutoMake dnr.c Å.cp > {tmp}
+set f Nuntius.MAMake
+target {f}
+find ¥ {f}
+clear /¥¶#MakeAutoMakeDep¶+ ¶¶¶n/Æ:Æ/¥¶#MakeAutoMakeDep¶- ¶¶°/ {f}
+cat {tmp} >> {f}.¤
+find ¥ {f}
+clear /¥¶#MakeAutoMakeObj¶+ ¶¶¶n/Æ:Æ/¥¶#MakeAutoMakeObj¶- ¶¶°/ {f}
+f dnr.c UThread.a Å.cp | see '/Å/ print "¶t¶t¶"¶{ObjApp¶}" . ".o¶" ¶¶"' > {f}.¤
+close -y {f}

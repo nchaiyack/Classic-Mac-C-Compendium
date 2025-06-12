@@ -1,1 +1,66 @@
-(* Top-Down :	Pascal version of the triangle top-down fill algorithm *)(*					just provided to test and demonstrate the algorithm *)(*					calling convention : 	b is highest point, a and d have same 	*)(*											vertical component 						*)procedure TPTopDown (a, b, d: point);	var		deltaxleft, deltaxright: fixed;		dx, dy: integer;		ys, ye: integer;		xs, xe: fixed;begin	dy := a.v - b.v;	dx := a.h - b.h;	deltaXleft := FixRatio(dx, dy); (* ATTN: dy may be zero ! *)	dx := d.h - b.h;	deltaXright := FixRatio(dx, dy);(* Not implemented : plot b itself *)	xs := FixRatio(b.h, 1);	ys := b.v;	xe := FixRatio(b.h, 1);	ye := b.v; (* now both point to the start point *)	while ye < a.v do		begin (* go down one line and plot from s to e horizontal line *)			ys := ys + 1;			ye := ye + 1;			xs := xs + deltaXleft;			xe := xe + deltaXright;			MoveTo(HiWord(xs), ys);			LineTo(HiWord(xe), ye);		end;end;procedure TPBottomUp (a, d, c: point);	var		deltaxleft, deltaxright: fixed;		dx, dy: integer;		ys, ye: integer;		xs, xe: fixed;begin	dy := a.v - c.v;	dx := a.h - c.h;	deltaXleft := FixRatio(dx, dy); (* ATTN: dy may be zero ! *)	dx := d.h - c.h;	deltaXright := FixRatio(dx, dy);(* Not implemented : plot b itself *)	xs := FixRatio(c.h, 1);	ys := c.v;	xe := FixRatio(c.h, 1);	ye := c.v; (* now both point to the start point *)	while ye > a.v do		begin (* go down one line and plot from s to e horizontal line *)			ys := ys - 1;			ye := ye - 1;			xs := xs - deltaXleft;			xe := xe - deltaXright;			MoveTo(HiWord(xs), ys);			LineTo(HiWord(xe), ye);		end;end;
+
+(* Top-Down :	Pascal version of the triangle top-down fill algorithm *)
+(*					just provided to test and demonstrate the algorithm *)
+(*					calling convention : 	b is highest point, a and d have same 	*)
+(*											vertical component 						*)
+
+procedure TPTopDown (a, b, d: point);
+	var
+		deltaxleft, deltaxright: fixed;
+		dx, dy: integer;
+		ys, ye: integer;
+		xs, xe: fixed;
+
+begin
+	dy := a.v - b.v;
+	dx := a.h - b.h;
+	deltaXleft := FixRatio(dx, dy); (* ATTN: dy may be zero ! *)
+	dx := d.h - b.h;
+	deltaXright := FixRatio(dx, dy);
+(* Not implemented : plot b itself *)
+	xs := FixRatio(b.h, 1);
+	ys := b.v;
+	xe := FixRatio(b.h, 1);
+	ye := b.v; (* now both point to the start point *)
+	while ye < a.v do
+		begin (* go down one line and plot from s to e horizontal line *)
+			ys := ys + 1;
+			ye := ye + 1;
+			xs := xs + deltaXleft;
+			xe := xe + deltaXright;
+			MoveTo(HiWord(xs), ys);
+			LineTo(HiWord(xe), ye);
+		end;
+end;
+
+
+procedure TPBottomUp (a, d, c: point);
+
+	var
+		deltaxleft, deltaxright: fixed;
+		dx, dy: integer;
+		ys, ye: integer;
+		xs, xe: fixed;
+
+
+begin
+	dy := a.v - c.v;
+	dx := a.h - c.h;
+	deltaXleft := FixRatio(dx, dy); (* ATTN: dy may be zero ! *)
+	dx := d.h - c.h;
+	deltaXright := FixRatio(dx, dy);
+(* Not implemented : plot b itself *)
+	xs := FixRatio(c.h, 1);
+	ys := c.v;
+	xe := FixRatio(c.h, 1);
+	ye := c.v; (* now both point to the start point *)
+	while ye > a.v do
+		begin (* go down one line and plot from s to e horizontal line *)
+			ys := ys - 1;
+			ye := ye - 1;
+			xs := xs - deltaXleft;
+			xe := xe - deltaXright;
+			MoveTo(HiWord(xs), ys);
+			LineTo(HiWord(xe), ye);
+		end;
+end;

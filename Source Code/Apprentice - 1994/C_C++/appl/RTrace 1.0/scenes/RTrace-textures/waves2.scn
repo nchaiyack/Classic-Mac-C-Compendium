@@ -1,1 +1,6 @@
-eye  1.6  1.6  1.6 light directional -1 -1 1 whitesurface matte Cyan waves 50 0 0.7		 % frequency between 5 and 50 is good; try 10sphere 0 0 0 1           % sphere object
+eye  1.6  1.6  1.6 
+light directional -1 -1 1 white
+surface matte Cyan 
+waves 50 0 0.7		 % frequency between 5 and 50 is good; try 10
+sphere 0 0 0 1           % sphere object
+

@@ -1,1 +1,102 @@
-#!/bin/sh# makemakefile - create a MakefilePROGNAME=`basename $0`USAGE="usage: $PROGNAME topdir os arch port srcdir builddir"# Check and get arguments#case $# in6)	;;*)  echo "$USAGE" 1>&2    echo '  <src> may be relative to <top>' 1>&2    echo '  <build> may be relative to <top>/Build/<arch>/<port>' 1>&2    exit 2    ;;esacTOPDIR=$1; shiftOS=$1; shiftARCH=$1; shiftPORT=$1; shiftSRCDIR=$1; shiftBLDDIR=$1; shift# Set derived pathnamesCONFDIR=$TOPDIR/Confcase $SRCDIR in/*)	;;*)	SRCDIR=$TOPDIR/$SRCDIR;;esaccase $BLDDIR in/*)	;;*)	BLDDIR=$TOPDIR/Build/$ARCH/$PORT/$BLDDIR;;esacOSPROTO=$CONFDIR/proto.os.$OSARCHPROTO=$CONFDIR/proto.arch.$ARCHPORTPROTO=$CONFDIR/proto.port.$PORTCONFPROTO=$CONFDIR/proto.confSRCPROTO=$SRCDIR/Make.proto# Make sure the source prototype exists, else there's no use in proceeding.# This test is made to avoid creating junk build directories.# (Missing other files are detected by the cat command.)if test ! -f $SRCPROTOthen	echo "$PROGNAME: can't find Makefile prototype $SRCPROTO" 1>&2	exit 1fi# Make sure the build directory exists, create it if necessary# (only one level deep though!)#if test -d $BLDDIRthen	:else	echo "$PROGNAME: creating new build directory $BLDDIR" 1>&2	mkdir $BLDDIR ||	{ echo "$PROGNAME: can't create build directory $BLDDIR" 1>&2; exit 1;}fi# Now begin doing the real work#PRELUDE="$OSPROTO $ARCHPROTO $PORTPROTO $CONFPROTO $SRCPROTO"BOOTMAKE=$BLDDIR/Mf.bootecho "$PROGNAME: creating bootstrap Makefile ..." 1>&2{ echo "TOP=$TOPDIR" &&  cat $PRELUDE;} >$BOOTMAKE ||{ echo "$PROGNAME: can't create bootstrap Makefile $BOOTMAKE" 1>&2; exit 1; }TEMPMAKE=$BLDDIR/Mf.tempecho "$PROGNAME: creating temp Makefile ..." 1>&2{ echo "TOP=$TOPDIR" &&  cat $PRELUDE &&  make -f $BOOTMAKE _bootstrap; } >$TEMPMAKE ||{ echo "$PROGNAME: can't create temp Makefile $TEMPMAKE" 1>&2; exit 1; }MAKEFILE=$BLDDIR/Makefileecho "$PROGNAME: moving temp Makefile to Makefile ..." 1>&2if test -f $MAKEFILEthen	BACKUP=$MAKEFILE.bak	echo "$PROGNAME: NB: moving previous Makefile to backup" 1>&2	rm -f $BACKUP	mv $MAKEFILE $BACKUPfimv $TEMPMAKE $MAKEFILE &&echo "$PROGNAME: done." 1>&2
+#!/bin/sh
+
+# makemakefile - create a Makefile
+
+PROGNAME=`basename $0`
+USAGE="usage: $PROGNAME topdir os arch port srcdir builddir"
+
+# Check and get arguments
+#
+case $# in
+6)	;;
+*)  echo "$USAGE" 1>&2
+    echo '  <src> may be relative to <top>' 1>&2
+    echo '  <build> may be relative to <top>/Build/<arch>/<port>' 1>&2
+    exit 2
+    ;;
+esac
+
+TOPDIR=$1; shift
+OS=$1; shift
+ARCH=$1; shift
+PORT=$1; shift
+SRCDIR=$1; shift
+BLDDIR=$1; shift
+
+
+# Set derived pathnames
+
+CONFDIR=$TOPDIR/Conf
+
+case $SRCDIR in
+/*)	;;
+*)	SRCDIR=$TOPDIR/$SRCDIR;;
+esac
+
+case $BLDDIR in
+/*)	;;
+*)	BLDDIR=$TOPDIR/Build/$ARCH/$PORT/$BLDDIR;;
+esac
+
+OSPROTO=$CONFDIR/proto.os.$OS
+ARCHPROTO=$CONFDIR/proto.arch.$ARCH
+PORTPROTO=$CONFDIR/proto.port.$PORT
+CONFPROTO=$CONFDIR/proto.conf
+SRCPROTO=$SRCDIR/Make.proto
+
+# Make sure the source prototype exists, else there's no use in proceeding.
+# This test is made to avoid creating junk build directories.
+# (Missing other files are detected by the cat command.)
+
+if test ! -f $SRCPROTO
+then
+	echo "$PROGNAME: can't find Makefile prototype $SRCPROTO" 1>&2
+	exit 1
+fi
+
+# Make sure the build directory exists, create it if necessary
+# (only one level deep though!)
+#
+if test -d $BLDDIR
+then
+	:
+else
+	echo "$PROGNAME: creating new build directory $BLDDIR" 1>&2
+	mkdir $BLDDIR ||
+	{ echo "$PROGNAME: can't create build directory $BLDDIR" 1>&2; exit 1;}
+fi
+
+
+# Now begin doing the real work
+#
+PRELUDE="$OSPROTO $ARCHPROTO $PORTPROTO $CONFPROTO $SRCPROTO"
+
+BOOTMAKE=$BLDDIR/Mf.boot
+echo "$PROGNAME: creating bootstrap Makefile ..." 1>&2
+
+{ echo "TOP=$TOPDIR" &&
+  cat $PRELUDE;
+} >$BOOTMAKE ||
+{ echo "$PROGNAME: can't create bootstrap Makefile $BOOTMAKE" 1>&2; exit 1; }
+
+TEMPMAKE=$BLDDIR/Mf.temp
+echo "$PROGNAME: creating temp Makefile ..." 1>&2
+
+{ echo "TOP=$TOPDIR" &&
+  cat $PRELUDE &&
+  make -f $BOOTMAKE _bootstrap; } >$TEMPMAKE ||
+{ echo "$PROGNAME: can't create temp Makefile $TEMPMAKE" 1>&2; exit 1; }
+
+MAKEFILE=$BLDDIR/Makefile
+echo "$PROGNAME: moving temp Makefile to Makefile ..." 1>&2
+
+if test -f $MAKEFILE
+then
+	BACKUP=$MAKEFILE.bak
+	echo "$PROGNAME: NB: moving previous Makefile to backup" 1>&2
+	rm -f $BACKUP
+	mv $MAKEFILE $BACKUP
+fi
+
+mv $TEMPMAKE $MAKEFILE &&
+echo "$PROGNAME: done." 1>&2

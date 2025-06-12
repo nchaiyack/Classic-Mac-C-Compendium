@@ -1,1 +1,6 @@
-eye 1.6  1.6  1.6light directional -1 -1 1 whitebozo 1.0 earthtones.map scale 2.0sphere 0 0 0 1           % sphere object
+eye 1.6  1.6  1.6
+light directional -1 -1 1 white
+bozo 1.0 earthtones.map scale 2.0
+sphere 0 0 0 1           % sphere object
+
+

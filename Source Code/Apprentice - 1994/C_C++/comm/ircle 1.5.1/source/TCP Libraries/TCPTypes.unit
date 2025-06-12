@@ -1,1 +1,444 @@
-unit TCPTypes;{ From Peter's PNL Libraries }{ Copyright 1992 Peter N Lewis }{ This source may be used for any non-commercial purposes as long as I get a mention }{ in the About box and Docs of any derivative program.  It may not be used in any commercial }{ application without my permission }interface{ MacTCP return Codes in the range -23000 through -23049 }	const		inProgress = 1;							{ I/O in progress }		ipBadLapErr = -23000;					{ bad network configuration }		ipBadCnfgErr = -23001;				{ bad IP configuration error }		ipNoCnfgErr = -23002;					{ missing IP or LAP configuration error }		ipLoadErr = -23003;					{ error in MacTCP load }		ipBadAddr = -23004;					{ error in getting address }		connectionClosing = -23005;			{ connection is closing }		invalidLength = -23006;		connectionExists = -23007;			{ request conflicts with existing connection }		connectionDoesntExist = -23008;		{ connection does not exist }		insufficientResources = -23009;		{ insufficient resources to perform request }		invalidStreamPtr = -23010;		streamAlreadyOpen = -23011;		connectionTerminated = -23012;		invalidBufPtr = -23013;		invalidRDS = -23014;		invalidWDS = -23014;		openFailed = -23015;		commandTimeout = -23016;		duplicateSocket = -23017;{ Error codes from internal IP functions }		ipDontFragErr = -23032;				{ Packet too large to send w/o fragmenting }		ipDestDeadErr = -23033;				{ destination not responding }		ipNoFragMemErr = -23036;			{ no memory to send fragmented pkt }		ipRouteErr = -23037;					{ can't route packet off-net }		nameSyntaxErr = -23041;		cacheFault = -23042;		noResultProc = -23043;		noNameServer = -23044;		authNameErr = -23045;		noAnsErr = -23046;		dnrErr = -23047;		outOfMemory = -23048;	const		CTRUE = $FF;		CFALSE = $00;	type		CBOOLEAN = signedByte;		ip_addr = longInt;		tcp_port = integer;		udp_port = integer;		StreamPtr = ptr;	type		wdsType = record			{ Write block for TCP driver. }				size: integer;				{ Number of bytes. }				buffer: Ptr;				{ Pointer to bytes. }				term: integer;				{ Zero for end of blocks. }			end;		wdsPtr = ^wdsType;		hostInfo = record				rtnCode: longInt;				rtnHostName: str255;				addrs: array[1..4] of longInt;			end;		hostInfoPtr = ^hostInfo;	const { csCodes for the TCP driver: }		TCPcsGetMyIP = 15;		ipctlLAPStats = 19;		TCPcsCreate = 30;		TCPcsPassiveOpen = 31;		TCPcsActiveOpen = 32;{    TCPcsActOpenWithData = 33;}		TCPcsSend = 34;		TCPcsNoCopyRcv = 35;		TCPcsRcvBfrReturn = 36;		TCPcsRcv = 37;		TCPcsClose = 38;		TCPcsAbort = 39;		TCPcsStatus = 40;		TCPcsExtendedStat = 41;		TCPcsRelease = 42;		TCPcsGlobalInfo = 43;		UDPcsCreate = 20;		UDPcsRead = 21;		UDPcsBfrReturn = 22;		UDPcsWrite = 23;		UDPcsRelease = 24;		UDPcsMaxMTUSize = 25;		UDPcsStatus = 26;		UDPcsMultiCreate = 27;		UDPcsMultiSend = 28;		UDPcsMultiRead = 29;		UDPcsCtlMax = 29;	type		TCPEventCode = integer;	const		TEC_Closing = 1;		TEC_ULPTimeout = 2;		TEC_Terminate = 3;		TEC_DataArrival = 4;		TEC_Urgent = 5;		TEC_ICMPReceived = 6;		TEC_last = 32767;	type		UDPEventCode = integer;	const		UDPDataArrival = 1;		UDPICMPReceived = 2;		lastUDPEvent = 32767;	type		TCPTerminateReason = integer;	const {TCPTerminateReasons: }		TTR_RemoteAbort = 2;		TTR_NetworkFailure = 3;		TTR_SecPrecMismatch = 4;		TTR_ULPTimeoutTerminate = 5;		TTR_ULPAbort = 6;		TTR_ULPClose = 7;		TTR_ServiceError = 8;		TTR_last = 32767;	type		TCPNotifyProc = procPtr;{ procedure TCPNotifyProc(tcpStream:StreamPtr; event:TCPEventCode; userDataPtr:ptr; }{                                   terminReason:TCPTerminateReason; icmpMsg:ICMPReportPtr); }	type		TCPIOCompletionProc = procPtr;{ C procedure TCPIOCompletionProc(iopb:TCPControlBlockPtr); - WHY IS THIS A C PROC???? }	type		UDPNotifyProc = procPtr;{ procedure UDPProc(udpStream:StreamPtr ; eventCode:integer;userDataPtr:ptr; icmpMsg:ICMPReportPtr) }	type		UDPIOCompletionProc = procPtr;{procedure UDPIOCompletionProc(iopb:UDPiopb Ptr) }	type		UDPCreatePB = record { for create and release calls }				rcvBuff: Ptr;				rcvBuffLen: longInt;				notifyProc: UDPNotifyProc;				localport: integer;				userDataPtr: ptr;				endingPort: udp_port;			end;	type		UDPSendPB = record				reserved: integer;				remoteIP: longInt;				remotePort: udp_port;				wds: wdsPtr;				checkSum: signedByte;				sendLength: integer;				userDataPtr: ptr;				localPort: udp_port;			end;	type		UDPReceivePB = record				timeOut: integer;				remoteIP: longInt;				remotePort: integer;				rcvBuff: ptr;				rcvBuffLen: integer;				secondTimeStamp: integer;				userDataPtr: ptr;				destHost: ip_addr;				destPort: udp_port;			end;	type		UDPMTUPB = record				mtuSize: integer;				remoteIP: ip_addr;				userDataPtr: ptr;			end;	type		UDPControlBlock = record				fill12: array[1..6] of integer;				ioCompletion: UDPIOCompletionProc;				ioResult: integer;				ioNamePtr: stringPtr;				ioVRefNum: integer;				ioCRefNum: integer;				csCode: integer;				udpStream: streamPtr;				case integer of					UDPcsCreate: (							create: UDPCreatePB					);					UDPcsWrite: (							send: UDPSendPB					);					UDPcsRead: (							receive: UDPReceivePB					);					UDPcsBfrReturn: (							return: UDPReceivePB					);					UDPcsMaxMTUSize: (							mtu: UDPMTUPB					);			end;	const { Validity Flags }		timeOutValue = $80;		timeOutAction = $40;		typeOfService = $20;		precedence = $10;	const { TOSFlags }		lowDelay = $01;		throughPut = $02;		reliability = $04;	type		TCPCreatePB = packed record				rcvBuff: ptr;				rcvBuffLen: longInt;				notifyProc: TCPNotifyProc;				userDataPtr: ptr;			end;		TCPOpenPB = packed record				ulpTimeoutValue: byte;				ulpTimeoutAction: byte;				validityFalgs: byte;				commandTimeoutValue: byte;				remoteHost: ip_addr;				remotePort: tcp_port;				localHost: ip_addr;				localPort: tcp_port;				tosFlags: byte;				precedence: byte;				dontFrag: CBOOLEAN;				timeToLive: byte;				security: byte;				optionCnt: byte;				options: array[0..39] of byte;				userDataPtr: ptr;			end;		TCPSendPB = packed record				ulpTimeoutValue: byte;				ulpTimeoutAction: byte;				validityFalgs: byte;				pushFalg: byte;				urgentFlag: CBOOLEAN;				wds: wdsptr;				sendFree: longInt;				sendLength: integer;				userDataPtr: ptr;			end;		TCPReceivePB = packed record				commandTimeoutValue: byte;				filler: byte;				markFlag: CBOOLEAN;				urgentFlag: CBOOLEAN;				rcvBuff: ptr;				rcvBuffLength: integer;				rdsPtr: ptr;				rdsLength: integer;				secondTimeStanmp: integer;				userDataPtr: ptr;			end;		TCPClosePB = packed record				ulpTimeoutValue: byte;				ulpTimeoutAction: byte;				validityFlags: byte;				userDataPtrX: ptr;   { Thats mad!  Its not on a word boundary! Parhaps a documentation bug??? }			end;		HistoBucket = packed record				value: integer;				counter: longInt;			end;	const		NumOfHistoBuckets = 7;	type		TCPConnectionStats = packed record				dataPktsRcvd: longInt;				dataPktsSent: longInt;				dataPktsResent: longInt;				bytesRcvd: longInt;				bytesRcvdDup: longInt;				bytesRcvdPastWindow: longInt;				bytesSent: longInt;				bytesResent: longInt;				numHistoBuckets: integer;				sentSizeHisto: array[1..NumOfHistoBuckets] of HistoBucket;				lastRTT: integer;				tmrRTT: integer;				rttVariance: integer;				tmrRTO: integer;				sendTries: byte;				sourchQuenchRcvd: byte;			end;		TCPConnectionStatsPtr = ^TCPConnectionStats;		TCPStatusPB = packed record				ulpTimeoutValue: byte;				ulpTimeoutAction: byte;				unused: longInt;				remoteHost: ip_addr;				remotePort: tcp_port;				localHost: ip_addr;				localPort: tcp_port;				tosFlags: byte;				precedence: byte;				connectionState: byte;				filler: byte;				sendWindow: integer;				rcvWindow: integer;				amtUnackedData: integer;				amtUnreadData: integer;				securityLevelPtr: ptr;				sendUnacked: longInt;				sendNext: longInt;				congestionWindow: longInt;				rcvNext: longInt;				srtt: longInt;				lastRTT: longInt;				sendMaxSegSize: longInt;				connStatPtr: TCPConnectionStatsPtr;				userDataPtr: ptr;			end;		TCPAbortPB = packed record				userDataPtr: ptr;			end;		TCPParam = packed record				tcpRtoA: longInt;				tcpRtoMin: longInt;				tcpRtoMax: longInt;				tcpMaxSegSize: longInt;				tcpMaxConn: longInt;				tcpMacWindow: longInt;			end;		TCPParamPtr = ^TCPParam;		TCPStats = packed record				tcpConnAttempts: longInt;				tcpConnOpened: longInt;				tcpConnAccepted: longInt;				tcpConnClosed: longInt;				tcpConnAborted: longInt;				tcpOctetsIn: longInt;				tcpOctetsOut: longInt;				tcpOctetsInDup: longInt;				tcpOctetsRetrans: longInt;				tcpInputPkts: longInt;				tcpOutputPkts: longInt;				tcpDupPkts: longInt;				tcpRetransPkts: longInt;			end;		TCPStatsPtr = ^TCPStats;		StreamPtrArray = array[1..1000] of StreamPtr;		StreamPtrArrayPtr = ^StreamPtrArray;		TCPGlobalInfoPB = packed record				tcpParamp: TCPParamPtr;				tcpStatsp: TCPStatsPtr;				tcpCDBTable: StreamPtrArrayPtr;				userDataPtr: ptr;				maxTCPConnections: integer;			end;		TCPGetMyIPPB = packed record				ourAddress: ip_addr;				ourNetMask: longInt;			end;		TCPControlBlock = record				qLink: QElemPtr;				qType: INTEGER;				ioTrap: INTEGER;				ioCmdAddr: Ptr;				ioCompletion: TCPIOCompletionProc; {completion routine, or NIL if none}				ioResult: OSErr; {result code}				ioNamePtr: StringPtr;				ioVRefNum: INTEGER;				ioCRefNum: INTEGER; {device refnum}				case csCode : integer of					TCPcsGetMyIP: (							getmyip: TCPGetMyIPPB;					);					0: (							tcpStream: StreamPtr;							case integer of								TCPcsCreate: (										create: TCPCreatePB								);								TCPcsActiveOpen, TCPcsPassiveOpen: (										open: TCPOpenPB;								);								TCPcsSend: (										send: TCPSendPB;								);								TCPcsNoCopyRcv, TCPcsRcvBfrReturn, TCPcsRcv: (										receive: TCPReceivePB;								);								TCPcsClose: (										close: TCPClosePB;								);								TCPcsAbort: (										abort: TCPAbortPB;								);								TCPcsStatus: (										status: TCPStatusPB;								);								TCPcsGlobalInfo: (										globalInfo: TCPGlobalInfoPB								);					);			end;		TCPControlBlockPtr = ^TCPControlBlock;implementationend.
+unit TCPTypes;
+
+{ From Peter's PNL Libraries }
+{ Copyright 1992 Peter N Lewis }
+{ This source may be used for any non-commercial purposes as long as I get a mention }
+{ in the About box and Docs of any derivative program.  It may not be used in any commercial }
+{ application without my permission }
+
+interface
+
+{ MacTCP return Codes in the range -23000 through -23049 }
+	const
+		inProgress = 1;							{ I/O in progress }
+
+		ipBadLapErr = -23000;					{ bad network configuration }
+		ipBadCnfgErr = -23001;				{ bad IP configuration error }
+		ipNoCnfgErr = -23002;					{ missing IP or LAP configuration error }
+		ipLoadErr = -23003;					{ error in MacTCP load }
+		ipBadAddr = -23004;					{ error in getting address }
+		connectionClosing = -23005;			{ connection is closing }
+		invalidLength = -23006;
+		connectionExists = -23007;			{ request conflicts with existing connection }
+		connectionDoesntExist = -23008;		{ connection does not exist }
+		insufficientResources = -23009;		{ insufficient resources to perform request }
+		invalidStreamPtr = -23010;
+		streamAlreadyOpen = -23011;
+		connectionTerminated = -23012;
+		invalidBufPtr = -23013;
+		invalidRDS = -23014;
+		invalidWDS = -23014;
+		openFailed = -23015;
+		commandTimeout = -23016;
+		duplicateSocket = -23017;
+
+{ Error codes from internal IP functions }
+		ipDontFragErr = -23032;				{ Packet too large to send w/o fragmenting }
+		ipDestDeadErr = -23033;				{ destination not responding }
+		ipNoFragMemErr = -23036;			{ no memory to send fragmented pkt }
+		ipRouteErr = -23037;					{ can't route packet off-net }
+
+		nameSyntaxErr = -23041;
+		cacheFault = -23042;
+		noResultProc = -23043;
+		noNameServer = -23044;
+		authNameErr = -23045;
+		noAnsErr = -23046;
+		dnrErr = -23047;
+		outOfMemory = -23048;
+
+	const
+		CTRUE = $FF;
+		CFALSE = $00;
+
+	type
+		CBOOLEAN = signedByte;
+		ip_addr = longInt;
+		tcp_port = integer;
+		udp_port = integer;
+		StreamPtr = ptr;
+
+	type
+		wdsType = record			{ Write block for TCP driver. }
+				size: integer;				{ Number of bytes. }
+				buffer: Ptr;				{ Pointer to bytes. }
+				term: integer;				{ Zero for end of blocks. }
+			end;
+		wdsPtr = ^wdsType;
+
+		hostInfo = record
+				rtnCode: longInt;
+				rtnHostName: str255;
+				addrs: array[1..4] of longInt;
+			end;
+		hostInfoPtr = ^hostInfo;
+
+	const { csCodes for the TCP driver: }
+		TCPcsGetMyIP = 15;
+		ipctlLAPStats = 19;
+		TCPcsCreate = 30;
+		TCPcsPassiveOpen = 31;
+		TCPcsActiveOpen = 32;
+{    TCPcsActOpenWithData = 33;}
+		TCPcsSend = 34;
+		TCPcsNoCopyRcv = 35;
+		TCPcsRcvBfrReturn = 36;
+		TCPcsRcv = 37;
+		TCPcsClose = 38;
+		TCPcsAbort = 39;
+		TCPcsStatus = 40;
+		TCPcsExtendedStat = 41;
+		TCPcsRelease = 42;
+		TCPcsGlobalInfo = 43;
+
+		UDPcsCreate = 20;
+		UDPcsRead = 21;
+		UDPcsBfrReturn = 22;
+		UDPcsWrite = 23;
+		UDPcsRelease = 24;
+		UDPcsMaxMTUSize = 25;
+		UDPcsStatus = 26;
+		UDPcsMultiCreate = 27;
+		UDPcsMultiSend = 28;
+		UDPcsMultiRead = 29;
+		UDPcsCtlMax = 29;
+
+	type
+		TCPEventCode = integer;
+	const
+		TEC_Closing = 1;
+		TEC_ULPTimeout = 2;
+		TEC_Terminate = 3;
+		TEC_DataArrival = 4;
+		TEC_Urgent = 5;
+		TEC_ICMPReceived = 6;
+		TEC_last = 32767;
+
+	type
+		UDPEventCode = integer;
+	const
+		UDPDataArrival = 1;
+		UDPICMPReceived = 2;
+		lastUDPEvent = 32767;
+
+	type
+		TCPTerminateReason = integer;
+	const {TCPTerminateReasons: }
+		TTR_RemoteAbort = 2;
+		TTR_NetworkFailure = 3;
+		TTR_SecPrecMismatch = 4;
+		TTR_ULPTimeoutTerminate = 5;
+		TTR_ULPAbort = 6;
+		TTR_ULPClose = 7;
+		TTR_ServiceError = 8;
+		TTR_last = 32767;
+
+	type
+		TCPNotifyProc = procPtr;
+{ procedure TCPNotifyProc(tcpStream:StreamPtr; event:TCPEventCode; userDataPtr:ptr; }
+{                                   terminReason:TCPTerminateReason; icmpMsg:ICMPReportPtr); }
+
+	type
+		TCPIOCompletionProc = procPtr;
+{ C procedure TCPIOCompletionProc(iopb:TCPControlBlockPtr); - WHY IS THIS A C PROC???? }
+
+	type
+		UDPNotifyProc = procPtr;
+{ procedure UDPProc(udpStream:StreamPtr ; eventCode:integer;userDataPtr:ptr; icmpMsg:ICMPReportPtr) }
+
+	type
+		UDPIOCompletionProc = procPtr;
+{procedure UDPIOCompletionProc(iopb:UDPiopb Ptr) }
+
+	type
+		UDPCreatePB = record { for create and release calls }
+				rcvBuff: Ptr;
+				rcvBuffLen: longInt;
+				notifyProc: UDPNotifyProc;
+				localport: integer;
+				userDataPtr: ptr;
+				endingPort: udp_port;
+			end;
+
+	type
+		UDPSendPB = record
+				reserved: integer;
+				remoteIP: longInt;
+				remotePort: udp_port;
+				wds: wdsPtr;
+				checkSum: signedByte;
+				sendLength: integer;
+				userDataPtr: ptr;
+				localPort: udp_port;
+			end;
+
+	type
+		UDPReceivePB = record
+				timeOut: integer;
+				remoteIP: longInt;
+				remotePort: integer;
+				rcvBuff: ptr;
+				rcvBuffLen: integer;
+				secondTimeStamp: integer;
+				userDataPtr: ptr;
+				destHost: ip_addr;
+				destPort: udp_port;
+			end;
+
+	type
+		UDPMTUPB = record
+				mtuSize: integer;
+				remoteIP: ip_addr;
+				userDataPtr: ptr;
+			end;
+
+	type
+		UDPControlBlock = record
+				fill12: array[1..6] of integer;
+				ioCompletion: UDPIOCompletionProc;
+				ioResult: integer;
+				ioNamePtr: stringPtr;
+				ioVRefNum: integer;
+				ioCRefNum: integer;
+				csCode: integer;
+				udpStream: streamPtr;
+				case integer of
+					UDPcsCreate: (
+							create: UDPCreatePB
+					);
+					UDPcsWrite: (
+							send: UDPSendPB
+					);
+					UDPcsRead: (
+							receive: UDPReceivePB
+					);
+					UDPcsBfrReturn: (
+							return: UDPReceivePB
+					);
+					UDPcsMaxMTUSize: (
+							mtu: UDPMTUPB
+					);
+			end;
+
+	const { Validity Flags }
+		timeOutValue = $80;
+		timeOutAction = $40;
+		typeOfService = $20;
+		precedence = $10;
+
+	const { TOSFlags }
+		lowDelay = $01;
+		throughPut = $02;
+		reliability = $04;
+
+	type
+		TCPCreatePB = packed record
+				rcvBuff: ptr;
+				rcvBuffLen: longInt;
+				notifyProc: TCPNotifyProc;
+				userDataPtr: ptr;
+			end;
+
+		TCPOpenPB = packed record
+				ulpTimeoutValue: byte;
+				ulpTimeoutAction: byte;
+				validityFalgs: byte;
+				commandTimeoutValue: byte;
+				remoteHost: ip_addr;
+				remotePort: tcp_port;
+				localHost: ip_addr;
+				localPort: tcp_port;
+				tosFlags: byte;
+				precedence: byte;
+				dontFrag: CBOOLEAN;
+				timeToLive: byte;
+				security: byte;
+				optionCnt: byte;
+				options: array[0..39] of byte;
+				userDataPtr: ptr;
+			end;
+
+		TCPSendPB = packed record
+				ulpTimeoutValue: byte;
+				ulpTimeoutAction: byte;
+				validityFalgs: byte;
+				pushFalg: byte;
+				urgentFlag: CBOOLEAN;
+				wds: wdsptr;
+				sendFree: longInt;
+				sendLength: integer;
+				userDataPtr: ptr;
+			end;
+
+		TCPReceivePB = packed record
+				commandTimeoutValue: byte;
+				filler: byte;
+				markFlag: CBOOLEAN;
+				urgentFlag: CBOOLEAN;
+				rcvBuff: ptr;
+				rcvBuffLength: integer;
+				rdsPtr: ptr;
+				rdsLength: integer;
+				secondTimeStanmp: integer;
+				userDataPtr: ptr;
+			end;
+
+		TCPClosePB = packed record
+				ulpTimeoutValue: byte;
+				ulpTimeoutAction: byte;
+				validityFlags: byte;
+				userDataPtrX: ptr;   { Thats mad!  Its not on a word boundary! Parhaps a documentation bug??? }
+			end;
+
+		HistoBucket = packed record
+				value: integer;
+				counter: longInt;
+			end;
+
+	const
+		NumOfHistoBuckets = 7;
+
+	type
+		TCPConnectionStats = packed record
+				dataPktsRcvd: longInt;
+				dataPktsSent: longInt;
+				dataPktsResent: longInt;
+				bytesRcvd: longInt;
+				bytesRcvdDup: longInt;
+				bytesRcvdPastWindow: longInt;
+				bytesSent: longInt;
+				bytesResent: longInt;
+				numHistoBuckets: integer;
+				sentSizeHisto: array[1..NumOfHistoBuckets] of HistoBucket;
+				lastRTT: integer;
+				tmrRTT: integer;
+				rttVariance: integer;
+				tmrRTO: integer;
+				sendTries: byte;
+				sourchQuenchRcvd: byte;
+			end;
+		TCPConnectionStatsPtr = ^TCPConnectionStats;
+
+		TCPStatusPB = packed record
+				ulpTimeoutValue: byte;
+				ulpTimeoutAction: byte;
+				unused: longInt;
+				remoteHost: ip_addr;
+				remotePort: tcp_port;
+				localHost: ip_addr;
+				localPort: tcp_port;
+				tosFlags: byte;
+				precedence: byte;
+				connectionState: byte;
+				filler: byte;
+				sendWindow: integer;
+				rcvWindow: integer;
+				amtUnackedData: integer;
+				amtUnreadData: integer;
+				securityLevelPtr: ptr;
+				sendUnacked: longInt;
+				sendNext: longInt;
+				congestionWindow: longInt;
+				rcvNext: longInt;
+				srtt: longInt;
+				lastRTT: longInt;
+				sendMaxSegSize: longInt;
+				connStatPtr: TCPConnectionStatsPtr;
+				userDataPtr: ptr;
+			end;
+
+		TCPAbortPB = packed record
+				userDataPtr: ptr;
+			end;
+
+		TCPParam = packed record
+				tcpRtoA: longInt;
+				tcpRtoMin: longInt;
+				tcpRtoMax: longInt;
+				tcpMaxSegSize: longInt;
+				tcpMaxConn: longInt;
+				tcpMacWindow: longInt;
+			end;
+		TCPParamPtr = ^TCPParam;
+
+		TCPStats = packed record
+				tcpConnAttempts: longInt;
+				tcpConnOpened: longInt;
+				tcpConnAccepted: longInt;
+				tcpConnClosed: longInt;
+				tcpConnAborted: longInt;
+				tcpOctetsIn: longInt;
+				tcpOctetsOut: longInt;
+				tcpOctetsInDup: longInt;
+				tcpOctetsRetrans: longInt;
+				tcpInputPkts: longInt;
+				tcpOutputPkts: longInt;
+				tcpDupPkts: longInt;
+				tcpRetransPkts: longInt;
+			end;
+		TCPStatsPtr = ^TCPStats;
+
+		StreamPtrArray = array[1..1000] of StreamPtr;
+		StreamPtrArrayPtr = ^StreamPtrArray;
+
+		TCPGlobalInfoPB = packed record
+				tcpParamp: TCPParamPtr;
+				tcpStatsp: TCPStatsPtr;
+				tcpCDBTable: StreamPtrArrayPtr;
+				userDataPtr: ptr;
+				maxTCPConnections: integer;
+			end;
+
+		TCPGetMyIPPB = packed record
+				ourAddress: ip_addr;
+				ourNetMask: longInt;
+			end;
+
+		TCPControlBlock = record
+				qLink: QElemPtr;
+				qType: INTEGER;
+				ioTrap: INTEGER;
+				ioCmdAddr: Ptr;
+				ioCompletion: TCPIOCompletionProc; {completion routine, or NIL if none}
+				ioResult: OSErr; {result code}
+				ioNamePtr: StringPtr;
+				ioVRefNum: INTEGER;
+				ioCRefNum: INTEGER; {device refnum}
+				case csCode : integer of
+					TCPcsGetMyIP: (
+							getmyip: TCPGetMyIPPB;
+					);
+					0: (
+							tcpStream: StreamPtr;
+							case integer of
+								TCPcsCreate: (
+										create: TCPCreatePB
+								);
+								TCPcsActiveOpen, TCPcsPassiveOpen: (
+										open: TCPOpenPB;
+								);
+								TCPcsSend: (
+										send: TCPSendPB;
+								);
+								TCPcsNoCopyRcv, TCPcsRcvBfrReturn, TCPcsRcv: (
+										receive: TCPReceivePB;
+								);
+								TCPcsClose: (
+										close: TCPClosePB;
+								);
+								TCPcsAbort: (
+										abort: TCPAbortPB;
+								);
+								TCPcsStatus: (
+										status: TCPStatusPB;
+								);
+								TCPcsGlobalInfo: (
+										globalInfo: TCPGlobalInfoPB
+								);
+					);
+			end;
+		TCPControlBlockPtr = ^TCPControlBlock;
+
+implementation
+
+end.

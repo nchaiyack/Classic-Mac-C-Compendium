@@ -1,1 +1,26 @@
-Release notes:	version 1.1.3		- added a check for System 7 in the module (Gestalt test).  I use Offscreen			Graphics Worlds which is (I think) a System 7-ism. 	version 1.1.2		- added/fixed the 'sysz' resource so that Peek-a-boo can now run under			Multimodule and Randomizer !!!! Whew! what a simple fix, why'd it take 			me so long? I'm distributing this version as a patch also (since this is 			getting big).	version 1.1.1		- fixed the random generator function ... the example in ThinkC 			reference was/is wrong so we could never get the last item in the menu.		- added code to update the menu selection in random mode. When in demo			mode, the menu visibly changes to reflect which random face is peeking.		- added a Kramer sound, trimmed down the parrot sound	version 1.1		- added a random faces checkbox. 		- updated code to use proper routines to get pixMaps from Gworlds.	version 1.0		- initial release
+
+Release notes:
+
+	version 1.1.3
+		- added a check for System 7 in the module (Gestalt test).  I use Offscreen
+			Graphics Worlds which is (I think) a System 7-ism. 
+
+	version 1.1.2
+		- added/fixed the 'sysz' resource so that Peek-a-boo can now run under
+			Multimodule and Randomizer !!!! Whew! what a simple fix, why'd it take 
+			me so long? I'm distributing this version as a patch also (since this is 
+			getting big).
+
+	version 1.1.1
+		- fixed the random generator function ... the example in ThinkC 
+			reference was/is wrong so we could never get the last item in the menu.
+		- added code to update the menu selection in random mode. When in demo
+			mode, the menu visibly changes to reflect which random face is peeking.
+		- added a Kramer sound, trimmed down the parrot sound
+
+	version 1.1
+		- added a random faces checkbox. 
+		- updated code to use proper routines to get pixMaps from Gworlds.
+
+	version 1.0
+		- initial release

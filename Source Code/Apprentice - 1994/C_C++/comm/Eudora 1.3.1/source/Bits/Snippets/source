@@ -1,1 +1,8 @@
-SOURCEThe source (minus Apple's "dnr.c" file) to Eudora is in the StuffIt Archive. Most is Copyright UIUC Board of Trustees, some is Copyright QUALCOMM Incorporated, and a little more is Copyright to various and sundry. Feel free to use this source (why you would want to is beyond me, but...) in other applications, provided you don't charge money for them, and maintain proper credit, both to UIUC and QUALCOMM, and also to the other copyright holders. (Eudora's proper credit to these others is found in the source itself; if you don't distribute source, please put a note in your README or About box.)You will need perl for MPW to make best use of the source. 
+SOURCE
+
+The source (minus Apple's "dnr.c" file) to Eudora is in the StuffIt Archive. Most is Copyright UIUC Board of Trustees, some is Copyright QUALCOMM Incorporated, and a little more is Copyright to various and sundry. 
+
+Feel free to use this source (why you would want to is beyond me, but...) in other applications, provided you don't charge money for them, and maintain proper credit, both to UIUC and QUALCOMM, and also to the other copyright holders. (Eudora's proper credit to these others is found in the source itself; if you don't distribute source, please put a note in your README or About box.)
+
+You will need perl for MPW to make best use of the source. 
+

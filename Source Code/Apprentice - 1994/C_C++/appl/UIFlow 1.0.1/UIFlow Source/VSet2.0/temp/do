@@ -1,1 +1,7 @@
-# This is how you can compile a C program that uses Vset.# Change "SUN" to the machine that you are using.#cat doecho "compiling $1..."cc $1.c  libvg.a -ldf -o $1 -g -DUNICOS -I/scr1/u12939/includeecho $1 done
+# This is how you can compile a C program that uses Vset.
+# Change "SUN" to the machine that you are using.
+#
+cat do
+echo "compiling $1..."
+cc $1.c  libvg.a -ldf -o $1 -g -DUNICOS -I/scr1/u12939/include
+echo $1 done

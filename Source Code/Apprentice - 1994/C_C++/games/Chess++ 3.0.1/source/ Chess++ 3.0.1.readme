@@ -1,1 +1,163 @@
-Chess++by Steve Bushellpython@world.std.com©1992-1993 Steve Bushell - all rights reserved.REMEMBER:As you read this and examine the program, remember that I appreciate all feedback,be it critical or laudatory.  Send everything to python@world.std.com.  I'd loveto hear what you think.  Thanks!WHAT IS IT?Chess++ is a program written in Symantec C++/TCL 1.1.3 which, as you mightguess, plays chess.  It was used as the demo project for the introduction ofSymantec's new THINK Project Manager at the World Wide Developer's Conference (WWDC)in California in early May, 1993.  During that introduction, the projectunexpectedly quit, but no one knows why, and noone can reproduce a crash on anymachine.  If you can, let me know how you did it!FEATURES:Chess++ does in fact play chess, offers different levels of play, and can begreat if you're learning to play chess because if you option click on one ofyour chess pieces, the squares that you can move to will be highlighted.Chess++ will "think" in the background, and you can alter its degree of"multifinder friendliness".  Take a look at the options dialog and you'll see.The "Back propagation" option in the dialog is bogus.  Sorry.Chess++ can show you the current piece it's thinking about, and can optionallybeep everytime it finds a better move to make against you.One other feature which has been in there since the very beginning of the Macversion is a "Tell Time" command.  Like it says, it tells the time, in my voice.It's a little cheezy, but I couldn't resist leaving it in there.The about box is kinda neat, and comes in three flavors, which are chosen at random.LIMITATIONS:Chess++ is by no means the best chess program around - as a matter of fact, it'sfar from it.  There is no opening move library, the endgame is rather weak, youstill cannot castle or capture en passant, and unless you play on the highestlevel, it can be pretty easy to beat.  This program is not here to be the bestchess program around; it's here only as a demo program for you to look at andenjoy.  If you're not enjoying it, don't look at it!PROGRAMMERS NOTES:Chess++ uses a very simple recursive algorithm for finding its next move (it'ssimple once you've written it).  Basically, after the real player makes a move,the "Brain" (as the virtual opponenet is known) examines every one of its pieces,and tries out every one of its possible legal moves.  The Brain then becomes itsopponent (you) and tries to figure out what you will do for each one of its moves.If it wants, it can then try to figure what it would do based on what you did inresponse to it's move, and so on until it's recursed as far as it wants to go.All of this information is quantized based on board location and the value ofcaptured pieces, and the move with the highest final value is the one the Brainfinally makes.  The search depth is essentially the level of recursion in theBrain's thoughts, and so, obviously, the deeper the recursion, the better itplays.In retrospect, I don't like a few things about the way I designed the program.I started changing a few of these things (which reduced my memory allocation needsdramatically) but there are still remnants of old code hanging around that may seemto have no purpose.  Keep in mind that all of the code is very much in a stateof development, and many parts of it could be rewritten much more elegantly.If I were to rewrite this whole program again, I'd change a lot of the datastructures relating to the chess board and the pieces to make everything workfaster.  Also, I'd rewrite a good part of the algorithms which check a move'slegality in assembly to get more speed out of it.  There is a _lot_ of roomfor optimization in this program, but if you're serious about writing your ownchess program, I'd suggest looking at Chess++, and then start from scratch.There's much that can be done with this program as it is, starting with addingcastling and capturing en passant.  This is all left as an exercise to the reader.The about box has some really cool hacky code which exploits double-buffered GWorlds.Because of this, Color Quickdraw is required to run (but I don't do a check for it).A lot of the data in the about box code is hard-wired to the picture that isdisplayed, so it will be very difficult to modify without screwing it up.It also uses the rarely seen adMin transfer mode!  Enjoy - it was the best Icould do in two hours.Although it looks like you can save a chessboard, you really can't.  Don't bothertrying it.  This feature wouldn't be too hard to add, though.BY THE WAY:I don't work for Symantec anymore - I left there in March of 1993.Be sure to look for my name in the about boxes of the THINK Project Manager andTHINK Reference 2.0!LEGAL INFORMATION:This program, "Chess++", and/or its source code, may be freely distributedprovided it is unaltered, and that proper credit is given to me, the author,Steve Bushell.  I retain all rights to the program and its source code, even ifeither one has been modified for any purpose.  This program has been placed inthe public domain with the aforementioned exclusions for purposes of enjoymentand education only.  This program and/or its sources may not be sold at any cost(other than normal connection fees) nor modified and reposted, without theexpress permission of Steve Bushell.  And, of course, I take no responsibilitywhatsoever for anything that happens as a consequence of your looking at orusing Chess++ and its source code.VERSION HISTORY:Chess++ 3.0.1 - 5/5/93©1993 Steve Bushellpython@world.std.comSeveral features have been added to make the game more "official".- The program will not let you move into check.- When pieces are moved (both by the player and the computer),  there is more visual feedback on the board.- The program will tell you if it checkmates or stalemates you.- The program does not quit abruptly when it loses anymore.  Instead it keeps the board around until you close it, and it  doesn't let you move any more pieces until you create a new  board.  The same applies if the program wins or stalemates.- The default setting for "Show thoughts" is now off (so there is  not too much blinking while it thinks)....Chess++ 3.0 : A C++ based revival of everyone's favorite, BBChess!Numerous bugs have been fixed since the last versions.  The movelookup algorithm now works properly and is much faster.  Insteadof allocating and deallocating 32 to the power of the search depthhandles on each move, the algorithm now only allocates one handle.A splash screen has been added, and the About... box has beengreatly enhanced (you'll just have to see it!)  The UI for dragginga piece has been slightly improved, and the app's icon has beenredesigned to make Apple's Human Interface Group happy.So why is this version 3.0?  Version 1.0 was created on a TI-99/4Ahome computer when I was in 8th grade.  It filled up all 16k of thecomputer's memory.  Version 2.0 was created on a 286 pc in Turbo C.It didn't get very far, so was given a quick and proper burial.And version 3.0 is the first Mac release, and is also the firstversion which actually checkmates me once in a while.  Version 4.0will be compiled and run on the PowerPC.Enjoy.- Steve4/27/93python@world.std.com...ChessThe TCL ProjectThe source was undergoing major modifications in the move-lookupalgorithms when I stopped working on it, so the project as it isnow doesn't work.  It is here as sample code showing how to usevarious parts of the TCL.  To see the program actually working,look at the already-built versions in this folder.BBChess 3.0d4 is probably the latest and best "official" version.Everything that I broke later works in this version.FloatingPointChess is the same as BBChess 3.0d4, but the About...box is much more interesting.Later dudes,- Steve3/9/93
+Chess++
+by Steve Bushell
+python@world.std.com
+©1992-1993 Steve Bushell - all rights reserved.
+
+REMEMBER:
+As you read this and examine the program, remember that I appreciate all feedback,
+be it critical or laudatory.  Send everything to python@world.std.com.  I'd love
+to hear what you think.  Thanks!
+
+WHAT IS IT?
+Chess++ is a program written in Symantec C++/TCL 1.1.3 which, as you might
+guess, plays chess.  It was used as the demo project for the introduction of
+Symantec's new THINK Project Manager at the World Wide Developer's Conference (WWDC)
+in California in early May, 1993.  During that introduction, the project
+unexpectedly quit, but no one knows why, and noone can reproduce a crash on any
+machine.  If you can, let me know how you did it!
+
+FEATURES:
+Chess++ does in fact play chess, offers different levels of play, and can be
+great if you're learning to play chess because if you option click on one of
+your chess pieces, the squares that you can move to will be highlighted.
+Chess++ will "think" in the background, and you can alter its degree of
+"multifinder friendliness".  Take a look at the options dialog and you'll see.
+The "Back propagation" option in the dialog is bogus.  Sorry.
+Chess++ can show you the current piece it's thinking about, and can optionally
+beep everytime it finds a better move to make against you.
+One other feature which has been in there since the very beginning of the Mac
+version is a "Tell Time" command.  Like it says, it tells the time, in my voice.
+It's a little cheezy, but I couldn't resist leaving it in there.
+The about box is kinda neat, and comes in three flavors, which are chosen at random.
+
+LIMITATIONS:
+Chess++ is by no means the best chess program around - as a matter of fact, it's
+far from it.  There is no opening move library, the endgame is rather weak, you
+still cannot castle or capture en passant, and unless you play on the highest
+level, it can be pretty easy to beat.  This program is not here to be the best
+chess program around; it's here only as a demo program for you to look at and
+enjoy.  If you're not enjoying it, don't look at it!
+
+PROGRAMMERS NOTES:
+Chess++ uses a very simple recursive algorithm for finding its next move (it's
+simple once you've written it).  Basically, after the real player makes a move,
+the "Brain" (as the virtual opponenet is known) examines every one of its pieces,
+and tries out every one of its possible legal moves.  The Brain then becomes its
+opponent (you) and tries to figure out what you will do for each one of its moves.
+If it wants, it can then try to figure what it would do based on what you did in
+response to it's move, and so on until it's recursed as far as it wants to go.
+All of this information is quantized based on board location and the value of
+captured pieces, and the move with the highest final value is the one the Brain
+finally makes.  The search depth is essentially the level of recursion in the
+Brain's thoughts, and so, obviously, the deeper the recursion, the better it
+plays.
+
+In retrospect, I don't like a few things about the way I designed the program.
+I started changing a few of these things (which reduced my memory allocation needs
+dramatically) but there are still remnants of old code hanging around that may seem
+to have no purpose.  Keep in mind that all of the code is very much in a state
+of development, and many parts of it could be rewritten much more elegantly.
+
+If I were to rewrite this whole program again, I'd change a lot of the data
+structures relating to the chess board and the pieces to make everything work
+faster.  Also, I'd rewrite a good part of the algorithms which check a move's
+legality in assembly to get more speed out of it.  There is a _lot_ of room
+for optimization in this program, but if you're serious about writing your own
+chess program, I'd suggest looking at Chess++, and then start from scratch.
+
+There's much that can be done with this program as it is, starting with adding
+castling and capturing en passant.  This is all left as an exercise to the reader.
+
+The about box has some really cool hacky code which exploits double-buffered GWorlds.
+Because of this, Color Quickdraw is required to run (but I don't do a check for it).
+A lot of the data in the about box code is hard-wired to the picture that is
+displayed, so it will be very difficult to modify without screwing it up.
+It also uses the rarely seen adMin transfer mode!  Enjoy - it was the best I
+could do in two hours.
+
+Although it looks like you can save a chessboard, you really can't.  Don't bother
+trying it.  This feature wouldn't be too hard to add, though.
+
+BY THE WAY:
+I don't work for Symantec anymore - I left there in March of 1993.
+Be sure to look for my name in the about boxes of the THINK Project Manager and
+THINK Reference 2.0!
+
+LEGAL INFORMATION:
+This program, "Chess++", and/or its source code, may be freely distributed
+provided it is unaltered, and that proper credit is given to me, the author,
+Steve Bushell.  I retain all rights to the program and its source code, even if
+either one has been modified for any purpose.  This program has been placed in
+the public domain with the aforementioned exclusions for purposes of enjoyment
+and education only.  This program and/or its sources may not be sold at any cost
+(other than normal connection fees) nor modified and reposted, without the
+express permission of Steve Bushell.  And, of course, I take no responsibility
+whatsoever for anything that happens as a consequence of your looking at or
+using Chess++ and its source code.
+
+VERSION HISTORY:
+
+Chess++ 3.0.1 - 5/5/93
+©1993 Steve Bushell
+python@world.std.com
+
+Several features have been added to make the game more "official".
+- The program will not let you move into check.
+- When pieces are moved (both by the player and the computer),
+  there is more visual feedback on the board.
+- The program will tell you if it checkmates or stalemates you.
+- The program does not quit abruptly when it loses anymore.
+  Instead it keeps the board around until you close it, and it
+  doesn't let you move any more pieces until you create a new
+  board.  The same applies if the program wins or stalemates.
+- The default setting for "Show thoughts" is now off (so there is
+  not too much blinking while it thinks).
+
+...
+
+Chess++ 3.0 : A C++ based revival of everyone's favorite, BBChess!
+
+Numerous bugs have been fixed since the last versions.  The move
+lookup algorithm now works properly and is much faster.  Instead
+of allocating and deallocating 32 to the power of the search depth
+handles on each move, the algorithm now only allocates one handle.
+A splash screen has been added, and the About... box has been
+greatly enhanced (you'll just have to see it!)  The UI for dragging
+a piece has been slightly improved, and the app's icon has been
+redesigned to make Apple's Human Interface Group happy.
+
+So why is this version 3.0?  Version 1.0 was created on a TI-99/4A
+home computer when I was in 8th grade.  It filled up all 16k of the
+computer's memory.  Version 2.0 was created on a 286 pc in Turbo C.
+It didn't get very far, so was given a quick and proper burial.
+And version 3.0 is the first Mac release, and is also the first
+version which actually checkmates me once in a while.  Version 4.0
+will be compiled and run on the PowerPC.
+
+Enjoy.
+
+- Steve
+4/27/93
+python@world.std.com
+
+...
+
+Chess
+The TCL Project
+
+The source was undergoing major modifications in the move-lookup
+algorithms when I stopped working on it, so the project as it is
+now doesn't work.  It is here as sample code showing how to use
+various parts of the TCL.  To see the program actually working,
+look at the already-built versions in this folder.
+
+BBChess 3.0d4 is probably the latest and best "official" version.
+Everything that I broke later works in this version.
+
+FloatingPointChess is the same as BBChess 3.0d4, but the About...
+box is much more interesting.
+
+Later dudes,
+
+- Steve
+3/9/93

@@ -1,1 +1,17 @@
-\input texinfo@setfilename quickref.info@settitle Xconq GDL Quick Reference@setchapternewpage odd@iftex@headings off@everyheading @| @thistitle @|@everyfooting DRAFT d14 @| @today{} @| DRAFT d14@end iftex@c @include syntax.texi@include syms.texi@bye
+\input texinfo
+@setfilename quickref.info
+
+@settitle Xconq GDL Quick Reference
+@setchapternewpage odd
+
+@iftex
+@headings off
+@everyheading @| @thistitle @|
+@everyfooting DRAFT d14 @| @today{} @| DRAFT d14
+@end iftex
+
+@c @include syntax.texi
+
+@include syms.texi
+
+@bye

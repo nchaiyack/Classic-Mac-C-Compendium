@@ -1,1 +1,56 @@
-#######################################	make external library for DataScope######################################LOPT	=	-m	addon		¶			-c	'NCSf'		¶			-t	'DSff'		¶			rm.o			¶			-o	DSlibrary#COPT	=	-o	rm.o#FILE1	=	colarray.cLOPT1	=	-rt	DSfn=1000	-sn Main=colarray#FILE2	=	rowarray.cLOPT2	=	-rt	DSfn=1001	-sn Main=rowarray#FILE3	=	lesser.cLOPT3	=	-rt	DSfn=1002	-sn Main=lesser#FILE4	=	greater.cLOPT4	=	-rt	DSfn=1003	-sn Main=greater#FILE5	=	genconst.cLOPT5	=	-rt	DSfn=1004	-sn Main=genconst#FILES	=	{FILE1}		¶			{FILE2}		¶			{FILE3}		¶			{FILE4}		¶			{FILE5}#Syslibs	=	"{CLibraries}"CLib881.o		¶			"{CLibraries}"CRuntime.o	¶			"{Libraries}"Interface.o	¶			"{CLibraries}"StdCLib.o 	¶			"{CLibraries}"CSANELib881.o ¶ 			"{CLibraries}"Math881.o		¶			"{CLibraries}"CInterface.o######################################DSlibrary	Ä	{FILE1}	¶				{FILE2}	¶				{FILE3}	¶				{FILE4}	¶				{FILE5}	C		{FILE1}		{COPT}	Link	{LOPT}		{LOPT1}	{Syslibs}	C		{FILE2}		{COPT}	Link	{LOPT}		{LOPT2}	{Syslibs}	C		{FILE3}		{COPT}	Link	{LOPT}		{LOPT3}	{Syslibs}	C		{FILE4}		{COPT}	Link	{LOPT}		{LOPT4}	{Syslibs}	C		{FILE5}		{COPT}	Link	{LOPT}		{LOPT5}	{Syslibs}#
+######################################
+#	make external library for DataScope
+######################################
+LOPT	=	-m	addon		¶
+			-c	'NCSf'		¶
+			-t	'DSff'		¶
+			rm.o			¶
+			-o	DSlibrary
+#
+COPT	=	-o	rm.o
+#
+FILE1	=	colarray.c
+LOPT1	=	-rt	DSfn=1000	-sn Main=colarray
+#
+FILE2	=	rowarray.c
+LOPT2	=	-rt	DSfn=1001	-sn Main=rowarray
+#
+FILE3	=	lesser.c
+LOPT3	=	-rt	DSfn=1002	-sn Main=lesser
+#
+FILE4	=	greater.c
+LOPT4	=	-rt	DSfn=1003	-sn Main=greater
+#
+FILE5	=	genconst.c
+LOPT5	=	-rt	DSfn=1004	-sn Main=genconst
+#
+FILES	=	{FILE1}		¶
+			{FILE2}		¶
+			{FILE3}		¶
+			{FILE4}		¶
+			{FILE5}
+#
+Syslibs	=	"{CLibraries}"CLib881.o		¶
+			"{CLibraries}"CRuntime.o	¶
+			"{Libraries}"Interface.o	¶
+			"{CLibraries}"StdCLib.o 	¶
+			"{CLibraries}"CSANELib881.o ¶
+ 			"{CLibraries}"Math881.o		¶
+			"{CLibraries}"CInterface.o
+######################################
+DSlibrary	Ä	{FILE1}	¶
+				{FILE2}	¶
+				{FILE3}	¶
+				{FILE4}	¶
+				{FILE5}
+	C		{FILE1}		{COPT}
+	Link	{LOPT}		{LOPT1}	{Syslibs}
+	C		{FILE2}		{COPT}
+	Link	{LOPT}		{LOPT2}	{Syslibs}
+	C		{FILE3}		{COPT}
+	Link	{LOPT}		{LOPT3}	{Syslibs}
+	C		{FILE4}		{COPT}
+	Link	{LOPT}		{LOPT4}	{Syslibs}
+	C		{FILE5}		{COPT}
+	Link	{LOPT}		{LOPT5}	{Syslibs}
+#

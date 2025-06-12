@@ -1,1 +1,73 @@
-EnvironServer - Environment Variables for the MacintoshBrent Burton - brentb@math.tamu.edu  5/31/93----------------------------------------Environment Variables for the MacintoshEnvServer.cpt.bin (or this directory) contains the full source andprecompiled executables that implement UNIX-style environment variableson the Macintosh.Under UNIX, each process inherits a set of environment variables fromthe shell which the program can manipulate through the getenv() andputenv() routines.  Since the Macintosh does not have any facilitylike this (well, Gestalt() is a small step in that direction) I decided toimplement this feature.  The idea I came up with was to have aserver run, handling requests from the processes.  The server is abackground-only app called the "EnvironServer".[Keep in mind that inter-program communication or user-definable optionsusing environment variables is such a foreign concept on the Mac thatthis is one hell of a hack.  This barely works...  I did it to see ifI could implement something like this.]About this versionThis particular version is minimal but it works.  I plan to later changethe server from a background-only app to having a nice interface forediting environment variables.  Right now, the server reads the filenamed "Environment" for initial environment variables and then handlesput/get-env() calls from there.Using this code in your projectsIf you are porting code that uses environment variables you will needto do a couple of things:* Add the line   #include "GetPutEnv.h"  to each source file that uses getenv() or putenv().* Add the library GPenv.lib to your program's project.  (a version is already compiled and included herein)* In the Unix world, a call to getenv() returns a pointer to static data.  In this implementation, getenv() returns a Macintosh Ptr type that  points to a NewPtr()-allocated chunk of memory.  If you want to be  careful, be sure to call DisposPtr() on the result when you're done.  See the example client's source code for more details.Using the demoTo see a quick demo, first double-click on the EnvironServer application.The server will start and then immediately become invisible (it goes tothe background).  Next, start the "Client" application which is a smallapplication that access 5 different environment variables and changestheir values.  When the client is done, run it again - it will producedifferent results...The server stays running throughout all this, so when you are done youmay use the include "Application Killer" (AppKiller) program to kill theserver process.  (Source is included for AppKiller for the curious types.)---------This code was originally created under Think C 5 and I have recompiledeverything without problems under Symantec C 6. Anyway, this code isfreely distributable and modifiable.  If you use it, I'd appreciate abrief mention.Enjoy!-BrentBrent Burtonbrentb@math.tamu.edu
+EnvironServer - Environment Variables for the Macintosh
+Brent Burton - brentb@math.tamu.edu  5/31/93
+----------------------------------------
+Environment Variables for the Macintosh
+
+EnvServer.cpt.bin (or this directory) contains the full source and
+precompiled executables that implement UNIX-style environment variables
+on the Macintosh.
+
+Under UNIX, each process inherits a set of environment variables from
+the shell which the program can manipulate through the getenv() and
+putenv() routines.  Since the Macintosh does not have any facility
+like this (well, Gestalt() is a small step in that direction) I decided to
+implement this feature.  The idea I came up with was to have a
+server run, handling requests from the processes.  The server is a
+background-only app called the "EnvironServer".
+
+[Keep in mind that inter-program communication or user-definable options
+using environment variables is such a foreign concept on the Mac that
+this is one hell of a hack.  This barely works...  I did it to see if
+I could implement something like this.]
+
+
+About this version
+
+This particular version is minimal but it works.  I plan to later change
+the server from a background-only app to having a nice interface for
+editing environment variables.  Right now, the server reads the file
+named "Environment" for initial environment variables and then handles
+put/get-env() calls from there.
+
+
+Using this code in your projects
+
+If you are porting code that uses environment variables you will need
+to do a couple of things:
+* Add the line   #include "GetPutEnv.h"
+  to each source file that uses getenv() or putenv().
+* Add the library GPenv.lib to your program's project.
+  (a version is already compiled and included herein)
+* In the Unix world, a call to getenv() returns a pointer to static data.
+  In this implementation, getenv() returns a Macintosh Ptr type that
+  points to a NewPtr()-allocated chunk of memory.  If you want to be
+  careful, be sure to call DisposPtr() on the result when you're done.
+  See the example client's source code for more details.
+
+
+Using the demo
+
+To see a quick demo, first double-click on the EnvironServer application.
+The server will start and then immediately become invisible (it goes to
+the background).  Next, start the "Client" application which is a small
+application that access 5 different environment variables and changes
+their values.  When the client is done, run it again - it will produce
+different results...
+
+The server stays running throughout all this, so when you are done you
+may use the include "Application Killer" (AppKiller) program to kill the
+server process.  (Source is included for AppKiller for the curious types.)
+
+---------
+This code was originally created under Think C 5 and I have recompiled
+everything without problems under Symantec C 6. Anyway, this code is
+freely distributable and modifiable.  If you use it, I'd appreciate a
+brief mention.
+
+Enjoy!
+-Brent
+
+Brent Burton
+brentb@math.tamu.edu
+
+

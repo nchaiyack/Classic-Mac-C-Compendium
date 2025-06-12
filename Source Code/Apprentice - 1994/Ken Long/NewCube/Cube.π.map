@@ -1,1 +1,38 @@
-  File:   0 "MacTraps"  File:   1 "NewCube.c"Segment "%GlobalData" size=$00053E	qd								-$00053E(A5)				file="MacTraps"	randSeed						-$0004F2(A5)	screenBits						-$0004EE(A5)	arrow							-$0004E0(A5)	dkGray							-$00049C(A5)	ltGray							-$000494(A5)	gray							-$00048C(A5)	black							-$000484(A5)	white							-$00047C(A5)	thePort							-$000474(A5)	done_flag						-$000470(A5)				file="NewCube.c"	sinus							-$00046E(A5)	show_r							-$00026E(A5)	work_w							-$000266(A5)	show_w							-$000262(A5)	windowRecord1					-$00025E(A5)	windowRecord2					-$0001C2(A5)	a								-$000126(A5)	b								-$000124(A5)	c								-$000122(A5)	fi1								-$000120(A5)	fi2								-$00011E(A5)	p0h								-$00011C(A5)	p0v								-$00011A(A5)	p1h								-$000118(A5)	p1v								-$000116(A5)	p2h								-$000114(A5)	p2v								-$000112(A5)	p3h								-$000110(A5)	p3v								-$00010E(A5)Segment "Seg2" size=$000714 rsrcid=2	main							$000004	  JT=$000072(A5)
+  File:   0 "MacTraps"
+  File:   1 "NewCube.c"
+
+Segment "%GlobalData" size=$00053E
+	qd								-$00053E(A5)				file="MacTraps"
+	randSeed						-$0004F2(A5)
+	screenBits						-$0004EE(A5)
+	arrow							-$0004E0(A5)
+	dkGray							-$00049C(A5)
+	ltGray							-$000494(A5)
+	gray							-$00048C(A5)
+	black							-$000484(A5)
+	white							-$00047C(A5)
+	thePort							-$000474(A5)
+	done_flag						-$000470(A5)				file="NewCube.c"
+	sinus							-$00046E(A5)
+	show_r							-$00026E(A5)
+	work_w							-$000266(A5)
+	show_w							-$000262(A5)
+	windowRecord1					-$00025E(A5)
+	windowRecord2					-$0001C2(A5)
+	a								-$000126(A5)
+	b								-$000124(A5)
+	c								-$000122(A5)
+	fi1								-$000120(A5)
+	fi2								-$00011E(A5)
+	p0h								-$00011C(A5)
+	p0v								-$00011A(A5)
+	p1h								-$000118(A5)
+	p1v								-$000116(A5)
+	p2h								-$000114(A5)
+	p2v								-$000112(A5)
+	p3h								-$000110(A5)
+	p3v								-$00010E(A5)
+
+Segment "Seg2" size=$000714 rsrcid=2
+	main							$000004	  JT=$000072(A5)
+

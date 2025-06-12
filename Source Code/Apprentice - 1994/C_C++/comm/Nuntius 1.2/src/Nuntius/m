@@ -1,1 +1,6 @@
-flushif {HasRamDisk} && "{K_Nuntius}" =~ /{RamDisk}Å/	set MADone ram-bup; export MADoneendMABuild Nuntius  -cplusplus -d -cplusplus DV='/**/' {parameters}flushvols
+flush
+if {HasRamDisk} && "{K_Nuntius}" =~ /{RamDisk}Å/
+	set MADone ram-bup; export MADone
+end
+MABuild Nuntius  -cplusplus -d -cplusplus DV='/**/' {parameters}
+flushvols

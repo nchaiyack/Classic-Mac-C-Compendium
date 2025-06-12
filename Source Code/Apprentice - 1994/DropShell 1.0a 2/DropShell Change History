@@ -1,1 +1,66 @@
-11/24/91	• Merged code down to a single C & Pascal version (with conditionals)	• Added support for Apple Menu Items (whoops)	• Added support/hooks for the 'pdoc' event as per DTS recommendation		In doing so, I ended up changing the names & params to the old		odoc event handlers.  The old odoc handlers now get called for		both odoc & pdoc events, with a boolean to distinguish which one.		There is also now a common 'doc event processor' in DSAppleEvents.				Also, PreFlightDocs is now a function, so that you can return a 		boolean to the caller as to whether you support this event so it		can return the right error to the AEManager.		{NOTE: Should it return an OSErr instead?}	• Added a userDataHandle parameter to all the odoc/pdoc calls		This is to avoid use of globals by allowing the programmer to		create a datablock which is passed to each of the called routines -		just like the new StandardFile!	• Added some more comments to the rez file - especially the help resources	• Created a new file called DSUtils which includes some utility routines		CenterAlert & ErrorAlert 	- for use in putting up messages to the user		GetAppName & GetAppFSSpec 	- process manager calls to get info about self		{NOTE: What else should go in here??}12/9/91	• Added the AEVT sending routines to DSUtils		SendODOCToSelf		SendQuitToSelf	• Implemented the new "Select File…" mechanism		File menu now has a "Select File…" menu item			This calls a new userProc (SelectFile) 				it just calls StandardGetFile & then sends odoc to self	• File:Quit now calls the SendQuitToSelf routine	• Display and handle a 'splash screen'		As per John Sullivan's recommedations, DropShell now goes looking		for a splash screen PICT (ID#128) and if it finds one, displays a		'splash screen' with that pict in it.12/10/91	• Added an 'aete' resource		we are now compat with a number of scripting systems12/11/91	• Fixed a bug in the DS/C sources		= vs. == in the _SendDocsToSelf routine	• Added two new userProcs - InitUserGlobals & DisposeUserGlobals		These were suggested by MClow to keep users from modifying DropShell.c/.p12/22/91		• NO changes to the DropShell sources, however these are now considered FINAL!	• Completed work on the Drop•Info sampleSuggestions for the future	• Put some comments into docs about 'gotchas' of dropboxes		signature resource MUST be present		doesn't work if dropbox on floppy		{NOTE: anything else?}	• High level support for AEInteractWithUser		idle procs, etc.	• Smaller default partition size (currently 100K)	• Support diskInsertion events	• Use GrayRgn.bBox.bounds instead of ScreenBits.bounds for _DragWindow		
+11/24/91
+	• Merged code down to a single C & Pascal version (with conditionals)
+	• Added support for Apple Menu Items (whoops)
+	• Added support/hooks for the 'pdoc' event as per DTS recommendation
+		In doing so, I ended up changing the names & params to the old
+		odoc event handlers.  The old odoc handlers now get called for
+		both odoc & pdoc events, with a boolean to distinguish which one.
+
+		There is also now a common 'doc event processor' in DSAppleEvents.
+		
+		Also, PreFlightDocs is now a function, so that you can return a 
+		boolean to the caller as to whether you support this event so it
+		can return the right error to the AEManager.
+		{NOTE: Should it return an OSErr instead?}
+	• Added a userDataHandle parameter to all the odoc/pdoc calls
+		This is to avoid use of globals by allowing the programmer to
+		create a datablock which is passed to each of the called routines -
+		just like the new StandardFile!
+	• Added some more comments to the rez file - especially the help resources
+	• Created a new file called DSUtils which includes some utility routines
+		CenterAlert & ErrorAlert 	- for use in putting up messages to the user
+		GetAppName & GetAppFSSpec 	- process manager calls to get info about self
+		{NOTE: What else should go in here??}
+
+12/9/91
+	• Added the AEVT sending routines to DSUtils
+		SendODOCToSelf
+		SendQuitToSelf
+	• Implemented the new "Select File…" mechanism
+		File menu now has a "Select File…" menu item
+			This calls a new userProc (SelectFile) 
+				it just calls StandardGetFile & then sends odoc to self
+	• File:Quit now calls the SendQuitToSelf routine
+	• Display and handle a 'splash screen'
+		As per John Sullivan's recommedations, DropShell now goes looking
+		for a splash screen PICT (ID#128) and if it finds one, displays a
+		'splash screen' with that pict in it.
+
+12/10/91
+	• Added an 'aete' resource
+		we are now compat with a number of scripting systems
+
+12/11/91
+	• Fixed a bug in the DS/C sources
+		= vs. == in the _SendDocsToSelf routine
+	• Added two new userProcs - InitUserGlobals & DisposeUserGlobals
+		These were suggested by MClow to keep users from modifying DropShell.c/.p
+
+12/22/91	
+	• NO changes to the DropShell sources, however these are now considered FINAL!
+	• Completed work on the Drop•Info sample
+
+
+Suggestions for the future
+	• Put some comments into docs about 'gotchas' of dropboxes
+		signature resource MUST be present
+		doesn't work if dropbox on floppy
+		{NOTE: anything else?}
+	• High level support for AEInteractWithUser
+		idle procs, etc.
+	• Smaller default partition size (currently 100K)
+	• Support diskInsertion events
+	• Use GrayRgn.bBox.bounds instead of ScreenBits.bounds for _DragWindow
+	
+
+	

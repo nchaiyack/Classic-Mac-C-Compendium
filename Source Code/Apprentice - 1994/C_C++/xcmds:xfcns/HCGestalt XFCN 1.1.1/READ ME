@@ -1,1 +1,5 @@
-HCGestalt XFCN 1.1.1by Alex MetcalfInternet: alex@metcalf.demon.co.uk (Alex Metcalf)This source code is being distributed to allow new programmers to see how to get started with writing an external for Hypercard. I know it's not perfect code (I'm sure people can suggest ways to optimize it), but I think it's a good example of how you can receive parameters, as well as return a result to Hypercard.
+HCGestalt XFCN 1.1.1
+by Alex Metcalf
+Internet: alex@metcalf.demon.co.uk (Alex Metcalf)
+
+This source code is being distributed to allow new programmers to see how to get started with writing an external for Hypercard. I know it's not perfect code (I'm sure people can suggest ways to optimize it), but I think it's a good example of how you can receive parameters, as well as return a result to Hypercard.

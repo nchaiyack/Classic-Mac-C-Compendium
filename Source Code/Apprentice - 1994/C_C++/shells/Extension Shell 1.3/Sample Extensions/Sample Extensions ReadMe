@@ -1,1 +1,19 @@
-Sample Extensions ReadMe------------------------The Extension Shell package comes with 6 sample Extensions, as well as a framework you can use as abasis for your own.Each Extension has been chosen to illustrate one aspect of Extension Shell. One installs a trap patch (anda block of code in the System heap), one a Gestalt selector, one a VBL task, one a Shutdown task, one alow memory filter, and one a Time Manager task.They all use a first-time-through flag mechanism to minimise calls to the address table: in most cases,this is the most efficient way of avoiding a constant lookup.The trap-patch example (BellTest) also shows how to extend the address table, as documented in‘Extension Shell (Source) ReadMe’. It also shows how to load, and call, a raw block of code into theSystem Heap. The shutdown task example (Shutdown Fade) also shows how to animate a sequence of icons.The Time Manager example (MacCough) also extends the address table.None of them are intended as ‘real’ Extensions - they're here by way of example...
+Sample Extensions ReadMe
+------------------------
+
+The Extension Shell package comes with 6 sample Extensions, as well as a framework you can use as a
+basis for your own.
+
+Each Extension has been chosen to illustrate one aspect of Extension Shell. One installs a trap patch (and
+a block of code in the System heap), one a Gestalt selector, one a VBL task, one a Shutdown task, one a
+low memory filter, and one a Time Manager task.
+
+They all use a first-time-through flag mechanism to minimise calls to the address table: in most cases,
+this is the most efficient way of avoiding a constant lookup.
+
+The trap-patch example (BellTest) also shows how to extend the address table, as documented in
+‘Extension Shell (Source) ReadMe’. It also shows how to load, and call, a raw block of code into the
+System Heap. The shutdown task example (Shutdown Fade) also shows how to animate a sequence of icons.
+The Time Manager example (MacCough) also extends the address table.
+
+None of them are intended as ‘real’ Extensions - they're here by way of example...

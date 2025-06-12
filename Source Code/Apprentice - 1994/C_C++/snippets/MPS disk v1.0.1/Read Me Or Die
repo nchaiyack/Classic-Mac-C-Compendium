@@ -1,1 +1,37 @@
-Dear consumer:Thanks for forking over the bucks for this Fine Disk. I hope you enjoy it. And we appreciate it.Due to some oversights no doubt caused by the publisher, there were a few errors in the source code published in the book. Those errors have been fixed and the changes are included on the Fine Disk you have just copied onto your hard disk and then tossed on your heap of floppies to be recycled. This document lists those errors and the fixes.p. 208: SaveBackground()----------------------If there are no application windows to be preserved, coveredWagon will be an empty region and coveredRect will be an empty rectangle. If this rectangle is then passed to CreateOffWorld, an invalid offscreen graphics world will be created (the authors might have noticed that if they hadn’t been so cocky and actually checked the result code returned by NewGWorld()). The solution is to check for an empty save region before trying to save it. In SaveBackground(), the following changes were made:	coveredWagon = GetCoveredArea(w);	if (!EmptyRgn(coveredWagon)) {                                // this line added		coveredRect = (**coveredWagon).rgnBBox; ...		(***savedData).offWorld = offWorld;	} else {                                                                     // this line added		*savedData = NIL;                                                  // this line added	}                                                                              // this line addedTo balance this out, we must make a change to RestoreBackground. If nothing was saved in SaveBackground, then nothing needs to be restored:	if (savedData != NIL) {                                             // this line added		coveredRect = (**(**savedData).coveredArea).rgnBBox;...		DisposeHandle((Handle) savedData);	}                                                                              // this line addedp. 450: MyMenuKey()------------------During development, MyMenuKey() contained the following line:	result = (*oldMenuKeyAddress)(ch);See page 406 if you don’t believe me. However, shortly before going to press, a green monster broke into the computer in the middle of the night and converted this line from K&R syntax to ANSI syntax. In the process, the monster removed one of the s’s from oldMenuKeyAddress. The line should read:	result = oldMenuKeyAddress(ch);
+Dear consumer:
+
+Thanks for forking over the bucks for this Fine Disk. I hope you enjoy it. And we appreciate it.
+
+Due to some oversights no doubt caused by the publisher, there were a few errors in the source code published in the book. Those errors have been fixed and the changes are included on the Fine Disk you have just copied onto your hard disk and then tossed on your heap of floppies to be recycled. This document lists those errors and the fixes.
+
+p. 208: SaveBackground()
+----------------------
+If there are no application windows to be preserved, coveredWagon will be an empty region and coveredRect will be an empty rectangle. If this rectangle is then passed to CreateOffWorld, an invalid offscreen graphics world will be created (the authors might have noticed that if they hadn’t been so cocky and actually checked the result code returned by NewGWorld()). The solution is to check for an empty save region before trying to save it. In SaveBackground(), the following changes were made:
+
+	coveredWagon = GetCoveredArea(w);
+	if (!EmptyRgn(coveredWagon)) {                                // this line added
+		coveredRect = (**coveredWagon).rgnBBox;
+ ...
+		(***savedData).offWorld = offWorld;
+	} else {                                                                     // this line added
+		*savedData = NIL;                                                  // this line added
+	}                                                                              // this line added
+
+To balance this out, we must make a change to RestoreBackground. If nothing was saved in SaveBackground, then nothing needs to be restored:
+
+	if (savedData != NIL) {                                             // this line added
+		coveredRect = (**(**savedData).coveredArea).rgnBBox;
+...
+		DisposeHandle((Handle) savedData);
+	}                                                                              // this line added
+
+
+p. 450: MyMenuKey()
+------------------
+During development, MyMenuKey() contained the following line:
+
+	result = (*oldMenuKeyAddress)(ch);
+
+See page 406 if you don’t believe me. However, shortly before going to press, a green monster broke into the computer in the middle of the night and converted this line from K&R syntax to ANSI syntax. In the process, the monster removed one of the s’s from oldMenuKeyAddress. The line should read:
+
+	result = oldMenuKeyAddress(ch);

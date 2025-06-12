@@ -1,1 +1,32 @@
-ARTAbrot - Apple Real-Time Architecture Mandelbrot ProgramVersion 1.21by George Warner03/29/94warnergt@aloft.att.comREQUIREMENTS:ARTA equipped Macintosh (Quadra 840av, Centris 660av, Quadra 660av or Mac with ARTA plug-in board), 68020 or greater1. WHAT IT IS: ARTAbrot is a Mandelbrot program that it uses the AT&T DSP3210 in ARTA to quickly perform the intensive Mandelbrot calculations.Complete source code too!  This is "must have" sample source code for anyone considering to do some DSP programming on av Macs.Release 1.21 03/29/94	Fixed code that tested for the presence of ARTA.Release 1.2	03/26/94	Added code for selecting new coordinates by dragging a rectangle around the new area of interest.  Special thanks to Wayne Vucenic (wvucenic@netcom.com) for contributing this code.  Added a color icon and a jazzed up about box.  Added code to test for the presence of ARTA to prevent errors when attempting to execute on non-ARTA Macs.  Now immediately starts calculating a Mandelbrot image upon launching the application.Release 1.1	11/22/93	Added support for larger windows, resizable windows, and background processing.Release 1.0	08/23/93	First version.That is all.George Warnerwarnergt@aloft.att.com
+ARTAbrot - Apple Real-Time Architecture Mandelbrot Program
+Version 1.21
+by George Warner
+03/29/94
+warnergt@aloft.att.com
+
+REQUIREMENTS:
+ARTA equipped Macintosh (Quadra 840av, Centris 660av, Quadra 660av 
+or Mac with ARTA plug-in board), 68020 or greater
+
+1. WHAT IT IS: ARTAbrot is a Mandelbrot program that it uses the AT&T 
+DSP3210 in ARTA to quickly perform the intensive Mandelbrot calculations.
+Complete source code too!  This is "must have" sample source code for 
+anyone considering to do some DSP programming on av Macs.
+
+Release 1.21 03/29/94	Fixed code that tested for the presence of ARTA.
+Release 1.2	03/26/94	Added code for selecting new coordinates by 
+dragging a rectangle around the new area of interest.  Special thanks to 
+Wayne Vucenic (wvucenic@netcom.com) for contributing this code.  Added a 
+color icon and a jazzed up about box.  Added code to test for the presence 
+of ARTA to prevent errors when attempting to execute on non-ARTA Macs.  
+Now immediately starts calculating a Mandelbrot image upon launching the 
+application.
+Release 1.1	11/22/93	Added support for larger windows, resizable 
+windows, and background processing.
+Release 1.0	08/23/93	First version.
+
+
+
+That is all.
+George Warner
+warnergt@aloft.att.com

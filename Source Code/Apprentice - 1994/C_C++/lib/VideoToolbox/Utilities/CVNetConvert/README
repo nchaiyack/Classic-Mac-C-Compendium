@@ -1,1 +1,194 @@
-README file for cvnetcnv version 1.05 [92-07-01]###### WARNING !!! WARNING !!! WARNING !!! WARNING !!! WARNING !!! ######Please DO NOT ABUSE the computer readable database you generate withthis program.  Mailing directly from your computer to all members ofCVNet is *ABUSE*!  No matter how hot a manuscript or how greata product you have, do not send mails to everyone directly.  If youthink you have some important information for a lot of people, send itto CVNet.I wrote this program to give us convenience in finding addresses of ourcolleagues.  Abuse of the database will lead to your expulsion from theCVNet, not to mention that everyone will hate you for it.##########################################################################cvnetcnv.c - CVNet master member list format converter.   This program converts CVNet master member list into other data formats	suitable for importing into a variety of database programs.	By defining the desired output format in file "cvnetcnv.fmt"	in the current directory, the program can be customized for	nearly all kinds of format conversion needs.  Format specification	files for some common data formats are included in the package.   The program has been tested on the following machines and operating systems.	BSD Unix 4.3	Sun 4 (SunOS Release 4.1)	NeXT (NeXT OS Release 2.1)	IBM PC/Clones (MSDOS 5.0)		Microsoft C (v5.1), Turbo C (v2.0), Turbo C++ (v1.0)	Macintosh (System 7)		THINK C   This program is not copyrighted.  You are free to do whatever	you want with it.   Send comments, bug fixes, support for other machines/OS, and additonal	format specification files to: izumi@pinoko.berkeley.edu.   Up-to-date version of this program and additional format specification files	will be available via anonymous FTP from our machine	"pinoko.berkeley.edu" in directory: /pub/CVNet.   This program is in no way guaranteed to do anything useful for you.   More likely, it will distract your attention from your research.   ---------------------------------------------------------------------------   Usage:	cvnetcnv inputfile outputfile [formatfile]   "Inputfile" is a file containing the CVNet master member list as obtained   from Listserv@vm1.yorkU.ca by sending it a one-line message that says:   GET MEMBER FILE   You do not have to edit out the e-mail header and little notes at the   beginning and end of the e-mail text.   "Outputfile" will contain the result of conversion performed per   specification in file "cvnetcnv.fmt".   "Formatfile" may be given as an option when you want to override the   default use of "cvnetcnv.fmt".	The Macintosh version (i.e. if MAC is defined) presents standard file	dialogs, asking you to open your CVNet master file, and how you want to	save it. You are asked to open your own format file only if it can't find	"cvnetcnv.fmt".   ---------------------------------------------------------------------------   To Compile:   NOTE -- Please check if the appropriate macro is defined for	UNIX, MSDOS, MAC or whatever.  These macros should be mutually	exclusive.  If you define MAC, comment out the others.   UNIX	cc -o cvnetcnv cvnetcnv.c   MSDOS (Uncomment #define MSDOS below. Same for Turbo C++)	cl cvnetcnv.c (MSC)	tcc cvnetcnv.c (Turbo C)   Macintosh THINK C   	 Uncomment #define MAC below. Use the supplied project file CVNetConvert. ¹.    	 Should work fine on all Macs and Systems 6 and 7, but was only tested on    	 Mac IIci with System 7.   ---------------------------------------------------------------------------   To Prepare Conversion Format Specification File:   The first line of the format file specifies the record format. You may use    the following variable names. All other characters not listed below will    be written out to the output as is.	    $L -- last name	    $F -- first name & initial	    $I -- institutional affiliation	    $A -- address (e-mail)	    $T -- TAB character	    $N -- NEW LINE character (LF for UNIX, CRLF for MSDOS)	    $Cnn -- advance to column nn if possible (if not past it already)    For example, this format line	    $L$C12$F$C22($I)$C43<$A>,    produces a file suitable for UNIX "mail/sendmail":	    Abramov    Israel    (Brooklyn College)   <ixrbc@cunyvm.bitnet>,    [#### Warning.  Don't send E-mails to everyone on CVNet using the alias file     you can obtain this way.  That is ABUSE! of the database.]    On the second line, a line beginning with $M may appear optionally. If present,    it specifies the output file's Macintosh file type and creator (ignored unless     the program is running on a Mac).  If not present, the file type/creator    will be set to that of MacWrite text file.        After the $M line, or on the second line if $M line does not appear,    a line beginning with $P may appear optionally (which may continue for    multiple lines).  If present, it will specify the prolog, text placed    at the beginning of the output file before all address records.    After this, a line beginning with $E may appear optionally (which    may continue for multiple lines).  If present, it will specify the    epilog, text placed at the end of the output file after all    address records.          $M, $P, $E must appear in that order if all three are present.    Not all of them have to be present, e.g., if no prolog is needed    but epilog is required, $M, $E lines should be entered in that order.        There may not be any blank or extraneous lines between the first line    and $M.  Similarly, no blank or extraneous lines should be present    between $M, $P, $E specifications.  However, blank lines are allowed    within the quoted text for the prolog and epilog.         $M, $P, $E must appear at column 1 without any leading spaces.    	$Mttttcccc -- specify the output file's four-character Macintosh type 		(e.g. TEXT) and creator (e.g. MACA). The rest of the line is ignored.	$P^prolog text^ -- Place the text between quote chars at the beginning of		the output file.	$E^epilog text^ -- Place the text between quote chars at the end of the		output file.        The prolog and epilog may extend over many lines. The character that     immediately follows $P and $E is used as the "quote" character to     mark the range of text for prolog and epilog.  The quote char may be any     printable character that is not used in the quoted text for the     prolog and epilog. The rest of the line after the terminating quote is     ignored. After the optional $M, $P, and $E the rest of the file is ignored.        The QuickDEX.fmt format file produces a Macintosh file    suitable for use with the Rolodex-like program called QuickDEX:	    *$NN$F $L$N$I$N$A	    $MTEXTQDEx	    $P^	    *	    ^	    $E^*	    *	    ^    The first line specifies the record format, which produces records like this:	    *	    NIsrael Abramov	    Brooklyn College	    ixrbc@cunyvm.bitnet    The line beginning with $M specifies the Macintosh file type (TEXT) and creator    (QDEx) so that QuickDEX will recognize it. The lines beginning with $P and $E     specify a prolog and epilog, adding some extra *'s and linefeeds to please QuickDEX.    Here are some more examples:        Revert to the old format of CVNet master list (but without continuation lines):		$L$C12$F$C22$I$C43$A	produces		Abramov    Israel    Brooklyn College     ixrbc@cunyvm.bitnet	Tab-separated ASCII format for importing into NeXT SpeedDeX application:		$L, $F$T$A$T$I	produces		Abramov, Israel	ixrbc@cunyvm.bitnet	Brooklyn College		               ^                   ^		              TAB                 TAB	A basic format might demarcate field by quotes and commas:		"$L", "$F", "$I", "$A"	produces		"Abramov", "Israel", "Brooklyn College", "ixrbc@cunyvm.bitnet"   ---------------------------------------------------------------------------   Revision history:   V1.00, 92-06-07, Izumi Ohzawa, izumi@pinoko.berkeley.edu   V1.01, 92-06-15, Denis_Pelli@isr.syr.edu added support for Macintosh.   V1.02, 92-06-16, Izumi Ohzawa, added support for Prolog, Epilog.   V1.03, 92-06-16, Denis Pelli, set type and creator of Mac files   V1.04, 92-06-17, Izumi & Denis, minor fixups for portability   V1.05, 92-07-01, Denis fixed bug reported by Larry Thibos, can now open   					files in any folder.   ---------------------------------------------------------------------------
+README file for cvnetcnv version 1.05 [92-07-01]
+
+###### WARNING !!! WARNING !!! WARNING !!! WARNING !!! WARNING !!! ######
+
+Please DO NOT ABUSE the computer readable database you generate with
+this program.  Mailing directly from your computer to all members of
+CVNet is *ABUSE*!  No matter how hot a manuscript or how great
+a product you have, do not send mails to everyone directly.  If you
+think you have some important information for a lot of people, send it
+to CVNet.
+I wrote this program to give us convenience in finding addresses of our
+colleagues.  Abuse of the database will lead to your expulsion from the
+CVNet, not to mention that everyone will hate you for it.
+##########################################################################
+
+cvnetcnv.c - CVNet master member list format converter.
+
+   This program converts CVNet master member list into other data formats
+	suitable for importing into a variety of database programs.
+	By defining the desired output format in file "cvnetcnv.fmt"
+	in the current directory, the program can be customized for
+	nearly all kinds of format conversion needs.  Format specification
+	files for some common data formats are included in the package.
+
+   The program has been tested on the following machines and operating systems.
+	BSD Unix 4.3
+	Sun 4 (SunOS Release 4.1)
+	NeXT (NeXT OS Release 2.1)
+	IBM PC/Clones (MSDOS 5.0)
+		Microsoft C (v5.1), Turbo C (v2.0), Turbo C++ (v1.0)
+	Macintosh (System 7)
+		THINK C
+
+   This program is not copyrighted.  You are free to do whatever
+	you want with it.
+
+   Send comments, bug fixes, support for other machines/OS, and additonal
+	format specification files to: izumi@pinoko.berkeley.edu.
+
+   Up-to-date version of this program and additional format specification files
+	will be available via anonymous FTP from our machine
+	"pinoko.berkeley.edu" in directory: /pub/CVNet.
+
+   This program is in no way guaranteed to do anything useful for you.
+   More likely, it will distract your attention from your research.
+
+   ---------------------------------------------------------------------------
+   Usage:
+	cvnetcnv inputfile outputfile [formatfile]
+
+   "Inputfile" is a file containing the CVNet master member list as obtained
+   from Listserv@vm1.yorkU.ca by sending it a one-line message that says:
+   GET MEMBER FILE
+   You do not have to edit out the e-mail header and little notes at the
+   beginning and end of the e-mail text.
+
+   "Outputfile" will contain the result of conversion performed per
+   specification in file "cvnetcnv.fmt".
+
+   "Formatfile" may be given as an option when you want to override the
+   default use of "cvnetcnv.fmt".
+
+	The Macintosh version (i.e. if MAC is defined) presents standard file
+	dialogs, asking you to open your CVNet master file, and how you want to
+	save it. You are asked to open your own format file only if it can't find
+	"cvnetcnv.fmt".
+   ---------------------------------------------------------------------------
+   To Compile:
+   NOTE -- Please check if the appropriate macro is defined for
+	UNIX, MSDOS, MAC or whatever.  These macros should be mutually
+	exclusive.  If you define MAC, comment out the others.
+
+   UNIX
+	cc -o cvnetcnv cvnetcnv.c
+
+   MSDOS (Uncomment #define MSDOS below. Same for Turbo C++)
+	cl cvnetcnv.c (MSC)
+	tcc cvnetcnv.c (Turbo C)
+
+   Macintosh THINK C
+   	 Uncomment #define MAC below. Use the supplied project file CVNetConvert. ¹. 
+   	 Should work fine on all Macs and Systems 6 and 7, but was only tested on 
+   	 Mac IIci with System 7.
+   ---------------------------------------------------------------------------
+   To Prepare Conversion Format Specification File:
+
+   The first line of the format file specifies the record format. You may use 
+   the following variable names. All other characters not listed below will 
+   be written out to the output as is.
+
+	    $L -- last name
+	    $F -- first name & initial
+	    $I -- institutional affiliation
+	    $A -- address (e-mail)
+	    $T -- TAB character
+	    $N -- NEW LINE character (LF for UNIX, CRLF for MSDOS)
+	    $Cnn -- advance to column nn if possible (if not past it already)
+
+    For example, this format line
+	    $L$C12$F$C22($I)$C43<$A>,
+    produces a file suitable for UNIX "mail/sendmail":
+	    Abramov    Israel    (Brooklyn College)   <ixrbc@cunyvm.bitnet>,
+
+    [#### Warning.  Don't send E-mails to everyone on CVNet using the alias file
+     you can obtain this way.  That is ABUSE! of the database.]
+
+    On the second line, a line beginning with $M may appear optionally. If present,
+    it specifies the output file's Macintosh file type and creator (ignored unless 
+    the program is running on a Mac).  If not present, the file type/creator
+    will be set to that of MacWrite text file.
+    
+    After the $M line, or on the second line if $M line does not appear,
+    a line beginning with $P may appear optionally (which may continue for
+    multiple lines).  If present, it will specify the prolog, text placed
+    at the beginning of the output file before all address records.
+    After this, a line beginning with $E may appear optionally (which
+    may continue for multiple lines).  If present, it will specify the
+    epilog, text placed at the end of the output file after all
+    address records.  
+    
+    $M, $P, $E must appear in that order if all three are present.
+    Not all of them have to be present, e.g., if no prolog is needed
+    but epilog is required, $M, $E lines should be entered in that order.
+    
+    There may not be any blank or extraneous lines between the first line
+    and $M.  Similarly, no blank or extraneous lines should be present
+    between $M, $P, $E specifications.  However, blank lines are allowed
+    within the quoted text for the prolog and epilog. 
+    
+    $M, $P, $E must appear at column 1 without any leading spaces.
+
+    
+	$Mttttcccc -- specify the output file's four-character Macintosh type 
+		(e.g. TEXT) and creator (e.g. MACA). The rest of the line is ignored.
+	$P^prolog text^ -- Place the text between quote chars at the beginning of
+		the output file.
+	$E^epilog text^ -- Place the text between quote chars at the end of the
+		output file.
+    
+    The prolog and epilog may extend over many lines. The character that 
+    immediately follows $P and $E is used as the "quote" character to 
+    mark the range of text for prolog and epilog.  The quote char may be any 
+    printable character that is not used in the quoted text for the 
+    prolog and epilog. The rest of the line after the terminating quote is 
+    ignored. After the optional $M, $P, and $E the rest of the file is ignored.
+    
+    The QuickDEX.fmt format file produces a Macintosh file
+    suitable for use with the Rolodex-like program called QuickDEX:
+	    *$NN$F $L$N$I$N$A
+	    $MTEXTQDEx
+	    $P^
+	    *
+	    ^
+	    $E^*
+	    *
+	    ^
+    The first line specifies the record format, which produces records like this:
+	    *
+	    NIsrael Abramov
+	    Brooklyn College
+	    ixrbc@cunyvm.bitnet
+    The line beginning with $M specifies the Macintosh file type (TEXT) and creator
+    (QDEx) so that QuickDEX will recognize it. The lines beginning with $P and $E 
+    specify a prolog and epilog, adding some extra *'s and linefeeds to please QuickDEX.
+
+    Here are some more examples:
+    
+    Revert to the old format of CVNet master list (but without continuation lines):
+		$L$C12$F$C22$I$C43$A
+	produces
+		Abramov    Israel    Brooklyn College     ixrbc@cunyvm.bitnet
+
+	Tab-separated ASCII format for importing into NeXT SpeedDeX application:
+		$L, $F$T$A$T$I
+	produces
+		Abramov, Israel	ixrbc@cunyvm.bitnet	Brooklyn College
+		               ^                   ^
+		              TAB                 TAB
+
+	A basic format might demarcate field by quotes and commas:
+		"$L", "$F", "$I", "$A"
+	produces
+		"Abramov", "Israel", "Brooklyn College", "ixrbc@cunyvm.bitnet"
+
+   ---------------------------------------------------------------------------
+   Revision history:
+   V1.00, 92-06-07, Izumi Ohzawa, izumi@pinoko.berkeley.edu
+   V1.01, 92-06-15, Denis_Pelli@isr.syr.edu added support for Macintosh.
+   V1.02, 92-06-16, Izumi Ohzawa, added support for Prolog, Epilog.
+   V1.03, 92-06-16, Denis Pelli, set type and creator of Mac files
+   V1.04, 92-06-17, Izumi & Denis, minor fixups for portability
+   V1.05, 92-07-01, Denis fixed bug reported by Larry Thibos, can now open
+   					files in any folder.
+   ---------------------------------------------------------------------------

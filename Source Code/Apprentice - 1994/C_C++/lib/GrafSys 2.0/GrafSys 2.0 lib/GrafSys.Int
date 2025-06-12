@@ -1,1 +1,500 @@
-unit GrafSys;{this is the interface file to the }{programmers hierachical 3D grafsys}{ © 1993 by christian franz }interface{$IFC UNDEFINED UseFixedMath}{$SETC UseFixedMath := FALSE}{$ENDC}{$PUSH}{$J+}{Matrix/Vector/Surface manipulation }{$IFC UseFixedMath = TRUE }type	Matrix4 = record			M: array[1..4, 1..4] of fixed;			identity: boolean;		end;	Vector4 = array[1..4] of fixed;var	one: fixed;{$ELSEC}type	Matrix4 = record			M: array[1..4, 1..4] of real;			identityFlag: boolean;		end;	Vector4 = array[1..4] of real;var	one: real;{$ENDC}{returns the identity matrix}function Identity: Matrix4;(* VSub : Subtract two vectors: result := x - y *)function VSub (x, y: Vector4): Vector4;(* VAdd : Add two vectors *)function VAdd (x, y: Vector4): Vector4;(* Set Vector to coordinates *)procedure SetVector4 (var theVector: Vector4; x, y, z: real);(* get vector coordinates *)procedure GetVector4 (theVector: Vector4; var x, y, z: real);(* IsVisible determines if the plane defined through the three points KLM (as vector 4) 	*)(* is visible form the eye. Visibility is determined as the value of the normal vector of 	*)(* the plane defined by abc. it is visible if the z component of n is greater than zero 		*)(* note that for this test you must label k,l,m clockwise !!! 									*)function IsVisible (k, l, m: Vector4): Boolean;{offscreen core data definitions }typeTOffscreenRec = record (* offscreen data management *)		thePort: CGrafPtr;		theDevice: GDHandle;		theColors: CTabHandle;		mainDevice: GDHandle;	end;{GrafSys core definitions }const	{Misc Constants }Res3D = '3Dob'; (* This is the 3D object data resource name *)Res3DColor = 'lClr'; (* line color resource for 3Dob *)	{Error Codes defined by the GrafSys }cNoFFallocated = -1;cOutOfMem = -2;cBadMethodCall = -3; {this method should not be called. Instance it yourself!}cNothingToInherit = -4; {this error occures when you try to pass on as first thing in the FF chain }cTooManyPoints = -5; {model database is full. Maximum # of points exceeded }cIllegalPointIndex = -6; {point index specified has no corresponding point in model }cTooManyLines = -7; {trying to add a line to a model that is full }cIllegalLineIndex = -8; {trying to access a line that does not exist }cCantDeletePoint = -9; {the point is still referenced by at least one line}cNotOwner = -10; {FF matrix doesn't belong to this object}cBadFF = -11;	{FF matrix was NIL}cBadFFType = -12; {FF matrix type cant be made current }cCantLoadRes = -13; {error loading resource }cNo3DWindow = -14; {Window passed is no 3D window }cCantCreateOffscreen = -15; {Error occured while trying to allocate Off-Screen PixMap}cCantChangeOffscreen = -16; {Error occured while trying to resize or recolor Off-Screen PixMap}cNoOSAttached = -17; {the 3D Window passed has no Off-Screen PixMap attached}cCantUseWindowCLUT = -18; {Current active window does not use indexed (1-8 bit/pixel) colors}cNoActiveOSPixMap = -19; {User did not call BeginOSDraw. no active pix map}	{other constants}cErrorAlertID = 32700; {standard error-handler alert }typeTGenericObject = object		ErrorCode: integer;		function Clone: TGenericObject;		procedure Kill; (* deallocate myself *)		procedure HandleError;		procedure ResetError;		function Test (opcode: integer): integer; (* does anything to check integrity of object 		*)														(* This incarnation just pops up the Error Dialog	*)														(* and returns Error Code. Opcode is ignored 		*)		procedure Init;								(* just so it is defined for every object. Does nothing     *)														(* but initialization of ErrorCode. Make sure you do this *)														(* first, then do your own init if no error reported        *)		procedure Reset;							(* reset this object. doesn't really do anything but provided *)														(* so all objects support this method *)	end;TMatrixList = object(TGenericObject)		M: Matrix4;		next: TMatrixList;		owner: TGenericObject;							{who owns this matrix? }		procedure Init; (* set matrix to identity *)		override;		procedure Reset;		override;		procedure TMRotate (dx, dy, dz: real);		{rotate this matrix further}		procedure TMScale (dx, dy, dz: real);		{scale this matrix further }		procedure TMTranslate (dx, dy, dz: real);	{Translate this matrix further }		procedure TMRotArbAchsis (p, x: Vector4; phi: real); {rotate around achsis defined by p and x}	end;TMatrixInherit = object(TMatrixList) 	{This links a string of inherited matrixes to a 'father' }		upLink: TMatrixList;						{M contains the result of all MxM multiplie of prior }													{Matrices. M is updated via the downlink whenever  }													{father object gets updated. Update from father}		meTheSon: Tabstract3DObject;			{link to myself. Used for killing son when father gets}													{kill message, father accesses this field via downlink}		procedure Init;		override;	end;TMatrixPass = object(TMatrixList)		{this links a FFmatrix-string (up to here) to a son}		downLink: TMatrixInherit;				{whenever Transform is called, it will place the current }													{result of the FF transformations in the downlinks M field }		meTheFather: Tabstract3DObject;		{link to myself}		procedure Init;		override;	end;Tabstract3DObject = object(TGenericObject)		xTrans, yTrans, zTrans: real;	{translation for origin}		xScale, yScale, zScale: Real;	{scale factors for object}		xrot, yrot, zrot: real; 			{ rotation in radiants }		xForm: Matrix4;					{ result of all xforms including freeform }		arbRot: Matrix4;					{ arbitrary rotation is stored here }		currentFF: TMatrixList;			{current FF matrix}		FFMatrix: TMatrixList;			{ listhead of freeform xform matrices }		objChanged: Boolean; 			{true if object description changed. A call to calcTransform will reset it}		versionsID: longint;				{used for sync with eye. If ID <> eyes ID a recalc is required }		hasChanged: boolean;				{true after calctransform call that changed data. Should be reset by Draw etc. }		procedure Init;										{initialize object}		override;		procedure Reset;									{reset all rot, trans, scale to default }		override;		function Clone: TGenericObject;					{must also clone all TMatrix }		override;												{ATTN: what about inheritances??}		procedure Translate (dx, dy, dz: real); 			{ xlate object }		procedure SetTranslation (x, y, z: real);	 	{ set xlation to fixed amount }		procedure Rotate (dx, dy, dz: real); 			 	{ rotate further (just changes x-,y- and zrot) }		procedure SetRotation (x, y, z: real); 		 	{ set rot to x,y and z }		procedure Scale (dx, dy, dz: real); 			 	{scale factor for x, y and z }		procedure SetScale (x, y, z: real); 			 	{set absolute scale factor }		procedure RotArb (p, x: Vector4; phi: real);	{rotate around arbitrary axis}		procedure ResetArb;								{reset arb operator to identity}		procedure FFTranslate (dx, dy, dz: real); 	 	{xlate current FFMatrix further}		procedure FFRotate (dx, dy, dz: real); 		 	{rotate current FFMatrix further }		procedure FFScale (dx, dy, dz: real); 		 	{scale current FFMatrix further }		procedure FFRotArbAchsis (p, x: Vector4; phi: real); {rotate around achsis defined by p and x}		procedure FFReset;								{resets *current* FFMatrix to Identity (i.e. not all) }		function FFNewPostConcat: TMatrixList;		 	{allocate new FF matrix and postconcat it, put it into currentFF}		function FFNewPreConcat: TMatrixList;			{allocate new FF matrix and preconcat it, put it into currentFF }		function FFActivate (theFF: TMatrixList): boolean;																{puts theFF into currentFF. Returns true if successful}		function FFPassOn: TMatrixPass;					{generates a link for inheritance to 'son' object. I'm Father}																{it appends a link field to the FFMatrix list}																{does not update currentFF field}		procedure FFInherit (var FatherList: TMatrixPass);	{Preconcatenate Fathers list to current FF List }		procedure CalcTransform;						{calculate xForm from rot,koord,scale and FF }		function ForeignPoint (p: Vector4): Vector4;	{convert p using current object's xForm. Call Transform first!}		function WorldToModel (wc: Vector4): Vector4; {xform world coordinates to model coordinates}		procedure Draw;									{not supported at this level }		procedure Kill;										{deallocate memory for this object. it will call kill for }		override;												{all associated FF matrices. If it passes on, it will deallocate }																{all sons and their FF matrices as well}	end;TPoint3D = object(Tabstract3DObject)		Koord: Vector4;		procedure Init;		override;		procedure Reset;		override;		procedure SetKoords (Koordinates: Vector4);		function GetKoords: Vector4;	end;TLine3D = object(Tabstract3DObject)		FromLoc: Vector4;		ToLoc: Vector4;		procedure Init;		override;		procedure Reset;		override;		procedure SetKoords (K1, K2: Vector4);		procedure GetKoords (var K1, K2: Vector4);	end;(* return the error string that belongs to an error code *)function InterpretError (theErr: integer): Str255;{GrafSys Screen definitions}const{$IFC UseFixedMath = FALSE}MaxPointPerBuf = 1024 - 1; (* Maximum Points per Object : 256K *){$ELSEC}{ code for fixed math routines }MaxPointPerBuf = 1024 - 1;{$ENDC}MaxBuffers = 256 - 1;(* GrafSys constants *)cPort3DType = '3Prt';cGrafSysVersion = $00000001; (* = Version 0.01 *)typeProjectionTypes = (parallel, perspective);clippingType = (none, arithmetic, fast);TPort3DPtr = ^TPort3D;TPort3D = record		theWindow: CWindowRecord; (* piggy-back riding on the window's data we'll put everything else *)		versionType: OSType; (* used to veryfy that this record is really a 3dPort *)		theOffscreen: TOffscreenRec; (* for later use in off-screen drawing *)		ProjectionPlane: rect;		ViewPlane: rect;		left, right, top, bottom: integer;		center: point;		useEye: Boolean;	{if false, no eye transform necessary }		EyeKoord: Vector4;		ViewPoint: Vector4;		phi, theta, pitch: real;		ViewAngle: real;		d: real; {Perspective param set by viewangle }		MasterTransform: Matrix4; {matrix to transform all objects according to eye settings }		projection: ProjectionTypes;		clipping: ClippingType;		versionsID: longint; (* ID so objects can detect if the eye changed its specifications *)	end;TSPoint3D = object(TPoint3D)		size: integer; (* size of point *)		procedure Init;		override;		procedure Reset;		override;		procedure Draw;	{draw point as seen from the eye. xForm (and Eye) are  applied. No Transform call required }		override;				{xForm is automatically calculated if neccessary. A Graf3DPort must be active! }	end;TSLine3D = object(TLine3D)		procedure Draw; 	{draw line as seen from the eye. xForm (and Eye) are  applied. No Transform call required }		override;				{xForm is automatically calculated if neccessary. A Graf3DPort must be active! }	end;Point3DEntry = record		koords: Vector4;		transformed: vector4; (* transformed point, used with clipping *)		Screenx: integer;		Screeny: integer;{transformedZ: real;}	end;Point3DBufPtr = ^Point3DBufRec;Point3DBufRec = array[0..MaxPointperBuf] of Point3DEntry;TSGenericObject3D = object(Tabstract3DObject) 	{ this is the real 3D object that will be extended }		theBufs: array[0..MaxBuffers] of Point3DBufPtr;		{ it contains only the points, nothing else }		currentBuf: Point3DBufPtr;		currentIndex: integer; (* index of current buffer *)		numPoints: longint; (* number of points in object *)		Bounds: rect; (* for auto-erase data gathering *)		oldBounds: Rect;		screenXform: Matrix4;								{final xformation matrix including eye if useseye else}																{equal to xForm                                                         }		procedure Init;		override;		function Clone: TGenericObject;					{duplicate point buffers as well }		override;		procedure Reset;									{reset all rots and attributes to default }		override;		procedure Kill; 										{deallocate mem. Will kill all sons that inherit}		override;		procedure GenIndex (pointIndex: longint; var BufIndex, bufOffset: integer); {pointindex -> (buffer, offset) conversion }		function AddPoint (x, y, z: real): longint;		{add a point to the object's database. It returns the }																{points reference number if successful or -1 otherwise}																{point count is one-based, i.e. fist point is index 1. Note	 }																{that this differs from the internal representation where }																{point count is zero-based. COMMON ERROR SOURCE!		 }		function DeletePoint (index: longint): boolean;	{delete point with passed index from database. returns }																{false if operation could not be completed }																{delete does not deallocate mem if buffer is freed }																{all points beyond the one deleted will be moved to }																{compact mem}																{passing index <1 as index means delete all points}		procedure GetPoint (index: longint; var x, y, z: real); 		{get points coordinate in model coords }																				{if point illegal, it returns 0,0,0}		function ChangePoint (index: longint; x, y, z: real): boolean; 	{change points coords. true on success }		procedure Transform (forceCalc: boolean);		{calc trafo-matrix (if necessary) and convert   }																{all points to their screen representation           }                                    										{WARNING: A 3D GrafPort must be open. The     }																{transformations are done for the currently ac-}																{tive 3D grafport's eye settings.}		procedure Transform2 (forceCalc: boolean);	(* calc trafo-matrix (if necessary) and convert    *)																(*all points to their screen representation. gather *)																(* information for auto-erasure                            *)		function TransformedPoint (index: longint): Vector4; 	{get transformed coordinates of point 	}																		{with index. if illegal proc will return 	}																		{0,0,0. Note that eye is not considered	}																		{you have to use ToScreen for that    	}		function ForeignPoint (p: Vector4): Vector4;	{as inherited except that eye trafo is included if}		override;												{useEye is set										  }		function WorldToModel (wc: Vector4): Vector4;	{as inherited except that eye trafo is included}		override;													{if useEye is set.									}		procedure CalcBounds;								{calc bounds of object on screen and place it in	}																{the oldBounds variable.								}	end;varcurrent3Dport: TPort3Dptr; (* currently active 3D port *)(* procedures to intialize GrafSys and return version numbers *)procedure InitGrafSysScreen; (* initialize the GrafSys and local variables such as current graf 3D port *)function GrafSysVersion: longint; (* higword: major release, lower word : minor release. Hex 00010001 means version 1.01 *)(* procedure to create new 3D windows and grafports *)function GetNew3DWindow (ID: integer; behind: ptr): WindowPtr; (* allocate a new window from resource *)function New3DWindow (boundsRect: Rect; title: Str255; visible: BOOLEAN; procID: Integer; behind: WindowPtr; goAwayFlag: BOOLEAN; refCon: LongInt): WindowPtr;procedure Dispos3DWindow (theWindow: WindowPtr); (* close and release mem occupied by the window *)(* procedures affecting CURRENT  3D GrafPort *)procedure Set3DPort (the3DPort: WindowPtr); 	(* tells grafsys in which port to draw. This port MUST have been *)															(* previously allocated with New3DWindow or GetNew3DWindow  *)procedure Get3DPort (var the3DPort: WindowPtr); 	(* returns current 3D GrafPort *)function Is3DPort (thePort: WindowPtr): Boolean;	(* returns TRUE if thePort is a 3D Port *)procedure SetView (ProjectPlaneSize, ViewPlaneSize: Rect); 	(* sets the viewing and projection plane parameters *)																			(* of the currently active 3D GrafPort                     *)																			(* this of course affects the center location             *)procedure SetCenter (x, y: Integer);				(* Sets center of current 3D grafport to given params  *)procedure SetEyeChar (UsesEye: Boolean; location: Vector4; thePhi, theTheta, thePitch, theViewangle: real; clipType: clippingType);															(* Sets eye characteristics and calculates window's master trans- *)															(* form                                     										 *)procedure GetEye (var UsesEye: Boolean; var location: Vector4; thePhi, theTheta, thePitch, theViewangle: real; var clipType: clippingType);															(* returns eye characteristic of current active 3d grafport *)procedure ToScreen (thePoint: Vector4; var h, v: INTEGER); { transforms a point with x,y,z to screen as seen under	}																	{current eye settings										}procedure ProjectPoint (thePoint: Vector4; var h, v: integer);		{project 3D pointz to screen using projection type}{GrafSys Object definitions }constMaxLine = 8000;typeLineEntry = record		fromP, toP: longint; (* max 8000 lines per model supported in this incarnation.  *)		hs, vs, he, ve: integer; (* for fast drawing. buffers transformed locations *)		newline: boolean; (* for optimization. if true, no MoveTo required *)		newLineColor: boolean;		LineColor: RGBColor;	end;LineBufPtr = ^LineBufRec;LineBufRec = array[1..MaxLine] of LineEntry;TSObject3D = object(TSGenericObject3D)		Lines: LineBufPtr;		numLines: integer;		AutoErase: Boolean;		UseBounds: Boolean;		procedure Init;		override;		function Clone: TGenericObject;	{also clone line description buffer}		override;		procedure Reset;		override;		procedure Kill;		override;		function AddLine (fIndex, tIndex: longint): integer;		{add line to objects database. returns line index or -1}		function ChangeLine (LineIndex, fIndex, tIndex: longint): boolean;	{change line description of line with index }																					{lineIndex. True if successful				}		function ChangeLineColor (LineIndex: longint; theColor: RGBColor): boolean;																		{change the color from this line on for all following }																		{until the next ChangeColor command                      }		function GetLineColor (LineIndex: longint; var theColor: RGBColor; var ChangeHere: boolean): Boolean;																		{returns the currently active color of specified line}		function KeepLineColor (LineIndex: longint): boolean;	{deletes change linecolor information. This line and }																		{all following will have the same color as the pre-  }																		{vious													  }		function DeleteLine (LineIndex: integer): Boolean;		{delete whole line from model. True on success}		function DeletePoint (index: longint): boolean;			{override inherited proc of this kind. This one checks}		override;														{first if point is referenced to by a point. If so, it }																		{returns false and doesn't delete the point            }		procedure GetLine (lineIndex: integer; var src, tgt: LongInt); {returns start and endpoint of line}		procedure BuildNewLines;	{should not be called from the outside}		procedure CollectLineData; {internal use only. fill the screen vals from point definition into line array}		procedure SetAutoerase (TurnOn: Boolean);				{controls setting of autoerase flag if switched on, }																		{this procedure will initialize the oldBounds var    }		procedure SetUseBounds (TurnOn: Boolean);				{tells Draw and fDraw to collect bouding box data}		procedure Draw;											{recalcs if neccessary, erases old image if auto- }		override;														{erase on, redraws all objects lines                     }		procedure fDraw;											{like Draw but it collects data prior to drawing }																		{thus making the actual drawing process a bit  }																		{faster but the whole call is slower than Draw }		procedure Erase;											{erase image of myself. this calcs and uses bounds}	end;{Global Procedures for GrafSys}procedure InitGrafSys;procedure ArithmeticClip (var startV, endV: Point3DEntry; var skipThis, clippedThis: boolean; var sx, sy, ex, ey: integer);																		{arithmetically clips a line that connects startV,endV }																		{if it intersects the Z=0 plane. If it is completely behind }																		{the Z=0 plane, skipThis is TRUE, if it intersects with }																		{the plane, clippedThis becomes true and sx..ey contain}																		{the new screen coordinates                                        }{resource access }function GetNewObject (theObjectID: INTEGER): TSObject3D;		{Create new 3D object and fill with data from res}function GetNewNamedObject (theName: Str255): TSObject3D;procedure SaveObject (Obj: TSObject3D; theName: Str255; ID: integer);	{save data to resource with number = ID }procedure SaveNamedObject (Obj: TSObject3D; theName: Str255; var ID: integer);{Off-screen Graphics }constcBitDepth = 8; (* Standard bit-depth for all offscreen devices GrafSys uses *)cMaxBitDepth = 8;cStdColorCLUT = 72;varcurrOSPixMap: PixMapHandle;function AttachOffScreen (theWindow: WindowPtr; theColors: CTabHandle): integer; (* attach OS port to window *)(* pass CTabHandle(-1) to use window's CLUT or CTabHandle(-2) as parameter if you want standard color CLUT *)function ChangeOffscreen (theWindow: WindowPtr; theColors: CTabHandle): integer; (* make OS port the same as the window *)(* pass CTabHandle(-1) as parameter if no change to CLUT *)function CloseOffscreen (theWindow: WindowPtr): integer; (* dispose OS port *)function BeginOSDraw (theWindow: WindowPtr): integer; (* begin drawing to Off-Screen *)function EndOSDraw (theWindow: WindowPtr): integer; (* end drawing to Off-Screen *)function CopyOS2Screen (theWindow: WindowPtr; theRect: Rect; copyMode: Integer): integer; (* copy offscreen to screen *){ pascal long FastPixErase ( PixMapHandle pixH, short color) }procedure FastPixErase (pixH: PixMapHandle; color: integer);{ pascal void FillTriangle (Point p1, Point p2, Point p3, int theColor, Boolean forceQD); }procedure FillTriangle (p1: Point; p2: point; p3: Point; theColor: Integer; useQD: Boolean);{$J-}{POP}procedure SetPortX (w: GrafPtr);{Automatically switches 3D port as well if the window indicated is a}{3D window }implementationprocedure SetPortX (w: GrafPtr);	begin		if Is3DPort(w) then			Set3DPort(w);		SetPort(w);	end;end.
+unit GrafSys;
+
+{this is the interface file to the }
+{programmers hierachical 3D grafsys}
+{ © 1993 by christian franz }
+
+interface
+
+{$IFC UNDEFINED UseFixedMath}
+{$SETC UseFixedMath := FALSE}
+{$ENDC}
+
+{$PUSH}
+{$J+}
+
+{Matrix/Vector/Surface manipulation }
+
+
+{$IFC UseFixedMath = TRUE }
+type
+	Matrix4 = record
+			M: array[1..4, 1..4] of fixed;
+			identity: boolean;
+		end;
+	Vector4 = array[1..4] of fixed;
+
+var
+	one: fixed;
+
+{$ELSEC}
+
+type
+
+	Matrix4 = record
+			M: array[1..4, 1..4] of real;
+			identityFlag: boolean;
+		end;
+	Vector4 = array[1..4] of real;
+
+var
+	one: real;
+
+{$ENDC}
+{returns the identity matrix}
+function Identity: Matrix4;
+
+(* VSub : Subtract two vectors: result := x - y *)
+function VSub (x, y: Vector4): Vector4;
+
+(* VAdd : Add two vectors *)
+function VAdd (x, y: Vector4): Vector4;
+
+(* Set Vector to coordinates *)
+procedure SetVector4 (var theVector: Vector4; x, y, z: real);
+
+(* get vector coordinates *)
+procedure GetVector4 (theVector: Vector4; var x, y, z: real);
+
+(* IsVisible determines if the plane defined through the three points KLM (as vector 4) 	*)
+(* is visible form the eye. Visibility is determined as the value of the normal vector of 	*)
+(* the plane defined by abc. it is visible if the z component of n is greater than zero 		*)
+(* note that for this test you must label k,l,m clockwise !!! 									*)
+
+function IsVisible (k, l, m: Vector4): Boolean;
+
+{offscreen core data definitions }
+
+type
+
+TOffscreenRec = record (* offscreen data management *)
+		thePort: CGrafPtr;
+		theDevice: GDHandle;
+		theColors: CTabHandle;
+		mainDevice: GDHandle;
+	end;
+
+{GrafSys core definitions }
+
+const
+	{Misc Constants }
+Res3D = '3Dob'; (* This is the 3D object data resource name *)
+Res3DColor = 'lClr'; (* line color resource for 3Dob *)
+
+	{Error Codes defined by the GrafSys }
+cNoFFallocated = -1;
+cOutOfMem = -2;
+cBadMethodCall = -3; {this method should not be called. Instance it yourself!}
+cNothingToInherit = -4; {this error occures when you try to pass on as first thing in the FF chain }
+cTooManyPoints = -5; {model database is full. Maximum # of points exceeded }
+cIllegalPointIndex = -6; {point index specified has no corresponding point in model }
+cTooManyLines = -7; {trying to add a line to a model that is full }
+cIllegalLineIndex = -8; {trying to access a line that does not exist }
+cCantDeletePoint = -9; {the point is still referenced by at least one line}
+cNotOwner = -10; {FF matrix doesn't belong to this object}
+cBadFF = -11;	{FF matrix was NIL}
+cBadFFType = -12; {FF matrix type cant be made current }
+cCantLoadRes = -13; {error loading resource }
+cNo3DWindow = -14; {Window passed is no 3D window }
+cCantCreateOffscreen = -15; {Error occured while trying to allocate Off-Screen PixMap}
+cCantChangeOffscreen = -16; {Error occured while trying to resize or recolor Off-Screen PixMap}
+cNoOSAttached = -17; {the 3D Window passed has no Off-Screen PixMap attached}
+cCantUseWindowCLUT = -18; {Current active window does not use indexed (1-8 bit/pixel) colors}
+cNoActiveOSPixMap = -19; {User did not call BeginOSDraw. no active pix map}
+	{other constants}
+cErrorAlertID = 32700; {standard error-handler alert }
+
+type
+TGenericObject = object
+		ErrorCode: integer;
+		function Clone: TGenericObject;
+		procedure Kill; (* deallocate myself *)
+		procedure HandleError;
+		procedure ResetError;
+		function Test (opcode: integer): integer; (* does anything to check integrity of object 		*)
+														(* This incarnation just pops up the Error Dialog	*)
+														(* and returns Error Code. Opcode is ignored 		*)
+		procedure Init;								(* just so it is defined for every object. Does nothing     *)
+														(* but initialization of ErrorCode. Make sure you do this *)
+														(* first, then do your own init if no error reported        *)
+		procedure Reset;							(* reset this object. doesn't really do anything but provided *)
+														(* so all objects support this method *)
+	end;
+
+
+TMatrixList = object(TGenericObject)
+		M: Matrix4;
+		next: TMatrixList;
+		owner: TGenericObject;							{who owns this matrix? }
+		procedure Init; (* set matrix to identity *)
+		override;
+		procedure Reset;
+		override;
+		procedure TMRotate (dx, dy, dz: real);		{rotate this matrix further}
+		procedure TMScale (dx, dy, dz: real);		{scale this matrix further }
+		procedure TMTranslate (dx, dy, dz: real);	{Translate this matrix further }
+		procedure TMRotArbAchsis (p, x: Vector4; phi: real); {rotate around achsis defined by p and x}
+	end;
+
+TMatrixInherit = object(TMatrixList) 	{This links a string of inherited matrixes to a 'father' }
+		upLink: TMatrixList;						{M contains the result of all MxM multiplie of prior }
+													{Matrices. M is updated via the downlink whenever  }
+													{father object gets updated. Update from father}
+		meTheSon: Tabstract3DObject;			{link to myself. Used for killing son when father gets}
+													{kill message, father accesses this field via downlink}
+		procedure Init;
+		override;
+	end;
+
+TMatrixPass = object(TMatrixList)		{this links a FFmatrix-string (up to here) to a son}
+		downLink: TMatrixInherit;				{whenever Transform is called, it will place the current }
+													{result of the FF transformations in the downlinks M field }
+		meTheFather: Tabstract3DObject;		{link to myself}
+		procedure Init;
+		override;
+	end;
+
+
+Tabstract3DObject = object(TGenericObject)
+		xTrans, yTrans, zTrans: real;	{translation for origin}
+		xScale, yScale, zScale: Real;	{scale factors for object}
+		xrot, yrot, zrot: real; 			{ rotation in radiants }
+		xForm: Matrix4;					{ result of all xforms including freeform }
+		arbRot: Matrix4;					{ arbitrary rotation is stored here }
+		currentFF: TMatrixList;			{current FF matrix}
+		FFMatrix: TMatrixList;			{ listhead of freeform xform matrices }
+		objChanged: Boolean; 			{true if object description changed. A call to calcTransform will reset it}
+		versionsID: longint;				{used for sync with eye. If ID <> eyes ID a recalc is required }
+		hasChanged: boolean;				{true after calctransform call that changed data. Should be reset by Draw etc. }
+		procedure Init;										{initialize object}
+		override;
+		procedure Reset;									{reset all rot, trans, scale to default }
+		override;
+		function Clone: TGenericObject;					{must also clone all TMatrix }
+		override;												{ATTN: what about inheritances??}
+		procedure Translate (dx, dy, dz: real); 			{ xlate object }
+		procedure SetTranslation (x, y, z: real);	 	{ set xlation to fixed amount }
+		procedure Rotate (dx, dy, dz: real); 			 	{ rotate further (just changes x-,y- and zrot) }
+		procedure SetRotation (x, y, z: real); 		 	{ set rot to x,y and z }
+		procedure Scale (dx, dy, dz: real); 			 	{scale factor for x, y and z }
+		procedure SetScale (x, y, z: real); 			 	{set absolute scale factor }
+		procedure RotArb (p, x: Vector4; phi: real);	{rotate around arbitrary axis}
+		procedure ResetArb;								{reset arb operator to identity}
+		procedure FFTranslate (dx, dy, dz: real); 	 	{xlate current FFMatrix further}
+		procedure FFRotate (dx, dy, dz: real); 		 	{rotate current FFMatrix further }
+		procedure FFScale (dx, dy, dz: real); 		 	{scale current FFMatrix further }
+		procedure FFRotArbAchsis (p, x: Vector4; phi: real); {rotate around achsis defined by p and x}
+		procedure FFReset;								{resets *current* FFMatrix to Identity (i.e. not all) }
+		function FFNewPostConcat: TMatrixList;		 	{allocate new FF matrix and postconcat it, put it into currentFF}
+		function FFNewPreConcat: TMatrixList;			{allocate new FF matrix and preconcat it, put it into currentFF }
+		function FFActivate (theFF: TMatrixList): boolean;
+																{puts theFF into currentFF. Returns true if successful}
+		function FFPassOn: TMatrixPass;					{generates a link for inheritance to 'son' object. I'm Father}
+																{it appends a link field to the FFMatrix list}
+																{does not update currentFF field}
+		procedure FFInherit (var FatherList: TMatrixPass);	{Preconcatenate Fathers list to current FF List }
+		procedure CalcTransform;						{calculate xForm from rot,koord,scale and FF }
+		function ForeignPoint (p: Vector4): Vector4;	{convert p using current object's xForm. Call Transform first!}
+		function WorldToModel (wc: Vector4): Vector4; {xform world coordinates to model coordinates}
+		procedure Draw;									{not supported at this level }
+		procedure Kill;										{deallocate memory for this object. it will call kill for }
+		override;												{all associated FF matrices. If it passes on, it will deallocate }
+																{all sons and their FF matrices as well}
+	end;
+
+TPoint3D = object(Tabstract3DObject)
+		Koord: Vector4;
+		procedure Init;
+		override;
+		procedure Reset;
+		override;
+		procedure SetKoords (Koordinates: Vector4);
+		function GetKoords: Vector4;
+	end;
+
+TLine3D = object(Tabstract3DObject)
+		FromLoc: Vector4;
+		ToLoc: Vector4;
+		procedure Init;
+		override;
+		procedure Reset;
+		override;
+		procedure SetKoords (K1, K2: Vector4);
+		procedure GetKoords (var K1, K2: Vector4);
+	end;
+
+(* return the error string that belongs to an error code *)
+
+function InterpretError (theErr: integer): Str255;
+
+{GrafSys Screen definitions}
+const
+{$IFC UseFixedMath = FALSE}
+MaxPointPerBuf = 1024 - 1; (* Maximum Points per Object : 256K *)
+{$ELSEC}
+{ code for fixed math routines }
+MaxPointPerBuf = 1024 - 1;
+{$ENDC}
+MaxBuffers = 256 - 1;
+(* GrafSys constants *)
+cPort3DType = '3Prt';
+cGrafSysVersion = $00000001; (* = Version 0.01 *)
+
+type
+ProjectionTypes = (parallel, perspective);
+clippingType = (none, arithmetic, fast);
+
+TPort3DPtr = ^TPort3D;
+TPort3D = record
+		theWindow: CWindowRecord; (* piggy-back riding on the window's data we'll put everything else *)
+		versionType: OSType; (* used to veryfy that this record is really a 3dPort *)
+		theOffscreen: TOffscreenRec; (* for later use in off-screen drawing *)
+		ProjectionPlane: rect;
+		ViewPlane: rect;
+		left, right, top, bottom: integer;
+		center: point;
+		useEye: Boolean;	{if false, no eye transform necessary }
+		EyeKoord: Vector4;
+		ViewPoint: Vector4;
+		phi, theta, pitch: real;
+		ViewAngle: real;
+		d: real; {Perspective param set by viewangle }
+		MasterTransform: Matrix4; {matrix to transform all objects according to eye settings }
+		projection: ProjectionTypes;
+		clipping: ClippingType;
+		versionsID: longint; (* ID so objects can detect if the eye changed its specifications *)
+	end;
+
+TSPoint3D = object(TPoint3D)
+		size: integer; (* size of point *)
+		procedure Init;
+		override;
+		procedure Reset;
+		override;
+		procedure Draw;	{draw point as seen from the eye. xForm (and Eye) are  applied. No Transform call required }
+		override;				{xForm is automatically calculated if neccessary. A Graf3DPort must be active! }
+	end;
+
+TSLine3D = object(TLine3D)
+		procedure Draw; 	{draw line as seen from the eye. xForm (and Eye) are  applied. No Transform call required }
+		override;				{xForm is automatically calculated if neccessary. A Graf3DPort must be active! }
+	end;
+
+Point3DEntry = record
+		koords: Vector4;
+		transformed: vector4; (* transformed point, used with clipping *)
+		Screenx: integer;
+		Screeny: integer;
+{transformedZ: real;}
+	end;
+
+Point3DBufPtr = ^Point3DBufRec;
+Point3DBufRec = array[0..MaxPointperBuf] of Point3DEntry;
+
+TSGenericObject3D = object(Tabstract3DObject) 	{ this is the real 3D object that will be extended }
+		theBufs: array[0..MaxBuffers] of Point3DBufPtr;		{ it contains only the points, nothing else }
+		currentBuf: Point3DBufPtr;
+		currentIndex: integer; (* index of current buffer *)
+		numPoints: longint; (* number of points in object *)
+		Bounds: rect; (* for auto-erase data gathering *)
+		oldBounds: Rect;
+		screenXform: Matrix4;								{final xformation matrix including eye if useseye else}
+																{equal to xForm                                                         }
+		procedure Init;
+		override;
+		function Clone: TGenericObject;					{duplicate point buffers as well }
+		override;
+		procedure Reset;									{reset all rots and attributes to default }
+		override;
+		procedure Kill; 										{deallocate mem. Will kill all sons that inherit}
+		override;
+		procedure GenIndex (pointIndex: longint; var BufIndex, bufOffset: integer); {pointindex -> (buffer, offset) conversion }
+		function AddPoint (x, y, z: real): longint;		{add a point to the object's database. It returns the }
+																{points reference number if successful or -1 otherwise}
+																{point count is one-based, i.e. fist point is index 1. Note	 }
+																{that this differs from the internal representation where }
+																{point count is zero-based. COMMON ERROR SOURCE!		 }
+		function DeletePoint (index: longint): boolean;	{delete point with passed index from database. returns }
+																{false if operation could not be completed }
+																{delete does not deallocate mem if buffer is freed }
+																{all points beyond the one deleted will be moved to }
+																{compact mem}
+																{passing index <1 as index means delete all points}
+		procedure GetPoint (index: longint; var x, y, z: real); 		{get points coordinate in model coords }
+																				{if point illegal, it returns 0,0,0}
+		function ChangePoint (index: longint; x, y, z: real): boolean; 	{change points coords. true on success }
+		procedure Transform (forceCalc: boolean);		{calc trafo-matrix (if necessary) and convert   }
+																{all points to their screen representation           }
+                                    										{WARNING: A 3D GrafPort must be open. The     }
+																{transformations are done for the currently ac-}
+																{tive 3D grafport's eye settings.}
+		procedure Transform2 (forceCalc: boolean);	(* calc trafo-matrix (if necessary) and convert    *)
+																(*all points to their screen representation. gather *)
+																(* information for auto-erasure                            *)
+
+		function TransformedPoint (index: longint): Vector4; 	{get transformed coordinates of point 	}
+																		{with index. if illegal proc will return 	}
+																		{0,0,0. Note that eye is not considered	}
+																		{you have to use ToScreen for that    	}
+		function ForeignPoint (p: Vector4): Vector4;	{as inherited except that eye trafo is included if}
+		override;												{useEye is set										  }
+		function WorldToModel (wc: Vector4): Vector4;	{as inherited except that eye trafo is included}
+		override;													{if useEye is set.									}
+		procedure CalcBounds;								{calc bounds of object on screen and place it in	}
+																{the oldBounds variable.								}
+	end;
+
+
+var
+current3Dport: TPort3Dptr; (* currently active 3D port *)
+
+
+(* procedures to intialize GrafSys and return version numbers *)
+procedure InitGrafSysScreen; (* initialize the GrafSys and local variables such as current graf 3D port *)
+function GrafSysVersion: longint; (* higword: major release, lower word : minor release. Hex 00010001 means version 1.01 *)
+(* procedure to create new 3D windows and grafports *)
+
+function GetNew3DWindow (ID: integer; behind: ptr): WindowPtr; (* allocate a new window from resource *)
+function New3DWindow (boundsRect: Rect; title: Str255; visible: BOOLEAN; procID: Integer; behind: WindowPtr; goAwayFlag: BOOLEAN; refCon: LongInt): WindowPtr;
+procedure Dispos3DWindow (theWindow: WindowPtr); (* close and release mem occupied by the window *)
+
+(* procedures affecting CURRENT  3D GrafPort *)
+procedure Set3DPort (the3DPort: WindowPtr); 	(* tells grafsys in which port to draw. This port MUST have been *)
+															(* previously allocated with New3DWindow or GetNew3DWindow  *)
+procedure Get3DPort (var the3DPort: WindowPtr); 	(* returns current 3D GrafPort *)
+function Is3DPort (thePort: WindowPtr): Boolean;	(* returns TRUE if thePort is a 3D Port *)
+procedure SetView (ProjectPlaneSize, ViewPlaneSize: Rect); 	(* sets the viewing and projection plane parameters *)
+																			(* of the currently active 3D GrafPort                     *)
+																			(* this of course affects the center location             *)
+procedure SetCenter (x, y: Integer);				(* Sets center of current 3D grafport to given params  *)
+procedure SetEyeChar (UsesEye: Boolean; location: Vector4; thePhi, theTheta, thePitch, theViewangle: real; clipType: clippingType);
+															(* Sets eye characteristics and calculates window's master trans- *)
+															(* form                                     										 *)
+procedure GetEye (var UsesEye: Boolean; var location: Vector4; thePhi, theTheta, thePitch, theViewangle: real; var clipType: clippingType);
+															(* returns eye characteristic of current active 3d grafport *)
+
+procedure ToScreen (thePoint: Vector4; var h, v: INTEGER); { transforms a point with x,y,z to screen as seen under	}
+																	{current eye settings										}
+procedure ProjectPoint (thePoint: Vector4; var h, v: integer);
+		{project 3D pointz to screen using projection type}
+
+
+{GrafSys Object definitions }
+const
+MaxLine = 8000;
+
+type
+
+LineEntry = record
+		fromP, toP: longint; (* max 8000 lines per model supported in this incarnation.  *)
+		hs, vs, he, ve: integer; (* for fast drawing. buffers transformed locations *)
+		newline: boolean; (* for optimization. if true, no MoveTo required *)
+		newLineColor: boolean;
+		LineColor: RGBColor;
+	end;
+
+LineBufPtr = ^LineBufRec;
+LineBufRec = array[1..MaxLine] of LineEntry;
+
+TSObject3D = object(TSGenericObject3D)
+		Lines: LineBufPtr;
+		numLines: integer;
+		AutoErase: Boolean;
+		UseBounds: Boolean;
+		procedure Init;
+		override;
+		function Clone: TGenericObject;	{also clone line description buffer}
+		override;
+		procedure Reset;
+		override;
+		procedure Kill;
+		override;
+		function AddLine (fIndex, tIndex: longint): integer;		{add line to objects database. returns line index or -1}
+		function ChangeLine (LineIndex, fIndex, tIndex: longint): boolean;	{change line description of line with index }
+																					{lineIndex. True if successful				}
+		function ChangeLineColor (LineIndex: longint; theColor: RGBColor): boolean;
+																		{change the color from this line on for all following }
+																		{until the next ChangeColor command                      }
+		function GetLineColor (LineIndex: longint; var theColor: RGBColor; var ChangeHere: boolean): Boolean;
+																		{returns the currently active color of specified line}
+		function KeepLineColor (LineIndex: longint): boolean;	{deletes change linecolor information. This line and }
+																		{all following will have the same color as the pre-  }
+																		{vious													  }
+		function DeleteLine (LineIndex: integer): Boolean;		{delete whole line from model. True on success}
+		function DeletePoint (index: longint): boolean;			{override inherited proc of this kind. This one checks}
+		override;														{first if point is referenced to by a point. If so, it }
+																		{returns false and doesn't delete the point            }
+		procedure GetLine (lineIndex: integer; var src, tgt: LongInt); {returns start and endpoint of line}
+		procedure BuildNewLines;	{should not be called from the outside}
+		procedure CollectLineData; {internal use only. fill the screen vals from point definition into line array}
+		procedure SetAutoerase (TurnOn: Boolean);				{controls setting of autoerase flag if switched on, }
+																		{this procedure will initialize the oldBounds var    }
+		procedure SetUseBounds (TurnOn: Boolean);				{tells Draw and fDraw to collect bouding box data}
+		procedure Draw;											{recalcs if neccessary, erases old image if auto- }
+		override;														{erase on, redraws all objects lines                     }
+		procedure fDraw;											{like Draw but it collects data prior to drawing }
+																		{thus making the actual drawing process a bit  }
+																		{faster but the whole call is slower than Draw }
+		procedure Erase;											{erase image of myself. this calcs and uses bounds}
+	end;
+
+{Global Procedures for GrafSys}
+procedure InitGrafSys;
+procedure ArithmeticClip (var startV, endV: Point3DEntry; var skipThis, clippedThis: boolean; var sx, sy, ex, ey: integer);																		{arithmetically clips a line that connects startV,endV }
+																		{if it intersects the Z=0 plane. If it is completely behind }
+																		{the Z=0 plane, skipThis is TRUE, if it intersects with }
+																		{the plane, clippedThis becomes true and sx..ey contain}
+																		{the new screen coordinates                                        }
+
+{resource access }
+function GetNewObject (theObjectID: INTEGER): TSObject3D;		{Create new 3D object and fill with data from res}
+function GetNewNamedObject (theName: Str255): TSObject3D;
+procedure SaveObject (Obj: TSObject3D; theName: Str255; ID: integer);	{save data to resource with number = ID }
+procedure SaveNamedObject (Obj: TSObject3D; theName: Str255; var ID: integer);
+
+{Off-screen Graphics }
+const
+cBitDepth = 8; (* Standard bit-depth for all offscreen devices GrafSys uses *)
+cMaxBitDepth = 8;
+cStdColorCLUT = 72;
+
+var
+currOSPixMap: PixMapHandle;
+
+function AttachOffScreen (theWindow: WindowPtr; theColors: CTabHandle): integer; (* attach OS port to window *)
+(* pass CTabHandle(-1) to use window's CLUT or CTabHandle(-2) as parameter if you want standard color CLUT *)
+
+function ChangeOffscreen (theWindow: WindowPtr; theColors: CTabHandle): integer; (* make OS port the same as the window *)
+(* pass CTabHandle(-1) as parameter if no change to CLUT *)
+
+function CloseOffscreen (theWindow: WindowPtr): integer; (* dispose OS port *)
+
+function BeginOSDraw (theWindow: WindowPtr): integer; (* begin drawing to Off-Screen *)
+function EndOSDraw (theWindow: WindowPtr): integer; (* end drawing to Off-Screen *)
+function CopyOS2Screen (theWindow: WindowPtr; theRect: Rect; copyMode: Integer): integer; (* copy offscreen to screen *)
+
+
+{ pascal long FastPixErase ( PixMapHandle pixH, short color) }
+procedure FastPixErase (pixH: PixMapHandle; color: integer);
+
+{ pascal void FillTriangle (Point p1, Point p2, Point p3, int theColor, Boolean forceQD); }
+procedure FillTriangle (p1: Point; p2: point; p3: Point; theColor: Integer; useQD: Boolean);
+
+{$J-}
+{POP}
+
+procedure SetPortX (w: GrafPtr);
+{Automatically switches 3D port as well if the window indicated is a}
+{3D window }
+
+
+implementation
+
+procedure SetPortX (w: GrafPtr);
+	begin
+		if Is3DPort(w) then
+			Set3DPort(w);
+		SetPort(w);
+	end;
+
+end.

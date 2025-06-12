@@ -1,1 +1,9 @@
-Because Compactor Pro replaces aliases with actual files, and becausealiases are device-specific, you should replace the following files inthis folder with aliases to their corresponding files in the folder(gs252.¹):	arch.h	gsutil.h	memory_.h	string_.h
+Because Compactor Pro replaces aliases with actual files, and because
+aliases are device-specific, you should replace the following files in
+this folder with aliases to their corresponding files in the folder
+(gs252.¹):
+
+	arch.h
+	gsutil.h
+	memory_.h
+	string_.h

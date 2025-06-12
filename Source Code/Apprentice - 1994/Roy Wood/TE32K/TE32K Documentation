@@ -1,1 +1,512 @@
-The TE32K TextEdit Replacement==============================Originally by Roy Wood122 Britannia AvenueLondon, Ontario, CanadaN6H 2J5(519) 438-3177rrwood@io.orgNote that numerous other people have added modifications andenhancements to the original TE32K!Contents:=========Introduction 				- What's this darn thing good for?Legal Stuff					- Oh, no....Using TE32K					- How do I use it anyway?TE32K Data Structures		- What's a TE32KRec?TE32K Interface Calls		- I have to do what?!?!?!TE32K Miscellania			- Where should this stuff go?TE32K Demo					- Make me a believer!TE32K Version History		- In the beginning....The Future					- Vapourware-wannabe stuffIntroduction:=============TE32K is designed to be a more-or-less “plug in” replacement for the Macintosh Toolbox TextEdit package.  The major difference between the two editor packages is that TE32K allows for the manipulation of text-files LARGER than 32K.  There are a few other differences as well, most of which are shortcomings due to laziness on my part, but since this source code is provided to you gratis, please feel free to modify it in whatever twisted way your warped little heart desires.  If you do improve it in any way, please be kind enough to share your work with the rest of us (i.e. send me a copy so I can keep track of TE32K's current state of evolution!).Note that TE32K is written as a non-OOP C program.  If this is not what you're interested in, I suggest you take a look at the many excellent OOP TextEdit replacement class libraries available via FTP, none of which I can remember the names or locations of right now. (though I do recall that Chris Wysocki wrote one, and I *think* I saw it at ftp.brown.edu, but don't hold me to that)I wrote TE32K since I needed it for rnMac, a Macintosh newsreader I wrote.  Well, I didn't really need it, but it was nice to have, and I wasn't doing anything one afternoon, so.....Legal Stuff:============TE32K is provided free of charge, since no-one will ever pay me anything for it anyway.  However, if you do use TE32K in a piece of software which you market, for every copy you sell, you are required to donate $1.00 to the World Wildlife Fund, 90 Eglinton Avenue East, Suite 504, Toronto, Ontario, Canada, M4P 2Z7.  I guess that makes TE32K CharityWare or maybe EcoWare. :)Using TE32K:============TE32K is designed as a source-level replacement for TextEdit.  This means that you will have to compile the “TE32K.c” file along with the rest of your program.  As well, you will have to change all your TextEdit calls to the equivalent TE32K routines, and make sure you pass appropriate-sized parameters (i.e. long's instead of ints, LongRect's instead of Rect's, LongPoints instead of Points, etc.).  The TE32K function calls and data structures are declared in the file “TE32K.h” which you should #include in your source, too.  The data structures and interface calls are described in the following sections.Note that TE32K is not optimized as much as it should be, so the results are sometimes less than perfect (e.g. unnecessary redrawing and flashing).  However, you really can't expect much from CharityWare, can you?  And if it really bothers you, you are more than welcome to fix things up....Warning #1: the one BIG inconsistency between TE32K and TextEdit is that you have to call TE32KSetFontStuff() to change the font or font-size.  I maintain a table of character widths in the TE32KRec to speed up the screen updates (calling CharWidth() is slooooooow), and if you change the font without telling TE32K, the results will not be what you expected!Warning #2: since TE32K supports editing of such large text files, the text rectangle (destRect) can easily by taller than 32767 pixels.  “So what?” you ask?  Well, this means that you had better not be using the value ((**theTEH32K).viewRect.top - (**theTEH32K).destRect.top) for the setting in your vertical scroll control.  If you do, then you will likely end up setting the control value to something much larger than its maximum of 32767.  Instead, you would be wise to set the control's value to ((**theTEH32K).viewRect.top - (**theTEH32K).destRect.top) / (**theTEH32K).lineHeight, which means that now your control keeps track of the top line number, rather than the pixel distance between the top of the destRect and viewRect.TE32K Data Structures:======================TE32K uses a couple of unconventional data stuctures to work its magic; these are defined in the “TE32K.h” header file as follows:/* a Rect defined with long's, rather than int's */typedef	struct{	long		top,left,bottom,right;	} LongRect;/* a Point defined with long's rather than int's */typedef	struct{	long		h,v;	} LongPoint;/* the TE32K data structure!  Notice the standard TextEdit field names! */typedef pascal Boolean (*TE32KProcPtr)(void);typedef	struct{	LongRect		destRect;	/* the destination rectangle */	LongRect		viewRect;	/* the view rectangle */	int			lineHeight;	/* height of a line of text */	int			fontAscent;	/* the font ascent */	LongPoint	selPoint;	/* coords of the selection point */	long			selStart;	/* the start of the selected text */	long			selEnd;		/* the end of the selected text */	int			active;		/* active flag */	TE32KProcPtr	clikLoop;	/* hook for the click-loop routine */	long			clickTime;	/* time used for double-clicking */	long			clickLoc;	/* location of last click, maybe */	int			clikStuff	/* flag for EOL cursor placement */	long			caretTime;	/* time for blinking cursor */	int			caretState;	/* state of cursor (visible/invis.) */	long			teLength;	/* size of edit text */	Handle		hText;		/* Handle to text */	int			txFont;		/* the font */	char			txFace;		/* the font face */	int			txMode;		/* the text display mode */	int			txSize;		/* the size of the text */	int			tabWidth;	/* the width of tabs */	int			tabChars;	/* if non-zero, used to calculate tabwidth */	int			maxLineWidth;	/* max width of a line in char's */	int			crOnly;		/* do Carriage Return only? */	GrafPtr		inPort;		/* the GrafPort we're in */	long			nLines;		/* the number of lines of text */	int			theCharWidths[256];	/* q&d lookup table */	ControlHandle		scrollH;	/* LAF, added 3/5/93 */	int					clickLevel;		/* Pete Gontier ??/??/93 */	long			lineStarts[];	/* the line starts array */	} 	TE32KRec,*TE32KPtr,**TE32KHandle;If you've done any programming with TextEdit, you'll quickly realize that these data structures are pretty easy to figure out .  Basically, I've just enlarged the relevant field sizes from int's to long's, and thrown away the fields I didn't need.  All the fields of the TE32KRec are named the same as traditional TextEdit fields, so it should be pretty simple to modify your source code to be compatible with TE32K.  The programs I've used it in were written to use TextEdit originally, but it's taken me no more than half an hour to make them compatible with TE32K.  If this seems too much effort for you, maybe you should stick with TextEdit then.Note that the “maxLineWidth” field defines the maximum width in characters that a line may be when word-wrapping is in effect (the default width is 32767 characters).  I added this since my newsreader needed to wrap lines if they were wider than, say, 72 characters.Warning: the one BIG inconsistency between TE32K and TextEdit is that you have to call TE32KSetFontStuff() to change the font or font-size.  I maintain a table of character widths in the TE32KRec to speed up the screen updates (calling CharWidth() is sloooooooow), and if you change the font without telling TE32K, the results will not be what you expected!Also—— the “tabChars” field is normally zero, which means TE32K will honour the tabwidth field.  If tabChars is non-zero, then the tabwidth field is set to the width of tabChars number of spaces in the active font/size/mode/style.TE32K Interface Calls:======================All the public routines are described as follows, with the equivalent TextEdit routine listed below the TE32K function declaration.  The name of each routine is basically the same as the standard TextEdit routine albeit with the “TE” replaced by “TE32K”.  The parameters are pretty much the same as usual too, with the major difference being the use of long's in place of int's, etc.void TE32KInit(void);---------------------replaces TEInitInitialize the TE32K scrap HandleTE32KHandle TE32KNew(LongRect *destRect,LongRect *viewRect);------------------------------------------------------------replaces TENewAllocate and return a Handle to a new TE32K edit record; destRect and viewRect as per usualvoid	 TE32KDispose(TE32KHandle theTE32KHandle);----------------------------------------------replaces TEDisposeDispose of a previously-allocated TE32K recordvoid TE32KCalText(TE32KHandle theTE32KHandle);----------------------------------------------TECalTextCalculate the lineStarts array for a text recordvoid TE32KUseTextHandle(Handle hText,TE32KHandle theTE32KHandle);-----------------------------------------------------------------unique to TE32K, courtesy of Dave Platt <dplatt@snulbug.mtview.ca.us>Sets the text handle to hText, discards the old text handle if there was one; saves on memory muddling.  Do not try to DisposeHandle(hText) after passing hText to TE32KUseTextHandle!void	 TE32KSetText(Ptr theText,long length,TE32KHandle theTE32KHandle);----------------------------------------------------------------------replaces TESetTextSet the text of the TE32K record to a copy of the text pointed at by theText, length of which is given by length parameterHandle TE32KGetText(TE32KHandle theTE32KHandle);------------------------------------------------replaces TEGetTextReturns a copy of the Handle of the text recordvoid TE32KUpdate(LongRect *updateRect,TE32KHandle theTE32KHandle);------------------------------------------------------------------replaces TEUpdateUpdate the display of the text within the specified update rectanglevoid TE32KScroll(long dh,long dv,TE32KHandle theTE32KHandle);-------------------------------------------------------------replaces TEScrollScroll the text display the amount specified by dh and dvvoid TE32KActivate(TE32KHandle theTE32KHandle);-----------------------------------------------replaces  TEActivateActivate the text recordvoid TE32KDeactivate(TE32KHandle theTE32KHandle);-------------------------------------------------replaces TEDeactivateDeactivate the text recordvoid TE32KIdle(TE32KHandle theTE32KHandle);-------------------------------------------replaces TEIdleCall this to blink the cursorvoid TE32KKey(unsigned char theChar,TE32KHandle theTE32KHandle);----------------------------------------------------------------replaces TEKeyProcess the keystroke contained in theChar.  Note that even arrow keys and shifted arrow key combinations are correctly handled by TE32K.void TE32KClick(Point thePt,unsigned char extend,TE32KHandle theTE32KHandle);-----------------------------------------------------------------------------replaces TEClickRespond to a mouse-down event in the view rectangle, extend indicates whether the shift-key was depressed and thus whether the user is selecting a range of textvoid TE32KSetSelect(long selStart,long selEnd,TE32KHandle theTE32KHandle);--------------------------------------------------------------------------replaces TESetSelectSet the selection range of the text recordOSErr TE32KToScrap(void);-------------------------replaces TEFromScrapCopy the TE32K scrap to the desktop/clipboard scrapOSErr TE32KFromScrap(void);---------------------------replaces TEFromScrapCopy the desktop/clipboard scrap to the TE32K scrapvoid TE32KCopy(TE32KHandle theTE32KHandle);-------------------------------------------replaces TECopyCopy the selected range of text to the TE32K scrapvoid TE32KCut(TE32KHandle theTE32KHandle);------------------------------------------replaces TECutCut the selected range of text to the TE32K scrapvoid TE32KDelete(TE32KHandle theTE32KHandle);---------------------------------------------replaces TEDeleteDelete the selected range of text to the TE32K scrapvoid TE32KInsert(Ptr textPtr,long length,TE32KHandle theTE32KHandle);---------------------------------------------------------------------replaces TEInsertInsert a block of text at the current cursor location within the text record, do all necessary lineStart calculationsvoid TE32KPaste(TE32KHandle theTE32KHandle);--------------------------------------------replaces TEPastePaste the TE32K scrap to the current cursor locationHandle TE32KScrapHandle(void);------------------------------replaces TEScrapHandleReturns a copy of the Handle to the TE32K scraplong TE32KGetScrapLen(void);----------------------------replaces TEGetScrapLenReturns the length of the TE32K scrapvoid TE32KSetScrapLen(long length);-----------------------------------replaces TESetSCrapLenSet the length of the TE32K scrap if you've changed its lengthvoid TE32KGetPoint(long selIndex,LongPoint *selPt,TE32KHandle theTE32KHandle);------------------------------------------------------------------------------replaces TEGetPointReturns in selPt the coordinates of the character specified by selIndex.  Since there is an ambiguity regarding the coordinates of the index at the end of a wrapped line, there is a necessary black magic parameter: clikStuff.  If the clikStuff field of the TE32KHandle is non-zero, the coordinates returned correspond to the end of the previous line; otherwise the coordinates returned are the start of the next line.  The clikStuff field is automatically reset to zero after every call to TE32KGetPoint, too.  Confused?  Well, TE32KClick and TE32KKey take care of cursor placement most of the time anyway, so don't worry about it.long TE32KGetOffset(LongPoint *selPt,TE32KHandle theTE32KHandle);-----------------------------------------------------------------replaces TEGetOffsetReturns the index to the character at the coordinates specified by selPtvoid TE32KSelView(TE32KHandle theTE32KHandle);----------------------------------------------replaces TESelViewScroll the cursor into view if it's not already visiblevoid TE32KSetFontStuff(int font,int face,int mode,int size,TE32KHandle theTE32KHandle);---------------------------------------------------------------------------------------unique to TE32KUse to set the font, face, mode, and size of the text record and update the quick-and-dirty table of character widths used in word-wrapping calculations.  If you change the fields of the TE32KHandle on your own, things will get nasty!If the (**theTE32KHandle).tabChars field is non-zero, the tabwidth field is modified so that (**theTE32KHandle).tabwidth = (**theTE32KHandle).tabChars * CharWidth(' ') in the new font size/style.  If the (**theTE32KHandle).tabChars field is zero the tabwidth remains unchanged.  You decide which one you like (I prefer to set (**theTE32KHandle).tabChars = 8, myself).TE32KAutoView(char autoView, TE32KHandle theTE32KHandle);---------------------------------------------------------replaces TEAutoViewUse to turn on/off automatic scrolling.  If autoView is TRUE, autoView scrolling is enabled; if autoView is FALSE, such scrolling is disabled.void SetLongRect(LongRect *,long,long,long,long);-------------------------------------------------unique to TE32KUse to set the left, top, right, bottom of a LongRect; similar to SetRectvoid LongRectToRect(LongRect *,Rect *);-------------------------------------------------unique to TE32KConvert a LongRect to a simple Rect, clipping the size if necessaryvoid RectToLongRect(Rect *,LongRect *);-------------------------------------------------unique to TE32KConvert a Rect to a LongRectvoid OffsetLongRect(LongRect *, long, long)-------------------------------------------unique to TE32K, courtesy of Dave Platt <dplatt@snulbug.mtview.ca.us>Offset a LongRectvoid TE32KStripLFs(unsigned char **textH)-----------------------------------------unique to TE32K, courtesy of Lee A. Fyock <laf@mbunix.mitre.org>This routine will strip *all* linefeeds ('\n') from a given text handle (must be a real Memory Manager handle!).Boolean PtInTE32KView(Point pt, TE32KHandle teH)------------------------------------------------unique to TE32K, courtesy of Lee A. Fyock <laf@mbunix.mitre.org>This routine will return true/false depending on whether the given point is inside the TE32KHandle's viewRect (does not include the scroll bars, if the auto scroll bars have been enabled)Boolean PtInTE32K(Point pt, TE32KHandle teH)--------------------------------------------unique to TE32K, courtesy of Lee A. Fyock <laf@mbunix.mitre.org>This routine will return true/false depending on whether the given point is inside the TE32KHandle viewRect or scroll bars (if auto scroll bars have been enabled).void TE32KResize(TE32KHandle teH, LongRect *viewRect, LongRect *destRect)-------------------------------------------------------------------------unique to TE32K, courtesy of Lee A. Fyock <laf@mbunix.mitre.org>This routine will resize the teH to the size specified by the given viewRect and destRect, twiddling the auto scroll bars as necessary.TE32KHandle TE32KNewScroll(LongRect *destRect, LongRect *viewRect)------------------------------------------------------------------unique to TE32K, courtesy of Lee A. Fyock <laf@mbunix.mitre.org>This routine allocates a new TE32KHandle and enables auto scroll bars.Phew, still with me?  Well, as promised, they're pretty much identical to their TextEdit counterparts, and modifying your source to be compatible should be a breeze, more or less (Ha!).  Just watch out for the use of long's in place of int's. (And yes, I know you don't like the way I keep inflecting “long” to indicate plurality.  And I agree; it does make me look like a dummy who doesn't know anything about the possessive case, but my Canadian Writer's Handbook says that it's okay to use an apostrophe to indicate plurality for short little weird words, so I'm going to continue doing it.)TE32K Miscellenia:==================Many new features have been added by various people.  Here's a brief discourse on the ones I'm aware of:Triple-Clicking---------------Pete Gontier says:There's a new field in the record: 'clickLevel'. This tracks the number of successive clicks which have occurred so far. Normally, this will be zero. After the first click, it becomes 1, and after a double-click, it becomes 2. It stays that way until the next click. If the next click is within the standard double-click time, the entire clicked line is selected, and dragging with the mouse button down is supported.The clickLevel field is initialized by TE32KNew to -1. This is the magic value which says triple-clicking is not enabled. This is to maintain consistency with normal TE, since TE32K is supposed to be as much of a drop-in replacement as possible. To turn on triple-clicking, set the clickLevel field to 0.Automatic Scroll Bar Handling-----------------------------A wonderful addition by Lee A. Fyock that apparently supports automatic handling of scroll bars.TE32K Demo:===========So, you'd like to actually see TE32K in action?  Well, with the source code for TE32K, I've included a little application that allows you to open and edit text files using TE32K instead of TextEdit.  Heck, I even include the source code so you can muck around with it yourself!  It was written using Symantec's Think C, version 5.0.2 (or whatever the version number is).  I used the demo to write this document, so it sort of even works!-Roy Wood, December 31, 1992.TE32K Version History:======================V 1.0-----• initial releaseV 1.1-----• corrected return type for TE32KFromScrap and TE32KToScrap so now they are OSErr's instead of void's• optimized TE32KInsert so it calls TE32KKey to insert single characters• enabled clicking and cursor movement to the end of word-wrapped lines• fixed a bug in the TE32KInsert code that failed to initialize sizeTE32KHandle, and thereby caused some nasty heap-trashing to occur• added capability to wrap lines after a specific number of characters (maxLineWidth field in TE32KRec)• removed a number of declarations of unused variables from routines (thanks to Teddy Slottow <edward@Athena.MIT.EDU>)• added OffsetLongRect() routine, courtesy of Dave Platt <dplatt@snulbug.mtview.ca.us>• tinkered with TE32KSelView logic to enable horizontal movement to show cursor• removed from many routines a nasty line of code that *could* store a '\r' past the end of the text handle  (these were left over from debugging and should have been removed long ago—— thanks again Dave)• made sure the port was set before trying to scroll text (many routines needed to have this done)• added Dave Platt's TE32KUseTextHandle routine• removed the useless TE32KCalTextFrom and TE32KCalTextFromTo routines• made sure that TE32KCalText always sets the nLines field• fiddled with things so that TE32K recognizes '\n' as well as '\r' characters as EOL's• added the tabChars field and logic• fixed a bug in the TE32KCalText routine that neglected to expand the size of the TE32KHandle when adding the final lineStartv1.2----• old TE32KGetText routine returned original handle to text, not a copy; fixed by replacing old code with code supplied by Patrick C. Beard <beard@cs.ucdavis.edu>• added colour highlighting support to invertSelRange as described by Lee A. Fyock <laf@mbunix.mitre.org>• added better double-click + dragging support with code supplied by Lee A. Fyock <laf@mbunix.mitre.org> (this works *really* nicely)v1.3----• added a ton of stuff by Lee A. Fyock <laf@mbunix.mitre.org>, including the scrollH field, and the TE32KResize, TE32KNewScroll, PtInTE32K, PtInTE32KView, TE32KStripLFs, routines• cleaned up the colour inverting as suggested by Julian Harris <julian@cs.aukuni.ac.nz> and Fournier Patrick <fourniep@JSP.UMontreal.CA>• as suggested by Dave Platt <dplatt@snulbug.mtview.ca.us>, I fixed up the TE32KGetText routine so that it sets the hText handle size to the size dictated by teLength before copying and returning the handle (much more memory efficient)• added triple-clicking capabilities as implemented by Pete Gontier <gurgle@netcom.com>The Future:===========My biggest gripe is that unnecessary screen updates occur.  There are lots of special cases that I could/should watch for, in which better update handling could/should be done (e.g. type-over of single characters).  As to when I do this, well.....Also, it might be nice if all the TE32K functions returned some sort of an error code (OSErr) if, say, a memory error occurs.  This even sounds easy to do!
+The TE32K TextEdit Replacement
+==============================
+
+Originally by Roy Wood
+122 Britannia Avenue
+London, Ontario, Canada
+N6H 2J5
+
+(519) 438-3177
+
+rrwood@io.org
+
+Note that numerous other people have added modifications and
+enhancements to the original TE32K!
+
+
+
+Contents:
+=========
+
+Introduction 				- What's this darn thing good for?
+Legal Stuff					- Oh, no....
+Using TE32K					- How do I use it anyway?
+TE32K Data Structures		- What's a TE32KRec?
+TE32K Interface Calls		- I have to do what?!?!?!
+TE32K Miscellania			- Where should this stuff go?
+TE32K Demo					- Make me a believer!
+TE32K Version History		- In the beginning....
+The Future					- Vapourware-wannabe stuff
+
+
+
+Introduction:
+=============
+
+TE32K is designed to be a more-or-less “plug in” replacement for the Macintosh Toolbox TextEdit package.  The major difference between the two editor packages is that TE32K allows for the manipulation of text-files LARGER than 32K.  There are a few other differences as well, most of which are shortcomings due to laziness on my part, but since this source code is provided to you gratis, please feel free to modify it in whatever twisted way your warped little heart desires.  If you do improve it in any way, please be kind enough to share your work with the rest of us (i.e. send me a copy so I can keep track of TE32K's current state of evolution!).
+
+Note that TE32K is written as a non-OOP C program.  If this is not what you're interested in, I suggest you take a look at the many excellent OOP TextEdit replacement class libraries available via FTP, none of which I can remember the names or locations of right now. (though I do recall that Chris Wysocki wrote one, and I *think* I saw it at ftp.brown.edu, but don't hold me to that)
+
+I wrote TE32K since I needed it for rnMac, a Macintosh newsreader I wrote.  Well, I didn't really need it, but it was nice to have, and I wasn't doing anything one afternoon, so.....
+
+
+
+Legal Stuff:
+============
+
+TE32K is provided free of charge, since no-one will ever pay me anything for it anyway.  However, if you do use TE32K in a piece of software which you market, for every copy you sell, you are required to donate $1.00 to the World Wildlife Fund, 90 Eglinton Avenue East, Suite 504, Toronto, Ontario, Canada, M4P 2Z7.  I guess that makes TE32K CharityWare or maybe EcoWare. :)
+
+
+
+Using TE32K:
+============
+
+TE32K is designed as a source-level replacement for TextEdit.  This means that you will have to compile the “TE32K.c” file along with the rest of your program.  As well, you will have to change all your TextEdit calls to the equivalent TE32K routines, and make sure you pass appropriate-sized parameters (i.e. long's instead of ints, LongRect's instead of Rect's, LongPoints instead of Points, etc.).  The TE32K function calls and data structures are declared in the file “TE32K.h” which you should #include in your source, too.  The data structures and interface calls are described in the following sections.
+
+Note that TE32K is not optimized as much as it should be, so the results are sometimes less than perfect (e.g. unnecessary redrawing and flashing).  However, you really can't expect much from CharityWare, can you?  And if it really bothers you, you are more than welcome to fix things up....
+
+Warning #1: the one BIG inconsistency between TE32K and TextEdit is that you have to call TE32KSetFontStuff() to change the font or font-size.  I maintain a table of character widths in the TE32KRec to speed up the screen updates (calling CharWidth() is slooooooow), and if you change the font without telling TE32K, the results will not be what you expected!
+
+Warning #2: since TE32K supports editing of such large text files, the text rectangle (destRect) can easily by taller than 32767 pixels.  “So what?” you ask?  Well, this means that you had better not be using the value ((**theTEH32K).viewRect.top - (**theTEH32K).destRect.top) for the setting in your vertical scroll control.  If you do, then you will likely end up setting the control value to something much larger than its maximum of 32767.  Instead, you would be wise to set the control's value to ((**theTEH32K).viewRect.top - (**theTEH32K).destRect.top) / (**theTEH32K).lineHeight, which means that now your control keeps track of the top line number, rather than the pixel distance between the top of the destRect and viewRect.
+
+
+
+TE32K Data Structures:
+======================
+
+TE32K uses a couple of unconventional data stuctures to work its magic; these are defined in the “TE32K.h” header file as follows:
+
+
+/* a Rect defined with long's, rather than int's */
+
+typedef	struct
+{
+	long		top,left,bottom,right;
+	
+} LongRect;
+
+
+/* a Point defined with long's rather than int's */
+
+typedef	struct
+{
+	long		h,v;
+	
+} LongPoint;
+
+
+/* the TE32K data structure!  Notice the standard TextEdit field names! */
+
+typedef pascal Boolean (*TE32KProcPtr)(void);
+
+typedef	struct
+{
+	LongRect		destRect;	/* the destination rectangle */
+	LongRect		viewRect;	/* the view rectangle */
+	int			lineHeight;	/* height of a line of text */
+	int			fontAscent;	/* the font ascent */
+	LongPoint	selPoint;	/* coords of the selection point */
+	long			selStart;	/* the start of the selected text */
+	long			selEnd;		/* the end of the selected text */
+	int			active;		/* active flag */
+	TE32KProcPtr	clikLoop;	/* hook for the click-loop routine */
+	long			clickTime;	/* time used for double-clicking */
+	long			clickLoc;	/* location of last click, maybe */
+	int			clikStuff	/* flag for EOL cursor placement */
+	long			caretTime;	/* time for blinking cursor */
+	int			caretState;	/* state of cursor (visible/invis.) */
+	long			teLength;	/* size of edit text */
+	Handle		hText;		/* Handle to text */
+	int			txFont;		/* the font */
+	char			txFace;		/* the font face */
+	int			txMode;		/* the text display mode */
+	int			txSize;		/* the size of the text */
+	int			tabWidth;	/* the width of tabs */
+	int			tabChars;	/* if non-zero, used to calculate tabwidth */
+	int			maxLineWidth;	/* max width of a line in char's */
+	int			crOnly;		/* do Carriage Return only? */
+	GrafPtr		inPort;		/* the GrafPort we're in */
+	long			nLines;		/* the number of lines of text */
+	int			theCharWidths[256];	/* q&d lookup table */
+	ControlHandle		scrollH;	/* LAF, added 3/5/93 */
+	int					clickLevel;		/* Pete Gontier ??/??/93 */
+	long			lineStarts[];	/* the line starts array */
+	
+} 	TE32KRec,*TE32KPtr,**TE32KHandle;
+
+
+
+If you've done any programming with TextEdit, you'll quickly realize that these data structures are pretty easy to figure out .  Basically, I've just enlarged the relevant field sizes from int's to long's, and thrown away the fields I didn't need.  All the fields of the TE32KRec are named the same as traditional TextEdit fields, so it should be pretty simple to modify your source code to be compatible with TE32K.  The programs I've used it in were written to use TextEdit originally, but it's taken me no more than half an hour to make them compatible with TE32K.  If this seems too much effort for you, maybe you should stick with TextEdit then.
+
+Note that the “maxLineWidth” field defines the maximum width in characters that a line may be when word-wrapping is in effect (the default width is 32767 characters).  I added this since my newsreader needed to wrap lines if they were wider than, say, 72 characters.
+
+Warning: the one BIG inconsistency between TE32K and TextEdit is that you have to call TE32KSetFontStuff() to change the font or font-size.  I maintain a table of character widths in the TE32KRec to speed up the screen updates (calling CharWidth() is sloooooooow), and if you change the font without telling TE32K, the results will not be what you expected!
+
+Also—— the “tabChars” field is normally zero, which means TE32K will honour the tabwidth field.  If tabChars is non-zero, then the tabwidth field is set to the width of tabChars number of spaces in the active font/size/mode/style.
+
+
+
+TE32K Interface Calls:
+======================
+
+All the public routines are described as follows, with the equivalent TextEdit routine listed below the TE32K function declaration.  The name of each routine is basically the same as the standard TextEdit routine albeit with the “TE” replaced by “TE32K”.  The parameters are pretty much the same as usual too, with the major difference being the use of long's in place of int's, etc.
+
+
+void TE32KInit(void);
+---------------------
+replaces TEInit
+
+Initialize the TE32K scrap Handle
+
+
+TE32KHandle TE32KNew(LongRect *destRect,LongRect *viewRect);
+------------------------------------------------------------
+replaces TENew
+
+Allocate and return a Handle to a new TE32K edit record; destRect and viewRect as per usual
+
+
+void	 TE32KDispose(TE32KHandle theTE32KHandle);
+----------------------------------------------
+replaces TEDispose
+
+Dispose of a previously-allocated TE32K record
+
+
+void TE32KCalText(TE32KHandle theTE32KHandle);
+----------------------------------------------
+TECalText
+
+Calculate the lineStarts array for a text record
+
+
+void TE32KUseTextHandle(Handle hText,TE32KHandle theTE32KHandle);
+-----------------------------------------------------------------
+unique to TE32K, courtesy of Dave Platt <dplatt@snulbug.mtview.ca.us>
+
+Sets the text handle to hText, discards the old text handle if there was one; saves on memory muddling.  Do not try to DisposeHandle(hText) after passing hText to TE32KUseTextHandle!
+
+
+void	 TE32KSetText(Ptr theText,long length,TE32KHandle theTE32KHandle);
+----------------------------------------------------------------------
+replaces TESetText
+
+Set the text of the TE32K record to a copy of the text pointed at by theText, length of which is given by length parameter
+
+
+Handle TE32KGetText(TE32KHandle theTE32KHandle);
+------------------------------------------------
+replaces TEGetText
+
+Returns a copy of the Handle of the text record
+
+
+void TE32KUpdate(LongRect *updateRect,TE32KHandle theTE32KHandle);
+------------------------------------------------------------------
+replaces TEUpdate
+
+Update the display of the text within the specified update rectangle
+
+
+void TE32KScroll(long dh,long dv,TE32KHandle theTE32KHandle);
+-------------------------------------------------------------
+replaces TEScroll
+
+Scroll the text display the amount specified by dh and dv
+
+
+void TE32KActivate(TE32KHandle theTE32KHandle);
+-----------------------------------------------
+replaces  TEActivate
+
+Activate the text record
+
+
+void TE32KDeactivate(TE32KHandle theTE32KHandle);
+-------------------------------------------------
+replaces TEDeactivate
+
+Deactivate the text record
+
+
+void TE32KIdle(TE32KHandle theTE32KHandle);
+-------------------------------------------
+replaces TEIdle
+
+Call this to blink the cursor
+
+
+void TE32KKey(unsigned char theChar,TE32KHandle theTE32KHandle);
+----------------------------------------------------------------
+replaces TEKey
+
+Process the keystroke contained in theChar.  Note that even arrow keys and shifted arrow key combinations are correctly handled by TE32K.
+
+
+void TE32KClick(Point thePt,unsigned char extend,TE32KHandle theTE32KHandle);
+-----------------------------------------------------------------------------
+replaces TEClick
+
+Respond to a mouse-down event in the view rectangle, extend indicates whether the shift-key was depressed and thus whether the user is selecting a range of text
+
+
+void TE32KSetSelect(long selStart,long selEnd,TE32KHandle theTE32KHandle);
+--------------------------------------------------------------------------
+replaces TESetSelect
+
+Set the selection range of the text record
+
+
+OSErr TE32KToScrap(void);
+-------------------------
+replaces TEFromScrap
+
+Copy the TE32K scrap to the desktop/clipboard scrap
+
+
+OSErr TE32KFromScrap(void);
+---------------------------
+replaces TEFromScrap
+
+Copy the desktop/clipboard scrap to the TE32K scrap
+
+
+void TE32KCopy(TE32KHandle theTE32KHandle);
+-------------------------------------------
+replaces TECopy
+
+Copy the selected range of text to the TE32K scrap
+
+
+void TE32KCut(TE32KHandle theTE32KHandle);
+------------------------------------------
+replaces TECut
+
+Cut the selected range of text to the TE32K scrap
+
+
+void TE32KDelete(TE32KHandle theTE32KHandle);
+---------------------------------------------
+replaces TEDelete
+
+Delete the selected range of text to the TE32K scrap
+
+
+void TE32KInsert(Ptr textPtr,long length,TE32KHandle theTE32KHandle);
+---------------------------------------------------------------------
+replaces TEInsert
+
+Insert a block of text at the current cursor location within the text record, do all necessary lineStart calculations
+
+
+void TE32KPaste(TE32KHandle theTE32KHandle);
+--------------------------------------------
+replaces TEPaste
+
+Paste the TE32K scrap to the current cursor location
+
+
+Handle TE32KScrapHandle(void);
+------------------------------
+replaces TEScrapHandle
+
+Returns a copy of the Handle to the TE32K scrap
+
+
+long TE32KGetScrapLen(void);
+----------------------------
+replaces TEGetScrapLen
+
+Returns the length of the TE32K scrap
+
+
+void TE32KSetScrapLen(long length);
+-----------------------------------
+replaces TESetSCrapLen
+
+Set the length of the TE32K scrap if you've changed its length
+
+
+void TE32KGetPoint(long selIndex,LongPoint *selPt,TE32KHandle theTE32KHandle);
+------------------------------------------------------------------------------
+replaces TEGetPoint
+
+Returns in selPt the coordinates of the character specified by selIndex.  
+
+Since there is an ambiguity regarding the coordinates of the index at the end of a wrapped line, there is a necessary black magic parameter: clikStuff.  If the clikStuff field of the TE32KHandle is non-zero, the coordinates returned correspond to the end of the previous line; otherwise the coordinates returned are the start of the next line.  The clikStuff field is automatically reset to zero after every call to TE32KGetPoint, too.  
+
+Confused?  Well, TE32KClick and TE32KKey take care of cursor placement most of the time anyway, so don't worry about it.
+
+
+long TE32KGetOffset(LongPoint *selPt,TE32KHandle theTE32KHandle);
+-----------------------------------------------------------------
+replaces TEGetOffset
+
+Returns the index to the character at the coordinates specified by selPt
+
+
+void TE32KSelView(TE32KHandle theTE32KHandle);
+----------------------------------------------
+replaces TESelView
+
+Scroll the cursor into view if it's not already visible
+
+
+void TE32KSetFontStuff(int font,int face,int mode,int size,TE32KHandle theTE32KHandle);
+---------------------------------------------------------------------------------------
+unique to TE32K
+
+Use to set the font, face, mode, and size of the text record and update the quick-and-dirty table of character widths used in word-wrapping calculations.  If you change the fields of the TE32KHandle on your own, things will get nasty!
+
+If the (**theTE32KHandle).tabChars field is non-zero, the tabwidth field is modified so that (**theTE32KHandle).tabwidth = (**theTE32KHandle).tabChars * CharWidth(' ') in the new font size/style.  If the (**theTE32KHandle).tabChars field is zero the tabwidth remains unchanged.  You decide which one you like (I prefer to set (**theTE32KHandle).tabChars = 8, myself).
+
+
+TE32KAutoView(char autoView, TE32KHandle theTE32KHandle);
+---------------------------------------------------------
+replaces TEAutoView
+
+Use to turn on/off automatic scrolling.  If autoView is TRUE, autoView scrolling is enabled; if autoView is FALSE, such scrolling is disabled.
+
+
+
+void SetLongRect(LongRect *,long,long,long,long);
+-------------------------------------------------
+unique to TE32K
+
+Use to set the left, top, right, bottom of a LongRect; similar to SetRect
+
+
+void LongRectToRect(LongRect *,Rect *);
+-------------------------------------------------
+unique to TE32K
+
+Convert a LongRect to a simple Rect, clipping the size if necessary
+
+
+void RectToLongRect(Rect *,LongRect *);
+-------------------------------------------------
+unique to TE32K
+
+Convert a Rect to a LongRect
+
+
+
+void OffsetLongRect(LongRect *, long, long)
+-------------------------------------------
+unique to TE32K, courtesy of Dave Platt <dplatt@snulbug.mtview.ca.us>
+
+Offset a LongRect
+
+
+void TE32KStripLFs(unsigned char **textH)
+-----------------------------------------
+unique to TE32K, courtesy of Lee A. Fyock <laf@mbunix.mitre.org>
+
+This routine will strip *all* linefeeds ('\n') from a given text handle (must be a real Memory Manager handle!).
+
+
+Boolean PtInTE32KView(Point pt, TE32KHandle teH)
+------------------------------------------------
+unique to TE32K, courtesy of Lee A. Fyock <laf@mbunix.mitre.org>
+
+This routine will return true/false depending on whether the given point is inside the TE32KHandle's viewRect (does not include the scroll bars, if the auto scroll bars have been enabled)
+
+
+Boolean PtInTE32K(Point pt, TE32KHandle teH)
+--------------------------------------------
+unique to TE32K, courtesy of Lee A. Fyock <laf@mbunix.mitre.org>
+
+This routine will return true/false depending on whether the given point is inside the TE32KHandle viewRect or scroll bars (if auto scroll bars have been enabled).
+
+
+void TE32KResize(TE32KHandle teH, LongRect *viewRect, LongRect *destRect)
+-------------------------------------------------------------------------
+unique to TE32K, courtesy of Lee A. Fyock <laf@mbunix.mitre.org>
+
+This routine will resize the teH to the size specified by the given viewRect and destRect, twiddling the auto scroll bars as necessary.
+
+
+TE32KHandle TE32KNewScroll(LongRect *destRect, LongRect *viewRect)
+------------------------------------------------------------------
+unique to TE32K, courtesy of Lee A. Fyock <laf@mbunix.mitre.org>
+
+This routine allocates a new TE32KHandle and enables auto scroll bars.
+
+
+
+
+Phew, still with me?  Well, as promised, they're pretty much identical to their TextEdit counterparts, and modifying your source to be compatible should be a breeze, more or less (Ha!).  Just watch out for the use of long's in place of int's. (And yes, I know you don't like the way I keep inflecting “long” to indicate plurality.  And I agree; it does make me look like a dummy who doesn't know anything about the possessive case, but my Canadian Writer's Handbook says that it's okay to use an apostrophe to indicate plurality for short little weird words, so I'm going to continue doing it.)
+
+
+
+TE32K Miscellenia:
+==================
+
+Many new features have been added by various people.  Here's a brief discourse on the ones I'm aware of:
+
+Triple-Clicking
+---------------
+
+Pete Gontier says:
+There's a new field in the record: 'clickLevel'. This tracks the number of successive clicks which have occurred so far. Normally, this will be zero. After the first click, it becomes 1, and after a double-click, it becomes 2. It stays that way until the next click. If the next click is within the standard double-click time, the entire clicked line is selected, and dragging with the mouse button down is supported.
+
+The clickLevel field is initialized by TE32KNew to -1. This is the magic value which says triple-clicking is not enabled. This is to maintain consistency with normal TE, since TE32K is supposed to be as much of a drop-in replacement as possible. To turn on triple-clicking, set the clickLevel field to 0.
+
+
+Automatic Scroll Bar Handling
+-----------------------------
+
+A wonderful addition by Lee A. Fyock that apparently supports automatic handling of scroll bars.
+
+
+TE32K Demo:
+===========
+
+So, you'd like to actually see TE32K in action?  Well, with the source code for TE32K, I've included a little application that allows you to open and edit text files using TE32K instead of TextEdit.  Heck, I even include the source code so you can muck around with it yourself!  It was written using Symantec's Think C, version 5.0.2 (or whatever the version number is).  I used the demo to write this document, so it sort of even works!
+
+
+
+-Roy Wood, December 31, 1992.
+
+
+
+
+
+TE32K Version History:
+======================
+
+V 1.0
+-----
+• initial release
+
+V 1.1
+-----
+• corrected return type for TE32KFromScrap and TE32KToScrap so now they are OSErr's instead of void's
+• optimized TE32KInsert so it calls TE32KKey to insert single characters
+• enabled clicking and cursor movement to the end of word-wrapped lines
+• fixed a bug in the TE32KInsert code that failed to initialize sizeTE32KHandle, and thereby caused some nasty heap-trashing to occur
+• added capability to wrap lines after a specific number of characters (maxLineWidth field in TE32KRec)
+• removed a number of declarations of unused variables from routines (thanks to Teddy Slottow <edward@Athena.MIT.EDU>)
+• added OffsetLongRect() routine, courtesy of Dave Platt <dplatt@snulbug.mtview.ca.us>
+• tinkered with TE32KSelView logic to enable horizontal movement to show cursor
+• removed from many routines a nasty line of code that *could* store a '\r' past the end of the text handle  (these were left over from debugging and should have been removed long ago—— thanks again Dave)
+• made sure the port was set before trying to scroll text (many routines needed to have this done)
+• added Dave Platt's TE32KUseTextHandle routine
+• removed the useless TE32KCalTextFrom and TE32KCalTextFromTo routines
+• made sure that TE32KCalText always sets the nLines field
+• fiddled with things so that TE32K recognizes '\n' as well as '\r' characters as EOL's
+• added the tabChars field and logic
+• fixed a bug in the TE32KCalText routine that neglected to expand the size of the TE32KHandle when adding the final lineStart
+
+v1.2
+----
+• old TE32KGetText routine returned original handle to text, not a copy; fixed by replacing old code with code supplied by Patrick C. Beard <beard@cs.ucdavis.edu>
+• added colour highlighting support to invertSelRange as described by Lee A. Fyock <laf@mbunix.mitre.org>
+• added better double-click + dragging support with code supplied by Lee A. Fyock <laf@mbunix.mitre.org> (this works *really* nicely)
+
+
+v1.3
+----
+• added a ton of stuff by Lee A. Fyock <laf@mbunix.mitre.org>, including the scrollH field, and the TE32KResize, TE32KNewScroll, PtInTE32K, PtInTE32KView, TE32KStripLFs, routines
+• cleaned up the colour inverting as suggested by Julian Harris <julian@cs.aukuni.ac.nz> and Fournier Patrick <fourniep@JSP.UMontreal.CA>
+• as suggested by Dave Platt <dplatt@snulbug.mtview.ca.us>, I fixed up the TE32KGetText routine so that it sets the hText handle size to the size dictated by teLength before copying and returning the handle (much more memory efficient)
+• added triple-clicking capabilities as implemented by Pete Gontier <gurgle@netcom.com>
+
+
+
+The Future:
+===========
+
+My biggest gripe is that unnecessary screen updates occur.  There are lots of special cases that I could/should watch for, in which better update handling could/should be done (e.g. type-over of single characters).  As to when I do this, well.....
+
+Also, it might be nice if all the TE32K functions returned some sort of an error code (OSErr) if, say, a memory error occurs.  This even sounds easy to do!

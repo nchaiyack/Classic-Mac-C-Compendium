@@ -1,1 +1,16 @@
-=== astro-data.shar =========================25-Jan-86 06:23:16-MST,64073;000000000001Return-Path: <unix-sources-request@BRL.ARPA>Received: from BRL-TGR.ARPA by SIMTEL20.ARPA with TCP; Sat 25 Jan 86 06:22:04-MSTReceived: from usenet by TGR.BRL.ARPA id a011630; 25 Jan 86 5:48 ESTFrom: Kukuk <rck@ihuxx.uucp>Newsgroups: net.sourcesSubject: Planetary dataMessage-ID: <956@ihuxx.UUCP>Date: 24 Jan 86 19:22:15 GMTTo:       unix-sources@BRL-TGR.ARPA	This program computes all sorts of data concerning the Sun,	Moon, and planets.  Refer to the README for more details.
+=== astro-data.shar =========================
+25-Jan-86 06:23:16-MST,64073;000000000001
+Return-Path: <unix-sources-request@BRL.ARPA>
+Received: from BRL-TGR.ARPA by SIMTEL20.ARPA with TCP; Sat 25 Jan 86 06:22:04-MST
+Received: from usenet by TGR.BRL.ARPA id a011630; 25 Jan 86 5:48 EST
+From: Kukuk <rck@ihuxx.uucp>
+Newsgroups: net.sources
+Subject: Planetary data
+Message-ID: <956@ihuxx.UUCP>
+Date: 24 Jan 86 19:22:15 GMT
+To:       unix-sources@BRL-TGR.ARPA
+
+
+	This program computes all sorts of data concerning the Sun,
+	Moon, and planets.  Refer to the README for more details.
+

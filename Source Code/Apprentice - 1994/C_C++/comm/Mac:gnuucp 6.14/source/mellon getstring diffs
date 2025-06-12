@@ -1,1 +1,149 @@
-To: jim@fpr.comSubject: Re: Stupid question... Date: Sat, 12 Jun 93 13:47:25 PDTFrom: Ted Lemon <mellon@hemlock.ncd.com>Hokay.   Here's the diffs (sorry about the reindentation - I wasexperiencing some severe reality clashes with an unbalanced brace, soI went through the entire getstring function reindenting it):diff -rbc2 gnuucp/Source/gnuucp.c nuucp/Source/gnuucp.c*** gnuucp/Source/gnuucp.c	Sat Jun 12 13:29:24 1993--- nuucp/Source/gnuucp.c	Sat Jun 12 13:28:29 1993****************** 183,193 ****   */  int! getstring(where)  	register char *where;  {  	register int data, count = 0;  	DEBUG(8, "Getstring:  ", 0);  	/* Read data until null character */! 	while ( (long)((data = xgetc()) != (long)EOF)) {  		data &= 0x7F;  		if (DEBUG_LEVEL(8)) --- 183,198 ----   */  int! getstring(where, maxi)  	register char *where;+ 	register int maxi;  {  	register int data, count = 0;  	DEBUG(8, "Getstring:  ", 0);+ 	+ 	--maxi; /* Leave space for NUL terminator... */+ 	  	/* Read data until null character */! 	while ( (long)((data = xgetc()) != (long)EOF))! 	{  		data &= 0x7F;  		if (DEBUG_LEVEL(8)) ****************** 200,207 ****  		if (data == 0x00 && count != 0)   			{! 				if (DEBUG_LEVEL(8)) putchar('\n');  					return SUCCESS;  					}  		}  	if (DEBUG_LEVEL(8)) putchar('\n');  	return FAIL;--- 205,218 ----  		if (data == 0x00 && count != 0)   		{! 			if (DEBUG_LEVEL(8))! 				putchar('\n');  			return SUCCESS;+ 		} else {+ 			if (count == maxi) {+ 				where [count] = '\0';+ 				return SUCCESS;  			}  		}+ 	}  	if (DEBUG_LEVEL(8)) putchar('\n');  	return FAIL;****************** 983,987 ****  			goto bort1; */  	again:! 		if (getstring(msgbuf) != SUCCESS)  			goto bort1;  		/* printf("MSGBUF: %s\n", msgbuf); */--- 994,998 ----  			goto bort1; */  	again:! 		if (getstring(msgbuf, sizeof msgbuf) != SUCCESS)  			goto bort1;  		/* printf("MSGBUF: %s\n", msgbuf); */****************** 1014,1018 ****    	/* wait for ok message */! 	if (getstring(msgbuf) != SUCCESS)  		goto bort1;  	if (msgbuf[0] != 'R')--- 1025,1029 ----    	/* wait for ok message */! 	if (getstring(msgbuf, sizeof msgbuf) != SUCCESS)  		goto bort1;  	if (msgbuf[0] != 'R')****************** 1027,1031 ****  	 * FIXME, should scan our table versus theirs.  	 */! 	if (getstring(msgbuf) != SUCCESS)  		goto bort1;  	if (msgbuf[0] != 'P')--- 1038,1042 ----  	 * FIXME, should scan our table versus theirs.  	 */! 	if (getstring(msgbuf, sizeof msgbuf) != SUCCESS)  		goto bort1;  	if (msgbuf[0] != 'P')****************** 1123,1127 ****  /* FIXME, handle this kludge */  /*	if (instr(msgi2,sizeof(msgi2)-1), 1) */! 	if (getstring(trash) != SUCCESS || trash[0] != 'S')  		goto bort;  --- 1134,1138 ----  /* FIXME, handle this kludge */  /*	if (instr(msgi2,sizeof(msgi2)-1), 1) */! 	if (getstring(trash, sizeof trash) != SUCCESS || trash[0] != 'S')  		goto bort;  ****************** 1133,1137 ****  	/* FIXME, make the protocol list here, and use it */  	twrite(msgo3a,sizeof(msgo3a)-1);! 	if (getstring(trash) != SUCCESS) goto bort;  	if (!strchr(trash+1, curproto->p_id))   		{--- 1144,1148 ----  	/* FIXME, make the protocol list here, and use it */  	twrite(msgo3a,sizeof(msgo3a)-1);! 	if (getstring(trash, sizeof trash) != SUCCESS) goto bort;  	if (!strchr(trash+1, curproto->p_id))   		{diff -rbc2 gnuucp/Source/gnuucp_proto.h nuucp/Source/gnuucp_proto.h*** gnuucp/Source/gnuucp_proto.h	Sat Jun 12 13:29:25 1993--- nuucp/Source/gnuucp_proto.h	Sat Jun 12 13:28:31 1993****************** 19,23 ****  /* GNUUCP.c */  ! int getstring(char *);  int instr(char *, int, int);  int twrite(char *, int);--- 19,23 ----  /* GNUUCP.c */  ! int getstring(char *, int);  int instr(char *, int, int);  int twrite(char *, int);
+To: jim@fpr.com
+Subject: Re: Stupid question... 
+Date: Sat, 12 Jun 93 13:47:25 PDT
+From: Ted Lemon <mellon@hemlock.ncd.com>
+
+
+Hokay.   Here's the diffs (sorry about the reindentation - I was
+experiencing some severe reality clashes with an unbalanced brace, so
+I went through the entire getstring function reindenting it):
+
+diff -rbc2 gnuucp/Source/gnuucp.c nuucp/Source/gnuucp.c
+*** gnuucp/Source/gnuucp.c	Sat Jun 12 13:29:24 1993
+--- nuucp/Source/gnuucp.c	Sat Jun 12 13:28:29 1993
+***************
+*** 183,193 ****
+   */
+  int
+! getstring(where)
+  	register char *where;
+  {
+  	register int data, count = 0;
+  	DEBUG(8, "Getstring:  ", 0);
+  	/* Read data until null character */
+! 	while ( (long)((data = xgetc()) != (long)EOF)) {
+  		data &= 0x7F;
+  		if (DEBUG_LEVEL(8)) 
+--- 183,198 ----
+   */
+  int
+! getstring(where, maxi)
+  	register char *where;
++ 	register int maxi;
+  {
+  	register int data, count = 0;
+  	DEBUG(8, "Getstring:  ", 0);
++ 	
++ 	--maxi; /* Leave space for NUL terminator... */
++ 	
+  	/* Read data until null character */
+! 	while ( (long)((data = xgetc()) != (long)EOF))
+! 	{
+  		data &= 0x7F;
+  		if (DEBUG_LEVEL(8)) 
+***************
+*** 200,207 ****
+  		if (data == 0x00 && count != 0) 
+  			{
+! 				if (DEBUG_LEVEL(8)) putchar('\n');
+  					return SUCCESS;
+  					}
+  		}
+  	if (DEBUG_LEVEL(8)) putchar('\n');
+  	return FAIL;
+--- 205,218 ----
+  		if (data == 0x00 && count != 0) 
+  		{
+! 			if (DEBUG_LEVEL(8))
+! 				putchar('\n');
+  			return SUCCESS;
++ 		} else {
++ 			if (count == maxi) {
++ 				where [count] = '\0';
++ 				return SUCCESS;
+  			}
+  		}
++ 	}
+  	if (DEBUG_LEVEL(8)) putchar('\n');
+  	return FAIL;
+***************
+*** 983,987 ****
+  			goto bort1; */
+  	again:
+! 		if (getstring(msgbuf) != SUCCESS)
+  			goto bort1;
+  		/* printf("MSGBUF: %s\n", msgbuf); */
+--- 994,998 ----
+  			goto bort1; */
+  	again:
+! 		if (getstring(msgbuf, sizeof msgbuf) != SUCCESS)
+  			goto bort1;
+  		/* printf("MSGBUF: %s\n", msgbuf); */
+***************
+*** 1014,1018 ****
+  
+  	/* wait for ok message */
+! 	if (getstring(msgbuf) != SUCCESS)
+  		goto bort1;
+  	if (msgbuf[0] != 'R')
+--- 1025,1029 ----
+  
+  	/* wait for ok message */
+! 	if (getstring(msgbuf, sizeof msgbuf) != SUCCESS)
+  		goto bort1;
+  	if (msgbuf[0] != 'R')
+***************
+*** 1027,1031 ****
+  	 * FIXME, should scan our table versus theirs.
+  	 */
+! 	if (getstring(msgbuf) != SUCCESS)
+  		goto bort1;
+  	if (msgbuf[0] != 'P')
+--- 1038,1042 ----
+  	 * FIXME, should scan our table versus theirs.
+  	 */
+! 	if (getstring(msgbuf, sizeof msgbuf) != SUCCESS)
+  		goto bort1;
+  	if (msgbuf[0] != 'P')
+***************
+*** 1123,1127 ****
+  /* FIXME, handle this kludge */
+  /*	if (instr(msgi2,sizeof(msgi2)-1), 1) */
+! 	if (getstring(trash) != SUCCESS || trash[0] != 'S')
+  		goto bort;
+  
+--- 1134,1138 ----
+  /* FIXME, handle this kludge */
+  /*	if (instr(msgi2,sizeof(msgi2)-1), 1) */
+! 	if (getstring(trash, sizeof trash) != SUCCESS || trash[0] != 'S')
+  		goto bort;
+  
+***************
+*** 1133,1137 ****
+  	/* FIXME, make the protocol list here, and use it */
+  	twrite(msgo3a,sizeof(msgo3a)-1);
+! 	if (getstring(trash) != SUCCESS) goto bort;
+  	if (!strchr(trash+1, curproto->p_id)) 
+  		{
+--- 1144,1148 ----
+  	/* FIXME, make the protocol list here, and use it */
+  	twrite(msgo3a,sizeof(msgo3a)-1);
+! 	if (getstring(trash, sizeof trash) != SUCCESS) goto bort;
+  	if (!strchr(trash+1, curproto->p_id)) 
+  		{
+diff -rbc2 gnuucp/Source/gnuucp_proto.h nuucp/Source/gnuucp_proto.h
+*** gnuucp/Source/gnuucp_proto.h	Sat Jun 12 13:29:25 1993
+--- nuucp/Source/gnuucp_proto.h	Sat Jun 12 13:28:31 1993
+***************
+*** 19,23 ****
+  /* GNUUCP.c */
+  
+! int getstring(char *);
+  int instr(char *, int, int);
+  int twrite(char *, int);
+--- 19,23 ----
+  /* GNUUCP.c */
+  
+! int getstring(char *, int);
+  int instr(char *, int, int);
+  int twrite(char *, int);

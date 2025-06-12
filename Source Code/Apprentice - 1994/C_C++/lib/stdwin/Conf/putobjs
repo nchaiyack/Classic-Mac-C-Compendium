@@ -1,1 +1,25 @@
-#! /bin/sh## Construct OBJS macro definition# usage: putobjs macroname sourcefile ...# Find out which echo we have, sighcase `echo -n` in-n)	N=; C='\c';;*)	N=-n; C=;;esacechoecho $N "$1=$C"shiftfor filedo	case $file in	*.c)	echo " \\"; echo $N "	`basename $file .c`.o$C";;	esacdoneecho
+#! /bin/sh
+#
+# Construct OBJS macro definition
+# usage: putobjs macroname sourcefile ...
+
+# Find out which echo we have, sigh
+case `echo -n` in
+-n)	N=; C='\c';;
+*)	N=-n; C=;;
+esac
+
+echo
+
+echo $N "$1=$C"
+
+shift
+
+for file
+do
+	case $file in
+	*.c)	echo " \\"; echo $N "	`basename $file .c`.o$C";;
+	esac
+done
+
+echo

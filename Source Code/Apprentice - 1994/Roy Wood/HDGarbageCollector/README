@@ -1,1 +1,10 @@
-This is the source code for my Garbage Collector application.The idea was that this thing would be used to create a master imageof what a hard drive should contain, and then the user would periodicallyrun it to clean up junk that gets put on it by dumb users.  It isa useful thing for a public lab or some similar setup....It needs to be cleaned up a lot, and I don't have the time or desire....-Roy Wood (rrwood@io.org)
+This is the source code for my Garbage Collector application.
+
+The idea was that this thing would be used to create a master image
+of what a hard drive should contain, and then the user would periodically
+run it to clean up junk that gets put on it by dumb users.  It is
+a useful thing for a public lab or some similar setup....
+
+It needs to be cleaned up a lot, and I don't have the time or desire....
+
+-Roy Wood (rrwood@io.org)

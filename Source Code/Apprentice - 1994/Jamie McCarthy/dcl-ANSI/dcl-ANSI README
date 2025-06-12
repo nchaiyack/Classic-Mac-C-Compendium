@@ -1,1 +1,104 @@
-#if 0C's method of declaring variables and functions is one of the most confusingparts of the language.  Even old pros will double- and triple-check theirarrays of pointers.  And the pathological cases are truly bizarre:"int(Int(int(Int)))" declares a function that accepts and returns an int, but"int(Int(int(int)))" declares a function that accepts another function,and _that_ function accepts and returns an int.  Weird stuff."dcl-ANSI" lets you type in a declaration, hit a few keys, and see what itmeans, in plain English.  Tell it "int *x[]()" and it tells you x is "typearray[] of function with undefined parameters returning type pointer to int."It's based on the "dcl" program in section 5.12 of K&R, but, as the nameimplies, it fully understands ANSI.  (Well, OK, there are a few limitations.See below.)  And it's public domain.There are two editions of this utility.  It was first created as a BBEditextension, because (1) I like BBEdit and (2) BBEdit provides a particularlynice environment for hacks like this to live in.  If you keep BBEdit openwhile programming, you may prefer this version.  Otherwise, you'll probablywant to use the second edition, the FKEY, because it's simpler:  justselect your declaration, hit cmd-C and cmd-shift-9 [*], and the Englishexplanation is in the clipboard, waiting for you to paste it somewhere.That's so much simpler, in fact, that you may be wondering why I kept theBBEdit extension hanging around at all.  Well, because:  (1) I like BBEdit.(2) If you want to translate the FKEY into another language, or add yourown specifiers for common typedefs, you'll have to recompile the code.But the extension's strings are in resources.  (You'll probably want touse Resorceror, which provides a handy little mechanism for editing arraysof C strings.)  (3) Tradition.  (4) You get an interface with the BBEditextension:  you can input text that's been selected but not copied, andyou can send the output to the clipboard, a window, or into a dialog box.(5) If you use BBXKeys and PwrSwitcher, and you leave BBEdit running allthe time, you can get results with only a few more keystrokes than theFKEY.  (6) You have to use ResEdit to install the FKEY, yuck.(7) I like BBEdit.Roughly in order of importance, the limitations are:¥ only one declaration at a time can be parsed;¥ the declarations may not be initialized;¥ the errors returned are sometimes not quite what you'd expect, so don't  take them as gospel or anything;¥ a semicolon terminates input, so a declaration is allowed to end with  one, but any other non-whitespace terminator produces an error;¥ specifiers are not parsed, so "short long" and "float int" and arrays of  void and other nonsense like that is considered valid;¥Êonly C specifiers are recognized, not ones you may have typedef'd, with  the exception of a few common ones--you can add your own by modifying  the BBEdit extension's resources or the FKEY's code;¥ the ellipsis token ("...") is not recognized;¥ comments are not recognized;¥ no C preprocessing is done, so line splicing, trigraphs, backslash  escape sequences, and #-stuff are not recognized;¥ the output can't be longer than 1K;¥ functions cannot be nested as parameters of functions more than six deep;¥ tokens longer than 100 characters might cause strangeness or a crash;¥ more than about a hundred nested pairs of parentheses may cause heap  corruption or a crash (2000 guarantees it).As I said, dcl-ANSI is public domain;  it's free, and I've forsaken allrights and responsibilities to and for it.  I did this for the fun of it.Part of the fun is hearing from people--if you have any comments orsuggestions, I'd like to hear from you!  And if you translate this orotherwise modify it, I'd especially like to hear about what you've done.Thank you.Happy coding!Jamie R. McCarthyInternet (at least for now):  k044477@kzoo.eduAppleLink (indefinitely):  j.mccarthyAppleLink, via Internet:  j.mccarthy@applelink.apple.com[*] This distribution gives the FKEY an ID of 9, so you invoke it withcmd-shift-9.  If you want to change that for some reason, just changethe ID number to something else when you install it.Instructions for installing an FKEY:  first, make a backup copy of yoursystem file, just in case.  Double-click the provided FKEY file.  ResEditshould start up;  if not, get a copy of ResEdit 2.1.1 (or later).  Copythe selected 'FKEY' resource.  Close the file.  Open your system file, andignore the warning (if any).  Paste.  Save.  Close your system file.  QuitResEdit and restart.  If your system file is now hosed, well, that's whatyour backup copy is for.#endifint(Int1(int(Int)));int Int1(int Int ){	Int = 5;}int(Int2(int                     (int                )));int Int2(int unnamedFunctionParam(int unnamedIntParam)){	int aLocalVariable = unnamedFunctionParam(5);}
+#if 0
+
+
+C's method of declaring variables and functions is one of the most confusing
+parts of the language.  Even old pros will double- and triple-check their
+arrays of pointers.  And the pathological cases are truly bizarre:
+"int(Int(int(Int)))" declares a function that accepts and returns an int, but
+"int(Int(int(int)))" declares a function that accepts another function,
+and _that_ function accepts and returns an int.  Weird stuff.
+
+"dcl-ANSI" lets you type in a declaration, hit a few keys, and see what it
+means, in plain English.  Tell it "int *x[]()" and it tells you x is "type
+array[] of function with undefined parameters returning type pointer to int."
+It's based on the "dcl" program in section 5.12 of K&R, but, as the name
+implies, it fully understands ANSI.  (Well, OK, there are a few limitations.
+See below.)  And it's public domain.
+
+There are two editions of this utility.  It was first created as a BBEdit
+extension, because (1) I like BBEdit and (2) BBEdit provides a particularly
+nice environment for hacks like this to live in.  If you keep BBEdit open
+while programming, you may prefer this version.  Otherwise, you'll probably
+want to use the second edition, the FKEY, because it's simpler:  just
+select your declaration, hit cmd-C and cmd-shift-9 [*], and the English
+explanation is in the clipboard, waiting for you to paste it somewhere.
+
+That's so much simpler, in fact, that you may be wondering why I kept the
+BBEdit extension hanging around at all.  Well, because:  (1) I like BBEdit.
+(2) If you want to translate the FKEY into another language, or add your
+own specifiers for common typedefs, you'll have to recompile the code.
+But the extension's strings are in resources.  (You'll probably want to
+use Resorceror, which provides a handy little mechanism for editing arrays
+of C strings.)  (3) Tradition.  (4) You get an interface with the BBEdit
+extension:  you can input text that's been selected but not copied, and
+you can send the output to the clipboard, a window, or into a dialog box.
+(5) If you use BBXKeys and PwrSwitcher, and you leave BBEdit running all
+the time, you can get results with only a few more keystrokes than the
+FKEY.  (6) You have to use ResEdit to install the FKEY, yuck.
+(7) I like BBEdit.
+
+Roughly in order of importance, the limitations are:
+¥ only one declaration at a time can be parsed;
+¥ the declarations may not be initialized;
+¥ the errors returned are sometimes not quite what you'd expect, so don't
+  take them as gospel or anything;
+¥ a semicolon terminates input, so a declaration is allowed to end with
+  one, but any other non-whitespace terminator produces an error;
+¥ specifiers are not parsed, so "short long" and "float int" and arrays of
+  void and other nonsense like that is considered valid;
+¥Êonly C specifiers are recognized, not ones you may have typedef'd, with
+  the exception of a few common ones--you can add your own by modifying
+  the BBEdit extension's resources or the FKEY's code;
+¥ the ellipsis token ("...") is not recognized;
+¥ comments are not recognized;
+¥ no C preprocessing is done, so line splicing, trigraphs, backslash
+  escape sequences, and #-stuff are not recognized;
+¥ the output can't be longer than 1K;
+¥ functions cannot be nested as parameters of functions more than six deep;
+¥ tokens longer than 100 characters might cause strangeness or a crash;
+¥ more than about a hundred nested pairs of parentheses may cause heap
+  corruption or a crash (2000 guarantees it).
+
+As I said, dcl-ANSI is public domain;  it's free, and I've forsaken all
+rights and responsibilities to and for it.  I did this for the fun of it.
+Part of the fun is hearing from people--if you have any comments or
+suggestions, I'd like to hear from you!  And if you translate this or
+otherwise modify it, I'd especially like to hear about what you've done.
+Thank you.
+
+Happy coding!
+
+Jamie R. McCarthy
+Internet (at least for now):  k044477@kzoo.edu
+AppleLink (indefinitely):  j.mccarthy
+AppleLink, via Internet:  j.mccarthy@applelink.apple.com
+
+
+[*] This distribution gives the FKEY an ID of 9, so you invoke it with
+cmd-shift-9.  If you want to change that for some reason, just change
+the ID number to something else when you install it.
+
+Instructions for installing an FKEY:  first, make a backup copy of your
+system file, just in case.  Double-click the provided FKEY file.  ResEdit
+should start up;  if not, get a copy of ResEdit 2.1.1 (or later).  Copy
+the selected 'FKEY' resource.  Close the file.  Open your system file, and
+ignore the warning (if any).  Paste.  Save.  Close your system file.  Quit
+ResEdit and restart.  If your system file is now hosed, well, that's what
+your backup copy is for.
+
+
+#endif
+
+
+
+int(Int1(int(Int)));
+int Int1(int Int )
+{
+	Int = 5;
+}
+
+int(Int2(int                     (int                )));
+int Int2(int unnamedFunctionParam(int unnamedIntParam))
+{
+	int aLocalVariable = unnamedFunctionParam(5);
+}

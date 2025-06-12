@@ -1,1 +1,1114 @@
-/* * @(#)sysdep.mac 1.2 87/09/23	Copyright 1987 Free Software Foundation, Inc. * * Copying and use of this program are controlled by the terms of the * GNU Emacs General Public License. */#ifndef lintchar sysdep_version[] = "@(#)sysdep.mac gnuucp Version Fort Pond Research-6.12";#endif/* * Created 22 September 1987 by John Gilmore,  * using code from sun!seismo!psc!jsl (John Labovitz). * His comments:	1. Logging cleanup.  It makes it somewhat easier to make the	   right time and date for whatever OS you're using.  I made it	   more modular.	2. Changes in the login routine to let it be more like real Unix	   systems.  I made a special routine that reads a line from the	   input port, and *then* checks it, instead of only checking each	   character as it comes in.  Also, it handles ^D, which my Unix	   systems uses to make sure there's a prompt.  Doesn't handle break.This needs some more work on the Mac side, like letting the user abortuuslave.  Right now you have to reset the machine!Hope this is useful.  I'm really interesting in running this thing, althoughI'm not quite sure how I'm going to configure it (like how to read mail onthe Mac).  But soon I'll be "potomac!sly!jsl".  What I might do is actuallyrun this as a server on a PC, connected to the Unix machine via RS232, thenwrite a program on the Mac that can access the PC via Appletalk (aon theMacBridge card) and get the mail.  That way, any of our 30 macs can get mailwithout being connected to Unix... Dreams. */#include "includes.h"#include <pascal.h>#include "uucp.h"#include <Devices.h>#include <Serial.h>#include <Errors.h>#include <LoMem.h>#include <Desk.h>#include <Devices.h>#define	CONTROL	"gnuucp.ctl"long total_data_processed = 0;int abort_key_pressed(void);void HandleEvent (EventRecord *, int);int gnuucp_cleaned_up = 0;/* * Exported variables */char 	sysdep_control[] = CONTROL;/* * Open the serial line for an incoming call. * Argument of NULL or empty string means stdin. * FIXME, baud rate should be settable here? *//* Should be related to MAX packet size we expect */#define SER_BUF_SIZE 4096char inbuf[SER_BUF_SIZE];char outbuf[SER_BUF_SIZE];Boolean GNUPortOpen = FALSE;int inRefNum;unsigned char *inRefName;int outRefNum;unsigned char *outRefName;void dtr_state(Boolean);void drop_dtr_for (int amt);intopenline(ttynam, baud)	char	*ttynam;	int	baud;{	int baud_set;	int compos;	int err;	SerShk SerFlags;	compos = strcmp(".B", ttynam);	if (compos == -1) 		{			inRefNum = binRefNum;			inRefName = "\p.Bin";			outRefNum = boutRefNum;			outRefName = "\p.Bout";			}		else		{			compos = strcmp(".A", ttynam);			if (compos == -1)				{					inRefNum = ainRefNum;					inRefName = "\p.Ain";					outRefNum = aoutRefNum;					outRefName = "\p.Aout";					}			else				{					logit("Unknown port.", ttynam);					sigint(0);					}			}	switch (baud)		{			case 300:				baud_set = baud300;				break;			case 1200:				baud_set = baud1200;				break;			case 2400:				baud_set = baud2400;				break;			case 3600:				baud_set = baud3600;				break;			case 4800:				baud_set = baud4800;				break;			case 7200:				baud_set = baud7200;				break;			case 9600:				baud_set = baud9600;				break;			case 19200:				baud_set = baud19200;				break;			case 57600:				baud_set = baud57600;				break;			default:				return(EOF);				break;				}	if (OpenDriver(inRefName, (short *)&inRefNum) != noErr)		return(EOF);	if (OpenDriver(outRefName, (short *)&outRefNum) != noErr)		return(EOF);	GNUPortOpen = TRUE;	SerReset(inRefNum, baud_set+data8+stop10);	SerReset(outRefNum, baud_set+data8+stop10);	SerSetBuf(inRefNum, inbuf, SER_BUF_SIZE);	SerSetBuf(outRefNum, outbuf, SER_BUF_SIZE);	SerFlags.fXOn = 0;    SerFlags.fCTS = 0;    SerFlags.xOn = 0;     SerFlags.xOff = 0;    SerFlags.errs = 0;    SerFlags.evts = 0;    SerFlags.fInX = 0;    SerFlags.fDTR = 0;	SerHShake(inRefNum, &SerFlags);	SerHShake(outRefNum, &SerFlags);		dtr_state(TRUE);	gnuucp_cleaned_up = 0;	gnusleep(1); /* Let the line settle */ 	return(0);}/* * Open the serial line for an outgoing call. */intopenout(p)	struct port *p;	{	int tty;	tty = openline(p->devname, p->baud);	return(tty);}intopenin(p)	struct port *p;	{	int tty;	char *ttynam;	char *modemname;	int baud;	ttynam = p->devname;	modemname = p->modemname;	baud = p->baud;	tty = openline(ttynam, baud);	if (strcmp(modemname, "none") != 0)		{			xwrite(/* 0, */"+++", 3);			gnusleep(4);			xwrite(/* 0, */"ats0=2\r", 7);			}	return(tty);}/* * Basement level I/O routines * * xwrite() writes a character string to the serial port * xgetc() returns a character from the serial port, or an EOF for timeout. * sigint() restores the state of the serial port on exit. * hangup() hangs up the serial port (e.g. drop DTR). */voidsigint(val)int val;{	exit(1);	}xwrite(/* dummy, */ buf, ctr)/* int dummy; */char *buf;int ctr;{	long count;		count = ctr;		HandleEvents();	if (FSWrite(outRefNum, &count, buf) != noErr)		return(EOF);	total_data_processed += ctr;	return((int)count);}long xgetc_buf_countunsigned char xgetc_buf[xgetc(){	unsigned char data;	long count;	int delay;	long i;		i = TickCount() + (ByteTimeout * 60L);	count = 0;	delay = 500;	while ((TickCount() < i)) 	{		SerGetBuf(inRefNum, &count);		HandleEvents();		if (count > 0) 			{				count = 1;	/* make sure we only read one byte */				if (FSRead(inRefNum, &count, &data) != noErr)					return(EOF);				   else	        	    total_data_processed++;	        	    return(data & 0xFF);	        	  }	       		 else				   {				   	 if (delay == 0)				   	 	{				   	 		gnusleep(1);				   	 		delay = 500;				   	 		}				   	 	else				   	 		{				   	 			delay--;				   	 			}				   	 }		}	return(EOF);}voidsend_break (){	SerSetBrk(outRefNum);	gnusleep(1);	SerClrBrk(outRefNum);	}	/* * hangup(): hang up the 'fone. */inthangup(p)struct port *p;{	char *modemname;	modemname = p ->modemname;	if (GNUPortOpen == TRUE);		{			drop_dtr_for (1);			}	if (strcmp(modemname, "none") != 0)		{			xwrite(/* (int)NULL, */"+++", 3);			gnusleep(3);			xwrite(/* (int)NULL, */"ATH\r", 4);			gnusleep(1);			xwrite(/* (int)NULL, */"ats0=0\r", 7);			}	if (GNUPortOpen == TRUE);		{			CloseDriver(inRefNum);			CloseDriver(outRefNum);			GNUPortOpen = FALSE;			}	gnuucp_cleaned_up = 1;	}		/* * Create a temporary file name for receiving a file into. * "name" is the name we will actually eventually want to use for the file. * We currently ignore it, but some OS's that can't move files around * easily might want to e.g. put the temp file into the same directory * that this file is going into. * * FIXME: * This interface should be able to return a "possible" filename, and * be re-called if the name is already in use, to get another. * This avoids checking here whether the name is good -- saving system calls. */#define MAXTRIES 20char *temp_filename(name)	register char *name;{	static char tname[NAMESIZE];	int i;	FILE *fd;	i = 0;	if (ourpid == 0)		ourpid = getpid();	while (TRUE)		{			i++;			(void) sprintf(tname, "TM.u%d", rand());			if (access(tname, 0) != 0)				break;			if (i == MAXTRIES) 				{	    			printf("can't generate unique file name\n");	    			exit(EXIT_ERR);					}	}	DEBUG(7, "Using temp file %s\n", tname);	return tname;}/* * Transform a filename from a uucp packet (in Unix format) into a local * filename that will work in the local file system. * * This is a real hack; it puts all the files into one big directory. * Everything.  Yuk. */char *munge_filename(name)	register char *name;{	register char *p;	static char buffer[NAMESIZE+SLOP];	int len, hostlen;	int i, j;    Boolean found_dot = FALSE;	DEBUG(7, "Munge_filename  input: %s\n", name);	for (p = name + strlen(name); p != name && *(p-1) != '/'; p--) ;	len = strlen(p);	for (i = 0, j = 0; i < len; i++, j++)		{			if (name[i] == '.') found_dot = TRUE;			if ((isupper(name[i]) != 0) && (found_dot == TRUE))				{					buffer[j] = '_';					j++;					}			buffer[j] = name[i];			}	buffer[j] = '\0';	DEBUG(7, "Munge_filename output: %s\n", buffer);	return buffer;}char *unmunge_filename(name)	register char *name;{	register char *p;	static char unbuffer[NAMESIZE+SLOP];	int len, hostlen;	int i, j;    Boolean found_dot = FALSE;	DEBUG(7, "Unmunge_filename  input: %s\n", name);	for (p = name + strlen(name); p != name && *(p-1) != '/'; p--) ;	len = strlen(p);	for (i = 0, j = 0; i < len; i++, j++)		{			if (name[i] == '.') found_dot = TRUE;			if ((name[i] == '_') && (found_dot == TRUE))				{					i++;					unbuffer[j] = toupper(name[i]);					}			unbuffer[j] = name[i];			}	unbuffer[j] = '\0';	DEBUG(7, "Unmunge_filename output: %s\n", unbuffer);	return unbuffer;}/* * Uucp work queue scan. * * gotsome = work_scan(hostname, type); * workfile = work_next(); * void work_done(); *//* * Local variables of the work queue scanner -- not visible to outsiders * * Workhost and worktype are always null-terminated; keeping their lengths * is just a performance hack.  Workprefix is NOT null terminated; various * people copy things after it and use the whole string.  Workprefix is * exactly workplen long; to append something, strcpy(workprefix+workplen, ...) */#define MAX_TYPE	10static struct DIR	*workdir = (struct DIR *)NULL;static struct dirent	*workfile;static char	workhost[MAX_HOST+1];static int	workhlen;static char	worktype[MAX_TYPE+1];static int	worktlen;static char	workfirst = 0;/* FIXME, at the moment this can be local to work_scan() */static char	workprefix[MAX_TYPE+1+MAX_HOST+1+MAX_TYPE+1+MAX_HOST+6+SLOP];		/*	   D        . hoptoad  / D        . hoptoad  N1234\0 */static int	workplen;voidwork_done(){	if (workdir)		closedir(workdir);	workdir = (struct DIR *) NULL;	workfile = (struct dirent *) NULL;	workfirst = 0;}char *index(str, ch)char *str;char ch;{	strchr(str, ch);	}	intwork_scan(host, type)	char *host;	char *type;{	char *p;	if (!host)		host = "";	/* If called twice in a row, don't thrash the disk again */	/* if (strcmp(workhost, host) == SAME &&	    strcmp(worktype, type) == SAME && workfile)		return 1; */	if (workdir) work_done();		/* Clean up prev call */	workfirst = 1;				/* Initialize for work_next */	strcpy(workhost, munge_filename(host));	workhlen = strlen(workhost);	if (workhlen > sizeof (workhost) -1) 		{			printf("WORK_SCAN SIZE RESTRICTION", "workhlen > sizeof(workhost) - 1");			exit(1);			}	if (workhlen > 30) workhlen = 30;		/* Unix uucp limit */	strcpy(worktype, type);	worktlen = strlen(worktype);	if (worktlen > sizeof (worktype) -1) 		{			printf("WORK_SCAN SIZE RESTRICTION", "worktlen > sizeof(worktype) - 1");			exit(1);			}	/* Figure out which subdirectory this class of files is in. */	/* FIXME: doesn't handle "all D. files" since D.myname is separate. */	sprintf(workprefix, "%s.%s", worktype, workhost);	/* p = munge_filename(workprefix);	strcpy(workprefix, p); */	p = index(workprefix, ':');	if (p)		workplen = 1 + p - workprefix;	/* Prefix ends after '/' */	else		workplen = 0;		/* No / in munged; hence no dir */	workprefix[workplen] = '\0';	DEBUG(7, "Work prefix is =%s=\n", workprefix);	strcpy(workprefix+workplen, ".");	workdir = opendir(workprefix);	/* Open whatever directory */	if (workdir == NULL) {		DEBUG(0, "Can't open queue directory %s\n", workprefix);		return 0;			/* No work */	}	return work_look();}static intwork_look(){	int len;	closedir(workdir);	opendir(workprefix);	for (;;) {		workfile = readdir(workdir);		if (workfile == NULL) {			DEBUG(7, "work_look readdir null\n", 0);			work_done();			return 0;		/* No work */		}		DEBUG(7, "work_look readdir %s\n", workfile->d_name);		/* Is it the right type? */		if (strncmpic(workfile->d_name, worktype, worktlen) == SAME		    && workfile->d_name[worktlen] == '.') {			/* see if it matches the hostname */			len = strlen(workfile->d_name);			/*         "C"        "." "hoptoad" "Xnnnn" */			if (workhlen == 0 || 			    (len == worktlen + 1 + workhlen + 5 &&			     !strncmp(workhost, workfile->d_name+2, workhlen))			   ) {				/* Found an entry! */				/* FIXME, check grade letter! */				DEBUG(7, "work_look found it!\n", 0);				return 1;	/* Found work */			}		}	}	/* NOTREACHED */}char *work_next(){	if (!workfirst) {		if (!workfile || !work_look())			return (char *)NULL;	}	workfirst = 0;	return unmunge_filename(workfile->d_name);}/* * Routine to return a string that gives the current date and time, and * identifies the current process, if on a multiprocess system. */char *time_and_pid(){	unsigned long clock;	struct tm *tm;	static int ourpid = 0;	static char format[] = "%d/%d-%d:%02d:%02d-%d";	static char outbuf[sizeof(format)];	(void) time(&clock);	tm = localtime(&clock);	if (ourpid == 0)		ourpid = getpid();	sprintf(outbuf, format,		tm->tm_mon+1, tm->tm_mday,		tm->tm_hour, tm->tm_min, tm->tm_sec,		ourpid);	return outbuf;}intchdir(ndir)char *ndir;{	WDPBRec	pb;	int err = 0;	int vol;	vol = 0;	CtoPstr(ndir);	pb.ioCompletion = 0;	pb.ioNamePtr = (StringPtr)ndir;	pb.ioVRefNum = 0;	pb.ioWDDirID = 0;	/* err = PBHSetVol(&pb,0); */	PtoCstr((unsigned char *)ndir);	return(err);	}#ifdef IGNOREDintexeclp (pgm, arg1, arg2)char *pgm;char *arg1;int arg2;{	printf("Going to exec", pgm);	}#endifHFileParam Opendir;char file_name[256];struct DIR*opendir(path)char *path;{	char tmp_str[256];	WDPBRec	pb;	int err = 0;	int vol;	vol = 0;	strcpy(tmp_str, Spool);	CtoPstr(tmp_str);	pb.ioCompletion = 0;	pb.ioNamePtr = (StringPtr)tmp_str;	pb.ioVRefNum = 0;	pb.ioWDDirID = 0;	err = PBOpenWD(&pb,0);	if (err != noErr)		return((struct DIR *)0);	Opendir.ioCompletion = 0;	Opendir.ioNamePtr = (StringPtr)&file_name;	Opendir.ioVRefNum = pb.ioVRefNum;	Opendir.ioFDirIndex = 0;	Opendir.ioDirID = 0;	return((struct DIR *)&Opendir);	}int closedir(dir)struct DIR *dir;{	WDPBRec pb;	int err;	pb.ioCompletion = 0;	pb.ioVRefNum = Opendir.ioVRefNum;	err = PBCloseWD(&pb, 0);	return(err);	}	struct dirent current_file;struct dirent*readdir(dir)struct DIR *dir;{	int err;	Opendir.ioCompletion = 0;	Opendir.ioNamePtr = (StringPtr)&file_name;	Opendir.ioDirID = 0;	Opendir.ioFDirIndex++;	err = PBHGetFInfo((HParmBlkPtr)&Opendir, 0);	if (err != noErr)		return((struct dirent *)0);	current_file.d_name = (char *)Opendir.ioNamePtr;	PtoCstr((unsigned char *)current_file.d_name);	return(&current_file);	}#ifdef IGNOREDchar *strtok(in, look_for)	char *in;	char *look_for;	{		static char *saved;		char *tmp, *tmp1;		if (in != NULL)			{				saved = in;				}		tmp = strpbrk(saved, look_for);		tmp1 = saved;		saved = tmp + strspn(tmp, look_for);		*tmp = '\0';		return(tmp1);		}#endifint strncmpic (s1, s2, n)register char *s1;register char *s2;int n;{	register int i;		for (i = 0; i < n; i++)		{			if (toupper(s1[i]) != toupper(s2[i]))				{					return(1);					}		}	return(0);	}	voidbzero(ptr, bytes)char *ptr;unsigned bytes;{	memset(ptr, 0, bytes);	}voidbcopy(to, from, count)char *to, *from;int count;{	memcpy(from, to, count);	}#ifdef IGNOREDint system(exe)	char *exe;	{		printf("SYSTEM NOT IMPLEMENTED", exe);		exit(1);		}#endif		intaccess(file, code)	char *file;	int code;	{		FILE *exists;		exists = fopen(file, "r");		if (exists != 0) 			{				fclose(exists);				return(0);				}			else				{					if (errno == bdNamErr)							return(0);						else							return(1);					}				}	/* get a random number for names and other stuff */random(){    int it;    long tmp;    it = time((unsigned long *)&tmp);    it &= 0xff;    return (it);}/* return the index of c in st. The first char is at 0 */mindex(st, c)char c, *st;{    int i;    for (i = 0; st[i] != '\0'; i++) {	if (st[i] == c)	    return (i);    }    return (-1);}voidgnuucp_cleanup()	{		/* hanup the phone This is abnormal so always do the hayes thing */		if (!gnuucp_cleaned_up)			{			 if (GNUPortOpen == TRUE)				{					drop_dtr_for (1);				}				gnusleep(1);				xwrite(/* (int)NULL, */"+++", 3);				gnusleep(3);				xwrite(/* (int)NULL, */"ATH\r", 4);				xwrite(/* (int)NULL, */"+++", 3);				gnusleep(1);				xwrite(/* (int)NULL, */"ats0=0\r", 7);			if (GNUPortOpen == TRUE)				{					CloseDriver(inRefNum);					CloseDriver(outRefNum);					GNUPortOpen = FALSE;				}			gnuucp_cleaned_up = 1;		}	}long eventcounter = 0;#define EVENTMAX 30void ProcessEvent (void);/* swallow key events looking for Command-. */void HandleEvents()	{		EventRecord event;		int mine;		if (eventcounter <= 0)			{				if (abort_key_pressed() == 1) sigint(0);				if (WNEIsImplemented())				{					mine = WaitNextEvent( everyEvent, &event, 0L, 0L);	       			}	       		else				{					mine = GetNextEvent(everyEvent, &event);					}			HandleEvent(&event, mine);		    eventcounter = EVENTMAX;			}			else				eventcounter--;			}char *currtime(){	static char timebuffer[26];	register char *tp;	unsigned long Time;	char Year[10];	DateTimeRec MacTimeRec;	register Intl1Hndl myHndl;	register int i;			GetDateTime(&Time);		Secs2Date(Time,&MacTimeRec);			myHndl = (Intl1Hndl)IUGetIntl(1);		tp = timebuffer;			for (i=1; i<4; i++)			*tp++ = (*myHndl)->days[MacTimeRec.dayOfWeek-1][i]; /* make day of week */		*tp++ = ',';		*tp++ = ' ';		sprintf(tp,"%02d ",MacTimeRec.day); /* now put in day of month */		tp += 3;	    for (i=1; i<4; i++)			*tp++ = (*myHndl)->months[MacTimeRec.month-1][i]; /* make month */		*tp++ = ' ';		Year[0] = '\0';		sprintf(Year, "%d", MacTimeRec.year);		/* Prepare for new century, i used to start at 2 */        for (i=0; i<4; i++)			*tp++ = Year[i]; /* make year */		*tp++ = ' ';		sprintf(tp,"%02d:%02d:%02d\n",MacTimeRec.hour,MacTimeRec.minute,MacTimeRec.second);		return(timebuffer);		}voidgnusleep (time)unsigned time;{	long start_t;	long curr_t;	EventRecord theEvent;	int mine;	start_t = clock() / CLOCKS_PER_SEC;	for (curr_t = start_t; 	     curr_t - start_t < time;	     curr_t = clock() / CLOCKS_PER_SEC)		{			if (WNEIsImplemented())				{					mine = WaitNextEvent( everyEvent, &theEvent, 	               	(time - (curr_t - start_t)) * CLOCKS_PER_SEC, 0L);	       			HandleEvent(&theEvent, mine);	       			}	       		else	       		 {	       		 	long finalTime;	       		 	Delay(CLOCKS_PER_SEC*time, &finalTime);	       		 	}	       	}	}extern int interrupted;int abort_key_pressed (){	if (interrupted) 		{			interrupted = 0;			logit("Aborting Mac/gnuucp", "Goodbye");			return(1);			}	return(0);	}#define hiword(x)		(((short *) &(x))[0])#define loword(x)		(((short *) &(x))[1])extern MenuHandle appleMenu;void HandleEvent(event, mine)EventRecord *event;int mine;{	int key;	WindowPeek wp;	long choice;	Str255 buf;			/*  check for an event  */			SEvtEnb = false;	SystemTask();	if (mine != 0) {		if (!SystemEvent(event))			goto doEvent;	}	else if (event->what == nullEvent) {		if (FrontWindow() == 0)			InitCursor();	}	return;			/*  handle event  */doEvent:	if (event->what == mouseDown) {		switch (FindWindow(event->where, (WindowPtr *)&wp)) {			case inMenuBar:				InitCursor();				choice = MenuSelect(event->where);				goto doMenu;			case inSysWindow:				SystemClick(event, (WindowPtr)wp);				break;		}	}	return;		/*  handle menu choice  */doMenu:		switch (hiword(choice)) {		case 1:		/*  Apple  */			GetItem(appleMenu, loword(choice), buf);			OpenDeskAcc(buf);			break;		case 2:		/*  File  */			console_options.pause_atexit = 0;			exit(0);			/* no return */		case 3:		/*  Edit  */			SystemEdit(loword(choice) - 1);			break;	}	HiliteMenu(0);}									/** Define trap numbers **/#ifndef _Unimplemented#define _Unimplemented	0xA89F			/* Unimplemented trap				*/#endif#ifndef _WaitNextEvent#define _WaitNextEvent	0xA860			/* WaitNextEvent trap				*/#endif#ifndef _OSDispatch#define _OSDispatch		0xA88F			/* Temporary MF memory calls		*/#endif/****************************************************************************** TrapAvailable  	Check whether a certain trap exists on this machine. For pre-Mac II 	machines, trap numbers only go up to 0x1FF. ******************************************************************************/Boolean		TrapAvailable(	short			trapNum,			/* The trap number to check			*/	short			tType)				/* OS or Toolbox trap				*/{	SysEnvRec		theWorld;		SysEnvirons(1, &theWorld);		if ( (tType == ToolTrap)  &&						/* Toolbox trap		*/		 ((theWorld.machineType < envMachUnknown)  ||	/* 64K ROM machine	*/		 ((theWorld.machineType > envMachUnknown)  &&	/* É512KE, Plus, or	*/		 (theWorld.machineType < envMacII))) ) {		/* ÉSE				*/		 		trapNum &= 0x3FF;				/* Traps numbers are 10 bits long	*/				if (trapNum > 0x1FF) {			/* Traps only go up to 0x1FF on		*/			return(false);				/*   these machines					*/		}	}			/* Compare the address of this trap with that of the	*/		/* unimplemented trap									*/	return( NGetTrapAddress(trapNum, tType)  !=			GetTrapAddress(_Unimplemented) );}/****************************************************************************** WNEIsImplemented  	Check whether the WaitNextEvent is implemented or not ******************************************************************************/Boolean		WNEIsImplemented(){	SysEnvRec	theWorld;				/* System environment				*/		SysEnvirons(1, &theWorld);			/* Check environment				*/		if (theWorld.machineType < 0) 		/* Old ROMs, definitely not present	*/		return(FALSE);			else								/* Check for WNE trap				*/		return(TrapAvailable(_WaitNextEvent, ToolTrap));}#define NARGS		25char *argv[NARGS+1];intparse(s, t, argvv)register char *s, *t;char **argvv[];{	int c, quote = 0, argc = 0;			while (c = *s++) {		if (c == ' ')			continue;		if (argc < NARGS)			argv[argc++] = t;		do {			if (c == '\\' && *s)				c = *s++;			else if (c == '"' || c == '\'') {				if (!quote) {					quote = c;					continue;				}				if (c == quote) {					quote = 0;					continue;				}			}			*t++ = c;		} while (*s && ((c = *s++) != ' ' || quote));		*t++ = 0;	}	*argvv = argv;	return(argc);}voiddtr_state (on_or_off)Boolean on_or_off;{	int ControlCode;	CntrlParam ParamPtr;	if (on_or_off == TRUE) 		ControlCode = 17; /* Turn it on */	else		ControlCode = 18; /* Trun it off */	ParamPtr.csCode = ControlCode;	Control(outRefNum, ControlCode, &ParamPtr);		}void drop_dtr_for (amt)int amt;{	dtr_state(FALSE);	gnusleep(amt);	dtr_state(TRUE);	}
+/*
+ * @(#)sysdep.mac 1.2 87/09/23	Copyright 1987 Free Software Foundation, Inc.
+ *
+ * Copying and use of this program are controlled by the terms of the
+ * GNU Emacs General Public License.
+ */
+
+#ifndef lint
+char sysdep_version[] = "@(#)sysdep.mac gnuucp Version Fort Pond Research-6.12";
+#endif
+
+/*
+ * Created 22 September 1987 by John Gilmore, 
+ * using code from sun!seismo!psc!jsl (John Labovitz).
+ * His comments:
+
+	1. Logging cleanup.  It makes it somewhat easier to make the
+	   right time and date for whatever OS you're using.  I made it
+	   more modular.
+	2. Changes in the login routine to let it be more like real Unix
+	   systems.  I made a special routine that reads a line from the
+	   input port, and *then* checks it, instead of only checking each
+	   character as it comes in.  Also, it handles ^D, which my Unix
+	   systems uses to make sure there's a prompt.  Doesn't handle break.
+
+This needs some more work on the Mac side, like letting the user abort
+uuslave.  Right now you have to reset the machine!
+
+Hope this is useful.  I'm really interesting in running this thing, although
+I'm not quite sure how I'm going to configure it (like how to read mail on
+the Mac).  But soon I'll be "potomac!sly!jsl".  What I might do is actually
+run this as a server on a PC, connected to the Unix machine via RS232, then
+write a program on the Mac that can access the PC via Appletalk (aon the
+MacBridge card) and get the mail.  That way, any of our 30 macs can get mail
+without being connected to Unix... Dreams.
+
+ */
+
+#include "includes.h"
+#include <pascal.h>
+#include "uucp.h"
+#include <Devices.h>
+#include <Serial.h>
+#include <Errors.h>
+#include <LoMem.h>
+#include <Desk.h>
+#include <Devices.h>
+
+#define	CONTROL	"gnuucp.ctl"
+
+long total_data_processed = 0;
+
+int abort_key_pressed(void);
+void HandleEvent (EventRecord *, int);
+int gnuucp_cleaned_up = 0;
+
+
+/*
+ * Exported variables
+ */
+char 	sysdep_control[] = CONTROL;
+
+/*
+ * Open the serial line for an incoming call.
+ * Argument of NULL or empty string means stdin.
+ * FIXME, baud rate should be settable here?
+ */
+
+/* Should be related to MAX packet size we expect */
+#define SER_BUF_SIZE 4096
+char inbuf[SER_BUF_SIZE];
+char outbuf[SER_BUF_SIZE];
+
+Boolean GNUPortOpen = FALSE;
+int inRefNum;
+unsigned char *inRefName;
+int outRefNum;
+unsigned char *outRefName;
+
+void dtr_state(Boolean);
+
+void drop_dtr_for (int amt);
+
+int
+openline(ttynam, baud)
+	char	*ttynam;
+	int	baud;
+{
+	int baud_set;
+	int compos;
+	int err;
+	SerShk SerFlags;
+	compos = strcmp(".B", ttynam);
+	if (compos == -1) 
+		{
+			inRefNum = binRefNum;
+			inRefName = "\p.Bin";
+			outRefNum = boutRefNum;
+			outRefName = "\p.Bout";
+			}
+		else
+		{
+			compos = strcmp(".A", ttynam);
+			if (compos == -1)
+				{
+					inRefNum = ainRefNum;
+					inRefName = "\p.Ain";
+					outRefNum = aoutRefNum;
+					outRefName = "\p.Aout";
+					}
+			else
+				{
+					logit("Unknown port.", ttynam);
+					sigint(0);
+					}
+			}
+	switch (baud)
+		{
+			case 300:
+				baud_set = baud300;
+				break;
+			case 1200:
+				baud_set = baud1200;
+				break;
+			case 2400:
+				baud_set = baud2400;
+				break;
+			case 3600:
+				baud_set = baud3600;
+				break;
+			case 4800:
+				baud_set = baud4800;
+				break;
+			case 7200:
+				baud_set = baud7200;
+				break;
+			case 9600:
+				baud_set = baud9600;
+				break;
+			case 19200:
+				baud_set = baud19200;
+				break;
+			case 57600:
+				baud_set = baud57600;
+				break;
+			default:
+				return(EOF);
+				break;
+				}
+	if (OpenDriver(inRefName, (short *)&inRefNum) != noErr)
+		return(EOF);
+	if (OpenDriver(outRefName, (short *)&outRefNum) != noErr)
+		return(EOF);
+	GNUPortOpen = TRUE;
+	SerReset(inRefNum, baud_set+data8+stop10);
+	SerReset(outRefNum, baud_set+data8+stop10);
+	SerSetBuf(inRefNum, inbuf, SER_BUF_SIZE);
+	SerSetBuf(outRefNum, outbuf, SER_BUF_SIZE);
+	SerFlags.fXOn = 0;
+    SerFlags.fCTS = 0;
+    SerFlags.xOn = 0; 
+    SerFlags.xOff = 0;
+    SerFlags.errs = 0;
+    SerFlags.evts = 0;
+    SerFlags.fInX = 0;
+    SerFlags.fDTR = 0;
+	SerHShake(inRefNum, &SerFlags);
+	SerHShake(outRefNum, &SerFlags);	
+	dtr_state(TRUE);
+	gnuucp_cleaned_up = 0;
+	gnusleep(1); /* Let the line settle */ 
+	return(0);
+}
+
+/*
+ * Open the serial line for an outgoing call.
+ */
+int
+openout(p)
+	struct port *p;
+	{
+	int tty;
+	tty = openline(p->devname, p->baud);
+	return(tty);
+}
+
+int
+openin(p)
+	struct port *p;
+	{
+	int tty;
+	char *ttynam;
+	char *modemname;
+	int baud;
+	ttynam = p->devname;
+	modemname = p->modemname;
+	baud = p->baud;
+	tty = openline(ttynam, baud);
+	if (strcmp(modemname, "none") != 0)
+		{
+			xwrite(/* 0, */"+++", 3);
+			gnusleep(4);
+			xwrite(/* 0, */"ats0=2\r", 7);
+			}
+	return(tty);
+}
+/*
+ * Basement level I/O routines
+ *
+ * xwrite() writes a character string to the serial port
+ * xgetc() returns a character from the serial port, or an EOF for timeout.
+ * sigint() restores the state of the serial port on exit.
+ * hangup() hangs up the serial port (e.g. drop DTR).
+ */
+
+void
+sigint(val)
+int val;
+{
+	exit(1);
+	}
+
+xwrite(/* dummy, */ buf, ctr)
+/* int dummy; */
+char *buf;
+int ctr;
+{
+	long count;
+	
+	count = ctr;
+	
+	HandleEvents();
+	if (FSWrite(outRefNum, &count, buf) != noErr)
+		return(EOF);
+	total_data_processed += ctr;
+	return((int)count);
+}
+
+long xgetc_buf_count
+unsigned char xgetc_buf[
+xgetc()
+{
+	unsigned char data;
+	long count;
+	int delay;
+	long i;
+	
+	i = TickCount() + (ByteTimeout * 60L);
+	count = 0;
+	delay = 500;
+	while ((TickCount() < i)) 
+	{
+		SerGetBuf(inRefNum, &count);
+		HandleEvents();
+		if (count > 0) 
+			{
+				count = 1;	/* make sure we only read one byte */
+				if (FSRead(inRefNum, &count, &data) != noErr)
+					return(EOF);
+				   else
+	        	    total_data_processed++;
+	        	    return(data & 0xFF);
+	        	  }
+	       		 else
+				   {
+				   	 if (delay == 0)
+				   	 	{
+				   	 		gnusleep(1);
+				   	 		delay = 500;
+				   	 		}
+				   	 	else
+				   	 		{
+				   	 			delay--;
+				   	 			}
+				   	 }
+		}
+	return(EOF);
+}
+
+void
+send_break ()
+{
+	SerSetBrk(outRefNum);
+	gnusleep(1);
+	SerClrBrk(outRefNum);
+	}
+	
+/*
+ * hangup(): hang up the 'fone.
+ */
+int
+hangup(p)
+struct port *p;
+{
+
+	char *modemname;
+	modemname = p ->modemname;
+	if (GNUPortOpen == TRUE);
+		{
+			drop_dtr_for (1);
+			}
+	if (strcmp(modemname, "none") != 0)
+		{
+			xwrite(/* (int)NULL, */"+++", 3);
+			gnusleep(3);
+			xwrite(/* (int)NULL, */"ATH\r", 4);
+			gnusleep(1);
+			xwrite(/* (int)NULL, */"ats0=0\r", 7);
+			}
+	if (GNUPortOpen == TRUE);
+		{
+			CloseDriver(inRefNum);
+			CloseDriver(outRefNum);
+			GNUPortOpen = FALSE;
+			}
+	gnuucp_cleaned_up = 1;
+	}
+		
+
+
+/*
+ * Create a temporary file name for receiving a file into.
+ * "name" is the name we will actually eventually want to use for the file.
+ * We currently ignore it, but some OS's that can't move files around
+ * easily might want to e.g. put the temp file into the same directory
+ * that this file is going into.
+ *
+ * FIXME:
+ * This interface should be able to return a "possible" filename, and
+ * be re-called if the name is already in use, to get another.
+ * This avoids checking here whether the name is good -- saving system calls.
+ */
+#define MAXTRIES 20
+char *
+temp_filename(name)
+	register char *name;
+{
+	static char tname[NAMESIZE];
+	int i;
+	FILE *fd;
+	i = 0;
+	if (ourpid == 0)
+		ourpid = getpid();
+	while (TRUE)
+		{
+			i++;
+			(void) sprintf(tname, "TM.u%d", rand());
+			if (access(tname, 0) != 0)
+				break;
+			if (i == MAXTRIES) 
+				{
+	    			printf("can't generate unique file name\n");
+	    			exit(EXIT_ERR);
+					}
+	}
+	DEBUG(7, "Using temp file %s\n", tname);
+	return tname;
+}
+
+
+/*
+ * Transform a filename from a uucp packet (in Unix format) into a local
+ * filename that will work in the local file system.
+ *
+ * This is a real hack; it puts all the files into one big directory.
+ * Everything.  Yuk.
+ */
+char *
+munge_filename(name)
+	register char *name;
+{
+	register char *p;
+	static char buffer[NAMESIZE+SLOP];
+	int len, hostlen;
+	int i, j;
+    Boolean found_dot = FALSE;
+	DEBUG(7, "Munge_filename  input: %s\n", name);
+
+	for (p = name + strlen(name); p != name && *(p-1) != '/'; p--) ;
+	len = strlen(p);
+	for (i = 0, j = 0; i < len; i++, j++)
+		{
+			if (name[i] == '.') found_dot = TRUE;
+			if ((isupper(name[i]) != 0) && (found_dot == TRUE))
+				{
+					buffer[j] = '_';
+					j++;
+					}
+			buffer[j] = name[i];
+			}
+	buffer[j] = '\0';
+	DEBUG(7, "Munge_filename output: %s\n", buffer);
+	return buffer;
+}
+
+char *
+unmunge_filename(name)
+	register char *name;
+{
+	register char *p;
+	static char unbuffer[NAMESIZE+SLOP];
+	int len, hostlen;
+	int i, j;
+    Boolean found_dot = FALSE;
+	DEBUG(7, "Unmunge_filename  input: %s\n", name);
+
+	for (p = name + strlen(name); p != name && *(p-1) != '/'; p--) ;
+	len = strlen(p);
+	for (i = 0, j = 0; i < len; i++, j++)
+		{
+			if (name[i] == '.') found_dot = TRUE;
+			if ((name[i] == '_') && (found_dot == TRUE))
+				{
+					i++;
+					unbuffer[j] = toupper(name[i]);
+					}
+			unbuffer[j] = name[i];
+			}
+	unbuffer[j] = '\0';
+	DEBUG(7, "Unmunge_filename output: %s\n", unbuffer);
+	return unbuffer;
+}
+/*
+ * Uucp work queue scan.
+ *
+ * gotsome = work_scan(hostname, type);
+ * workfile = work_next();
+ * void work_done();
+ */
+
+/*
+ * Local variables of the work queue scanner -- not visible to outsiders
+ *
+ * Workhost and worktype are always null-terminated; keeping their lengths
+ * is just a performance hack.  Workprefix is NOT null terminated; various
+ * people copy things after it and use the whole string.  Workprefix is
+ * exactly workplen long; to append something, strcpy(workprefix+workplen, ...)
+ */
+#define MAX_TYPE	10
+static struct DIR	*workdir = (struct DIR *)NULL;
+static struct dirent	*workfile;
+static char	workhost[MAX_HOST+1];
+static int	workhlen;
+static char	worktype[MAX_TYPE+1];
+static int	worktlen;
+static char	workfirst = 0;
+/* FIXME, at the moment this can be local to work_scan() */
+static char	workprefix[MAX_TYPE+1+MAX_HOST+1+MAX_TYPE+1+MAX_HOST+6+SLOP];
+		/*	   D        . hoptoad  / D        . hoptoad  N1234\0 */
+static int	workplen;
+
+
+void
+work_done()
+{
+	if (workdir)
+		closedir(workdir);
+	workdir = (struct DIR *) NULL;
+	workfile = (struct dirent *) NULL;
+	workfirst = 0;
+}
+
+char *
+index(str, ch)
+char *str;
+char ch;
+{
+	strchr(str, ch);
+	}
+	
+int
+work_scan(host, type)
+	char *host;
+	char *type;
+{
+	char *p;
+
+	if (!host)
+		host = "";
+
+	/* If called twice in a row, don't thrash the disk again */
+	/* if (strcmp(workhost, host) == SAME &&
+	    strcmp(worktype, type) == SAME && workfile)
+		return 1; */
+
+	if (workdir) work_done();		/* Clean up prev call */
+
+	workfirst = 1;				/* Initialize for work_next */
+	strcpy(workhost, munge_filename(host));
+	workhlen = strlen(workhost);
+	if (workhlen > sizeof (workhost) -1) 
+		{
+			printf("WORK_SCAN SIZE RESTRICTION", "workhlen > sizeof(workhost) - 1");
+			exit(1);
+			}
+	if (workhlen > 30) workhlen = 30;		/* Unix uucp limit */
+	strcpy(worktype, type);
+	worktlen = strlen(worktype);
+	if (worktlen > sizeof (worktype) -1) 
+		{
+			printf("WORK_SCAN SIZE RESTRICTION", "worktlen > sizeof(worktype) - 1");
+			exit(1);
+			}
+	/* Figure out which subdirectory this class of files is in. */
+	/* FIXME: doesn't handle "all D. files" since D.myname is separate. */
+	sprintf(workprefix, "%s.%s", worktype, workhost);
+	/* p = munge_filename(workprefix);
+	strcpy(workprefix, p); */
+	p = index(workprefix, ':');
+	if (p)
+		workplen = 1 + p - workprefix;	/* Prefix ends after '/' */
+	else
+		workplen = 0;		/* No / in munged; hence no dir */
+	workprefix[workplen] = '\0';
+	DEBUG(7, "Work prefix is =%s=\n", workprefix);
+
+	strcpy(workprefix+workplen, ".");
+	workdir = opendir(workprefix);	/* Open whatever directory */
+	if (workdir == NULL) {
+		DEBUG(0, "Can't open queue directory %s\n", workprefix);
+		return 0;			/* No work */
+	}
+
+	return work_look();
+}
+
+
+static int
+work_look()
+{
+	int len;
+	closedir(workdir);
+	opendir(workprefix);
+	for (;;) {
+		workfile = readdir(workdir);
+		if (workfile == NULL) {
+			DEBUG(7, "work_look readdir null\n", 0);
+			work_done();
+			return 0;		/* No work */
+		}
+		DEBUG(7, "work_look readdir %s\n", workfile->d_name);
+
+		/* Is it the right type? */
+		if (strncmpic(workfile->d_name, worktype, worktlen) == SAME
+		    && workfile->d_name[worktlen] == '.') {
+			/* see if it matches the hostname */
+			len = strlen(workfile->d_name);
+			/*         "C"        "." "hoptoad" "Xnnnn" */
+			if (workhlen == 0 || 
+			    (len == worktlen + 1 + workhlen + 5 &&
+			     !strncmp(workhost, workfile->d_name+2, workhlen))
+			   ) {
+				/* Found an entry! */
+				/* FIXME, check grade letter! */
+				DEBUG(7, "work_look found it!\n", 0);
+				return 1;	/* Found work */
+			}
+		}
+	}
+	/* NOTREACHED */
+}
+
+
+char *
+work_next()
+{
+
+	if (!workfirst) {
+		if (!workfile || !work_look())
+			return (char *)NULL;
+	}
+	workfirst = 0;
+	return unmunge_filename(workfile->d_name);
+}
+
+/*
+ * Routine to return a string that gives the current date and time, and
+ * identifies the current process, if on a multiprocess system.
+ */
+char *
+time_and_pid()
+{
+	unsigned long clock;
+	struct tm *tm;
+	static int ourpid = 0;
+	static char format[] = "%d/%d-%d:%02d:%02d-%d";
+	static char outbuf[sizeof(format)];
+
+	(void) time(&clock);
+	tm = localtime(&clock);
+	if (ourpid == 0)
+		ourpid = getpid();
+	sprintf(outbuf, format,
+		tm->tm_mon+1, tm->tm_mday,
+		tm->tm_hour, tm->tm_min, tm->tm_sec,
+		ourpid);
+	return outbuf;
+}
+
+int
+chdir(ndir)
+char *ndir;
+{
+	WDPBRec	pb;
+	int err = 0;
+	int vol;
+	vol = 0;
+	CtoPstr(ndir);
+	pb.ioCompletion = 0;
+	pb.ioNamePtr = (StringPtr)ndir;
+	pb.ioVRefNum = 0;
+	pb.ioWDDirID = 0;
+	/* err = PBHSetVol(&pb,0); */
+	PtoCstr((unsigned char *)ndir);
+	return(err);
+	}
+
+#ifdef IGNORED
+int
+execlp (pgm, arg1, arg2)
+char *pgm;
+char *arg1;
+int arg2;
+{
+	printf("Going to exec", pgm);
+	}
+#endif
+
+HFileParam Opendir;
+char file_name[256];
+
+struct DIR*
+opendir(path)
+char *path;
+{
+	char tmp_str[256];
+	WDPBRec	pb;
+	int err = 0;
+	int vol;
+	vol = 0;
+	strcpy(tmp_str, Spool);
+	CtoPstr(tmp_str);
+	pb.ioCompletion = 0;
+	pb.ioNamePtr = (StringPtr)tmp_str;
+	pb.ioVRefNum = 0;
+	pb.ioWDDirID = 0;
+	err = PBOpenWD(&pb,0);
+	if (err != noErr)
+		return((struct DIR *)0);
+	Opendir.ioCompletion = 0;
+	Opendir.ioNamePtr = (StringPtr)&file_name;
+	Opendir.ioVRefNum = pb.ioVRefNum;
+	Opendir.ioFDirIndex = 0;
+	Opendir.ioDirID = 0;
+	return((struct DIR *)&Opendir);
+	}
+
+int closedir(dir)
+struct DIR *dir;
+{
+	WDPBRec pb;
+	int err;
+	pb.ioCompletion = 0;
+	pb.ioVRefNum = Opendir.ioVRefNum;
+	err = PBCloseWD(&pb, 0);
+	return(err);
+	}
+	
+struct dirent current_file;
+
+struct dirent*
+readdir(dir)
+struct DIR *dir;
+{
+	int err;
+	Opendir.ioCompletion = 0;
+	Opendir.ioNamePtr = (StringPtr)&file_name;
+	Opendir.ioDirID = 0;
+	Opendir.ioFDirIndex++;
+	err = PBHGetFInfo((HParmBlkPtr)&Opendir, 0);
+	if (err != noErr)
+		return((struct dirent *)0);
+	current_file.d_name = (char *)Opendir.ioNamePtr;
+	PtoCstr((unsigned char *)current_file.d_name);
+	return(&current_file);
+	}
+
+#ifdef IGNORED
+char *strtok(in, look_for)
+	char *in;
+	char *look_for;
+	{
+		static char *saved;
+		char *tmp, *tmp1;
+		if (in != NULL)
+			{
+				saved = in;
+				}
+		tmp = strpbrk(saved, look_for);
+		tmp1 = saved;
+		saved = tmp + strspn(tmp, look_for);
+		*tmp = '\0';
+		return(tmp1);
+		}
+#endif
+
+int strncmpic (s1, s2, n)
+register char *s1;
+register char *s2;
+int n;
+{
+	register int i;
+	
+	for (i = 0; i < n; i++)
+		{
+			if (toupper(s1[i]) != toupper(s2[i]))
+				{
+					return(1);
+					}
+		}
+	return(0);
+	}
+	
+void
+bzero(ptr, bytes)
+char *ptr;
+unsigned bytes;
+{
+	memset(ptr, 0, bytes);
+	}
+
+void
+bcopy(to, from, count)
+char *to, *from;
+int count;
+{
+	memcpy(from, to, count);
+	}
+
+#ifdef IGNORED
+int system(exe)
+	char *exe;
+	{
+		printf("SYSTEM NOT IMPLEMENTED", exe);
+		exit(1);
+		}
+#endif
+		
+int
+access(file, code)
+	char *file;
+	int code;
+	{
+		FILE *exists;
+		exists = fopen(file, "r");
+		if (exists != 0) 
+			{
+				fclose(exists);
+				return(0);
+				}
+			else
+				{
+					if (errno == bdNamErr)
+							return(0);
+						else
+							return(1);
+					}
+				}
+
+	
+/* get a random number for names and other stuff */
+random()
+{
+    int it;
+    long tmp;
+
+    it = time((unsigned long *)&tmp);
+    it &= 0xff;
+    return (it);
+}
+
+/* return the index of c in st. The first char is at 0 */
+mindex(st, c)
+char c, *st;
+
+{
+    int i;
+
+    for (i = 0; st[i] != '\0'; i++) {
+	if (st[i] == c)
+	    return (i);
+    }
+    return (-1);
+}
+
+void
+gnuucp_cleanup()
+	{
+		/* hanup the phone This is abnormal so always do the hayes thing */
+		if (!gnuucp_cleaned_up)
+			{
+			 if (GNUPortOpen == TRUE)
+				{
+					drop_dtr_for (1);
+				}
+				gnusleep(1);
+				xwrite(/* (int)NULL, */"+++", 3);
+				gnusleep(3);
+				xwrite(/* (int)NULL, */"ATH\r", 4);
+				xwrite(/* (int)NULL, */"+++", 3);
+				gnusleep(1);
+				xwrite(/* (int)NULL, */"ats0=0\r", 7);
+			if (GNUPortOpen == TRUE)
+				{
+					CloseDriver(inRefNum);
+					CloseDriver(outRefNum);
+					GNUPortOpen = FALSE;
+				}
+			gnuucp_cleaned_up = 1;
+		}
+	}
+
+long eventcounter = 0;
+#define EVENTMAX 30
+
+void ProcessEvent (void);
+
+/* swallow key events looking for Command-. */
+void HandleEvents()
+	{
+		EventRecord event;
+		int mine;
+		if (eventcounter <= 0)
+			{
+				if (abort_key_pressed() == 1) sigint(0);
+				if (WNEIsImplemented())
+				{
+					mine = WaitNextEvent( everyEvent, &event, 0L, 0L);
+	       			}
+	       		else
+				{
+					mine = GetNextEvent(everyEvent, &event);
+					}
+			HandleEvent(&event, mine);
+		    eventcounter = EVENTMAX;
+			}
+			else
+				eventcounter--;
+			}
+
+
+char *currtime()
+{
+	static char timebuffer[26];
+	register char *tp;
+	unsigned long Time;
+	char Year[10];
+	DateTimeRec MacTimeRec;
+	register Intl1Hndl myHndl;
+	register int i;	
+		GetDateTime(&Time);
+		Secs2Date(Time,&MacTimeRec);
+	
+		myHndl = (Intl1Hndl)IUGetIntl(1);
+		tp = timebuffer;
+	
+		for (i=1; i<4; i++)
+			*tp++ = (*myHndl)->days[MacTimeRec.dayOfWeek-1][i]; /* make day of week */
+		*tp++ = ',';
+		*tp++ = ' ';
+		sprintf(tp,"%02d ",MacTimeRec.day); /* now put in day of month */
+		tp += 3;
+	    for (i=1; i<4; i++)
+			*tp++ = (*myHndl)->months[MacTimeRec.month-1][i]; /* make month */
+		*tp++ = ' ';
+		Year[0] = '\0';
+		sprintf(Year, "%d", MacTimeRec.year);
+		/* Prepare for new century, i used to start at 2 */
+        for (i=0; i<4; i++)
+			*tp++ = Year[i]; /* make year */
+		*tp++ = ' ';
+		sprintf(tp,"%02d:%02d:%02d\n",MacTimeRec.hour,MacTimeRec.minute,MacTimeRec.second);
+		return(timebuffer);
+		}
+
+void
+gnusleep (time)
+unsigned time;
+{
+	long start_t;
+	long curr_t;
+	EventRecord theEvent;
+	int mine;
+	start_t = clock() / CLOCKS_PER_SEC;
+	for (curr_t = start_t; 
+	     curr_t - start_t < time;
+	     curr_t = clock() / CLOCKS_PER_SEC)
+		{
+			if (WNEIsImplemented())
+				{
+					mine = WaitNextEvent( everyEvent, &theEvent, 
+	               	(time - (curr_t - start_t)) * CLOCKS_PER_SEC, 0L);
+	       			HandleEvent(&theEvent, mine);
+	       			}
+	       		else
+	       		 {
+	       		 	long finalTime;
+	       		 	Delay(CLOCKS_PER_SEC*time, &finalTime);
+	       		 	}
+	       	}
+	}
+
+extern int interrupted;
+int abort_key_pressed ()
+{
+	if (interrupted) 
+		{
+			interrupted = 0;
+			logit("Aborting Mac/gnuucp", "Goodbye");
+			return(1);
+			}
+	return(0);
+	}
+
+#define hiword(x)		(((short *) &(x))[0])
+#define loword(x)		(((short *) &(x))[1])
+extern MenuHandle appleMenu;
+
+void HandleEvent(event, mine)
+EventRecord *event;
+int mine;
+{
+	int key;
+	WindowPeek wp;
+	long choice;
+	Str255 buf;
+	
+		/*  check for an event  */
+		
+	SEvtEnb = false;
+	SystemTask();
+	if (mine != 0) {
+		if (!SystemEvent(event))
+			goto doEvent;
+	}
+	else if (event->what == nullEvent) {
+		if (FrontWindow() == 0)
+			InitCursor();
+	}
+	return;
+	
+		/*  handle event  */
+
+doEvent:
+	if (event->what == mouseDown) {
+		switch (FindWindow(event->where, (WindowPtr *)&wp)) {
+			case inMenuBar:
+				InitCursor();
+				choice = MenuSelect(event->where);
+				goto doMenu;
+			case inSysWindow:
+				SystemClick(event, (WindowPtr)wp);
+				break;
+		}
+	}
+	return;
+
+		/*  handle menu choice  */
+
+doMenu:	
+	switch (hiword(choice)) {
+		case 1:		/*  Apple  */
+			GetItem(appleMenu, loword(choice), buf);
+			OpenDeskAcc(buf);
+			break;
+		case 2:		/*  File  */
+			console_options.pause_atexit = 0;
+			exit(0);
+			/* no return */
+		case 3:		/*  Edit  */
+			SystemEdit(loword(choice) - 1);
+			break;
+	}
+	HiliteMenu(0);
+}
+
+									/** Define trap numbers **/
+#ifndef _Unimplemented
+#define _Unimplemented	0xA89F			/* Unimplemented trap				*/
+#endif
+
+#ifndef _WaitNextEvent
+#define _WaitNextEvent	0xA860			/* WaitNextEvent trap				*/
+#endif
+
+#ifndef _OSDispatch
+#define _OSDispatch		0xA88F			/* Temporary MF memory calls		*/
+#endif
+
+/******************************************************************************
+ TrapAvailable
+ 
+ 	Check whether a certain trap exists on this machine. For pre-Mac II
+ 	machines, trap numbers only go up to 0x1FF.
+ ******************************************************************************/
+
+Boolean		TrapAvailable(
+	short			trapNum,			/* The trap number to check			*/
+	short			tType)				/* OS or Toolbox trap				*/
+{
+	SysEnvRec		theWorld;
+	
+	SysEnvirons(1, &theWorld);
+	
+	if ( (tType == ToolTrap)  &&						/* Toolbox trap		*/
+		 ((theWorld.machineType < envMachUnknown)  ||	/* 64K ROM machine	*/
+		 ((theWorld.machineType > envMachUnknown)  &&	/* É512KE, Plus, or	*/
+		 (theWorld.machineType < envMacII))) ) {		/* ÉSE				*/
+		 
+		trapNum &= 0x3FF;				/* Traps numbers are 10 bits long	*/
+		
+		if (trapNum > 0x1FF) {			/* Traps only go up to 0x1FF on		*/
+			return(false);				/*   these machines					*/
+		}
+	}
+	
+		/* Compare the address of this trap with that of the	*/
+		/* unimplemented trap									*/
+
+	return( NGetTrapAddress(trapNum, tType)  !=
+			GetTrapAddress(_Unimplemented) );
+}
+
+
+/******************************************************************************
+ WNEIsImplemented
+ 
+ 	Check whether the WaitNextEvent is implemented or not
+ ******************************************************************************/
+
+Boolean		WNEIsImplemented()
+{
+	SysEnvRec	theWorld;				/* System environment				*/
+	
+	SysEnvirons(1, &theWorld);			/* Check environment				*/
+	
+	if (theWorld.machineType < 0) 		/* Old ROMs, definitely not present	*/
+		return(FALSE);
+		
+	else								/* Check for WNE trap				*/
+		return(TrapAvailable(_WaitNextEvent, ToolTrap));
+}
+
+#define NARGS		25
+
+char *argv[NARGS+1];
+
+int
+parse(s, t, argvv)
+register char *s, *t;
+char **argvv[];
+{
+	int c, quote = 0, argc = 0;
+		
+	while (c = *s++) {
+		if (c == ' ')
+			continue;
+		if (argc < NARGS)
+			argv[argc++] = t;
+		do {
+			if (c == '\\' && *s)
+				c = *s++;
+			else if (c == '"' || c == '\'') {
+				if (!quote) {
+					quote = c;
+					continue;
+				}
+				if (c == quote) {
+					quote = 0;
+					continue;
+				}
+			}
+			*t++ = c;
+		} while (*s && ((c = *s++) != ' ' || quote));
+		*t++ = 0;
+	}
+	*argvv = argv;
+	return(argc);
+}
+
+
+void
+dtr_state (on_or_off)
+Boolean on_or_off;
+{
+	int ControlCode;
+	CntrlParam ParamPtr;
+	if (on_or_off == TRUE) 
+		ControlCode = 17; /* Turn it on */
+	else
+		ControlCode = 18; /* Trun it off */
+	ParamPtr.csCode = ControlCode;
+	Control(outRefNum, ControlCode, &ParamPtr);	
+	}
+
+void drop_dtr_for (amt)
+int amt;
+{
+	dtr_state(FALSE);
+	gnusleep(amt);
+	dtr_state(TRUE);
+	}
+
+

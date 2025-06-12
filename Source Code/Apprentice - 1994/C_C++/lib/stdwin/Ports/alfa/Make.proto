@@ -1,1 +1,30 @@
-## Makefile prototype for X11 port#SRCS=		\		$(ALFA)/bind.c \		$(ALFA)/draw.c \		$(ALFA)/event.c \		$(ALFA)/keymap.c \		$(ALFA)/measure.c \		$(ALFA)/menu.c \		$(ALFA)/scroll.c \		$(ALFA)/stdwin.c \		$(ALFA)/syswin.c \		$(ALFA)/timer.c \		$(TOOLS)/strdup.c \		$(GEN)/waskfile.c \		$(GEN)/waskync.c \		$(GEN)/wperror.c \		$(GEN)/wstyle.c \		$(GEN)/wsetclip.c \		$(GEN)/wsetcutbuffer.c \		$(GEN)/wsetselection.c \		$(VTRM_ALL) \		$(TEXTEDIT_PACK)all:		lib.a_bootstrap:	@putlibmf lib.a $(SRCS)
+#
+# Makefile prototype for X11 port
+#
+
+SRCS=		\
+		$(ALFA)/bind.c \
+		$(ALFA)/draw.c \
+		$(ALFA)/event.c \
+		$(ALFA)/keymap.c \
+		$(ALFA)/measure.c \
+		$(ALFA)/menu.c \
+		$(ALFA)/scroll.c \
+		$(ALFA)/stdwin.c \
+		$(ALFA)/syswin.c \
+		$(ALFA)/timer.c \
+		$(TOOLS)/strdup.c \
+		$(GEN)/waskfile.c \
+		$(GEN)/waskync.c \
+		$(GEN)/wperror.c \
+		$(GEN)/wstyle.c \
+		$(GEN)/wsetclip.c \
+		$(GEN)/wsetcutbuffer.c \
+		$(GEN)/wsetselection.c \
+		$(VTRM_ALL) \
+		$(TEXTEDIT_PACK)
+
+all:		lib.a
+
+_bootstrap:
+	@putlibmf lib.a $(SRCS)

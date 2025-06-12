@@ -1,1 +1,92 @@
-                                                            TutorialThere are two versions of RTrace, the “Power Mac” version (called just RTrace) and the normal version (called RTrace/68000).  You should use RTrace if you have a 68020 or better processor, and if you have a math coprocessor.  If you have are lacking either of those, you should use RTrace/68000.To start RTrace, just double-click on its icon in the Finder.  RTrace will start up.  If you are using a Macintosh which cannot take full advantage of RTrace’s imaging capabilities (one which does not have 32-bit QuickDraw), a message will appear telling you what you’re missing.  Click the Continue button.Next, RTrace will show you its nifty About... box.  Once you’ve seen enough of it, click on the Okay! button.  (See the Preferences section for information on how to keep that friggin’ box from ever coming up again).You should see the Log Window now.  The Log Window gives you technical feedback about the scene RTrace is processing.  Since RTrace isn’t processing anything yet, the Log Window is empty.Now choose Open... from the File menu.  This will bring up a standard Open... window.  Use it to open demo.sff, a scene description file provided with RTrace.RTrace will then present you with a window full of options which looks like this:                                         Figure 1: The Options WindowThe complexity of the window can be intimidating, but relax.  The default options will do nicely for most purposes.  As you become more familiar with RTrace, you can experiment with some of the more complex options.For now, we’ll just change the size of the image.   The Image Width and Image Height fields contain the width and height, in pixels, of the image which RTrace will generate.  For now, change them both to 100.  This will create a 100x100 image, which is small enough that it won’t take long even on slower machines.Now that we’ve set the options as we would like, we’re ready to go.  Click on the Render button.  RTrace will bring up the Status Window and, if you have a color Macintosh, the Image Window.  The Status Window gives you visual clues about what RTrace is doing, and provides an indication of how much longer an operation will take.  The Image Window displays the image as it is created.RTrace will first read the scene from disk (from the demo.sff file).  Since demo.sff is a very simple scene, that should take almost no time.  Then RTrace will begin generating the image, a pixel at a time.  This could take a while.  If you have a color Macintosh, you will be able to see the image slowly appear in the Image Window.  If not, you will be able to tell how far along it is by looking at the thermometer in the Status Window.When it’s all done, you can save the image by choosing Save... from the File menu.  You should save it as a PICT file, since that is the format which most Macintosh graphics applications understand.  It will be saved as a 32-bit color PICT file.  This file will not be readable on any Macintosh without 32-bit QuickDraw.Now let’s do a simple animation.  The Options Window should still be visible— click on the Animation button.  This brings up the Animation Window, which looks like this:                                      Figure 2: The Animation WindowAgain, the defaults are fine.  In a nutshell, the Eye Point is point in space we’re looking from.  The Look Point is the point we’re looking at.  The Up vector is a vector which points in the direction which we want to appear to be up.  And the Angle aperture is the number of degrees in our view.Doing animation with RTrace, unlike most other features of RTrace, requires a real understanding of math.  You need to know how to define an equation parametrically, and you need to have a good concept of what a vector is.  Like the rest of RTrace, it also requires an understanding of space and the traditional coordinate system.  Sorry, that’s required.  If you don’t understand these things, you probably will have a hard time making effective animation.For this tutorial, we’ll lead you through it.  What we want to do is make a simple circular orbit around the scene.  You can always assume that the default values are a decent viewpoint, so we’ll work from there.Parametrically, a circular path is described by (x, y) = (rsin t, rcos t).  Noticing that “up” in demo.sff is in the y  direction (as indicated by the Up vector (0, 1, 0)), we will plot a course which takes us in a circle around the center of the scene, remaining at a constant height above the ground.  A suitable course is (x, y, z) = (-25sin t, 25, 25cos t).  We choose 25 for y here because the positive y direction is “up,” and we want to be at a constant “height” (above the xz plane).  Since the Look Point is (0, 0, 0), we know that the center of the orbit will be directly above the center of the scene.Now enter the equations.  RTrace, like most computer programs, isn’t smart enough to read implied multiplication or parentheses.  So every time you want multiplication, you need to include an asterisk (*) between the multiplier and the multiplicand.  Also, when use a function like sin, be sure to include parentheses around its argument.  The correct format for the parametric equations are x(t) = -25*sin(t), y(t) = 25, z(y) = 25*cos(t).  Enter these equations now in the Eye Point fields.The variable t represents time.  It is chosen by default to run from 0 to 2*π, which is perfect for a circular orbit.  So we will leave the settings for t alone, and leave the number of frames at 10.  Click the Okay button to return to the Options Window, and then click Render.RTrace will now render ten different views of demo.sff, evenly spaced around the circular path we requested.  Actually, they won’t all be difference, because RTrace will plot both t=0 and t=2π, which will be identical since sine and cosine are periodic functions with period 2π.Since RTrace has to render ten frames, this rendering will take ten times longer than the previous one.  Be very sure you know what you’re doing when you start an animation rendering—it can take a long  time!  If you ever want to abort a rendering, just press -.When RTrace is finished rendering, you should save the animation sequence.  RTrace can save an animation sequence only as a series of PICT files or as a QuickTime movie.  Choose Save Animation... from the File menu, and type a name for the animation sequence, perhaps “demo.anim”.  If you do not have QuickTime, use the PICT files option in the popup menu.  RTrace will save the ten PICT files in sequence, naming them demo.anim1 through demo.anim10.If you do have QuickTime, select the QuickTime movie option in the popup menu.  When you click Save, the QuickTime Compression Window will appear.  You may then set several options for compression and frame speed.  If you have Millions mode on your monitor, you should try Millions+ for the number of colors.  If you have only 256 colors available, try using 256 colors for the number of colors.  Choose the other options to be whatever you like, and click Okay.  It will be best played in Repeat mode.Now go back and try playing with some of the options.  Try setting the Supersampling to “better” or “best” for better quality images.  Try using larger or smaller image dimensions.  Try some more animations, with different paths, or with the up vector or the eye point changing with t.  Experiment!  RTrace is FUN!
+
+                                                            Tutorial
+
+There are two versions of RTrace, the “Power Mac” version (called just RTrace) and the normal version (called RTrace/68000).  You should use RTrace if you have a 68020 or better processor, and if you have a math coprocessor.  If you have are lacking either of those, you should use RTrace/68000.
+
+To start RTrace, just double-click on its icon in the Finder.  RTrace will start up.  If you are using a Macintosh which cannot take full advantage of RTrace’s imaging capabilities (one which does not have 32-bit QuickDraw), a message will appear telling you what you’re missing.  Click the Continue button.
+
+Next, RTrace will show you its nifty About... box.  Once you’ve seen enough of it, click on the Okay! button.  (See the Preferences section for information on how to keep that friggin’ box from ever coming up again).
+
+You should see the Log Window now.  The Log Window gives you technical feedback about the scene RTrace is processing.  Since RTrace isn’t processing anything yet, the Log Window is empty.
+
+Now choose Open... from the File menu.  This will bring up a standard Open... window.  Use it to open demo.sff, a scene description file provided with RTrace.
+
+RTrace will then present you with a window full of options which looks like this:
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        Figure 1: The Options Window
+
+The complexity of the window can be intimidating, but relax.  The default options will do nicely for most purposes.  As you become more familiar with RTrace, you can experiment with some of the more complex options.
+
+For now, we’ll just change the size of the image.   The Image Width and Image Height fields contain the width and height, in pixels, of the image which RTrace will generate.  For now, change them both to 100.  This will create a 100x100 image, which is small enough that it won’t take long even on slower machines.
+
+Now that we’ve set the options as we would like, we’re ready to go.  Click on the Render button.  RTrace will bring up the Status Window and, if you have a color Macintosh, the Image Window.  The Status Window gives you visual clues about what RTrace is doing, and provides an indication of how much longer an operation will take.  The Image Window displays the image as it is created.
+
+RTrace will first read the scene from disk (from the demo.sff file).  Since demo.sff is a very simple scene, that should take almost no time.  Then RTrace will begin generating the image, a pixel at a time.  This could take a while.  If you have a color Macintosh, you will be able to see the image slowly appear in the Image Window.  If not, you will be able to tell how far along it is by looking at the thermometer in the Status Window.
+
+When it’s all done, you can save the image by choosing Save... from the File menu.  You should save it as a PICT file, since that is the format which most Macintosh graphics applications understand.  It will be saved as a 32-bit color PICT file.  This file will not be readable on any Macintosh without 32-bit QuickDraw.
+
+Now let’s do a simple animation.  The Options Window should still be visible— click on the Animation button.  This brings up the Animation Window, which looks like this:
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                     Figure 2: The Animation Window
+
+Again, the defaults are fine.  In a nutshell, the Eye Point is point in space we’re looking from.  The Look Point is the point we’re looking at.  The Up vector is a vector which points in the direction which we want to appear to be up.  And the Angle aperture is the number of degrees in our view.
+
+Doing animation with RTrace, unlike most other features of RTrace, requires a real understanding of math.  You need to know how to define an equation parametrically, and you need to have a good concept of what a vector is.  Like the rest of RTrace, it also requires an understanding of space and the traditional coordinate system.  Sorry, that’s required.  If you don’t understand these things, you probably will have a hard time making effective animation.
+
+For this tutorial, we’ll lead you through it.  What we want to do is make a simple circular orbit around the scene.  You can always assume that the default values are a decent viewpoint, so we’ll work from there.
+
+Parametrically, a circular path is described by (x, y) = (rsin t, rcos t).  Noticing that “up” in demo.sff is in the y  direction (as indicated by the Up vector (0, 1, 0)), we will plot a course which takes us in a circle around the center of the scene, remaining at a constant height above the ground.  A suitable course is (x, y, z) = (-25sin t, 25, 25cos t).  We choose 25 for y here because the positive y direction is “up,” and we want to be at a constant “height” (above the xz plane).  Since the Look Point is (0, 0, 0), we know that the center of the orbit will be directly above the center of the scene.
+
+Now enter the equations.  RTrace, like most computer programs, isn’t smart enough to read implied multiplication or parentheses.  So every time you want multiplication, you need to include an asterisk (*) between the multiplier and the multiplicand.  Also, when use a function like sin, be sure to include parentheses around its argument.  The correct format for the parametric equations are x(t) = -25*sin(t), y(t) = 25, z(y) = 25*cos(t).  Enter these equations now in the Eye Point fields.
+
+The variable t represents time.  It is chosen by default to run from 0 to 2*π, which is perfect for a circular orbit.  So we will leave the settings for t alone, and leave the number of frames at 10.  Click the Okay button to return to the Options Window, and then click Render.
+
+RTrace will now render ten different views of demo.sff, evenly spaced around the circular path we requested.  Actually, they won’t all be difference, because RTrace will plot both t=0 and t=2π, which will be identical since sine and cosine are periodic functions with period 2π.
+
+Since RTrace has to render ten frames, this rendering will take ten times longer than the previous one.  Be very sure you know what you’re doing when you start an animation rendering—it can take a long  time!  If you ever want to abort a rendering, just press -.
+
+When RTrace is finished rendering, you should save the animation sequence.  RTrace can save an animation sequence only as a series of PICT files or as a QuickTime movie.  Choose Save Animation... from the File menu, and type a name for the animation sequence, perhaps “demo.anim”.  If you do not have QuickTime, use the PICT files option in the popup menu.  RTrace will save the ten PICT files in sequence, naming them demo.anim1 through demo.anim10.
+
+If you do have QuickTime, select the QuickTime movie option in the popup menu.  When you click Save, the QuickTime Compression Window will appear.  You may then set several options for compression and frame speed.  If you have Millions mode on your monitor, you should try Millions+ for the number of colors.  If you have only 256 colors available, try using 256 colors for the number of colors.  Choose the other options to be whatever you like, and click Okay.  It will be best played in Repeat mode.
+
+Now go back and try playing with some of the options.  Try setting the Supersampling to “better” or “best” for better quality images.  Try using larger or smaller image dimensions.  Try some more animations, with different paths, or with the up vector or the eye point changing with t.  Experiment!  RTrace is FUN!

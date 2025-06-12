@@ -1,1 +1,40 @@
-Todo.NoteHistory:	2/6/94	Fixed for 12" monitors and large monitors.	Fixed startup sound bug when using Sound Manager 3.0	Sped up Sprite Display		4/28/93 - 5/93		Original Code WrittenNew Features to Add:	Shield Energy Yummy	Yummy for large bullets which are x3 hit points.	Help Screens/Credits	Fix Thrust Sound - continue while key is held down, stop when key is released.	Same for Shield Sound.	Consider making game over appear on top of display.	Create a nicer font / status bar	Special Bullets	Maximum Speed - currently there is no upper limit on ship speed	Make asters or teacup take multiple hits.	Blinking Stars?	Aquarium mode.	Attract mode with special android ship.	Bolo-like multiplayer/networkable version that takes place in a larger space.	Bolo-like plug-in interface for android ships.	
+Todo.Note
+
+History:
+	2/6/94
+	Fixed for 12" monitors and large monitors.
+	Fixed startup sound bug when using Sound Manager 3.0
+	Sped up Sprite Display
+	
+	4/28/93 - 5/93
+		Original Code Written
+
+New Features to Add:
+	Shield Energy Yummy
+
+	Yummy for large bullets which are x3 hit points.
+
+	Help Screens/Credits
+
+	Fix Thrust Sound - continue while key is held down, stop when key is released.
+	Same for Shield Sound.
+
+	Consider making game over appear on top of display.
+	Create a nicer font / status bar
+
+	Special Bullets
+
+	Maximum Speed - currently there is no upper limit on ship speed
+
+	Make asters or teacup take multiple hits.
+
+	Blinking Stars?
+
+	Aquarium mode.
+
+	Attract mode with special android ship.
+
+	Bolo-like multiplayer/networkable version that takes place in a larger space.
+
+	Bolo-like plug-in interface for android ships.
+	

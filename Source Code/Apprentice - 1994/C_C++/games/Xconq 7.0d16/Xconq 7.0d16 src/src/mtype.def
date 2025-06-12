@@ -1,1 +1,37 @@
-/* Definitions of material type properties. */DEF_MPROP_I("available", m_available,	"Is type defn actually used",	available, 0, 1, 1)DEF_MPROP_S("color", m_color,	"The preferred color(s) for this type of material",	color, "gray")DEF_MPROP_L("description", m_description,	"",	description)DEF_MPROP_L("extensions", m_extensions,	"",	extensions)DEF_MPROP_S("help", m_help,	"One-line description of material type",	mhelp, "")DEF_MPROP_S("image-name", m_image_name,	"The preferred image for this type of material",	imagename, "")DEF_MPROP_S("name", m_type_name,	"Displayable name of the material type",	name, "")DEF_MPROP_L("notes", m_notes,	"",	notes)DEF_MPROP_I("people", m_people,	"Actual number of individuals per unit of material",	people, 0, 0, 9999)
+/* Definitions of material type properties. */
+
+DEF_MPROP_I("available", m_available,
+	"Is type defn actually used",
+	available, 0, 1, 1)
+
+DEF_MPROP_S("color", m_color,
+	"The preferred color(s) for this type of material",
+	color, "gray")
+
+DEF_MPROP_L("description", m_description,
+	"",
+	description)
+
+DEF_MPROP_L("extensions", m_extensions,
+	"",
+	extensions)
+
+DEF_MPROP_S("help", m_help,
+	"One-line description of material type",
+	mhelp, "")
+
+DEF_MPROP_S("image-name", m_image_name,
+	"The preferred image for this type of material",
+	imagename, "")
+
+DEF_MPROP_S("name", m_type_name,
+	"Displayable name of the material type",
+	name, "")
+
+DEF_MPROP_L("notes", m_notes,
+	"",
+	notes)
+
+DEF_MPROP_I("people", m_people,
+	"Actual number of individuals per unit of material",
+	people, 0, 0, 9999)

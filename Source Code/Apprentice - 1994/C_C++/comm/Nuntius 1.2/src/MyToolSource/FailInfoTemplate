@@ -1,1 +1,10 @@
-	FailInfo fi;	if (fi.Try())	{				fi.Success();	}	else // fail	{		fi.ReSignal();	}
+	FailInfo fi;
+	if (fi.Try())
+	{
+		
+		fi.Success();
+	}
+	else // fail
+	{
+		fi.ReSignal();
+	}

@@ -1,1 +1,34 @@
-	scrounge	version 1.0.0	30 March 1994		Copyright (C) 1994 Celestin Company.	All Rights Reserved.		Written by: Paul Celestin		This utility will grab all new news articles in the subscribed	groups specified in your .newsrc file and output them in rnews	format. Output is to the console. You can redirect it to a file,	if you wish, by typing "scrounge > filename" or something similar.		The.newsrc file is updated to reflect the newly scrounged articles.		Change SPOOL_DIR to the location of the news spool files for your	host. It's usually in the /usr/spool/news directory, but this is	subject to change depending on how your host is configured. For my	host, it's /news/spool.		scrounge has been tested on various Unix hosts, from Suns to BSDI	flavors. If it doesn't compile under 'cc', try 'gcc'. Your mileage	may vary. Neither Paul Celestin nor Celestin Company is responsible	for any damaged caused by using this source file. Compile and use	it at your own risk.		Restrictions: You may freely distribute this source file. However,	please do not distribute modified versions, unless you place a note	in the source file stating that it has been modified and by whom.		Send questions, comments, and bugs to: celestin@pt.olympus.net		940330 - 1.0.0 - initial release
+	scrounge
+	version 1.0.0
+	30 March 1994
+	
+	Copyright (C) 1994 Celestin Company.
+	All Rights Reserved.
+	
+	Written by: Paul Celestin
+	
+	This utility will grab all new news articles in the subscribed
+	groups specified in your .newsrc file and output them in rnews
+	format. Output is to the console. You can redirect it to a file,
+	if you wish, by typing "scrounge > filename" or something similar.
+	
+	The.newsrc file is updated to reflect the newly scrounged articles.
+	
+	Change SPOOL_DIR to the location of the news spool files for your
+	host. It's usually in the /usr/spool/news directory, but this is
+	subject to change depending on how your host is configured. For my
+	host, it's /news/spool.
+	
+	scrounge has been tested on various Unix hosts, from Suns to BSDI
+	flavors. If it doesn't compile under 'cc', try 'gcc'. Your mileage
+	may vary. Neither Paul Celestin nor Celestin Company is responsible
+	for any damaged caused by using this source file. Compile and use
+	it at your own risk.
+	
+	Restrictions: You may freely distribute this source file. However,
+	please do not distribute modified versions, unless you place a note
+	in the source file stating that it has been modified and by whom.
+	
+	Send questions, comments, and bugs to: celestin@pt.olympus.net
+	
+	940330 - 1.0.0 - initial release

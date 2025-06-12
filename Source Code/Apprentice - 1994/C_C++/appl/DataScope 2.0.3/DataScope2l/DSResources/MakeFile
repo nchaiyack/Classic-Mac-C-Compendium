@@ -1,1 +1,11 @@
-######################################	Make File for DataScope DSResources#####################################LDIR	= ::DSLibs:#####################################{LDIR}DataScope.r	Ä	DataScope.rsrc	DeRez	DataScope.rsrc		¶			Types.r				¶			SysTypes.r			¶			> {LDIR}DataScope.r#	
+#####################################
+#	Make File for DataScope DSResources
+#####################################
+LDIR	= ::DSLibs:
+#####################################
+{LDIR}DataScope.r	Ä	DataScope.rsrc
+	DeRez	DataScope.rsrc		¶
+			Types.r				¶
+			SysTypes.r			¶
+			> {LDIR}DataScope.r
+#	

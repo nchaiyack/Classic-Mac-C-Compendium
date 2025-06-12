@@ -1,1 +1,23 @@
-# MakeExtern makes a C include file declaring external globals.# It's input is the root declaration file for those globals.duplicate -y "{1}" "{2}"target "{2}"find ¥find /'Globals are declared here.'/clear Á0:1# remove size from array declarationsreplace -c ° /¶[[a-zA-Z_0-9]+¶]/ ¶[¶]find ¥# remove trailing whitespace so that the next command can workreplace -c ° /[ ¶t]+¶n/ ¶n# remove newlines after commasfind ¥replace -c ° /,¶n/ ','find ¥# clear all curly bracket pairsreplace -c ° /¶{Å¶}/ ''find ¥replace -c ° /=[Â,;]+/ ''find ¥replace -c ° /¥([a-z_A-Z])¨1/ 'extern ¨1'close -y "{2}"
+# MakeExtern makes a C include file declaring external globals.
+# It's input is the root declaration file for those globals.
+duplicate -y "{1}" "{2}"
+target "{2}"
+find ¥
+find /'Globals are declared here.'/
+clear Á0:1
+# remove size from array declarations
+replace -c ° /¶[[a-zA-Z_0-9]+¶]/ ¶[¶]
+find ¥
+# remove trailing whitespace so that the next command can work
+replace -c ° /[ ¶t]+¶n/ ¶n
+# remove newlines after commas
+find ¥
+replace -c ° /,¶n/ ','
+find ¥
+# clear all curly bracket pairs
+replace -c ° /¶{Å¶}/ ''
+find ¥
+replace -c ° /=[Â,;]+/ ''
+find ¥
+replace -c ° /¥([a-z_A-Z])¨1/ 'extern ¨1'
+close -y "{2}"

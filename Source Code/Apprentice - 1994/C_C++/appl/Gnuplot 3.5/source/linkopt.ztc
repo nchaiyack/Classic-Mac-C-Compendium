@@ -1,1 +1,4 @@
-cx+bitmap+term+graphics+graph3d+contour+readline+plot+setshow+command+help+internal+misc+specfun+gnubin+binary+parse+eval+scanner+standard+util+versiongnuplot,,fgp.lib /map/co
+cx+bitmap+term+graphics+graph3d+contour+readline+
+plot+setshow+command+help+internal+misc+specfun+gnubin+binary+
+parse+eval+scanner+standard+util+version
+gnuplot,,fgp.lib /map/co

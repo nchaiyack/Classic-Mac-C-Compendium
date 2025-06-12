@@ -1,1 +1,50 @@
-	 This program parses the "indexor" TOWR resource left by the Seahaven Towers	program and attempts to produce a solution.  The current state of the Towers	game must currently be written to the TOWR resource by quitting the game at	whatever state you desire the solution to start from.  This program will run 	fairly quietly in the background, calling getnextevent every 50 moves or so.	When in the forground, the menu can be used to display certain info about the	progress, by typing "M". [all letters need to be upper case][The menu bar is normally blank]	 In addition, the game will snapshot its current move list into the log file 	[SH.log11] upon receipt of an "L", followed by continuous logging	until the next "L".  It is strongly advised that L's be entered in pairs to avoid	giant log files.  This program will terminate upon receipt of a "Q", or by	successful solution [which will be recorded in the log file] or by exhausting the	possible move tree. In addition, the program will beep once on failure and beep 4 times	if successful solution is found. This is to allow the program to run without cluttering	up the display.  I normally ignore the log file and just use Do.Towers to see if the game	is solvable.	  	 A note about memory.  Do.Towers is set to a 600k partition as released.  It will use whatever	you give it.  The memory is used to store "wrong" paths to speed solution time. Given	enough memory, Do.Towers will solve most games in a few seconds, and use only a few hundred K.	the 600K partition will solve 95% of the games without running out of memory.  If it runs	out, the process will slow way down because we no longer will know all "wrong paths".	Once in a while, I run into a game that needs 1000k or even 2000k to produce an answer	in a reasonable time.		 A note about the status "M" command.	Typing "M" will paint a menu bar with the following info:	X:L..H, MaxChain:A, Held:B, skpMoves:C, Heap=D	...where	  X= total number of moves so far	  L= Lowest move depth since the last M command	  H= Highest move depth since the last M command	  A= Longest search path to find "wrong pathways"	  B= Number of "wrong pathways" held in storage	  C= Number of skipped moves due to being on a doomed path	  D= Heap space to store more "wrong pathways"	  	The last one "D" is the most interesting.  When it gets below 12 the program will no longer	maintain every doomed path, and will slow way down.  In this mode it could take weeks to	solve very tough games, so you might as well give up with "Q", add more memory and try again.		 A note about shareware.	Be SURE you send Art Cabral his $20.00 for his very fine game.  Do.Towers is FREE.  	The source code is included for reference, but is undocumented	Do.Towers is a Lightspeed C 6.x program.		Chuck Pliske	Seawell Microsystems	Seattle, WA 98116	(206) 938-5420
+	 This program parses the "indexor" TOWR resource left by the Seahaven Towers
+	program and attempts to produce a solution.  The current state of the Towers
+	game must currently be written to the TOWR resource by quitting the game at
+	whatever state you desire the solution to start from.  This program will run 
+	fairly quietly in the background, calling getnextevent every 50 moves or so.
+	When in the forground, the menu can be used to display certain info about the
+	progress, by typing "M". [all letters need to be upper case][The menu bar is normally blank]
+	 In addition, the game will snapshot its current move list into the log file 
+	[SH.log11] upon receipt of an "L", followed by continuous logging
+	until the next "L".  It is strongly advised that L's be entered in pairs to avoid
+	giant log files.  This program will terminate upon receipt of a "Q", or by
+	successful solution [which will be recorded in the log file] or by exhausting the
+	possible move tree. In addition, the program will beep once on failure and beep 4 times
+	if successful solution is found. This is to allow the program to run without cluttering
+	up the display.  I normally ignore the log file and just use Do.Towers to see if the game
+	is solvable.
+	  
+	 A note about memory.  Do.Towers is set to a 600k partition as released.  It will use whatever
+	you give it.  The memory is used to store "wrong" paths to speed solution time. Given
+	enough memory, Do.Towers will solve most games in a few seconds, and use only a few hundred K.
+	the 600K partition will solve 95% of the games without running out of memory.  If it runs
+	out, the process will slow way down because we no longer will know all "wrong paths".
+	Once in a while, I run into a game that needs 1000k or even 2000k to produce an answer
+	in a reasonable time.
+	
+	 A note about the status "M" command.
+	Typing "M" will paint a menu bar with the following info:
+	X:L..H, MaxChain:A, Held:B, skpMoves:C, Heap=D
+	...where
+	  X= total number of moves so far
+	  L= Lowest move depth since the last M command
+	  H= Highest move depth since the last M command
+	  A= Longest search path to find "wrong pathways"
+	  B= Number of "wrong pathways" held in storage
+	  C= Number of skipped moves due to being on a doomed path
+	  D= Heap space to store more "wrong pathways"
+	  
+	The last one "D" is the most interesting.  When it gets below 12 the program will no longer
+	maintain every doomed path, and will slow way down.  In this mode it could take weeks to
+	solve very tough games, so you might as well give up with "Q", add more memory and try again.
+	
+	 A note about shareware.
+	Be SURE you send Art Cabral his $20.00 for his very fine game.  Do.Towers is FREE.  
+	The source code is included for reference, but is undocumented
+	Do.Towers is a Lightspeed C 6.x program.
+	
+	Chuck Pliske
+	Seawell Microsystems
+	Seattle, WA 98116
+	(206) 938-5420

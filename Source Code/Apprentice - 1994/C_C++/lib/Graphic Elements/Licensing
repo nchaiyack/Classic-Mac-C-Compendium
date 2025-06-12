@@ -1,1 +1,61 @@
-GRAPHIC ELEMENTS LICENSING AND REGISTRATION	_Permissions and Limitations_Graphic Elements is copyright © 1994 by Al Evans. All rights reserved.The Graphic Elements system may be used free of charge in any softwarewhich is similarly distributed free of charge, except that creditmust be given as specified below. Registered users of the shareware version of Graphic Elements may use it free of charge in any software distributed as shareware, as long ascredit is given as specified below and I receive one registered copy ofthe shareware release.Credit line: "This software uses Graphic Elements. The Graphic Elementssystem is copyright © 1994 by Al Evans."Any other use, whether for a published commercial product or for softwareto be used in-house in a profit-making business, is subject to a licensing fee. Contact me for details._Registration_In return for a registration fee of $49.95, you will receive the following:- A version of the Graphic Elements library compatible with MPW 3.x.- Source code and documentation for CGEPane, a CPane derivative which  adds Graphic Elements support to the Think Class Library.  - Source code and documentation for TGEView, a TView subclass which  adds Graphic Elements to MacApp.  - An additional (masking) low-level copy routine, for offscreen use, which  is plug-compatible with the Graphic Elements "transparent" copy   routine and offers a 30% overall improvement in speed at the cost of  increased memory requirements.  - Documentation describing the creation of custom Graphic Elements and  examples of such elements.  - Technical support by email.- Information on new software modules for the Graphic Elements system  as they become available.  Your check may be made payable to Al Evans or to PowerTools, and mailed to:	PowerTools	1206 Karen Ave.	Austin, TX 78757	You can contact me via email at:	al@crucible.powertools.com	Or, on CompuServe:	72167,2253					--Al Evans--
+GRAPHIC ELEMENTS LICENSING AND REGISTRATION	
+
+_Permissions and Limitations_
+
+Graphic Elements is copyright © 1994 by Al Evans. All rights reserved.
+
+The Graphic Elements system may be used free of charge in any software
+which is similarly distributed free of charge, except that credit
+must be given as specified below. 
+
+Registered users of the shareware version of Graphic Elements may use it 
+free of charge in any software distributed as shareware, as long as
+credit is given as specified below and I receive one registered copy of
+the shareware release.
+
+Credit line: "This software uses Graphic Elements. The Graphic Elements
+system is copyright © 1994 by Al Evans."
+
+Any other use, whether for a published commercial product or for software
+to be used in-house in a profit-making business, is subject to a 
+licensing fee. Contact me for details.
+
+_Registration_
+
+In return for a registration fee of $49.95, you will receive the following:
+
+- A version of the Graphic Elements library compatible with MPW 3.x.
+
+- Source code and documentation for CGEPane, a CPane derivative which
+  adds Graphic Elements support to the Think Class Library.
+  
+- Source code and documentation for TGEView, a TView subclass which
+  adds Graphic Elements to MacApp.
+  
+- An additional (masking) low-level copy routine, for offscreen use, which
+  is plug-compatible with the Graphic Elements "transparent" copy 
+  routine and offers a 30% overall improvement in speed at the cost of
+  increased memory requirements.
+  
+- Documentation describing the creation of custom Graphic Elements and
+  examples of such elements.
+  
+- Technical support by email.
+
+- Information on new software modules for the Graphic Elements system
+  as they become available.
+  
+Your check may be made payable to Al Evans or to PowerTools, and mailed to:
+
+	PowerTools
+	1206 Karen Ave.
+	Austin, TX 78757
+	
+You can contact me via email at:
+
+	al@crucible.powertools.com
+	
+Or, on CompuServe:
+
+	72167,2253
+					--Al Evans--

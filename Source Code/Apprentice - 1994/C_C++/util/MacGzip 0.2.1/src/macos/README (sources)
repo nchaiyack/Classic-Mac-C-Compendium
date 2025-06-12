@@ -1,1 +1,76 @@
-•  MacGzip 0.2.1 (gzip 1.2.4) -sources- Think C 5.0.4 sources for MacGzip 0.2.1•  About the sources....MacGzip was developed mainly from two sources: gzip 1.2.4 original distribution (by Jean-loup Gailly) and the example source code from Apple's  Developer CD Series. I must mention also Timothy Murphy ("tim@maths.tcd.ie" ), whose Posix Library por Think C was used to link chmod, fstat, utime and stat (all used in gzip.c).(In MacGzip's readme, you can find a list of involuntary contyributions)Part of the Apple source code comes from Snippets(Snippets are not tested by anyone, except (presumably) the author. They are NOT to be considered the final or best way to do something. They are just bits of code that the DTS engineers and others come up with and feel might be useful to developers. Think of Snippets as a "Bucket 'o Rusty Parts" that is provided for your browsing pleasure, NOT as polished examples. A Snippet should only be used in a commercial application if YOU are sure that it does what you want. )so, you can apply this to macgzip sources, too.• The portingThe main folder contents GNU sources and documentation, as well as MacGzip project file and resources.  GNU sources has been modified. If you find some error here, probably is mine.If have used some #ifdef's in most of the changes, but not in all.Changes:-Standard output and error by alerts.-#define MAXSEG_64K (gzip works without this, but is required by unlzw.c in order to uncompress Unix .Z files-Add some type/creator stuff when creating files.-Insert here an there System Tasks to be nice with other applications and to update progress bar. (for example one call in the 'fill the input buffer' function)-other...Note: Some of the command line options (-vlt) are not available just because they require aditional Macintosh interface; but using Think C console, they should work.The folder named 'macos' holds Posix Library (as it comes from maths.tcd.ie), and the sources of the interface; they can be reused with some minor changes for any other file processing (input file + few parameters -> output file).There are several ways in which this source could be improved; here you are some:-MacGzip.c:     Should accept High Level Events (this will change OpenFromFinder)-MacErrors.c:     Calert should use varargs!-SPDCProg.c:     The string on the movable modal window could be variable       (erase string's Rect before DrawString in DrawMovable)     Event loop in SPDSystemTask does not accept new files to process-thePrefs.c:      When an old prefs file is found, the new should be ajusted to match the old.      The balloon icon should be a button which enables/disables balloon help• The Bugsgzip -a does not work (gzip -da works)when the file has been compressed in non-mac os, the date is incorrect (stat?)• The Songhablar como en un susurro que el viento se quiere llevarse agita la ciudad dormidaotoño no acaba jamásno tiembles por que esté oscurosi nada nos puede pasarte he visto mover con orgullohey vamos, enséñame másno ver la luz serenabajando tan suave y besarandar desnudos por la arenala sangre ya llega hasta el marno he vuelto a jurar otra vezdesde que se fueno he vuelto a quedar otra vezen paz		Ciudad Dormida (BB sin sed)			      
+•  MacGzip 0.2.1 (gzip 1.2.4) -sources-
+
+ Think C 5.0.4 sources for MacGzip 0.2.1
+
+•  About the sources....
+
+MacGzip was developed mainly from two sources: gzip 1.2.4 original distribution (by Jean-loup Gailly) and the example source code from Apple's  Developer CD Series. I must mention also Timothy Murphy ("tim@maths.tcd.ie" ), whose Posix Library por Think C was used to link chmod, fstat, utime and stat (all used in gzip.c).
+
+(In MacGzip's readme, you can find a list of involuntary contyributions)
+
+Part of the Apple source code comes from Snippets
+(Snippets are not tested by anyone, except (presumably) the author. They are NOT to be considered the final or best way to do something. They are just bits of code that the DTS engineers and others come up with and feel might be useful to developers. Think of Snippets as a "Bucket 'o Rusty Parts" that is provided for your browsing pleasure, NOT as polished examples. A Snippet should only be used in a commercial application if YOU are sure that it does what you want. )
+so, you can apply this to macgzip sources, too.
+
+• The porting
+
+The main folder contents GNU sources and documentation, as well as MacGzip project file and resources.  GNU sources has been modified. If you find some error here, probably is mine.
+If have used some #ifdef's in most of the changes, but not in all.
+
+Changes:
+
+-Standard output and error by alerts.
+-#define MAXSEG_64K (gzip works without this, but is required by unlzw.c in order to uncompress Unix .Z files
+-Add some type/creator stuff when creating files.
+-Insert here an there System Tasks to be nice with other applications and to update progress bar. (for example one call in the 'fill the input buffer' function)
+-other...
+
+Note: Some of the command line options (-vlt) are not available just because they require aditional Macintosh interface; but using Think C console, they should work.
+
+
+The folder named 'macos' holds Posix Library (as it comes from maths.tcd.ie), and the sources of the interface; they can be reused with some minor changes for any other file processing (input file + few parameters -> output file).
+
+There are several ways in which this source could be improved; here you are some:
+
+-MacGzip.c:
+     Should accept High Level Events (this will change OpenFromFinder)
+-MacErrors.c:
+     Calert should use varargs!
+-SPDCProg.c:
+     The string on the movable modal window could be variable
+       (erase string's Rect before DrawString in DrawMovable)
+     Event loop in SPDSystemTask does not accept new files to process
+-thePrefs.c:
+      When an old prefs file is found, the new should be ajusted to match the old.
+      The balloon icon should be a button which enables/disables balloon help
+
+
+• The Bugs
+
+gzip -a does not work (gzip -da works)
+when the file has been compressed in non-mac os, the date is incorrect (stat?)
+
+• The Song
+
+hablar como en un susurro 
+que el viento se quiere llevar
+se agita la ciudad dormida
+otoño no acaba jamás
+no tiembles por que esté oscuro
+si nada nos puede pasar
+te he visto mover con orgullo
+hey vamos, enséñame más
+
+no ver la luz serena
+bajando tan suave y besar
+andar desnudos por la arena
+la sangre ya llega hasta el mar
+
+no he vuelto a jurar otra vez
+desde que se fue
+no he vuelto a quedar otra vez
+en paz
+
+		Ciudad Dormida (BB sin sed)
+
+			      

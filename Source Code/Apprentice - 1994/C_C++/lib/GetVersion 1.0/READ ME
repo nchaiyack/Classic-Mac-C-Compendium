@@ -1,1 +1,11 @@
-Name: GetVersionVersion: 1.0Category: functionsContributor: Andrew Gilmartin <Andrew_Gilmartin@Brown.Edu> Date: 93-06-04TCL-Version: AllTCL-Language: CCopyright: Public DomainA simple function to get the version resource our of the currentresource fork and copy its content to a struct.
+Name: GetVersion
+Version: 1.0
+Category: functions
+Contributor: Andrew Gilmartin <Andrew_Gilmartin@Brown.Edu> 
+Date: 93-06-04
+TCL-Version: All
+TCL-Language: C
+Copyright: Public Domain
+
+A simple function to get the version resource our of the current
+resource fork and copy its content to a struct.

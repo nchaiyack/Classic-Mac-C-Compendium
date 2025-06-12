@@ -1,1 +1,29 @@
-What is What and Where======================	GrafSys 2.0 lib	---------------		contains the project and resource files required to build the library		It also contains a pre-compiled version of the GrafSys 2.0 and the 		interface file for it.			GrafSys 2.0 source	------------------		contains the sourcecode for the GrafSys 2.0			Documentation	-------------		contains the manual for the GrafSys plus notes for printing			Demos	-----		contains projects and compiled demos. The demos are compiled		with the 68030/881 options checked, so if you don't have a 030 		or 881 (or an LC040 processor) you must recompile them.The Space Shuttle was created with GrafSys 2.0, the picture within the folder with 'FolderPICT' by Laucence Harris.CF 12/93
+What is What and Where
+======================
+
+	GrafSys 2.0 lib
+	---------------
+		contains the project and resource files required to build the library
+		It also contains a pre-compiled version of the GrafSys 2.0 and the 
+		interface file for it.
+		
+	GrafSys 2.0 source
+	------------------
+		contains the sourcecode for the GrafSys 2.0
+		
+	Documentation
+	-------------
+		contains the manual for the GrafSys plus notes for printing
+		
+	Demos
+	-----
+		contains projects and compiled demos. The demos are compiled
+		with the 68030/881 options checked, so if you don't have a 030 
+		or 881 (or an LC040 processor) you must recompile them.
+
+
+The Space Shuttle was created with GrafSys 2.0, the picture within the folder 
+with 'FolderPICT' by Laucence Harris.
+
+
+CF 12/93

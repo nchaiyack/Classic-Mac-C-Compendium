@@ -1,1 +1,1 @@
-gs -q -dNODISPLAY -dWRITESYSTEMDICT -- font2c.ps $*
+gs -q -dNODISPLAY -dWRITESYSTEMDICT -- font2c.ps $*

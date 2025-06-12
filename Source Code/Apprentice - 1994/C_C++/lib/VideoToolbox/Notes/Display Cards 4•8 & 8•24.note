@@ -1,1 +1,53 @@
-Note from Apple.Macintosh Display Cards 4¥8 & 8¥24 and third-party monitorsWhat do I need to determine if my third-party monitor is compatible with anApple video display card?___The Macintosh¨ Display Cards 4¥8 & 8¥24 support any monitor that meets one ofthe following specifications:                                                  - - - - - - MHz - - - - -Sense pins                           Hor x Vert     Dot      Vert    Horiz 10  7  4         Display              Pixels      Clock    Refrsh   Refrsh----------  ----------------------   ----------   -------   ------   ------  0  0  0   21-inch Color Monitor    1152 x 870    100        75      68.7  0  0  1   Apple Portrait Display    640 x 870   57.2832     75      68.9  0  1  1   Apple Two-Page Monitor   1152 x 870    100        75      68.7  1  1  0   12Ó Apple            Monochrome Monitor        640 x 480    30.24     66.7     35.0  1  1  0   13Ó AppleColor            RGB Monitor               640 x 480    30.24     66.7     35.00 - Grounded  1 - Not ConnectedNote that sense pins 4, 7, and 10 are referred to as SENSE0, SENSE1, andSENSE2 in video connector pinout tables, such as the table in ÒMacintoshDisplay Cards 4¥8 and 8¥24 Developer Note.Here are the pinouts for the Macintosh Display Cards:     Pin   Description     ---   -----------      1    Red Video Ground      2    Red Video      3    Composite Sync      4    SENSE0      5    Green Video      6    Green Video Ground      7    SENSE1      8    Not Connected      9    Blue Video     10    SENSE2     11    Composite Sync and Vertical Sync Ground     12    Vertical Sync     13    Blue Video Ground     14    Horizontal Sync Ground     15    Horizontal Sync    Shell  Chassis Ground©Apple Computer,  Inc.  1985-1991
+Note from Apple.
+Macintosh Display Cards 4¥8 & 8¥24 and third-party monitors
+
+What do I need to determine if my third-party monitor is compatible with an
+Apple video display card?
+___
+
+The Macintosh¨ Display Cards 4¥8 & 8¥24 support any monitor that meets one of
+the following specifications:
+
+                                                  - - - - - - MHz - - - - -
+Sense pins                           Hor x Vert     Dot      Vert    Horiz
+ 10  7  4         Display              Pixels      Clock    Refrsh   Refrsh
+----------  ----------------------   ----------   -------   ------   ------
+  0  0  0   21-inch Color Monitor    1152 x 870    100        75      68.7
+  0  0  1   Apple Portrait Display    640 x 870   57.2832     75      68.9
+  0  1  1   Apple Two-Page Monitor   1152 x 870    100        75      68.7
+  1  1  0   12Ó Apple
+            Monochrome Monitor        640 x 480    30.24     66.7     35.0
+  1  1  0   13Ó AppleColor
+            RGB Monitor               640 x 480    30.24     66.7     35.0
+
+0 - Grounded  1 - Not Connected
+
+Note that sense pins 4, 7, and 10 are referred to as SENSE0, SENSE1, and
+SENSE2 in video connector pinout tables, such as the table in ÒMacintosh
+Display Cards 4¥8 and 8¥24 Developer Note.
+
+Here are the pinouts for the Macintosh Display Cards:
+
+     Pin   Description
+     ---   -----------
+      1    Red Video Ground
+      2    Red Video
+      3    Composite Sync
+      4    SENSE0
+      5    Green Video
+      6    Green Video Ground
+      7    SENSE1
+      8    Not Connected
+      9    Blue Video
+     10    SENSE2
+     11    Composite Sync and Vertical Sync Ground
+     12    Vertical Sync
+     13    Blue Video Ground
+     14    Horizontal Sync Ground
+     15    Horizontal Sync
+    Shell  Chassis Ground
+
+
+
+©Apple Computer,  Inc.  1985-1991
+

@@ -1,1 +1,192 @@
-How to Play and Design Games with Xconq[basic intro]Xconq is not just a game, it's a game design system.  It provides game designers with a variety of tools to help design new kinds of strategy games.  The concept is similar to HyperCardª, which supports both new users clicking on cards, designers creating and filling in cards, and script authors programming in Hypertalk.  Xconq's language is called GDL, and is a declarative Lisp-like language with considerable power.Installation"Xconq" is the game application.  It has been tested on ci's and fx's and Powerbook 100s and Quadra 800s, all running 7.0.  Xconq doesn't do any really weird tricks, but it REQUIRES SYSTEM 7."lib" is a folder of game modules."lib-mac" includes Mac-specific things referenced by game modules.  Xconq doesn't absolutely have to have these, but the display will be REALLY ugly without them."doc" is the generic documentation for players and game designers.  It does not have any Mac-specific info.  The format is Texinfo, which is based on TeX, which you'll need TeXtures or OzTeX and the texinfo.tex file to format, sorry."ImFam" is a small utility for game designers to display and convert images used in Xconq games.  Do "Open Resources..." on "lib-mac" files and see all the pretty pictures!How To Use The Mac InterfaceFirst we will follow along in an introductory game.Playing an Introductory Game[describe startup of intro in great detail]Starting a GameThe splash screen gives you four choices: New, which brings up a list of games;  Open, which allows you to pick a file;  Connect, which will (when implemented) allow you to pick a game to join;  and Quit, which lets you escape.New GameUsually you will want to choose New, which brings up a dialog listing all the games.  You can select one and see a brief description of it.Open GameYou can also load a game from a file.  This just uses the standard Mac file-opening dialog.Loading a GameWhether you've chosen from New Game or Open Game, Xconq will go through a loading process, which may take a while if the game is large or complicated.You may get some warning alerts, which are often benign (such as an inability to find some images), but others are indicative of disaster ahead.  If you see one and continue anyway, don't be surprised if the game goes up in a cloud of smoke later!VariantsIf the game includes any "variants", you will then get a dialog with assorted buttons and checkboxes to choose from.  For instance, some games let you choose whether the whole world is visible when you start, or what kind of scoring system to use.Different games have different variants, but there are several used by many games.The "World Seen" checkbox, when set, makes the whole world seen right from the beginning of the game.  This only affects the initial view, and you will only see some types of units belonging to other players, such as their cities.The "See All" checkbox makes everything seen all the time, right down to each occupant of each unit of each side.  This makes Xconq more like a boardgame, where everything is "on the table", so to speak.The "World Size" button brings up a dialog that you can use to change the dimensions of the world in everybody will be playing.  In Xconq, the available area of the world is either a hexagon, or a cylinder wrapping entirely around the world.  You get the cylinder by setting the circumference equal to the width of the area. [etc]Player SetupThe player setup window shows the sides that will be in the game and who will play each side.  As with the variants, you will often just want to accept it (click "OK"), since the game designer will usually have set the defaults reasonably.In games that allow you to have more than the default number of side, you can just click the "Add" button.  All the other controls require you to have selected a side/player pair.  You can do this by clicking anywhere in one of the boxes describing the side/player pair, which will be highlighted in response. [describe one of the entries]The "Computer" button toggles the AI (artificial intelligence - a robot player) for that side.  You can add an AI to any side, including your own.  You can also remove the AI from any side; a side with no AI and no human player will just sit quietly through the entire game.If you don't like the side you're on, you can use the "Exchange" button to switch.  The ordering of the sides is fixed, so exchange just exchanges players between the currently selected side/player pair and the next one.Final SetupWhen all the setup dialogs have been OKed, Xconq will finish setting up the game.  For some games, this will take quite a while!  Xconq generates random terrain, lays out countries that are neither too close nor too far apart, and does many other things at this point, so just kick back and watch...Once everything is set up, Xconq then opens up the game window, the instructions window, and one map window for you.  The map shows you terrain with different patterns, and your playing pieces (units) with small pictures.(In some games, notably "panzer", the AI gets the drop on you and may start bashing your stuff even before your display has come up.  Life is tough sometimes! :-) )Playing[needs much work]Display and interaction is still evolving, but the basic gist is to find a unit in a map or list window, click once to select it, and then pick commands from the "Play" menu.You can select units by clicking on a unit, shift-clicking a group, dragging out a selection rectangle, or by using Command-A to select all units.  A selected unit is indicated by an outline box - solid black to indicate that it can move, dark gray to indicate that it cannot move, and gray to indicate that it cannot do anything at all, at least during this turn.  If clicking on a unit image doesn't do anything, then it's not a unit that belongs to you.To move a selected unit, drag the selected unit to its desired new location.  The unit might not move right away if it doesn't have the action points, but it may get some in the next turn.  To move all selected units, do Command-click on the desired location and all of them will attempt to move there.To shoot at another unit, you can position the mouse over the desired target, type 'f', and all selected units will attempt to fire.  This works even if all units are selected, so you can call down considerable destruction with 'f'!  If the target is too far away, nothing will happen.To find out more about a unit, pick "Closeup" from the "Play" menu or do Command-I.  This brings up a window that shows all kind of data about a single unit.  You can leave this window up and it will always be kept up-to-date.To jump ahead to the next turn, do the menu command "End Turn" or Command-E.  You may have to do this if some of your units still have action points, but not enough to do any of the things you want them to do.If you turn on "Auto Select" and "Move on Click" in the Side menu, you get a sort of accelerated mode where one click moves a unit, the next click moves the next unit, and so forth.  It's faster, but takes some getting used to, and also has some weirdities still.The Game window (Command-1) shows the status of all the sides in the game, including how many actions each side has left to do.[describe auto-selection]WindowsXconq lets you have many windows open at once.  Each type has its own specialized functionality, which is why it's a separate window.Map Window[picture of map window]The "top line" of the map window supplies you with information about what the cursor is currently over, plus the current game date. [etc]The map control panel is along the left side.  At its top is the auto-select/move-on-click button.  Below that is a set of find-next/previous buttons.The next set of buttons is controls for how the map will be displayed.  These behave identically to the map's View menu items.Game WindowMenusFile MenuThe File menu includes the usual sorts of commands that all Mac programs share.[New Game][Open Game]Edit Menu[???]The Design item is for access to game designer tools.  You cannot use these during a normal game; you will be asked to confirm that you want to design, and if so, Xconq will change all the windows appropriately and bring up a special designer's palette.  This is a one-way activity; once somebody in the game becomes a designer, all players will be notified and computer-run players will no longer bother to play.Find MenuThis menu is for various kinds of searching.Play [Action?] MenuThis menu is the main set of commands that you can give to individual units.Side MenuThis menu is for overall control of the side you're playing. Windows MenuThis menu is for the creation and arrangement of windows.View MenuThe View menu gives you control over the appearance of the window you're currently looking at.  Each kind of window that has any view controls will have a different view menu. ShortcutsDesigningDesigner's tools and capabilities are available via the Design item in the Edit menu.  The display changes to show you everything in the world, you get a number of special privileges (such as the ability to move *any* side's units), and you get a designer's tools palette.In general, palette items use option-click and option-shift-click to cycle through possible values, and many also have a popup menu.  Also note that the selection can be changed without changing the tool; you have to click in the tool and get a heavy border around it before the tool is actually changed.  Each type of designer tool has a distinct cursor when over a map window, so look for that as well.Painting TerrainIf you select the terrain item in the palette, then clicking/dragging in a map paints the current terrain type displayed  in the palette (Option-clicking the terrain item cycles through all the types, shift-option-click does the same thing in reverse order). The background terrain type can be cycled via command-click and command-shift-click.  Creating UnitsThe side item creates a popup with the sides - use it to set the side with which a new unit will be created.  Not all units are allowed on all sides - Xconq marks the sides that are allowed with the current unit type, and the unit types that are allowed with the current side.Painting PeopleIf you select the side item in the palette, you can click/drag in a map to set the side of the people.Painting MaterialCreating Named FeaturesPainting ElevationsPainting TemperaturesPainting WindsPainting CloudsBeyond the Designer PaletteThe designer palette and privileges just scratch the surface of what you can do with Xconq.  You can define your own complete games with Xconq using its Game Design Language (GDL), a declarative Lisp-like language with many more capabilities than could be provided interactively (in much the same way that HyperTalk adds to basic HyperCard) .  The manual chapter "Designing Games with Xconq" goes into much more detail about Xconq's programmability. [need to discuss image creation]Bugs and WorkaroundsIf units disappear strangely, type '~', which recalculates visibility of everything.There are many bugs still, although crashes are rare.  If you get a warning alert and don't know what it means, it's safer to quit than to try to struggle on.  You're likely to get a warning about missing images for some games.  This just means that Xconq will have to try to make up some sort of image itself, and usually ends up making an ugly display.  Harmless.
+How to Play and Design Games with Xconq
+
+[basic intro]
+
+Xconq is not just a game, it's a game design system.  It provides game designers with a variety of tools to help design new kinds of strategy games.  The concept is similar to HyperCardª, which supports both new users clicking on cards, designers creating and filling in cards, and script authors programming in Hypertalk.  Xconq's language is called GDL, and is a declarative Lisp-like language with considerable power.
+
+Installation
+
+"Xconq" is the game application.  It has been tested on ci's and fx's and Powerbook 100s and Quadra 800s, all running 7.0.  Xconq doesn't do any really weird tricks, but it REQUIRES SYSTEM 7.
+
+"lib" is a folder of game modules.
+
+"lib-mac" includes Mac-specific things referenced by game modules.  Xconq doesn't absolutely have to have these, but the display will be REALLY ugly without them.
+
+"doc" is the generic documentation for players and game designers.  It does not have any Mac-specific info.  The format is Texinfo, which is based on TeX, which you'll need TeXtures or OzTeX and the texinfo.tex file to format, sorry.
+
+"ImFam" is a small utility for game designers to display and convert images used in Xconq games.  Do "Open Resources..." on "lib-mac" files and see all the pretty pictures!
+
+How To Use The Mac Interface
+
+First we will follow along in an introductory game.
+
+Playing an Introductory Game
+
+[describe startup of intro in great detail]
+
+Starting a Game
+
+The splash screen gives you four choices: New, which brings up a list of games;  Open, which allows you to pick a file;  Connect, which will (when implemented) allow you to pick a game to join;  and Quit, which lets you escape.
+
+New Game
+
+Usually you will want to choose New, which brings up a dialog listing all the games.  You can select one and see a brief description of it.
+
+Open Game
+
+You can also load a game from a file.  This just uses the standard Mac file-opening dialog.
+
+Loading a Game
+
+Whether you've chosen from New Game or Open Game, Xconq will go through a loading process, which may take a while if the game is large or complicated.
+
+You may get some warning alerts, which are often benign (such as an inability to find some images), but others are indicative of disaster ahead.  If you see one and continue anyway, don't be surprised if the game goes up in a cloud of smoke later!
+
+Variants
+
+If the game includes any "variants", you will then get a dialog with assorted buttons and checkboxes to choose from.  For instance, some games let you choose whether the whole world is visible when you start, or what kind of scoring system to use.
+
+Different games have different variants, but there are several used by many games.
+
+The "World Seen" checkbox, when set, makes the whole world seen right from the beginning of the game.  This only affects the initial view, and you will only see some types of units belonging to other players, such as their cities.
+
+The "See All" checkbox makes everything seen all the time, right down to each occupant of each unit of each side.  This makes Xconq more like a boardgame, where everything is "on the table", so to speak.
+
+The "World Size" button brings up a dialog that you can use to change the dimensions of the world in everybody will be playing.  In Xconq, the available area of the world is either a hexagon, or a cylinder wrapping entirely around the world.  You get the cylinder by setting the circumference equal to the width of the area. [etc]
+
+Player Setup
+
+The player setup window shows the sides that will be in the game and who will play each side.  As with the variants, you will often just want to accept it (click "OK"), since the game designer will usually have set the defaults reasonably.
+
+In games that allow you to have more than the default number of side, you can just click the "Add" button.  All the other controls require you to have selected a side/player pair.  You can do this by clicking anywhere in one of the boxes describing the side/player pair, which will be highlighted in response. [describe one of the entries]
+
+The "Computer" button toggles the AI (artificial intelligence - a robot player) for that side.  You can add an AI to any side, including your own.  You can also remove the AI from any side; a side with no AI and no human player will just sit quietly through the entire game.
+
+If you don't like the side you're on, you can use the "Exchange" button to switch.  The ordering of the sides is fixed, so exchange just exchanges players between the currently selected side/player pair and the next one.
+
+Final Setup
+
+When all the setup dialogs have been OKed, Xconq will finish setting up the game.  For some games, this will take quite a while!  Xconq generates random terrain, lays out countries that are neither too close nor too far apart, and does many other things at this point, so just kick back and watch...
+
+Once everything is set up, Xconq then opens up the game window, the instructions window, and one map window for you.  The map shows you terrain with different patterns, and your playing pieces (units) with small pictures.
+
+(In some games, notably "panzer", the AI gets the drop on you and may start bashing your stuff even before your display has come up.  Life is tough sometimes! :-) )
+
+Playing
+
+[needs much work]
+
+Display and interaction is still evolving, but the basic gist is to find a unit in a map or list window, click once to select it, and then pick commands from the "Play" menu.
+
+You can select units by clicking on a unit, shift-clicking a group, dragging out a selection rectangle, or by using Command-A to select all units.  A selected unit is indicated by an outline box - solid black to indicate that it can move, dark gray to indicate that it cannot move, and gray to indicate that it cannot do anything at all, at least during this turn.  If clicking on a unit image doesn't do anything, then it's not a unit that belongs to you.
+
+To move a selected unit, drag the selected unit to its desired new location.  The unit might not move right away if it doesn't have the action points, but it may get some in the next turn.  To move all selected units, do Command-click on the desired location and all of them will attempt to move there.
+
+To shoot at another unit, you can position the mouse over the desired target, type 'f', and all selected units will attempt to fire.  This works even if all units are selected, so you can call down considerable destruction with 'f'!  If the target is too far away, nothing will happen.
+
+To find out more about a unit, pick "Closeup" from the "Play" menu or do Command-I.  This brings up a window that shows all kind of data about a single unit.  You can leave this window up and it will always be kept up-to-date.
+
+To jump ahead to the next turn, do the menu command "End Turn" or Command-E.  You may have to do this if some of your units still have action points, but not enough to do any of the things you want them to do.
+
+If you turn on "Auto Select" and "Move on Click" in the Side menu, you get a sort of accelerated mode where one click moves a unit, the next click moves the next unit, and so forth.  It's faster, but takes some getting used to, and also has some weirdities still.
+
+The Game window (Command-1) shows the status of all the sides in the game, including how many actions each side has left to do.
+
+[describe auto-selection]
+
+Windows
+
+Xconq lets you have many windows open at once.  Each type has its own specialized functionality, which is why it's a separate window.
+
+Map Window
+
+[picture of map window]
+
+The "top line" of the map window supplies you with information about what the cursor is currently over, plus the current game date. [etc]
+
+The map control panel is along the left side.  At its top is the auto-select/move-on-click button.  Below that is a set of find-next/previous buttons.
+The next set of buttons is controls for how the map will be displayed.  These behave identically to the map's View menu items.
+
+Game Window
+
+Menus
+
+File Menu
+
+The File menu includes the usual sorts of commands that all Mac programs share.
+
+[New Game]
+
+[Open Game]
+
+Edit Menu
+
+[???]
+
+The Design item is for access to game designer tools.  You cannot use these during a normal game; you will be asked to confirm that you want to design, and if so, Xconq will change all the windows appropriately and bring up a special designer's palette.  This is a one-way activity; once somebody in the game becomes a designer, all players will be notified and computer-run players will no longer bother to play.
+
+Find Menu
+
+This menu is for various kinds of searching.
+
+Play [Action?] Menu
+
+This menu is the main set of commands that you can give to individual units.
+
+Side Menu
+
+This menu is for overall control of the side you're playing.
+ 
+Windows Menu
+
+This menu is for the creation and arrangement of windows.
+
+View Menu
+
+The View menu gives you control over the appearance of the window you're currently looking at.  Each kind of window that has any view controls will have a different view menu. 
+
+Shortcuts
+
+Designing
+
+Designer's tools and capabilities are available via the Design item in the Edit menu.  The display changes to show you everything in the world, you get a number of special privileges (such as the ability to move *any* side's units), and you get a designer's tools palette.
+
+In general, palette items use option-click and option-shift-click to cycle through possible values, and many also have a popup menu.  Also note that the selection can be changed without changing the tool; you have to click in the tool and get a heavy border around it before the tool is actually changed.  Each type of designer tool has a distinct cursor when over a map window, so look for that as well.
+
+Painting Terrain
+
+If you select the terrain item in the palette, then clicking/dragging in a map paints the current terrain type displayed  in the palette (Option-clicking the terrain item cycles through all the types, shift-option-click does the same thing in reverse order). The background terrain type can be cycled via command-click and command-shift-click.  
+
+Creating Units
+
+The side item creates a popup with the sides - use it to set the side with which a new unit will be created.  Not all units are allowed on all sides - Xconq marks the sides that are allowed with the current unit type, and the unit types that are allowed with the current side.
+
+Painting People
+
+If you select the side item in the palette, you can click/drag in a map to set the side of the people.
+
+Painting Material
+
+Creating Named Features
+
+Painting Elevations
+
+Painting Temperatures
+
+Painting Winds
+
+Painting Clouds
+
+Beyond the Designer Palette
+
+The designer palette and privileges just scratch the surface of what you can do with Xconq.  You can define your own complete games with Xconq using its Game Design Language (GDL), a declarative Lisp-like language with many more capabilities than could be provided interactively (in much the same way that HyperTalk adds to basic HyperCard) .  The manual chapter "Designing Games with Xconq" goes into much more detail about Xconq's programmability. 
+
+[need to discuss image creation]
+
+Bugs and Workarounds
+
+If units disappear strangely, type '~', which recalculates visibility of everything.
+
+There are many bugs still, although crashes are rare.  If you get a warning alert and don't know what it means, it's safer to quit than to try to struggle on.  You're likely to get a warning about missing images for some games.  This just means that Xconq will have to try to make up some sort of image itself, and usually ends up making an ugly display.  Harmless.
+
+

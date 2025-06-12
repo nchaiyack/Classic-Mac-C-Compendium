@@ -1,1 +1,73 @@
-perl -x "{0}" {"parameters"} ; exit#!/usr/local/bin/perlopen(SRC,"<" . $ARGV[0]) || die;open(HFIL,">" . $ARGV[1]) || die;open(SFIL,">" . $ARGV[2]) || die;$str=$ARGV[3];$gran=40;$elem=$gran+1;while (<SRC>){  if (/^#/ || /^\W*$/) {next;}  chop;  ($cmd,$rest) = split(/\t/,$_,2);  if ($cmd eq "DLOG")  {    if ($id != 0) {print HFIL "}};\n";}    ($id,$nSkip) = split(/\t/,$rest,2);    if ($nSkip eq "") {$nSkip = "0";}    print HFIL "resource 'hdlg' ($id,purgeable) { HelpMgrVersion,$nSkip,hmDefaultOptions,0,3,\n";    $notfirst = 0;  }  elsif ($cmd eq "SKIP")  {    print HFIL "HMSkipItem {},\n";    if ($notfirst == 0)    {      print HFIL "{\n";      $notfirst = 1;    }  }  else  {    print HFIL "HMStringResItem {{5,5},{0,0,0,0},\n";    @strings = split('##',$rest);    $rep = $strings[0];    for ($i=0;$i<=$#strings;$i++)    {      if ($strings[$i] eq "")      {        print HFIL "0,0,\n";      }      else      {	if ($elem>=$gran)	{	  if ($elem==$gran) {print SFIL '}};' . "\n";}	  $elem = 0;	  $str += 200;	  printf SFIL "resource 'STR#' (%d,purgeable) {{\n",$str;	}	printf HFIL "%d,%d,\n",$str,++$elem;	$toprint = $strings[$i];	($rp,$rest) = split(' ',$toprint,2);	if ($rp eq "REPEAT") {$toprint = $rep . "\\n" . $rest;}	print SFIL "\"$toprint\",\n";      }    }    for (;$i<4;$i++)    {      print HFIL "0,0,\n";    }    print HFIL "},\n";    if ($notfirst == 0)    {      print HFIL "{\n";      $notfirst = 1;    }  }}if ($elem>0 && $elem<=$gran) {print SFIL '}};' . "\n";}if ($id != 0) {print HFIL "}};\n";}
+perl -x "{0}" {"parameters"} ; exit
+#!/usr/local/bin/perl
+open(SRC,"<" . $ARGV[0]) || die;
+open(HFIL,">" . $ARGV[1]) || die;
+open(SFIL,">" . $ARGV[2]) || die;
+$str=$ARGV[3];
+$gran=40;
+$elem=$gran+1;
+
+while (<SRC>)
+{
+  if (/^#/ || /^\W*$/) {next;}
+  chop;
+  ($cmd,$rest) = split(/\t/,$_,2);
+  if ($cmd eq "DLOG")
+  {
+    if ($id != 0) {print HFIL "}};\n";}
+    ($id,$nSkip) = split(/\t/,$rest,2);
+    if ($nSkip eq "") {$nSkip = "0";}
+    print HFIL "resource 'hdlg' ($id,purgeable) { HelpMgrVersion,$nSkip,hmDefaultOptions,0,3,\n";
+    $notfirst = 0;
+  }
+  elsif ($cmd eq "SKIP")
+  {
+    print HFIL "HMSkipItem {},\n";
+    if ($notfirst == 0)
+    {
+      print HFIL "{\n";
+      $notfirst = 1;
+    }
+  }
+  else
+  {
+    print HFIL "HMStringResItem {{5,5},{0,0,0,0},\n";
+    @strings = split('##',$rest);
+    $rep = $strings[0];
+    for ($i=0;$i<=$#strings;$i++)
+    {
+      if ($strings[$i] eq "")
+      {
+        print HFIL "0,0,\n";
+      }
+      else
+      {
+	if ($elem>=$gran)
+	{
+	  if ($elem==$gran) {print SFIL '}};' . "\n";}
+	  $elem = 0;
+	  $str += 200;
+	  printf SFIL "resource 'STR#' (%d,purgeable) {{\n",$str;
+	}
+	printf HFIL "%d,%d,\n",$str,++$elem;
+	$toprint = $strings[$i];
+	($rp,$rest) = split(' ',$toprint,2);
+	if ($rp eq "REPEAT") {$toprint = $rep . "\\n" . $rest;}
+	print SFIL "\"$toprint\",\n";
+      }
+    }
+    for (;$i<4;$i++)
+    {
+      print HFIL "0,0,\n";
+    }
+    print HFIL "},\n";
+    if ($notfirst == 0)
+    {
+      print HFIL "{\n";
+      $notfirst = 1;
+    }
+  }
+}
+
+if ($elem>0 && $elem<=$gran) {print SFIL '}};' . "\n";}
+if ($id != 0) {print HFIL "}};\n";}

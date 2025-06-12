@@ -1,1 +1,20 @@
-Ê1 May 199412 Sept 1992 			joseph judge:  j.t.judge@att.com, JosephJ1@aol.com, judge@oucsace.cs.ohiou.edu	Peek-a-boo is an AfterDarkª module. It requires Color Quickdraw (I use offscreen graphics worlds for the faces, sorry). To hear the sound, you need AfterDarkª 2.0u or better.	Unbeknownst to you, there are many strange and exciting things inside your computer. I have found a few and enticed them to peer out of the window. Faces will peep up against a black background in your monitor. Some make sounds and some will do some interesting things while on your screen.	Peek-a-boo is extensible with any resource editing utilty. If you add interesting faces or sounds, please let me know. I'd like to have a copy of how you changed it.  A separate text file is included to explain how to customize the module.	Peek-a-boo module is free and may freely be distributed as long as this documentation accompanies it. User assumes all liability for results from it's use.  AfterDark is trademarked by Berkely Systems.	I've included the source code for those of you who wish to learn how to make program AfterDarkª modules. To learn more about programming modules, join the (unofficial) AfterDark mailing list. Email afterdark-request@emsr.att.com for details.
+
+
+Ê
+
+
+
+
+1 May 1994
+12 Sept 1992 			joseph judge: 
+ j.t.judge@att.com, JosephJ1@aol.com, judge@oucsace.cs.ohiou.edu
+
+	Peek-a-boo is an AfterDarkª module. It requires Color Quickdraw (I use offscreen graphics worlds for the faces, sorry). To hear the sound, you need AfterDarkª 2.0u or better.
+
+	Unbeknownst to you, there are many strange and exciting things inside your computer. I have found a few and enticed them to peer out of the window. Faces will peep up against a black background in your monitor. Some make sounds and some will do some interesting things while on your screen.
+
+	Peek-a-boo is extensible with any resource editing utilty. If you add interesting faces or sounds, please let me know. I'd like to have a copy of how you changed it.  A separate text file is included to explain how to customize the module.
+
+	Peek-a-boo module is free and may freely be distributed as long as this documentation accompanies it. User assumes all liability for results from it's use.  AfterDark is trademarked by Berkely Systems.
+
+	I've included the source code for those of you who wish to learn how to make program AfterDarkª modules. To learn more about programming modules, join the (unofficial) AfterDark mailing list. Email afterdark-request@emsr.att.com for details.

@@ -1,1 +1,98 @@
-                                                 HeartQuest 0.8.2HeartQuest is a simple, fairly non-violent color arcade game for the Mac that I made as a gift to my wife. If your wife doesn't like it, perhaps your kids will.The first version, b/w only, was made on Valentine's Day 1992. A week before Valentine's 1993, I released the colorized version, which was verison 0.7.Improvements from 0.7:• The game doesn't get harder as fast. Level 5 was close to impossible before. Now things get harder in a nicer rate. Fewer hearts per level also means less slowdown on slower Macs.• A clicking sound warns you that you are getting low on bonus.• Bonus object should not appear too low any more.• Flypapers are used up after catching the player.• Faster "safe" graphics.• The mouse control is modified. Better? Well, that's up to you.• Some improvements in the graphics.• The underlying sprite library (Sprite Animation Toolkit) is safer than before, less likely to crash.From 0.8 to 0.8.1:• Smaller size. (Removed 30k caused by a stupid drawing program.)• Strings in the high score are truncated so that the score won't be overwritten.From 0.8.1 to 0.8.2:• Preference file handling (making it CD-ROM-friendly).• Clicking in the game window starts or resumes the game.• No strings are hard-coded, so the program can be localized for other languages only by editing resources.HeartQuest is *not*:==================Violent.Slow.Expensive.Hard to learn.Big. (≈114k)How do I play HeartQuest?=======================In HeartQuest, you control a butterfly with the mouse, collecting hearts while trying to avoid the sticky flypapers. That's about it. Start by selecting "new game" in the "Game" menu.The faster you do it, the more bonus you will get. The game has two modes, normal mode and macho mode. In normal mode, the game ends after three levels. In macho mode, the game is over whenever you run out of bonus. The normal mode is recommended for beginners, children, and anyone who doesn't have the hand-to-eye coordination or who don't like to do the game in a hurry.Color, you say. What bit depth? Will it work on a 68000 Mac (SE, Classic)?==================================================================It works best in 1, 4 or 8 bits of color (grays are ok too) - and in all other depths as well, but in other screen depths, it might be a bit slow. It works on old, 68000-based Macs as well - at least my SE. Note, however, that an 8 MHz Mac can be quite slow on high levels.Why make a game like this?=========================I made this game as my Valentine's Day gift for my wife Eva in 1992. The first version was a quick hack on that very day. Later, I have developed fast direct-to-screen routines, and I used HeartQuest for testing them.Hm, I suppose you have only tested it on your own Mac...?==================================================HeartQuest has been tested on quite a bunch of Macs (SE, LC, IIfx, IIsi, Quadra…), under System 6.0.7 and 7. System 6.0.2 or better is needed. Of course there can be bugs, and of course there are some video cards or screen types that it isn't tested on, so I make no guarantees. (Remember, this is a pre-1.0 version.) Still, it seems to work pretty well.Will there be any future versions?orDo the flypapers have to look like potato peels?=============================================If you are more of an artist than I am, you are welcome to make better-looking icons and backdrops. If you do, please send them to me for inclusion in a new version, or - if it's not intended to replace the old graphics, but rather to be an alternative - make it *absolutely* clear that your version is a "hacked" version - neither a "new" version or a different game. If the code hasn't changed, don't change the version number. (Of course, if you are a programmer who creates a completely new game based on the HeartQuest source code, then it's a different matter.)There are two major problems when trying to improve the graphics:- Since the game can scale after other screen sizes (see below) a pixel mapped backdrop may look very ugly in some cases. I want scalable graphics.- A pixel mapped image takes *lots* of disk space. Simple games should take reasonable amounts of disk space. At less than 120k, I believe HeartQuest is where it should. Feel free to plug in other backdrops (though you will need to make some slight changes in the source code as well) if you like. The source code is part of Sprite Animation Toolkit, freely available.Why don't you use the full screen?==============================I do, but only if you explicitly ask for it. Try starting the game with a modifier key (e.g the alt/option key) held down… but if your screen is big, you might have to give HeartQuest a lot more memory. This is only tested on 640*480 pixels - no guarantees!What does that voice and the text on that bonus object say?=====================================================Yes, that's swedish, and I don't say anything important, just "yes!" and "that's it!", and the bonus object says "Eva is sweet". BTW, feel free to edit that text (with ResEdit) if you want to make a little surprise to *your* girlfriend!Does it cost anything?====================Nope. HeartQuest is *freeware* - free but copyrighted. Use it, give it away to friends, upload it to BBSs, etc. If you are a CD-ROM manufacturer or commercial shareware distributor, you may include HeartQuest only if you send me a sample of the final product (CD, book, magazine…).Have you made other games?=========================Yes, quite a few. I offer all my games in two "shareware packs".• Pack #1 goes for $15 and has Bachman (with editor) and Slime Invaders as the top items.• Pack #2 goes for $10, and has Ingemar's Skiing Game (with editor) on the top.(Both at once for $20.)I will fill the rest of the disk with my other games (HeartQuest, MacSokoban, Hexmines, Bikaka, Classic Daleks, future games and some minor items) according to your preferences. By default, I put the older games (though latest version, of course) in pack #1 and newer games in pack #2.Final words==========My thanks to the testers, especially Dmitry Boldyrev who patiently went through several crashes before I had tracked down every flaw in the direct-to-screen drawing.You can send opinions and bug reports to me over the Internet to the address ingemar@isy.liu.se or ingemar@lysator.liu.se.Snail mail address:Ingemar RagnemalmPlöjaregatan 73S-58330 LinköpingSWEDEN
+
+                                                 HeartQuest 0.8.2
+
+
+HeartQuest is a simple, fairly non-violent color arcade game for the Mac that I made as a gift to my wife. If your wife doesn't like it, perhaps your kids will.
+
+The first version, b/w only, was made on Valentine's Day 1992. A week before Valentine's 1993, I released the colorized version, which was verison 0.7.
+
+Improvements from 0.7:
+• The game doesn't get harder as fast. Level 5 was close to impossible before. Now things get harder in a nicer rate. Fewer hearts per level also means less slowdown on slower Macs.
+• A clicking sound warns you that you are getting low on bonus.
+• Bonus object should not appear too low any more.
+• Flypapers are used up after catching the player.
+• Faster "safe" graphics.
+• The mouse control is modified. Better? Well, that's up to you.
+• Some improvements in the graphics.
+• The underlying sprite library (Sprite Animation Toolkit) is safer than before, less likely to crash.
+From 0.8 to 0.8.1:
+• Smaller size. (Removed 30k caused by a stupid drawing program.)
+• Strings in the high score are truncated so that the score won't be overwritten.
+From 0.8.1 to 0.8.2:
+• Preference file handling (making it CD-ROM-friendly).
+• Clicking in the game window starts or resumes the game.
+• No strings are hard-coded, so the program can be localized for other languages only by editing resources.
+
+HeartQuest is *not*:
+==================
+Violent.
+Slow.
+Expensive.
+Hard to learn.
+Big. (≈114k)
+
+How do I play HeartQuest?
+=======================
+In HeartQuest, you control a butterfly with the mouse, collecting hearts while trying to avoid the sticky flypapers. That's about it. Start by selecting "new game" in the "Game" menu.
+
+The faster you do it, the more bonus you will get. The game has two modes, normal mode and macho mode. In normal mode, the game ends after three levels. In macho mode, the game is over whenever you run out of bonus. The normal mode is recommended for beginners, children, and anyone who doesn't have the hand-to-eye coordination or who don't like to do the game in a hurry.
+
+Color, you say. What bit depth? Will it work on a 68000 Mac (SE, Classic)?
+==================================================================
+It works best in 1, 4 or 8 bits of color (grays are ok too) - and in all other depths as well, but in other screen depths, it might be a bit slow. It works on old, 68000-based Macs as well - at least my SE. Note, however, that an 8 MHz Mac can be quite slow on high levels.
+
+Why make a game like this?
+=========================
+I made this game as my Valentine's Day gift for my wife Eva in 1992. The first version was a quick hack on that very day. Later, I have developed fast direct-to-screen routines, and I used HeartQuest for testing them.
+
+Hm, I suppose you have only tested it on your own Mac...?
+==================================================
+HeartQuest has been tested on quite a bunch of Macs (SE, LC, IIfx, IIsi, Quadra…), under System 6.0.7 and 7. System 6.0.2 or better is needed. Of course there can be bugs, and of course there are some video cards or screen types that it isn't tested on, so I make no guarantees. (Remember, this is a pre-1.0 version.) Still, it seems to work pretty well.
+
+Will there be any future versions?
+or
+Do the flypapers have to look like potato peels?
+=============================================
+If you are more of an artist than I am, you are welcome to make better-looking icons and backdrops. If you do, please send them to me for inclusion in a new version, or - if it's not intended to replace the old graphics, but rather to be an alternative - make it *absolutely* clear that your version is a "hacked" version - neither a "new" version or a different game. If the code hasn't changed, don't change the version number. (Of course, if you are a programmer who creates a completely new game based on the HeartQuest source code, then it's a different matter.)
+
+There are two major problems when trying to improve the graphics:
+- Since the game can scale after other screen sizes (see below) a pixel mapped backdrop may look very ugly in some cases. I want scalable graphics.
+- A pixel mapped image takes *lots* of disk space. Simple games should take reasonable amounts of disk space. At less than 120k, I believe HeartQuest is where it should. Feel free to plug in other backdrops (though you will need to make some slight changes in the source code as well) if you like. The source code is part of Sprite Animation Toolkit, freely available.
+
+Why don't you use the full screen?
+==============================
+I do, but only if you explicitly ask for it. Try starting the game with a modifier key (e.g the alt/option key) held down… but if your screen is big, you might have to give HeartQuest a lot more memory. This is only tested on 640*480 pixels - no guarantees!
+
+What does that voice and the text on that bonus object say?
+=====================================================
+Yes, that's swedish, and I don't say anything important, just "yes!" and "that's it!", and the bonus object says "Eva is sweet". BTW, feel free to edit that text (with ResEdit) if you want to make a little surprise to *your* girlfriend!
+
+Does it cost anything?
+====================
+Nope. HeartQuest is *freeware* - free but copyrighted. Use it, give it away to friends, upload it to BBSs, etc. If you are a CD-ROM manufacturer or commercial shareware distributor, you may include HeartQuest only if you send me a sample of the final product (CD, book, magazine…).
+
+Have you made other games?
+=========================
+Yes, quite a few. I offer all my games in two "shareware packs".
+
+• Pack #1 goes for $15 and has Bachman (with editor) and Slime Invaders as the top items.
+
+• Pack #2 goes for $10, and has Ingemar's Skiing Game (with editor) on the top.
+
+(Both at once for $20.)
+
+I will fill the rest of the disk with my other games (HeartQuest, MacSokoban, Hexmines, Bikaka, Classic Daleks, future games and some minor items) according to your preferences. By default, I put the older games (though latest version, of course) in pack #1 and newer games in pack #2.
+
+Final words
+==========
+
+My thanks to the testers, especially Dmitry Boldyrev who patiently went through several crashes before I had tracked down every flaw in the direct-to-screen drawing.
+
+You can send opinions and bug reports to me over the Internet to the address ingemar@isy.liu.se or ingemar@lysator.liu.se.
+
+Snail mail address:
+
+Ingemar Ragnemalm
+Plöjaregatan 73
+S-58330 Linköping
+SWEDEN

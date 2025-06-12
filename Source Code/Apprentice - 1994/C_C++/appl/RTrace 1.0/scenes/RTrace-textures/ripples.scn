@@ -1,1 +1,6 @@
-eye  1.6  1.6  1.6 light directional -1 -1 1 whitesurface matte DarkTurquoiseripples 10 0 0.7 	 % sames as waves; scale should also > 0.3 +-sphere 0 0 0 1           % sphere object
+eye  1.6  1.6  1.6 
+light directional -1 -1 1 white
+surface matte DarkTurquoise
+ripples 10 0 0.7 	 % sames as waves; scale should also > 0.3 +-
+sphere 0 0 0 1           % sphere object
+

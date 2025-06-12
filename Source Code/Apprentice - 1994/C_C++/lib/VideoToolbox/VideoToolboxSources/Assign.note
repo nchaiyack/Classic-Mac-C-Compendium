@@ -1,1 +1,583 @@
-Assign.noteThis file documents Assign.c.Assign is a portable runtime C interpreter that reads and executes any text"assignment" file that contains only C assignments and comments, e.g.	viewingDistance=57.0;	/* inches */It uses an array of "Description" structures to associate each name in theassignment file with a corresponding runtime C variable. It can also write anassignment file, making the assignment file a portable way of writing andreading calibrations and experimental parameters. Arrays can be allocateddynamically, automatically dimensioned so as to hold all the assignments in anypart of the assignment file.Programs written before 1993, using the old ReadAssignments.c (now superceded by Assign.c), may #include the header file Assign92.h to minimize the effort of updating.PORTABILITY: Standard CSYNTAX OF THE ASSIGNMENT FILEThe entire "assignment" file may contain only simple assignments--which areinterpreted--and whitespace and comments--which are ignored. Both C style /* */and C++ style // comments are allowed. Ignoring any intervening whitespace andcomments, each assignment consists of a variable name of any length, possiblywith a constant subscript (of up to ASSIGN_DIMS dimensions), an equal sign,either a constant (decimal 13, 1.3, 1.3e9, hex 0x1a, char 'a', transcendentalInf, or not-a-number NaN) or a string literal (e.g. "hello"), and a semicolon.	i=3; a=1.0; b[1][2]=INF; msg="hello world"; /* examples */NaN (or NAN or nan), Inf (or INF or inf), and -Inf are accepted as floatingvalues. (The NAN specification may include a NAN-code, a la THINK C, e.g. NANFF,or ala MPW C, e.g. NAN[255].) Backslash escapes, e.g. \007 and \n, within singleor double quotes are fully supported (except that there is no support for Standard C'snew international "wide" characters and trigraph sequences). A simple variablename, as in C, consists of an alphabetic character (or _) followed by any numberof alphanumeric characters (or _). To simulate structure references, compositenames are allowed, made up of simple names joined by "." or "->", e.g.	a->b.c=0.0; myStruct->b=INF;Unlike Standard C, each line must be less than BUFFER_SIZE characters long (currently512). Lines that end with the backslash character \ are spliced to the next bydeleting the backslash and the following newline character. The splice may bebetween tokens or inside a comment or string literal, but, unlike C, the splicemay not break a token. Adjacent string literals "a" "b" are concatenated "ab",as specified by Standard C. (The line splicing and adjacent concatenation allowcreation of strings of arbitrary length, not limited by BUFFER_SIZE.) No furtherexpression evaluation is supported. No other operators, e.g. +-&*, enums, casts,e.g. (unsigned long), or number suffixes, e.g. UL, are allowed. No macros orpreprocessor directives are supported (e.g. #if, #define). The syntax rules arestrictly enforced. If ReadAssignmentLine can't interpret your file it will, atthe caller's option, either return an error code or call PrintfExit with anerror message pinpointing the error.Assign.c supports one optional extension beyond C syntax that makes it practicalto save images within assignment files. If a non-string variable is assigned astring, 	a="1111aaaa1111";then ReadAssignmentLine assumes that the string is an encoding of the desiredbinary object as a hexadecimal number, and assigns the decoded binary object tothe variable, one byte for every two hex digits. This is supported for bothscalar and array variables--treating either an element or a row (last subscript,fastest changing) of the array as a single binary object--so you can load orsave a huge row by a single statement that assigns a humungous string of hexdata to the array. E.g. if m[][] is of type char, then the following three linesare equivalent.	m[3][0]=155;m[3][1]=95;m[3][2]=255;m[3][3]=127;	m[3][0]="9b";m[3][1]="5f";m[3][2]="ff";m[3][3]="7f";	m[3]="9b5fff7f";This format is supported by both ReadAssignmentLine and PrintAnAssignment. Whenreading an assignment file, a binary object containing only one element, as inm[3][0]="9b", is interpreted as a scalar, rather than as a row of length 1. Whenwriting an assignment file a whole row of each array is assigned at oncem[3]="9b5fff7f" unless the row is only one element long, in which case eachelement is assigned separately. The default behavior of ReadAssignmentLine andPrintAnAssignment is to use the binary object assignments only for integers(including char) and to write it only when it would greatly reduce the filesize. The motivation for this extension is to provide a compact way to specifythe contents of an image, typically an array of small integers. It may also beuseful in situations where one wants to save and restore the exact value of adouble, since typical implementations of the C stdio library lose a few bits ofprecision translating to or from decimal representations of floating numbers.You grant or deny permission to read and write hex-encoded binary objects bysetting or clearing two flag bits, assignNoHexInts and assignHexFloats, whichare explained below.DESCRIBING YOUR VARIABLES TO THE ASSIGN ROUTINESThe Assign routines use your pre-existing C variables. Each C variable thatyou want to be able to load from (or print to) an assignment file must bedescribed by a "Description" structure, which has fields for the type, name,address ("ptr"), and other characteristics of your C variable.	typedef struct {		short type;		unsigned sizedOnce:1;	/* Is dim[] meaningful? */		unsigned sized:1;		/* Is dim[] final? */		unsigned malloced:1;	/* Allocated by malloc? */		char *name;		void *ptr;				/* for array, address of element zero */		long dim[ASSIGN_DIMS];	/* zero indicates a scalar */		long firstElement;/* subscript of first element of last dimension. Usually 0 */		const char *comment;	/* text string, or NULL */	} Description;The routines Describe, DescribeArray, and DescribeFirstLast are convenient waysto set all the fields. Use these routines (instead of explicitly loading thefields yourself) to enhance the compatibility of your programs with futureenhancements to Assign.c, which might redefine the fields of the Descriptionstructure.	Description Describe(short type,void *ptr,char *name,const char *comment);	short n;	d[i++]=Describe(shortType,&n,"n","hello");The available types fall into three groups. The basic types correspond to thebasic types in C: charType, unsignedCharType, shortType, unsignedShortType,longType, unsignedLongType, floatType, shortDoubleType, and doubleType. Asecond, corresponding, group of types, adding the word "Ptr", requests dynamicarray allocation: charPtrType, unsignedCharPtrType, shortPtrType,unsignedShortPtrType, longPtrType, unsignedLongPtrType, floatPtrType,shortDoublePtrType, and doublePtrType. The third group consists solely of the"stringType", which is handled somewhat differently from the charPtrType. (Note:since Standard C doesn't allow the "short double" type, the shortDoubleType andshortDoublePtrType are conditionally compiled, controlled by SHORT_DOUBLE_OK,which is defined in VideoToolbox.h.) The name argument string is used in reading theassignment file. The ptr argument should be the address of a C variable of thetype specified by the type argument (e.g. float). When the type is one of thePtr types, or stringType, then the C variable should be a pointer of theappropriate kind, so the "ptr" argument you supply will be the address of thatpointer. The last argument to Describe() is comment, which must be a string orNULL. Any call to PrintAnAssignment() will print the comment (if not NULL) afterthe assignment statement, surrounding it by /* */.	Description DescribeArray(short type,void *ptr,char *name,const char *comment,...);	double b[3][4];	d[i++]=DescribeArray(doubleType,&b,"b","coefficients",3L,4L,0L);For the basic and string types, the supplied C variable can be an array, whosedimensions are specified as additional arguments to DescribeArray. There maybe up to ASSIGN_DIMS dimensions. Each dimension must be a long, and the argumentlist must be terminated by 0L, i.e. a zero of type long.Arrays of stringType are allowed, e.g. 	char *nicknames[10];	DescribeArray(stringType,&nicknames,"nicknames",NULL,10L,0L);But, in that case, malloced space for a string is not freed when a new string is assigned.READING AN ASSIGNMENT FILEReadAssignmentLine does all the reading. ReadAssignmentBlock andReadAssignmentFile just call ReadAssignmentLine repeatedly. One by one,ReadAssignmentLine reads assignments from the assignment file (until it reachesthe end of the line, or detects an error). Syntax errors are reported.ReadAssignmentLine gets a variable name from the assignment file and looks for amatching name in the user-supplied Description array. Any inconsistency of theassignment statement with the variable's declared type and dimensions isreported. Then the assignment is made.Assignment to basic variables is straightforward, equivalent to assignment ina C program, e.g.	a[2][1]=3.0;When ReadAssignmentLine assigns a string to a stringType variable,	s="hello world";the string is allocated by malloc() and the string's address is poked into yourchar * variable. Prior to assignment of a string, FreeADescribedVar will becalled, which, if any pre-existing string was allocated by malloc--as indicatedby the d->malloced flag--will free it. You can free all your strings (andPtrType variables) by calling FreeDescribedVars.The PtrType variables initially have no space allocation for storage of data. Eachunallocated Ptr variable is automatically allocated space for a scalar or arraydimensioned just big enough to contain all the assignments in the part (or"gulp") of the assignment file that the user has just asked to read: a line, ablock, or the whole file. (If the Ptr variable is dimensioned, from a call toDescribeArray, but not allocated, then it will be allocated at the declaredsize.) Once allocated, the array dimensions are fixed, unless the user frees theallocations by calling FreeDescribedPtrVars() or FreeDescribedVars(), which alsoclear the array's dimensions (whether set dynamically or by an initial call toDescribeArray). Restricting the scan to the current gulp makes it possible toread assignment files in which the array sizes change from gulp to gulp,provided only that between gulps the user calls FreeDescribedPtrVars() orFreeDescribedVars(). An inconsistent number of array dimensions	a[0]=1; a[0][0]=1;within a gulp is flagged as an error. ROUTINES	stream=OpenCalFileWrite(filename);Open up a calibration file for appending. If the file exists in the currentdirectory, it is used. If not, then if it exists in the Preferences folder, itused. If not, the file is created in the Preferences folder.	stream=OpenCalFileRead(filename);Open up a calibration file for reading. First looks in the current directory,then in the preferences folder. On success returns the opened file's stream. Onfailure returns NULL.	stream=OpenCalFileReadAndCheck(filename);Open up a calibration file for reading. If the file exists in the currentdirectory, it is used. If not, then if it exists in the preferences folder, itused. If no file is found then prints an error message and exits.	AppendDescriptions(&d,s);Appends the second descriptions array onto the end of the first, which isreallocated with more space. The source array is not freed; the caller should dothat. Both arrays must be null-terminated.	CopyDescriptions(d,s);Copy one null-terminated array of descriptions to another, which is assumed tobe big enough.	d=AllocateDescriptions(n);Allocate space for variable descriptions. Adds one to the passed size to holdthe null descriptor. Nulls the first element.	FreeDescriptions(d);Free the descriptions array. Doesn't affect the described variables.	n=NumberOfDescriptions(d);Find the size of an array of descriptions. Does not count the trailing nulldescription.	d[i]=NullDescription();Returns a null description, to terminate a descriptions array.	if( IsNullDescription(d[i]) )...;Determine whether we are looking at a null description. Implemented as a macro.Description Describe(short type,void *ptr,char *name,const char *comment);Description DescribeArray(short type,void *ptr,char *name,const char *comment,...);	double a,*p,x[3];	d[i++]=Describe(doubleType,&a,"a","hello");	d[i++]=Describe(doublePtrType,&p,"p",NULL);	d[i++]=DescribeArray(doubleType,&x,"x",NULL,3L,0L);Describe and DescribeArray merely return a Description with the field valuesthat you supply. Use them to make your programs more readable, and to enhancethe compatibility of your programs with future enhancements to Assign.c, whichmight redefine the fields of the Description structure. DescribeArray() acceptsa variable number of arguments specifying the array dimensions. You may supplyany number of array dimensions (up to ASSIGN_DIMS), but they MUST be long, andthe argument list MUST be terminated by a 0L following the list of dimensions.Any additional arguments following the 0L are ignored. A PtrType variable may bedescribed by DescribeArray(), specifying the dimensions of the storage area tobe allocated, or may be described by Describe() in which case the dimensions(none up to ASSIGN_DIMS) will be determined from the first gulp of theassignment file. In either case, storage for the PtrType variable is allocatedonly when it is encountered in the assignment file. The array dimensions of aPtrType variable specified when calling DescribeArray() are wiped out if youlater call FreePtrVariables(), with the same result as just calling Describe().TYPES: charType, unsignedCharType, shortType, unsignedShortType, longType,unsignedLongType, floatType, shortDoubleType, doubleType, charPtrType,unsignedCharPtrType, shortPtrType, unsignedShortPtrType, longPtrType,unsignedLongPtrType, floatPtrType, shortDoublePtrType, doublePtrType,stringType.Description DescribeFirstLast(short type,void *ptr,char *name	,const char *comment,long firstElement,long lastElement);	float *a;	a=vector(1,10);	/* a Numerical Recipes in C allocation routine */	d[i++]=DescribeFirstLast(floatType,a,"a",NULL,1L,10L,0L);This allows you to specify a 1-dimensional array with a nonstandard subscriptrange, e.g. starting with subscript 1, as in Numerical Recipes in C. The "ptr"argument should always point to element zero, even if that element is not part ofthe array's allocated storage. 	error=UnequalDescribedVars(descriptions1,descriptions2,flags);	error=UnequalDescribedVarPair(d1,d2,flags);These routines compare the data pointed to by the two Description arrays orstructs. They return 0 if the Descriptions are legal and the data areequal, and a nonzero error code (or PrintfExit, depending on flags) otherwise.(Comparison of floating numbers allows a tolerance of +/- one part in a million,because converting to and from decimal may lose some precision, and considersall NANs equal because NAN indices (NAN04 vs NANFF) are not preserved by mostoperations.) This makes it easy to verify what was written to an assignmentfile. Just create a new data structure and a Description array describing it,call ReadAssignmentFile, and use UnequalDescribedVars to verify that you readback exactly what you wrote.	n=InitializeDescribedVars(descriptions,flags);	n=InitializeADescribedVar(d,flags);Initialize the described variables. All integer variablesare set to zero, all floating variables are set to NAN, and all the strings areset to point to a particular empty string "". Any PtrType scalars and arraysthat have already been allocated will be initialized; unallocated PtrTypevariables are NULLed.	n=ReadAssignmentLine(stream,descriptions,flags);Interprets one line from the stream (splicing continuation lines), and continuesto read further lines, if necessary, to reach the end of any incomplete commentor assignment. ReadAssignmentBlock() and ReadAssignmentFile(), below, do alltheir reading by repeatedly calling ReadAssignmentLine().	blank=AssignmentLineWasBlank();Returns true (i.e. 1) unless the most recent call to ReadAssignmentLine() readsome non-blank text, in which case it returns false (i.e. 0).	n=ReadAssignmentBlock(stream,descriptions,flags);Interprets lines from the stream until it reads a blank line. (Blank lines withinan assignment or comment /* */ are ignored.) Implemented by repeatedly callingReadAssignmentLine() until AssignmentLineWasBlank() is true. 	n=ReadAssignmentFile(filename,descriptions,flags);Interpret a whole file. Implemented by repeatedly calling ReadAssignmentLine().	FreeDescribedPtrVars(descriptions,flags);Frees any allocated storage (and wipes out the array dimensions) for anydescribed PtrType variables; they will be appropriately dimensioned andallocated when they are next read from an assignment file. This allows readingof assignment files in which array dimensions may change from gulp to gulp.	FreeDescribedVars(descriptions,flags);Frees any allocated storage (and wipes out the array dimensions) for anydescribed PtrType and stringType variables.	FreeADescribedVar(description,flags);Frees any allocated storage (and wipes out the array dimensions) for a describedvariable. This only affects PtrType and stringType variables.	KeepDescribedVars(descriptions,flags);Prevents the freeing of all the allocated storage for all the described PtrTypeand stringType variables. Call this when you want to copy the pointer elsewhereand you don't want Assign to dispose of the storage pointed to. (This routinesimply clears all the "malloced" fields in the descriptions.)	i=FindDescription(d,ptr,flags);Finds your C variable's description in the supplied array. Returns the subscript(³0) of the matching Description, or, if the search fails, then either PrintfExitswith an error or returns a negative error code, as determined by the setting ofthe assignNoPrintfExit bit in flags. Your C variable's dimensions are in thed[i].dim[] field, which is dimensioned ASSIGN_DIMS.	dim=FindDescribedDim(d,ptr,n,flags);Calls FindDescription to find your C variable's description and returns thesize of your variable's n-th dimension. (All dimensions after the firstASSIGN_DIMS return zero.) Handling of search failure as in FindDescription().	n=PrintAnAssignment(stream,d,flags);Prints out the name and value of the described variable as an assignmentstatement "i=2;" suitable for reading by ReadAssignmentLine.	n=PrintAssignments(stream,descriptions,flags);Calls PrintAnAssignment and fprintf(stream,"\n"); for each described variable.	n=PrintAssignmentsToFile(filename,descriptions,flags);Opens the file, calls PrintAssignments, and closes the file. If a file of that name already exists it appends to the existing file.	n=ReadLuminanceRecord(filename,LP,flags)This uses ReadAssignmentFile() to interpret a LuminanceRecord?.h file. Thisroutine is in ReadLuminanceRecord.c.In all cases the returned value, n, is either positive (>=0), indicating thenumber of data that were fully processed, or negative, indicating an error codedefined in VideoToolbox.h. Each array element, scalar, or string is considered adatum. Any assignments that referred to out-of-range array elements or unknownvariables are skipped and are not counted.The first argument is either a filename (c string) or a stream (FILE *)returned by fopen(). Open the file in text, not binary, mode, so that'\r' and '\n' characters will be translated properly.The second argument, "descriptions", is an array of Descriptions ofyour variables. The number of array elements is not given. Instead you mark theend by zeroing the "type" field of the last Description. The "Description" datastructure is defined in VideoToolbox.h.The third argument, "flags", allows you to specify various runtime options. Eachoption is controlled by a different bit; flags is the sum of the desiredoptions. Most users will want the default behavior, i.e. flags==0. The defaultbehavior of PrintAnAssignment is to never hex-encode floats (float and double)and to only hex encode integers (i.e. char, short, and long, signed or unsigned)when this would reduce the number of lines in the assignment file (i.e. whenthe last dimension exceeds typeSize+2).FLAGS"assignNoPrintfExit" is a flag that asks all the routines to return an errorcode if they cannot satisfy the request, otherwise the routines call PrintfExitwith a diagnostic error message that pinpoints the location of the error."assignReportUnknown" asks ReadAssignmentLine to report an error if an unknownvariable appears in the assignment file. Array elements with out-of-rangesubscripts are considered unknown variables. In the absence of this flag,attempts to assign to unknown variables are silently skipped (the data arediscarded)."assignNoHexInts" tells ReadAssignmentLine and PrintAnAssignment to never reador save char, short, or long as hex strings. This sacrifices the compactness ofhex strings, but enhances human readability of the assignment file. (It alsopreserves compatibility with C, making it possible to #include the assignmentfile inside a C program, and preserves portability of the assignment filebetween computers that use different byte orderings.)"assignHexFloats" tells PrintAnAssignment to always save floats (float anddouble) as hex strings, and tells ReadAssignmentLine to allow hex strings. Thispreserves the exact value (unlike decimal representation, which loses a fewleast-significant bits in typical implementations of the C stdio library), butsacrifices human readability and portability of the assignment file since thebinary representation of floats is highly dependent on the compiler options andthe kind of computer. (It also sacrifices compatibility with C, making itimpossible to #include the assignment file.)"assignNoComment" tells PrintAnAssignment not to print the comment field."assignEchoFile", primarily an aid to debugging, prints each line from the streamas it is read by ReadAssignmentLine."assignEchoAssignments", primarily an aid to debugging, calls PrintAnAssignmentafter each assignment is performed by ReadAssignmentLine. Uncommented newlinecharacters in the assignment file are echoed as well. (If assignReportUnknown isoff then assignment statements containing unknown variables or out-of-boundsarray references are echoed as comments: /*UNKNOWN: x=3; */.)"assignEchoComments", primarily an aid to debugging, prints both /*..*/ and//-style comments as they are read by ReadAssignmentLine. Uncommented newlinecharacters in the assignment file are echoed as well.ERRORSAn error code is returned only if the assignNoPrintfExit flag is set. OtherwisePrintfExit() is called with a diagnostic message.-1 assignMemoryError: couldn't allocate enough memory.-2 assignTypeError: unknown type, or array of string, which is not allowed.-3 assignVariableError: couldn't parse the variable name.-4 assignUnknownVariableError: unknown variable; can only occur if the 	assignReportUnknown flag is set.-5 assignSubscriptError: couldn't parse the subscript.-6 assignSubscriptBoundsError: out-of-bounds array element; this error is flagged only 	if the assignReportUnknown flag is set.-7 assignEqualsError: couldn't find the equals sign.-8 assignConstantError: couldn't parse the constant.-9 assignHexError: couldn't parse a hex-encoded binary object constant.-10 assignSemicolonError: couldn't find the semicolon.-11 assignFileError: couldn't open the file.-12 assignInconsistentDescriptionsError: two descriptions are inconsistent.-13 assignUnequalDataError: two described variables have significantly different data.IMPORTANT: Do not forget to mark the end of your Description array by a Description with a type of zero.USING ASSIGN.CIt is suggested that those who want to use this package create a header filewith a typedef for a data structure, and write a subroutine that allocates andfills a Description array describing the data structure's fields. For example,Luminance.h defines the luminanceRecord structure and ReadLuminanceRecord.c contains the function,	Description *DescribeLuminanceRecord(luminanceRecord *LP);that creates a Description array describing the particular luminanceRecord structure.CONTROLLING EXPERIMENTSAssign.c was originally written to read parameter files that controlexperiments. Typical psychophysical and physiological experiments are verycomplicated and require lots of adjustable parameters. One needs an easy way tochange them all that is self documenting and easily reproduced, possibly monthslater. The routines provided here come in various flavors allowing you to read aline at a time (with any number of assignments on the line), a block at a time(blocks are separated by blank lines), or a whole file at a time. A line may becontinued by ending it with backslash \. In controlling psychophysicalexperiments I use a block at the beginning of the file to define the generalexperiment followed by a block for each psychophysical "block"; within the blockeach line specifies a different experimental condition.If you decide to read the assignment file a bit at a time, bear in mind thatReadAssignmentLine will immediately return or PrintfExit if the assignment filecontains even a single error. It is strongly suggested that your experimentalprogram begin by doing a dry run, reading the whole assignment file through tocheck for errors, before initializing your variables, and reading it again a bitat a time as the experiment progresses. It would obviously be very bad to havethe interpreter quit near the end of a 3 hour experiment.READING AND WRITING CALIBRATION DATADavid Brainard and I have been discussing how to save and read calibrations ofvideo displays in a portable way, so that the vision community could sharecalibration programs, and experimental programs could simply read in the dataassociated with the particular display. The current idea is that there would bea text file called "Monitor nn calib" associated with each display (where nn isthe video card's slot number), and that this file would hold all kinds ofcalibration data for this display, typically produced by a variety ofcalibration programs that would each append their results. On a Macintoshcomputer these calibration files would reside in the Preferences folder. (Whereshould they go on a DOS machine?) David has developed color calibration softwareand I've developed software to calibrate gamma and MTF. We are now rewritingthese to make them more portable. We have begun drafting an open-ended standardfor this calibration file, to allow any number of programs to read and write toit, extracting or adding the data they need and know about and ignoring therest. Tentatively, in order to conform to this calibration standard a newsupplement (e.g. to calibrate the geometry of the display) should include: 1. aC header file that defines a suitable data structure to hold the measurements(and a few standard facts, e.g. the date of calibration, the name of the videocard and serial number of the monitor, and the names of the person and programthat did the calibration), 2. a C subroutine that accepts a pointer to such adata structure and returns a pointer to a "Description" array describing each ofthe data structure's fields. 3. a program (in any language) that makes themeasurements and appends them to the monitor's calibration file as C assignmentsto the data structure's fields, which is easily accomplished by one call toPrintAssignmentFile. These C assignments must be readable by ReadAssignmentFileusing the Description array created in 2. above, and it is strongly recommendedthat the calibration program itself call ReadAssignmentFile, and useUnequalDescribedVars() to verify that it read back exactly what it wrote. 4.finally, it will normally be important to provide some sort of advice on how touse the calibration data when they are read from the calibration file.EXAMPLEAn assignment file might contain this:	/* first block */	viewingDistance=57.0;	trials=40;	message="Monitor calibrated November 21, 1993 by Katie Burns";	a=3;		// second block	logC=-1.0;	a[0]=1;		// third block	logC=-2; 	a[1][1]=1.1;a[0][0]=-INF;Here is a sample program to read the assignments given above:#include "VideoToolbox.h"#include "assert.h"typedef struct {	double *a,logC,viewingDistance;	long trials;	char *message;} Psychophysics;Description *DescribePsychophysics(Psychophysics *p);Description *DescribePsychophysics(Psychophysics *p){	Description *d;	int i;		d=AllocateDescriptions(10);	i=0;	d[i++]=Describe(stringType,&p->message,"message",NULL);	d[i++]=Describe(doubleType,&p->viewingDistance,"viewingDistance",NULL);	d[i++]=Describe(shortType,&p->trials,"trials",NULL);	d[i++]=Describe(doubleType,&p->logC,"logC",NULL);	d[i++]=Describe(doublePtrType,&p->a,"a",NULL);	assert(i<=10);		/*  make sure array was big enough */	d[i++]=NullDescription();		/*  mark end of array */	return d;}void main(void){	Description *d;	Psychophysics psychophysics,*p;	short i,flags=0;	FILE *stream;		p=&psychophysics;	d=DescribePsychophysics(p);	InitializeDescribedVars(d,flags);	stream=fopen("assignments","r");	do{		printf("\n/******** New block ********/\n");		ReadAssignmentBlock(stream,d,flags);		/*		a real program would do something useful here with the data in p		*/		PrintAssignments(stdout,d,flags);		FreeDescribedPtrVars(d,flags);	} while(!feof(stream));	fclose(stream);	FreeDescriptions(d);}NOTES FOR FUTURE ENHANCEMENTThe "firstElement" approach supports Numerical Recipes vectors, i.e. 1-d arrays.For multi-dimensional Numerical Recipes arrays I would also need a"vectoredArray" flag. Vectored arrays would be fairly easy to add, onlyaffecting ElementPtr, and allocation and freeing. In the meantime, note thatNumerical Recipes provides a convert_matrix routine that provides vectoredaddressing of a normal 2-d c array.ACKNOWLEDGEMENTSAssign.c was inspired by an idea Beau Watson mentioned to me in the 1980's: aroutine to read free-form parameter values at run time. Discussions with DavidBrainard motivated the extensions to support arrays, dynamic allocation, andunknown variables.
+Assign.note
+This file documents Assign.c.
+
+Assign is a portable runtime C interpreter that reads and executes any text
+"assignment" file that contains only C assignments and comments, e.g.
+	viewingDistance=57.0;	/* inches */
+It uses an array of "Description" structures to associate each name in the
+assignment file with a corresponding runtime C variable. It can also write an
+assignment file, making the assignment file a portable way of writing and
+reading calibrations and experimental parameters. Arrays can be allocated
+dynamically, automatically dimensioned so as to hold all the assignments in any
+part of the assignment file.
+
+Programs written before 1993, using the old ReadAssignments.c (now superceded by 
+Assign.c), may #include the header file Assign92.h to minimize the effort of 
+updating.
+
+PORTABILITY: Standard C
+
+SYNTAX OF THE ASSIGNMENT FILE
+
+The entire "assignment" file may contain only simple assignments--which are
+interpreted--and whitespace and comments--which are ignored. Both C style /* */
+and C++ style // comments are allowed. Ignoring any intervening whitespace and
+comments, each assignment consists of a variable name of any length, possibly
+with a constant subscript (of up to ASSIGN_DIMS dimensions), an equal sign,
+either a constant (decimal 13, 1.3, 1.3e9, hex 0x1a, char 'a', transcendental
+Inf, or not-a-number NaN) or a string literal (e.g. "hello"), and a semicolon.
+	i=3; a=1.0; b[1][2]=INF; msg="hello world"; /* examples */
+NaN (or NAN or nan), Inf (or INF or inf), and -Inf are accepted as floating
+values. (The NAN specification may include a NAN-code, a la THINK C, e.g. NANFF,
+or ala MPW C, e.g. NAN[255].) Backslash escapes, e.g. \007 and \n, within single
+or double quotes are fully supported (except that there is no support for Standard C's
+new international "wide" characters and trigraph sequences). A simple variable
+name, as in C, consists of an alphabetic character (or _) followed by any number
+of alphanumeric characters (or _). To simulate structure references, composite
+names are allowed, made up of simple names joined by "." or "->", e.g.
+	a->b.c=0.0; myStruct->b=INF;
+Unlike Standard C, each line must be less than BUFFER_SIZE characters long (currently
+512). Lines that end with the backslash character \ are spliced to the next by
+deleting the backslash and the following newline character. The splice may be
+between tokens or inside a comment or string literal, but, unlike C, the splice
+may not break a token. Adjacent string literals "a" "b" are concatenated "ab",
+as specified by Standard C. (The line splicing and adjacent concatenation allow
+creation of strings of arbitrary length, not limited by BUFFER_SIZE.) No further
+expression evaluation is supported. No other operators, e.g. +-&*, enums, casts,
+e.g. (unsigned long), or number suffixes, e.g. UL, are allowed. No macros or
+preprocessor directives are supported (e.g. #if, #define). The syntax rules are
+strictly enforced. If ReadAssignmentLine can't interpret your file it will, at
+the caller's option, either return an error code or call PrintfExit with an
+error message pinpointing the error.
+
+Assign.c supports one optional extension beyond C syntax that makes it practical
+to save images within assignment files. If a non-string variable is assigned a
+string, 
+	a="1111aaaa1111";
+then ReadAssignmentLine assumes that the string is an encoding of the desired
+binary object as a hexadecimal number, and assigns the decoded binary object to
+the variable, one byte for every two hex digits. This is supported for both
+scalar and array variables--treating either an element or a row (last subscript,
+fastest changing) of the array as a single binary object--so you can load or
+save a huge row by a single statement that assigns a humungous string of hex
+data to the array. E.g. if m[][] is of type char, then the following three lines
+are equivalent.
+	m[3][0]=155;m[3][1]=95;m[3][2]=255;m[3][3]=127;
+	m[3][0]="9b";m[3][1]="5f";m[3][2]="ff";m[3][3]="7f";
+	m[3]="9b5fff7f";
+This format is supported by both ReadAssignmentLine and PrintAnAssignment. When
+reading an assignment file, a binary object containing only one element, as in
+m[3][0]="9b", is interpreted as a scalar, rather than as a row of length 1. When
+writing an assignment file a whole row of each array is assigned at once
+m[3]="9b5fff7f" unless the row is only one element long, in which case each
+element is assigned separately. The default behavior of ReadAssignmentLine and
+PrintAnAssignment is to use the binary object assignments only for integers
+(including char) and to write it only when it would greatly reduce the file
+size. The motivation for this extension is to provide a compact way to specify
+the contents of an image, typically an array of small integers. It may also be
+useful in situations where one wants to save and restore the exact value of a
+double, since typical implementations of the C stdio library lose a few bits of
+precision translating to or from decimal representations of floating numbers.
+You grant or deny permission to read and write hex-encoded binary objects by
+setting or clearing two flag bits, assignNoHexInts and assignHexFloats, which
+are explained below.
+
+DESCRIBING YOUR VARIABLES TO THE ASSIGN ROUTINES
+
+The Assign routines use your pre-existing C variables. Each C variable that
+you want to be able to load from (or print to) an assignment file must be
+described by a "Description" structure, which has fields for the type, name,
+address ("ptr"), and other characteristics of your C variable.
+	typedef struct {
+		short type;
+		unsigned sizedOnce:1;	/* Is dim[] meaningful? */
+		unsigned sized:1;		/* Is dim[] final? */
+		unsigned malloced:1;	/* Allocated by malloc? */
+		char *name;
+		void *ptr;				/* for array, address of element zero */
+		long dim[ASSIGN_DIMS];	/* zero indicates a scalar */
+		long firstElement;/* subscript of first element of last dimension. Usually 0 */
+		const char *comment;	/* text string, or NULL */
+	} Description;
+The routines Describe, DescribeArray, and DescribeFirstLast are convenient ways
+to set all the fields. Use these routines (instead of explicitly loading the
+fields yourself) to enhance the compatibility of your programs with future
+enhancements to Assign.c, which might redefine the fields of the Description
+structure.
+	Description Describe(short type,void *ptr,char *name,const char *comment);
+	short n;
+	d[i++]=Describe(shortType,&n,"n","hello");
+The available types fall into three groups. The basic types correspond to the
+basic types in C: charType, unsignedCharType, shortType, unsignedShortType,
+longType, unsignedLongType, floatType, shortDoubleType, and doubleType. A
+second, corresponding, group of types, adding the word "Ptr", requests dynamic
+array allocation: charPtrType, unsignedCharPtrType, shortPtrType,
+unsignedShortPtrType, longPtrType, unsignedLongPtrType, floatPtrType,
+shortDoublePtrType, and doublePtrType. The third group consists solely of the
+"stringType", which is handled somewhat differently from the charPtrType. (Note:
+since Standard C doesn't allow the "short double" type, the shortDoubleType and
+shortDoublePtrType are conditionally compiled, controlled by SHORT_DOUBLE_OK,
+which is defined in VideoToolbox.h.) The name argument string is used in reading the
+assignment file. The ptr argument should be the address of a C variable of the
+type specified by the type argument (e.g. float). When the type is one of the
+Ptr types, or stringType, then the C variable should be a pointer of the
+appropriate kind, so the "ptr" argument you supply will be the address of that
+pointer. The last argument to Describe() is comment, which must be a string or
+NULL. Any call to PrintAnAssignment() will print the comment (if not NULL) after
+the assignment statement, surrounding it by /* */.
+	Description DescribeArray(short type,void *ptr,char *name,const char *comment,...);
+	double b[3][4];
+	d[i++]=DescribeArray(doubleType,&b,"b","coefficients",3L,4L,0L);
+For the basic and string types, the supplied C variable can be an array, whose
+dimensions are specified as additional arguments to DescribeArray. There may
+be up to ASSIGN_DIMS dimensions. Each dimension must be a long, and the argument
+list must be terminated by 0L, i.e. a zero of type long.
+
+Arrays of stringType are allowed, e.g. 
+	char *nicknames[10];
+	DescribeArray(stringType,&nicknames,"nicknames",NULL,10L,0L);
+But, in that case, malloced space for a string is not freed when a new string 
+is assigned.
+
+READING AN ASSIGNMENT FILE
+
+ReadAssignmentLine does all the reading. ReadAssignmentBlock and
+ReadAssignmentFile just call ReadAssignmentLine repeatedly. One by one,
+ReadAssignmentLine reads assignments from the assignment file (until it reaches
+the end of the line, or detects an error). Syntax errors are reported.
+ReadAssignmentLine gets a variable name from the assignment file and looks for a
+matching name in the user-supplied Description array. Any inconsistency of the
+assignment statement with the variable's declared type and dimensions is
+reported. Then the assignment is made.
+
+Assignment to basic variables is straightforward, equivalent to assignment in
+a C program, e.g.
+	a[2][1]=3.0;
+When ReadAssignmentLine assigns a string to a stringType variable,
+	s="hello world";
+the string is allocated by malloc() and the string's address is poked into your
+char * variable. Prior to assignment of a string, FreeADescribedVar will be
+called, which, if any pre-existing string was allocated by malloc--as indicated
+by the d->malloced flag--will free it. You can free all your strings (and
+PtrType variables) by calling FreeDescribedVars.
+
+The PtrType variables initially have no space allocation for storage of data. Each
+unallocated Ptr variable is automatically allocated space for a scalar or array
+dimensioned just big enough to contain all the assignments in the part (or
+"gulp") of the assignment file that the user has just asked to read: a line, a
+block, or the whole file. (If the Ptr variable is dimensioned, from a call to
+DescribeArray, but not allocated, then it will be allocated at the declared
+size.) Once allocated, the array dimensions are fixed, unless the user frees the
+allocations by calling FreeDescribedPtrVars() or FreeDescribedVars(), which also
+clear the array's dimensions (whether set dynamically or by an initial call to
+DescribeArray). Restricting the scan to the current gulp makes it possible to
+read assignment files in which the array sizes change from gulp to gulp,
+provided only that between gulps the user calls FreeDescribedPtrVars() or
+FreeDescribedVars(). An inconsistent number of array dimensions
+	a[0]=1; a[0][0]=1;
+within a gulp is flagged as an error. 
+
+ROUTINES
+
+	stream=OpenCalFileWrite(filename);
+Open up a calibration file for appending. If the file exists in the current
+directory, it is used. If not, then if it exists in the Preferences folder, it
+used. If not, the file is created in the Preferences folder.
+
+	stream=OpenCalFileRead(filename);
+Open up a calibration file for reading. First looks in the current directory,
+then in the preferences folder. On success returns the opened file's stream. On
+failure returns NULL.
+
+	stream=OpenCalFileReadAndCheck(filename);
+Open up a calibration file for reading. If the file exists in the current
+directory, it is used. If not, then if it exists in the preferences folder, it
+used. If no file is found then prints an error message and exits.
+
+	AppendDescriptions(&d,s);
+Appends the second descriptions array onto the end of the first, which is
+reallocated with more space. The source array is not freed; the caller should do
+that. Both arrays must be null-terminated.
+
+	CopyDescriptions(d,s);
+Copy one null-terminated array of descriptions to another, which is assumed to
+be big enough.
+
+	d=AllocateDescriptions(n);
+Allocate space for variable descriptions. Adds one to the passed size to hold
+the null descriptor. Nulls the first element.
+
+	FreeDescriptions(d);
+Free the descriptions array. Doesn't affect the described variables.
+
+	n=NumberOfDescriptions(d);
+Find the size of an array of descriptions. Does not count the trailing null
+description.
+
+	d[i]=NullDescription();
+Returns a null description, to terminate a descriptions array.
+
+	if( IsNullDescription(d[i]) )...;
+Determine whether we are looking at a null description. Implemented as a macro.
+
+Description Describe(short type,void *ptr,char *name,const char *comment);
+Description DescribeArray(short type,void *ptr,char *name,const char *comment,...);
+	double a,*p,x[3];
+	d[i++]=Describe(doubleType,&a,"a","hello");
+	d[i++]=Describe(doublePtrType,&p,"p",NULL);
+	d[i++]=DescribeArray(doubleType,&x,"x",NULL,3L,0L);
+Describe and DescribeArray merely return a Description with the field values
+that you supply. Use them to make your programs more readable, and to enhance
+the compatibility of your programs with future enhancements to Assign.c, which
+might redefine the fields of the Description structure. DescribeArray() accepts
+a variable number of arguments specifying the array dimensions. You may supply
+any number of array dimensions (up to ASSIGN_DIMS), but they MUST be long, and
+the argument list MUST be terminated by a 0L following the list of dimensions.
+Any additional arguments following the 0L are ignored. A PtrType variable may be
+described by DescribeArray(), specifying the dimensions of the storage area to
+be allocated, or may be described by Describe() in which case the dimensions
+(none up to ASSIGN_DIMS) will be determined from the first gulp of the
+assignment file. In either case, storage for the PtrType variable is allocated
+only when it is encountered in the assignment file. The array dimensions of a
+PtrType variable specified when calling DescribeArray() are wiped out if you
+later call FreePtrVariables(), with the same result as just calling Describe().
+
+TYPES: charType, unsignedCharType, shortType, unsignedShortType, longType,
+unsignedLongType, floatType, shortDoubleType, doubleType, charPtrType,
+unsignedCharPtrType, shortPtrType, unsignedShortPtrType, longPtrType,
+unsignedLongPtrType, floatPtrType, shortDoublePtrType, doublePtrType,
+stringType.
+
+Description DescribeFirstLast(short type,void *ptr,char *name
+	,const char *comment,long firstElement,long lastElement);
+	float *a;
+	a=vector(1,10);	/* a Numerical Recipes in C allocation routine */
+	d[i++]=DescribeFirstLast(floatType,a,"a",NULL,1L,10L,0L);
+This allows you to specify a 1-dimensional array with a nonstandard subscript
+range, e.g. starting with subscript 1, as in Numerical Recipes in C. The "ptr"
+argument should always point to element zero, even if that element is not part of
+the array's allocated storage. 
+
+	error=UnequalDescribedVars(descriptions1,descriptions2,flags);
+	error=UnequalDescribedVarPair(d1,d2,flags);
+These routines compare the data pointed to by the two Description arrays or
+structs. They return 0 if the Descriptions are legal and the data are
+equal, and a nonzero error code (or PrintfExit, depending on flags) otherwise.
+(Comparison of floating numbers allows a tolerance of +/- one part in a million,
+because converting to and from decimal may lose some precision, and considers
+all NANs equal because NAN indices (NAN04 vs NANFF) are not preserved by most
+operations.) This makes it easy to verify what was written to an assignment
+file. Just create a new data structure and a Description array describing it,
+call ReadAssignmentFile, and use UnequalDescribedVars to verify that you read
+back exactly what you wrote.
+
+	n=InitializeDescribedVars(descriptions,flags);
+	n=InitializeADescribedVar(d,flags);
+Initialize the described variables. All integer variables
+are set to zero, all floating variables are set to NAN, and all the strings are
+set to point to a particular empty string "". Any PtrType scalars and arrays
+that have already been allocated will be initialized; unallocated PtrType
+variables are NULLed.
+
+	n=ReadAssignmentLine(stream,descriptions,flags);
+Interprets one line from the stream (splicing continuation lines), and continues
+to read further lines, if necessary, to reach the end of any incomplete comment
+or assignment. ReadAssignmentBlock() and ReadAssignmentFile(), below, do all
+their reading by repeatedly calling ReadAssignmentLine().
+
+	blank=AssignmentLineWasBlank();
+Returns true (i.e. 1) unless the most recent call to ReadAssignmentLine() read
+some non-blank text, in which case it returns false (i.e. 0).
+
+	n=ReadAssignmentBlock(stream,descriptions,flags);
+Interprets lines from the stream until it reads a blank line. (Blank lines within
+an assignment or comment /* */ are ignored.) Implemented by repeatedly calling
+ReadAssignmentLine() until AssignmentLineWasBlank() is true. 
+
+	n=ReadAssignmentFile(filename,descriptions,flags);
+Interpret a whole file. Implemented by repeatedly calling ReadAssignmentLine().
+
+	FreeDescribedPtrVars(descriptions,flags);
+Frees any allocated storage (and wipes out the array dimensions) for any
+described PtrType variables; they will be appropriately dimensioned and
+allocated when they are next read from an assignment file. This allows reading
+of assignment files in which array dimensions may change from gulp to gulp.
+
+	FreeDescribedVars(descriptions,flags);
+Frees any allocated storage (and wipes out the array dimensions) for any
+described PtrType and stringType variables.
+
+	FreeADescribedVar(description,flags);
+Frees any allocated storage (and wipes out the array dimensions) for a described
+variable. This only affects PtrType and stringType variables.
+
+	KeepDescribedVars(descriptions,flags);
+Prevents the freeing of all the allocated storage for all the described PtrType
+and stringType variables. Call this when you want to copy the pointer elsewhere
+and you don't want Assign to dispose of the storage pointed to. (This routine
+simply clears all the "malloced" fields in the descriptions.)
+
+	i=FindDescription(d,ptr,flags);
+Finds your C variable's description in the supplied array. Returns the subscript
+(³0) of the matching Description, or, if the search fails, then either PrintfExits
+with an error or returns a negative error code, as determined by the setting of
+the assignNoPrintfExit bit in flags. Your C variable's dimensions are in the
+d[i].dim[] field, which is dimensioned ASSIGN_DIMS.
+
+	dim=FindDescribedDim(d,ptr,n,flags);
+Calls FindDescription to find your C variable's description and returns the
+size of your variable's n-th dimension. (All dimensions after the first
+ASSIGN_DIMS return zero.) Handling of search failure as in FindDescription().
+
+	n=PrintAnAssignment(stream,d,flags);
+Prints out the name and value of the described variable as an assignment
+statement "i=2;" suitable for reading by ReadAssignmentLine.
+
+	n=PrintAssignments(stream,descriptions,flags);
+Calls PrintAnAssignment and fprintf(stream,"\n"); for each described variable.
+
+	n=PrintAssignmentsToFile(filename,descriptions,flags);
+Opens the file, calls PrintAssignments, and closes the file. If a file of that 
+name already exists it appends to the existing file.
+
+	n=ReadLuminanceRecord(filename,LP,flags)
+This uses ReadAssignmentFile() to interpret a LuminanceRecord?.h file. This
+routine is in ReadLuminanceRecord.c.
+
+In all cases the returned value, n, is either positive (>=0), indicating the
+number of data that were fully processed, or negative, indicating an error code
+defined in VideoToolbox.h. Each array element, scalar, or string is considered a
+datum. Any assignments that referred to out-of-range array elements or unknown
+variables are skipped and are not counted.
+
+The first argument is either a filename (c string) or a stream (FILE *)
+returned by fopen(). Open the file in text, not binary, mode, so that
+'\r' and '\n' characters will be translated properly.
+
+The second argument, "descriptions", is an array of Descriptions of
+your variables. The number of array elements is not given. Instead you mark the
+end by zeroing the "type" field of the last Description. The "Description" data
+structure is defined in VideoToolbox.h.
+
+The third argument, "flags", allows you to specify various runtime options. Each
+option is controlled by a different bit; flags is the sum of the desired
+options. Most users will want the default behavior, i.e. flags==0. The default
+behavior of PrintAnAssignment is to never hex-encode floats (float and double)
+and to only hex encode integers (i.e. char, short, and long, signed or unsigned)
+when this would reduce the number of lines in the assignment file (i.e. when
+the last dimension exceeds typeSize+2).
+
+FLAGS
+
+"assignNoPrintfExit" is a flag that asks all the routines to return an error
+code if they cannot satisfy the request, otherwise the routines call PrintfExit
+with a diagnostic error message that pinpoints the location of the error.
+
+"assignReportUnknown" asks ReadAssignmentLine to report an error if an unknown
+variable appears in the assignment file. Array elements with out-of-range
+subscripts are considered unknown variables. In the absence of this flag,
+attempts to assign to unknown variables are silently skipped (the data are
+discarded).
+
+"assignNoHexInts" tells ReadAssignmentLine and PrintAnAssignment to never read
+or save char, short, or long as hex strings. This sacrifices the compactness of
+hex strings, but enhances human readability of the assignment file. (It also
+preserves compatibility with C, making it possible to #include the assignment
+file inside a C program, and preserves portability of the assignment file
+between computers that use different byte orderings.)
+
+"assignHexFloats" tells PrintAnAssignment to always save floats (float and
+double) as hex strings, and tells ReadAssignmentLine to allow hex strings. This
+preserves the exact value (unlike decimal representation, which loses a few
+least-significant bits in typical implementations of the C stdio library), but
+sacrifices human readability and portability of the assignment file since the
+binary representation of floats is highly dependent on the compiler options and
+the kind of computer. (It also sacrifices compatibility with C, making it
+impossible to #include the assignment file.)
+
+"assignNoComment" tells PrintAnAssignment not to print the comment field.
+
+"assignEchoFile", primarily an aid to debugging, prints each line from the stream
+as it is read by ReadAssignmentLine.
+
+"assignEchoAssignments", primarily an aid to debugging, calls PrintAnAssignment
+after each assignment is performed by ReadAssignmentLine. Uncommented newline
+characters in the assignment file are echoed as well. (If assignReportUnknown is
+off then assignment statements containing unknown variables or out-of-bounds
+array references are echoed as comments: /*UNKNOWN: x=3; */.)
+
+"assignEchoComments", primarily an aid to debugging, prints both /*..*/ and
+//-style comments as they are read by ReadAssignmentLine. Uncommented newline
+characters in the assignment file are echoed as well.
+
+ERRORS
+
+An error code is returned only if the assignNoPrintfExit flag is set. Otherwise
+PrintfExit() is called with a diagnostic message.
+
+-1 assignMemoryError: couldn't allocate enough memory.
+-2 assignTypeError: unknown type, or array of string, which is not allowed.
+-3 assignVariableError: couldn't parse the variable name.
+-4 assignUnknownVariableError: unknown variable; can only occur if the 
+	assignReportUnknown flag is set.
+-5 assignSubscriptError: couldn't parse the subscript.
+-6 assignSubscriptBoundsError: out-of-bounds array element; this error is flagged only 
+	if the assignReportUnknown flag is set.
+-7 assignEqualsError: couldn't find the equals sign.
+-8 assignConstantError: couldn't parse the constant.
+-9 assignHexError: couldn't parse a hex-encoded binary object constant.
+-10 assignSemicolonError: couldn't find the semicolon.
+-11 assignFileError: couldn't open the file.
+-12 assignInconsistentDescriptionsError: two descriptions are inconsistent.
+-13 assignUnequalDataError: two described variables have significantly different data.
+
+IMPORTANT: Do not forget to mark the end of your Description array by a Description 
+with a type of zero.
+
+USING ASSIGN.C
+
+It is suggested that those who want to use this package create a header file
+with a typedef for a data structure, and write a subroutine that allocates and
+fills a Description array describing the data structure's fields. For example,
+Luminance.h defines the luminanceRecord structure and ReadLuminanceRecord.c 
+contains the function,
+	Description *DescribeLuminanceRecord(luminanceRecord *LP);
+that creates a Description array describing the particular luminanceRecord structure.
+
+CONTROLLING EXPERIMENTS
+
+Assign.c was originally written to read parameter files that control
+experiments. Typical psychophysical and physiological experiments are very
+complicated and require lots of adjustable parameters. One needs an easy way to
+change them all that is self documenting and easily reproduced, possibly months
+later. The routines provided here come in various flavors allowing you to read a
+line at a time (with any number of assignments on the line), a block at a time
+(blocks are separated by blank lines), or a whole file at a time. A line may be
+continued by ending it with backslash \. In controlling psychophysical
+experiments I use a block at the beginning of the file to define the general
+experiment followed by a block for each psychophysical "block"; within the block
+each line specifies a different experimental condition.
+
+If you decide to read the assignment file a bit at a time, bear in mind that
+ReadAssignmentLine will immediately return or PrintfExit if the assignment file
+contains even a single error. It is strongly suggested that your experimental
+program begin by doing a dry run, reading the whole assignment file through to
+check for errors, before initializing your variables, and reading it again a bit
+at a time as the experiment progresses. It would obviously be very bad to have
+the interpreter quit near the end of a 3 hour experiment.
+
+READING AND WRITING CALIBRATION DATA
+
+David Brainard and I have been discussing how to save and read calibrations of
+video displays in a portable way, so that the vision community could share
+calibration programs, and experimental programs could simply read in the data
+associated with the particular display. The current idea is that there would be
+a text file called "Monitor nn calib" associated with each display (where nn is
+the video card's slot number), and that this file would hold all kinds of
+calibration data for this display, typically produced by a variety of
+calibration programs that would each append their results. On a Macintosh
+computer these calibration files would reside in the Preferences folder. (Where
+should they go on a DOS machine?) David has developed color calibration software
+and I've developed software to calibrate gamma and MTF. We are now rewriting
+these to make them more portable. We have begun drafting an open-ended standard
+for this calibration file, to allow any number of programs to read and write to
+it, extracting or adding the data they need and know about and ignoring the
+rest. Tentatively, in order to conform to this calibration standard a new
+supplement (e.g. to calibrate the geometry of the display) should include: 1. a
+C header file that defines a suitable data structure to hold the measurements
+(and a few standard facts, e.g. the date of calibration, the name of the video
+card and serial number of the monitor, and the names of the person and program
+that did the calibration), 2. a C subroutine that accepts a pointer to such a
+data structure and returns a pointer to a "Description" array describing each of
+the data structure's fields. 3. a program (in any language) that makes the
+measurements and appends them to the monitor's calibration file as C assignments
+to the data structure's fields, which is easily accomplished by one call to
+PrintAssignmentFile. These C assignments must be readable by ReadAssignmentFile
+using the Description array created in 2. above, and it is strongly recommended
+that the calibration program itself call ReadAssignmentFile, and use
+UnequalDescribedVars() to verify that it read back exactly what it wrote. 4.
+finally, it will normally be important to provide some sort of advice on how to
+use the calibration data when they are read from the calibration file.
+
+EXAMPLE
+
+An assignment file might contain this:
+	/* first block */
+	viewingDistance=57.0;
+	trials=40;
+	message="Monitor calibrated November 21, 1993 by Katie Burns";
+	a=3;
+	
+	// second block
+	logC=-1.0;
+	a[0]=1;
+	
+	// third block
+	logC=-2; 
+	a[1][1]=1.1;a[0][0]=-INF;
+
+Here is a sample program to read the assignments given above:
+#include "VideoToolbox.h"
+#include "assert.h"
+typedef struct {
+	double *a,logC,viewingDistance;
+	long trials;
+	char *message;
+} Psychophysics;
+Description *DescribePsychophysics(Psychophysics *p);
+
+Description *DescribePsychophysics(Psychophysics *p)
+{
+	Description *d;
+	int i;
+	
+	d=AllocateDescriptions(10);
+	i=0;
+	d[i++]=Describe(stringType,&p->message,"message",NULL);
+	d[i++]=Describe(doubleType,&p->viewingDistance,"viewingDistance",NULL);
+	d[i++]=Describe(shortType,&p->trials,"trials",NULL);
+	d[i++]=Describe(doubleType,&p->logC,"logC",NULL);
+	d[i++]=Describe(doublePtrType,&p->a,"a",NULL);
+	assert(i<=10);		/*  make sure array was big enough */
+	d[i++]=NullDescription();		/*  mark end of array */
+	return d;
+}
+
+void main(void)
+{
+	Description *d;
+	Psychophysics psychophysics,*p;
+	short i,flags=0;
+	FILE *stream;
+	
+	p=&psychophysics;
+	d=DescribePsychophysics(p);
+	InitializeDescribedVars(d,flags);
+	stream=fopen("assignments","r");
+	do{
+		printf("\n/******** New block ********/\n");
+		ReadAssignmentBlock(stream,d,flags);
+		/*
+		a real program would do something useful here with the data in p
+		*/
+		PrintAssignments(stdout,d,flags);
+		FreeDescribedPtrVars(d,flags);
+	} while(!feof(stream));
+	fclose(stream);
+	FreeDescriptions(d);
+}
+
+NOTES FOR FUTURE ENHANCEMENT
+The "firstElement" approach supports Numerical Recipes vectors, i.e. 1-d arrays.
+For multi-dimensional Numerical Recipes arrays I would also need a
+"vectoredArray" flag. Vectored arrays would be fairly easy to add, only
+affecting ElementPtr, and allocation and freeing. In the meantime, note that
+Numerical Recipes provides a convert_matrix routine that provides vectored
+addressing of a normal 2-d c array.
+
+ACKNOWLEDGEMENTS
+Assign.c was inspired by an idea Beau Watson mentioned to me in the 1980's: a
+routine to read free-form parameter values at run time. Discussions with David
+Brainard motivated the extensions to support arrays, dynamic allocation, and
+unknown variables.
+

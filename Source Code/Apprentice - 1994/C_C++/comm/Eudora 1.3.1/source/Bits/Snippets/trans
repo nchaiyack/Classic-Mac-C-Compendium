@@ -1,1 +1,6 @@
-TRANSLITERATION IN EUDORAEudora has a primitive transliteration facility. It can replace any one 8 bit character with any other 8-bit character, when sending mail, receiving mail, or displaying a message. This is primarily of interest to people who communicate in languages other than English; if you don't, read no further.Here's the bottom line. Put the EudoraTables document in your Preferences folder (system folder, for you 6'ers). Start Eudora. Open a message from your in box. Hold down the shift key, and press on the blank popup in the icon bar. Choose the appropriate country code from the menu. Now, choose New... from the Message menu. Again, hold down the shift key and choose the appropriate country code from the menu. All done. 
+TRANSLITERATION IN EUDORA
+
+Eudora has a primitive transliteration facility. It can replace any one 8 bit character with any other 8-bit character, when sending mail, receiving mail, or displaying a message. This is primarily of interest to people who communicate in languages other than English; if you don't, read no further.
+
+Here's the bottom line. Put the EudoraTables document in your Preferences folder (system folder, for you 6'ers). Start Eudora. Open a message from your in box. Hold down the shift key, and press on the blank popup in the icon bar. Choose the appropriate country code from the menu. Now, choose New... from the Message menu. Again, hold down the shift key and choose the appropriate country code from the menu. All done. 
+

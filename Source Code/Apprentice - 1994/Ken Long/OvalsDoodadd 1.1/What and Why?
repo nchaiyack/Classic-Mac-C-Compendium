@@ -1,1 +1,71 @@
-"Oval Doodadd" is public domain (p) 1993 Kenneth A. Long. Norights reserved.There is nothing unique about this source.  It draws an oval in arectangle, offsets the rectangle, draws another, etc., until aparameter set by a control is reached.  There are two sets ofovals, one horizontal and one vertical (if that's possible).Pretty basic and simple control/draw setup, but can be extended tocontrol all sorts of things, such as numbers and frames in aSpriteWorld, etc.Although this is B/W, it wouldn't take much to make it color.  Acontrol could be set up to change colors.  Palette animation couldbe introduced, as well.I have a fragment set in so you can change from oval to rect.  Tryhorizontal as an oval and vertical as a rect.I needed to learn a little about controls and controlling.  When Igot the "Display" file off the BMUG board, and got it to partiallyrun, and saw the oval doodadd, I thought "I could rig in somecontrols and get these ovals to do more than they do now."  So thesource that already had working controls like  the ones I neededwas in EarthPlot 3.0. (a public domain source project). First, I madeduplicates of any of its files and put them in the project folder.Then I added any to my project I knew I needed and made my windowroutine call the first one on the tree.  So I got my oval window(with some error handling) with an EarthPlot control window overit.  Then it was only a matter of cutting out unnecessary stuffand changing point locations and names.  The only thing left wasto put the control values into the drawing loops.  A button wasput in to replace a menu item for drawing.The SetUpMenu routine in the original, was funky so I modified itto be like the one in MiniEdit.  This change made a couple otherthings not work so I fixed them.I actually had the program working 99% like I wanted it, but therewas one thing left.  When I moved the control "thumb" the valueRect didn't update until the was up or down arrow was clicked. The value updated, but the display of it did not.  When I went tofix that, the whole control mechanism no longer worked, and Icould not remember exactly how to get it to work again!The "diamond in the turd" (a valuable lesson which is learned fromthis frustrating experience) is:  If you have source that worksand are going to make changes in it, even if you made the source,MAKE A COPY OF IT FIRST!  It took me several  hours to get theprogram to work the SAME WAY that only took me 20 minutes to  dothe first time.  Call them "1.c, 2.c 3.c" and so on.  Making copiesis nothing compared to retracing actions from human memory!  Thenif it gets botched, you can say, "Well, I messed THAT up!  Let'ssee.  2-Oval.c ran.  I'll just go back to it and start over." Dig?But, in getting it back to a running project, I had to hit thebooks, and I did learn more than if I had just went with the firstone.  So maybe it wasn't such a "turd" after all.The original file is included, here.  Plus a Think C 5 projectthat uses a cleaned up version of the original.  All I did was getit to run in Think C - I did NOT debug it much.  It runs, but doesnot do all it should.Have fun!  I did!-Ken-	(kenlong@netcom.com)
+"Oval Doodadd" is public domain (p) 1993 Kenneth A. Long. No
+rights reserved.
+
+There is nothing unique about this source.  It draws an oval in a
+rectangle, offsets the rectangle, draws another, etc., until a
+parameter set by a control is reached.  There are two sets of
+ovals, one horizontal and one vertical (if that's possible).
+
+Pretty basic and simple control/draw setup, but can be extended to
+control all sorts of things, such as numbers and frames in a
+SpriteWorld, etc.
+
+Although this is B/W, it wouldn't take much to make it color.  A
+control could be set up to change colors.  Palette animation could
+be introduced, as well.
+
+I have a fragment set in so you can change from oval to rect.  Try
+horizontal as an oval and vertical as a rect.
+
+I needed to learn a little about controls and controlling.  When I
+got the "Display" file off the BMUG board, and got it to partially
+run, and saw the oval doodadd, I thought "I could rig in some
+controls and get these ovals to do more than they do now."  So the
+source that already had working controls like  the ones I needed
+was in EarthPlot 3.0. (a public domain source project). First, I made
+duplicates of any of its files and put them in the project folder.
+
+Then I added any to my project I knew I needed and made my window
+routine call the first one on the tree.  So I got my oval window
+(with some error handling) with an EarthPlot control window over
+it.  Then it was only a matter of cutting out unnecessary stuff
+and changing point locations and names.  The only thing left was
+to put the control values into the drawing loops.  A button was
+put in to replace a menu item for drawing.
+
+The SetUpMenu routine in the original, was funky so I modified it
+to be like the one in MiniEdit.  This change made a couple other
+things not work so I fixed them.
+
+I actually had the program working 99% like I wanted it, but there
+was one thing left.  When I moved the control "thumb" the value
+Rect didn't update until the was up or down arrow was clicked. 
+The value updated, but the display of it did not.  When I went to
+fix that, the whole control mechanism no longer worked, and I
+could not remember exactly how to get it to work again!
+
+The "diamond in the turd" (a valuable lesson which is learned from
+this frustrating experience) is:  If you have source that works
+and are going to make changes in it, even if you made the source,
+MAKE A COPY OF IT FIRST!  It took me several  hours to get the
+program to work the SAME WAY that only took me 20 minutes to  do
+the first time.  Call them "1.c, 2.c 3.c" and so on.  Making copies
+is nothing compared to retracing actions from human memory!  Then
+if it gets botched, you can say, "Well, I messed THAT up!  Let's
+see.  2-Oval.c ran.  I'll just go back to it and start over." 
+Dig?
+
+But, in getting it back to a running project, I had to hit the
+books, and I did learn more than if I had just went with the first
+one.  So maybe it wasn't such a "turd" after all.
+
+The original file is included, here.  Plus a Think C 5 project
+that uses a cleaned up version of the original.  All I did was get
+it to run in Think C - I did NOT debug it much.  It runs, but does
+not do all it should.
+
+Have fun!  I did!
+
+-Ken-	
+
+(kenlong@netcom.com)

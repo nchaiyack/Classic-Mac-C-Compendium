@@ -1,1 +1,27 @@
-BaseConverter 1.15/5/94BaseConverter is a simple utility that lets you view a long integer value in several different forms:- as a decimal number- as a octal number- as a hexadecimal number- as four bytes in binary- as four ascii characters- as four ascii code symbols or characters in geneva 9You can enter the value in the first 5 of these forms and instantly see it displayed in all of the others.You can change the font of the displays. This is mostly useful for viewing the ascii values in different fonts. If you use a non-Roman font that does not have digits in the same ascii positions as the standard Roman fonts, strange things will result.The font and the position of the window are remembered if the program is not on a locked disk.This program is freeware and worth every cent!Roger BrownAcademic ComputingKiewit Computation CenterDartmouth CollegeHanover, NH 03755 USAroger.brown@dartmouth.edu
+BaseConverter 1.1
+5/5/94
+
+BaseConverter is a simple utility that lets you view a long integer value in several different forms:
+- as a decimal number
+- as a octal number
+- as a hexadecimal number
+- as four bytes in binary
+- as four ascii characters
+- as four ascii code symbols or characters in geneva 9
+
+You can enter the value in the first 5 of these forms and instantly see it displayed in all of the others.
+
+You can change the font of the displays. This is mostly useful for viewing the ascii values in different fonts. If you use a non-Roman font that does not have digits in the same ascii positions as the standard Roman fonts, strange things will result.
+
+The font and the position of the window are remembered if the program is not on a locked disk.
+
+This program is freeware and worth every cent!
+
+
+Roger Brown
+Academic Computing
+Kiewit Computation Center
+Dartmouth College
+Hanover, NH 03755 USA
+
+roger.brown@dartmouth.edu

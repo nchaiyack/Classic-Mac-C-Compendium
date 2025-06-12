@@ -1,1 +1,15 @@
-## Makefile prototype for tetris application#TETRIS=		$(APPLS)/tetrisSRCS=		\		$(TETRIS)/tetris.call:		tetris_bootstrap:	@putprogmf tetris $(SRCS)
+
+#
+# Makefile prototype for tetris application
+#
+
+TETRIS=		$(APPLS)/tetris
+
+SRCS=		\
+		$(TETRIS)/tetris.c
+
+all:		tetris
+
+_bootstrap:
+	@putprogmf tetris $(SRCS)
+

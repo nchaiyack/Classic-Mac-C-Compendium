@@ -1,1 +1,28 @@
-## Definitions pertaining to the port to the XXX window system## NB: You are not expected to port STDWIN -- this has already been done.# This prototype file is provided mostly to document the definitions# exported from the various proto.port.* files, and as a template for# the STDWIN implementer.  And, of course, if you really WANT to port# stdwin to a new window system or look-and-feel (NeWS, or SunTools, or# OpenLook), you're welcome -- just check with the author of STDWIN# first to see if somebody else isn't planning to do the same.# Define the name of this port.# This is used as a subdirectory name where all the objects for this# port for a given architecture live: $(TOP)/Build/$(ARCH)/$(PORT)#PORT=		XXX# Libraries to link with for the X11 port.# Most of this is boilerplate, only the PORTSYSLIBS part depends on# what your system requires.#PORTOWNLIBS=	$(PORTBUILD)/lib/lib.aPORTSYSLIBS=	-lXXXPORTLIBS=	$(PORTOWNLIBS) $(PORTSYSLIBS)# NB: -lXXX is really OS- or site-specific as well, sigh.
+
+#
+# Definitions pertaining to the port to the XXX window system
+#
+
+# NB: You are not expected to port STDWIN -- this has already been done.
+# This prototype file is provided mostly to document the definitions
+# exported from the various proto.port.* files, and as a template for
+# the STDWIN implementer.  And, of course, if you really WANT to port
+# stdwin to a new window system or look-and-feel (NeWS, or SunTools, or
+# OpenLook), you're welcome -- just check with the author of STDWIN
+# first to see if somebody else isn't planning to do the same.
+
+# Define the name of this port.
+# This is used as a subdirectory name where all the objects for this
+# port for a given architecture live: $(TOP)/Build/$(ARCH)/$(PORT)
+#
+PORT=		XXX
+
+# Libraries to link with for the X11 port.
+# Most of this is boilerplate, only the PORTSYSLIBS part depends on
+# what your system requires.
+#
+PORTOWNLIBS=	$(PORTBUILD)/lib/lib.a
+PORTSYSLIBS=	-lXXX
+PORTLIBS=	$(PORTOWNLIBS) $(PORTSYSLIBS)
+
+# NB: -lXXX is really OS- or site-specific as well, sigh.

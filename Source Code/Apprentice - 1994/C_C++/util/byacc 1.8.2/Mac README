@@ -1,1 +1,31 @@
-byacc 1.8.2 for the MacOSported by Brent Burton, brentb@tamsun.tamu.edu---------------------------------------------------------------Notes to the port:* ported to v. 5 of Think C, with very few modifications.* Project file has "Infer Prototypes" ON* #define MACINTOSH  so the few changes are local* See other macros in the project file (Cmd-; then select prefixes)Changes:main.c------* Use Think C console support* use an alternate temporary filename scheme than the original* misc little stuff that I can't remember now ;-)---------------------------------If you come across any problems in the executable (I haven't), letme know if it was due to me.  Otherwise contact the author ofbyacc.NOTE:  unlike GNU Bison, byacc does not hinder your generated sourcecode in any way.  Byacc (Berkeley-yacc) is a total rewrite of yaccby the friendly CS folks at Berkeley and is freely distributable.-Brent
+byacc 1.8.2 for the MacOS
+
+ported by Brent Burton, brentb@tamsun.tamu.edu
+---------------------------------------------------------------
+
+Notes to the port:
+
+* ported to v. 5 of Think C, with very few modifications.
+* Project file has "Infer Prototypes" ON
+* #define MACINTOSH  so the few changes are local
+* See other macros in the project file (Cmd-; then select prefixes)
+
+Changes:
+
+main.c
+------
+* Use Think C console support
+* use an alternate temporary filename scheme than the original
+* misc little stuff that I can't remember now ;-)
+
+---------------------------------
+
+If you come across any problems in the executable (I haven't), let
+me know if it was due to me.  Otherwise contact the author of
+byacc.
+
+NOTE:  unlike GNU Bison, byacc does not hinder your generated source
+code in any way.  Byacc (Berkeley-yacc) is a total rewrite of yacc
+by the friendly CS folks at Berkeley and is freely distributable.
+
+-Brent

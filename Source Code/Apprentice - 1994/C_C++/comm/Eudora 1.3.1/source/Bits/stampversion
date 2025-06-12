@@ -1,1 +1,24 @@
-perl -x "{0}" {"parameters"} ; exit#!/usr/local/bin/perlopen (VERS,"<EudoraSrc/Version.r") || die;<VERS>;<VERS>;$_=<VERS>;close(VERS);chop;s/\s*"//;s/".*//;s/\./_/g;$vers = $_;$ci = "/usr/bin/ci -l -nv$vers -m$vers -f";while (<EudoraSrc/RCS/*>){  s=/RCS==;  s/,v//;  $cicmd = "$ci $_\n";  print $cicmd;  system($cicmd);}
+perl -x "{0}" {"parameters"} ; exit
+#!/usr/local/bin/perl
+open (VERS,"<EudoraSrc/Version.r") || die;
+<VERS>;
+<VERS>;
+$_=<VERS>;
+close(VERS);
+
+chop;
+s/\s*"//;
+s/".*//;
+s/\./_/g;
+$vers = $_;
+
+$ci = "/usr/bin/ci -l -nv$vers -m$vers -f";
+
+while (<EudoraSrc/RCS/*>)
+{
+  s=/RCS==;
+  s/,v//;
+  $cicmd = "$ci $_\n";
+  print $cicmd;
+  system($cicmd);
+}

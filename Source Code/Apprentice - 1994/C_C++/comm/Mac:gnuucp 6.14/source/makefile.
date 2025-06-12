@@ -1,1 +1,61 @@
-# Makefile for gnuucp @(#)Makefile	1.16 87/09/29.# Fix this sometime soon!DEFS =	-DBSD -DSUBDIRSHAR1 =	README ATT.CERTIFICATION PORTING BUGS Makefile gnuucp.ctl $(SRC1)SHAR2 = $(SRC2)SHAR3 =	Protocol.doc $(HDRS) comport.h comport.asmSHAR4 =	$(SYSDEP1)SHAR5 = packet.driver.ms uuxqt.c rmail.c VMS.README VMS.COM $(SYSDEP2)SRC1 =	gnuucp.cSRC2 =	uuq.c uusnap.c uumisc.c gio.c locking.cSRCS =	$(SRC1) $(SRC2)SYSDEP1=sysdep.unix sysdep.msdos sysdep.st sysdep.cpm sysdep.macSYSDEP2=sysdep.vms sysdep.amigaOBJS =	gnuucp.o locking.o uumisc.o gio.o sysdep.oHDRS =	uucp.h includes.h sysdep.h# FIXME, the rest of the programs shouldn't need the locking and serial IO.REST =	uumisc.o sysdep.o locking.oCFLAGS = -g $(DEFS)USERPGMS = uuq uusnap uuxqt rmailALL =	gnuucp $(USERPGMS)MYDIR =	/usr/pdall:	$(ALL)gnuucp: $(OBJS)	$(CC) $(CFLAGS) -o gnuucp $(OBJS)uuq: uuq.o $(REST)	$(CC) $(CFLAGS) -o uuq uuq.o $(REST)uusnap: uusnap.o $(REST)	$(CC) $(CFLAGS) -o uusnap uusnap.o $(REST)uuxqt: uuxqt.o $(REST)	$(CC) $(CFLAGS) -o uuxqt uuxqt.o $(REST)rmail: rmail.o $(REST)	$(CC) $(CFLAGS) -o rmail rmail.o $(REST)install: all	mv $(USERPGMS) $(DESTDIR)$(MYDIR)/	cd $(DESTDIR)$(MYDIR); chown uucp $(USERPGMS) 	cd $(DESTDIR)$(MYDIR); chmod 4755 $(USERPGMS) 	echo "Didn't install ./gnuucp yet"clean:	rm -f *.o $(ALL) errs lintout tagslint:	lint -hbxn $(DEFS) $(SRCS) sysdep.cshar:	shar $(SHAR1) >gnuucp.shar.1	shar $(SHAR2) >gnuucp.shar.2	shar $(SHAR3) >gnuucp.shar.3	shar $(SHAR4) >gnuucp.shar.4	shar $(SHAR5) >gnuucp.shar.5$(OBJS) $(REST):	uucp.h includes.h sysdep.h
+# Makefile for gnuucp @(#)Makefile	1.16 87/09/29.
+# Fix this sometime soon!
+
+DEFS =	-DBSD -DSUBDIR
+SHAR1 =	README ATT.CERTIFICATION PORTING BUGS Makefile gnuucp.ctl $(SRC1)
+SHAR2 = $(SRC2)
+SHAR3 =	Protocol.doc $(HDRS) comport.h comport.asm
+SHAR4 =	$(SYSDEP1)
+SHAR5 = packet.driver.ms uuxqt.c rmail.c VMS.README VMS.COM $(SYSDEP2)
+SRC1 =	gnuucp.c
+SRC2 =	uuq.c uusnap.c uumisc.c gio.c locking.c
+SRCS =	$(SRC1) $(SRC2)
+SYSDEP1=sysdep.unix sysdep.msdos sysdep.st sysdep.cpm sysdep.mac
+SYSDEP2=sysdep.vms sysdep.amiga
+OBJS =	gnuucp.o locking.o uumisc.o gio.o sysdep.o
+HDRS =	uucp.h includes.h sysdep.h
+# FIXME, the rest of the programs shouldn't need the locking and serial IO.
+REST =	uumisc.o sysdep.o locking.o
+CFLAGS = -g $(DEFS)
+USERPGMS = uuq uusnap uuxqt rmail
+ALL =	gnuucp $(USERPGMS)
+MYDIR =	/usr/pd
+
+all:	$(ALL)
+
+gnuucp: $(OBJS)
+	$(CC) $(CFLAGS) -o gnuucp $(OBJS)
+
+uuq: uuq.o $(REST)
+	$(CC) $(CFLAGS) -o uuq uuq.o $(REST)
+
+uusnap: uusnap.o $(REST)
+	$(CC) $(CFLAGS) -o uusnap uusnap.o $(REST)
+
+uuxqt: uuxqt.o $(REST)
+	$(CC) $(CFLAGS) -o uuxqt uuxqt.o $(REST)
+
+rmail: rmail.o $(REST)
+	$(CC) $(CFLAGS) -o rmail rmail.o $(REST)
+
+install: all
+	mv $(USERPGMS) $(DESTDIR)$(MYDIR)/
+	cd $(DESTDIR)$(MYDIR); chown uucp $(USERPGMS) 
+	cd $(DESTDIR)$(MYDIR); chmod 4755 $(USERPGMS) 
+	echo "Didn't install ./gnuucp yet"
+
+clean:
+	rm -f *.o $(ALL) errs lintout tags
+
+lint:
+	lint -hbxn $(DEFS) $(SRCS) sysdep.c
+
+shar:
+	shar $(SHAR1) >gnuucp.shar.1
+	shar $(SHAR2) >gnuucp.shar.2
+	shar $(SHAR3) >gnuucp.shar.3
+	shar $(SHAR4) >gnuucp.shar.4
+	shar $(SHAR5) >gnuucp.shar.5
+
+$(OBJS) $(REST):	uucp.h includes.h sysdep.h
+

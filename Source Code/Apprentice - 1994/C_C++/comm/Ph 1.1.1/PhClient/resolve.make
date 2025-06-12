@@ -1,1 +1,27 @@
-#   File:       resolve.make#   Target:     resolve#   Sources:    resolve.c#   Created:    Thursday, April 4, 1991 3:14:30 PMMacTCPCIncludes = "jlnx:MacTCP:CIncludes:"OBJECTS = resolve.c.o rslv.c.o utl.c.o fsu.c.oCOptions = -mbg ch8 -sym off -r -i {MacTCPCIncludes}resolve.c.o Ä precompile rslv.h fsu.hrslv.c.o Ä precompile utl.h rslv.h fsu.hutl.c.o Ä precompile utl.hfsu.c.o Ä precompile fsu.h utl.hprecompile Ä precompile.c	C {COptions} precompile.cresolve ÄÄ resolve.make {OBJECTS}	Link -d -c 'MPS ' -t MPST ¶		{OBJECTS} ¶		"{CLibraries}"StdClib.o ¶		"{Libraries}"Stubs.o ¶		"{Libraries}"Runtime.o ¶		"{Libraries}"Interface.o ¶		-o resolve
+#   File:       resolve.make
+#   Target:     resolve
+#   Sources:    resolve.c
+#   Created:    Thursday, April 4, 1991 3:14:30 PM
+
+MacTCPCIncludes = "jlnx:MacTCP:CIncludes:"
+
+OBJECTS = resolve.c.o rslv.c.o utl.c.o fsu.c.o
+
+COptions = -mbg ch8 -sym off -r -i {MacTCPCIncludes}
+
+resolve.c.o Ä precompile rslv.h fsu.h
+rslv.c.o Ä precompile utl.h rslv.h fsu.h
+utl.c.o Ä precompile utl.h
+fsu.c.o Ä precompile fsu.h utl.h
+
+precompile Ä precompile.c
+	C {COptions} precompile.c
+
+resolve ÄÄ resolve.make {OBJECTS}
+	Link -d -c 'MPS ' -t MPST ¶
+		{OBJECTS} ¶
+		"{CLibraries}"StdClib.o ¶
+		"{Libraries}"Stubs.o ¶
+		"{Libraries}"Runtime.o ¶
+		"{Libraries}"Interface.o ¶
+		-o resolve

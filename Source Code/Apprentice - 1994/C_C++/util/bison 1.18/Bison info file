@@ -1,1 +1,21 @@
-Bison 1.18 for Macintosh OS  (not A/UX, not MPW)This archive includes full original source and the Think C projectneeded to build Bison 1.18.  It also includes a precompiled application,ready to roll.  Please see the COPYING file for details about whatyou are allowed to do to the code, and other GNU licensing information.This port does not need MPW in order to run; it runs by itself underthe MacOS.  An MPW version is already available at finer ftp sitesnear you.Bison is tool to generate language parsers for compilers, commandinterpreters, data file readers, etc.  It is compatible with theAT&T UNIX command "yacc" and generates better parsers.I'm glad I could port this; enjoy!-Brentbpb9204@tamsun.tamu.edu----------------------------------------------------------------
+Bison 1.18 for Macintosh OS  (not A/UX, not MPW)
+
+This archive includes full original source and the Think C project
+needed to build Bison 1.18.  It also includes a precompiled application,
+ready to roll.  Please see the COPYING file for details about what
+you are allowed to do to the code, and other GNU licensing information.
+
+This port does not need MPW in order to run; it runs by itself under
+the MacOS.  An MPW version is already available at finer ftp sites
+near you.
+
+Bison is tool to generate language parsers for compilers, command
+interpreters, data file readers, etc.  It is compatible with the
+AT&T UNIX command "yacc" and generates better parsers.
+
+I'm glad I could port this; enjoy!
+
+-Brent
+bpb9204@tamsun.tamu.edu
+----------------------------------------------------------------
+

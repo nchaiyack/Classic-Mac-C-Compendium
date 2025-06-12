@@ -1,1 +1,6 @@
-If {BackGroundShell}	(OMMakeAppl "Incognito" "MakeFile" && "Incognito" && Beep 3D,15,128) || Beep d,20Else	Directory "`OM_SendAE PINF %Path`"	(OMMakeAppl "Incognito" "MakeFile" && "Incognito" && Beep 3D,15,128) || (Beep d,20;OM_SendAE ERR -FRNTbool True)End
+If {BackGroundShell}
+	(OMMakeAppl "Incognito" "MakeFile" && "Incognito" && Beep 3D,15,128) || Beep d,20
+Else
+	Directory "`OM_SendAE PINF %Path`"
+	(OMMakeAppl "Incognito" "MakeFile" && "Incognito" && Beep 3D,15,128) || (Beep d,20;OM_SendAE ERR -FRNTbool True)
+End

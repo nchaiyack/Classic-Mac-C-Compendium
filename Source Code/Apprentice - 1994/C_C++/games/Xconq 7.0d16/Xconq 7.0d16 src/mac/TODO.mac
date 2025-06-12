@@ -1,1 +1,26 @@
-To Do(Things that should be done before release of the next version.)--MacintoshFix where clicking on a saved game doesn't always set the default volume correctly and therefore can't load the module.Fix flakiness of scrolling in history window.Make sure all windows all or mostly on screen, even for small screens.  No window should start out so large that its controls don't fit on screen.Fix where startup of mplayer (in autonext mode only?) causes gray screen withone unit visible only, frozen while ai inits.Flush mouse input etc while screen is scrolling or AI is thinking.When in autonext, scroll map correctly at beginning of turn.Eliminate occasional need to click a second time to get a build to happen.Disable "select all" item if no windows are up.Fix where some occ departures omit cell display update.Add keyboard command help node.
+To Do
+
+(Things that should be done before release of the next version.)
+
+--Macintosh
+
+Fix where clicking on a saved game doesn't always set the default volume correctly and therefore can't load the module.
+
+Fix flakiness of scrolling in history window.
+
+Make sure all windows all or mostly on screen, even for small screens.  No window should start out so large that its controls don't fit on screen.
+
+Fix where startup of mplayer (in autonext mode only?) causes gray screen with
+one unit visible only, frozen while ai inits.
+
+Flush mouse input etc while screen is scrolling or AI is thinking.
+
+When in autonext, scroll map correctly at beginning of turn.
+
+Eliminate occasional need to click a second time to get a build to happen.
+
+Disable "select all" item if no windows are up.
+
+Fix where some occ departures omit cell display update.
+
+Add keyboard command help node.

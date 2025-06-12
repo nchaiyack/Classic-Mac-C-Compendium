@@ -1,1 +1,7 @@
-eye 1.6  1.6  1.6light directional -1 -1 1 whitesurface plastic CornflowerBlue mono 0.3 0.3dents 0.9 scale 0.3sphere 0 0 0 1           % sphere object 
+eye 1.6  1.6  1.6
+light directional -1 -1 1 white
+surface plastic CornflowerBlue mono 0.3 0.3
+dents 0.9 scale 0.3
+sphere 0 0 0 1           % sphere object
+ 
+

@@ -1,1 +1,13 @@
-File: POVDOC.SEATitle: POV-Ray 2.0 Mac-Main DocsKeywords: POV POVRAY POVDOC MACDescr: Macintosh version of POVDOC.SEA,the documentation archive for thePersistence of Vision Ray TracerPOV-Ray version 2.0.  It contains allthe main documentation, some necessaryscene definition "include" files, and aDEMO folder of example scenes.  See AlsoPOVINF.DOC, and the POVSCN.SEA,POVMAC.SEA, POVMNF.SEA, andPOVSRC.SEA archives.
+File: POVDOC.SEA
+Title: POV-Ray 2.0 Mac-Main Docs
+Keywords: POV POVRAY POVDOC MAC
+Descr: Macintosh version of POVDOC.SEA,
+the documentation archive for the
+Persistence of Vision Ray Tracer
+POV-Ray version 2.0.  It contains all
+the main documentation, some necessary
+scene definition "include" files, and a
+DEMO folder of example scenes.  See Also
+POVINF.DOC, and the POVSCN.SEA,
+POVMAC.SEA, POVMNF.SEA, and
+POVSRC.SEA archives.

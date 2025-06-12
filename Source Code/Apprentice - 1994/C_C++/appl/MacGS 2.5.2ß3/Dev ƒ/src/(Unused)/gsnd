@@ -1,1 +1,1 @@
-gs -DNODISPLAY -q $*
+gs -DNODISPLAY -q $*

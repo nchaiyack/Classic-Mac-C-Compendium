@@ -1,1 +1,102 @@
-Projects (non-essential features to add)--MacintoshMove general prototypes and decls out of Mac-specific files.Support large numbers of sides in setup by adding a scroll bar between list of sides and the buttons.Draw side progress bars incrementally when possible.Theater boundarys should be done in a contrasting way.Describe not-yet-arrived units correctly in list windows.Check for events between every few rows of drawing, be able to abort or restart drawing if requested.Make designer palette into a floating window.Do mouse-based actions when mouse *released*.Use unit->uihook to optimize re-selection of units in maps.Clicking in construction should cause next window back to scroll/hilite selected unit (or add a button to do?)Use drag of unit to indicate waypoints of a path, feedback with envelopes of route and only do waypoints when indicating points outside shortest route.Be able to double-click in build dialog to set construction .When laying out list window, precompute widths of columns using max/expected string widths for type names etc.  Account for width of headers and desired spacing between columns.Make pdoc load game and print the full description of it.Allow multiple units to be selected in list windows.Change row-drawing in map to rect-drawing or region-drawing approach, do more by data layers.Instead of scrolling to new screen, ask about units already visible, skipping through others until time to scroll.Express merge by dragging onto unit, express detach by supplying an amount in modal dialog (awkward, but rare?)Initial setup should try to keep windows from overlapping.Should be able to zoom or resize side list to show relative standings and other detail about each side.Allow for more flexibility in size of emblem relative to unit (a preference?)Add hierarchy of game/scenario to new game dialog.  Might have a disabled main game entry in the list if it is not playable by itself (should mark the playable games).Display instructions and notes from multiple modules possibly, need to say how to do this (explicit "append" directive at end of instructions?).Implement a progress bar for internals of AI calcs or at least a watch cursor.Extend construction dialog to include material production.Build routines to insert a string into a "field" of a list entry, instead of rebuilding entire entry.Add menu equivalents for wake/sleep, mark to indicate whether any of a group of selected units matches each item.Unhighlight forward/backward arrows when no units to look at.Command-. should be able to interrupt nearly any calculation.Preferences dialog should have a list of specific setups to choose from ("big screen", "careful play", etc) impl as config-names.  Player config objects should include Mac-specific flags then...  Dialog can also have several screens of options.To display names, make a layer of shorts where each value is location of cell with the legended object.  Cell itself has access to legend, plus flag indicating direction and position of beginning of legend.  Then to erase legend, have to clear each cell that refers to given cell.   Also need to repair legend correctly when another unit passes through it.When drawing rubberband line for movement, make line heavier for part of movement that will happen immediately.World is totally lit if dimensions < half of world circumference and all six corners of hexagon have same lighting.  If world totally dark, draw darkening mask only.Draw question marks (with large gray ppat?) or faint hex outlines to indicate unseen terrain better.  Question mark pattern should be optional?Modify ImFam to generate both cicns and ICONs for b/w images in imf.  Make resources be alphabetically arranged.When listing units by location, add twist-down for occupants, group stackmembers with bar or some such.Be able to draw more unit info on map window, at least at high mag powers.Do num parts/hp, mp/acp, in misc corners a la Empire Master.  Unit id would be useful also sometimes.Implement both randomly-chosen and cycling image sets for the map window.Implement images and sound effects for combat (at different scales, so need to incorporate into imf machinery).To indicate available movement, change cursor to reflect accessibility and amount of time needed to get there (ETA) or display in control panel or elsewhere on map.Implement doctrine as dialogs examining doctrine objects.Add button in unit closeups.Do offscreen drawing for visible map plus part of area around, but need to calc memory limits so as not to exhaust space prematurely.  Do one offscreen area/map, precalc size and retain, use individual cell drawing otherwise.Make ImFam generate version info for an Images file. (vers resource?)Be able to hit key to bring up useful data while rubberbanding, or else haveadditional popup with this info.Add at least one foreign-language localization, for testing.Support distinct images for individual units, via a hook property.  Maintain id->image table (hash table? do sizes as well).Add a graph window that displays up to 4-5 chosen statistics against time.  Needs choice of what to display and a subset selector for each graph.  Some stats will have records that have been kept, others will start only when graph is requested, but then keep accumulating even if no longer being displayed.
+Projects (non-essential features to add)
+
+--Macintosh
+
+Move general prototypes and decls out of Mac-specific files.
+
+Support large numbers of sides in setup by adding a scroll bar between list of sides and the buttons.
+
+Draw side progress bars incrementally when possible.
+
+Theater boundarys should be done in a contrasting way.
+
+Describe not-yet-arrived units correctly in list windows.
+
+Check for events between every few rows of drawing, be able to abort or restart drawing if requested.
+
+Make designer palette into a floating window.
+
+Do mouse-based actions when mouse *released*.
+
+Use unit->uihook to optimize re-selection of units in maps.
+
+Clicking in construction should cause next window back to scroll/hilite selected unit (or add a button to do?)
+
+Use drag of unit to indicate waypoints of a path, feedback with envelopes of route and only do waypoints when indicating points outside shortest route.
+
+Be able to double-click in build dialog to set construction .
+
+When laying out list window, precompute widths of columns using max/expected string widths for type names etc.  Account for width of headers and desired spacing between columns.
+
+Make pdoc load game and print the full description of it.
+
+Allow multiple units to be selected in list windows.
+
+Change row-drawing in map to rect-drawing or region-drawing approach, do more by data layers.
+
+Instead of scrolling to new screen, ask about units already visible, skipping through others until time to scroll.
+
+Express merge by dragging onto unit, express detach by supplying an amount in modal dialog (awkward, but rare?)
+
+Initial setup should try to keep windows from overlapping.
+
+Should be able to zoom or resize side list to show relative standings and other detail about each side.
+
+Allow for more flexibility in size of emblem relative to unit (a preference?)
+
+Add hierarchy of game/scenario to new game dialog.  Might have a disabled main game entry in the list if it is not playable by itself (should mark the playable games).
+
+Display instructions and notes from multiple modules possibly, need to say how to do this (explicit "append" directive at end of instructions?).
+
+Implement a progress bar for internals of AI calcs or at least a watch cursor.
+
+Extend construction dialog to include material production.
+
+Build routines to insert a string into a "field" of a list entry, instead of rebuilding entire entry.
+
+Add menu equivalents for wake/sleep, mark to indicate whether any of a group of selected units matches each item.
+
+Unhighlight forward/backward arrows when no units to look at.
+
+Command-. should be able to interrupt nearly any calculation.
+
+Preferences dialog should have a list of specific setups to choose from ("big screen", "careful play", etc) impl as config-names.  Player config objects should include Mac-specific flags then...  Dialog can also have several screens of options.
+
+To display names, make a layer of shorts where each value is location of cell with the legended object.  Cell itself has access to legend, plus flag indicating direction and position of beginning of legend.  Then to erase legend, have to clear each cell that refers to given cell.   Also need to repair legend correctly when another unit passes through it.
+
+When drawing rubberband line for movement, make line heavier for part of movement that will happen immediately.
+
+World is totally lit if dimensions < half of world circumference and all six corners of hexagon have same lighting.  If world totally dark, draw darkening mask only.
+
+Draw question marks (with large gray ppat?) or faint hex outlines to indicate unseen terrain better.  Question mark pattern should be optional?
+
+Modify ImFam to generate both cicns and ICONs for b/w images in imf.  Make resources be alphabetically arranged.
+
+When listing units by location, add twist-down for occupants, group stack
+members with bar or some such.
+
+Be able to draw more unit info on map window, at least at high mag powers.
+Do num parts/hp, mp/acp, in misc corners a la Empire Master.  Unit id would be useful also sometimes.
+
+Implement both randomly-chosen and cycling image sets for the map window.
+
+Implement images and sound effects for combat (at different scales, so need to incorporate into imf machinery).
+
+To indicate available movement, change cursor to reflect accessibility and amount of time needed to get there (ETA) or display in control panel or elsewhere on map.
+
+Implement doctrine as dialogs examining doctrine objects.
+Add button in unit closeups.
+
+Do offscreen drawing for visible map plus part of area around, but need to calc memory limits so as not to exhaust space prematurely.  Do one offscreen area/map, precalc size and retain, use individual cell drawing otherwise.
+
+Make ImFam generate version info for an Images file. (vers resource?)
+
+Be able to hit key to bring up useful data while rubberbanding, or else have
+additional popup with this info.
+
+Add at least one foreign-language localization, for testing.
+
+Support distinct images for individual units, via a hook property.  Maintain id->image table (hash table? do sizes as well).
+
+Add a graph window that displays up to 4-5 chosen statistics against time.  Needs choice of what to display and a subset selector for each graph.  Some stats will have records that have been kept, others will start only when graph is requested, but then keep accumulating even if no longer being displayed.
+

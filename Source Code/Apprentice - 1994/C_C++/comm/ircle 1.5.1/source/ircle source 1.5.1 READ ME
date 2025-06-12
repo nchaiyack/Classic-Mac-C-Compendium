@@ -1,1 +1,20 @@
-------------------------ircle source 1.5.1 READ ME------------------------This is a Macintosh IRC (Internet Relay Chat) client. It allows you to talk to people all over the world over the Internet.It will run on any Mac with System version 6.0 or greater and the MacTCP driver, version 1.0 or greater.This is free software according to the GNU General Public License (any version). Refer to the file COPYING for precise terms and conditions.This package contains complete source code and auxiliary files for building the binary with THINK Pascal 2.0.1 or later versions.Portions are Copyright 1992 Peter N.Lewis, read the notices in theTCP Libraries files.Send comments, suggestions, bug reports etc. to:Olaf Titz  <s_titz@ira.uka.de>
+------------------------
+ircle source 1.5.1 READ ME
+------------------------
+
+This is a Macintosh IRC (Internet Relay Chat) client. 
+It allows you to talk to people all over the world over the Internet.
+
+It will run on any Mac with System version 6.0 or greater and the 
+MacTCP driver, version 1.0 or greater.
+
+This is free software according to the GNU General Public License 
+(any version). Refer to the file COPYING for precise terms and conditions.
+
+This package contains complete source code and auxiliary files for 
+building the binary with THINK Pascal 2.0.1 or later versions.
+Portions are Copyright 1992 Peter N.Lewis, read the notices in the
+TCP Libraries files.
+
+Send comments, suggestions, bug reports etc. to:
+Olaf Titz  <s_titz@ira.uka.de>

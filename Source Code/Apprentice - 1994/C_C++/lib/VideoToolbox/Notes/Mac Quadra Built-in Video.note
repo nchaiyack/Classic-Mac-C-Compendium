@@ -1,1 +1,249 @@
-[Downloaded from CompuServe 12/17/91 dgp][The message was uploaded by CompuServe user 76174,2707, who is presumably the author.]> From: Dale_Adams@gateway.qm.apple.com (Dale Adams)> Newsgroups: comp.sys.mac.hardware> Subject: Mac Quadra Video Explained, Part 1> Date: 25 Nov 91 16:39:34 GMT> Organization: Apple Computer, Inc.,  Cupertino, CAMacintosh Quadra Built-In VideoThere have been quite a few questions in this (and other) news groups concerning the built-in video capabilities of the new Macintosh Quadra 700 and 900.  In response to these questions, here is an article which provides an in-depth (and accurate!) description of the Quadra video capabilities.  This article discusses a number of general Quadra video topics, details how to wire the video connector sense pins to access all the Quadra's supported video modes, and describes the memory configurations necessary to support each of the video modes at specific pixel depths.  (And by the way, since I designed the video hardware for both Mac Quadras, you can be reasonably sure this information is accurate.)[Note: You may want to use a mono-spaced, 10-point font to ensure that that that tables in the following sections are formatted correctly.]General Quadra Video Design Philosophy--------------------------------------The Quadras were designed with a flexible video hardware section in order to support a wide variety of displays.  Since the purchaser of one of these CPUs is paying for a frame buffer on the motherboard (whether (s)he wants it or not), and since the Quadras were designed to be high performance machines, the frame buffer was designed to be both very flexible (to support most displays a user may want to use) and to be relatively high performance (to match the computer's capabilities).Obviously every display made by every 3rd party monitor vendor can't be supported by the onboard video, but the Quadras do support a much wider range of displays at a higher level of performance than any previous Macintosh.  The Quadra 700 and 900 support pixel depths ranging from 1 to 32 bits per pixel (bpp), Apple displays ranging from the 512 x 384 12-inch color monitor through the 1152 x 870 21-inch color monitor, pixel clocks ranging from 12 to 100 MHz, and a variety of industry standards such as VGA, SVGA, NTSC, and PAL.  The Mac Quadra video port produces RS-343 RGB, and also provides horizontal, vertical and composite sync outputs.  Composite or S-video output is not provided, but can be accomplished by use of an external RGB-to-composite encoder.  The Quadra 700 and 900 also support Apple convolution for flicker-reduction on interlaced displays (i.e., NTSC and PAL) at up to 8 bpp.  The Mac Quadras automatically detect the type of display attached to the video connector via 3 'sense' pins on the video connector.  Depending on the wiring of these 3 pins, software in ROM configures the video hardware for one the supported display types.  (A full description of sense pin wiring and supported display types follows later in this article.)The Quadra 700/900 provide the highest built-in video performance of any Macintosh CPU to date.  In a (very) simplified graphics model, we could say that performance depends on two main factors: processor horsepower and the bandwidth the processor has into frame  buffer memory.   These machines already have a fast processor - the 68040 - which runs standard 32-bit QuickDraw.  To provide high bandwidth into frame buffer memory, dedicated video RAM (VRAM) was used for the frame buffer, and that VRAM was placed directly on the 68040 processor's local bus.  This provides the 68040 the same access time into frame buffer memory that it has into main system RAM.  (The Quadra frame buffer can support transfer rates in excess of 40 MBytes/sec.)  In addition, memory options such as fast page mode are supported, which can improve graphics performance for operations such as scrolling, offscreen-to-onscreen pixmap transfers, etc.In a number of cases the design was optimized for high performance over low cost.  A good example of this is 32 bpp operation on Apple's standard 13-inch RGB monitor at 640 x 480 resolution (and this also applies to VGA and NTSC), which is probably the most common color monitor in use on the Macintosh.  The actual number of memory bytes needed to support 24 bpp is 640 x 480 x 3 = 921,600.  This would seem to fit within 1 MByte of memory (as is the case with the Apple 8*24 video card), but the Quadras actually require 2 MBytes of VRAM for this mode.  The 8*24 card supports 24 bpp at 640 x 480 by using a storage mode called 'chunky planar' to fully utilize all its 1 MByte of VRAM.  However, this results in having to perform 3 separate memory accesses for each 24-bit pixel read from or written to the frame buffer.  (This is done in hardware so software only performs a single read or write.)  On a NuBus video card, this inefficiency is partially masked by the synchronization delays which occur at the processor-bus/NuBus interface.  However, when frame buffer memory is placed directly on the processor bus, this approach results in a nearly 3X performance degradation.  This was judged unacceptable for the Quadras.  Each 24-bit pixel occupies one longword (4-bytes) in VRAM, so the Quadras actually provide 32 bpp for the 640 x 480 resolution.  This pushes the memory requirement for this mode over the 1 MByte boundary (640 x 480 x 4 = 1,228,800 bytes).  Performance is improved still more by another frame buffer architectural feature.  Video memory in the Quadras is organized into 4 'banks' of 512 KBytes per bank.  As mentioned earlier, Quadra VRAM can operate in fast page mode.  In addition, each bank of VRAM operates in fast page mode independently of the other 3 banks.  This causes the number of in-page 'hits' to increase, and thus improves the effective bandwidth into the frame buffer.  Also, at 32 bpp, 640 x 480 resolution, each row is set to 4096 bytes, or 1024 32-bit pixels.  Each successive row is assigned to a different VRAM bank (modulo 4, of course).  This memory organization improves performance during commonly performed graphics operations such as vertical scrolling.In any design there are a number of tradeoffs to be made, and this is certainly true for the frame buffer in the Mac Quadra machines.  While the video does operate at 32 bpp on up to 16-inch displays, it does not support 21-inch displays at this pixel depth since this would have significantly raised the cost of the motherboard.  (Memory capacity and bus bandwidths would essentially have to double, and this would be expensive.)  It does support NTSC and PAL timing, but does not provide a composite video output.  While it is much faster than any non-accelerated video card, there are accelerated video cards that are faster (and much more expensive, too, by the way).  A separate graphics processor was not added primarily for cost reasons.  However, a graphics processor such as the 29000 RISC chip on the 8*24GC card can only speed up the graphics operations that it was designed to know about.  If an application program bypasses QuickDraw (which is what most Mac graphics processors are designed to accelerate), a graphics accelerator will not improve performance, and can actually cause a performance degradation.Overall, the Macintosh Quadra video provides a reasonable compromise of cost, performance, and features, which provides the video needed by the majority of Macintosh users at a reasonable price.Supported Display Configurations and Monitor ID Codes-----------------------------------------------------The Quadra frame buffer determines what type of display is attached to the video connector by examining the state of 3 sense line pins.  The following chart details how these three pins must be wired for each of the supported display types.  For each supported display, the screen resolution (horiz. pixels  X  vertical pixels), dot clock frequency, and the vertical and horizontal scan rates are listed.Basically, the Quadra 700 & 900 support any display, whether from Apple or from another vendor, that meets one of the following specifications:STANDARD SENSE CODES:                        Sense pins       Hor x Vert    Dot      Vert     HorizDisplay                10   7    4      Pixels        Clock    Refrsh   Refrsh-----------            -----------      ----------    -----    ------   ------ Apple 21Ó Color        0    0    0     1152 x 870     100        75     68.7Apple Portrait         0    0    1      640 x 870     57.2832    75     68.9 12" Apple RGB          0    1    0      512 x 384     15.6672    60.15  24.48 Apple Two-Page Mono.   0    1    1     1152 x 870     100        75     68.7 NTSC                   1    0    0  underscan-512x384 12.2727    59.94  15.7                       1    0    0  overscan- 640x480 12.2727    59.94  15.7(To produce a color NTSC signal, a RGB-to-NTSC converter is required.)12" AppleMonochrome    1    1    0      640 x 480    30.24      66.7    35.0 13" Apple RGB          1    1    0      640 x 480    30.24      66.7    35.0Extended sense codes will be examined if the following sense code is detected:                       1    1    1 NOTE 1 on above monitors: A sense pin value of 0 means that the pin should begrounded to the C&VSYNC.GND signal; a value of 1 means do not connect the pin. NOTE 2 on above monitors: sense pins 4, 7, and 10 are referred to as SENSE0,SENSE1, and SENSE2 in pinout tables for the video connectors.NOTE 3: The terms 'underscan' and 'overscan' are used to describe the active video resolution for NTSC and PAL modes.  Underscan means that the active video area appears in a rectangle centered on the screen with a black surrounding area.  This ensures that the entire active video area always is displayed on all monitors.  Overscan utilizes the entire possible video area for NTSC or PAL.  However, most monitors or televisions will cause some of this video to be lost beyond the edges of the display, so the entire image will not be seen. EXTENDED SENSE CODES: NOTE for extended sense codes: A sense pin pair value of 0 means those pins should be tied together (as opposed to grounding the pins to pin 11); a value of 1 means do not connect the pins.  Do _not_ wire any of these pins to ground.                      Sense pins      Hor x Vert      Dot      Vert     HorizDisplay             4-10 10-7 7-4      Pixels        Clock    Refrsh   Refrsh-----------         -------------    ----------      -----    ------   ------16" Color,(such as E-Machines) 0    1    1      832 x 624      57.2832    75     49.7 PALPAL has two wiring options, using the extended sense pin configuration.  To produce a color PAL signal, an RGB-to-PAL converter is required. PAL Option 1         0    0    0   underscan-640x480  14.75     50     15.625                                   overscan-768x576   14.75     50     15.625Note: This configuration does not presently doesn't support 24 bits per pixel. PAL Option 2         1    1    0   underscan-640x480  14.75     50     15.625                                   overscan-768x576   14.75     50     15.625Note: This sense code also requires a diode between sense pins 10 & 7, with anode towards pin 7, cathode towards pin 10.  VGA                  1    0    1       640 x 480      25.175    59.95   31.47 SVGA                 1    0    1       800 x 600      36         56     35.16To enable SVGA, after configuring and connecting the monitor for VGA, open the Monitors control panel and select Options.  Choose Super VGA from the dialog and reboot your system.No external monitor (video halted)                     1    1    1  Here are the Quadra video connector pinouts: Pin    Signal          Description-----  -----------     ----------------------------------------1      RED.GND         Red Video Ground2      RED.VID         Red Video3      CYSNC~          Composite Sync4      MON.ID1         Monitor ID, Bit 1 (also known as SENSE0)5      GRN.VID         Green Video6      GRN.GND         Green Video Ground7      MON.ID2         Monitor ID, Bit 2 (also known as SENSE1)8      nc              (no connection)9      BLU.VID         Blue Video10     MON.ID3         Monitor ID, Bit 3 (also known as SENSE2)11     C&VSYNC.GND     CSYNC & VSYNC Ground12     VSYNC~          Vertical Sync13     BLU.GND         Blue Video Ground14     HSYNC.GND       HSYNC Ground15     HSYNC~          Horizontal SyncShell  CHASSIS.GND     Chassis Ground  If your monitor is a VGA type, you can try the following cable pinouts. Macintosh Quadra                         VGA ConnectorDB-15-------------                           -------------- 2  ------------------- Red Video ------------ 11  ------------------- Red Ground ----------- 69  ------------------- Blue Video ----------- 313 ------------------- Blue Ground ---------- 85  ------------------- Green Video ---------- 26  ------------------- Green Ground --------- 715 ------------------- Hsync ---------------- 1312 ------------------- Vsync ---------------- 1414 ------------------- Sync Ground ---------- 1010 ------------------|7  ------------------| Connect 7 and 10 so the sense pin ID will equal VGA There are a few issues to keep in mind with VGA monitors:  * VGA monitors will vary depending on the vendor.  Check with the vendor   about Macintosh Quadra compatibility before buying, or better yet, actually   try the monitor with a Quadra to see if it works and if the quality is   acceptable.  * Vendors have different image quality specifications.  There may be   significant differences between Apple monitors and the wide range of   VGA monitors.  Do a side-by-side comparison of the monitors you are   considering before buying.  * Many third party cable vendors have off-the-shelf cables that should work. Most NTSC devices use an RCA-type phono-connector and the following diagram uses that as a reference point.  A cable wired as follows may allow many different brands of NTSC monitors to work on a Macintosh Quadra.  I would advise you to test the monitor on a Macintosh Quadra prior to purchase to see if it meets your expectations. Adjust the phono-connector side to whatever type of connector is used (RCA, BNC, etc.).  "Tip" is the pin in the center of the connector (the signal); the sleeve is flange around the outer edges of the connector (the chassis ground).    Card Connector                     RCA-Type Phono-Connector   --------------                     ------------------------   4      MON.ID1  (sense0) --|   7      MON.ID2  (sense1) --|   11     C&VSYNC.GND --------|    5      GRN.VID  -----------------> Tip (signal)   Shell  CHASSIS.GND --------------> Sleeve (ground) By grounding pin 4 and pin 7 to pin 11, the Macintosh Quadras are told thatan NTSC monitor is attached.  The actual black and white video signal is on pin 5 and connects to the center (Tip) of the phono-plug.  The shell of the card connector connects to the sleeve of the phono-plug. To acquire a color NTSC signal from a Quadra (or any Apple Macintoshdisplay card), an RGB-to-NTSC converter is required, such as thoseavailable from RasterOps, Truevision, and Computer Friends.  Sorry, but I do not have the cable requirements for any of these devices.VRAM Requirements for Supported Display Configurations------------------------------------------------------The Quadra frame buffer supports a variety of pixel depths, from 1 to 32 bits per pixel (bpp).  The supported pixel depths (1, 2, 4, 8, or 32 bpp) depend on the display resolution and the amount of VRAM in the Quadra.  The fully expanded capability of both Quadras is the same, i.e., both the 900 and 700 can be expanded to 2 MB of VRAM.  However, note that 512K of VRAM is the minimum configuration for the Quadra 700 whereas it is 1MB of VRAM for the Quadra 900 (this is the amount of VRAM soldered on the motherboard).  The Quadra 700 has 6 VRAM expansion slots, while the 900 has only 4.  Also note that only 0.5 MB, 1 MB, and 2 MB configurations are supported (i.e., 1.5 MB is not supported).The Quadra 700 and 900 can be expanded using 256K (i.e., 128K x 16) 100 nS VRAM SIMMs.  These are the same as the VRAM SIMM shipped in the base configuration of the Macintosh LC, or the VRAM SIMMs used to expand an Apple 4*8 video card to an 8*24 card.  Note that the 512K VRAM SIMMs used to upgrade the Mac LC will _not_ work in a Quadra.  (The 256K SIMMs removed from an LC when performing a VRAM upgrade will work, however.  All those old 256K VRAM SIMMs laying around from upgraded LCs can be used to upgrade Quadra 700s and 900s!)  The DRAM SIMMs used to upgrade an 8*24GC video card will also not work.The following chart lists the Quadra 700 & 900 built-in video's maximum pixeldepth supported depending upon the VRAM configuration: Display size                        512K VRAM     1MB VRAM     2MB VRAM 12-inch landscape384 x 512(such as 12" RGB)                    8 bpp         32 bpp       32 bpp 12-inch Monochrome640 x 480                            8 bpp          8 bpp        8 bpp 13-inch RGB & VGA640 x 480                            8 bpp          8 bpp       32 bpp SVGA800 x 600                            8 bpp          8 bpp       32 bpp 15-inch Portrait (b/w)640 x 870                            4 bpp          8 bpp       8 bpp 16" Color,832 x 624                            8 bpp          8 bpp       32 bpp 2-Page Display (b/w)1152 x 870                           4 bpp          8 bpp       8 bpp 21" Color1152 x 870                           4 bpp          8 bpp       8 bpp PAL without convolutionunderscan-640x480                     8 bpp        8 bpp        32 bpp*overscan-768x576                      8 bpp        8 bpp        32 bpp* PAL with convolutionunderscan-640x480                      n.a.        8 bpp         8 bppoverscan-768x576                       n.a.        8 bpp         8 bpp NTSC without convolutionunderscan-512x384                     8 bpp        8 bpp        32 bppoverscan- 640x480                     8 bpp        8 bpp        32 bpp NTSC with convolutionunderscan-512x384                     n.a          8 bpp         8 bppoverscan- 640x480                     n.s          8 bpp         8 bpp *Note there are two ways to cable a PAL monitor to a Quadra; only by using theproper extended sense code are you able to achieve 32 bits per pixel.  For details, refer to the previous article on Quadra video sense pinouts.********************************************************************** Dale Adams             *   Opinions expressed are not necessarily ** Apple Computer, Inc.   *   those of my employer.                  **********************************************************************> From: Dale_Adams@gateway.qm.apple.com (Dale Adams)> Newsgroups: comp.sys.mac.hardware> Subject: Mac Quadra Video Explained, Part 3> Date: 25 Nov 91 17:02:16 GMT> Organization: Apple Computer, Inc.,  Cupertino, CA
+[Downloaded from CompuServe 12/17/91 dgp]
+[The message was uploaded by CompuServe user 76174,2707, who is presumably the author.]
+
+> From: Dale_Adams@gateway.qm.apple.com (Dale Adams)
+> Newsgroups: comp.sys.mac.hardware
+> Subject: Mac Quadra Video Explained, Part 1
+> Date: 25 Nov 91 16:39:34 GMT
+> Organization: Apple Computer, Inc.,  Cupertino, CA
+
+Macintosh Quadra Built-In Video
+
+There have been quite a few questions in this (and other) news groups concerning the built-in video capabilities of the new Macintosh Quadra 700 and 900.  In response to these questions, here is an article which provides an in-depth (and accurate!) description of the Quadra video capabilities.  This article discusses a number of general Quadra video topics, details how to wire the video connector sense pins to access all the Quadra's supported video modes, and describes the memory configurations necessary to support each of the video modes at specific pixel depths.  (And by the way, since I designed the video hardware for both Mac Quadras, you can be reasonably sure this information is accurate.)
+
+[Note: You may want to use a mono-spaced, 10-point font to ensure that that that tables in the following sections are formatted correctly.]
+
+
+General Quadra Video Design Philosophy
+--------------------------------------
+The Quadras were designed with a flexible video hardware section in order to support a wide variety of displays.  Since the purchaser of one of these CPUs is paying for a frame buffer on the motherboard (whether (s)he wants it or not), and since the Quadras were designed to be high performance machines, the frame buffer was designed to be both very flexible (to support most displays a user may want to use) and to be relatively high performance (to match the computer's capabilities).
+
+Obviously every display made by every 3rd party monitor vendor can't be supported by the onboard video, but the Quadras do support a much wider range of displays at a higher level of performance than any previous Macintosh.  The Quadra 700 and 900 support pixel depths ranging from 1 to 32 bits per pixel (bpp), Apple displays ranging from the 512 x 384 12-inch color monitor through the 1152 x 870 21-inch color monitor, pixel clocks ranging from 12 to 100 MHz, and a variety of industry standards such as VGA, SVGA, NTSC, and PAL.  The Mac Quadra video port produces RS-343 RGB, and also provides horizontal, vertical and composite sync outputs.  Composite or S-video output is not provided, but can be accomplished by use of an external RGB-to-composite encoder.  The Quadra 700 and 900 also support Apple convolution for flicker-reduction on interlaced displays (i.e., NTSC and PAL) at up to 8 bpp.  The Mac Quadras automatically detect the type of display attached to the video connector via 3 'sense' pins on the video connector.  Depending on the wiring of these 3 pins, software in ROM configures the video hardware for one the supported display types.  (A full description of sense pin wiring and supported display types follows later in this article.)
+
+The Quadra 700/900 provide the highest built-in video performance of any Macintosh CPU to date.  In a (very) simplified graphics model, we could say that performance depends on two main factors: processor horsepower and the bandwidth the processor has into frame  buffer memory.   These machines already have a fast processor - the 68040 - which runs standard 32-bit QuickDraw.  To provide high bandwidth into frame buffer memory, dedicated video RAM (VRAM) was used for the frame buffer, and that VRAM was placed directly on the 68040 processor's local bus.  This provides the 68040 the same access time into frame buffer memory that it has into main system RAM.  (The Quadra frame buffer can support transfer rates in excess of 40 MBytes/sec.)  In addition, memory options such as fast page mode are supported, which can improve graphics performance for operations such as scrolling, offscreen-to-onscreen pixmap transfers, etc.
+
+In a number of cases the design was optimized for high performance over low cost.  A good example of this is 32 bpp operation on Apple's standard 13-inch RGB monitor at 640 x 480 resolution (and this also applies to VGA and NTSC), which is probably the most common color monitor in use on the Macintosh.  The actual number of memory bytes needed to support 24 bpp is 640 x 480 x 3 = 921,600.  This would seem to fit within 1 MByte of memory (as is the case with the Apple 8*24 video card), but the Quadras actually require 2 MBytes of VRAM for this mode.  The 8*24 card supports 24 bpp at 640 x 480 by using a storage mode called 'chunky planar' to fully utilize all its 1 MByte of VRAM.  However, this results in having to perform 3 separate memory accesses for each 24-bit pixel read from or written to the frame buffer.  (This is done in hardware so software only performs a single read or write.)  On a NuBus video card, this inefficiency is partially masked by the synchronization delays which occur at the processor-bus/NuBus interface.  However, when frame buffer memory is placed directly on the processor bus, this approach results in a nearly 3X performance degradation.  This was judged unacceptable for the Quadras.  Each 24-bit pixel occupies one longword (4-bytes) in VRAM, so the Quadras actually provide 32 bpp for the 640 x 480 resolution.  This pushes the memory requirement for this mode over the 1 MByte boundary (640 x 480 x 4 = 1,228,800 bytes).  Performance is improved still more by another frame buffer architectural feature.  Video memory in the Quadras is organized into 4 'banks' of 512 KBytes per bank.  As mentioned earlier, Quadra VRAM can operate in fast page mode.  In addition, each bank of VRAM operates in fast page mode independently of the other 3 banks.  This causes the number of in-page 'hits' to increase, and thus improves the effective bandwidth into the frame buffer.  Also, at 32 bpp, 640 x 480 resolution, each row is set to 4096 bytes, or 1024 32-bit pixels.  Each successive row is assigned to a different VRAM bank (modulo 4, of course).  This memory organization improves performance during commonly performed graphics operations such as vertical scrolling.
+
+In any design there are a number of tradeoffs to be made, and this is certainly true for the frame buffer in the Mac Quadra machines.  While the video does operate at 32 bpp on up to 16-inch displays, it does not support 21-inch displays at this pixel depth since this would have significantly raised the cost of the motherboard.  (Memory capacity and bus bandwidths would essentially have to double, and this would be expensive.)  It does support NTSC and PAL timing, but does not provide a composite video output.  While it is much faster than any non-accelerated video card, there are accelerated video cards that are faster (and much more expensive, too, by the way).  A separate graphics processor was not added primarily for cost reasons.  However, a graphics processor such as the 29000 RISC chip on the 8*24GC card can only speed up the graphics operations that it was designed to know about.  If an application program bypasses QuickDraw (which is what most Mac graphics processors are designed to accelerate), a graphics accelerator will not improve performance, and can actually cause a performance degradation.
+
+Overall, the Macintosh Quadra video provides a reasonable compromise of cost, performance, and features, which provides the video needed by the majority of Macintosh users at a reasonable price.
+
+
+
+Supported Display Configurations and Monitor ID Codes
+-----------------------------------------------------
+The Quadra frame buffer determines what type of display is attached to the video connector by examining the state of 3 sense line pins.  The following chart details how these three pins must be wired for each of the supported display types.  For each supported display, the screen resolution (horiz. pixels  X  vertical pixels), dot clock frequency, and the vertical and horizontal scan rates are listed.
+
+Basically, the Quadra 700 & 900 support any display, whether from Apple or from another vendor, that meets one of the following specifications:
+
+STANDARD SENSE CODES:
+ 
+                       Sense pins       Hor x Vert    Dot      Vert     Horiz
+Display                10   7    4      Pixels        Clock    Refrsh   Refrsh
+-----------            -----------      ----------    -----    ------   ------
+ 
+Apple 21Ó Color        0    0    0     1152 x 870     100        75     68.7
+
+Apple Portrait         0    0    1      640 x 870     57.2832    75     68.9
+ 
+12" Apple RGB          0    1    0      512 x 384     15.6672    60.15  24.48
+ 
+Apple Two-Page Mono.   0    1    1     1152 x 870     100        75     68.7
+ 
+NTSC                   1    0    0  underscan-512x384 12.2727    59.94  15.7
+                       1    0    0  overscan- 640x480 12.2727    59.94  15.7
+(To produce a color NTSC signal, a RGB-to-NTSC converter is required.)
+
+12" AppleMonochrome    1    1    0      640 x 480    30.24      66.7    35.0
+ 
+13" Apple RGB          1    1    0      640 x 480    30.24      66.7    35.0
+
+Extended sense codes will be examined if the following sense code is detected:
+                       1    1    1
+ 
+NOTE 1 on above monitors: A sense pin value of 0 means that the pin should be
+grounded to the C&VSYNC.GND signal; a value of 1 means do not connect the pin.
+ 
+NOTE 2 on above monitors: sense pins 4, 7, and 10 are referred to as SENSE0,
+SENSE1, and SENSE2 in pinout tables for the video connectors.
+
+NOTE 3: The terms 'underscan' and 'overscan' are used to describe the active video resolution for NTSC and PAL modes.  Underscan means that the active video area appears in a rectangle centered on the screen with a black surrounding area.  This ensures that the entire active video area always is displayed on all monitors.  Overscan utilizes the entire possible video area for NTSC or PAL.  However, most monitors or televisions will cause some of this video to be lost beyond the edges of the display, so the entire image will not be seen.
+ 
+
+
+EXTENDED SENSE CODES:
+ 
+NOTE for extended sense codes: A sense pin pair value of 0 means those pins should be tied together (as opposed to grounding the pins to pin 11); a value of 1 means do not connect the pins.  Do _not_ wire any of these pins to ground.
+ 
+                     Sense pins      Hor x Vert      Dot      Vert     Horiz
+Display             4-10 10-7 7-4      Pixels        Clock    Refrsh   Refrsh
+-----------         -------------    ----------      -----    ------   ------
+
+16" Color,
+(such as E-Machines) 0    1    1      832 x 624      57.2832    75     49.7
+ 
+PAL
+PAL has two wiring options, using the extended sense pin configuration.  To produce a color PAL signal, an RGB-to-PAL converter is required.
+ 
+PAL Option 1         0    0    0   underscan-640x480  14.75     50     15.625
+                                   overscan-768x576   14.75     50     15.625
+Note: This configuration does not presently doesn't support 24 bits per pixel.
+ 
+PAL Option 2         1    1    0   underscan-640x480  14.75     50     15.625
+                                   overscan-768x576   14.75     50     15.625
+Note: This sense code also requires a diode between sense pins 10 & 7, with anode towards pin 7, cathode towards pin 10. 
+
+ 
+VGA                  1    0    1       640 x 480      25.175    59.95   31.47
+ 
+SVGA                 1    0    1       800 x 600      36         56     35.16
+To enable SVGA, after configuring and connecting the monitor for VGA, open the Monitors control panel and select Options.  Choose Super VGA from the dialog and reboot your system.
+
+No external monitor (video halted)
+                     1    1    1
+  
+
+
+Here are the Quadra video connector pinouts:
+ 
+Pin    Signal          Description
+-----  -----------     ----------------------------------------
+1      RED.GND         Red Video Ground
+2      RED.VID         Red Video
+3      CYSNC~          Composite Sync
+4      MON.ID1         Monitor ID, Bit 1 (also known as SENSE0)
+5      GRN.VID         Green Video
+6      GRN.GND         Green Video Ground
+7      MON.ID2         Monitor ID, Bit 2 (also known as SENSE1)
+8      nc              (no connection)
+9      BLU.VID         Blue Video
+10     MON.ID3         Monitor ID, Bit 3 (also known as SENSE2)
+11     C&VSYNC.GND     CSYNC & VSYNC Ground
+12     VSYNC~          Vertical Sync
+13     BLU.GND         Blue Video Ground
+14     HSYNC.GND       HSYNC Ground
+15     HSYNC~          Horizontal Sync
+Shell  CHASSIS.GND     Chassis Ground
+ 
+ 
+
+If your monitor is a VGA type, you can try the following cable pinouts.
+ 
+Macintosh Quadra                         VGA Connector
+DB-15
+-------------                           --------------
+ 
+2  ------------------- Red Video ------------ 1
+1  ------------------- Red Ground ----------- 6
+9  ------------------- Blue Video ----------- 3
+13 ------------------- Blue Ground ---------- 8
+5  ------------------- Green Video ---------- 2
+6  ------------------- Green Ground --------- 7
+15 ------------------- Hsync ---------------- 13
+12 ------------------- Vsync ---------------- 14
+14 ------------------- Sync Ground ---------- 10
+10 ------------------|
+7  ------------------| Connect 7 and 10 so the sense pin ID will equal VGA
+ 
+There are a few issues to keep in mind with VGA monitors:
+ 
+ * VGA monitors will vary depending on the vendor.  Check with the vendor
+   about Macintosh Quadra compatibility before buying, or better yet, actually
+   try the monitor with a Quadra to see if it works and if the quality is
+   acceptable.
+ 
+ * Vendors have different image quality specifications.  There may be
+   significant differences between Apple monitors and the wide range of
+   VGA monitors.  Do a side-by-side comparison of the monitors you are
+   considering before buying.
+ 
+ * Many third party cable vendors have off-the-shelf cables that should work.
+ 
+
+
+Most NTSC devices use an RCA-type phono-connector and the following diagram uses that as a reference point.  A cable wired as follows may allow many different brands of NTSC monitors to work on a Macintosh Quadra.  I would advise you to test the monitor on a Macintosh Quadra prior to purchase to see if it meets your expectations.
+ 
+Adjust the phono-connector side to whatever type of connector is used (RCA, BNC, etc.).  "Tip" is the pin in the center of the connector (the signal); the sleeve is flange around the outer edges of the connector (the chassis ground).
+ 
+   Card Connector                     RCA-Type Phono-Connector
+   --------------                     ------------------------
+   4      MON.ID1  (sense0) --|
+   7      MON.ID2  (sense1) --|
+   11     C&VSYNC.GND --------|
+ 
+   5      GRN.VID  -----------------> Tip (signal)
+   Shell  CHASSIS.GND --------------> Sleeve (ground)
+ 
+By grounding pin 4 and pin 7 to pin 11, the Macintosh Quadras are told that
+an NTSC monitor is attached.  The actual black and white video signal is on pin 5 and connects to the center (Tip) of the phono-plug.  The shell of the card connector connects to the sleeve of the phono-plug.
+ 
+To acquire a color NTSC signal from a Quadra (or any Apple Macintosh
+display card), an RGB-to-NTSC converter is required, such as those
+available from RasterOps, Truevision, and Computer Friends.  Sorry, but I do not have the cable requirements for any of these devices.
+
+
+
+VRAM Requirements for Supported Display Configurations
+------------------------------------------------------
+The Quadra frame buffer supports a variety of pixel depths, from 1 to 32 bits per pixel (bpp).  The supported pixel depths (1, 2, 4, 8, or 32 bpp) depend on the display resolution and the amount of VRAM in the Quadra.  The fully expanded capability of both Quadras is the same, i.e., both the 900 and 700 can be expanded to 2 MB of VRAM.  However, note that 512K of VRAM is the minimum configuration for the Quadra 700 whereas it is 1MB of VRAM for the Quadra 900 (this is the amount of VRAM soldered on the motherboard).  The Quadra 700 has 6 VRAM expansion slots, while the 900 has only 4.  Also note that only 0.5 MB, 1 MB, and 2 MB configurations are supported (i.e., 1.5 MB is not supported).
+
+The Quadra 700 and 900 can be expanded using 256K (i.e., 128K x 16) 100 nS VRAM SIMMs.  These are the same as the VRAM SIMM shipped in the base configuration of the Macintosh LC, or the VRAM SIMMs used to expand an Apple 4*8 video card to an 8*24 card.  Note that the 512K VRAM SIMMs used to upgrade the Mac LC will _not_ work in a Quadra.  (The 256K SIMMs removed from an LC when performing a VRAM upgrade will work, however.  All those old 256K VRAM SIMMs laying around from upgraded LCs can be used to upgrade Quadra 700s and 900s!)  The DRAM SIMMs used to upgrade an 8*24GC video card will also not work.
+
+The following chart lists the Quadra 700 & 900 built-in video's maximum pixel
+depth supported depending upon the VRAM configuration:
+ 
+Display size                        512K VRAM     1MB VRAM     2MB VRAM
+ 
+12-inch landscape
+384 x 512
+(such as 12" RGB)                    8 bpp         32 bpp       32 bpp
+ 
+12-inch Monochrome
+640 x 480                            8 bpp          8 bpp        8 bpp
+ 
+13-inch RGB & VGA
+640 x 480                            8 bpp          8 bpp       32 bpp
+ 
+SVGA
+800 x 600                            8 bpp          8 bpp       32 bpp
+ 
+15-inch Portrait (b/w)
+640 x 870                            4 bpp          8 bpp       8 bpp
+ 
+16" Color,
+832 x 624                            8 bpp          8 bpp       32 bpp
+ 
+2-Page Display (b/w)
+1152 x 870                           4 bpp          8 bpp       8 bpp
+ 
+21" Color
+1152 x 870                           4 bpp          8 bpp       8 bpp
+ 
+PAL without convolution
+underscan-640x480                     8 bpp        8 bpp        32 bpp*
+overscan-768x576                      8 bpp        8 bpp        32 bpp*
+ 
+PAL with convolution
+underscan-640x480                      n.a.        8 bpp         8 bpp
+overscan-768x576                       n.a.        8 bpp         8 bpp
+ 
+NTSC without convolution
+underscan-512x384                     8 bpp        8 bpp        32 bpp
+overscan- 640x480                     8 bpp        8 bpp        32 bpp
+ 
+NTSC with convolution
+underscan-512x384                     n.a          8 bpp         8 bpp
+overscan- 640x480                     n.s          8 bpp         8 bpp
+ 
+*Note there are two ways to cable a PAL monitor to a Quadra; only by using the
+proper extended sense code are you able to achieve 32 bits per pixel.  For details, refer to the previous article on Quadra video sense pinouts.
+
+*********************************************************************
+* Dale Adams             *   Opinions expressed are not necessarily *
+* Apple Computer, Inc.   *   those of my employer.                  *
+*********************************************************************
+> From: Dale_Adams@gateway.qm.apple.com (Dale Adams)
+> Newsgroups: comp.sys.mac.hardware
+> Subject: Mac Quadra Video Explained, Part 3
+> Date: 25 Nov 91 17:02:16 GMT
+> Organization: Apple Computer, Inc.,  Cupertino, CA

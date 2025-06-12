@@ -1,1 +1,685 @@
-/* Definitions of all the tables. */DEF_UU_TABLE("ablation", uu_ablation,	"The degree to which occupants and transport take hits for each other",	uuablation, constuuablation, 0, 0, 100)DEF_UT_TABLE("accident-damage", ut_accident_damage,	"",	utaccidentdamage, constaccidentdamage, 0, 0, 9999)DEF_UT_TABLE("accident-hit-chance", ut_accident_hit,	"chance to be hit in given terrain type, as .01% chance.",	utaccidenthit, constaccidenthit, 0, 0, 9999)DEF_UT_TABLE("accident-vanish-chance", ut_accident_vanish,	"chance to vanish in given terrain type, as .01% chance.",	utaccidentvanish, constaccidentvanish, 0, 0, 9999)DEF_UT_TABLE("acp-to-add-terrain", ut_acp_to_add_terrain,	"",	utacptoaddterrain, constutacptoaddterrain, 0, 0, 9999)DEF_UU_TABLE("acp-to-attack", uu_acp_to_attack,	"",	uuacptoattack, constuuacptoattack, 0, 1, 9999)DEF_UU_TABLE("acp-to-be-fired-on", uu_acp_to_be_fired_on,	"",	uuacptobefiredon, constuuacptobefiredon, 0, 1, 9999)DEF_UU_TABLE("acp-to-build", uu_acp_to_build,	"acp needed by one unit to work on another",	uuacptobuild, constuuacptobuild, 0, 0, 9999)DEF_UU_TABLE("acp-to-capture", uu_acp_to_capture,	"acp needed by one unit to create another",	uuacptocapture, constuuacptocapture, 0, 0, 9999)DEF_UU_TABLE("acp-to-change-type", uu_acp_to_change_type,	"acp needed by one type of unit to change to another type",	uuacptochangetype, constuuacptochangetype, 0, 0, 9999)DEF_UU_TABLE("acp-to-create", uu_acp_to_create,	"acp needed by one type of unit to create another type",	uuacptocreate, constuuacptocreate, 0, 0, 9999)DEF_UU_TABLE("acp-to-defend", uu_acp_to_defend,	"",	uuacptodefend, constuuacptodefend, 0, 1, 9999)DEF_UU_TABLE("acp-to-enter-unit", uu_acp_to_enter,	"acp needed by one type of unit to enter another type",	uuacptoenter, constuuacptoenter, 0, 1, 9999)DEF_UM_TABLE("acp-to-load", um_acp_to_load,	"",	umacptoload, constumacptoload, 0, 0, 9999)DEF_UT_TABLE("acp-to-remove-terrain", ut_acp_to_remove_terrain,	"",	utacptoremoveterrain, constutacptoremoveterrain, 0, 0, 9999)DEF_UM_TABLE("acp-to-produce", um_acp_to_produce,	"",	umacptoproduce, constumacptoproduce, 0, 0, 9999)DEF_UU_TABLE("acp-to-repair", uu_acp_to_repair,	"acp needed by one type of unit to repair another type",	uuacptorepair, constuuacptorepair, 0, 0, 9999)DEF_UU_TABLE("acp-to-research", uu_acp_to_research,	"acp needed by one type of unit to research another type",	uuacptoresearch, constuuacptoresearch, 0, 0, 9999)DEF_UU_TABLE("acp-to-toolup", uu_acp_to_toolup,	"acp needed by one type of unit to toolup another type",	uuacptotoolup, constuuacptotoolup, 0, 0, 9999)DEF_UM_TABLE("acp-to-unload", um_acp_to_unload,	"",	umacptounload, constumacptounload, 0, 0, 9999)DEF_TT_TABLE("adjacent-terrain-effect", tt_adj_terr_effect,	"Effect of adjacent terrain on another",	ttadjterreffect, constttadjterreffect, 0, -1, 0)DEF_UT_TABLE("alter-terrain-range", ut_alter_range,	"Distance at which a unit can alter terrain",	utalterrange, constutalterrange, 0, 0, 9999)DEF_UT_TABLE("altitude-max", ut_alt_max,	"How high unit can go in the terrain",	utaltmax, constutaltmax, -9999, 0, 9999)DEF_UT_TABLE("altitude-min", ut_alt_min,	"How low unit can go in the terrain",	utaltmin, constutaltmin, -9999, 0, 9999)DEF_UU_TABLE("ambush-chance", uu_ambush,	"",	uuambush, constuuambush, 0, 0, 100)DEF_UU_TABLE("attack-range", uu_attack_range,	"",	uuattackrange, constattackrange, 0, 1, 9999)DEF_UU_TABLE("attack-range-min", uu_attack_range_min,	"",	uuattackrangemin, constattackrangemin, 0, 0, 9999)DEF_UT_TABLE("attack-terrain-effect", ut_attack_terrain_effect,	"",	utattackterraineffect, constutattackterraineffect, 0, 100, 9999)DEF_UT_TABLE("attrition", ut_attrition,	"Base chance to lose hp in given terrain type, in .01% increments",	utattrition, constattrition, 0, 0, 0)DEF_UM_TABLE("base-consumption", um_base_consumption,	"overhead consumption in each turn",	umbaseconsumption, constumbaseconsumption, 0, 0, 0)DEF_UM_TABLE("base-production", um_produce,	"rate of supply production",	utproduce, constproduce, 0, 0, 0)DEF_UU_TABLE("bridge", uu_bridge,	"Whether an assault can cross to a unit on impassable terrain.",	uubridge, constbridge, 0, 0, 0)DEF_UU_TABLE("can-command", uu_can_command,	"True if the type can give orders to the other type.",	uucancommand, constcancommand, 0, 0, 0)DEF_UU_TABLE("can-enter-independent", uu_can_enter_indep,	"True if the type can enter an indep of some other type",	uucanenterindep, constuucanenterindep, 0, 0, 1)DEF_UT_TABLE("capacity-negation", ut_capacity_neg,	"",	utcapacityneg, constutcapacityneg, 0, 0, 1)DEF_UU_TABLE("capture-chance", uu_capture,	"Base chance for one type of unit to capture another type.",	uucapture, constcapture, 0, 0, 0)DEF_TM_TABLE("change-on-exhaustion-chance", tm_change_on_exhaust,	"",	tmchangeonexhaust, consttmchangeonexhaust, 0, 0, 100)DEF_TT_TABLE("coating-depth-max", tt_coat_max,	"",	ttcoatmax, constttcoatmax, 0, 0, 9999)DEF_TT_TABLE("coating-depth-min", tt_coat_min,	"",	ttcoatmin, constttcoatmin, 0, 0, 9999)DEF_UU_TABLE("combat-visibility", uu_combat_visibility,	"",	uucombatvisibility, constuucombatvisibility, 0, 100, 100)DEF_UU_TABLE("compromise-chance", uu_compromise,	"",	uucompromise, constuucompromise, 0, 0, 100)DEF_UM_TABLE("consumption-as-occupant", um_consumption_as_occupant,	"",	umconsumptionasoccupant, constumconsumptionasoccupant, 0, 100, 9999)DEF_UM_TABLE("consumption-on-creation", um_consumption_on_creation,	"amount of material m used by any creator to create u",	umconsumptiononcreation, constumconsumptiononcreation, 0, 0, 9999)DEF_UM_TABLE("consumption-per-attack", um_hitswith,	"amount of supply used in combat",	umhitswith, consthitswith, 0, 0, 0)DEF_UM_TABLE("consumption-per-build", um_consume_per_build,	"amount of supply used to build",	umconsumeperbuild, constumconsumeperbuild, 0, 0, 9999)DEF_UM_TABLE("consumption-per-move", um_consume_per_move,	"supplies used up by a move action",	umconsumepermove, constconsumepermove, 0, 0, 9999)DEF_UM_TABLE("consumption-per-repair", um_consumed_by_repair,	"supplies used up by a repair action",	umconsumedbyrepair, constconsumedbyrepair, 0, 0, 9999)DEF_UU_TABLE("control-chance", uu_control,	"",	uucontrol, constuucontrol, -1, 0, 100)DEF_UU_TABLE("control-chance-at", uu_control_at,	"",	uucontrolat, constuucontrolat, -1, 0, 100)DEF_UU_TABLE("control-chance-adjacent", uu_control_adj,	"",	uucontroladj, constuucontroladj, -1, 0, 100)DEF_UU_TABLE("control-distance-max", uu_control_dist,	"",	uucontroldist, constuucontroldist, -1, 0, 9999)DEF_UU_TABLE("cp-on-creation", uu_creation_cp,	"",	uucreationcp, constuucreationcp, -1, -1, 9999)DEF_UU_TABLE("cp-per-build", uu_cp_per_build,	"Amount of completeness added by one completion action",	uucpperbuild, constuucpperbuild, 0, 0, 0)DEF_UU_TABLE("cxp-per-capture", uu_cxp_per_capture,	"",	uucxppercapture, constuucxppercapture, 0, 0, 9999)DEF_UU_TABLE("cxp-per-combat", uu_cxp_per_combat,	"",	uucxppercombat, constuucxppercombat, 0, 0, 9999)DEF_UU_TABLE("damage", uu_damage,	"how many points it hits for",	uudamage, constdamage, 0, 0, 0)DEF_TT_TABLE("damaged-terrain", tt_damaged_terrain,	"",	ttdamagedterrain, constttdamagedterrain, 0, 0, 0)DEF_UT_TABLE("defend-terrain-effect", ut_defend_terrain_effect,	"",	utdefendterraineffect, constutdefendterraineffect, 0, 100, 9999)DEF_UT_TABLE("detonation-accident-chance", ut_detonation_accident,	"",	utdetonationaccident, constutdetonationaccident, 0, 0, 9999)DEF_UU_TABLE("detonation-damage-at", uu_detonation_damage_at,	"",	uudetonationdamageat, constuudetonationdamageat, 0, 0, 9999)DEF_UU_TABLE("detonation-damage-adjacent", uu_detonation_damage_adj,	"",	uudetonationdamageadj, constuudetonationdamageadj, 0, 0, 9999)DEF_UU_TABLE("detonation-range", uu_detonation_range,	"",	uudetonation, constuudetonation, 0, 0, 9999)DEF_UU_TABLE("detonate-on-approach", uu_detonation_on_approach,	"",	uudetonateonapproach, constdetonateonapproach, 0, 0, 100)DEF_UU_TABLE("detonate-on-capture", uu_detonation_on_capture,	"",	uudetonateoncapture, constdetonateoncapture, 0, 0, 100)DEF_UU_TABLE("detonate-on-hit", uu_detonation_on_hit,	"",	uudetonateonhit, constdetonateonhit, 0, 0, 100)DEF_UT_TABLE("eye-height", ut_eye_height,	"effective height of a unit's eyes in a type of terrain",	uteyeheight, constuteyeheight, 0, 0, 0)DEF_UT_TABLE("favored-terrain", ut_favored,	"the chance for a unit to be placed on a type of terrain",	utfavored, constfavored, 0, 100, 100)DEF_UU_TABLE("ferry-on-entry", uu_ferry_on_enter,	"",	uuferryonenter, constuuferryonenter, 0, 2, 3)DEF_UU_TABLE("ferry-on-departure", uu_ferry_on_leave,	"",	uuferryonleave, constuuferryonleave, 0, 2, 3)DEF_UU_TABLE("friendly-hit-chance", uu_friend_hit,	"base chance for a type of unit to hit another type of unit",	uufriendhit, constuufriendhit, 0, 0, 100)DEF_UU_TABLE("hp-min", uu_hp_min,	"Attacker cannot reduce victim's hp below this",	uuhpmin, consthpmin, 0, 0, 9999)DEF_UU_TABLE("hp-to-garrison", uu_hp_to_garrison,	"how much of unit gets used up to garrison a prize",	uuhptogarrison, consthptogarrison, 0, 0, 9999)DEF_UU_TABLE("hit-at-max-range-effect", uu_hit_max_range_effect,	"chance for a type of unit to hit another type of unit at longest range",	uuhitatmaxrangeeffect, consthitatmaxrangeeffect, 0, 100, 9999)DEF_UM_TABLE("hit-by", um_hitby,	"kind of ammo that hits unit",	umhitby, constumhitby, 0, 0, 0)DEF_UU_TABLE("hit-chance", uu_hit,	"base chance for a type of unit to hit another type of unit",	uuhitchance, constuuhitchance, 0, 0, 100)DEF_UU_TABLE("hp-per-repair", uu_repair,	"HP restored by a repair action",	uuhprepair, constuuhprepair, 0, 0, 9999)DEF_UU_TABLE("hp-to-repair", uu_hp_to_repair,	"",	uuhptorepair, constuuhptorepair, 1, 1, 9999)DEF_UM_TABLE("hp-per-starve", um_hp_per_starve,	"HP lost/gained per turn of starvation",	umhpstarve, constumhpstarve, -9999, 0, 9999)DEF_UM_TABLE("in-length", um_inlength,	"length of supply line coming in",	uminlength, constuminlength, 0, 0, 0)DEF_UT_TABLE("independent-density", ut_indep_density,	"Likelihood of an indep unit type on a terrain type",	utindepdensity, constutindepdensity, 0, 0, 9999)DEF_UM_TABLE("load-max", um_load_max,	"",	umloadmax, constumloadmax, -1, -1, 9999)DEF_TM_TABLE("material-size-in-terrain", tm_size,	"How much space one unit of a material requires in terrain",	tmsize, consttmsize, 0, 1, 9999)DEF_UM_TABLE("material-size-in-unit", um_size,	"How much space one unit of a material requires in a unit",	umsize, constumsize, 0, 1, 9999)DEF_UM_TABLE("material-to-act", um_to_act,	"supplies needed to be able to act at all",	umtoact, constumtact, 0, 0, 9999)DEF_UM_TABLE("material-to-build", um_to_build,	"supplies needed to be able to work on a unit",	umtobuild, constumtobuild, 0, 0, 9999)DEF_UM_TABLE("material-to-create", um_to_create,	"supplies needed to be able to create",	umtocreate, constumtocreate, 0, 0, 9999)DEF_UM_TABLE("material-to-fight", um_to_fight,	"supplies needed to be able to do any sort of combat",	umtofight, constumtofight, 0, 0, 9999)DEF_UM_TABLE("material-to-move", um_to_move,	"supplies needed to be able to move",	umtomove, constumtomove, 0, 0, 9999)DEF_UM_TABLE("material-to-repair", um_to_repair,	"",	umtorepair, constumtorepair, 0, 0, 9999)DEF_UU_TABLE("mp-per-occupant", uu_mobility,	"true if unit affects mobility of its transport.",	uumobility, constuumobility, 0, 100, 9999)DEF_UT_TABLE("mp-to-ascend", ut_mp_to_ascend,	"mp to increase elevation or altitude",	utmptoascend, constutmptoascend, -1, 0, 9999)DEF_UT_TABLE("mp-to-descend", ut_mp_to_descend,	"mp to reduce elevation or altitude",	utmptodescend, constutmptodescend, -1, 0, 9999)DEF_UT_TABLE("mp-to-enter-terrain", ut_mp_to_enter,	"mp needed to enter the terrain",	utmptoenter, constutmptoenter, -1, 1, 9999)DEF_UU_TABLE("mp-to-enter-unit", uu_mp_to_enter,	"",	uumptoenter, constuumptoenter, -1, 0, 9999)DEF_UU_TABLE("mp-to-enter-zoc", uu_mp_to_enter_zoc,	"",	uumptoenterzoc, constuumptoenterzoc, -1, -1, 9999)DEF_UT_TABLE("mp-to-leave-terrain", ut_mp_to_leave,	"",	utmptoleave, constutmptoleave, -1, 0, 9999)DEF_UU_TABLE("mp-to-leave-unit", uu_mp_to_leave,	"",	uumptoleave, constuumptoleave, -1, 0, 9999)DEF_UU_TABLE("mp-to-leave-zoc", uu_mp_to_leave_zoc,	"",	uumptoleavezoc, constuumptoleavezoc, -1, 0, 9999)DEF_UT_TABLE("mp-to-traverse", ut_mp_to_traverse,	"",	utmptotraverse, constutmptotraverse, 0, 1, 9999)DEF_UU_TABLE("mp-to-traverse-zoc", uu_mp_to_traverse_zoc,	"",	uumptotraversezoc, constuumptotraversezoc, -1, 0, 9999)DEF_UT_TABLE("night-acp-effect", ut_night_acp_effect,	"",	utnightacpeffect, constutnightacpeffect, 0, 100, 9999)DEF_UT_TABLE("night-vision-effect", ut_night_vision_effect,	"",	utnightvisioneffect, constutnightvisioneffect, 0, 100, 9999)DEF_UU_TABLE("occupant-acp-effect", uu_occ_acp,	"",	uuoccacp, constuuoccacp, 0, 100, 9999)DEF_UU_TABLE("occupant-can-have-occupants", uu_occ_can_have_occs,	"True if occupant can have occupants itself",	uuocccanhaveoccs, constuuocccanhaveoccs, 0, 1, 1)DEF_UU_TABLE("occupant-combat", uu_occ_can_fight,	"True if occupant can fight",	uuocccanfight, constuuocccanfight, 0, 100, 100)DEF_UU_TABLE("occupant-can-construct", uu_occ_can_build,	"True if occupant can build",	uuocccanbuild, constuuocccanbuild, 0, 1, 1)DEF_UU_TABLE("occupant-escape-chance", uu_occ_escape,	"Base chance for u2 to move to avoid capture",	uuoccescape, constuuoccescape, 0, 0, 100)DEF_UM_TABLE("occupant-production", um_occ_production,	"",	umoccproduction, constumoccproduction, 0, 0, 0)DEF_UU_TABLE("occupant-vision", uu_occ_can_see,	"True if occupant can see",	uuocccansee, constuuocccansee, 0, 100, 100)DEF_UU_TABLE("occupant-max", uu_occ_max,	"extra ceiling on total number of a type",	uuoccmax, constuuoccmax, -1, -1, 9999)DEF_UM_TABLE("out-length", um_outlength,	"length of supply line going out",	umoutlength, constoutlength, 0, 0, 0)DEF_MM_TABLE("people-base-consumption", mm_people_consumption,	"",	mmpeopleconsumption, constmmpeopleconsumption, 0, 0, 9999)DEF_MM_TABLE("people-base-production", mm_people_production,	"",	mmpeopleproduction, constmmpeopleproduction, 0, 0, 9999)DEF_UT_TABLE("people-surrender-chance", ut_people_surrender,	"Chance that people will surrender to occupying unit",	utpeoplesurrender, constutpeoplesurrender, 0, 0, 100)DEF_UM_TABLE("people-surrender-effect", um_people_surrender,	"Effect of people type on surrender chance",	umpeoplesurrender, constumpeoplesurrender, 0, 100, 9999)DEF_UT_TABLE("productivity", ut_productivity,	"effect of terrain on production",	utproductivity, constproductivity, 0, 0, 0)DEF_UM_TABLE("productivity-max", um_productivity_max,	"limit on effect of terrain on production",	umproductivitymax, constumproductivitymax, 0, 9999, 9999)DEF_UM_TABLE("productivity-min", um_productivity_min,	"limit of effect of terrain on production",	umproductivitymin, constumproductivitymin, 0, 0, 9999)DEF_UU_TABLE("protection", uu_protection,	"The degree to which transports protect occupants and vice versa",	uuprotection, constuuprotection, 0, 100, 9999)DEF_UM_TABLE("recycleable-material", um_recycleable,	"",	umrecycleable, constumrecycleable, 0, 0, 9999)DEF_UU_TABLE("retreat-chance", uu_retreat_chance,	"Chance to retreat after combat",	uuretreatchance, constuuretreatchance, 0, 0, 100)DEF_UU_TABLE("road-chance", uu_road_chance,	"Chance for a road from one type to another",	uuroadchance, constuuroadchance, 0, 0, 100)DEF_TT_TABLE("road-into-chance", tt_road_into_chance,	"Chance for type of road into type of terrain",	ttroadintochance, constttroadintochance, 0, 0, 100)DEF_UU_TABLE("scuttle-chance", uu_scuttle,	"Base chance for u1 to wreck self to avoid capture by u2",	uuscuttle, constscuttle, 0, 0, 100)DEF_UU_TABLE("separation-to-build-max", uu_sep_to_build_max,	"max distance between unit and unit being worked on",	uuseptobuildmax, constuuseptobuildmax, 0, 0, 9999)DEF_UU_TABLE("separation-to-create-max", uu_sep_to_create_max,	"max distance between unit and unit being created",	uuseptocreatemax, constuuseptocreatemax, 0, 0, 9999)DEF_UU_TABLE("spy-quality", uu_spy_quality,	"Chance for u1 to return info about u2 when spied upon",	uuspyquality, constspyquality, 0, 100, 100)DEF_UU_TABLE("stack-ablation", uu_stack_ablation,	"Percentage of hits that stacked units take for each other",	uustackablation, constuustackablation, 0, 0, 100)DEF_UU_TABLE("stack-protection", uu_stack_protection,	"The degree to which units in same cell protect each other",	uustackprotection, constuustackprotection, 0, 100, 9999)DEF_UM_TABLE("supply-on-creation", um_created_supply,	"",	umcreatedsupply, constumcreatedsupply, 0, 0, 9999)DEF_UM_TABLE("supply-on-completion", um_completed_supply,	"",	umcompletedsupply, constumcompletedsupply, 0, 0, 9999)DEF_UM_TABLE("supply-per-disband", um_supply_per_disband,	"",	umsupplyperdisband, constumsupplyperdisband, 0, 0, 9999)DEF_UU_TABLE("surrender-chance", uu_surrender_chance,	"",	uusurrenderchance, constuusurrenderchance, 0, 0, 9999)DEF_UU_TABLE("surrender-chance-per-attack", uu_surrender_per_attack,	"",	uusurrenderattack, constuusurrenderattack, 0, 0, 100)DEF_UU_TABLE("surrender-range", uu_surrender_range,	"",	uusurrenderrange, constuusurrenderrange, 0, 0, 9999)DEF_UU_TABLE("tech-crossover", uu_tech_crossover,	"Effect of tech for one type on tech for another type",	uutechcross, constuutechcross, 0, 0, 100)DEF_UU_TABLE("tech-per-research", uu_tech_per_research,	".01 tech increase from one research action",	uutechperresearch, constuutechperresearch, 0, 0, 9999)DEF_UU_TABLE("temperature-protection", uu_temp_protect,	"",	uutempprotect, constuutempprotect, 0, 0, 1)DEF_TM_TABLE("terrain-base-consumption", tm_consumption,	"overhead consumption in each turn",	tmconsumption, consttmconsumption, 0, 0, 9999)DEF_TM_TABLE("terrain-base-production", tm_production,	"rate of supply production",	tmproduction, consttmproduction, 0, 0, 9999)DEF_UT_TABLE("terrain-capacity-x", ut_capacity_x,	"Number of units that can always be in terrain",	utcapacityx, constutcapacityx, 0, 0, 9999)DEF_TM_TABLE("terrain-exhaustion-type", tm_exhaust_type,	"",	tmexhausttype, consttmexhausttype, 0, NONTTYPE, 0)DEF_TM_TABLE("terrain-initial-supply", tm_initial,	"Amount of each material that a cell starts with.",	tminitial, consttminitial, 0, 0, 9999)DEF_TM_TABLE("terrain-storage-x", tm_storage_x,	"Amount of each material that a cell can hold",	tmstoragex, consttmstoragex, 0, 0, 9999)DEF_UU_TABLE("tp-max", uu_tp_max,	"Maximum possible tooling",	uutpmax, constuutpmax, 0, 0, 9999)DEF_UU_TABLE("tp-per-toolup", uu_tp_per_toolup,	"",	uutppertoolup, constuutppertoolup, 0, 0, 9999)DEF_UU_TABLE("tp-to-build", uu_tp_to_build,	"",	uutptobuild, constuutptobuild, 0, 0, 9999)DEF_UU_TABLE("tp-attrition", uu_tp_attrition,	"",	uutpattrition, constuutpattrition, 0, 0, 9999)DEF_UU_TABLE("tp-crossover", uu_tp_crossover,	"Effect of tooling for one type on tooling for another type",	uutpcrossover, constuutpcrossover, 0, 0, 100)DEF_UM_TABLE("unit-initial-supply", um_initial,	"Amount of each material that a unit starts with.",	utinitial, constinitial, 0, 0, 9999)DEF_UU_TABLE("unit-capacity-x", uu_capacity_x,	"carrying capacity reserved for unit type",	uucapacityx, constcapacityx, 0, 0, 9999)DEF_UU_TABLE("unit-size-as-occupant", uu_size,	"how much space an occupant takes up in the given transport",	uusize, constuusize, 0, 1, 9999)DEF_UT_TABLE("unit-size-in-terrain", ut_size,	"how much space a unit takes up in a cell",	utsize, constutsize, 0, 1, 9999)DEF_UM_TABLE("unit-storage-x", um_storage_x,	"capacity for each material type",	umstoragex, constumstoragex, 0, 0, 9999)DEF_UM_TABLE("unload-max", um_unload_max,	"",	umunloadmax, constumunloadmax, -1, -1, 9999)DEF_UT_TABLE("vanishes-on", ut_vanishes_on,	"True if a unit in the terrain simply vanishes",	utvanisheson, constvanisheson, 0, 0, 1) DEF_UT_TABLE("visibility", ut_visibility,	"Base chance to see unit when in terrain",	utvisibility, constvisibility, 0, 100, 100)DEF_UM_TABLE("visibility-to-people", um_visibility_to_people,	"Base chance for a type of people to see unit",	umvistopeople, constumvistopeople, 0, 100, 100)DEF_UU_TABLE("withdraw-chance-per-attack", uu_withdraw_per_attack,	"",	uuwithdrawattack, constuuwithdrawattack, 0, 0, 100)DEF_UT_TABLE("wrecks-on", ut_wrecks_on,	"True if a unit in the terrain becomes wrecked",	utwreckson, constutwreckson, 0, 0, 1) DEF_UT_TABLE("zoc-into-terrain", ut_zoc_into,	"",	utzocinto, constutzocinto, 0, 1, 1)DEF_UT_TABLE("zoc-from-terrain-effect", ut_zoc_from_terrain,	"",	utzocfromterrain, constutzocfromterrain, 0, 100, 9999)DEF_UU_TABLE("zoc-range", uu_zoc_range,	"Distance to which ZOC is exerted",	uuzocrange, constuuzocrange, -1, 0, 9999)DEF_UU_TABLE("zzz-avg-build-time", uu_avg_build_time,	"average build time (for AIs)",	uuabt, constabt, 0, 0, 0)DEF_UU_TABLE("zzz-bhw", uu_bhw,	"basic hit worth (for AIs)",	uubhw, constuubhw, 0, 0, 0)DEF_UU_TABLE("zzz-bcw", uu_bcw,	"basic capture worth (for AIs)",	uubcw, constuubcw, 0, 0, 0)DEF_UU_TABLE("zzz-btw", uu_btw,	"basic transport worth (for AIs)",	uubtw, constuubtw, 0, 0, 0)DEF_UU_TABLE("zzz-base-worth", uu_base_worth,	"",	uubaseworth, constuubaseworth, 0, 0, 0)DEF_UU_TABLE("zzz-depot-worth", uu_depot_worth,	"",	uudepotworth, constuudepotworth, 0, 0, 0)DEF_UU_TABLE("zzz-carrier-worth", uu_carrier_worth,	"",	uucarrierworth, constuucarrierworth, 0, 0, 0)DEF_UU_TABLE("zzz-terrain-worth", ut_terrain_worth,	"",	utterrainworth, constutterrainworth, 0, 0, 0)
+/* Definitions of all the tables. */
+
+DEF_UU_TABLE("ablation", uu_ablation,
+	"The degree to which occupants and transport take hits for each other",
+	uuablation, constuuablation, 0, 0, 100)
+
+DEF_UT_TABLE("accident-damage", ut_accident_damage,
+	"",
+	utaccidentdamage, constaccidentdamage, 0, 0, 9999)
+
+DEF_UT_TABLE("accident-hit-chance", ut_accident_hit,
+	"chance to be hit in given terrain type, as .01% chance.",
+	utaccidenthit, constaccidenthit, 0, 0, 9999)
+
+DEF_UT_TABLE("accident-vanish-chance", ut_accident_vanish,
+	"chance to vanish in given terrain type, as .01% chance.",
+	utaccidentvanish, constaccidentvanish, 0, 0, 9999)
+
+DEF_UT_TABLE("acp-to-add-terrain", ut_acp_to_add_terrain,
+	"",
+	utacptoaddterrain, constutacptoaddterrain, 0, 0, 9999)
+
+DEF_UU_TABLE("acp-to-attack", uu_acp_to_attack,
+	"",
+	uuacptoattack, constuuacptoattack, 0, 1, 9999)
+
+DEF_UU_TABLE("acp-to-be-fired-on", uu_acp_to_be_fired_on,
+	"",
+	uuacptobefiredon, constuuacptobefiredon, 0, 1, 9999)
+
+DEF_UU_TABLE("acp-to-build", uu_acp_to_build,
+	"acp needed by one unit to work on another",
+	uuacptobuild, constuuacptobuild, 0, 0, 9999)
+
+DEF_UU_TABLE("acp-to-capture", uu_acp_to_capture,
+	"acp needed by one unit to create another",
+	uuacptocapture, constuuacptocapture, 0, 0, 9999)
+
+DEF_UU_TABLE("acp-to-change-type", uu_acp_to_change_type,
+	"acp needed by one type of unit to change to another type",
+	uuacptochangetype, constuuacptochangetype, 0, 0, 9999)
+
+DEF_UU_TABLE("acp-to-create", uu_acp_to_create,
+	"acp needed by one type of unit to create another type",
+	uuacptocreate, constuuacptocreate, 0, 0, 9999)
+
+DEF_UU_TABLE("acp-to-defend", uu_acp_to_defend,
+	"",
+	uuacptodefend, constuuacptodefend, 0, 1, 9999)
+
+DEF_UU_TABLE("acp-to-enter-unit", uu_acp_to_enter,
+	"acp needed by one type of unit to enter another type",
+	uuacptoenter, constuuacptoenter, 0, 1, 9999)
+
+DEF_UM_TABLE("acp-to-load", um_acp_to_load,
+	"",
+	umacptoload, constumacptoload, 0, 0, 9999)
+
+DEF_UT_TABLE("acp-to-remove-terrain", ut_acp_to_remove_terrain,
+	"",
+	utacptoremoveterrain, constutacptoremoveterrain, 0, 0, 9999)
+
+DEF_UM_TABLE("acp-to-produce", um_acp_to_produce,
+	"",
+	umacptoproduce, constumacptoproduce, 0, 0, 9999)
+
+DEF_UU_TABLE("acp-to-repair", uu_acp_to_repair,
+	"acp needed by one type of unit to repair another type",
+	uuacptorepair, constuuacptorepair, 0, 0, 9999)
+
+DEF_UU_TABLE("acp-to-research", uu_acp_to_research,
+	"acp needed by one type of unit to research another type",
+	uuacptoresearch, constuuacptoresearch, 0, 0, 9999)
+
+DEF_UU_TABLE("acp-to-toolup", uu_acp_to_toolup,
+	"acp needed by one type of unit to toolup another type",
+	uuacptotoolup, constuuacptotoolup, 0, 0, 9999)
+
+DEF_UM_TABLE("acp-to-unload", um_acp_to_unload,
+	"",
+	umacptounload, constumacptounload, 0, 0, 9999)
+
+DEF_TT_TABLE("adjacent-terrain-effect", tt_adj_terr_effect,
+	"Effect of adjacent terrain on another",
+	ttadjterreffect, constttadjterreffect, 0, -1, 0)
+
+DEF_UT_TABLE("alter-terrain-range", ut_alter_range,
+	"Distance at which a unit can alter terrain",
+	utalterrange, constutalterrange, 0, 0, 9999)
+
+DEF_UT_TABLE("altitude-max", ut_alt_max,
+	"How high unit can go in the terrain",
+	utaltmax, constutaltmax, -9999, 0, 9999)
+
+DEF_UT_TABLE("altitude-min", ut_alt_min,
+	"How low unit can go in the terrain",
+	utaltmin, constutaltmin, -9999, 0, 9999)
+
+DEF_UU_TABLE("ambush-chance", uu_ambush,
+	"",
+	uuambush, constuuambush, 0, 0, 100)
+
+DEF_UU_TABLE("attack-range", uu_attack_range,
+	"",
+	uuattackrange, constattackrange, 0, 1, 9999)
+
+DEF_UU_TABLE("attack-range-min", uu_attack_range_min,
+	"",
+	uuattackrangemin, constattackrangemin, 0, 0, 9999)
+
+DEF_UT_TABLE("attack-terrain-effect", ut_attack_terrain_effect,
+	"",
+	utattackterraineffect, constutattackterraineffect, 0, 100, 9999)
+
+DEF_UT_TABLE("attrition", ut_attrition,
+	"Base chance to lose hp in given terrain type, in .01% increments",
+	utattrition, constattrition, 0, 0, 0)
+
+DEF_UM_TABLE("base-consumption", um_base_consumption,
+	"overhead consumption in each turn",
+	umbaseconsumption, constumbaseconsumption, 0, 0, 0)
+
+DEF_UM_TABLE("base-production", um_produce,
+	"rate of supply production",
+	utproduce, constproduce, 0, 0, 0)
+
+DEF_UU_TABLE("bridge", uu_bridge,
+	"Whether an assault can cross to a unit on impassable terrain.",
+	uubridge, constbridge, 0, 0, 0)
+
+DEF_UU_TABLE("can-command", uu_can_command,
+	"True if the type can give orders to the other type.",
+	uucancommand, constcancommand, 0, 0, 0)
+
+DEF_UU_TABLE("can-enter-independent", uu_can_enter_indep,
+	"True if the type can enter an indep of some other type",
+	uucanenterindep, constuucanenterindep, 0, 0, 1)
+
+DEF_UT_TABLE("capacity-negation", ut_capacity_neg,
+	"",
+	utcapacityneg, constutcapacityneg, 0, 0, 1)
+
+DEF_UU_TABLE("capture-chance", uu_capture,
+	"Base chance for one type of unit to capture another type.",
+	uucapture, constcapture, 0, 0, 0)
+
+DEF_TM_TABLE("change-on-exhaustion-chance", tm_change_on_exhaust,
+	"",
+	tmchangeonexhaust, consttmchangeonexhaust, 0, 0, 100)
+
+DEF_TT_TABLE("coating-depth-max", tt_coat_max,
+	"",
+	ttcoatmax, constttcoatmax, 0, 0, 9999)
+
+DEF_TT_TABLE("coating-depth-min", tt_coat_min,
+	"",
+	ttcoatmin, constttcoatmin, 0, 0, 9999)
+
+DEF_UU_TABLE("combat-visibility", uu_combat_visibility,
+	"",
+	uucombatvisibility, constuucombatvisibility, 0, 100, 100)
+
+DEF_UU_TABLE("compromise-chance", uu_compromise,
+	"",
+	uucompromise, constuucompromise, 0, 0, 100)
+
+DEF_UM_TABLE("consumption-as-occupant", um_consumption_as_occupant,
+	"",
+	umconsumptionasoccupant, constumconsumptionasoccupant, 0, 100, 9999)
+
+DEF_UM_TABLE("consumption-on-creation", um_consumption_on_creation,
+	"amount of material m used by any creator to create u",
+	umconsumptiononcreation, constumconsumptiononcreation, 0, 0, 9999)
+
+DEF_UM_TABLE("consumption-per-attack", um_hitswith,
+	"amount of supply used in combat",
+	umhitswith, consthitswith, 0, 0, 0)
+
+DEF_UM_TABLE("consumption-per-build", um_consume_per_build,
+	"amount of supply used to build",
+	umconsumeperbuild, constumconsumeperbuild, 0, 0, 9999)
+
+DEF_UM_TABLE("consumption-per-move", um_consume_per_move,
+	"supplies used up by a move action",
+	umconsumepermove, constconsumepermove, 0, 0, 9999)
+
+DEF_UM_TABLE("consumption-per-repair", um_consumed_by_repair,
+	"supplies used up by a repair action",
+	umconsumedbyrepair, constconsumedbyrepair, 0, 0, 9999)
+
+DEF_UU_TABLE("control-chance", uu_control,
+	"",
+	uucontrol, constuucontrol, -1, 0, 100)
+
+DEF_UU_TABLE("control-chance-at", uu_control_at,
+	"",
+	uucontrolat, constuucontrolat, -1, 0, 100)
+
+DEF_UU_TABLE("control-chance-adjacent", uu_control_adj,
+	"",
+	uucontroladj, constuucontroladj, -1, 0, 100)
+
+DEF_UU_TABLE("control-distance-max", uu_control_dist,
+	"",
+	uucontroldist, constuucontroldist, -1, 0, 9999)
+
+DEF_UU_TABLE("cp-on-creation", uu_creation_cp,
+	"",
+	uucreationcp, constuucreationcp, -1, -1, 9999)
+
+DEF_UU_TABLE("cp-per-build", uu_cp_per_build,
+	"Amount of completeness added by one completion action",
+	uucpperbuild, constuucpperbuild, 0, 0, 0)
+
+DEF_UU_TABLE("cxp-per-capture", uu_cxp_per_capture,
+	"",
+	uucxppercapture, constuucxppercapture, 0, 0, 9999)
+
+DEF_UU_TABLE("cxp-per-combat", uu_cxp_per_combat,
+	"",
+	uucxppercombat, constuucxppercombat, 0, 0, 9999)
+
+DEF_UU_TABLE("damage", uu_damage,
+	"how many points it hits for",
+	uudamage, constdamage, 0, 0, 0)
+
+DEF_TT_TABLE("damaged-terrain", tt_damaged_terrain,
+	"",
+	ttdamagedterrain, constttdamagedterrain, 0, 0, 0)
+
+DEF_UT_TABLE("defend-terrain-effect", ut_defend_terrain_effect,
+	"",
+	utdefendterraineffect, constutdefendterraineffect, 0, 100, 9999)
+
+DEF_UT_TABLE("detonation-accident-chance", ut_detonation_accident,
+	"",
+	utdetonationaccident, constutdetonationaccident, 0, 0, 9999)
+
+DEF_UU_TABLE("detonation-damage-at", uu_detonation_damage_at,
+	"",
+	uudetonationdamageat, constuudetonationdamageat, 0, 0, 9999)
+
+DEF_UU_TABLE("detonation-damage-adjacent", uu_detonation_damage_adj,
+	"",
+	uudetonationdamageadj, constuudetonationdamageadj, 0, 0, 9999)
+
+DEF_UU_TABLE("detonation-range", uu_detonation_range,
+	"",
+	uudetonation, constuudetonation, 0, 0, 9999)
+
+DEF_UU_TABLE("detonate-on-approach", uu_detonation_on_approach,
+	"",
+	uudetonateonapproach, constdetonateonapproach, 0, 0, 100)
+
+DEF_UU_TABLE("detonate-on-capture", uu_detonation_on_capture,
+	"",
+	uudetonateoncapture, constdetonateoncapture, 0, 0, 100)
+
+DEF_UU_TABLE("detonate-on-hit", uu_detonation_on_hit,
+	"",
+	uudetonateonhit, constdetonateonhit, 0, 0, 100)
+
+DEF_UT_TABLE("eye-height", ut_eye_height,
+	"effective height of a unit's eyes in a type of terrain",
+	uteyeheight, constuteyeheight, 0, 0, 0)
+
+DEF_UT_TABLE("favored-terrain", ut_favored,
+	"the chance for a unit to be placed on a type of terrain",
+	utfavored, constfavored, 0, 100, 100)
+
+DEF_UU_TABLE("ferry-on-entry", uu_ferry_on_enter,
+	"",
+	uuferryonenter, constuuferryonenter, 0, 2, 3)
+
+DEF_UU_TABLE("ferry-on-departure", uu_ferry_on_leave,
+	"",
+	uuferryonleave, constuuferryonleave, 0, 2, 3)
+
+DEF_UU_TABLE("friendly-hit-chance", uu_friend_hit,
+	"base chance for a type of unit to hit another type of unit",
+	uufriendhit, constuufriendhit, 0, 0, 100)
+
+DEF_UU_TABLE("hp-min", uu_hp_min,
+	"Attacker cannot reduce victim's hp below this",
+	uuhpmin, consthpmin, 0, 0, 9999)
+
+DEF_UU_TABLE("hp-to-garrison", uu_hp_to_garrison,
+	"how much of unit gets used up to garrison a prize",
+	uuhptogarrison, consthptogarrison, 0, 0, 9999)
+
+DEF_UU_TABLE("hit-at-max-range-effect", uu_hit_max_range_effect,
+	"chance for a type of unit to hit another type of unit at longest range",
+	uuhitatmaxrangeeffect, consthitatmaxrangeeffect, 0, 100, 9999)
+
+DEF_UM_TABLE("hit-by", um_hitby,
+	"kind of ammo that hits unit",
+	umhitby, constumhitby, 0, 0, 0)
+
+DEF_UU_TABLE("hit-chance", uu_hit,
+	"base chance for a type of unit to hit another type of unit",
+	uuhitchance, constuuhitchance, 0, 0, 100)
+
+DEF_UU_TABLE("hp-per-repair", uu_repair,
+	"HP restored by a repair action",
+	uuhprepair, constuuhprepair, 0, 0, 9999)
+
+DEF_UU_TABLE("hp-to-repair", uu_hp_to_repair,
+	"",
+	uuhptorepair, constuuhptorepair, 1, 1, 9999)
+
+DEF_UM_TABLE("hp-per-starve", um_hp_per_starve,
+	"HP lost/gained per turn of starvation",
+	umhpstarve, constumhpstarve, -9999, 0, 9999)
+
+DEF_UM_TABLE("in-length", um_inlength,
+	"length of supply line coming in",
+	uminlength, constuminlength, 0, 0, 0)
+
+DEF_UT_TABLE("independent-density", ut_indep_density,
+	"Likelihood of an indep unit type on a terrain type",
+	utindepdensity, constutindepdensity, 0, 0, 9999)
+
+DEF_UM_TABLE("load-max", um_load_max,
+	"",
+	umloadmax, constumloadmax, -1, -1, 9999)
+
+DEF_TM_TABLE("material-size-in-terrain", tm_size,
+	"How much space one unit of a material requires in terrain",
+	tmsize, consttmsize, 0, 1, 9999)
+
+DEF_UM_TABLE("material-size-in-unit", um_size,
+	"How much space one unit of a material requires in a unit",
+	umsize, constumsize, 0, 1, 9999)
+
+DEF_UM_TABLE("material-to-act", um_to_act,
+	"supplies needed to be able to act at all",
+	umtoact, constumtact, 0, 0, 9999)
+
+DEF_UM_TABLE("material-to-build", um_to_build,
+	"supplies needed to be able to work on a unit",
+	umtobuild, constumtobuild, 0, 0, 9999)
+
+DEF_UM_TABLE("material-to-create", um_to_create,
+	"supplies needed to be able to create",
+	umtocreate, constumtocreate, 0, 0, 9999)
+
+DEF_UM_TABLE("material-to-fight", um_to_fight,
+	"supplies needed to be able to do any sort of combat",
+	umtofight, constumtofight, 0, 0, 9999)
+
+DEF_UM_TABLE("material-to-move", um_to_move,
+	"supplies needed to be able to move",
+	umtomove, constumtomove, 0, 0, 9999)
+
+DEF_UM_TABLE("material-to-repair", um_to_repair,
+	"",
+	umtorepair, constumtorepair, 0, 0, 9999)
+
+DEF_UU_TABLE("mp-per-occupant", uu_mobility,
+	"true if unit affects mobility of its transport.",
+	uumobility, constuumobility, 0, 100, 9999)
+
+DEF_UT_TABLE("mp-to-ascend", ut_mp_to_ascend,
+	"mp to increase elevation or altitude",
+	utmptoascend, constutmptoascend, -1, 0, 9999)
+
+DEF_UT_TABLE("mp-to-descend", ut_mp_to_descend,
+	"mp to reduce elevation or altitude",
+	utmptodescend, constutmptodescend, -1, 0, 9999)
+
+DEF_UT_TABLE("mp-to-enter-terrain", ut_mp_to_enter,
+	"mp needed to enter the terrain",
+	utmptoenter, constutmptoenter, -1, 1, 9999)
+
+DEF_UU_TABLE("mp-to-enter-unit", uu_mp_to_enter,
+	"",
+	uumptoenter, constuumptoenter, -1, 0, 9999)
+
+DEF_UU_TABLE("mp-to-enter-zoc", uu_mp_to_enter_zoc,
+	"",
+	uumptoenterzoc, constuumptoenterzoc, -1, -1, 9999)
+
+DEF_UT_TABLE("mp-to-leave-terrain", ut_mp_to_leave,
+	"",
+	utmptoleave, constutmptoleave, -1, 0, 9999)
+
+DEF_UU_TABLE("mp-to-leave-unit", uu_mp_to_leave,
+	"",
+	uumptoleave, constuumptoleave, -1, 0, 9999)
+
+DEF_UU_TABLE("mp-to-leave-zoc", uu_mp_to_leave_zoc,
+	"",
+	uumptoleavezoc, constuumptoleavezoc, -1, 0, 9999)
+
+DEF_UT_TABLE("mp-to-traverse", ut_mp_to_traverse,
+	"",
+	utmptotraverse, constutmptotraverse, 0, 1, 9999)
+
+DEF_UU_TABLE("mp-to-traverse-zoc", uu_mp_to_traverse_zoc,
+	"",
+	uumptotraversezoc, constuumptotraversezoc, -1, 0, 9999)
+
+DEF_UT_TABLE("night-acp-effect", ut_night_acp_effect,
+	"",
+	utnightacpeffect, constutnightacpeffect, 0, 100, 9999)
+
+DEF_UT_TABLE("night-vision-effect", ut_night_vision_effect,
+	"",
+	utnightvisioneffect, constutnightvisioneffect, 0, 100, 9999)
+
+DEF_UU_TABLE("occupant-acp-effect", uu_occ_acp,
+	"",
+	uuoccacp, constuuoccacp, 0, 100, 9999)
+
+DEF_UU_TABLE("occupant-can-have-occupants", uu_occ_can_have_occs,
+	"True if occupant can have occupants itself",
+	uuocccanhaveoccs, constuuocccanhaveoccs, 0, 1, 1)
+
+DEF_UU_TABLE("occupant-combat", uu_occ_can_fight,
+	"True if occupant can fight",
+	uuocccanfight, constuuocccanfight, 0, 100, 100)
+
+DEF_UU_TABLE("occupant-can-construct", uu_occ_can_build,
+	"True if occupant can build",
+	uuocccanbuild, constuuocccanbuild, 0, 1, 1)
+
+DEF_UU_TABLE("occupant-escape-chance", uu_occ_escape,
+	"Base chance for u2 to move to avoid capture",
+	uuoccescape, constuuoccescape, 0, 0, 100)
+
+DEF_UM_TABLE("occupant-production", um_occ_production,
+	"",
+	umoccproduction, constumoccproduction, 0, 0, 0)
+
+DEF_UU_TABLE("occupant-vision", uu_occ_can_see,
+	"True if occupant can see",
+	uuocccansee, constuuocccansee, 0, 100, 100)
+
+DEF_UU_TABLE("occupant-max", uu_occ_max,
+	"extra ceiling on total number of a type",
+	uuoccmax, constuuoccmax, -1, -1, 9999)
+
+DEF_UM_TABLE("out-length", um_outlength,
+	"length of supply line going out",
+	umoutlength, constoutlength, 0, 0, 0)
+
+DEF_MM_TABLE("people-base-consumption", mm_people_consumption,
+	"",
+	mmpeopleconsumption, constmmpeopleconsumption, 0, 0, 9999)
+
+DEF_MM_TABLE("people-base-production", mm_people_production,
+	"",
+	mmpeopleproduction, constmmpeopleproduction, 0, 0, 9999)
+
+DEF_UT_TABLE("people-surrender-chance", ut_people_surrender,
+	"Chance that people will surrender to occupying unit",
+	utpeoplesurrender, constutpeoplesurrender, 0, 0, 100)
+
+DEF_UM_TABLE("people-surrender-effect", um_people_surrender,
+	"Effect of people type on surrender chance",
+	umpeoplesurrender, constumpeoplesurrender, 0, 100, 9999)
+
+DEF_UT_TABLE("productivity", ut_productivity,
+	"effect of terrain on production",
+	utproductivity, constproductivity, 0, 0, 0)
+
+DEF_UM_TABLE("productivity-max", um_productivity_max,
+	"limit on effect of terrain on production",
+	umproductivitymax, constumproductivitymax, 0, 9999, 9999)
+
+DEF_UM_TABLE("productivity-min", um_productivity_min,
+	"limit of effect of terrain on production",
+	umproductivitymin, constumproductivitymin, 0, 0, 9999)
+
+DEF_UU_TABLE("protection", uu_protection,
+	"The degree to which transports protect occupants and vice versa",
+	uuprotection, constuuprotection, 0, 100, 9999)
+
+DEF_UM_TABLE("recycleable-material", um_recycleable,
+	"",
+	umrecycleable, constumrecycleable, 0, 0, 9999)
+
+DEF_UU_TABLE("retreat-chance", uu_retreat_chance,
+	"Chance to retreat after combat",
+	uuretreatchance, constuuretreatchance, 0, 0, 100)
+
+DEF_UU_TABLE("road-chance", uu_road_chance,
+	"Chance for a road from one type to another",
+	uuroadchance, constuuroadchance, 0, 0, 100)
+
+DEF_TT_TABLE("road-into-chance", tt_road_into_chance,
+	"Chance for type of road into type of terrain",
+	ttroadintochance, constttroadintochance, 0, 0, 100)
+
+DEF_UU_TABLE("scuttle-chance", uu_scuttle,
+	"Base chance for u1 to wreck self to avoid capture by u2",
+	uuscuttle, constscuttle, 0, 0, 100)
+
+DEF_UU_TABLE("separation-to-build-max", uu_sep_to_build_max,
+	"max distance between unit and unit being worked on",
+	uuseptobuildmax, constuuseptobuildmax, 0, 0, 9999)
+
+DEF_UU_TABLE("separation-to-create-max", uu_sep_to_create_max,
+	"max distance between unit and unit being created",
+	uuseptocreatemax, constuuseptocreatemax, 0, 0, 9999)
+
+DEF_UU_TABLE("spy-quality", uu_spy_quality,
+	"Chance for u1 to return info about u2 when spied upon",
+	uuspyquality, constspyquality, 0, 100, 100)
+
+DEF_UU_TABLE("stack-ablation", uu_stack_ablation,
+	"Percentage of hits that stacked units take for each other",
+	uustackablation, constuustackablation, 0, 0, 100)
+
+DEF_UU_TABLE("stack-protection", uu_stack_protection,
+	"The degree to which units in same cell protect each other",
+	uustackprotection, constuustackprotection, 0, 100, 9999)
+
+DEF_UM_TABLE("supply-on-creation", um_created_supply,
+	"",
+	umcreatedsupply, constumcreatedsupply, 0, 0, 9999)
+
+DEF_UM_TABLE("supply-on-completion", um_completed_supply,
+	"",
+	umcompletedsupply, constumcompletedsupply, 0, 0, 9999)
+
+DEF_UM_TABLE("supply-per-disband", um_supply_per_disband,
+	"",
+	umsupplyperdisband, constumsupplyperdisband, 0, 0, 9999)
+
+DEF_UU_TABLE("surrender-chance", uu_surrender_chance,
+	"",
+	uusurrenderchance, constuusurrenderchance, 0, 0, 9999)
+
+DEF_UU_TABLE("surrender-chance-per-attack", uu_surrender_per_attack,
+	"",
+	uusurrenderattack, constuusurrenderattack, 0, 0, 100)
+
+DEF_UU_TABLE("surrender-range", uu_surrender_range,
+	"",
+	uusurrenderrange, constuusurrenderrange, 0, 0, 9999)
+
+DEF_UU_TABLE("tech-crossover", uu_tech_crossover,
+	"Effect of tech for one type on tech for another type",
+	uutechcross, constuutechcross, 0, 0, 100)
+
+DEF_UU_TABLE("tech-per-research", uu_tech_per_research,
+	".01 tech increase from one research action",
+	uutechperresearch, constuutechperresearch, 0, 0, 9999)
+
+DEF_UU_TABLE("temperature-protection", uu_temp_protect,
+	"",
+	uutempprotect, constuutempprotect, 0, 0, 1)
+
+DEF_TM_TABLE("terrain-base-consumption", tm_consumption,
+	"overhead consumption in each turn",
+	tmconsumption, consttmconsumption, 0, 0, 9999)
+
+DEF_TM_TABLE("terrain-base-production", tm_production,
+	"rate of supply production",
+	tmproduction, consttmproduction, 0, 0, 9999)
+
+DEF_UT_TABLE("terrain-capacity-x", ut_capacity_x,
+	"Number of units that can always be in terrain",
+	utcapacityx, constutcapacityx, 0, 0, 9999)
+
+DEF_TM_TABLE("terrain-exhaustion-type", tm_exhaust_type,
+	"",
+	tmexhausttype, consttmexhausttype, 0, NONTTYPE, 0)
+
+DEF_TM_TABLE("terrain-initial-supply", tm_initial,
+	"Amount of each material that a cell starts with.",
+	tminitial, consttminitial, 0, 0, 9999)
+
+DEF_TM_TABLE("terrain-storage-x", tm_storage_x,
+	"Amount of each material that a cell can hold",
+	tmstoragex, consttmstoragex, 0, 0, 9999)
+
+DEF_UU_TABLE("tp-max", uu_tp_max,
+	"Maximum possible tooling",
+	uutpmax, constuutpmax, 0, 0, 9999)
+
+DEF_UU_TABLE("tp-per-toolup", uu_tp_per_toolup,
+	"",
+	uutppertoolup, constuutppertoolup, 0, 0, 9999)
+
+DEF_UU_TABLE("tp-to-build", uu_tp_to_build,
+	"",
+	uutptobuild, constuutptobuild, 0, 0, 9999)
+
+DEF_UU_TABLE("tp-attrition", uu_tp_attrition,
+	"",
+	uutpattrition, constuutpattrition, 0, 0, 9999)
+
+DEF_UU_TABLE("tp-crossover", uu_tp_crossover,
+	"Effect of tooling for one type on tooling for another type",
+	uutpcrossover, constuutpcrossover, 0, 0, 100)
+
+DEF_UM_TABLE("unit-initial-supply", um_initial,
+	"Amount of each material that a unit starts with.",
+	utinitial, constinitial, 0, 0, 9999)
+
+DEF_UU_TABLE("unit-capacity-x", uu_capacity_x,
+	"carrying capacity reserved for unit type",
+	uucapacityx, constcapacityx, 0, 0, 9999)
+
+DEF_UU_TABLE("unit-size-as-occupant", uu_size,
+	"how much space an occupant takes up in the given transport",
+	uusize, constuusize, 0, 1, 9999)
+
+DEF_UT_TABLE("unit-size-in-terrain", ut_size,
+	"how much space a unit takes up in a cell",
+	utsize, constutsize, 0, 1, 9999)
+
+DEF_UM_TABLE("unit-storage-x", um_storage_x,
+	"capacity for each material type",
+	umstoragex, constumstoragex, 0, 0, 9999)
+
+DEF_UM_TABLE("unload-max", um_unload_max,
+	"",
+	umunloadmax, constumunloadmax, -1, -1, 9999)
+
+DEF_UT_TABLE("vanishes-on", ut_vanishes_on,
+	"True if a unit in the terrain simply vanishes",
+	utvanisheson, constvanisheson, 0, 0, 1)
+ 
+DEF_UT_TABLE("visibility", ut_visibility,
+	"Base chance to see unit when in terrain",
+	utvisibility, constvisibility, 0, 100, 100)
+
+DEF_UM_TABLE("visibility-to-people", um_visibility_to_people,
+	"Base chance for a type of people to see unit",
+	umvistopeople, constumvistopeople, 0, 100, 100)
+
+DEF_UU_TABLE("withdraw-chance-per-attack", uu_withdraw_per_attack,
+	"",
+	uuwithdrawattack, constuuwithdrawattack, 0, 0, 100)
+
+DEF_UT_TABLE("wrecks-on", ut_wrecks_on,
+	"True if a unit in the terrain becomes wrecked",
+	utwreckson, constutwreckson, 0, 0, 1)
+ 
+DEF_UT_TABLE("zoc-into-terrain", ut_zoc_into,
+	"",
+	utzocinto, constutzocinto, 0, 1, 1)
+
+DEF_UT_TABLE("zoc-from-terrain-effect", ut_zoc_from_terrain,
+	"",
+	utzocfromterrain, constutzocfromterrain, 0, 100, 9999)
+
+DEF_UU_TABLE("zoc-range", uu_zoc_range,
+	"Distance to which ZOC is exerted",
+	uuzocrange, constuuzocrange, -1, 0, 9999)
+
+DEF_UU_TABLE("zzz-avg-build-time", uu_avg_build_time,
+	"average build time (for AIs)",
+	uuabt, constabt, 0, 0, 0)
+
+DEF_UU_TABLE("zzz-bhw", uu_bhw,
+	"basic hit worth (for AIs)",
+	uubhw, constuubhw, 0, 0, 0)
+
+DEF_UU_TABLE("zzz-bcw", uu_bcw,
+	"basic capture worth (for AIs)",
+	uubcw, constuubcw, 0, 0, 0)
+
+DEF_UU_TABLE("zzz-btw", uu_btw,
+	"basic transport worth (for AIs)",
+	uubtw, constuubtw, 0, 0, 0)
+
+DEF_UU_TABLE("zzz-base-worth", uu_base_worth,
+	"",
+	uubaseworth, constuubaseworth, 0, 0, 0)
+
+DEF_UU_TABLE("zzz-depot-worth", uu_depot_worth,
+	"",
+	uudepotworth, constuudepotworth, 0, 0, 0)
+
+DEF_UU_TABLE("zzz-carrier-worth", uu_carrier_worth,
+	"",
+	uucarrierworth, constuucarrierworth, 0, 0, 0)
+
+DEF_UU_TABLE("zzz-terrain-worth", ut_terrain_worth,
+	"",
+	utterrainworth, constutterrainworth, 0, 0, 0)

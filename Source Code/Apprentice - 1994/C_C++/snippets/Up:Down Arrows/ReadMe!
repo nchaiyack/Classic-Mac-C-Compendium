@@ -1,1 +1,44 @@
----------------------------------------------------------------------Note:  The two "Tweak" versions were done by Ken Long.The only modifications to the source were the addition of many morecomments, and the change of resource ID numbers.  The modificationsto the resource file were the addition of 'PICT', 'DITL' and 'DLOG'resources to facititate the two color arrow sets.  Everythingelse is the same.Think C 5.0.4 guys: Just add MacTraps and MacTraps2 and whichever.c file you want to run.---------------------------------------------------------------------From: egurney@vcd.hp.com (Eddy J. Gurney) Subject: UpDownArrowTester Source Date: Fri, 4 Mar 1994Here's an old program of mine that I wrote when I was firstlearning to program the Mac. It attempts to implement the "up/downarrow bumpers" commonly seen in the ColorPicker dialog. It'swritten completely as part of the event handler, so it's not anice little compact CDEF or anything. It uses three PICT resourcesto represent the "off", "up" and "down" states, and featuresvariable speed increment/decrement (ie., the longer you hold itdown, the faster it goes, just like the ColorPicker, which as Isaid, I was using as a model.)I'm not claiming this is the right way to do it (probably far fromit!) but at least it's a start.  If anyone makes improvements,etc. let me know.  (I don't care about any bugs in the "Tester"portion of the code, just the part that handles the up/downarrows, which is all I really cared about testing!)If someone has a better implementation, I'd love to see it.Regards, Eddy-- Eddy J. Gurney N8FPW    Hewlett-Packard Company, Vancouver(USA!) Division egurney@vcd.hp.com                        #include <standard-disclaimer.h>"Failures are divided into two classes--those who thought and  never did, and those who did and never thought."      											John Charles Salak
+---------------------------------------------------------------------
+Note:  The two "Tweak" versions were done by Ken Long.
+The only modifications to the source were the addition of many more
+comments, and the change of resource ID numbers.  The modifications
+to the resource file were the addition of 'PICT', 'DITL' and 'DLOG'
+resources to facititate the two color arrow sets.  Everything
+else is the same.
+
+Think C 5.0.4 guys: Just add MacTraps and MacTraps2 and whichever
+.c file you want to run.
+---------------------------------------------------------------------
+
+From: egurney@vcd.hp.com (Eddy J. Gurney) 
+Subject: UpDownArrowTester Source 
+Date: Fri, 4 Mar 1994
+
+Here's an old program of mine that I wrote when I was first
+learning to program the Mac. It attempts to implement the "up/down
+arrow bumpers" commonly seen in the ColorPicker dialog. It's
+written completely as part of the event handler, so it's not a
+nice little compact CDEF or anything. It uses three PICT resources
+to represent the "off", "up" and "down" states, and features
+variable speed increment/decrement (ie., the longer you hold it
+down, the faster it goes, just like the ColorPicker, which as I
+said, I was using as a model.)
+
+I'm not claiming this is the right way to do it (probably far from
+it!) but at least it's a start.  If anyone makes improvements,
+etc. let me know.  (I don't care about any bugs in the "Tester"
+portion of the code, just the part that handles the up/down
+arrows, which is all I really cared about testing!)
+
+If someone has a better implementation, I'd love to see it.
+
+Regards, Eddy
+
+-- Eddy J. Gurney N8FPW    Hewlett-Packard Company, Vancouver
+(USA!) Division egurney@vcd.hp.com                        
+#include <standard-disclaimer.h>
+"Failures are divided into two classes--
+those who thought and  never did, 
+and those who did and never thought."      					
+						John Charles Salak
+

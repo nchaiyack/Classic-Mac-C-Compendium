@@ -1,1 +1,379 @@
-This file contains some items grabbed from various sources that maygive new users of IRC some advice.Contents: - Frequently Asked Questions (from alt.irc), by Helen Trillian Rose Davis - How to Behave on IRC (from IRCII), by Lea Viljanen and Ari Husa - Users Behaviour on the Internet Relay Chat system (from IRCII), by Ove Ruben R Olsen---------------------------------------------------------------------From: hrose@kei.com (Helen T. Rose Davis)Newsgroups: alt.irc,alt.irc.ircii,alt.answers,news.answersSubject: IRC Frequently Asked Questions (FAQ)Archive-name: irc-faqLast-modified: 1993/11/23Version: 1.22(1) What is IRC? 	IRC stands for "Internet Relay Chat". It was originallywritten by Jarkko Oikarinen (jto@tolsun.oulu.fi) in 1988. Sincestarting in Finland, it has been used in over 60 countries spanningthe globe.  It was designed as a replacement for the "talk" programbut has become much much more than that. IRC is a multi-user chatsystem, where people convene on "channels" (a virtual place, usuallywith a topic of conversation) to talk in groups, or privately. IRC isconstantly evolving, so the way you expect things to work one week maynot be the way they work the next. Read the MOTD (message of the day)every time you use IRC to keep up on any new happenings or serverupdates.	IRC gained international fame during the late Persian Gulf War,where updates from around the world came accross the wire, and mostpeople on IRC gathered on a single channel to hear these reports. IRChad similar uses during the coup against Boris Yeltsin in September1993, where IRC users from Moscow were giving live reports about theunstable situation there.(2) How is IRC set up?	The user runs a "client" program (usually called 'irc') whichconnects to the IRC network via another program called a "server".Servers exist to pass messages from user to user over the IRC network.(3) How do I use a client?	First, check to see if irc is installed on your system. Type"irc" from your prompt. If this doesn't work, ask your local systemspeople if irc is already installed. This will save you the work ofinstalling it yourself.	If an IRC client isn't already on your system, you eithercompile the source yourself, have someone else on your machine compilethe source for you, or use the TELNET client. "telnet tiger.itc.univie.ac.at 6668". Please only use the latter when you have no other way of reaching IRC, as this resource is quitelimited, is slow, and is *very* unreliable.(4) Where can I get source for an IRC client?	You can anonymous ftp to any of the following sites (use theone closest to you):  *** If you don't know what anonymous ftp is, askyour local systems people to show you ***UNIX client-> cs.bu.edu /irc/clients	      ftp.acsu.buffalo.edu /pub/irc	      ftp.funet.fi /pub/unix/irc              coombs.anu.edu.au /pub/irc	      ftp.informatik.tu-muenchen.de /pub/comp/networking/irc/clients	      slopoke.mlb.semi.harris.com /pub/irc	      there is also a client avaliable with the server code.EMACS elisp-> cs.bu.edu /irc/clients/elisp	      ftp.funet.fi /pub/unix/irc/Emacs              ftp.informatik.tu-muenchen.de /pub/comp/networking/irc/clients	      slopoke.mlb.semi.harris.com /pub/irc/emacs              lehtori.cc.tut.fi /pub/irchatX11 client->  catless.ncl.ac.uk /pub              harbor.ecn.purdue.edu /pub/tcl/codeVMS ->        cs.bu.edu /irc/clients/vms	      coombs.anu.edu.au /pub/irc/vms              ftp.funet.fi  /pub/unix/irc/vms              ftp.informatik.tu-muenchen.de /pub/net/ircREXX client for VM->    cs.bu.edu /irc/clients/rxirc                        ftp.informatik.uni-oldenburg.de /pub/irc/rxirc                        ftp.informatik.tu-muenchen.de /pub/net/irc/VM                        coombs.anu.edu.au /pub/irc/rxirc                        ftp.funet.fi /pub/unix/irc/rxircMSDOS->         cs.bu.edu /irc/clients/msdos                ftp.funet.fi /pub/unix/irc/msdosMacintosh->     cs.bu.edu /irc/clients/macintosh                sumex-aim.stanford.edu /info-mac/comm                ftp.funet.fi /pub/unix/irc/mac                ftp.ira.uka.de /pub/systems/mac(5) Which server do I connect to?	It's usually best to try and connect to one geographicallyclose, even though that may not be the best. You can always ask when youget on IRC. Here's a list of servers avaliable for connection:USA:		csa.bu.edu		irc.colorado.edu                irc.uiuc.eduCanada:		ug.cs.dal.caEurope:		irc.funet.fi		cismhp.univ-lyon1.fr                disuns2.epfl.ch                irc.nada.kth.se		sokrates.informatik.uni-kl.de                bim.itc.univie.ac.atAustralia:		jello.qabc.uq.oz.auThis is, by no means, a comprehensive list, but merely a start. Connectto the closest of these servers and join the channel #Twilight_ZoneWhen you get there, immediately ask what you want. Don't say "I have aquestion" because then hardly anyone will talk. (6) OK, I've got a client and I'm connected to a server, now what?	It's probably best to take a look around and see what you wantto do first. All IRC commands start with a "/", and most are one word.Typing /help will get you help information. /names will get you a listof names, etc. The output of /names is typically something like this->Pub: #hack      zorgo eiji Patrick fup htoaster Pub: #Nippon    @jircc @miyu_d Pub: #nicole    MountainD Pub: #hottub    omar liron beer Deadog moh pfloyd Dode greywolf SAMANTHA(Note there are LOTS more channels than this, this is just sampleoutput -- one way to stop /names from being too large is doing /names-min 20 which will only list channels with 20 or more people on it,but you can only do this with the ircII client)."Pub" means public (or "visible") channel. "hack" is the channel name."#" is the prefix. A "@" before someone's nickname indicates he/she isthe "Channel operator" (see #7) of that channel. A Channel Operator issomeone who has control over a specific channel. It can be shared ornot as the first Channel Operator sees fit. The first person to jointhe channel automatically gets Channel Operator, and can share it withanyone he/she chooses (or not).  Another thing you might see is "Prv"which means private. You will only see this if you are on that privatechannel. No one can see Private channels except those who are on thatparticular private channel.(7) What is a channel operator? What is an IRC operator? 	A channel operator is someone with a "@" by their nickname ina /names list, or a "@" by the channel name in /whois output. Channeloperators are kings/queens of their channel. This means they can kickyou out of their channel for no reason. If you don't like this, youcan start your own channel and become a channel operator there. 	An IRC operator is someone who maintains the IRC network. Theycannot fix channel problems. They cannot kick someone out of a channelfor you. They cannot /kill (kick someone out of IRC temporarily)someone just because you gave the offender channel operator privelegesand said offender kicked *you* off.(8) What is a "bot"?         "bot" is short for "robot". It is a script run from an ircIIclient or a separate program (in perl, C, and sometimes more obscurelanguages). StarOwl@uiuc.edu (Michael Adams) defined bots very well: "Abot is a vile creation of /lusers to make up for lack of penis length".IRC bots are generally not needed. See (10) below about "ownership" ofnicknames and channels.(9) What are good channels to try while using IRC?	#hottub and #initgame are almost always teeming with people.#hottub is meant to simulate a hot tub, and #initgame is a non-stop gameof "inits" (initials). Just join and find out! 	To get a list of channels with their names and topics, do/list -min 20 (on ircII) which will show you channels with 20 or moremembers. You can also do this for smaller numbers.	Many IRC operators are in #Twilight_Zone ... so if you jointhat channel and don't hear much talking, don't worry, it's not becauseyou joined, operators don't talk much on that channel anyways!(10) Someone is using my nickname, can anyone do anything about it?    Someone is using my channel, can anyone do anything about it?        Even with NickServ (see (13) below) registering nicknames, thereare not enough nicknames to have nickname ownership. If someone takesyour nickname while you are not on IRC, you can ask for them to give itback, but you can not *demand* it, nor will IRC operators /kill fornickname ownership.                 There are, literally, millions of possible channel names, so ifsomeone is on your usual channel, just go to another. You can /msg themand ask for them to leave, but you can't *force* them to leave. (11) There aren't any channel operators on my channel, now what?         Channel operators are the owner(s) of their respective channels.Keep this in mind when giving out channel operator powers (make sure togive them to enough people so that all of the channel operators don'tunexpectedly leave and the channel is stuck without a channel operator).        On the other hand, do not give out channel operator to*everyone*. This causes the possibility of mass-kicking, where thechannel would be stuck without any channel operators.	You have one option. You can ask everyone to leave and rejointhe channel. This is a good way to get channel operator back. Itdoesn't work on large channels or ones with bots, for obvious reasons.(12) What if someone tells me to type something cryptic?	Never type anything anyone tells you to without knowing what itis. There is a problem with typing certain commands with the ircIIclient that give anyone immediate control of your client (and thus cangain access to your account).(13) What is NickServ? What if I can't remember my NickServ password?	NickServ is a service. Services are special robots on IRC.NickServ resides in Germany. You must always address messages toNickServ as NickServ@service.de and not as just "NickServ". 	To quote from NickServ's help text, NickServ's purpose is tokeep unique nicknames on IRC. NickServ sends a warning to anyone elsewho signs on with your nickname.  If you don't use IRC for 10 weeks,your nickname expires and becomes available for reuse by anyone.  	Basic NickServ information can be retrieved by doing/msg NickServ@service.de help	Only a NickServ operator can change your nickserv password.To find out which NickServ operators are online, send/msg NickServ@service.de OPERWHONicknames with a "*" next to them are online at the time.(14) Where can I find GIF archives of IRC people?        GIF archives of IRC people are available:     ftp.funet.fi:/pub/pics/gif/pics/people/misc/irc (NORDUnet only)     ftp.informatik.tu-muenchen.de /pub/comp/networking/irc/RP(15) Where can I learn more?	The best, basic, IRC user's manual is the IRC Primer,available in plain text, PostScript, and LaTeX fromcs.bu.edu:/irc/support ... Another good place to start might bedownloading the IRC tutorials.  They're avaliable via anonymous ftpfrom cs.bu.edu in /irc/support/tutorial.* 	You can also join various IRC related mailing lists:  * "operlist" is a list that discusses current (and past) server code,   routing, and protocol. You can join by mailing   operlist-request@kei.com.  * "irchat" is an elisp client. You can join the irchat mailing list by   mailing irchat-request@cc.tut.fi. * "ircd-three" is a list that exists to discuss protocol revisions   for the 3.0 release of the ircd (irc server), currently in   planning.  Mail ircd-three-request@kei.com to be added. * "vmsirc" is a list for the questions, problems, and discussions   related to the vms IRC clients. Mail vmsirc-request@vax1.elon.edu   (with "subscribe" in the message body).NOTE! These are not "Help me, where can I get started?" lists. Forthat information, read the IRCprimer noted above. 	Those looking for more technical information can get the IRCRFC (rfc1459) available at all RFC ftp sites, as well ascs.bu.edu:/irc/support/rfc1459.txt(15) What do I do if I'm still confused or have additions to this posting?	email hrose@kei.com or ask for help (in #Twilight_Zone) on IRC.---------------------------------------------------------------------** HOW TO BEHAVE ON IRC(ETIQUETTE from the IRCII documentation)Authors:      Lea Viljanen (LadyBug)  viljanen@kreeta.helsinki.fi              Ari Husa     (luru)     so-luru@tolsun.oulu.fi Modified by:  Troy Rollo   (Troy)     troy@plod.cbme.unsw.oz.au							Olaf Titz  (praetorius) 		s_titz@ira.uka.de1) Language   The most widely understood and spoken language on IRC is English. However! As IRC is used in many different countries, English is byno means the only language. If you want to speak some other languagethan English (for example with your friends), go to a separate channeland set the topic (with /topic) to indicate that. For example   /topic Finnish only!would mean that this channel would be reserved for Finnish discussion.On the other hand, you should check the topic (with /list command) before you move to a channel to see if there are any restrictions about language.   On a channel not restricted by /topic, please speak a languageeverybody can understand. If you want to do otherwise, change channelsand set the topic accordingly.2) Hello/Goodbye   It's not necessary to greet everybody on a channel personally.Usually one "Hello" or equivalent is enough. And don't expect everybodyto greet you back. On a channel with 20 people that would mean onescreenful of hellos. It's sensible not to greet, in order not to be rudeto the rest of the channel. If you must say hello to somebody you know,do it with a private /msg. The same applies to goodbyes.3) Discussion   When you come to a new channel it's advised you to listenfor a while to get an impression of what's discussed. Please feel freeto join in, but do not try to force your topic into the discussionif that doesn't come naturally.4) Limits   On channel numbers above 10 there can be only 10 personsper channel. So if the channel is full and you don't activelyparticipate, please move to another channel to let someone else in.5) {}|[]\   IRC has quite a lot of people from Scandinavian countries,the above characters are letters in their alphabet. This has been explained on IRC about a thousand and one times, soread the following, do not ask it on IRC:   {     is an A with 2 dots over it   }     is an A with a small circle above it   |     is either an O with 2 dots over it or an O with a dash (/) through it   [, ], and \ are the preceding three letters in upper case.6) ATTENTION!   Remember, people on IRC form their opinions about you only by your actions, writings and comments on IRC. So think before you type.---------------------------------------------------------------------** Users Behavior on the Internet Relay Chat system(RULES from the IRCII documentation)Author: Ove Ruben R OlsenDefinitions:   IRC-ADMIN - Person who have access to all files concerning ircd.   IRC-OP    - Person who have privilegies given to him by an IRC-ADMIN.	       And who is in charge at HIS server.   USER      - Person who is using IRC.The Internet Relay Network (IRC) is a system for comunicating with otherpeoples.IRC is a free speech system. Users may exchange viewpoints with otherusers. But to protect people from abuse there are certain rules that the user MUST respect.If a USER doesn't respect the guidelines/rules stated below, then theIRC-ADMIN may suspend or reduce the availability for the USER.These things are prohibited:   * Using offensive words in channel topics.   * Harassing another user. Harassment is defined as behavior towards      another user with the purpose of annoying them.      Harassment is a matter of opinion of the IRC-OP.   * "Dumping" a lot of text to a channel.   * Annoying another user or a channel with constant beeping.    * Any behavior reducing the functionality of IRC.What kind of action a user is doing to break these rules are up to the IRC-OP to decide.Violation should be straighted out via a civilized conversation betweenthe IRC-OP and the USER.If the USER is not on-line then the USER should be notified by EMail.If the USER wont respect what he's been told then it is up to the IRC-ADMIN what to do with the USER.If someone finds a USER violating these rules he may contact the USER'sIRC-ADMIN.To find a USERS IRC-ADMIN one may use the /ADMIN <nick-name>.---------------------------------------------------------------------
+This file contains some items grabbed from various sources that may
+give new users of IRC some advice.
+
+Contents:
+ - Frequently Asked Questions (from alt.irc), by Helen Trillian Rose Davis
+ - How to Behave on IRC (from IRCII), by Lea Viljanen and Ari Husa
+ - Users Behaviour on the Internet Relay Chat system (from IRCII), by Ove Ruben R Olsen
+---------------------------------------------------------------------
+
+From: hrose@kei.com (Helen T. Rose Davis)
+Newsgroups: alt.irc,alt.irc.ircii,alt.answers,news.answers
+Subject: IRC Frequently Asked Questions (FAQ)
+
+Archive-name: irc-faq
+Last-modified: 1993/11/23
+Version: 1.22
+
+(1) What is IRC? 
+
+	IRC stands for "Internet Relay Chat". It was originally
+written by Jarkko Oikarinen (jto@tolsun.oulu.fi) in 1988. Since
+starting in Finland, it has been used in over 60 countries spanning
+the globe.  It was designed as a replacement for the "talk" program
+but has become much much more than that. IRC is a multi-user chat
+system, where people convene on "channels" (a virtual place, usually
+with a topic of conversation) to talk in groups, or privately. IRC is
+constantly evolving, so the way you expect things to work one week may
+not be the way they work the next. Read the MOTD (message of the day)
+every time you use IRC to keep up on any new happenings or server
+updates.
+
+	IRC gained international fame during the late Persian Gulf War,
+where updates from around the world came accross the wire, and most
+people on IRC gathered on a single channel to hear these reports. IRC
+had similar uses during the coup against Boris Yeltsin in September
+1993, where IRC users from Moscow were giving live reports about the
+unstable situation there.
+
+(2) How is IRC set up?
+
+	The user runs a "client" program (usually called 'irc') which
+connects to the IRC network via another program called a "server".
+Servers exist to pass messages from user to user over the IRC network.
+
+(3) How do I use a client?
+
+	First, check to see if irc is installed on your system. Type
+"irc" from your prompt. If this doesn't work, ask your local systems
+people if irc is already installed. This will save you the work of
+installing it yourself.
+
+	If an IRC client isn't already on your system, you either
+compile the source yourself, have someone else on your machine compile
+the source for you, or use the TELNET client. 
+"telnet tiger.itc.univie.ac.at 6668". Please only use the latter when 
+you have no other way of reaching IRC, as this resource is quite
+limited, is slow, and is *very* unreliable.
+
+(4) Where can I get source for an IRC client?
+
+	You can anonymous ftp to any of the following sites (use the
+one closest to you):  *** If you don't know what anonymous ftp is, ask
+your local systems people to show you ***
+
+UNIX client-> cs.bu.edu /irc/clients
+	      ftp.acsu.buffalo.edu /pub/irc
+	      ftp.funet.fi /pub/unix/irc
+              coombs.anu.edu.au /pub/irc
+	      ftp.informatik.tu-muenchen.de /pub/comp/networking/irc/clients
+	      slopoke.mlb.semi.harris.com /pub/irc
+	      there is also a client avaliable with the server code.
+EMACS elisp-> cs.bu.edu /irc/clients/elisp
+	      ftp.funet.fi /pub/unix/irc/Emacs
+              ftp.informatik.tu-muenchen.de /pub/comp/networking/irc/clients
+	      slopoke.mlb.semi.harris.com /pub/irc/emacs
+              lehtori.cc.tut.fi /pub/irchat
+X11 client->  catless.ncl.ac.uk /pub
+              harbor.ecn.purdue.edu /pub/tcl/code
+VMS ->        cs.bu.edu /irc/clients/vms
+	      coombs.anu.edu.au /pub/irc/vms
+              ftp.funet.fi  /pub/unix/irc/vms
+              ftp.informatik.tu-muenchen.de /pub/net/irc
+REXX client for VM->    cs.bu.edu /irc/clients/rxirc
+                        ftp.informatik.uni-oldenburg.de /pub/irc/rxirc
+                        ftp.informatik.tu-muenchen.de /pub/net/irc/VM
+                        coombs.anu.edu.au /pub/irc/rxirc
+                        ftp.funet.fi /pub/unix/irc/rxirc
+MSDOS->         cs.bu.edu /irc/clients/msdos
+                ftp.funet.fi /pub/unix/irc/msdos
+Macintosh->     cs.bu.edu /irc/clients/macintosh
+                sumex-aim.stanford.edu /info-mac/comm
+                ftp.funet.fi /pub/unix/irc/mac
+                ftp.ira.uka.de /pub/systems/mac
+
+(5) Which server do I connect to?
+
+	It's usually best to try and connect to one geographically
+close, even though that may not be the best. You can always ask when you
+get on IRC. Here's a list of servers avaliable for connection:
+
+USA:
+		csa.bu.edu
+		irc.colorado.edu
+                irc.uiuc.edu
+
+Canada:
+		ug.cs.dal.ca
+
+Europe:
+		irc.funet.fi
+		cismhp.univ-lyon1.fr
+                disuns2.epfl.ch
+                irc.nada.kth.se
+		sokrates.informatik.uni-kl.de
+                bim.itc.univie.ac.at
+
+Australia:
+		jello.qabc.uq.oz.au
+
+
+This is, by no means, a comprehensive list, but merely a start. Connect
+to the closest of these servers and join the channel #Twilight_Zone
+When you get there, immediately ask what you want. Don't say "I have a
+question" because then hardly anyone will talk. 
+
+(6) OK, I've got a client and I'm connected to a server, now what?
+
+	It's probably best to take a look around and see what you want
+to do first. All IRC commands start with a "/", and most are one word.
+Typing /help will get you help information. /names will get you a list
+of names, etc. 
+
+The output of /names is typically something like this->
+
+Pub: #hack      zorgo eiji Patrick fup htoaster 
+Pub: #Nippon    @jircc @miyu_d 
+Pub: #nicole    MountainD 
+Pub: #hottub    omar liron beer Deadog moh pfloyd Dode greywolf SAMANTHA
+
+(Note there are LOTS more channels than this, this is just sample
+output -- one way to stop /names from being too large is doing /names
+-min 20 which will only list channels with 20 or more people on it,
+but you can only do this with the ircII client).
+
+"Pub" means public (or "visible") channel. "hack" is the channel name.
+"#" is the prefix. A "@" before someone's nickname indicates he/she is
+the "Channel operator" (see #7) of that channel. A Channel Operator is
+someone who has control over a specific channel. It can be shared or
+not as the first Channel Operator sees fit. The first person to join
+the channel automatically gets Channel Operator, and can share it with
+anyone he/she chooses (or not).  Another thing you might see is "Prv"
+which means private. You will only see this if you are on that private
+channel. No one can see Private channels except those who are on that
+particular private channel.
+
+(7) What is a channel operator? What is an IRC operator? 
+
+	A channel operator is someone with a "@" by their nickname in
+a /names list, or a "@" by the channel name in /whois output. Channel
+operators are kings/queens of their channel. This means they can kick
+you out of their channel for no reason. If you don't like this, you
+can start your own channel and become a channel operator there. 
+
+	An IRC operator is someone who maintains the IRC network. They
+cannot fix channel problems. They cannot kick someone out of a channel
+for you. They cannot /kill (kick someone out of IRC temporarily)
+someone just because you gave the offender channel operator priveleges
+and said offender kicked *you* off.
+
+(8) What is a "bot"? 
+
+        "bot" is short for "robot". It is a script run from an ircII
+client or a separate program (in perl, C, and sometimes more obscure
+languages). StarOwl@uiuc.edu (Michael Adams) defined bots very well: "A
+bot is a vile creation of /lusers to make up for lack of penis length".
+IRC bots are generally not needed. See (10) below about "ownership" of
+nicknames and channels.
+
+(9) What are good channels to try while using IRC?
+
+	#hottub and #initgame are almost always teeming with people.
+#hottub is meant to simulate a hot tub, and #initgame is a non-stop game
+of "inits" (initials). Just join and find out! 
+
+	To get a list of channels with their names and topics, do
+/list -min 20 (on ircII) which will show you channels with 20 or more
+members. You can also do this for smaller numbers.
+
+	Many IRC operators are in #Twilight_Zone ... so if you join
+that channel and don't hear much talking, don't worry, it's not because
+you joined, operators don't talk much on that channel anyways!
+
+(10) Someone is using my nickname, can anyone do anything about it?
+    Someone is using my channel, can anyone do anything about it?
+
+        Even with NickServ (see (13) below) registering nicknames, there
+are not enough nicknames to have nickname ownership. If someone takes
+your nickname while you are not on IRC, you can ask for them to give it
+back, but you can not *demand* it, nor will IRC operators /kill for
+nickname ownership. 
+        
+        There are, literally, millions of possible channel names, so if
+someone is on your usual channel, just go to another. You can /msg them
+and ask for them to leave, but you can't *force* them to leave. 
+
+(11) There aren't any channel operators on my channel, now what? 
+
+        Channel operators are the owner(s) of their respective channels.
+Keep this in mind when giving out channel operator powers (make sure to
+give them to enough people so that all of the channel operators don't
+unexpectedly leave and the channel is stuck without a channel operator).
+
+        On the other hand, do not give out channel operator to
+*everyone*. This causes the possibility of mass-kicking, where the
+channel would be stuck without any channel operators.
+
+	You have one option. You can ask everyone to leave and rejoin
+the channel. This is a good way to get channel operator back. It
+doesn't work on large channels or ones with bots, for obvious reasons.
+
+(12) What if someone tells me to type something cryptic?
+
+	Never type anything anyone tells you to without knowing what it
+is. There is a problem with typing certain commands with the ircII
+client that give anyone immediate control of your client (and thus can
+gain access to your account).
+
+(13) What is NickServ? What if I can't remember my NickServ password?
+
+	NickServ is a service. Services are special robots on IRC.
+NickServ resides in Germany. You must always address messages to
+NickServ as NickServ@service.de and not as just "NickServ". 
+
+	To quote from NickServ's help text, NickServ's purpose is to
+keep unique nicknames on IRC. NickServ sends a warning to anyone else
+who signs on with your nickname.  If you don't use IRC for 10 weeks,
+your nickname expires and becomes available for reuse by anyone.  
+
+	Basic NickServ information can be retrieved by doing
+/msg NickServ@service.de help
+
+	Only a NickServ operator can change your nickserv password.
+To find out which NickServ operators are online, send
+/msg NickServ@service.de OPERWHO
+
+Nicknames with a "*" next to them are online at the time.
+
+(14) Where can I find GIF archives of IRC people?
+
+        GIF archives of IRC people are available:
+
+     ftp.funet.fi:/pub/pics/gif/pics/people/misc/irc (NORDUnet only)
+     ftp.informatik.tu-muenchen.de /pub/comp/networking/irc/RP
+
+(15) Where can I learn more?
+
+	The best, basic, IRC user's manual is the IRC Primer,
+available in plain text, PostScript, and LaTeX from
+cs.bu.edu:/irc/support ... Another good place to start might be
+downloading the IRC tutorials.  They're avaliable via anonymous ftp
+from cs.bu.edu in /irc/support/tutorial.* 
+
+	You can also join various IRC related mailing lists: 
+
+ * "operlist" is a list that discusses current (and past) server code,
+   routing, and protocol. You can join by mailing
+   operlist-request@kei.com. 
+
+ * "irchat" is an elisp client. You can join the irchat mailing list by
+   mailing irchat-request@cc.tut.fi.
+
+ * "ircd-three" is a list that exists to discuss protocol revisions
+   for the 3.0 release of the ircd (irc server), currently in
+   planning.  Mail ircd-three-request@kei.com to be added.
+
+ * "vmsirc" is a list for the questions, problems, and discussions
+   related to the vms IRC clients. Mail vmsirc-request@vax1.elon.edu
+   (with "subscribe" in the message body).
+
+NOTE! These are not "Help me, where can I get started?" lists. For
+that information, read the IRCprimer noted above. 
+
+	Those looking for more technical information can get the IRC
+RFC (rfc1459) available at all RFC ftp sites, as well as
+cs.bu.edu:/irc/support/rfc1459.txt
+
+(15) What do I do if I'm still confused or have additions to this posting?
+
+	email hrose@kei.com or ask for help (in #Twilight_Zone) on IRC.
+
+---------------------------------------------------------------------
+
+** HOW TO BEHAVE ON IRC
+(ETIQUETTE from the IRCII documentation)
+Authors:      Lea Viljanen (LadyBug)  viljanen@kreeta.helsinki.fi
+              Ari Husa     (luru)     so-luru@tolsun.oulu.fi 
+Modified by:  Troy Rollo   (Troy)     troy@plod.cbme.unsw.oz.au
+							Olaf Titz  (praetorius) 		s_titz@ira.uka.de
+1) Language
+   The most widely understood and spoken language on IRC is English. 
+However! As IRC is used in many different countries, English is by
+no means the only language. If you want to speak some other language
+than English (for example with your friends), go to a separate channel
+and set the topic (with /topic) to indicate that. For example
+   /topic Finnish only!
+would mean that this channel would be reserved for Finnish discussion.
+On the other hand, you should check the topic (with /list command) 
+before you move to a channel to see if there are any restrictions about 
+language.
+   On a channel not restricted by /topic, please speak a language
+everybody can understand. If you want to do otherwise, change channels
+and set the topic accordingly.
+2) Hello/Goodbye
+   It's not necessary to greet everybody on a channel personally.
+Usually one "Hello" or equivalent is enough. And don't expect everybody
+to greet you back. On a channel with 20 people that would mean one
+screenful of hellos. It's sensible not to greet, in order not to be rude
+to the rest of the channel. If you must say hello to somebody you know,
+do it with a private /msg. The same applies to goodbyes.
+3) Discussion
+   When you come to a new channel it's advised you to listen
+for a while to get an impression of what's discussed. Please feel free
+to join in, but do not try to force your topic into the discussion
+if that doesn't come naturally.
+4) Limits
+   On channel numbers above 10 there can be only 10 persons
+per channel. So if the channel is full and you don't actively
+participate, please move to another channel to let someone else in.
+5) {}|[]\
+   IRC has quite a lot of people from Scandinavian countries,
+the above characters are letters in their alphabet. This 
+has been explained on IRC about a thousand and one times, so
+read the following, do not ask it on IRC:
+   {     is an A with 2 dots over it
+   }     is an A with a small circle above it
+   |     is either an O with 2 dots over it or an O with a dash (/) through it
+   [, ], and \ are the preceding three letters in upper case.
+6) ATTENTION!
+   Remember, people on IRC form their opinions about you only by 
+your actions, writings and comments on IRC. So think before you type.
+
+---------------------------------------------------------------------
+
+
+** Users Behavior on the Internet Relay Chat system
+(RULES from the IRCII documentation)
+Author: Ove Ruben R Olsen
+Definitions:
+   IRC-ADMIN - Person who have access to all files concerning ircd.
+   IRC-OP    - Person who have privilegies given to him by an IRC-ADMIN.
+	       And who is in charge at HIS server.
+   USER      - Person who is using IRC.
+The Internet Relay Network (IRC) is a system for comunicating with other
+peoples.
+IRC is a free speech system. Users may exchange viewpoints with other
+users. But to protect people from abuse there are certain rules that the 
+user MUST respect.
+If a USER doesn't respect the guidelines/rules stated below, then the
+IRC-ADMIN may suspend or reduce the availability for the USER.
+These things are prohibited:
+   * Using offensive words in channel topics.
+   * Harassing another user. Harassment is defined as behavior towards 
+     another user with the purpose of annoying them. 
+     Harassment is a matter of opinion of the IRC-OP.
+   * "Dumping" a lot of text to a channel.
+   * Annoying another user or a channel with constant beeping. 
+   * Any behavior reducing the functionality of IRC.
+What kind of action a user is doing to break these rules are up to the 
+IRC-OP to decide.
+Violation should be straighted out via a civilized conversation between
+the IRC-OP and the USER.
+If the USER is not on-line then the USER should be notified by EMail.
+If the USER wont respect what he's been told then it is up to the IRC-ADMIN 
+what to do with the USER.
+If someone finds a USER violating these rules he may contact the USER's
+IRC-ADMIN.
+To find a USERS IRC-ADMIN one may use the /ADMIN <nick-name>.
+
+---------------------------------------------------------------------

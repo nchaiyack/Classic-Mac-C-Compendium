@@ -1,1 +1,62 @@
-Since Extension Shell is intended for writing System 7 Extensions, I’ve included these posts from c.s.m.p.If you were worried about tail-patching in your Extensions, these might help clarify things for you. Youcan find these posts in Issue 153, Volume 1, of the C.S.M.P. Digest. They’re archived as:			ftp.cs.uoregon.edu::/pub/mac/csmp-digest/v1/csmp-v1-153.txt++++++++++++++++++++++++++++++++++++++++++++++++++++++++From: greggor@apple.com (Greg L. Anderson)Subject: Some details on tail patching under System 7Date: 18 Jun 92 16:55:13 GMTOrganization: Apple Computer Inc, Cupertino, CAIt appears that many people are still uncertain if it is okay to install a tail patch under System 7.  Here area few words on the subject from some mail I sent to Bill Walburg regarding his question on tail patching.- ----To the best of my knowledge, you may Tail-patch every trap in System 7 _except_ for FrontWindow.  I'mnot sure why that one is special; Dean Yu just said "don't do it".System 7 has a new improved SetTrapAddress/GetTrapAddress mechanism that allows tail patching.  Thismechanism did not exist in System 6. It works through a little bit of magic.  System come-from patches(the icky bug fixes that made tail patching inadvisable under System 6) are installed in a special magic wayby the system.  They also include special magic that allows the system to determine if there is acome-from patch at the head of the trap pointer, and if there is, the system can get _and change_ theaddress of the routine that will be executed after the come-from patch.If your trap patch is not installed using the special system magic (and it shouldn't be), then GetTrapAddresswill return to you the address of the first function _after_ all of the come-from patches, andSetTrapAddress will install your routine _after_ all of the come-from patches.  Thus, your trap patch willnot be "in the way" when the come-from patch is snooping up the stack.- ----Don't try this under any System prior to System 7.=====================	===========================Greg Anderson				Apple Computer, Inc.Macintosh Bodhisattva		Macintosh System Softwaregreggor@apple.com			Finder Team=====================	===========================++++++++++++++++++++++++++++++++++++++++++++++++++++++++From: nerm@apple.com (Dean Yu)Date: 27 Jun 92 01:16:18 GMTOrganization: Apple Computer, Inc.In article <68927@apple.Apple.COM>, greggor@apple.com (Greg L. Anderson) wrote:> To the best of my knowledge, you may Tail-patch every trap in System 7 _except_ for FrontWindow.  I'm> not sure why that one is special; Dean Yu just said "don't do it".The mythical Layer Manager has a come from patch on FrontWindow that will not call through in somecases, so if you patch FrontWindow, your patch may not fire.  It's probably not worth the effort to try towork around it.Dean YuBlue Meanie, Negative Ethnic Role Model, etc.Apple Computer, Inc.
+Since Extension Shell is intended for writing System 7 Extensions, I’ve included these posts from c.s.m.p.
+If you were worried about tail-patching in your Extensions, these might help clarify things for you. You
+can find these posts in Issue 153, Volume 1, of the C.S.M.P. Digest. They’re archived as:
+
+			ftp.cs.uoregon.edu::/pub/mac/csmp-digest/v1/csmp-v1-153.txt
+
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+From: greggor@apple.com (Greg L. Anderson)
+Subject: Some details on tail patching under System 7
+Date: 18 Jun 92 16:55:13 GMT
+Organization: Apple Computer Inc, Cupertino, CA
+
+It appears that many people are still uncertain if it is okay to install a tail patch under System 7.  Here are
+a few words on the subject from some mail I sent to Bill Walburg regarding his question on tail patching.
+
+- ----
+
+To the best of my knowledge, you may Tail-patch every trap in System 7 _except_ for FrontWindow.  I'm
+not sure why that one is special; Dean Yu just said "don't do it".
+
+System 7 has a new improved SetTrapAddress/GetTrapAddress mechanism that allows tail patching.  This
+mechanism did not exist in System 6. It works through a little bit of magic.  System come-from patches
+(the icky bug fixes that made tail patching inadvisable under System 6) are installed in a special magic way
+by the system.  They also include special magic that allows the system to determine if there is a
+come-from patch at the head of the trap pointer, and if there is, the system can get _and change_ the
+address of the routine that will be executed after the come-from patch.
+
+If your trap patch is not installed using the special system magic (and it shouldn't be), then GetTrapAddress
+will return to you the address of the first function _after_ all of the come-from patches, and
+SetTrapAddress will install your routine _after_ all of the come-from patches.  Thus, your trap patch will
+not be "in the way" when the come-from patch is snooping up the stack.
+
+- ----
+
+Don't try this under any System prior to System 7.
+
+=====================	===========================
+Greg Anderson				Apple Computer, Inc.
+Macintosh Bodhisattva		Macintosh System Software
+greggor@apple.com			Finder Team
+=====================	===========================
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+From: nerm@apple.com (Dean Yu)
+Date: 27 Jun 92 01:16:18 GMT
+Organization: Apple Computer, Inc.
+
+In article <68927@apple.Apple.COM>, greggor@apple.com (Greg L. Anderson) wrote:
+> To the best of my knowledge, you may Tail-patch every trap in System 7 _except_ for FrontWindow.  I'm
+> not sure why that one is special; Dean Yu just said "don't do it".
+
+The mythical Layer Manager has a come from patch on FrontWindow that will not call through in some
+cases, so if you patch FrontWindow, your patch may not fire.  It's probably not worth the effort to try to
+work around it.
+
+Dean Yu
+Blue Meanie, Negative Ethnic Role Model, etc.
+Apple Computer, Inc.

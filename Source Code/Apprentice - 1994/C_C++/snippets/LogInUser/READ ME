@@ -1,1 +1,8 @@
-/*** This function takes a username as input, and reads server and volume information from resources  It was designed for a very specific purpose,but should give enough of the form in order to change/re-create the workitself.. ***//*** Submitted by:  Christopher Roberts  (Internet address: ctr@pyrite.som.cwru.edu)  ***/
+/*** This function takes a username as input, and reads server and volume 
+information from resources  It was designed for a very specific purpose,
+but should give enough of the form in order to change/re-create the work
+itself.. 
+***/
+
+/*** Submitted by:  Christopher Roberts  
+(Internet address: ctr@pyrite.som.cwru.edu)  ***/

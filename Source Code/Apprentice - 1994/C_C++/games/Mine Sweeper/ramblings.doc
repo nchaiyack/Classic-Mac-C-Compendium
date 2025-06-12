@@ -1,1 +1,15 @@
-Mine SweeperCopyright ©1991 by William Edward Woody, all rights reserved.Permission to reproduce this software package for non-commerical usage is hereby granted.General Ramblings:1)  This program stores the position of the window, high scores, and user preferences in a preferences file when you are using a Macintosh 512Ke or newer; on a Macintosh 128 or Macintosh 512, a preferences file is not generated.  This means that if you want to clear the high scores, or if (for some reason) the window doesn't show up when you start the program, throw the 'Mine Preferences' file away.  (It is stored in the 'Preferences' folder in your System Folder.)2)  This program is being distributed for free.  Shucks, you don't even have to smile if you like it!  However, I would prefer if these release notes were kept with the Mine Sweeper program so I don't wind up answering a lot of stupid questions.3)  The program is addictive.  I would suggest not playing it alot.4)  Help on how to play, as well as the high scores, may be devined by using 'About Mine...' in the Apple menu.5)  Good luck.
+Mine Sweeper
+Copyright ©1991 by William Edward Woody, all rights reserved.
+Permission to reproduce this software package for non-commerical usage is hereby granted.
+
+General Ramblings:
+
+1)  This program stores the position of the window, high scores, and user preferences in a preferences file when you are using a Macintosh 512Ke or newer; on a Macintosh 128 or Macintosh 512, a preferences file is not generated.  This means that if you want to clear the high scores, or if (for some reason) the window doesn't show up when you start the program, throw the 'Mine Preferences' file away.  (It is stored in the 'Preferences' folder in your System Folder.)
+
+2)  This program is being distributed for free.  Shucks, you don't even have to smile if you like it!  However, I would prefer if these release notes were kept with the Mine Sweeper program so I don't wind up answering a lot of stupid questions.
+
+3)  The program is addictive.  I would suggest not playing it alot.
+
+4)  Help on how to play, as well as the high scores, may be devined by using 'About Mine...' in the Apple menu.
+
+5)  Good luck.

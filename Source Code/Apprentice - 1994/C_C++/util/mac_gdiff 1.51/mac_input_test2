@@ -1,1 +1,2 @@
-gdiff +recursive +context boot:gdiff boot:gdiff.orig > boot:gdiff.out
+gdiff +recursive +context boot:gdiff boot:gdiff.orig > boot:gdiff.out
+

@@ -1,1 +1,357 @@
-/* This sample program allows a user to open a file and print it's contents** to a window on the Mac screen.  To give the compiled program an Icon** copy the resources from Display.rsrc (use Rmover or Resource Editor) and** paste them into the compiled file.  Then use SetFile to change the creator** name of the compiled file to DFIL and set the bundle bit.  When you ** return to the finder the program icon should have an icon.** By Greg Corson** 19141 Summers Drive** South Bend, IN 46637** (219) 272-2136** UUCP: {ihnp4 | ucbvax}!pur-ee!kangaro!milo** ARPA: pur-ee!kangaro!milo@Purdue.ARPA** EDU: kangaro!milo@ee.Purdue.EDU** Or call my BBS at (219) 277-5825*/#include <qd.h>  #include <win.h>#include <menu.h>#include <event.h>#include <pack.h>#include <font.h>#define LASTMENU 4#define APPLEMENU 1#define FILEMENU 256#define EDITMENU 257#define STOPMENU 258#define NULL 0L#define FALSE 0#define TRUE 1#define eoferr (-39)rgnhandle    updateregn;menuhandle   mymenus[LASTMENU+1];rect         screenrect, dragrect, prect;boolean      doneflag, temp;eventrecord  myevent;int          code, refnum;windowrecord wrecord;windowptr    mywindow, whichwindow;grafptr      temport;int          themenu, theitem;int          fileopen,wide,fd1;long         count;char         tempbuf[32];main(){   #include <qdvars.h>	/* quickdraw globals */   int i,j;/* Initialize variables */   j = 0;   doneflag = FALSE;   fileopen = FALSE;   /* Initialize quickdraw, fonts, events, windows, menus, dialogs and cursor */      initgraf(&theport);   initfonts();   flushevents(everyevent, 0);   initwindows();   initmenus();   teinit();   initdialogs(NULL);   initcursor();/* Create an empty region pointer for use by scrollrect later */   updateregn=newrgn();/* Setup the menu bar */   setupmenus();   /* Setup the drag rectangle so part of the window will always be visible */   setrect(&screenrect, 4, 40, 508, 338);   setrect(&dragrect, 4, 24, screenrect.a.right-4, screenrect.a.bottom-4);   /* Create the window and set the current port to the window port */      mywindow = newwindow(&wrecord, &screenrect, "Display a file", TRUE, 0,			 (long)-1, FALSE, (long)0);   setport(mywindow);/* get the rectangle for the current window and put it in prect */   blockmove(&theport->portrect, &prect, (long)sizeof prect);   wide = prect.a.right  - prect.a.left;   /* Now that the window and menus are drawn set the window font to monaco 9 */      textfont(monaco);   textsize(9);   moveto(prect.a.left+1,prect.a.bottom-2);/* Main loop to process events */      do {/**** If a file is open copy a line to the output window */      if(fileopen)         {	 count=32;	 fsread(fd1, &count, tempbuf);	 if(count == 0)	    {	    fsclose(fd1);	    fileopen=FALSE;	    moveto(prect.a.left+1,prect.a.bottom-2);	    scrollrect(&prect,0,-11,updateregn);	    drawstring("-------End of File-------");	    scrollrect(&prect,0,-11,updateregn);	    moveto(prect.a.left+1,prect.a.bottom-2);	    }	 else	    {	    for(i = 0; i < count; i++)	       {	       if(tempbuf[i] > 31)	          drawchar(tempbuf[i]);	       else	          {/**************** Scroll window if we get a carriage return */                  if(tempbuf[i] == '\r')		     {		     j = 0;		     scrollrect(&prect,0,-11,updateregn);		     moveto(prect.a.left+1,prect.a.bottom-2);		     }/**************** Expand tabs by outputting spaces */                  if(tempbuf[i] == '\011')		     {		     drawchar(' ');		     j++;		     for(;j & 07;j++)		        drawchar(' ');		     }		  }	       }	    }	 }/**** Get the next event */      systemtask();      temp = getnextevent(everyevent, &myevent);      switch (myevent.what)         {	 case mousedown:  /* mouse down, call findwindow to figure out where */	    code = findwindow(&myevent.where, &whichwindow);	    switch (code)	       {	       case inmenubar:	/* in meun bar, execute the menu command */ 	          docommand(menuselect(&myevent.where));		  break;               case insyswindow:	/* in desk accessory, call desk manager */	          systemclick(&myevent, whichwindow); 		  break;	       case indrag:	/* in drag, call dragwindow to move it */	          dragwindow(whichwindow, &myevent.where, &dragrect);	          break;	       case incontent:	/* in content area, make application window the frontmost */	       if (whichwindow != frontwindow())	          selectwindow(whichwindow);	       break;	       }	    break;	 case keydown:	/* If keydown event, check for menu command key */	    if(myevent.modifiers & cmdkey)	       docommand(menukey((char)(myevent.message & 0377)));	    break;	 case autokey:	    break;	 case activateevt:	/* Application window becomming active, do nothing */	    if((myevent.modifiers & 1)&&(((windowptr)myevent.message) == mywindow))	       {	       disableitem(mymenus[3],0);	       enableitem(mymenus[2],0);	       drawmenubar();	       }	    else	       {	       enableitem(mymenus[3],0);	       disableitem(mymenus[2],0);	       drawmenubar();	       }	    break;	 case updateevt:	/* Update event, update the window frame */	    if(((windowptr)myevent.message) == mywindow)	       {	       beginupdate(mywindow);	       endupdate(mywindow);	       }	    break;	}    } while (doneflag == 0);}/*---------------------------------------------------------------------------*//* setupmenus()---This subroutine sets up the menu bar and reads in the desk** accessory menu*/setupmenus(){   int i;/* Apple menu, \024 is the apple character, adresmenu call loads all type DRVR resources */   mymenus[1] = newmenu(APPLEMENU, "\024");   appendmenu(mymenus[1], "About \"Display a File\";(-");   addresmenu(mymenus[1], "DRVR");/* File menu with open, close and quit selections */   mymenus[2] = newmenu(FILEMENU, "File");   appendmenu(mymenus[2], "Open/O;Close/C;Quit/Q");/* Edit menu with cut, copy and paste */   mymenus[3] = newmenu(EDITMENU, "Edit");   appendmenu(mymenus[3], "Undo;(-;Cut;Copy;Paste;Clear;(-;Show Clipboard");/* Stop scroll menu */   mymenus[4] = newmenu(STOPMENU,"Click Here to Pause Printout");   appendmenu(mymenus[4], "Release mouse button to resume printout");   for (i=1; i<=LASTMENU; i++)      insertmenu(mymenus[i], 0);/* Draw the completed menu bar */   drawmenubar();}/*---------------------------------------------------------------------------*//* docommand(themenu, theitem)---this subroutine processes commands from the** menu bar.  Themenu is the menu ID, theitem is the item number in the menu*/docommand(themenu, theitem)int themenu, theitem;{   char name[256];   point  openp;   sfreply rep;   sftypelist typelist;   int i;/* Switch to decide what menu the cursor is in */      switch (themenu)      {      case APPLEMENU:	/* Mouse down in apple menu *//******* Item one is the "about Display a file" box */         if(theitem == 1)	    {	    textfont(systemfont);	    textsize(12);	    eraserect(&prect);	    moveto(prect.a.left,prect.a.top+70);	    center("Display a file program");	    center("Copyright 1985 by Greg Corson");	    center("Kangaroo Koncepts, Inc.");	    center("19141 Summers Drive");	    center("South Bend, IN 46637");	    center("(219) 277-5306");	    textfont(monaco);            textsize(9); 	    move(0,-3);	    center("Feel free to give this program away to all your friends.");	    center("It should NOT be sold for profit.  Be sure to try our");	    center("Computer Based Communications System \"The Connection\"");	    center("Free demo line (219) 277-5825 available 24 hours at 300 or");	    center("1200 baud.  Be sure to look at the \"MacTech\" special");	    center("interest group for information of interest to Mac");	    center("programmers and the \"macintosh\" SIG for general info.");	    pretty();	    moveto(prect.a.left+1,prect.a.bottom-2);	    }/******* The rest of the items are desk accessorys */         else	    {	    getitem(mymenus[1], theitem, name);            refnum = opendeskacc(name);	    setport(mywindow);	    }	 break;      case FILEMENU:	/* Mouse down in file menu */         switch(theitem)	    {	    case 1:		/* Open file */	       openp.a.v = 100;	       openp.a.h = 60;	       strncpy(&typelist[0],"TEXT",4);	       sfgetfile(&openp.a,"",NULL,1, typelist, NULL, &rep);	       if(rep.good)	          {		  if(fileopen)	             {		     fsclose(fd1);		     fileopen = FALSE;		     }		  if(fsopen(rep.fname,rep.vrefnum,&fd1) == noerr)		     {		     scrollrect(&prect,0,-11,updateregn);		     fileopen=TRUE;		     }		  }	       break;	    case 2:		/* Close file */	       if(fileopen)	          {		  fsclose(fd1);		  fileopen = FALSE;		  }	       break;	    case 3:		/* Quit */	       if(fileopen)	          {		  fsclose(fd1);		  fileopen = FALSE;		  }	       doneflag = 1;	       break;	    }	 break;      case EDITMENU:	/* Process system edit events */         systemedit(theitem-1);	 break;   }   hilitemenu(0);}/* Center a string in the window */center(str)char   *str;{   move(((wide-stringwidth(str))/2), 0);   drawstring(str);   move(-(mywindow->pnloc.a.h),(mywindow->txsize)+2);}/* draw a pretty design */pretty(){   int j;   rect tmprec;      blockmove(&prect, &tmprec, (long)sizeof prect);   for(j=0;j < 12;j++)      {      frameoval(&tmprec);      insetrect(&tmprec,6,0);      }   blockmove(&prect, &tmprec, (long)sizeof prect);   for(j=0;j < 9;j++)      {      frameoval(&tmprec);      insetrect(&tmprec,0,6);      }}   
+
+/* This sample program allows a user to open a file and print it's contents
+** to a window on the Mac screen.  To give the compiled program an Icon
+** copy the resources from Display.rsrc (use Rmover or Resource Editor) and
+** paste them into the compiled file.  Then use SetFile to change the creator
+** name of the compiled file to DFIL and set the bundle bit.  When you 
+** return to the finder the program icon should have an icon.
+** By Greg Corson
+** 19141 Summers Drive
+** South Bend, IN 46637
+** (219) 272-2136
+** UUCP: {ihnp4 | ucbvax}!pur-ee!kangaro!milo
+** ARPA: pur-ee!kangaro!milo@Purdue.ARPA
+** EDU: kangaro!milo@ee.Purdue.EDU
+** Or call my BBS at (219) 277-5825
+*/
+
+#include <qd.h>  
+#include <win.h>
+#include <menu.h>
+#include <event.h>
+#include <pack.h>
+#include <font.h>
+
+#define LASTMENU 4
+#define APPLEMENU 1
+#define FILEMENU 256
+#define EDITMENU 257
+#define STOPMENU 258
+#define NULL 0L
+#define FALSE 0
+#define TRUE 1
+#define eoferr (-39)
+
+rgnhandle    updateregn;
+menuhandle   mymenus[LASTMENU+1];
+rect         screenrect, dragrect, prect;
+boolean      doneflag, temp;
+eventrecord  myevent;
+int          code, refnum;
+windowrecord wrecord;
+windowptr    mywindow, whichwindow;
+grafptr      temport;
+int          themenu, theitem;
+int          fileopen,wide,fd1;
+long         count;
+char         tempbuf[32];
+
+main()
+{
+   #include <qdvars.h>	/* quickdraw globals */
+   int i,j;
+
+/* Initialize variables */
+
+   j = 0;
+   doneflag = FALSE;
+   fileopen = FALSE;
+   
+/* Initialize quickdraw, fonts, events, windows, menus, dialogs and cursor */
+   
+   initgraf(&theport);
+   initfonts();
+   flushevents(everyevent, 0);
+   initwindows();
+   initmenus();
+   teinit();
+   initdialogs(NULL);
+   initcursor();
+
+/* Create an empty region pointer for use by scrollrect later */
+
+   updateregn=newrgn();
+
+/* Setup the menu bar */
+
+   setupmenus();
+   
+/* Setup the drag rectangle so part of the window will always be visible */
+
+   setrect(&screenrect, 4, 40, 508, 338);
+   setrect(&dragrect, 4, 24, screenrect.a.right-4, screenrect.a.bottom-4);
+   
+/* Create the window and set the current port to the window port */
+   
+   mywindow = newwindow(&wrecord, &screenrect, "Display a file", TRUE, 0,
+			 (long)-1, FALSE, (long)0);
+   setport(mywindow);
+
+/* get the rectangle for the current window and put it in prect */
+
+   blockmove(&theport->portrect, &prect, (long)sizeof prect);
+   wide = prect.a.right  - prect.a.left;
+   
+/* Now that the window and menus are drawn set the window font to monaco 9 */
+   
+   textfont(monaco);
+   textsize(9);
+   moveto(prect.a.left+1,prect.a.bottom-2);
+
+/* Main loop to process events */
+   
+   do {
+
+/**** If a file is open copy a line to the output window */
+
+      if(fileopen)
+         {
+	 count=32;
+	 fsread(fd1, &count, tempbuf);
+	 if(count == 0)
+	    {
+	    fsclose(fd1);
+	    fileopen=FALSE;
+	    moveto(prect.a.left+1,prect.a.bottom-2);
+	    scrollrect(&prect,0,-11,updateregn);
+	    drawstring("-------End of File-------");
+	    scrollrect(&prect,0,-11,updateregn);
+	    moveto(prect.a.left+1,prect.a.bottom-2);
+	    }
+	 else
+	    {
+	    for(i = 0; i < count; i++)
+	       {
+	       if(tempbuf[i] > 31)
+	          drawchar(tempbuf[i]);
+	       else
+	          {
+/**************** Scroll window if we get a carriage return */
+                  if(tempbuf[i] == '\r')
+		     {
+		     j = 0;
+		     scrollrect(&prect,0,-11,updateregn);
+		     moveto(prect.a.left+1,prect.a.bottom-2);
+		     }
+/**************** Expand tabs by outputting spaces */
+                  if(tempbuf[i] == '\011')
+		     {
+		     drawchar(' ');
+		     j++;
+		     for(;j & 07;j++)
+		        drawchar(' ');
+		     }
+		  }
+	       }
+	    }
+	 }
+
+/**** Get the next event */
+
+      systemtask();
+      temp = getnextevent(everyevent, &myevent);
+      switch (myevent.what)
+         {
+	 case mousedown:  /* mouse down, call findwindow to figure out where */
+	    code = findwindow(&myevent.where, &whichwindow);
+	    switch (code)
+	       {
+	       case inmenubar:	/* in meun bar, execute the menu command */ 
+	          docommand(menuselect(&myevent.where));
+		  break;
+               case insyswindow:	/* in desk accessory, call desk manager */
+	          systemclick(&myevent, whichwindow); 
+		  break;
+	       case indrag:	/* in drag, call dragwindow to move it */
+	          dragwindow(whichwindow, &myevent.where, &dragrect);
+	          break;
+	       case incontent:	/* in content area, make application window the frontmost */
+	       if (whichwindow != frontwindow())
+	          selectwindow(whichwindow);
+	       break;
+	       }
+	    break;
+	 case keydown:	/* If keydown event, check for menu command key */
+	    if(myevent.modifiers & cmdkey)
+	       docommand(menukey((char)(myevent.message & 0377)));
+	    break;
+	 case autokey:
+	    break;
+	 case activateevt:	/* Application window becomming active, do nothing */
+	    if((myevent.modifiers & 1)&&(((windowptr)myevent.message) == mywindow))
+	       {
+	       disableitem(mymenus[3],0);
+	       enableitem(mymenus[2],0);
+	       drawmenubar();
+	       }
+	    else
+	       {
+	       enableitem(mymenus[3],0);
+	       disableitem(mymenus[2],0);
+	       drawmenubar();
+	       }
+	    break;
+	 case updateevt:	/* Update event, update the window frame */
+	    if(((windowptr)myevent.message) == mywindow)
+	       {
+	       beginupdate(mywindow);
+	       endupdate(mywindow);
+	       }
+	    break;
+	}
+    } while (doneflag == 0);
+}
+
+/*---------------------------------------------------------------------------*/
+/* setupmenus()---This subroutine sets up the menu bar and reads in the desk
+** accessory menu
+*/
+
+setupmenus()
+{
+   int i;
+
+/* Apple menu, \024 is the apple character, adresmenu call loads all type DRVR resources */
+   mymenus[1] = newmenu(APPLEMENU, "\024");
+   appendmenu(mymenus[1], "About \"Display a File\";(-");
+   addresmenu(mymenus[1], "DRVR");
+/* File menu with open, close and quit selections */
+   mymenus[2] = newmenu(FILEMENU, "File");
+   appendmenu(mymenus[2], "Open/O;Close/C;Quit/Q");
+/* Edit menu with cut, copy and paste */
+   mymenus[3] = newmenu(EDITMENU, "Edit");
+   appendmenu(mymenus[3], "Undo;(-;Cut;Copy;Paste;Clear;(-;Show Clipboard");
+/* Stop scroll menu */
+   mymenus[4] = newmenu(STOPMENU,"Click Here to Pause Printout");
+   appendmenu(mymenus[4], "Release mouse button to resume printout");
+   for (i=1; i<=LASTMENU; i++)
+      insertmenu(mymenus[i], 0);
+/* Draw the completed menu bar */
+   drawmenubar();
+}
+/*---------------------------------------------------------------------------*/
+/* docommand(themenu, theitem)---this subroutine processes commands from the
+** menu bar.  Themenu is the menu ID, theitem is the item number in the menu
+*/
+
+docommand(themenu, theitem)
+int themenu, theitem;
+{
+   char name[256];
+   point  openp;
+   sfreply rep;
+   sftypelist typelist;
+   int i;
+
+/* Switch to decide what menu the cursor is in */
+   
+   switch (themenu)
+      {
+      case APPLEMENU:	/* Mouse down in apple menu */
+/******* Item one is the "about Display a file" box */
+         if(theitem == 1)
+	    {
+	    textfont(systemfont);
+	    textsize(12);
+	    eraserect(&prect);
+	    moveto(prect.a.left,prect.a.top+70);
+	    center("Display a file program");
+	    center("Copyright 1985 by Greg Corson");
+	    center("Kangaroo Koncepts, Inc.");
+	    center("19141 Summers Drive");
+	    center("South Bend, IN 46637");
+	    center("(219) 277-5306");
+	    textfont(monaco);
+            textsize(9); 
+	    move(0,-3);
+	    center("Feel free to give this program away to all your friends.");
+	    center("It should NOT be sold for profit.  Be sure to try our");
+	    center("Computer Based Communications System \"The Connection\"");
+	    center("Free demo line (219) 277-5825 available 24 hours at 300 or");
+	    center("1200 baud.  Be sure to look at the \"MacTech\" special");
+	    center("interest group for information of interest to Mac");
+	    center("programmers and the \"macintosh\" SIG for general info.");
+	    pretty();
+	    moveto(prect.a.left+1,prect.a.bottom-2);
+	    }
+/******* The rest of the items are desk accessorys */
+         else
+	    {
+	    getitem(mymenus[1], theitem, name);
+            refnum = opendeskacc(name);
+	    setport(mywindow);
+	    }
+	 break;
+      case FILEMENU:	/* Mouse down in file menu */
+         switch(theitem)
+	    {
+	    case 1:		/* Open file */
+	       openp.a.v = 100;
+	       openp.a.h = 60;
+	       strncpy(&typelist[0],"TEXT",4);
+	       sfgetfile(&openp.a,"",NULL,1, typelist, NULL, &rep);
+	       if(rep.good)
+	          {
+		  if(fileopen)
+	             {
+		     fsclose(fd1);
+		     fileopen = FALSE;
+		     }
+		  if(fsopen(rep.fname,rep.vrefnum,&fd1) == noerr)
+		     {
+		     scrollrect(&prect,0,-11,updateregn);
+		     fileopen=TRUE;
+		     }
+		  }
+	       break;
+	    case 2:		/* Close file */
+	       if(fileopen)
+	          {
+		  fsclose(fd1);
+		  fileopen = FALSE;
+		  }
+	       break;
+	    case 3:		/* Quit */
+	       if(fileopen)
+	          {
+		  fsclose(fd1);
+		  fileopen = FALSE;
+		  }
+	       doneflag = 1;
+	       break;
+	    }
+	 break;
+      case EDITMENU:	/* Process system edit events */
+         systemedit(theitem-1);
+	 break;
+   }
+   hilitemenu(0);
+}
+/* Center a string in the window */
+center(str)
+char   *str;
+{
+   move(((wide-stringwidth(str))/2), 0);
+   drawstring(str);
+   move(-(mywindow->pnloc.a.h),(mywindow->txsize)+2);
+}
+/* draw a pretty design */
+pretty()
+{
+   int j;
+   rect tmprec;
+   
+   blockmove(&prect, &tmprec, (long)sizeof prect);
+   for(j=0;j < 12;j++)
+      {
+      frameoval(&tmprec);
+      insetrect(&tmprec,6,0);
+      }
+   blockmove(&prect, &tmprec, (long)sizeof prect);
+   for(j=0;j < 9;j++)
+      {
+      frameoval(&tmprec);
+      insetrect(&tmprec,0,6);
+      }
+}
+   

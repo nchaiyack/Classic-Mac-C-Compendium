@@ -1,1 +1,390 @@
-unit Matrix;{ fast, 4x4 Matrix multiplikation, fast Ax=b multiplikation for A ist 4x4 mtrx, x ist 4-vektor (x,y,z,1) }{ for use with the 3D Project © 1991 by Christian Franz }{$IFC UNDEFINED UseFixedMath}{$SETC UseFixedMath := FALSE}{$ENDC}interface{$IFC UseFixedMath = TRUE }uses	FixedMath;type	Matrix4 = record			M: array[1..4, 1..4] of fixed;			identity: boolean;		end;	Vector4 = array[1..4] of fixed;var	one: fixed;{$ELSEC}type	Matrix4 = record			M: array[1..4, 1..4] of real;			identityFlag: boolean;		end;	Vector4 = array[1..4] of real;var	one: real;{$ENDC}(* InitMatrix : Init matrix module *)procedure InitMatrix;(* identity : returns identity-matrix *)function Identity: Matrix4;(* MMult : Multiply 4x4 by 4x4 Matrix. Returns C = AB *)function MMult (var A, B: Matrix4): Matrix4;(* VMult : Multiply the Vector x with the Matrix A giving the Vector b (return value *)function VMult (x: Vector4; var A: Matrix4): Vector4;function MatrixVectorMult (M: Matrix4; p: Vector4): Vector4;(* GeoBench's matrix * vector multiplication... To be optimized for speed *)(* Transpose : Generate Transpose of Matrix A *)function Transpose (A: Matrix4): Matrix4;(* VSub : Subtract two vectors: result := x - y *)function VSub (x, y: Vector4): Vector4;(* VAdd : Add two vectors *)function VAdd (x, y: Vector4): Vector4;(* Set Vector to coordinates *)procedure SetVector4 (var theVector: Vector4; x, y, z: real);(* get vector coordinates *)procedure GetVector4 (theVector: Vector4; var x, y, z: real);(* IsVisible determines if the plane defined through the three points KLM (as vector 4) 	*)(* is visible form the eye. Visibility is determined as the value of the normal vector of 	*)(* the plane defined by abc. it is visible if the z component of n is greater than zero 		*)(* note that for this test you must label k,l,m clockwise !!! 									*)function IsVisible (k, l, m: Vector4): Boolean;implementation{$IFC UseFixedMath = FALSE }(* InitMatrix : Init matrix module *)procedure InitMatrix;	begin		one := 1;	end;{ this function will generate a 4x4 Identity Matrix }function Identity: Matrix4;	var		I: Matrix4;		j: INTEGER;	begin		with I do begin			for j := 1 to 4 do begin				M[j, 1] := 0;				M[j, 2] := 0;				M[j, 3] := 0;				M[j, 4] := 0;				M[j, j] := 1;			end;			IdentityFlag := TRUE;			Identity := I;		end;	end;function MMult (var A, B: Matrix4): Matrix4;	var		C: Matrix4;	begin		if A.IdentityFlag then begin			MMult := B;			Exit(MMult);		end;		if B.IdentityFlag then begin			MMult := A;			Exit(MMult);		end;		C.M[1, 1] := A.M[1, 1] * B.M[1, 1] + A.M[1, 2] * B.M[2, 1] + A.M[1, 3] * B.M[3, 1] + A.M[1, 4] * B.M[4, 1];		C.M[1, 2] := A.M[1, 1] * B.M[1, 2] + A.M[1, 2] * B.M[2, 2] + A.M[1, 3] * B.M[3, 2] + A.M[1, 4] * B.M[4, 2];		C.M[1, 3] := A.M[1, 1] * B.M[1, 3] + A.M[1, 2] * B.M[2, 3] + A.M[1, 3] * B.M[3, 3] + A.M[1, 4] * B.M[4, 3];		C.M[1, 4] := A.M[1, 1] * B.M[1, 4] + A.M[1, 2] * B.M[2, 4] + A.M[1, 3] * B.M[3, 4] + A.M[1, 4] * B.M[4, 4];		C.M[2, 1] := A.M[2, 1] * B.M[1, 1] + A.M[2, 2] * B.M[2, 1] + A.M[2, 3] * B.M[3, 1] + A.M[2, 4] * B.M[4, 1];		C.M[2, 2] := A.M[2, 1] * B.M[1, 2] + A.M[2, 2] * B.M[2, 2] + A.M[2, 3] * B.M[3, 2] + A.M[2, 4] * B.M[4, 2];		C.M[2, 3] := A.M[2, 1] * B.M[1, 3] + A.M[2, 2] * B.M[2, 3] + A.M[2, 3] * B.M[3, 3] + A.M[2, 4] * B.M[4, 3];		C.M[2, 4] := A.M[2, 1] * B.M[1, 4] + A.M[2, 2] * B.M[2, 4] + A.M[2, 3] * B.M[3, 4] + A.M[2, 4] * B.M[4, 4];		C.M[3, 1] := A.M[3, 1] * B.M[1, 1] + A.M[3, 2] * B.M[2, 1] + A.M[3, 3] * B.M[3, 1] + A.M[3, 4] * B.M[4, 1];		C.M[3, 2] := A.M[3, 1] * B.M[1, 2] + A.M[3, 2] * B.M[2, 2] + A.M[3, 3] * B.M[3, 2] + A.M[3, 4] * B.M[4, 2];		C.M[3, 3] := A.M[3, 1] * B.M[1, 3] + A.M[3, 2] * B.M[2, 3] + A.M[3, 3] * B.M[3, 3] + A.M[3, 4] * B.M[4, 3];		C.M[3, 4] := A.M[3, 1] * B.M[1, 4] + A.M[3, 2] * B.M[2, 4] + A.M[3, 3] * B.M[3, 4] + A.M[3, 4] * B.M[4, 4];		C.M[4, 1] := A.M[4, 1] * B.M[1, 1] + A.M[4, 2] * B.M[2, 1] + A.M[4, 3] * B.M[3, 1] + A.M[4, 4] * B.M[4, 1];		C.M[4, 2] := A.M[4, 1] * B.M[1, 2] + A.M[4, 2] * B.M[2, 2] + A.M[4, 3] * B.M[3, 2] + A.M[4, 4] * B.M[4, 2];		C.M[4, 3] := A.M[4, 1] * B.M[1, 3] + A.M[4, 2] * B.M[2, 3] + A.M[4, 3] * B.M[3, 3] + A.M[4, 4] * B.M[4, 3];		C.M[4, 4] := A.M[4, 1] * B.M[1, 4] + A.M[4, 2] * B.M[2, 4] + A.M[4, 3] * B.M[3, 4] + A.M[4, 4] * B.M[4, 4];		C.IdentityFlag := FALSE;		MMult := C;	end;function VMult (x: Vector4; var A: Matrix4): Vector4;	var		b: Vector4;	begin		if A.IdentityFlag then begin			VMult := x;			Exit(VMult);		end;		b[1] := x[1] * A.M[1, 1] + x[2] * A.M[2, 1] + x[3] * A.M[3, 1] + x[4] * A.M[4, 1];		b[2] := x[1] * A.M[1, 2] + x[2] * A.M[2, 2] + x[3] * A.M[3, 2] + x[4] * A.M[4, 2];		b[3] := x[1] * A.M[1, 3] + x[2] * A.M[2, 3] + x[3] * A.M[3, 3] + x[4] * A.M[4, 3];		b[4] := x[1] * A.M[1, 4] + x[2] * A.M[2, 4] + x[3] * A.M[3, 4] + x[4] * A.M[4, 4];		VMult := b;	end;{SetVector4 : set coordinates of a point or vector to the passed params }procedure SetVector4 (var theVector: Vector4; x, y, z: real);	begin		theVector[1] := x;		theVector[2] := y;		theVector[3] := z;		theVector[4] := 1;	end;{GetVector4 : return the settings of the inner definition of vector4 }procedure GetVector4 (theVector: Vector4; var x, y, z: real);	begin		x := theVector[1];		y := theVector[2];		z := theVector[3];	end;(* IsVisible determines if the plane defined through the three points XYZ (as vectors 4) 	*)(* is visible form the eye. Visibility is determined as the value of the normal vector of 	*)(* the plane defined by abc. it is visible if the z component of n is greater than zero 		*)(* note that for this test you must label x,y,z clockwise !!! 									*)function IsVisible (k, l, m: Vector4): Boolean;	var		nz: real;		ax, bx, ay, by: real;	begin{ax := (l[1] - k[1]);{}{bx := (m[1] - k[1]);{}{ay := (l[2] - k[2]);{}{by := (m[2] - k[2]);{}{nz := ax * by - ay * bx;{}		nz := (l[1] - k[1]) * (m[2] - k[2]) - (l[2] - k[2]) * (m[1] - k[1]);		IsVisible := nz >= 0;	end;{$ELSEC}{ BEGIN FIXED-MATH routines }(* InitMatrix : Init matrix module *)procedure InitMatrix;	begin		one := FixRatio(1, 1);	end;{ this function will generate a 4x4 Identity Matrix }function Identity: Matrix4;	var		I: Matrix4;		j: INTEGER;	begin		with I do			for j := 1 to 4 do begin				I[j, 1] := 0;				I[j, 2] := 0;				I[j, 3] := 0;				I[j, 4] := 0;				I[j, j] := FixRatio(1, 1);			end;		I.IdentityFlag := TRUE;		Identity := I;	end;function MMult (var A, B: Matrix4): Matrix4;	var		C: Matrix4;	begin		if A.IdentityFlag then begin			MMult := B;			Exit(MMult);		end;		if B.IdentityFlag then begin			MMult := A;			Exit(MMult);		end;		C.M[1, 1] := FixMul(A.M[1, 1], B.M[1, 1]) + FixMul(A.M[1, 2], B.M[2, 1]) + FixMul(A.M[1, 3], B.M[3, 1]) + FixMul(A.M[1, 4], B.M[4, 1]);		C.M[1, 2] := FixMul(A.M[1, 1], B.M[1, 2]) + FixMul(A.M[1, 2], B.M[2, 2]) + FixMul(A.M[1, 3], B.M[3, 2]) + FixMul(A.M[1, 4], B.M[4, 2]);		C.M[1, 3] := FixMul(A.M[1, 1], B.M[1, 3]) + FixMul(A.M[1, 2], B.M[2, 3]) + FixMul(A.M[1, 3], B.M[3, 3]) + FixMul(A.M[1, 4], B.M[4, 3]);		C.M[1, 4] := FixMul(A.M[1, 1], B.M[1, 4]) + FixMul(A.M[1, 2], B.M[2, 4]) + FixMul(A.M[1, 3], B.M[3, 4]) + FixMul(A.M[1, 4], B.M[4, 4]);		C.M[2, 1] := FixMul(A.M[2, 1], B.M[1, 1]) + FixMul(A.M[2, 2], B.M[2, 1]) + FixMul(A.M[2, 3], B.M[3, 1]) + FixMul(A.M[2, 4], B.M[4, 1]);		C.M[2, 2] := FixMul(A.M[2, 1], B.M[1, 2]) + FixMul(A.M[2, 2], B.M[2, 2]) + FixMul(A.M[2, 3], B.M[3, 2]) + FixMul(A.M[2, 4], B.M[4, 2]);		C.M[2, 3] := FixMul(A.M[2, 1], B.M[1, 3]) + FixMul(A.M[2, 2], B.M[2, 3]) + FixMul(A.M[2, 3], B.M[3, 3]) + FixMul(A.M[2, 4], B.M[4, 3]);		C.M[2, 4] := FixMul(A.M[2, 1], B.M[1, 4]) + FixMul(A.M[2, 2], B.M[2, 4]) + FixMul(A.M[2, 3], B.M[3, 4]) + FixMul(A.M[2, 4], B.M[4, 4]);		C.M[3, 1] := FixMul(A.M[3, 1], B.M[1, 1]) + FixMul(A.M[3, 2], B.M[2, 1]) + FixMul(A.M[3, 3], B.M[3, 1]) + FixMul(A.M[3, 4], B.M[4, 1]);		C.M[3, 2] := FixMul(A.M[3, 1], B.M[1, 2]) + FixMul(A.M[3, 2], B.M[2, 2]) + FixMul(A.M[3, 3], B.M[3, 2]) + FixMul(A.M[3, 4], B.M[4, 2]);		C.M[3, 3] := FixMul(A.M[3, 1], B.M[1, 3]) + FixMul(A.M[3, 2], B.M[2, 3]) + FixMul(A.M[3, 3], B.M[3, 3]) + FixMul(A.M[3, 4], B.M[4, 3]);		C.M[3, 4] := FixMul(A.M[3, 1], B.M[1, 4]) + FixMul(A.M[3, 2], B.M[2, 4]) + FixMul(A.M[3, 3], B.M[3, 4]) + FixMul(A.M[3, 4], B.M[4, 4]);		C.M[4, 1] := FixMul(A.M[4, 1], B.M[1, 1]) + FixMul(A.M[4, 2], B.M[2, 1]) + FixMul(A.M[4, 3], B.M[3, 1]) + FixMul(A.M[4, 4], B.M[4, 1]);		C.M[4, 2] := FixMul(A.M[4, 1], B.M[1, 2]) + FixMul(A.M[4, 2], B.M[2, 2]) + FixMul(A.M[4, 3], B.M[3, 2]) + FixMul(A.M[4, 4], B.M[4, 2]);		C.M[4, 3] := FixMul(A.M[4, 1], B.M[1, 3]) + FixMul(A.M[4, 2], B.M[2, 3]) + FixMul(A.M[4, 3], B.M[3, 3]) + FixMul(A.M[4, 4], B.M[4, 3]);		C.M[4, 4] := FixMul(A.M[4, 1], B.M[1, 4]) + FixMul(A.M[4, 2], B.M[2, 4]) + FixMul(A.M[4, 3], B.M[3, 4]) + FixMul(A.M[4, 4], B.M[4, 4]);		MMult := C;	end;function VMult (x: Vector4; var A: Matrix4): Vector4;	var		b: Vector4;	begin		if A.IdentityFlag then begin			VMult := x;			Exit(VMult);		end;		b[1] := FixMul(x[1], A.M[1, 1]) + FixMul(x[2], A.M[2, 1]) + FixMul(x[3], A.M[3, 1]) + FixMul(x[4], A.M[4, 1]);		b[2] := FixMul(x[1], A.M[1, 2]) + FixMul(x[2], A.M[2, 2]) + FixMul(x[3], A.M[3, 2]) + FixMul(x[4], A.M[4, 2]);		b[3] := FixMul(x[1], A.M[1, 3]) + FixMul(x[2], A.M[2, 3]) + FixMul(x[3], A.M[3, 3]) + FixMul(x[4], A.M[4, 3]);		b[4] := FixMul(x[1], A.M[1, 4]) + FixMul(x[2], A.M[2, 4]) + FixMul(x[3], A.M[3, 4]) + FixMul(x[4], A.M[4, 4]);		VMult := b;	end;{SetVector4 : set coordinates of a point or vector to the passed params }procedure SetVector4 (var theVector: Vector4; x, y, z: real);	begin		theVector[1] := X2Fix(x);		theVector[2] := X2Fix(y);		theVector[3] := X2Fix(z);		theVector[4] := FixRatio(1, 1);	end;{GetVector4 : return the settings of the inner definition of vector4 }procedure GetVector4 (theVector: Vector4; var x, y, z: real);	begin		x := Fix2X(theVector[1]);		y := Fix2X(theVector[2]);		z := Fix2X(theVector[3]);	end;function IsVisible (k, l, m: Vector4): Boolean;	var		nz: Fixed;{ax, bx, ay, by: real;}	begin{ax := (l[1] - k[1]);{}{bx := (m[1] - k[1]);{}{ay := (l[2] - k[2]);{}{by := (m[2] - k[2]);{}{nz := ax * by - ay * bx;{}		nz := FixMul((l[1] - k[1]), (m[2] - k[2])) - FixMul((l[2] - k[2]), (m[1] - k[1]));		IsVisible := nz >= 0;	end;{$ENDC}(* PROCEDURE THAT ARE THE SAME FOR BOTH VERSIONS *)(* Transpose : Generate Transpose of Matrix A . This proc is identical to both fixed an float version*)function Transpose (A: Matrix4): Matrix4;	var		T: Matrix4;		index: Integer;	begin		with T do			for index := 1 to 4 do begin				M[index, 1] := A.M[1, index];				M[index, 2] := A.M[2, index];				M[index, 3] := A.M[3, index];				M[index, 4] := A.M[4, index];			end;		Transpose := T;	end;(* VSub : Subtract two vectors: result := x - y *)function VSub (x, y: Vector4): Vector4;	var		theResult: Vector4;	begin		theResult[1] := x[1] - y[1];		theResult[2] := x[2] - y[2];		theResult[3] := x[3] - y[3];		theResult[4] := one;		VSub := theResult;	end;(* VAdd : Add two vectors *)function VAdd (x, y: Vector4): Vector4;	var		theResult: Vector4;	begin		theResult[1] := x[1] + y[1];		theResult[2] := x[2] + y[2];		theResult[3] := x[3] + y[3];		theResult[4] := one;		VAdd := theResult;	end;(* mvm : from geobench the matrix times vector multiplication *)function MatrixVectorMult (M: Matrix4; p: Vector4): Vector4;	var		i, j: integer;		res: Vector4;	begin		for i := 1 to 4 do begin			res[i] := 0;			for j := 1 to 4 do				res[i] := res[i] + M.M[i, j] * p[j];		end;		MatrixVectorMult := res;	end;end.
+unit Matrix;
+
+{ fast, 4x4 Matrix multiplikation, fast Ax=b multiplikation for A ist 4x4 mtrx, x ist 4-vektor (x,y,z,1) }
+
+{ for use with the 3D Project © 1991 by Christian Franz }
+
+{$IFC UNDEFINED UseFixedMath}
+{$SETC UseFixedMath := FALSE}
+{$ENDC}
+
+
+interface
+
+{$IFC UseFixedMath = TRUE }
+uses
+	FixedMath;
+
+type
+
+	Matrix4 = record
+			M: array[1..4, 1..4] of fixed;
+			identity: boolean;
+		end;
+	Vector4 = array[1..4] of fixed;
+
+var
+	one: fixed;
+
+{$ELSEC}
+
+type
+
+	Matrix4 = record
+			M: array[1..4, 1..4] of real;
+			identityFlag: boolean;
+		end;
+	Vector4 = array[1..4] of real;
+
+var
+	one: real;
+
+{$ENDC}
+
+(* InitMatrix : Init matrix module *)
+procedure InitMatrix;
+
+(* identity : returns identity-matrix *)
+function Identity: Matrix4;
+
+(* MMult : Multiply 4x4 by 4x4 Matrix. Returns C = AB *)
+function MMult (var A, B: Matrix4): Matrix4;
+
+(* VMult : Multiply the Vector x with the Matrix A giving the Vector b (return value *)
+function VMult (x: Vector4; var A: Matrix4): Vector4;
+
+function MatrixVectorMult (M: Matrix4; p: Vector4): Vector4;
+(* GeoBench's matrix * vector multiplication... To be optimized for speed *)
+
+(* Transpose : Generate Transpose of Matrix A *)
+function Transpose (A: Matrix4): Matrix4;
+
+(* VSub : Subtract two vectors: result := x - y *)
+function VSub (x, y: Vector4): Vector4;
+
+(* VAdd : Add two vectors *)
+function VAdd (x, y: Vector4): Vector4;
+
+(* Set Vector to coordinates *)
+procedure SetVector4 (var theVector: Vector4; x, y, z: real);
+
+(* get vector coordinates *)
+procedure GetVector4 (theVector: Vector4; var x, y, z: real);
+
+(* IsVisible determines if the plane defined through the three points KLM (as vector 4) 	*)
+(* is visible form the eye. Visibility is determined as the value of the normal vector of 	*)
+(* the plane defined by abc. it is visible if the z component of n is greater than zero 		*)
+(* note that for this test you must label k,l,m clockwise !!! 									*)
+
+function IsVisible (k, l, m: Vector4): Boolean;
+
+implementation
+
+{$IFC UseFixedMath = FALSE }
+
+(* InitMatrix : Init matrix module *)
+procedure InitMatrix;
+
+	begin
+		one := 1;
+	end;
+
+{ this function will generate a 4x4 Identity Matrix }
+
+function Identity: Matrix4;
+
+	var
+		I: Matrix4;
+		j: INTEGER;
+
+	begin
+		with I do begin
+			for j := 1 to 4 do begin
+				M[j, 1] := 0;
+				M[j, 2] := 0;
+				M[j, 3] := 0;
+				M[j, 4] := 0;
+				M[j, j] := 1;
+			end;
+			IdentityFlag := TRUE;
+			Identity := I;
+		end;
+	end;
+
+function MMult (var A, B: Matrix4): Matrix4;
+
+	var
+		C: Matrix4;
+
+	begin
+		if A.IdentityFlag then begin
+			MMult := B;
+			Exit(MMult);
+		end;
+		if B.IdentityFlag then begin
+			MMult := A;
+			Exit(MMult);
+		end;
+
+		C.M[1, 1] := A.M[1, 1] * B.M[1, 1] + A.M[1, 2] * B.M[2, 1] + A.M[1, 3] * B.M[3, 1] + A.M[1, 4] * B.M[4, 1];
+		C.M[1, 2] := A.M[1, 1] * B.M[1, 2] + A.M[1, 2] * B.M[2, 2] + A.M[1, 3] * B.M[3, 2] + A.M[1, 4] * B.M[4, 2];
+		C.M[1, 3] := A.M[1, 1] * B.M[1, 3] + A.M[1, 2] * B.M[2, 3] + A.M[1, 3] * B.M[3, 3] + A.M[1, 4] * B.M[4, 3];
+		C.M[1, 4] := A.M[1, 1] * B.M[1, 4] + A.M[1, 2] * B.M[2, 4] + A.M[1, 3] * B.M[3, 4] + A.M[1, 4] * B.M[4, 4];
+
+		C.M[2, 1] := A.M[2, 1] * B.M[1, 1] + A.M[2, 2] * B.M[2, 1] + A.M[2, 3] * B.M[3, 1] + A.M[2, 4] * B.M[4, 1];
+		C.M[2, 2] := A.M[2, 1] * B.M[1, 2] + A.M[2, 2] * B.M[2, 2] + A.M[2, 3] * B.M[3, 2] + A.M[2, 4] * B.M[4, 2];
+		C.M[2, 3] := A.M[2, 1] * B.M[1, 3] + A.M[2, 2] * B.M[2, 3] + A.M[2, 3] * B.M[3, 3] + A.M[2, 4] * B.M[4, 3];
+		C.M[2, 4] := A.M[2, 1] * B.M[1, 4] + A.M[2, 2] * B.M[2, 4] + A.M[2, 3] * B.M[3, 4] + A.M[2, 4] * B.M[4, 4];
+
+		C.M[3, 1] := A.M[3, 1] * B.M[1, 1] + A.M[3, 2] * B.M[2, 1] + A.M[3, 3] * B.M[3, 1] + A.M[3, 4] * B.M[4, 1];
+		C.M[3, 2] := A.M[3, 1] * B.M[1, 2] + A.M[3, 2] * B.M[2, 2] + A.M[3, 3] * B.M[3, 2] + A.M[3, 4] * B.M[4, 2];
+		C.M[3, 3] := A.M[3, 1] * B.M[1, 3] + A.M[3, 2] * B.M[2, 3] + A.M[3, 3] * B.M[3, 3] + A.M[3, 4] * B.M[4, 3];
+		C.M[3, 4] := A.M[3, 1] * B.M[1, 4] + A.M[3, 2] * B.M[2, 4] + A.M[3, 3] * B.M[3, 4] + A.M[3, 4] * B.M[4, 4];
+
+		C.M[4, 1] := A.M[4, 1] * B.M[1, 1] + A.M[4, 2] * B.M[2, 1] + A.M[4, 3] * B.M[3, 1] + A.M[4, 4] * B.M[4, 1];
+		C.M[4, 2] := A.M[4, 1] * B.M[1, 2] + A.M[4, 2] * B.M[2, 2] + A.M[4, 3] * B.M[3, 2] + A.M[4, 4] * B.M[4, 2];
+		C.M[4, 3] := A.M[4, 1] * B.M[1, 3] + A.M[4, 2] * B.M[2, 3] + A.M[4, 3] * B.M[3, 3] + A.M[4, 4] * B.M[4, 3];
+		C.M[4, 4] := A.M[4, 1] * B.M[1, 4] + A.M[4, 2] * B.M[2, 4] + A.M[4, 3] * B.M[3, 4] + A.M[4, 4] * B.M[4, 4];
+		C.IdentityFlag := FALSE;
+		MMult := C;
+	end;
+
+function VMult (x: Vector4; var A: Matrix4): Vector4;
+
+	var
+		b: Vector4;
+
+	begin
+		if A.IdentityFlag then begin
+			VMult := x;
+			Exit(VMult);
+		end;
+		b[1] := x[1] * A.M[1, 1] + x[2] * A.M[2, 1] + x[3] * A.M[3, 1] + x[4] * A.M[4, 1];
+		b[2] := x[1] * A.M[1, 2] + x[2] * A.M[2, 2] + x[3] * A.M[3, 2] + x[4] * A.M[4, 2];
+		b[3] := x[1] * A.M[1, 3] + x[2] * A.M[2, 3] + x[3] * A.M[3, 3] + x[4] * A.M[4, 3];
+		b[4] := x[1] * A.M[1, 4] + x[2] * A.M[2, 4] + x[3] * A.M[3, 4] + x[4] * A.M[4, 4];
+		VMult := b;
+	end;
+
+{SetVector4 : set coordinates of a point or vector to the passed params }
+procedure SetVector4 (var theVector: Vector4; x, y, z: real);
+	begin
+		theVector[1] := x;
+		theVector[2] := y;
+		theVector[3] := z;
+		theVector[4] := 1;
+	end;
+
+{GetVector4 : return the settings of the inner definition of vector4 }
+procedure GetVector4 (theVector: Vector4; var x, y, z: real);
+
+	begin
+		x := theVector[1];
+		y := theVector[2];
+		z := theVector[3];
+	end;
+
+(* IsVisible determines if the plane defined through the three points XYZ (as vectors 4) 	*)
+(* is visible form the eye. Visibility is determined as the value of the normal vector of 	*)
+(* the plane defined by abc. it is visible if the z component of n is greater than zero 		*)
+(* note that for this test you must label x,y,z clockwise !!! 									*)
+
+function IsVisible (k, l, m: Vector4): Boolean;
+	var
+		nz: real;
+		ax, bx, ay, by: real;
+
+	begin
+{ax := (l[1] - k[1]);{}
+{bx := (m[1] - k[1]);{}
+{ay := (l[2] - k[2]);{}
+{by := (m[2] - k[2]);{}
+{nz := ax * by - ay * bx;{}
+		nz := (l[1] - k[1]) * (m[2] - k[2]) - (l[2] - k[2]) * (m[1] - k[1]);
+		IsVisible := nz >= 0;
+	end;
+
+
+{$ELSEC}
+{ BEGIN FIXED-MATH routines }
+
+(* InitMatrix : Init matrix module *)
+procedure InitMatrix;
+	begin
+		one := FixRatio(1, 1);
+	end;
+
+{ this function will generate a 4x4 Identity Matrix }
+
+function Identity: Matrix4;
+
+	var
+		I: Matrix4;
+		j: INTEGER;
+
+	begin
+		with I do
+			for j := 1 to 4 do begin
+				I[j, 1] := 0;
+				I[j, 2] := 0;
+				I[j, 3] := 0;
+				I[j, 4] := 0;
+				I[j, j] := FixRatio(1, 1);
+			end;
+		I.IdentityFlag := TRUE;
+		Identity := I;
+	end;
+
+function MMult (var A, B: Matrix4): Matrix4;
+
+	var
+		C: Matrix4;
+
+	begin
+		if A.IdentityFlag then begin
+			MMult := B;
+			Exit(MMult);
+		end;
+		if B.IdentityFlag then begin
+			MMult := A;
+			Exit(MMult);
+		end;
+
+		C.M[1, 1] := FixMul(A.M[1, 1], B.M[1, 1]) + FixMul(A.M[1, 2], B.M[2, 1]) + FixMul(A.M[1, 3], B.M[3, 1]) + FixMul(A.M[1, 4], B.M[4, 1]);
+		C.M[1, 2] := FixMul(A.M[1, 1], B.M[1, 2]) + FixMul(A.M[1, 2], B.M[2, 2]) + FixMul(A.M[1, 3], B.M[3, 2]) + FixMul(A.M[1, 4], B.M[4, 2]);
+		C.M[1, 3] := FixMul(A.M[1, 1], B.M[1, 3]) + FixMul(A.M[1, 2], B.M[2, 3]) + FixMul(A.M[1, 3], B.M[3, 3]) + FixMul(A.M[1, 4], B.M[4, 3]);
+		C.M[1, 4] := FixMul(A.M[1, 1], B.M[1, 4]) + FixMul(A.M[1, 2], B.M[2, 4]) + FixMul(A.M[1, 3], B.M[3, 4]) + FixMul(A.M[1, 4], B.M[4, 4]);
+
+		C.M[2, 1] := FixMul(A.M[2, 1], B.M[1, 1]) + FixMul(A.M[2, 2], B.M[2, 1]) + FixMul(A.M[2, 3], B.M[3, 1]) + FixMul(A.M[2, 4], B.M[4, 1]);
+		C.M[2, 2] := FixMul(A.M[2, 1], B.M[1, 2]) + FixMul(A.M[2, 2], B.M[2, 2]) + FixMul(A.M[2, 3], B.M[3, 2]) + FixMul(A.M[2, 4], B.M[4, 2]);
+		C.M[2, 3] := FixMul(A.M[2, 1], B.M[1, 3]) + FixMul(A.M[2, 2], B.M[2, 3]) + FixMul(A.M[2, 3], B.M[3, 3]) + FixMul(A.M[2, 4], B.M[4, 3]);
+		C.M[2, 4] := FixMul(A.M[2, 1], B.M[1, 4]) + FixMul(A.M[2, 2], B.M[2, 4]) + FixMul(A.M[2, 3], B.M[3, 4]) + FixMul(A.M[2, 4], B.M[4, 4]);
+
+		C.M[3, 1] := FixMul(A.M[3, 1], B.M[1, 1]) + FixMul(A.M[3, 2], B.M[2, 1]) + FixMul(A.M[3, 3], B.M[3, 1]) + FixMul(A.M[3, 4], B.M[4, 1]);
+		C.M[3, 2] := FixMul(A.M[3, 1], B.M[1, 2]) + FixMul(A.M[3, 2], B.M[2, 2]) + FixMul(A.M[3, 3], B.M[3, 2]) + FixMul(A.M[3, 4], B.M[4, 2]);
+		C.M[3, 3] := FixMul(A.M[3, 1], B.M[1, 3]) + FixMul(A.M[3, 2], B.M[2, 3]) + FixMul(A.M[3, 3], B.M[3, 3]) + FixMul(A.M[3, 4], B.M[4, 3]);
+		C.M[3, 4] := FixMul(A.M[3, 1], B.M[1, 4]) + FixMul(A.M[3, 2], B.M[2, 4]) + FixMul(A.M[3, 3], B.M[3, 4]) + FixMul(A.M[3, 4], B.M[4, 4]);
+
+		C.M[4, 1] := FixMul(A.M[4, 1], B.M[1, 1]) + FixMul(A.M[4, 2], B.M[2, 1]) + FixMul(A.M[4, 3], B.M[3, 1]) + FixMul(A.M[4, 4], B.M[4, 1]);
+		C.M[4, 2] := FixMul(A.M[4, 1], B.M[1, 2]) + FixMul(A.M[4, 2], B.M[2, 2]) + FixMul(A.M[4, 3], B.M[3, 2]) + FixMul(A.M[4, 4], B.M[4, 2]);
+		C.M[4, 3] := FixMul(A.M[4, 1], B.M[1, 3]) + FixMul(A.M[4, 2], B.M[2, 3]) + FixMul(A.M[4, 3], B.M[3, 3]) + FixMul(A.M[4, 4], B.M[4, 3]);
+		C.M[4, 4] := FixMul(A.M[4, 1], B.M[1, 4]) + FixMul(A.M[4, 2], B.M[2, 4]) + FixMul(A.M[4, 3], B.M[3, 4]) + FixMul(A.M[4, 4], B.M[4, 4]);
+
+		MMult := C;
+	end;
+
+function VMult (x: Vector4; var A: Matrix4): Vector4;
+
+	var
+		b: Vector4;
+
+	begin
+		if A.IdentityFlag then begin
+			VMult := x;
+			Exit(VMult);
+		end;
+		b[1] := FixMul(x[1], A.M[1, 1]) + FixMul(x[2], A.M[2, 1]) + FixMul(x[3], A.M[3, 1]) + FixMul(x[4], A.M[4, 1]);
+		b[2] := FixMul(x[1], A.M[1, 2]) + FixMul(x[2], A.M[2, 2]) + FixMul(x[3], A.M[3, 2]) + FixMul(x[4], A.M[4, 2]);
+		b[3] := FixMul(x[1], A.M[1, 3]) + FixMul(x[2], A.M[2, 3]) + FixMul(x[3], A.M[3, 3]) + FixMul(x[4], A.M[4, 3]);
+		b[4] := FixMul(x[1], A.M[1, 4]) + FixMul(x[2], A.M[2, 4]) + FixMul(x[3], A.M[3, 4]) + FixMul(x[4], A.M[4, 4]);
+		VMult := b;
+	end;
+
+{SetVector4 : set coordinates of a point or vector to the passed params }
+procedure SetVector4 (var theVector: Vector4; x, y, z: real);
+	begin
+		theVector[1] := X2Fix(x);
+		theVector[2] := X2Fix(y);
+		theVector[3] := X2Fix(z);
+		theVector[4] := FixRatio(1, 1);
+	end;
+
+{GetVector4 : return the settings of the inner definition of vector4 }
+procedure GetVector4 (theVector: Vector4; var x, y, z: real);
+
+	begin
+		x := Fix2X(theVector[1]);
+		y := Fix2X(theVector[2]);
+		z := Fix2X(theVector[3]);
+	end;
+
+function IsVisible (k, l, m: Vector4): Boolean;
+	var
+		nz: Fixed;
+{ax, bx, ay, by: real;}
+
+	begin
+{ax := (l[1] - k[1]);{}
+{bx := (m[1] - k[1]);{}
+{ay := (l[2] - k[2]);{}
+{by := (m[2] - k[2]);{}
+{nz := ax * by - ay * bx;{}
+		nz := FixMul((l[1] - k[1]), (m[2] - k[2])) - FixMul((l[2] - k[2]), (m[1] - k[1]));
+		IsVisible := nz >= 0;
+	end;
+
+{$ENDC}
+
+(* PROCEDURE THAT ARE THE SAME FOR BOTH VERSIONS *)
+
+(* Transpose : Generate Transpose of Matrix A . This proc is identical to both fixed an float version*)
+function Transpose (A: Matrix4): Matrix4;
+
+	var
+		T: Matrix4;
+		index: Integer;
+
+	begin
+		with T do
+			for index := 1 to 4 do begin
+				M[index, 1] := A.M[1, index];
+				M[index, 2] := A.M[2, index];
+				M[index, 3] := A.M[3, index];
+				M[index, 4] := A.M[4, index];
+			end;
+		Transpose := T;
+	end;
+
+(* VSub : Subtract two vectors: result := x - y *)
+function VSub (x, y: Vector4): Vector4;
+	var
+		theResult: Vector4;
+
+	begin
+		theResult[1] := x[1] - y[1];
+		theResult[2] := x[2] - y[2];
+		theResult[3] := x[3] - y[3];
+		theResult[4] := one;
+		VSub := theResult;
+	end;
+
+
+(* VAdd : Add two vectors *)
+function VAdd (x, y: Vector4): Vector4;
+	var
+		theResult: Vector4;
+
+	begin
+		theResult[1] := x[1] + y[1];
+		theResult[2] := x[2] + y[2];
+		theResult[3] := x[3] + y[3];
+		theResult[4] := one;
+		VAdd := theResult;
+	end;
+
+(* mvm : from geobench the matrix times vector multiplication *)
+function MatrixVectorMult (M: Matrix4; p: Vector4): Vector4;
+	var
+		i, j: integer;
+		res: Vector4;
+
+	begin
+		for i := 1 to 4 do begin
+			res[i] := 0;
+			for j := 1 to 4 do
+				res[i] := res[i] + M.M[i, j] * p[j];
+		end;
+		MatrixVectorMult := res;
+
+	end;
+end.

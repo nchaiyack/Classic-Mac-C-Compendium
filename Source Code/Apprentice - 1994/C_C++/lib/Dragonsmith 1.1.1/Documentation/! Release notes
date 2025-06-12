@@ -1,1 +1,95 @@
-D r a g o n s m i t h     r e l e a s e     n o t e s============================================================================version 1.1.115 Jan 1994This is a bug-fix and THINK C 6 compatibility release only.  No new features have been added, and the documentation has not been changed from version 1.1.Bugs fixed----------    DisposHandle in FileUtils.c (FREFTypes) should have been ReleaseResource    sleepTime was set incorrectly at launch (Dragon::Dragon)    Files on AppleShare volumes weren't handled correctly (FileUtils.c)    Memory leak in DPasser.c    Trailing zero byte was written to scrap in DFilePaths.c (DFilePaths::EndProcessing)    Choosing Quit should have triggered a 'quit' event    Launch in System 7.1 sometimes crashed -- this bug has *probably* been fixedOther changes-------------    A few other minor modifications have been made -- these are marked in the source code files with "bug-fix 1.1.1" notations.  Also, an 'aete' resource has been added to the project resource files to allow scripting of 'odoc' and 'quit' events.============================================================================version 1.111 Oct 1992New features------------Versatile disk- and folder-opening capability    Add recursive directory searching to your dragon without adding or changing any source code.Background processing    The user can switch to or launch other processes while your dragon is processing documents, and can cancel Open Documents events.Extensive documentation (MSWord and text formats)    The  Dragonsmith Programmer's Manual contains descriptions of every instance variable and method in the Dragon class, instructions on how to use or override them (and notes on when it's best to leave them alone), and much more.  The text-format version doesn't look very nice and lacks illustrations but otherwise contains the same information.Resource-based Preferences class    Preferences files are automatically created, and the user can switch to a particular preferences file at any time by double-clicking on it.  If you don't want your dragon to create a preferences file, you only need to make simple changes two resources.Improved file filtering    The Dragon class is now smarter about which documents to process and which to leave alone.  Custom filtering is easy to add.Easier interface for subclasses    Subclasses of Dragon require less added code.Improved Apple event debugging    Document processing can now be debugged in its natural state -- using the Passer dragon, you can essentially drag-and-drop documents onto your dragon while it’s running in the THINK C Debugger.  Also, incoming 'odoc' events will be postponed if your dragon is busy processing a batch of documents, and finished later in the order in which they were received.Template files for quick Dragon subclassing    Three template classes and associated files can be used as the basis for Dragon subclasses.Improved menu support    The Dragon class implements standard Apple and Edit menus and a simple File menu.  No source code additions or modifications need to be made if you decide NOT to use menus in a dragon.Moving from v1.0b2 to v1.1------------------------Because a number of implementation details have changed with this release, you'll have to make several changes to your subclass of Dragon in order to get it to compile.  See the 'Getting started' section in the Dragonsmith Programmer's Manual for details.============================================================================version 1.0b220 May 1992First widely released version.============================================================================Future plans: 1994-If I have time during the summer of 1994, I'll continue work on a new version of Dragonsmith.  Some of the features I'm working on include: + Versatile progress window + Improved Preferences class based on Apple event data structures (and hence scriptable) + Automated dragon project creation using a custom OSA-compliant resource compiler (this one's a bit of a long shot) + Improved error reportingFuture releases will be written with THINK Project Manager in mind and will not feature THINK C 5.0 compatibility.  A C++ version is possible but not likely at this point.============================================================================Dragonsmith is freeware.  Send comments, bug reports, etc. to:Paul M. Hoffman302 W. Davis #2Ann Arbor MI 48103USAInternet: paul.hoffman@umich.edu -or- dragonsmith@umich.eduAFS: /afs/umich.edu/user/n/k/nkuitse
+
+D r a g o n s m i t h     r e l e a s e     n o t e s
+
+============================================================================
+version 1.1.1
+15 Jan 1994
+
+This is a bug-fix and THINK C 6 compatibility release only.  No new features have been added, and the documentation has not been changed from version 1.1.
+
+Bugs fixed
+----------
+
+    DisposHandle in FileUtils.c (FREFTypes) should have been ReleaseResource
+    sleepTime was set incorrectly at launch (Dragon::Dragon)
+    Files on AppleShare volumes weren't handled correctly (FileUtils.c)
+    Memory leak in DPasser.c
+    Trailing zero byte was written to scrap in DFilePaths.c (DFilePaths::EndProcessing)
+    Choosing Quit should have triggered a 'quit' event
+    Launch in System 7.1 sometimes crashed -- this bug has *probably* been fixed
+
+Other changes
+-------------
+
+    A few other minor modifications have been made -- these are marked in the source code files with "bug-fix 1.1.1" notations.  Also, an 'aete' resource has been added to the project resource files to allow scripting of 'odoc' and 'quit' events.
+
+============================================================================
+version 1.1
+11 Oct 1992
+
+New features
+------------
+
+Versatile disk- and folder-opening capability
+    Add recursive directory searching to your dragon without adding or changing any source code.
+
+Background processing
+    The user can switch to or launch other processes while your dragon is processing documents, and can cancel Open Documents events.
+
+Extensive documentation (MSWord and text formats)
+    The  Dragonsmith Programmer's Manual contains descriptions of every instance variable and method in the Dragon class, instructions on how to use or override them (and notes on when it's best to leave them alone), and much more.  The text-format version doesn't look very nice and lacks illustrations but otherwise contains the same information.
+
+Resource-based Preferences class
+    Preferences files are automatically created, and the user can switch to a particular preferences file at any time by double-clicking on it.  If you don't want your dragon to create a preferences file, you only need to make simple changes two resources.
+
+Improved file filtering
+    The Dragon class is now smarter about which documents to process and which to leave alone.  Custom filtering is easy to add.
+
+Easier interface for subclasses
+    Subclasses of Dragon require less added code.
+
+Improved Apple event debugging
+    Document processing can now be debugged in its natural state -- using the Passer dragon, you can essentially drag-and-drop documents onto your dragon while it’s running in the THINK C Debugger.  Also, incoming 'odoc' events will be postponed if your dragon is busy processing a batch of documents, and finished later in the order in which they were received.
+
+Template files for quick Dragon subclassing
+    Three template classes and associated files can be used as the basis for Dragon subclasses.
+
+Improved menu support
+    The Dragon class implements standard Apple and Edit menus and a simple File menu.  No source code additions or modifications need to be made if you decide NOT to use menus in a dragon.
+
+
+Moving from v1.0b2 to v1.1
+------------------------
+
+Because a number of implementation details have changed with this release, you'll have to make several changes to your subclass of Dragon in order to get it to compile.  See the 'Getting started' section in the Dragonsmith Programmer's Manual for details.
+
+
+============================================================================
+version 1.0b2
+20 May 1992
+
+First widely released version.
+
+
+============================================================================
+Future plans: 1994-
+
+If I have time during the summer of 1994, I'll continue work on a new version of Dragonsmith.  Some of the features I'm working on include:
+
+ + Versatile progress window
+ + Improved Preferences class based on Apple event data structures (and hence scriptable)
+ + Automated dragon project creation using a custom OSA-compliant resource compiler (this one's a bit of a long shot)
+ + Improved error reporting
+
+Future releases will be written with THINK Project Manager in mind and will not feature THINK C 5.0 compatibility.  A C++ version is possible but not likely at this point.
+
+============================================================================
+Dragonsmith is freeware.  Send comments, bug reports, etc. to:
+
+Paul M. Hoffman
+302 W. Davis #2
+Ann Arbor MI 48103
+USA
+
+Internet: paul.hoffman@umich.edu -or- dragonsmith@umich.edu
+AFS: /afs/umich.edu/user/n/k/nkuitse

@@ -1,1 +1,39 @@
-About Flag Control GH 1.0 4/24/94The file "Flag Control GH (rsrc)" contains a CDEF of id 932. This CDEF implementsa control which acts exactly like the toggle switches found in the Finder'stext views. This control has not changed since its original release.¥ For an example where this is control is used, look at Siege Watch 2.0.  ¥ CNTL resources which used this CDEF should use a proc ID of 14912¥ I've included all the source code for this control in the files: FlagCDEF.c,  FlagCDEF.h, utilities.c and utilities.h. Feel free to modify the code for  your own projects and send along bug fixes and suggestions to me.¥ DLOGs should have an auxillary color resource, so the Dialog Manager  knows enough to use a color window when appropriate.  ¥ If used in a document window, be sure to use a color window when  color quickdraw is available.  ¥ I used Think C 5 to compile this project.¥ Thanks to Leonard Roesenthol for providing a few lines of very important  code.¥ Thanks to the good folks at Symantec for providing some sample code in  Think Reference 2.0¥ If you do use this control in a released program, send me a postcard  describing it.¥ If you bundle this package in a CD-ROM such as the Sumex CD-ROM send me  a copy of the first edition it appears on.**************Glenn R. Howes1101 University Ave. Madison, WI 53715grhowes@students.wisc.edu**************
+About Flag Control GH 1.0 4/24/94
+The file "Flag Control GH (rsrc)" contains a CDEF of id 932. This CDEF implements
+a control which acts exactly like the toggle switches found in the Finder's
+text views. This control has not changed since its original release.
+
+¥ For an example where this is control is used, look at Siege Watch 2.0.
+  
+¥ CNTL resources which used this CDEF should use a proc ID of 14912
+
+¥ I've included all the source code for this control in the files: FlagCDEF.c,
+  FlagCDEF.h, utilities.c and utilities.h. Feel free to modify the code for
+  your own projects and send along bug fixes and suggestions to me.
+
+¥ DLOGs should have an auxillary color resource, so the Dialog Manager
+  knows enough to use a color window when appropriate.
+  
+¥ If used in a document window, be sure to use a color window when
+  color quickdraw is available.
+  
+¥ I used Think C 5 to compile this project.
+
+¥ Thanks to Leonard Roesenthol for providing a few lines of very important
+  code.
+
+¥ Thanks to the good folks at Symantec for providing some sample code in
+  Think Reference 2.0
+
+¥ If you do use this control in a released program, send me a postcard
+  describing it.
+
+¥ If you bundle this package in a CD-ROM such as the Sumex CD-ROM send me
+  a copy of the first edition it appears on.
+
+**************
+Glenn R. Howes
+1101 University Ave. 
+Madison, WI 53715
+grhowes@students.wisc.edu
+**************

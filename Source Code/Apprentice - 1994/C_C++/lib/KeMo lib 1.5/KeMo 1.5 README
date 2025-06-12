@@ -1,1 +1,93 @@
-Welcome to KeMo 1.5!CHANGES--------Version 1.5- Source code now available to registered users.  See License section.- Added the ability to wait for more than one device at a time (waiting for more than one device decreases the accuracy of the measurement accordingly); see KeMoSelect() and KeMoWait()- Added several constant definitions for selecting various combinations of ADB devices (see KeMoSelect())- Changed the argument type for KeMoSelect() from short integer to long integer (your programs must be recompiled with the new KeMo.h or KeMo.p)- Added the ability to distinguish between two mouse buttons (tested on PowerBook trackballs only).  See KeMoWait().- Added the function KeMoDeviceType() to manually set the device types (keyboard or mouse) when KeMo fails to appropriately categorize a device.- Added access to two data arrays that contain information about available ADB devices (see the bottom of KeMo.h and KeMo.p)- Fixed Quadra and PowerBook incompatibilities (incompatibilities fixed in KeMoInit() and KeMoSync())Version 1.03- Added KeMoQuitAllApps, a function that makes all other running applications quit (including the Finder).  Requires System 7.0.0 or later.Version 1.02- Only one library is included instead of two; this one library should link with Think C projects as well as Pascal and other languages/development systems.- The return type of KeMoCode2Asc has been changed to short integer to accomodate Pascal peculiarities.- A Pascal unit interface is provided, "KeMo.p".- "KeMoTest (w/ debug)" now also saves debugging information in a file called "KeMo Debug Output."INTRODUCTION-------------This package is essentially a set of functions to help writing reaction time experiments on the Mac, the KeMo Reaction Timing Utilities.  Functionality currently consists of the following:- a timer with 20 microsecond resolution- polling functions for ADB devices, such as keyboards and mice, with +/-1.4 to +/-2.1 msec accuracy, depending on your Mac (as opposed to the +/- 8 to +/-16 msec accuracy that you get with "normal" Toolbox functions like GetKeys)- a screen refresh synchronization function for all Macs- functions that hide and show the menu bar- a function to make all other applications quit (System 7 required)Before I get too many comments like "the Mac is not a real-time machine" let me put in my disclaimer: this software-only approach does not guarantee the accuracy claimed above in all conditions.  Various factors like disk access and network activity can cause loss of accuracy.  But this lack of accuracy can be avoided with careful programming and by using Macs that are not doing certain other things and running other programs at the same time they are doing reaction timing.  See "Accuracy Issues" in the Users' Guide for more discussion of this.These routines are packaged in a library file which can be incorporated into your program, together with header files for C and Pascal.  Additionally, a sample program that exercises all of the functions is included with source code in C.KeMo’s ADB (Apple Desktop Bus) polling functions only work on Macs with ADB’s.  These include all Macs sold by Apple after the Mac Plus.  In addition, all functions require System Version 6.0.5 or later.  If using Think Pascal, you must use Think Pascal version 3.0 or later.The KeMo set of functions is distributed as “Old World Order/Recession-ware”: there is a shareware registration fee of $20 unless you can't afford it, or can't get U.S. dollars.  You may not use KeMo to write commercial or shareware programs without prior permission.  See the license terms in the Users' Guide for more details.Source code is available for free to registered users ($10 shipping/handlingif you need me to send you stuff by physical mail, prepaid).You may contact Dan Costin, the author, at dcostin@ucsd.edu or dcostin@ucsd.bitnet, or P.O. Box 13214, La Jolla, CA  92039-3214.   Support is on a time-available basis.The KeMo Reaction Time Utilities are provided "as is" without warranty of any kind.  I, Dan Costin, make no claims concerning the accuracy or correctness of the computer code contained in, or the results of the use of the KeMo Reaction Time Utilities.  The entire risk as to the results and performance of the KeMo Reaction Time Utilities is assumed by you.  If the KeMo Reaction Time Utilities are defective you, and not I, Dan Costin, assume the entire cost of all necessary servicing, repair or correction.-Dan Costin, October 11, 1993KeMo Reaction Time Utilities Copyright 1992,1993 Dan Costin
+Welcome to KeMo 1.5!
+
+CHANGES
+--------
+Version 1.5
+- Source code now available to registered users.  See License section.
+- Added the ability to wait for more than one device at a time (waiting for more 
+than one device decreases the accuracy of the measurement accordingly); see 
+KeMoSelect() and KeMoWait()
+- Added several constant definitions for selecting various combinations of ADB 
+devices (see KeMoSelect())
+- Changed the argument type for KeMoSelect() from short integer to long integer 
+(your programs must be recompiled with the new KeMo.h or KeMo.p)
+- Added the ability to distinguish between two mouse buttons (tested on 
+PowerBook trackballs only).  See KeMoWait().
+- Added the function KeMoDeviceType() to manually set the device types (keyboard 
+or mouse) when KeMo fails to appropriately categorize a device.
+- Added access to two data arrays that contain information about available ADB 
+devices (see the bottom of KeMo.h and KeMo.p)
+- Fixed Quadra and PowerBook incompatibilities (incompatibilities fixed in 
+KeMoInit() and KeMoSync())
+
+Version 1.03
+- Added KeMoQuitAllApps, a function that makes all other running applications 
+quit (including the Finder).  Requires System 7.0.0 or later.
+
+Version 1.02
+- Only one library is included instead of two; this one library should link with 
+Think C projects as well as Pascal and other languages/development systems.
+- The return type of KeMoCode2Asc has been changed to short integer to 
+accomodate Pascal peculiarities.
+- A Pascal unit interface is provided, "KeMo.p".
+- "KeMoTest (w/ debug)" now also saves debugging information in a file called 
+"KeMo Debug Output."
+
+INTRODUCTION
+-------------
+
+This package is essentially a set of functions to help writing reaction time 
+experiments on the Mac, the KeMo Reaction Timing Utilities.  Functionality 
+currently consists of the following:
+- a timer with 20 microsecond resolution
+- polling functions for ADB devices, such as keyboards and mice, with +/-1.4 to 
++/-2.1 msec accuracy, depending on your Mac (as opposed to the +/- 8 to +/-16 
+msec accuracy that you get with "normal" Toolbox functions like GetKeys)
+- a screen refresh synchronization function for all Macs
+- functions that hide and show the menu bar
+- a function to make all other applications quit (System 7 required)
+
+Before I get too many comments like "the Mac is not a real-time machine" let me 
+put in my disclaimer: this software-only approach does not guarantee the 
+accuracy claimed above in all conditions.  Various factors like disk access and 
+network activity can cause loss of accuracy.  But this lack of accuracy can be 
+avoided with careful programming and by using Macs that are not doing certain 
+other things and running other programs at the same time they are doing reaction 
+timing.  See "Accuracy Issues" in the Users' Guide for more discussion of this.
+
+These routines are packaged in a library file which can be incorporated into 
+your program, together with header files for C and Pascal.  Additionally, a 
+sample program that exercises all of the functions is included with source code 
+in C.
+
+KeMo’s ADB (Apple Desktop Bus) polling functions only work on Macs with ADB’s.  
+These include all Macs sold by Apple after the Mac Plus.  In addition, all functions 
+require System Version 6.0.5 or later.  If using Think Pascal, you must use 
+Think Pascal version 3.0 or later.
+
+The KeMo set of functions is distributed as “Old World Order/Recession-ware”: 
+there is a shareware registration fee of $20 unless you can't afford it, or 
+can't get U.S. dollars.  You may not use KeMo to write commercial or shareware 
+programs without prior permission.  See the license terms in the Users' Guide 
+for more details.
+
+Source code is available for free to registered users ($10 shipping/handling
+if you need me to send you stuff by physical mail, prepaid).
+
+You may contact Dan Costin, the author, at dcostin@ucsd.edu or 
+dcostin@ucsd.bitnet, or P.O. Box 13214, La Jolla, CA  92039-3214.   Support is 
+on a time-available basis.
+
+The KeMo Reaction Time Utilities are provided "as is" without warranty of any 
+kind.  I, Dan Costin, make no claims concerning the accuracy or correctness of 
+the computer code contained in, or the results of the use of the KeMo Reaction 
+Time Utilities.  The entire risk as to the results and performance of the KeMo 
+Reaction Time Utilities is assumed by you.  If the KeMo Reaction Time Utilities 
+are defective you, and not I, Dan Costin, assume the entire cost of all 
+necessary servicing, repair or correction.
+
+-Dan Costin, October 11, 1993
+
+KeMo Reaction Time Utilities Copyright 1992,1993 Dan Costin
+
+

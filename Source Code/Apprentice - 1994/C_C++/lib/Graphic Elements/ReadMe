@@ -1,1 +1,105 @@
-GRAPHIC ELEMENTSGraphic Elements is a very general, high-performance, framework-independent graphics presentation system. It offers graphic performance comparable to that of a "sprite animation" system. At the same time, it affords a very flexible mechanism for defining what a graphic is and does. Anything that can be drawn on the screen can be a Graphic Element.The Macintosh version of Graphic Elements is compatible with any Macintoshhaving a 68020 (or better) processor running 32-bit QuickDraw. It isnot guaranteed to be compatible with system software versions prior toSystem 7.Within these limitations, the Graphic Elements system is completely "legal".Any normal Macintosh window can contain a Graphic Elements "world". Thecode contains no "funny stuff" which may break under some future Macintoshsystem release.DESIGN PHILOSOPHYIn writing the Graphic Elements system, I had four primary objectives.First, I wanted to provide the most general paradigm possible for programming interactive graphics software. Second, I wanted to create an application program interface for interactive graphics which will not "break", regardless of changes in the underlying graphic engine or even in the type of computerwhich hosts this engine. Third, I wanted to give the application programmera high degree of flexibility in defining "a graphic". Finally, I wantedto allow maximum reusability of graphics code. The Graphic Elementssystem accomplishes these objectives in the following manner:From the viewpoint of the application programmer, a Graphic Element isan independent software object which knows how to image itself ondemand into an offscreen workspace. Each Graphic Element may optionallyhave ways of reacting to 1) the passage of time, 2) contact withanother Graphic Element, and 3) the user's actions. These methods willbe called automatically by the Graphic Elements system, as required. Inaddition, the application program can act on Graphic Elements explicitlyat any time.This provides a great degree of separation between the "main line" ofa program's code and its graphics code. After initialization, the application (or the view or pane object, if a class library is being used) needs only two calls to the Graphic Elements system to run a window full of animated graphics.This simplification is feasible because the Graphic Elements system allowsany graphic to be defined as a Graphic Element. In order to do this,the application need only define a function which will draw the elementinto its current rectangle in an offscreen graphics workspace providedby the Graphic Elements system.The Graphic Elements approach leads to a style of programming in whichelements, or associated groups of elements, are defined in individual"scene" modules containing all the routines used to initialize andrun the elements in the "scene". Such scenes can easily be moved fromone program to another by simply including them in the new programand calling their initialization routines.DESIGN LIMITATIONSIn order to maximize versatility and generality, Graphic Elementsuses a "double-buffered" drawing system, in which the "scene" isfirst assembled in an offscreen workspace, then copied to the screen.By its nature, such a system imposes a cost in memory (requiring anoffscreen area the same size as the onscreen "world") and in time(due to the requirement for copying from offscreen to onscreen).The significance of the time cost, in a given situation, depends onthe processor speed, the video-display hardware, the required frame-generation rate, and the area of the screen which must be updated foreach frame. As a rough indication, animating 32 graphics, each 32X32pixels, on each frame, the current version of Graphic Elements cangenerate 31 frames per second on a Quadra 800, and 8 fps on a IIsi.THE FUTURE OF GRAPHIC ELEMENTSI designed the Graphic Elements system according to my vision of thefuture of interactive-graphics programming. In doing so, I implicitlyaccepted the speed disadvantage and memory cost of doing things in a very general way. I am convinced that these costs are bearable, even inthe current generation of machines. With the advent of the PowerPC andother RISC-based machines, they will become insignificant.The generality obtained by accepting these costs pays off in other, more important ways. The same Graphic Elements "scene" source can already be compiled under MPW C or C++, Think C 6.0, and Symantec C++. The compiled code can be utilized from a normal application or from one based on the MacApp or TCL class libraries. A scene module can be "adopted" into anotherapplication program by including its header file, linking it in, andcalling its initialization routine.I have no corporate sponsor, and I have exhausted my available resourcesin creating the present version of Graphic Elements. However, theunderlying architecture of Graphic Elements is designed to be portable,not only across application-development environments, but across platformsas well. If anybody who reads this has the means and/or ability to adaptthe Graphic Elements system to other platforms such as Windows or X, Iwould like to hear from you.					--Al Evans--					  al@crucible.powertools.com					  CompuServe: 72167,2253					  Mail: Powertools					  	1206 Karen Ave.						Austin, TX 78757
+GRAPHIC ELEMENTS
+
+Graphic Elements is a very general, high-performance, framework-
+independent graphics presentation system. It offers graphic performance 
+comparable to that of a "sprite animation" system. At the same time, it 
+affords a very flexible mechanism for defining what a graphic is and does. 
+Anything that can be drawn on the screen can be a Graphic Element.
+
+The Macintosh version of Graphic Elements is compatible with any Macintosh
+having a 68020 (or better) processor running 32-bit QuickDraw. It is
+not guaranteed to be compatible with system software versions prior to
+System 7.
+
+Within these limitations, the Graphic Elements system is completely "legal".
+Any normal Macintosh window can contain a Graphic Elements "world". The
+code contains no "funny stuff" which may break under some future Macintosh
+system release.
+
+DESIGN PHILOSOPHY
+
+In writing the Graphic Elements system, I had four primary objectives.
+First, I wanted to provide the most general paradigm possible for programming 
+interactive graphics software. Second, I wanted to create an application 
+program interface for interactive graphics which will not "break", regardless 
+of changes in the underlying graphic engine or even in the type of computer
+which hosts this engine. Third, I wanted to give the application programmer
+a high degree of flexibility in defining "a graphic". Finally, I wanted
+to allow maximum reusability of graphics code. The Graphic Elements
+system accomplishes these objectives in the following manner:
+
+From the viewpoint of the application programmer, a Graphic Element is
+an independent software object which knows how to image itself on
+demand into an offscreen workspace. Each Graphic Element may optionally
+have ways of reacting to 1) the passage of time, 2) contact with
+another Graphic Element, and 3) the user's actions. These methods will
+be called automatically by the Graphic Elements system, as required. In
+addition, the application program can act on Graphic Elements explicitly
+at any time.
+
+This provides a great degree of separation between the "main line" of
+a program's code and its graphics code. After initialization, the 
+application (or the view or pane object, if a class library is being used) 
+needs only two calls to the Graphic Elements system to run a window full 
+of animated graphics.
+
+This simplification is feasible because the Graphic Elements system allows
+any graphic to be defined as a Graphic Element. In order to do this,
+the application need only define a function which will draw the element
+into its current rectangle in an offscreen graphics workspace provided
+by the Graphic Elements system.
+
+The Graphic Elements approach leads to a style of programming in which
+elements, or associated groups of elements, are defined in individual
+"scene" modules containing all the routines used to initialize and
+run the elements in the "scene". Such scenes can easily be moved from
+one program to another by simply including them in the new program
+and calling their initialization routines.
+
+DESIGN LIMITATIONS
+
+In order to maximize versatility and generality, Graphic Elements
+uses a "double-buffered" drawing system, in which the "scene" is
+first assembled in an offscreen workspace, then copied to the screen.
+By its nature, such a system imposes a cost in memory (requiring an
+offscreen area the same size as the onscreen "world") and in time
+(due to the requirement for copying from offscreen to onscreen).
+
+The significance of the time cost, in a given situation, depends on
+the processor speed, the video-display hardware, the required frame-
+generation rate, and the area of the screen which must be updated for
+each frame. As a rough indication, animating 32 graphics, each 32X32
+pixels, on each frame, the current version of Graphic Elements can
+generate 31 frames per second on a Quadra 800, and 8 fps on a IIsi.
+
+THE FUTURE OF GRAPHIC ELEMENTS
+
+I designed the Graphic Elements system according to my vision of the
+future of interactive-graphics programming. In doing so, I implicitly
+accepted the speed disadvantage and memory cost of doing things in a very 
+general way. I am convinced that these costs are bearable, even in
+the current generation of machines. With the advent of the PowerPC and
+other RISC-based machines, they will become insignificant.
+
+The generality obtained by accepting these costs pays off in other, more 
+important ways. The same Graphic Elements "scene" source can already be 
+compiled under MPW C or C++, Think C 6.0, and Symantec C++. The compiled 
+code can be utilized from a normal application or from one based on the MacApp 
+or TCL class libraries. A scene module can be "adopted" into another
+application program by including its header file, linking it in, and
+calling its initialization routine.
+
+I have no corporate sponsor, and I have exhausted my available resources
+in creating the present version of Graphic Elements. However, the
+underlying architecture of Graphic Elements is designed to be portable,
+not only across application-development environments, but across platforms
+as well. If anybody who reads this has the means and/or ability to adapt
+the Graphic Elements system to other platforms such as Windows or X, I
+would like to hear from you.
+
+					--Al Evans--
+					  al@crucible.powertools.com
+					  CompuServe: 72167,2253
+					  Mail: Powertools
+					  	1206 Karen Ave.
+						Austin, TX 78757

@@ -1,1 +1,33 @@
-This area contains the latest official binary release of NetHack 3.1for the Macintosh, created from version 3.1.3 of the distributedNetHack source code.  Any updates made to the binary release by theMacintosh NetHack Port Team (MacNHPT) which are not documented in thedistributed source code will be noted and described below.  The binaryrelease consists of the following files:README.mac  - this filenh313.doc   - owner's manualnh313.hqx   - game archiveTo install and play a game you will need a hard drive with, at least,3.5MB of free space and any Macintosh running system 6.0.2 or better.Get the nh31* text files, mentioned above and follow the directions inthe owner's manual.  The game archive is a self-extracting, BinHexencoded file.Concerns:    Rare (and unreproducible) report of freezing when attempting to        switch out of NetHack.    Strange messages when viewing intrinsics.  Please ignore!Updates:July 26, 1993    LEVL icons added and other icons enabled.    q-Quaff added also to Bits menu.The MacNHPT hope you enjoy this release of NetHack while we work toimprove it for later releases.  E-mail installation questions,comments, bug reports and etc., to the internet address:To: nethack-bugs@linc.cis.upenn.eduSubject: Macintosh NetHack 3.1
+This area contains the latest official binary release of NetHack 3.1
+for the Macintosh, created from version 3.1.3 of the distributed
+NetHack source code.  Any updates made to the binary release by the
+Macintosh NetHack Port Team (MacNHPT) which are not documented in the
+distributed source code will be noted and described below.  The binary
+release consists of the following files:
+
+README.mac  - this file
+nh313.doc   - owner's manual
+nh313.hqx   - game archive
+
+To install and play a game you will need a hard drive with, at least,
+3.5MB of free space and any Macintosh running system 6.0.2 or better.
+Get the nh31* text files, mentioned above and follow the directions in
+the owner's manual.  The game archive is a self-extracting, BinHex
+encoded file.
+
+Concerns:
+    Rare (and unreproducible) report of freezing when attempting to
+        switch out of NetHack.
+    Strange messages when viewing intrinsics.  Please ignore!
+
+Updates:
+July 26, 1993
+    LEVL icons added and other icons enabled.
+    q-Quaff added also to Bits menu.
+
+The MacNHPT hope you enjoy this release of NetHack while we work to
+improve it for later releases.  E-mail installation questions,
+comments, bug reports and etc., to the internet address:
+
+To: nethack-bugs@linc.cis.upenn.edu
+Subject: Macintosh NetHack 3.1

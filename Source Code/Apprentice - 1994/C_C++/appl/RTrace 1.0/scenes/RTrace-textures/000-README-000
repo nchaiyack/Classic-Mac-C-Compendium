@@ -1,1 +1,25 @@
-   The RTrace Textures directory contains SFF files which each render a singlesphere with a different texture on each one.  To get RTrace to render the textures,select the Options dialog: "Texture: Inside Objects Field" otherwise, youwill just see a blank sphere.     The .sff files in this directory were created from the .scn files using the program “scntosff” on a Unix machine.   You can look at the .sff files with a text editor to see how they were derived from the .scn files.   PPM is a simple image format used by the Unix program PBMPlus.  It is basically a "raw" image format with an ASCII header and 24 bit RGB pixels with no packing or run-length encoding.    Note that the image texture mapping files: image.sff and image1.sff can only open the image map once in a session and it must be in PPM format.  The next Mac-RTrace version will allow texture mapping multiple images and support for texture mapping PICT format images.     The colormap files such as “Rainbow.map” or “Random.map” used in many of the textures are just 256 ASCII triplets of RGB values.-- reid judd    ILLUMINATI@AppleLink.Apple.Com    2617 Sweetbriar Road    Durham, NC  27704
+
+   The RTrace Textures directory contains SFF files which each render a single
+sphere with a different texture on each one.  To get RTrace to render the textures,
+select the Options dialog: "Texture: Inside Objects Field" otherwise, you
+will just see a blank sphere.  
+
+   The .sff files in this directory were created from the .scn files using the 
+program “scntosff” on a Unix machine.   You can look at the .sff files with a 
+text editor to see how they were derived from the .scn files.
+
+   PPM is a simple image format used by the Unix program PBMPlus.  It is basically 
+a "raw" image format with an ASCII header and 24 bit RGB pixels with no packing or 
+run-length encoding.    Note that the image texture mapping files: image.sff 
+and image1.sff can only open the image map once in a session and it must be 
+in PPM format.  The next Mac-RTrace version will allow texture mapping 
+multiple images and support for texture mapping PICT format images.  
+
+   The colormap files such as “Rainbow.map” or “Random.map” used in many of 
+the textures are just 256 ASCII triplets of RGB values.
+
+-- reid judd
+
+    ILLUMINATI@AppleLink.Apple.Com
+    2617 Sweetbriar Road
+    Durham, NC  27704

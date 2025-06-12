@@ -1,1 +1,139 @@
-In Tech Note #68, "Searching All Directories on an HFS Volume", Apple gives a very simple algorithm for disk scanning.  There's a problem withthis algorithm, however, which I discovered while working on my anti-virus program Disinfectant.  I've come up with an improved algorithm that solves the problem.  The new algorithm will be part of Disinfectant version1.1, which we hope to release early next week.I've wanted to "publish" this new algorithm so that everyone canbenefit from it.  comp.sys.mac.programmer seems as good a place as any!Please understand that this problem is not a "bug" in Disinfectant 1.0,despite what MacWeek has to say :-)  The "bug" is shared by any programwhich uses the TN 68 algorithm to do disk scanning, which I suspect is allprograms which do disk scanning.The basic idea outlined in Tech Note #68 is to make indexed calls to thePBGetCatInfo file manager routine.  We'll use (abuse) the followingnotation for these calls:   r = PBGetCatInfo(d, i, o)   means "call PBGetCatInfo to get the i'th object o in directory d, withresult code r."  Note that r will be non-zero if there are no more objects in the directory.The algorithm in TN 68, expressed in pseudo-c and stripped of all thebells and whistles, is as follows:   i = 1   while (true) {      if (PBGetCatInfo(d, i, o)) break      if o is a subdirectory call ourselves recursively to scan o      if o is a file scan it      i++   }   This algorithm seems quite simple and fool-proof at first glance, but itonly works if you assume that no other users or tasks are creating ordeleting files or directories while the scan is in progress.As an extreme example, suppose we're scanning a server volume that containstwo files named A and B and a directory C that contains another 1000 files.Suppose that while we're scanning file B some other user deletes file A.Our index i in the above algorithm is 2 while we're scanning file B.  Whenwe finish scanning file B we increment i to 3 and loop, callingPBGetCatInfo to get the third object in the directory.  But there arenow only two objects in the directory (B and C), so the PBGetCatInfo callreturns a non-zero result code and we break out of the loop and quit.  Thenet result is that we end up scanning only 2 out of the 1002 total fileson the server!This problem is most serious when scanning server volumes, where the probability of other users creating or deleting objects is oftensignificant.  The problem can also occur on local volumes under MultiFinderif other tasks are creating or deleting objects during a scan, or if ourprogram itself creates or deletes objects on the volume during the scan.(Disinfectant 1.0 suffers from all three problems, but only the serverproblem is really serious.)My solution is quite simple.  I simply recall PBGetCatInfo immediatelyafter scanning an object to see if it has changed its position in thedirectory.  If the position has changed, I rescan the directory to attemptto locate the new position.The revised algorithm is:   i = 1   while (true) {            if (PBGetCatInfo(d, i, o)) break      if o is a subdirectory call ourselves recursively to scan o      if o is a file scan it      n = the name of object o      if (!PBGetCatInfo(d, i, o)) {  /* recall PBGetCatInfo */         m = the name of object o         if (n == m) {              /* usual case - no position change */            i++                     /* continue scan with next object */            continue         }      }      oldi = i                     /* save our old location */      i = 1                        /* start looking for our new location */      while (true) {         if (PBGetCatInfo(d, i, o)) {            i = oldi               /* just in case we've been deleted in            break                  /* the last few milliseconds */         }         m = the name of object o         if (n == m) {             /* found new location */            i++                    /* continue scan with next object */            break         }         i++      }   }There is still an unavoidable window in this algorithm where our PBGetCatInfo indices can get out of synch with reality, but it is nowonly milliseconds wide instead of seconds or even minutes wide.  So thenew algorithm is still not perfect, but it's orders of magnitude better thanthe old naive one.In my first attempt to design this new algorithm I tried to be fancy -I didn't rescan from the beginning of the directory, but I instead triedto scan backwards or forwards from the current position.  This techniquewas slightly faster, but assumed that the directory was maintained in alphabetical order using the RelString toolbox routine with caseSens=falseand diacSens=true.  This works OK on normal volumes, but with foreign filesystems and in other "non-standard" cases we can't assume that directoriesare in any particular order.  The final algorithm presented above doesnot depend on directories being maintained in any particular order.Please note that my new algorithm hasn't yet been put to the acid testof use by millions of real live users.  But I think it's reasonable andit has worked just fine in my tests.  Apple, of course, knows nothingabout all this.  If they did they'd probably tell me that it would breakin system 7.0 :-)  So use it at your own risk, etc., etc.It's interesting that this problem is not shared by UNIX and other operatingsystems.  In UNIX once an entry is made in a directory its position neverchanges.  When entries are deleted they're simply marked "unused".  Thesystem does not attempt to move all the following entries down to close upthe hole.  There is no attempt made to keep the directories in any particular order.The new algorithm is part of the reusable module scan.c, which is partof the "public" source code of Disinfectant.  Write to me at the addressbelow if you'd like a copy.Please excuse the length of this posting.  I thought this was a niftytrick, and there might be others who will find it useful.John NorstadAcademic Computing and Network ServicesNorthwestern UniversityBitnet:      jln@nuaccInternet:    jln@acns.nwu.eduAppleLink:   a0173CompuServe:  76666,573
+In Tech Note #68, "Searching All Directories on an HFS Volume", Apple 
+gives a very simple algorithm for disk scanning.  There's a problem with
+this algorithm, however, which I discovered while working on my anti-virus 
+program Disinfectant.  I've come up with an improved algorithm that 
+solves the problem.  The new algorithm will be part of Disinfectant version
+1.1, which we hope to release early next week.
+
+I've wanted to "publish" this new algorithm so that everyone can
+benefit from it.  comp.sys.mac.programmer seems as good a place as any!
+
+Please understand that this problem is not a "bug" in Disinfectant 1.0,
+despite what MacWeek has to say :-)  The "bug" is shared by any program
+which uses the TN 68 algorithm to do disk scanning, which I suspect is all
+programs which do disk scanning.
+
+The basic idea outlined in Tech Note #68 is to make indexed calls to the
+PBGetCatInfo file manager routine.  We'll use (abuse) the following
+notation for these calls:
+
+   r = PBGetCatInfo(d, i, o)
+   
+means "call PBGetCatInfo to get the i'th object o in directory d, with
+result code r."  Note that r will be non-zero if there are no more objects 
+in the directory.
+
+The algorithm in TN 68, expressed in pseudo-c and stripped of all the
+bells and whistles, is as follows:
+
+   i = 1
+   while (true) {
+      if (PBGetCatInfo(d, i, o)) break
+      if o is a subdirectory call ourselves recursively to scan o
+      if o is a file scan it
+      i++
+   }
+   
+This algorithm seems quite simple and fool-proof at first glance, but it
+only works if you assume that no other users or tasks are creating or
+deleting files or directories while the scan is in progress.
+
+As an extreme example, suppose we're scanning a server volume that contains
+two files named A and B and a directory C that contains another 1000 files.
+Suppose that while we're scanning file B some other user deletes file A.
+Our index i in the above algorithm is 2 while we're scanning file B.  When
+we finish scanning file B we increment i to 3 and loop, calling
+PBGetCatInfo to get the third object in the directory.  But there are
+now only two objects in the directory (B and C), so the PBGetCatInfo call
+returns a non-zero result code and we break out of the loop and quit.  The
+net result is that we end up scanning only 2 out of the 1002 total files
+on the server!
+
+This problem is most serious when scanning server volumes, where the 
+probability of other users creating or deleting objects is often
+significant.  The problem can also occur on local volumes under MultiFinder
+if other tasks are creating or deleting objects during a scan, or if our
+program itself creates or deletes objects on the volume during the scan.
+(Disinfectant 1.0 suffers from all three problems, but only the server
+problem is really serious.)
+
+My solution is quite simple.  I simply recall PBGetCatInfo immediately
+after scanning an object to see if it has changed its position in the
+directory.  If the position has changed, I rescan the directory to attempt
+to locate the new position.
+
+The revised algorithm is:
+
+   i = 1
+   while (true) {      
+      if (PBGetCatInfo(d, i, o)) break
+      if o is a subdirectory call ourselves recursively to scan o
+      if o is a file scan it
+      n = the name of object o
+      if (!PBGetCatInfo(d, i, o)) {  /* recall PBGetCatInfo */
+         m = the name of object o
+         if (n == m) {              /* usual case - no position change */
+            i++                     /* continue scan with next object */
+            continue
+         }
+      }
+      oldi = i                     /* save our old location */
+      i = 1                        /* start looking for our new location */
+      while (true) {
+         if (PBGetCatInfo(d, i, o)) {
+            i = oldi               /* just in case we've been deleted in
+            break                  /* the last few milliseconds */
+         }
+         m = the name of object o
+         if (n == m) {             /* found new location */
+            i++                    /* continue scan with next object */
+            break
+         }
+         i++
+      }
+   }
+
+There is still an unavoidable window in this algorithm where our 
+PBGetCatInfo indices can get out of synch with reality, but it is now
+only milliseconds wide instead of seconds or even minutes wide.  So the
+new algorithm is still not perfect, but it's orders of magnitude better than
+the old naive one.
+
+In my first attempt to design this new algorithm I tried to be fancy -
+I didn't rescan from the beginning of the directory, but I instead tried
+to scan backwards or forwards from the current position.  This technique
+was slightly faster, but assumed that the directory was maintained in 
+alphabetical order using the RelString toolbox routine with caseSens=false
+and diacSens=true.  This works OK on normal volumes, but with foreign file
+systems and in other "non-standard" cases we can't assume that directories
+are in any particular order.  The final algorithm presented above does
+not depend on directories being maintained in any particular order.
+
+Please note that my new algorithm hasn't yet been put to the acid test
+of use by millions of real live users.  But I think it's reasonable and
+it has worked just fine in my tests.  Apple, of course, knows nothing
+about all this.  If they did they'd probably tell me that it would break
+in system 7.0 :-)  So use it at your own risk, etc., etc.
+
+It's interesting that this problem is not shared by UNIX and other operating
+systems.  In UNIX once an entry is made in a directory its position never
+changes.  When entries are deleted they're simply marked "unused".  The
+system does not attempt to move all the following entries down to close up
+the hole.  There is no attempt made to keep the directories in any 
+particular order.
+
+The new algorithm is part of the reusable module scan.c, which is part
+of the "public" source code of Disinfectant.  Write to me at the address
+below if you'd like a copy.
+
+Please excuse the length of this posting.  I thought this was a nifty
+trick, and there might be others who will find it useful.
+
+John Norstad
+Academic Computing and Network Services
+Northwestern University
+
+Bitnet:      jln@nuacc
+Internet:    jln@acns.nwu.edu
+AppleLink:   a0173
+CompuServe:  76666,573

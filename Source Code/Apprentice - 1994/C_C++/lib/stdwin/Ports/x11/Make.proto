@@ -1,1 +1,32 @@
-## Makefile prototype for X11 port#SRCS=		\		$(X11)/caret.c \		$(X11)/cursor.c \		$(X11)/cutbuffer.c \		$(X11)/dialog.c \		$(X11)/draw.c \		$(X11)/error.c \		$(X11)/event.c \		$(X11)/font.c \		$(X11)/general.c \		$(X11)/llevent.c \		$(X11)/menu.c \		$(X11)/selection.c \		$(X11)/scroll.c \		$(X11)/timer.c \		$(X11)/window.c \		$(TOOLS)/strdup.c \		$(GEN)/waskfile.c \		$(GEN)/wperror.c \		$(GEN)/wsetclip.c \		$(GEN)/wtextbreak.c \		$(TEXTEDIT_PACK) \		$(VT_PACK)all:		lib.a_bootstrap:	@putlibmf lib.a $(SRCS)
+#
+# Makefile prototype for X11 port
+#
+
+SRCS=		\
+		$(X11)/caret.c \
+		$(X11)/cursor.c \
+		$(X11)/cutbuffer.c \
+		$(X11)/dialog.c \
+		$(X11)/draw.c \
+		$(X11)/error.c \
+		$(X11)/event.c \
+		$(X11)/font.c \
+		$(X11)/general.c \
+		$(X11)/llevent.c \
+		$(X11)/menu.c \
+		$(X11)/selection.c \
+		$(X11)/scroll.c \
+		$(X11)/timer.c \
+		$(X11)/window.c \
+		$(TOOLS)/strdup.c \
+		$(GEN)/waskfile.c \
+		$(GEN)/wperror.c \
+		$(GEN)/wsetclip.c \
+		$(GEN)/wtextbreak.c \
+		$(TEXTEDIT_PACK) \
+		$(VT_PACK)
+
+all:		lib.a
+
+_bootstrap:
+	@putlibmf lib.a $(SRCS)

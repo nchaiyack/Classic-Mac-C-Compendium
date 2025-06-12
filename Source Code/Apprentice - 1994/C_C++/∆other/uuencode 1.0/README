@@ -1,1 +1,17 @@
-This is the GNU release of uuencode and uudecode.These programs are used to encode binary data in a printable ASCIIformat which may be safely sent through e-mail or other communicationchannel which does not support the transmission of eight bit data.This code is based closely on the BSD NET/2 distribution.  Therefore,it is covered by the BSD license, rather than the GPL.  See theindividual files for the copying conditions.There is currently no texinfo documentation.  There are a couple ofman pages based on the Berkeley sources.Please report any bugs to bug-gnu-utils@prep.ai.mit.edu.Ian Lance Taylorian@airs.com
+This is the GNU release of uuencode and uudecode.
+
+These programs are used to encode binary data in a printable ASCII
+format which may be safely sent through e-mail or other communication
+channel which does not support the transmission of eight bit data.
+
+This code is based closely on the BSD NET/2 distribution.  Therefore,
+it is covered by the BSD license, rather than the GPL.  See the
+individual files for the copying conditions.
+
+There is currently no texinfo documentation.  There are a couple of
+man pages based on the Berkeley sources.
+
+Please report any bugs to bug-gnu-utils@prep.ai.mit.edu.
+
+Ian Lance Taylor
+ian@airs.com

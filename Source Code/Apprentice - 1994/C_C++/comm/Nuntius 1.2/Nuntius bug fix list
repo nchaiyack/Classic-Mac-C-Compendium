@@ -1,1 +1,367 @@
-______________________________________________________________NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTEPlease: Do not send me personal letters with questions, etc.There are two mailing lists about Nuntius.  NUNTIUS-L is forquestions, answers and general discussion.  NUNTIUS-ANNOUNCE-Lis a moderated, low traffic list for announcements ONLY (suchas for new versions, bugs, etc.).  All messages to theannouncement list are cross-posted to the discussion list.To subscribe to the lists, send the following in the body of amessage to "listserv@cornell.edu":SUBSCRIBE NUNTIUS-L your real nameorSUBSCRIBE NUNTIUS-ANNOUNCE-L your real namewhere "your real name"  is something like "Hans Jensen".Any questions about list subscriptions should be sent to theNuntius mailing list administrator, Aaron Freimark(aaron@med.cornell.edu).______________________________________________________________Know bugs in latest version of Nuntius      Nuntius can't find it's preferences file.      Workaround: run Nuntius on another mac, and copy the      "Nuntius private files" folder      (located in the preferences folder in the system folder)      to your mac.      This bug is sometimes easy to reproduce and sometimes not.      Sometimes the "Quit" menu item is grayed out. I would like      to get feedback on this, as I only have experienced it once      Hitting the space key several times in a row while displaying      the text of articles may freeze the mac.______________________________________________________________Bugs fixed and improvements.1.2 final.  Removed extra "TCHR" resource (backup of "Latin1/DK-ASCII")  Temporary preference files are now deleted.  Submenu of grouplist documents should not be empty anymore.  Save article uses NewsServer translate tables.1.1.4b2:  X-Date header is now 1994 instead of 94.  X-UserAgent changed to X-Newsreader.  Bug in (scan subject of) extracting binaries fixed.1.1.4b1  Thread Unit rewritten. Has now support for 3 implementations of threads:    1) Apple's Thread Manager extension    2) My own setjmp/longjmp implementation.    3) My own copy stacks into handle (the old  "d e v e l o p"  type).    #3 is always used on MacPlus, as they have a bug in the ResourceMgr        (Apples ThreadMgr are not compatible with MacPlus either).    #1 is used if present, otherwise #2  -  Better MacTCP code: issues read only when something *is* received.  Reduced number of segments -> should load a little faster, or just for fun.  Better handling of windows menu.  Faster (network) read of preferences files.  All windows are now edited in AdLib, making it easier for other    appls to read the 'View' format.  The new-user is now able to edit server-prefs before Nuntius tries to    do anything with the server.  NewOptions: authentication when openening a NNTP connection, and not    postponed until the server asks for it.  Able to close list of threads window, while extracting binaries.  Alert if cancelling while Nuntius is posting an article, as it may    be posted anyway. (No support in NNTP for aborting an operation).  Better mapping of chars in US/DK-ASCII tables (quotes, accents, etc).  If the specified translatetable is not available, Nuntius will just    post an alert without quitting.  ArticleWindow-update bug fixed.  NewFeature: ROT13 implemented.  NewOption: one can alter the rate at which Nuntius checks for new articles  If some of the saved articles is not available, Nuntius will tell you, and    save the available articles.  Appends UNIX mailbox "From" header in Notes files: can be browsed by Eudora.   Fix for crash if local prefs was denied by the "Eudora document Trick".  Warning if running an old pre-final version (I just got tired of getting    too many bug reports for old versions). Tells to upgrade.  Checks the Preferences folder for changes much more seldom. Better GUI    response when the folder is located at a server.  NewFeature: can start check for new articles manually.  NewFeature: assigns commandkeys 1-9 to items in the grouplist submenu.-  -  The code doing all the "post article/followup" windows has been reworked,    but should be rewritten from scratch. Until then, it may be unstable.1.1.3  "Talk with system adm" bug fixed.  New splash screen with the real version number (read from vers resource).1.1.2 final:      No more experimental.      Reworked some code to avoid freeze crashes.      It will not switch to ISO-2022 if you have only installed one script system.        (To avoid displaying some articles in Chicago).      All filemgr calls are now async and buffered:         (AppleShare users _will_ notice it)      Fixed bug in checking for blocking local prefs: if the preferences folder        contains an alias to the real "Nuntius personal files", Nuntius will not        abort anymore but silently resolve the alias.1.1.1d27:      *** Still experimental ***      Support for ISO-2022 indication, but does not remember the indication      across lines. Posted articles does always end in Roman state.      (For US/European people: is able to encode Katakana/Kanji, but not flawless).      You have to format the articles with newlines yourself, Nuntius doesn't      try do to anything like that at all when it uses this encoding,       it doesn't even look for spaces. The character set translate table is not       used when Nuntius detects articles posted with ISO-2022 (or posts itself).            Look in the Prefs/Editor menu for using ISO-2022 when posting.      Thanks to Shigeru Kanemoto for the ISO 2022 conversion code.      1.1.1d26:      Some low-level code for memory handling have been improved. Rebuild the      list of all groups is 5 times as fast on my mac. (no promise for your mac).      This version may be unstable as it is not tested much, so       *** please don't distribute it to the rest of the world ***      I'll let you know when I think I it's stable.      As I don't need the same bug reported by 400 people, only 40 :-)1.1.1d25:      Option for specifying max number of articles in group database.      !!! This should reduce the needed amount of memory needed !!!      Clicking outside text in grouplists, will deselect. (I listen, I listen)      Found & fixed bug causing "In TPeriodicThread::GoSleep, fThreadCmd was not gone".1.1.1d24:      Fixed charset translation in copy/reply etc. (double bug actually)1.1.1d23:      Rewrote code to close MacTCP connections if Nuntius is aborted (cmd-opt-esc),        or a fatal error occurs.      Added Transparent charset, look at Prefs/NewsServer.      Lookups the servers IP at launch. Performs basic tests if it changes.1.1.1d22:      Tried to fix "1 in list of USED TProgress", but have disabled the report        as the error doesn't matter.      When trying to display unavailable articles, their status are set to read.      If all text in an article is selected, it will be deselected if clicking      wihtout modifierkeys.1.1.1d21:      Fixed a bug in choosing files: didn't show anything resonable.      Fixed some bugs in the new uudecoder.1.1.1d20:      Fix for "TObjectCache::Free(), Has 1 object in list of USED TProgress"        - but untested as I can't reproduce it.      Kills MacTCP stuff in Nuntius heap if forced quit1.1.1d19:      If the shiftkey is down, Nuntius will not decode the BinHex        (just save it).       More classes is pointer based.1.1.1d18:      BinHex decoder implemented. Will decode the binhex, not just save      the text.      The same appl for extracting the saved BinHex is used for       the decoded binhex.      1.1.1d17:      Added new news server translate tables:        "Latin1/US-ASCII (In/Out)"   (default for new users)        "Latin1/DK-ASCII (In/Out)"   (for Danish users)      Translates subject & from headers too        balloon help in list of all groups too      Fixed bug in translate of 8 bits chars when posting article      Better at reporting fatal errors to me      Fixed "In TPeriodicThread::GoSleep, fThreadCmd was not gone"      Fixed "In TGroupListDoc::Free, had fPeriodicCheck"      1.1.1d16:      Fixed bug in finding database file for groups with long names (>29 chars)        this caused the mac to hang when Nuntius tried to open such a group        (bug introduced in d14, and did trash a lot of disks, sorry)      Fixed bug in errormessages.      Expires threads when all of the articles have been expired at the server.        - or no new articles have been added the last 3 days and the first          article have been expired at the server1.1.1d15:      Fixed bug in killing processes for periodic task like updating groups        (fixes "In TPeriodicThread::GoSleep, fThread was not killed")      Reserved more memory for low memory situations      Stops updating processes etc when in low memory situtation, but        user can still abort updating etc.      Fixed bug in disposing thread when it was not started        (eg not enough memory to create it). This caused some        "TThread::Free: 'this' is not gCurThread"      Fixed bug in asking for password (cleared local copy unless it was         stored in the prefs)1.1.1d14:      Generates TeachText with description of fatal bugs instead        of asking the user to take a snapshot. Reports available memory too now.      Fixed bug in killing processes when quitting Nuntius      Fixed bug in forking processes      Fixed bug in killing a process (showed up when killing >1 processes)      Quote char is in STR# (actually template)1.1.1d13:      Have written my own process manager (instead of using the        library from "d e v e l o p" #6). This should fix the        fatal errors "returned from EndThread(devThread)".      Recognizes "too many users" strings for nntp error 400      Expires threads only when the first article is not available at the        server, and no new articles have been added the last 3 days      Other fixes (lost this file due to bug in MPW script...)1.1.1d12      Max articles in XHDR command batches is preference        (utilize news server disk cache feature)      Reserves much more memory for threads: should avoid the fatal bug:        "In TThread::Free, returned from EndThread(devThread);"      Able to translate characters in articles:  Prefs/NewsServer 1.1.1d11:      Remembers {which groups that is updated} between sessions      Able to check/uncheck "Launch mailer with document" in Prefs/Mail dialog1.1.1d10      Tries only to save printinfo in group lists if it exist      Close window-with-new-groups crash fixed      Checks for new groups first, then updates database      Long window names are smTruncMiddle in window menu1.1.1d9      Quit-group-while-update fatal freeze bug fixed.        This bug sometimes got Nuntius to complain about fatal error        "TObjectCache::Free(), Has 1 objects in list of in-use PRealNntp"      Yet another "Mark as" bug fixed (will this ever end?)      If the group is opened from the ListOfAllGroups, and the         public/private files does not exist, they will not be created/saved      Max size of article cache *before* fecthing new articles is now        a preference (menu Prefs/Misc)      Able to handle bogous "ready" msg from ANU news server when your        mac has no dot name      Nuntius wont open 'PREF' files created by other appls.      Progress bar does not work too fast/much when updating a group      Macs without dotnames can post again, but path header etc are omitted.      Long pathnames are smTruncMiddle in preferences dialogs      You can choose the desktop folder when being asked for a folder      Save article always saves the headers.1.1.1d8      Another "Mark as xxx" bug fixed and even better (faster) now.      Can update database in background.      You can always quit if you hold down the control key while        clicking in the menubar (hack due to bug).      Show xxx threads _preference_ is separated from the        show xxx threads _command_      Able to use port other than 119: write number after newserver name        like telnet      Can cancel posted articles      Able to auto check for new groups at startup      "Check for new groups" menu item changes to "Rebuild list of all groups"        if option key is held down      Upgraded to MacApp 3.0.1 from 3.0.0      Will not post article if not edited      Bug in getting own dotname fixed (showed up at random)1.1.1d7      Small arrows works again (d6 recompile bug)      Fetches headers in small batches to utilize servers diskcache      Date header in saved articles too1.1.1d6      You can choose your Eudora Settings file as signature file      Expand xxx articles _preference_ is separated from the expand xxx      articles _command_      Can extract uuencoded binaries without starting separator      1.1.1d5      Better errormessage when Nuntius can't get its own dot-name      Better to scan subjects for uuencode binaries:         can skip past resolution codes      Better detection of uuencoded blocks: first line must start with 'M'      Shows Date header too in articles      Can open preferences dialogs even if aliases cannot be resolved1.1.1d4      Fixed bug in optimized "Mark selection as..." when all      threads are selected1.1.1d3      Mark as xxx is much faster when all threads are selected      Able to create message-id and date headers        Currently created as X-Date and X-Message-ID      Bug in getting own dotname fixed1.1.1d2      Headergeneration much more flexible,         look at STR# named kPostArticleHeaderStrings      Better at sorting multipart binaries:        '|', ':' and '-' are separators too now        bad subjects are ignored        subjects starting with "Re:" are ignored      Saving articles: long/short header and separator is added      New feature: can save selection in note file 1.1.1d1      Remembers editor, extractor and mailer by alias instead of signature.      Needed as the desktop manager can contain references to non-existing        appls and will not work with appls on non-mounted volumes.      Can launch application with "minimum memory", instead of requiring        the normal partition.      Error message is now corrected.      "Path:" header is in STR#, specifies user name too for         maximum compability with old news server software1.1 final        Doesn't forget to ask "save changes?" when closing _new_ group lists.				Closing article window while it's fetching the articles				no longer crash1.1b3: Bug fix release:        Bug in list of articles when some of the articles are too old        to be kept at the server (displayed with "n.a." is list of threads).        Bug in error message when testing server for XHDR command is fixed        (reported as "is missing basic groups").1.1b2: Bug fix release:        Launch-Nuntius-by-double-click-on-a-group-list bug is fixed1.1b1: Bug fix release.        More MacApp3/d e v e l o p   bugs fixed        Better to remember window positions for group lists.1.1a5: Major bug fix release:        many MacApp 3.0 / d e v e l o p  threads incompability        problems fixed        Prints always only one page horiz.1.1a4  New features version:        support for authentication1.1a3: New features version:        triangles in the list of articles        marking of articles        saves window positions        update of list of all groups        change to MacApp 3.0 final, caused a lot of         problems and crash bugs.1.1a2: first major release of version 1.1Fixes earlier than 1.1a2 have not been recorded, sorry.
+______________________________________________________________
+
+NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE
+
+Please: Do not send me personal letters with questions, etc.
+
+There are two mailing lists about Nuntius.  NUNTIUS-L is for
+questions, answers and general discussion.  NUNTIUS-ANNOUNCE-L
+is a moderated, low traffic list for announcements ONLY (such
+as for new versions, bugs, etc.).  All messages to the
+announcement list are cross-posted to the discussion list.
+
+To subscribe to the lists, send the following in the body of a
+message to "listserv@cornell.edu":
+
+SUBSCRIBE NUNTIUS-L your real name
+
+or
+
+SUBSCRIBE NUNTIUS-ANNOUNCE-L your real name
+
+where "your real name"  is something like "Hans Jensen".
+
+Any questions about list subscriptions should be sent to the
+Nuntius mailing list administrator, Aaron Freimark
+(aaron@med.cornell.edu).
+
+______________________________________________________________
+
+
+Know bugs in latest version of Nuntius
+      Nuntius can't find it's preferences file.
+      Workaround: run Nuntius on another mac, and copy the
+      "Nuntius private files" folder
+      (located in the preferences folder in the system folder)
+      to your mac.
+      This bug is sometimes easy to reproduce and sometimes not.
+
+      Sometimes the "Quit" menu item is grayed out. I would like
+      to get feedback on this, as I only have experienced it once
+
+      Hitting the space key several times in a row while displaying
+      the text of articles may freeze the mac.
+
+______________________________________________________________
+
+Bugs fixed and improvements.
+
+1.2 final.
+  Removed extra "TCHR" resource (backup of "Latin1/DK-ASCII")
+  Temporary preference files are now deleted.
+  Submenu of grouplist documents should not be empty anymore.
+  Save article uses NewsServer translate tables.
+
+1.1.4b2:
+  X-Date header is now 1994 instead of 94.
+  X-UserAgent changed to X-Newsreader.
+  Bug in (scan subject of) extracting binaries fixed.
+
+1.1.4b1
+  Thread Unit rewritten. Has now support for 3 implementations of threads:
+    1) Apple's Thread Manager extension
+    2) My own setjmp/longjmp implementation.
+    3) My own copy stacks into handle (the old  "d e v e l o p"  type).
+    #3 is always used on MacPlus, as they have a bug in the ResourceMgr
+        (Apples ThreadMgr are not compatible with MacPlus either).
+    #1 is used if present, otherwise #2
+  -
+  Better MacTCP code: issues read only when something *is* received.
+  Reduced number of segments -> should load a little faster, or just for fun.
+  Better handling of windows menu.
+  Faster (network) read of preferences files.
+  All windows are now edited in AdLib, making it easier for other
+    appls to read the 'View' format.
+  The new-user is now able to edit server-prefs before Nuntius tries to
+    do anything with the server.
+  NewOptions: authentication when openening a NNTP connection, and not
+    postponed until the server asks for it.
+  Able to close list of threads window, while extracting binaries.
+  Alert if cancelling while Nuntius is posting an article, as it may
+    be posted anyway. (No support in NNTP for aborting an operation).
+  Better mapping of chars in US/DK-ASCII tables (quotes, accents, etc).
+  If the specified translatetable is not available, Nuntius will just
+    post an alert without quitting.
+  ArticleWindow-update bug fixed.
+  NewFeature: ROT13 implemented.
+  NewOption: one can alter the rate at which Nuntius checks for new articles
+  If some of the saved articles is not available, Nuntius will tell you, and
+    save the available articles.
+  Appends UNIX mailbox "From" header in Notes files: can be browsed by Eudora. 
+  Fix for crash if local prefs was denied by the "Eudora document Trick".
+  Warning if running an old pre-final version (I just got tired of getting 
+   too many bug reports for old versions). Tells to upgrade.
+  Checks the Preferences folder for changes much more seldom. Better GUI
+    response when the folder is located at a server.
+  NewFeature: can start check for new articles manually.
+  NewFeature: assigns commandkeys 1-9 to items in the grouplist submenu.-
+  -
+  The code doing all the "post article/followup" windows has been reworked,
+    but should be rewritten from scratch. Until then, it may be unstable.
+
+1.1.3
+  "Talk with system adm" bug fixed.
+  New splash screen with the real version number (read from vers resource).
+
+1.1.2 final:
+      No more experimental.
+      Reworked some code to avoid freeze crashes.
+      It will not switch to ISO-2022 if you have only installed one script system.
+        (To avoid displaying some articles in Chicago).
+      All filemgr calls are now async and buffered: 
+        (AppleShare users _will_ notice it)
+      Fixed bug in checking for blocking local prefs: if the preferences folder
+        contains an alias to the real "Nuntius personal files", Nuntius will not
+        abort anymore but silently resolve the alias.
+
+1.1.1d27:
+      *** Still experimental ***
+      Support for ISO-2022 indication, but does not remember the indication
+      across lines. Posted articles does always end in Roman state.
+      (For US/European people: is able to encode Katakana/Kanji, but not flawless).
+      You have to format the articles with newlines yourself, Nuntius doesn't
+      try do to anything like that at all when it uses this encoding, 
+      it doesn't even look for spaces. The character set translate table is not 
+      used when Nuntius detects articles posted with ISO-2022 (or posts itself).      
+      Look in the Prefs/Editor menu for using ISO-2022 when posting.
+      Thanks to Shigeru Kanemoto for the ISO 2022 conversion code.
+      
+1.1.1d26:
+      Some low-level code for memory handling have been improved. Rebuild the
+      list of all groups is 5 times as fast on my mac. (no promise for your mac).
+      This version may be unstable as it is not tested much, so 
+      *** please don't distribute it to the rest of the world ***
+      I'll let you know when I think I it's stable.
+      As I don't need the same bug reported by 400 people, only 40 :-)
+
+1.1.1d25:
+      Option for specifying max number of articles in group database.
+      !!! This should reduce the needed amount of memory needed !!!
+      Clicking outside text in grouplists, will deselect. (I listen, I listen)
+      Found & fixed bug causing "In TPeriodicThread::GoSleep, fThreadCmd was not gone".
+
+
+1.1.1d24:
+      Fixed charset translation in copy/reply etc. (double bug actually)
+
+1.1.1d23:
+      Rewrote code to close MacTCP connections if Nuntius is aborted (cmd-opt-esc),
+        or a fatal error occurs.
+      Added Transparent charset, look at Prefs/NewsServer.
+      Lookups the servers IP at launch. Performs basic tests if it changes.
+
+1.1.1d22:
+      Tried to fix "1 in list of USED TProgress", but have disabled the report
+        as the error doesn't matter.
+      When trying to display unavailable articles, their status are set to read.
+      If all text in an article is selected, it will be deselected if clicking
+      wihtout modifierkeys.
+
+1.1.1d21:
+      Fixed a bug in choosing files: didn't show anything resonable.
+      Fixed some bugs in the new uudecoder.
+
+1.1.1d20:
+      Fix for "TObjectCache::Free(), Has 1 object in list of USED TProgress"
+        - but untested as I can't reproduce it.
+      Kills MacTCP stuff in Nuntius heap if forced quit
+
+1.1.1d19:
+      If the shiftkey is down, Nuntius will not decode the BinHex
+        (just save it). 
+      More classes is pointer based.
+
+1.1.1d18:
+      BinHex decoder implemented. Will decode the binhex, not just save
+      the text.
+      The same appl for extracting the saved BinHex is used for 
+      the decoded binhex.
+      
+1.1.1d17:
+      Added new news server translate tables:
+        "Latin1/US-ASCII (In/Out)"   (default for new users)
+        "Latin1/DK-ASCII (In/Out)"   (for Danish users)
+      Translates subject & from headers too
+        balloon help in list of all groups too
+      Fixed bug in translate of 8 bits chars when posting article
+      Better at reporting fatal errors to me
+      Fixed "In TPeriodicThread::GoSleep, fThreadCmd was not gone"
+      Fixed "In TGroupListDoc::Free, had fPeriodicCheck"
+      
+1.1.1d16:
+      Fixed bug in finding database file for groups with long names (>29 chars)
+        this caused the mac to hang when Nuntius tried to open such a group
+        (bug introduced in d14, and did trash a lot of disks, sorry)
+      Fixed bug in errormessages.
+      Expires threads when all of the articles have been expired at the server.
+        - or no new articles have been added the last 3 days and the first
+          article have been expired at the server
+
+1.1.1d15:
+      Fixed bug in killing processes for periodic task like updating groups
+        (fixes "In TPeriodicThread::GoSleep, fThread was not killed")
+      Reserved more memory for low memory situations
+      Stops updating processes etc when in low memory situtation, but
+        user can still abort updating etc.
+      Fixed bug in disposing thread when it was not started
+        (eg not enough memory to create it). This caused some
+        "TThread::Free: 'this' is not gCurThread"
+      Fixed bug in asking for password (cleared local copy unless it was 
+        stored in the prefs)
+
+1.1.1d14:
+      Generates TeachText with description of fatal bugs instead
+        of asking the user to take a snapshot. Reports available memory too now.
+      Fixed bug in killing processes when quitting Nuntius
+      Fixed bug in forking processes
+      Fixed bug in killing a process (showed up when killing >1 processes)
+      Quote char is in STR# (actually template)
+
+1.1.1d13:
+      Have written my own process manager (instead of using the
+        library from "d e v e l o p" #6). This should fix the
+        fatal errors "returned from EndThread(devThread)".
+      Recognizes "too many users" strings for nntp error 400
+      Expires threads only when the first article is not available at the
+        server, and no new articles have been added the last 3 days
+      Other fixes (lost this file due to bug in MPW script...)
+
+1.1.1d12
+      Max articles in XHDR command batches is preference
+        (utilize news server disk cache feature)
+      Reserves much more memory for threads: should avoid the fatal bug:
+        "In TThread::Free, returned from EndThread(devThread);"
+      Able to translate characters in articles:  Prefs/NewsServer
+ 
+1.1.1d11:
+      Remembers {which groups that is updated} between sessions
+      Able to check/uncheck "Launch mailer with document" in Prefs/Mail dialog
+
+1.1.1d10
+      Tries only to save printinfo in group lists if it exist
+      Close window-with-new-groups crash fixed
+      Checks for new groups first, then updates database
+      Long window names are smTruncMiddle in window menu
+
+1.1.1d9
+      Quit-group-while-update fatal freeze bug fixed.
+        This bug sometimes got Nuntius to complain about fatal error
+        "TObjectCache::Free(), Has 1 objects in list of in-use PRealNntp"
+      Yet another "Mark as" bug fixed (will this ever end?)
+      If the group is opened from the ListOfAllGroups, and the 
+        public/private files does not exist, they will not be created/saved
+      Max size of article cache *before* fecthing new articles is now
+        a preference (menu Prefs/Misc)
+      Able to handle bogous "ready" msg from ANU news server when your
+        mac has no dot name
+      Nuntius wont open 'PREF' files created by other appls.
+      Progress bar does not work too fast/much when updating a group
+      Macs without dotnames can post again, but path header etc are omitted.
+      Long pathnames are smTruncMiddle in preferences dialogs
+      You can choose the desktop folder when being asked for a folder
+      Save article always saves the headers.
+
+1.1.1d8
+      Another "Mark as xxx" bug fixed and even better (faster) now.
+      Can update database in background.
+      You can always quit if you hold down the control key while
+        clicking in the menubar (hack due to bug).
+      Show xxx threads _preference_ is separated from the
+        show xxx threads _command_
+      Able to use port other than 119: write number after newserver name
+        like telnet
+      Can cancel posted articles
+      Able to auto check for new groups at startup
+      "Check for new groups" menu item changes to "Rebuild list of all groups"
+        if option key is held down
+      Upgraded to MacApp 3.0.1 from 3.0.0
+      Will not post article if not edited
+      Bug in getting own dotname fixed (showed up at random)
+
+1.1.1d7
+      Small arrows works again (d6 recompile bug)
+      Fetches headers in small batches to utilize servers diskcache
+      Date header in saved articles too
+
+1.1.1d6
+      You can choose your Eudora Settings file as signature file
+      Expand xxx articles _preference_ is separated from the expand xxx
+      articles _command_
+      Can extract uuencoded binaries without starting separator
+      
+1.1.1d5
+      Better errormessage when Nuntius can't get its own dot-name
+      Better to scan subjects for uuencode binaries: 
+        can skip past resolution codes
+      Better detection of uuencoded blocks: first line must start with 'M'
+      Shows Date header too in articles
+      Can open preferences dialogs even if aliases cannot be resolved
+
+1.1.1d4
+      Fixed bug in optimized "Mark selection as..." when all
+      threads are selected
+
+1.1.1d3
+      Mark as xxx is much faster when all threads are selected
+      Able to create message-id and date headers
+        Currently created as X-Date and X-Message-ID
+      Bug in getting own dotname fixed
+
+1.1.1d2
+      Headergeneration much more flexible, 
+        look at STR# named kPostArticleHeaderStrings
+      Better at sorting multipart binaries:
+        '|', ':' and '-' are separators too now
+        bad subjects are ignored
+        subjects starting with "Re:" are ignored
+      Saving articles: long/short header and separator is added
+      New feature: can save selection in note file 
+
+1.1.1d1
+      Remembers editor, extractor and mailer by alias instead of signature.
+      Needed as the desktop manager can contain references to non-existing
+        appls and will not work with appls on non-mounted volumes.
+      Can launch application with "minimum memory", instead of requiring
+        the normal partition.
+      Error message is now corrected.
+      "Path:" header is in STR#, specifies user name too for 
+        maximum compability with old news server software
+
+
+1.1 final
+        Doesn't forget to ask "save changes?" when closing _new_ group lists.
+				Closing article window while it's fetching the articles
+				no longer crash
+
+1.1b3: Bug fix release:
+        Bug in list of articles when some of the articles are too old
+        to be kept at the server (displayed with "n.a." is list of threads).
+        Bug in error message when testing server for XHDR command is fixed
+        (reported as "is missing basic groups").
+
+1.1b2: Bug fix release:
+        Launch-Nuntius-by-double-click-on-a-group-list bug is fixed
+
+1.1b1: Bug fix release.
+        More MacApp3/d e v e l o p   bugs fixed
+        Better to remember window positions for group lists.
+
+1.1a5: Major bug fix release:
+        many MacApp 3.0 / d e v e l o p  threads incompability
+        problems fixed
+        Prints always only one page horiz.
+
+1.1a4  New features version:
+        support for authentication
+
+1.1a3: New features version:
+        triangles in the list of articles
+        marking of articles
+        saves window positions
+        update of list of all groups
+        change to MacApp 3.0 final, caused a lot of 
+        problems and crash bugs.
+
+1.1a2: first major release of version 1.1
+
+Fixes earlier than 1.1a2 have not been recorded, sorry.

@@ -1,1 +1,15 @@
-Compile gzip for MPW is one of the last things in my 'to do' list(because I really don't need it too much)If you want to try it using this sources, drop me a note;perhaps I could help you.I think it can't be very hard; perhaps the main problem would beto compile the posix library (I havent tried, but it should be easy).Probably the best choice is start from a clean GNU's gzip sources;compare them with MacGzip sources and make the minimal changes.In MacGzip code, there are changes in error handling and in progressbar wich are, surely, unnecesary in an MPW tool.	good luck
+Compile gzip for MPW is one of the last things in my 'to do' list
+(because I really don't need it too much)
+
+If you want to try it using this sources, drop me a note;
+perhaps I could help you.
+
+I think it can't be very hard; perhaps the main problem would be
+to compile the posix library (I havent tried, but it should be easy).
+
+Probably the best choice is start from a clean GNU's gzip sources;
+compare them with MacGzip sources and make the minimal changes.
+In MacGzip code, there are changes in error handling and in progress
+bar wich are, surely, unnecesary in an MPW tool.
+
+	good luck

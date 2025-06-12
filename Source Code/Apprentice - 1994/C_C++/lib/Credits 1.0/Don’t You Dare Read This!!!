@@ -1,1 +1,71 @@
-Thank you for trying out Credits, by Bill Hayden and Nikol Software!This version of Credits is a library for use with THINK C or Pascal which gives you the ability to display a custom scrolling About box with a single line of code.  This is the entire main() from the CreditTest.π sample application:main (){	  ToolBoxInit(); 	if (!ShowCredits(128, 1973, 1, kNone, 2, TRUE))		   SysBeep(10);}As you can see, a single call to  ShowCredits() does all the work.  After dropping the Credits library into your project, you have only to let your creative juices run wild and create a snazzy dialog and PICT to scroll with your resource editor.  You do the fun work, ShowCredits handles every programmer’s nightmare: CopyBits!(FYI: deatiled information about the parameters are contained in the file Credits.h)For simple About boxes in your non-distributed applications, the Credits library may be all that you need.  But for more complex needs, the source code can be an invaluable tool.  In addition, if you plan to distribute the software, you will need to obtain a distribution license from Nikol Software - this is included when buying the full version.  The full version is $12, and our address is located at the bottom of this file.Here is what the full version will give you:•  Source code for the Credits library itself•  Source code for the Credits sample application			This code, as you can see if you run the app, has been adapted for non-modal use. 			It even runs in the background!  Non-modal use is not included in the free library.			Neither is pausing/unpausing.  In addition, with the source code, you could create			your own on-the-fly pictures to scroll, perhaps using TextBox, which could save			you much space.  Internal updates can also be handled, if you decide to use a			moveable dialog.•  Commercial distribution license•  More code snippets from other Nikol Software products			Included in these snippets are Speech and Voice Dialog Dismiss routines, as can be			seen in the upcoming SpeechMail, Scrabble, and Developer Utilities applications			from Nikol Software.  You won’t believe how easy it is to incorporate them into			your software!•  Samples of other Nikol Software products, including the latest up-to-the-week		betas of our upcoming releases.  You WILL be impressed!The following is a short list of Nikol Software’s upcoming releases:Scrabble - The all-time classic, with new super-addictive features! Up to four players,		including Computer or Remote opponents via AppleTalkSpeechMail - First all-pupose mail utility to incorporate speech capability - 1st Rate!Developer Utilities - C to Pascal, Pascal to C, Prototypes, Creator Change, more…The Game of Thoth		(Name subject to change) - A highly addictive Tarot card game		whose graphics BLOW AWAY even CD ROM tarot decks that have been released lately.		May include fortune-telling capablity at a later date, if a demand for it is shown.Tripwire - The ancient strategy game for two.The Word - Computer Bible with speech capability, which can read in the background.A more complete description of some of these applications is included in the about box of the Credits sample application.  Advance order ARE being taken - read below.Notes:Upgrades are ALWAYS free for registered users of Nikol Software, and we will always let you take an advance look at our products so we can find out what YOU want to see!  Finally, we’re just like you: we want the absolute latest, coolest software for our Macintoshes, and we want it yesterday!  Therefore, we try to expidite your order as much as possible so you can have fun (or work, if you so desire) as soon as humanly possible.  We’ll even send your entire order via America Online for an extra $3, if you want to be able to get it the night it arrives at our offices!Although I don't forsee any major bugs or problems with this product, emergency technical support can be reached at (904) 378-2938 from 9:30am to 9:30pm, 7 days a week.  No collect calls will be accepted.  There is a rare, minor conflict with the NowMenus left launch menu.  It does not appear to be a fault of ours, but we'll keep you updated (pun intended).This library may be distributed by disk or BBS, provided that no money is charged for it and it remains complete and unmodified, including all read me  and sample  files.  Distribution by CD-ROM is acceptable, under the same conditions, provided that Nikol Software is sent a copy of the CD.  Credits is © 1994 Nikol Software.All Nikol Software is only $12 dollars, and advance orders are gladly accepted. Advance orders will include a pre-release version of the software and all the aforementioned extras, and updates will be sent as they become available.  Bug reporting (as if there would be ANY bugs…) may earn you a spot in the credits.Important:Checks/Money Orders are to be made payable to William Hayden in order to process your order.  Acceptable methods of payment are cash, check, or money order.  No credits card orders are yet being accepted.Nikol Softwarec/o William Hayden924 Gondolier Blvd.Gulf Breeze, FL  32561-3018on America Online:BMOC 1
+Thank you for trying out Credits, by Bill Hayden and Nikol Software!
+
+This version of Credits is a library for use with THINK C or Pascal which gives you the ability to display a custom scrolling About box with a single line of code.  This is the entire main() from the CreditTest.π sample application:
+
+main ()
+{	
+  ToolBoxInit();
+ 	if (!ShowCredits(128, 1973, 1, kNone, 2, TRUE))
+		   SysBeep(10);
+}
+
+
+As you can see, a single call to  ShowCredits() does all the work.  After dropping the Credits library into your project, you have only to let your creative juices run wild and create a snazzy dialog and PICT to scroll with your resource editor.  You do the fun work, ShowCredits handles every programmer’s nightmare: CopyBits!
+
+(FYI: deatiled information about the parameters are contained in the file Credits.h)
+
+For simple About boxes in your non-distributed applications, the Credits library may be all that you need.  But for more complex needs, the source code can be an invaluable tool.  In addition, if you plan to distribute the software, you will need to obtain a distribution license from Nikol Software - this is included when buying the full version.  The full version is $12, and our address is located at the bottom of this file.
+
+Here is what the full version will give you:
+
+•  Source code for the Credits library itself
+•  Source code for the Credits sample application
+			This code, as you can see if you run the app, has been adapted for non-modal use. 
+			It even runs in the background!  Non-modal use is not included in the free library.
+			Neither is pausing/unpausing.  In addition, with the source code, you could create
+			your own on-the-fly pictures to scroll, perhaps using TextBox, which could save
+			you much space.  Internal updates can also be handled, if you decide to use a
+			moveable dialog.
+•  Commercial distribution license
+•  More code snippets from other Nikol Software products
+			Included in these snippets are Speech and Voice Dialog Dismiss routines, as can be
+			seen in the upcoming SpeechMail, Scrabble, and Developer Utilities applications
+			from Nikol Software.  You won’t believe how easy it is to incorporate them into
+			your software!
+•  Samples of other Nikol Software products, including the latest up-to-the-week
+		betas of our upcoming releases.  You WILL be impressed!
+
+
+The following is a short list of Nikol Software’s upcoming releases:
+
+Scrabble - The all-time classic, with new super-addictive features! Up to four players,
+		including Computer or Remote opponents via AppleTalk
+SpeechMail - First all-pupose mail utility to incorporate speech capability - 1st Rate!
+Developer Utilities - C to Pascal, Pascal to C, Prototypes, Creator Change, more…
+The Game of Thoth		(Name subject to change) - A highly addictive Tarot card game
+		whose graphics BLOW AWAY even CD ROM tarot decks that have been released lately.
+		May include fortune-telling capablity at a later date, if a demand for it is shown.
+Tripwire - The ancient strategy game for two.
+The Word - Computer Bible with speech capability, which can read in the background.
+
+A more complete description of some of these applications is included in the about box of the Credits sample application.  Advance order ARE being taken - read below.
+
+Notes:
+Upgrades are ALWAYS free for registered users of Nikol Software, and we will always let you take an advance look at our products so we can find out what YOU want to see!  Finally, we’re just like you: we want the absolute latest, coolest software for our Macintoshes, and we want it yesterday!  Therefore, we try to expidite your order as much as possible so you can have fun (or work, if you so desire) as soon as humanly possible.  We’ll even send your entire order via America Online for an extra $3, if you want to be able to get it the night it arrives at our offices!
+
+Although I don't forsee any major bugs or problems with this product, emergency technical support can be reached at (904) 378-2938 from 9:30am to 9:30pm, 7 days a week.  No collect calls will be accepted.  There is a rare, minor conflict with the NowMenus left launch menu.  It does not appear to be a fault of ours, but we'll keep you updated (pun intended).
+
+This library may be distributed by disk or BBS, provided that no money is charged for it and it remains complete and unmodified, including all read me  and sample  files.  Distribution by CD-ROM is acceptable, under the same conditions, provided that Nikol Software is sent a copy of the CD.  Credits is © 1994 Nikol Software.
+
+All Nikol Software is only $12 dollars, and advance orders are gladly accepted. Advance orders will include a pre-release version of the software and all the aforementioned extras, and updates will be sent as they become available.  Bug reporting (as if there would be ANY bugs…) may earn you a spot in the credits.
+
+Important:
+Checks/Money Orders are to be made payable to William Hayden in order to process your order.  Acceptable methods of payment are cash, check, or money order.  No credits card orders are yet being accepted.
+
+Nikol Software
+c/o William Hayden
+924 Gondolier Blvd.
+Gulf Breeze, FL  32561-3018
+
+on America Online:
+BMOC 1

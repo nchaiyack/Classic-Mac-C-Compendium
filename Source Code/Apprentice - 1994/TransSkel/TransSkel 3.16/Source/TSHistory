@@ -1,1 +1,444 @@
-TSHistory - history of modifications to TransSkel06/13/86	Beta version. (pd)08/27/86	Version number changed to 1.01.- v1.0 DoGrow bug fixed - the port at the point of theInvalRect could have been anything; the fix is to setthe port to the grown window first.  This also explainswhy the kludge to DoActivate in v1.0 worked.  (pd)10/02/86	Version number changed to 1.02, as a result of addingmodifications by David W. Berry (well!dwb@lll-lcc.arpa)for supporting window zooming.  Also used his modificationsfor supporting modeless dialogs (though not in the sameform).  Dialog support can be #define'd on or off.  (pd)12/28/86	Version number changed to 1.03.  Modified to work underLightspeedC v. 2.01 - took out definitions for window zoomingstuff, as it is now supported by the compiler directly.  Alsodeclared DoZoom static, fixing an oversight.  (pd)01/18/86	Put a SetPort into DoZoom - ZoomWindow requires port to be			set to window being zoomed.  (pd)02/05/86	Version number changed to 1.04.  Big change:  port settingbehavior made explicit - the only persistant switch occurswhen a window comes active.  This changes underlyingprogramming model (see manual for detailed discussion).Thanks to Duane Williams for pointing out that this shouldbe done.- Typedef'd integer/long variables to Integer, Longint tofacilitate coversion to other C compilers.  More completetype-casting done.  LightspeedC does a lot of it automatically,other compilers may not.  (pd - this version never released)03/02/87	Fixed bug whereby clicks in drag region of non-active windowsmay not bring window to front.  Seems to be due to DragWindowcalling StillDown to see if mouse is still down.  If the machinewas busy otherwise when click occurred and mouse already up whenDragWindow is called, the click ends up being ignored.  Thanks toRoger Humphrey for finding this one.*** Changes implemented first by omh to Pascal Version  4/18/87	Changed Desk Accessory code so it's more tolerant of memory			conditions for desk accessories.  (omh)  7/12/87	Added "cache" code to GetWDHandler.  Now TransSkel figures that			an event is most likely to occur for the same window as the			previous event.  Thus the WindowPtr and WDHandle for events			are cached and examined to avoid searching through the handler			list.  (omh)  7/12/87	Excised the notorious "SetPort" excess.  As pointed out by 			Duane Williams, SetPort traps abounded unnecessarily in			version 1.02.  These have been eliminated now with two			exceptions.  First, the port is set when a window handler			is installed.  The justification for this is that when a			handler is installed, it is likely that further processing			will be done on it immediately.  The application gets control			immediately after the handler is installed anyway, so this			behavior can be manually overridden where necessary.  Second,			when a window is activated, the port is set to it.  This			follows the model of keeping the port in sync with the active			window.  (omh)  7/14/87	Added grow zone function installation and MoreMasters to SkelInit,			which now requires two parameters. The first indicates the number			of times to call MoreMasters.  The second is a ProcPtr indicating			a user-supplied grow zone function to be called when memory problems			occur.  If nil, no grow zone function is installed.  (omh)  7/14/87	SkelMenu, SkelWindow, and SkelDialog now return zero or non-zero			to indicate failure or success of handler allocation.  This could			break *all* previous TransSkel applications (as will the change to			SkelInit, above.  Please see the section "How to adapt old			TransSkel to New" in the manual for detailed specifications on			how to convert your old programs.  TransSkel becomes more memory			conscious with these changes.  The functions SkelMenu, SkelWindow,			and SkelDialog are the only routines which actually allocate			memory.  Since they may be called at any time, knowing that you			have enough memory becomes important. Thus, these routines return			a value to indicate what happened.  If they return zero, then			memory allocation failed.  (omh)  10/21/87	Added another parameter to SkelMenu: drawBar:Boolean.   This tells			SkelMenu whether to draw the menu bar after adding the Menu.  This			is done to eliminate the menus popping up one at a time.  Simply			call SkelMenu with drawBar false until the last time you call			SkelMenu, then call it (for the last menu) with drawBar true.(omh)  10/26/87	Removed declarations for zoom-in and zoom-out.  Added Pascal changes (above)			to C version.  (omh)  02/02/88	Merged  pd's 1.04 changes with those of omh, above, to create			release version 2.0.  Fixed bug whereby cmd-key equivalents			for menu selections would execute twice if DA window in front.			Thanks to Don Fredkin and Julian Vrieslander for finding this			one.  (pd)  12/07/88	Owen releases Pascal version 2.0, shaming Paul into finally			working on getting the last changes on the C version done.			The world rejoices :-)  02/02/89	v2.01.  Turned out the cmd-key bug fix wasn't, quite.  One			year later, the bug is finally (I hope) fixed.  (pd)Additional changes for 3.00 (much of this based on Bob Schumaker's work):13 Dec 90 Release 3.01- Finally fixed misspelling of "Capitol" in my own address!- Added hook to be called when mouse goes down in menu bar.  Allowsapplications to update their menus then instead of every time somethingis changed in application that causes menu item changes.14 Dec 90- Changed SkelEventMask(), SkelBackground(), etc. to SkelSetEventMask(),SkelSetBackground(), for symmetry with SkelGetXXX() routines.  Cosmetic.- Started changing routines that don't return any value to be of type void.- Changed gzProc arg to SkelInit to Size (*gzProc)().- Started changing routines that return 1/0 to be Boolean.- Started adding prototypes.  This means there is now a "TransSkel.h"that must be #include'd in application source files for publicroutines.  Private routine prototypes are internal to TransSkel.c.- DoMenuCommand() now takes modifier keys and passes them to menu handlerroutines, so can tell things like option-command-X, etc.  This includesthe Apple menu handler for the About item, so that the About proc takesone argument, the modifiers.  Now you, too, can do all kinds of weirdstuff by holding down modifiers and selecting About..., like ResEditdoes.- Started taking out "register" stuff.  This was originally put in tosave a few bytes, but it actually makes code harder to understand,decreasing pedagogical value (assuming there is any).21 Dec 90- Took out most Macintosh header file #includes.  <MacHeaders> is assumedto be turned on so that they're not necessary.27 Dec 90- Changed menu handler routines back to not pass the modifier keys.  Afterfurther thought it seems this was a bad idea:  (i) the idea of passingmodifiers around can be extended indefinitely to all kinds of events,leading to lots of function calling changes; (ii) in most cases themodifiers are not of interest anyway.  Hence, a different approach isadopted: a routine SkelGetModifiers() can be called (from anywhere, buttypically from within within handler routines) to retrieve the modifiersof the current event.  This extends the capability of getting themodifiers to all event handlers without changing the calling sequences.Handlers that have always been passed modifiers still get them (thisincludes window handler mouse and key click routines).- Added some typedefs for handles to window and menu handlers to be ableto type in variable declarations without all the **'s everywhere(laziness).03 Jan 91- MoreMasters() call in SkelInit() now follows calls to MaxApplZone()and the other manager initializations.- mBarHeight initialized in SkelInit() using Script Manager routineGetMBarHeight() if not running 64K ROM.- Added parameter to SkelMenu() to indicate whether or not the menu isa submenu.  This allows hierarchical menus to be handled.- Added parameter to window key-click handler for passing key code.This is used to indicate key-ups events -- the high bit (bit 7) isset.04 Jan 91- Began to add MultiFinder support.- Add flag to menu handler struct indicating whether menu is submenuor not.  SkelRmveMenu() doesn't redraw menu bar if not (what for?).- Added global variable mhDrawBarOnRmve for telling SkelRmveMenu()never to redraw menu bar.  SkelClobber() sets false to avoid menubar flicker when all menus are removed.- Changed default value of eventMask to everyEvent^keyUp fromeveryEvent in anticipation of allowing key-up processing.- Save system event mask in SkelInit() and restore in SkelClobber()to protect Finder (TN 202).07 Jan 91- TN TB 29, p.1, PGMF 2-3 say "you...should not call GetWMgrPort() underany circumstances."  SkelInit() was doing that to get screen boundsfor window dragging and sizing, so now screenbits.bounds isused instead (which is equivalent).  Even that isn't quite correct,since it provides no support for multiple monitors. (Fixed below)08 Jan 91- Ahem.  See 04 Jan 91.  Changed default value of eventMask toeveryEvent^keyUpMask instead of everyEvent^keyUp.  No wondermouse-ups were getting eaten! (keyUp == mUpMask).09 Jan 91- TriggerUpdate(), DoGrow() and DoZoom() now pass window handleronly, instead of handler and window.  The window can be derivedfrom the handler anyway.  One subtle difference is that growsand zooms for windows without TransSkel handlers won't doanything, but that situation is unlikely to occur.- DoZoom() now tries to handle multiple monitors, zooming windowonto screen containing most of window.  Zoom behavior will beapplication-modifiable soon, so the code that finds the correctdevice is packaged into a public routine SkelGetWindowDevice()in order that applications be able to use it.  This routinereturns the device containing most of the window and the maximumrectangle to which the window can be zoomed, taking into accountthe menu bar and window title bar.- DoZoom() now erases the zoomed window before zooming it.  Looksbetter (IM IV-50, TN TB 30, p.4).- Added use of WaitNextEvent() if it's implemented.10 Jan 91- SkelMain(), SkelClobber(), SkelRmveWindow() and SkelRmveMenu()no longer have global knowledge of what doneFlag, mhDrawBarOnRmve,whClobOnRmve and mhClobOnRmve, respectively, should be reset toafter they change them.  Instead, they save the current value,change it, then restore it to the saved value.  This has nopractical effect now, but it might prevent bugs during futuredevelopment.- Window dragging and sizing is now multiple-monitor aware.  Usesbounding box of desktop (GrayRgn), per IM V-121, TN TB 30, p.2.- Decided that saving/restoring system event mask wasn't worth it,and removed code that did it.12 Jan 91- Yet more renaming.  SkelMain() is non-descriptive.  It's nowSkelEventLoop().  SkelWhoa() is now SkelStopEventLoop().  SinceI anticiplate that SkelClobber() may one day do more than clobber,e.g., do other general cleanup, it's now SkelCleanup().- The event-routing routine DoEvent() is now named SkelRouteEvent()and is public.  There are places where the application might wishto have a specific event that it obtains itself be processed byTransSkel.13 Jan 91- SkelApple() processing changes: the application can now pass an"About" string that actually contains more than one item, forinstance, "\pAbout...;Help/H".  This can be useful for applicationsthat want another non-desk accessory item in the Apple menu.  Thehandler function is passed the item number if a non-DA is selectedfrom the menu (it formerly took no arguments).  This change makesthe function isomorphic to the argument structure of other menuhandlers.  RESTRICTION: the item string can't contain a "-" item.14 Jan 91- Split the SkelApple() stuff out into a separate file.  Presumablymost routines use it, but if they don't, the code won't be linkedin.21 Jan 91- SkelQuery() implemented to allow TransSkel to be interrogatedabout some aspects of the execution environment.22 Jan 91- SkelSetZoom() and SkelGetZoom() allow zoom procedures to be set tooverride the default.- Changed SkelSetGrowBounds() to use GetWDHandler() rather thanGetWHandler().  Shouldn't hurt, and might help in the long run ifgrowable dialog windows are invented in the future.25 Jan 91- DoActivate() was setting port on activates, to implement thechange-port-to-active-window port-setting model.  It was alsosetting it on deactivates, to make sure it was set properly duringexecution of activate handler.  Now it saves *and restores* the porton deactivates in the case that the deactivate is due to adialog coming in front: typically the port is set to the dialog andit's processed with ModalDialog().  With the advent of SkelDlogFilter(),the deactivate of underlying window can now be processed easily, andthat means the deactivate should leave the port where it was (i.e., thedialog!).26 Jan 91- SkelGetWindowDevice() doesn't take window title height into accountanymore, it simply returns the usable area on the device containingmost of the window. It turns out that for invisible windows thestructure region is empty, so trying to take title bar height intoaccount for prepositioning invisible windows is impossible.  Thecaller must try to do that itself, perhaps by relying on prior(i.e., hardcoded, ugh) knowledge of window characteristics. InTransSkel itself, this affects DoZoom(), which has to modify therect returned from SkelGetWindowDevice().  This is easy, though, becausethe window is known to be visible and the structure region is valid.28 Jan 91 Release 3.02- Filter demo placed on ftp.primate.wisc.edu for FTP, so changeversion number of development version.29 Jan 91- Added #define for skelAppleMenuID (value 1) to TransSkel.h soapplications can know the apple menu's ID without knowing a magicnumber.- SkelGetXXX() functions now return a value rather than stuffing thevalue into a pointer argument. No doubt some will think this agratuitous change.- Changed Longint in Compiler.h to LongInt.  More gratuitousness.17 Feb 91- Started adding stuff to implement window property lists.18 Feb 91- Make window zooms clip to upper size bounds defined in growrectangle.12 Jun 92- Lots of changes to TransSkel.h.  Made all function names #defines insteadthat evaluate to the real function name; effect is that TransSkel.h MUST beincluded in source files that call TS routines.  Added bunches of functionpointer typedefs.- SkelDlogFilter() now takes boolean argument so caller can indicate whetherreturn/enter key processing should be done by standard filter.17 Jun 92- SkelGetZoom() returns function pointer as return value rather than inan argument.20 Feb 93- Check FrontWindow() != nil in DoDialog() as per bug in IsDialogEvent()(it fails if there's no front window (MMWZ says so, anyway)).05 Jun 93 Release 3.03- Conversion for THINK C 6.0.07 Jun 93- Changed SkelAddWindProp() to fail if the property already exists.  Beforeit just replaced the data, which could be dangerous if the data was a handle.03 Jul 93- Changed SkelWindow() to transfer existing window properties if the handlerfor the window exists already.  Previously properties were destroyed.  Alsouse new routine DetachWDHandler() in SkelWindow() and SkelRmveWindow(),which obviates need for whClobOnRmve.- Changed the window property routines to call GetWDHandler() instead ofGetWHandler(), since dialog windows might have properties, too.- SkelDialog() intalls a skelWPropModeless property to the window afterinstalling the window's handler.08 Oct 93 Release 3.04- Changed the argument list to SkelInit().  See TPN #5 for details.16 Oct 93- Moved handling of idle task from SkelEventLoop() to SkelRouteEvent(),in the nullEvent code.19 Oct 93- Added SkelSetWaitTimes(), SkelGetWaitTimes() to set/get wait times used byWaitNextEvent().21 Oct 93- Changed Boolean SkelQuery (Integer selector, LongInt *response)to LongInt SkelQuery (Integer selector).  Now you can just test thereturn value as the query result.30 Oct 93- Added SkelTrapAvailable() for checking whether a given trap isimplemented.- Added SkelQuery() query types skelQHasGestalt and skelQHasAppleEventsthat indicate whether Gestalt() is available and whether Apple Eventsare available.01 Nov 93- SkelCleanup() now hides all windows back-to-front before removinghandlers, and closes any open DA's.- Added SkelQuery selector type skelQSysVersion for obtaining thesystem software version.08 Nov 93- Look at 'SIZE' resource -1 to see whether the application wants toreceive mouse clicks that bring it to the foreground.  (If a click occursin a non-frontmost window, the click is used to select the window, butthen must be duplicated as a content-area click.)11 Nov 93- Renamed the idle-time procedures SkelSetBackground() andSkelGetBackground() to SkelSetIdle() and SkelGetIdle() since "background"has a meaning other than "idle" in a multitasking environment.  Alsorenamed SkelBackgroundProcPtr type to SkelIdleProcPtr.13 Nov 93- SkelGetZoom() was declared as SkelWindZoomProcPtr *, not asSkelWindZoomProcPtr.  Fixed.14 Nov 93- Save and restore port in SkelGetWindowDevice() in case window isnot the active window (e.g., if invisible).18 Nov 93- Made DoZoom() save and restore the port since it's not known thatthe port is set to the zoomed window if zooming is initiated by theapplication (as opposed to the user clicking in the zoom box of theactive window).- Added SkelActivate() so that application programs can tell TransSkelto call a window's activate procedure.  This is useful when you don'tknow a window's activate procedure in your application code.  It's alsocalled during disk-insert processing before bringing up the disk-initialization dialog to deactivate the front window.- Added SkelClose() so that application programs can tell TransSkel tocall a window's close procedure.  This is useful when you don't know awindow's close procedure in your application code.  It also knows how toclose DA's.24 Nov 93- No way to specify that window idle procedures should execute differentlywhen application is in foreground or background.  The current mechanismof determining whether to run the proc depending on whether it runs onlywhen the window is frontmost or not makes less sense in a multitaskingenvironment.  If a proc runs only when the window's frontmost, but theapplication is suspended, should it run?  Maybe not.  In lieu of a goodscheme for deciding without a bunch of complexity in TransSkel, I judgeit best to skip all window idle procs if the application is suspended.06 Dec 93 Release 3.05- SkelClose() provides a way for the application to close any window.  DoClose()has assumed the port will be set correctly, but SkelClose() invalidates thatassumption.  So now the port is saved before and restored afterward.07 Dec 93- Split out SkelGetWindowDevice() into its own file.- Added SkelGetWindTitleHeight(), which determines height of window title barregardless of script system.  Used it in DoZoom(), which should now workproperly internationally.08 Dec 93- Renamed SkelGetSuspend(), SkelSetSuspend(), SkelSuspendProcPtr toSkelGetSuspendResume(), SkelSetSuspendResume(), SkelSuspendResumeProcPtr.22 Dec 93 Release 3.06- New convenience function SkelGetRectDevice() added.  It's similar toSkelGetWindDevice().23 Dec 93- Added skelQQDVersion selector for SkelQuery() that returns QuickDrawversion number.31 Dec 93- SkelGetWindowDevice() now computes screen overlap *including* menu bar,since even though the menu bar obscures a window, that is part of the overlap.Returned value for usable area on device still doesn't include menu bar.- Added several files to the "convenience" portion of TransSkel containingroutines to perform some common control and dialog item operations.02 Jan 94Junked the use of “#define function function_” definitions in TransSkel.h toforce link errors if TransSkel.h isn’t included in a source file that callsTransSkel functions. That discipline can be enforced in your applicationsimply by turning on the Require Prototypes option in the project.03 Jan 94- Added auxiliary functions SkelDlogDefaultItem() and SkelDlogCancelItem() forspecifying which dialog items are the default and cancel items.  These are usedin conjunction with SkelDlogFilter().04 Jan 94- Added function SkelDlogFilterYD() for installing filters that can be usedwith the System 7 Standard File dialogs.- Changed type of SkelDlogFilter() from SkelDlogFilterProcPtr toModalFilterProcPtr.- Undid Integer/LongInt type stuff back to short/long. Nobody else in the worlduses Integer/LongInt and it just adds another header file requirement.  GoodbyeCompiler.h.07 Jan 94 Release 3.07.- SkelDlogFilter()/SkelDlogFilterYD() no longer check autoKey.13 Jan 94- Fixed bug in SkelDlogFilter() handling of return/enter when default buttoninactive and edittext item present.15 Jan 94- New convenience routines SkelToggleCtlValue() and SkelToggleDlogCtlValue().17 Jan 94- Fixed SkelRouteEvent() bug.  pIdle was being called on occurrance of nullevents.  However, if the front window was a dialog, DoDialog() handled nullevents first and so pIdle never saw them.  Changed by calling pIdle beforeDoDialog().- New convenience routines SkelAlert(), SkelSetAlertPosRatios() andSkelGetAlertPosRatios().28 Jan 94 Release 3.08- New convenience function SkelSetDlogType().- New core function SkelGetCurrentEvent(), which returns a pointer to the lastevent seen by SkelRouteEvent().- Eliminated ghastly explanation about DA's and pseudo null events fromSkelEventLoop() code.  Check Snippets/3.07-SkelEventLoop if you want to seewhat it was all about.- Eliminated some superfluous prototypes.31 Jan 94 Release 3.09- Added new core routines SkelGetWindContentRect() and SkelGetStructureRect(),for returning a window’s content and structure rectangles.  These are to alarge degree what the guts of SkelGetWindTitleHeight() was, so that functionwas rewritten in terms of them.01 Feb 94- Rewrote SkelGetRectDevice() to be more general, made it a core instead ofa convenience routine, rewrote SkelGetWindowDevice() in terms of it.  Thiseliminates the former redundancy between the two routines.  SkelGetRectDevice()now has two more arguments, though, so it's incompatible with pre-3.09 releases.- Fixed bug in SkelGetRectDevice() -- was testing for appropriate devicesusing "if(!condition && !condition)" instead of "if(!condition || !condition)."- Offset window userState rectangle when window is dragged in SkelRouteEvent().Otherwise it's hard to save window positions accurately.- Added new convenience routine SkelPause() for pausing process execution.02 Feb 94- Added new SkelQuery() selector skelQGrayRgn which returns a copy of thedesktop region.
+TSHistory - history of modifications to TransSkel
+
+06/13/86	Beta version. (pd)
+08/27/86	Version number changed to 1.01.
+- v1.0 DoGrow bug fixed - the port at the point of the
+InvalRect could have been anything; the fix is to set
+the port to the grown window first.  This also explains
+why the kludge to DoActivate in v1.0 worked.  (pd)
+10/02/86	Version number changed to 1.02, as a result of adding
+modifications by David W. Berry (well!dwb@lll-lcc.arpa)
+for supporting window zooming.  Also used his modifications
+for supporting modeless dialogs (though not in the same
+form).  Dialog support can be #define'd on or off.  (pd)
+12/28/86	Version number changed to 1.03.  Modified to work under
+LightspeedC v. 2.01 - took out definitions for window zooming
+stuff, as it is now supported by the compiler directly.  Also
+declared DoZoom static, fixing an oversight.  (pd)
+01/18/86	Put a SetPort into DoZoom - ZoomWindow requires port to be
+			set to window being zoomed.  (pd)
+
+02/05/86	Version number changed to 1.04.  Big change:  port setting
+behavior made explicit - the only persistant switch occurs
+when a window comes active.  This changes underlying
+programming model (see manual for detailed discussion).
+Thanks to Duane Williams for pointing out that this should
+be done.
+- Typedef'd integer/long variables to Integer, Longint to
+facilitate coversion to other C compilers.  More complete
+type-casting done.  LightspeedC does a lot of it automatically,
+other compilers may not.  (pd - this version never released)
+03/02/87	Fixed bug whereby clicks in drag region of non-active windows
+may not bring window to front.  Seems to be due to DragWindow
+calling StillDown to see if mouse is still down.  If the machine
+was busy otherwise when click occurred and mouse already up when
+DragWindow is called, the click ends up being ignored.  Thanks to
+Roger Humphrey for finding this one.
+
+*** Changes implemented first by omh to Pascal Version
+
+  4/18/87	Changed Desk Accessory code so it's more tolerant of memory
+			conditions for desk accessories.  (omh)
+  7/12/87	Added "cache" code to GetWDHandler.  Now TransSkel figures that
+			an event is most likely to occur for the same window as the
+			previous event.  Thus the WindowPtr and WDHandle for events
+			are cached and examined to avoid searching through the handler
+			list.  (omh)
+  7/12/87	Excised the notorious "SetPort" excess.  As pointed out by 
+			Duane Williams, SetPort traps abounded unnecessarily in
+			version 1.02.  These have been eliminated now with two
+			exceptions.  First, the port is set when a window handler
+			is installed.  The justification for this is that when a
+			handler is installed, it is likely that further processing
+			will be done on it immediately.  The application gets control
+			immediately after the handler is installed anyway, so this
+			behavior can be manually overridden where necessary.  Second,
+			when a window is activated, the port is set to it.  This
+			follows the model of keeping the port in sync with the active
+			window.  (omh)
+  7/14/87	Added grow zone function installation and MoreMasters to SkelInit,
+			which now requires two parameters. The first indicates the number
+			of times to call MoreMasters.  The second is a ProcPtr indicating
+			a user-supplied grow zone function to be called when memory problems
+			occur.  If nil, no grow zone function is installed.  (omh)
+  7/14/87	SkelMenu, SkelWindow, and SkelDialog now return zero or non-zero
+			to indicate failure or success of handler allocation.  This could
+			break *all* previous TransSkel applications (as will the change to
+			SkelInit, above.  Please see the section "How to adapt old
+			TransSkel to New" in the manual for detailed specifications on
+			how to convert your old programs.  TransSkel becomes more memory
+			conscious with these changes.  The functions SkelMenu, SkelWindow,
+			and SkelDialog are the only routines which actually allocate
+			memory.  Since they may be called at any time, knowing that you
+			have enough memory becomes important. Thus, these routines return
+			a value to indicate what happened.  If they return zero, then
+			memory allocation failed.  (omh)
+  10/21/87	Added another parameter to SkelMenu: drawBar:Boolean.   This tells
+			SkelMenu whether to draw the menu bar after adding the Menu.  This
+			is done to eliminate the menus popping up one at a time.  Simply
+			call SkelMenu with drawBar false until the last time you call
+			SkelMenu, then call it (for the last menu) with drawBar true.(omh)
+  10/26/87	Removed declarations for zoom-in and zoom-out.  Added Pascal changes (above)
+			to C version.  (omh)
+
+  02/02/88	Merged  pd's 1.04 changes with those of omh, above, to create
+			release version 2.0.  Fixed bug whereby cmd-key equivalents
+			for menu selections would execute twice if DA window in front.
+			Thanks to Don Fredkin and Julian Vrieslander for finding this
+			one.  (pd)
+  12/07/88	Owen releases Pascal version 2.0, shaming Paul into finally
+			working on getting the last changes on the C version done.
+			The world rejoices :-)
+  02/02/89	v2.01.  Turned out the cmd-key bug fix wasn't, quite.  One
+			year later, the bug is finally (I hope) fixed.  (pd)
+
+Additional changes for 3.00 (much of this based on Bob Schumaker's work):
+
+13 Dec 90 Release 3.01
+- Finally fixed misspelling of "Capitol" in my own address!
+- Added hook to be called when mouse goes down in menu bar.  Allows
+applications to update their menus then instead of every time something
+is changed in application that causes menu item changes.
+14 Dec 90
+- Changed SkelEventMask(), SkelBackground(), etc. to SkelSetEventMask(),
+SkelSetBackground(), for symmetry with SkelGetXXX() routines.  Cosmetic.
+- Started changing routines that don't return any value to be of type void.
+- Changed gzProc arg to SkelInit to Size (*gzProc)().
+- Started changing routines that return 1/0 to be Boolean.
+- Started adding prototypes.  This means there is now a "TransSkel.h"
+that must be #include'd in application source files for public
+routines.  Private routine prototypes are internal to TransSkel.c.
+- DoMenuCommand() now takes modifier keys and passes them to menu handler
+routines, so can tell things like option-command-X, etc.  This includes
+the Apple menu handler for the About item, so that the About proc takes
+one argument, the modifiers.  Now you, too, can do all kinds of weird
+stuff by holding down modifiers and selecting About..., like ResEdit
+does.
+- Started taking out "register" stuff.  This was originally put in to
+save a few bytes, but it actually makes code harder to understand,
+decreasing pedagogical value (assuming there is any).
+21 Dec 90
+- Took out most Macintosh header file #includes.  <MacHeaders> is assumed
+to be turned on so that they're not necessary.
+27 Dec 90
+- Changed menu handler routines back to not pass the modifier keys.  After
+further thought it seems this was a bad idea:  (i) the idea of passing
+modifiers around can be extended indefinitely to all kinds of events,
+leading to lots of function calling changes; (ii) in most cases the
+modifiers are not of interest anyway.  Hence, a different approach is
+adopted: a routine SkelGetModifiers() can be called (from anywhere, but
+typically from within within handler routines) to retrieve the modifiers
+of the current event.  This extends the capability of getting the
+modifiers to all event handlers without changing the calling sequences.
+Handlers that have always been passed modifiers still get them (this
+includes window handler mouse and key click routines).
+- Added some typedefs for handles to window and menu handlers to be able
+to type in variable declarations without all the **'s everywhere
+(laziness).
+03 Jan 91
+- MoreMasters() call in SkelInit() now follows calls to MaxApplZone()
+and the other manager initializations.
+- mBarHeight initialized in SkelInit() using Script Manager routine
+GetMBarHeight() if not running 64K ROM.
+- Added parameter to SkelMenu() to indicate whether or not the menu is
+a submenu.  This allows hierarchical menus to be handled.
+- Added parameter to window key-click handler for passing key code.
+This is used to indicate key-ups events -- the high bit (bit 7) is
+set.
+04 Jan 91
+- Began to add MultiFinder support.
+- Add flag to menu handler struct indicating whether menu is submenu
+or not.  SkelRmveMenu() doesn't redraw menu bar if not (what for?).
+- Added global variable mhDrawBarOnRmve for telling SkelRmveMenu()
+never to redraw menu bar.  SkelClobber() sets false to avoid menu
+bar flicker when all menus are removed.
+- Changed default value of eventMask to everyEvent^keyUp from
+everyEvent in anticipation of allowing key-up processing.
+- Save system event mask in SkelInit() and restore in SkelClobber()
+to protect Finder (TN 202).
+07 Jan 91
+- TN TB 29, p.1, PGMF 2-3 say "you...should not call GetWMgrPort() under
+any circumstances."  SkelInit() was doing that to get screen bounds
+for window dragging and sizing, so now screenbits.bounds is
+used instead (which is equivalent).  Even that isn't quite correct,
+since it provides no support for multiple monitors. (Fixed below)
+08 Jan 91
+- Ahem.  See 04 Jan 91.  Changed default value of eventMask to
+everyEvent^keyUpMask instead of everyEvent^keyUp.  No wonder
+mouse-ups were getting eaten! (keyUp == mUpMask).
+09 Jan 91
+- TriggerUpdate(), DoGrow() and DoZoom() now pass window handler
+only, instead of handler and window.  The window can be derived
+from the handler anyway.  One subtle difference is that grows
+and zooms for windows without TransSkel handlers won't do
+anything, but that situation is unlikely to occur.
+- DoZoom() now tries to handle multiple monitors, zooming window
+onto screen containing most of window.  Zoom behavior will be
+application-modifiable soon, so the code that finds the correct
+device is packaged into a public routine SkelGetWindowDevice()
+in order that applications be able to use it.  This routine
+returns the device containing most of the window and the maximum
+rectangle to which the window can be zoomed, taking into account
+the menu bar and window title bar.
+- DoZoom() now erases the zoomed window before zooming it.  Looks
+better (IM IV-50, TN TB 30, p.4).
+- Added use of WaitNextEvent() if it's implemented.
+10 Jan 91
+- SkelMain(), SkelClobber(), SkelRmveWindow() and SkelRmveMenu()
+no longer have global knowledge of what doneFlag, mhDrawBarOnRmve,
+whClobOnRmve and mhClobOnRmve, respectively, should be reset to
+after they change them.  Instead, they save the current value,
+change it, then restore it to the saved value.  This has no
+practical effect now, but it might prevent bugs during future
+development.
+- Window dragging and sizing is now multiple-monitor aware.  Uses
+bounding box of desktop (GrayRgn), per IM V-121, TN TB 30, p.2.
+- Decided that saving/restoring system event mask wasn't worth it,
+and removed code that did it.
+12 Jan 91
+- Yet more renaming.  SkelMain() is non-descriptive.  It's now
+SkelEventLoop().  SkelWhoa() is now SkelStopEventLoop().  Since
+I anticiplate that SkelClobber() may one day do more than clobber,
+e.g., do other general cleanup, it's now SkelCleanup().
+- The event-routing routine DoEvent() is now named SkelRouteEvent()
+and is public.  There are places where the application might wish
+to have a specific event that it obtains itself be processed by
+TransSkel.
+13 Jan 91
+- SkelApple() processing changes: the application can now pass an
+"About" string that actually contains more than one item, for
+instance, "\pAbout...;Help/H".  This can be useful for applications
+that want another non-desk accessory item in the Apple menu.  The
+handler function is passed the item number if a non-DA is selected
+from the menu (it formerly took no arguments).  This change makes
+the function isomorphic to the argument structure of other menu
+handlers.  RESTRICTION: the item string can't contain a "-" item.
+14 Jan 91
+- Split the SkelApple() stuff out into a separate file.  Presumably
+most routines use it, but if they don't, the code won't be linked
+in.
+21 Jan 91
+- SkelQuery() implemented to allow TransSkel to be interrogated
+about some aspects of the execution environment.
+22 Jan 91
+- SkelSetZoom() and SkelGetZoom() allow zoom procedures to be set to
+override the default.
+- Changed SkelSetGrowBounds() to use GetWDHandler() rather than
+GetWHandler().  Shouldn't hurt, and might help in the long run if
+growable dialog windows are invented in the future.
+25 Jan 91
+- DoActivate() was setting port on activates, to implement the
+change-port-to-active-window port-setting model.  It was also
+setting it on deactivates, to make sure it was set properly during
+execution of activate handler.  Now it saves *and restores* the port
+on deactivates in the case that the deactivate is due to a
+dialog coming in front: typically the port is set to the dialog and
+it's processed with ModalDialog().  With the advent of SkelDlogFilter(),
+the deactivate of underlying window can now be processed easily, and
+that means the deactivate should leave the port where it was (i.e., the
+dialog!).
+26 Jan 91
+- SkelGetWindowDevice() doesn't take window title height into account
+anymore, it simply returns the usable area on the device containing
+most of the window. It turns out that for invisible windows the
+structure region is empty, so trying to take title bar height into
+account for prepositioning invisible windows is impossible.  The
+caller must try to do that itself, perhaps by relying on prior
+(i.e., hardcoded, ugh) knowledge of window characteristics. In
+TransSkel itself, this affects DoZoom(), which has to modify the
+rect returned from SkelGetWindowDevice().  This is easy, though, because
+the window is known to be visible and the structure region is valid.
+
+28 Jan 91 Release 3.02
+- Filter demo placed on ftp.primate.wisc.edu for FTP, so change
+version number of development version.
+29 Jan 91
+- Added #define for skelAppleMenuID (value 1) to TransSkel.h so
+applications can know the apple menu's ID without knowing a magic
+number.
+- SkelGetXXX() functions now return a value rather than stuffing the
+value into a pointer argument. No doubt some will think this a
+gratuitous change.
+- Changed Longint in Compiler.h to LongInt.  More gratuitousness.
+17 Feb 91
+- Started adding stuff to implement window property lists.
+18 Feb 91
+- Make window zooms clip to upper size bounds defined in grow
+rectangle.
+12 Jun 92
+- Lots of changes to TransSkel.h.  Made all function names #defines instead
+that evaluate to the real function name; effect is that TransSkel.h MUST be
+included in source files that call TS routines.  Added bunches of function
+pointer typedefs.
+- SkelDlogFilter() now takes boolean argument so caller can indicate whether
+return/enter key processing should be done by standard filter.
+17 Jun 92
+- SkelGetZoom() returns function pointer as return value rather than in
+an argument.
+20 Feb 93
+- Check FrontWindow() != nil in DoDialog() as per bug in IsDialogEvent()
+(it fails if there's no front window (MMWZ says so, anyway)).
+
+05 Jun 93 Release 3.03
+- Conversion for THINK C 6.0.
+07 Jun 93
+- Changed SkelAddWindProp() to fail if the property already exists.  Before
+it just replaced the data, which could be dangerous if the data was a handle.
+03 Jul 93
+- Changed SkelWindow() to transfer existing window properties if the handler
+for the window exists already.  Previously properties were destroyed.  Also
+use new routine DetachWDHandler() in SkelWindow() and SkelRmveWindow(),
+which obviates need for whClobOnRmve.
+- Changed the window property routines to call GetWDHandler() instead of
+GetWHandler(), since dialog windows might have properties, too.
+- SkelDialog() intalls a skelWPropModeless property to the window after
+installing the window's handler.
+
+08 Oct 93 Release 3.04
+- Changed the argument list to SkelInit().  See TPN #5 for details.
+16 Oct 93
+- Moved handling of idle task from SkelEventLoop() to SkelRouteEvent(),
+in the nullEvent code.
+19 Oct 93
+- Added SkelSetWaitTimes(), SkelGetWaitTimes() to set/get wait times used by
+WaitNextEvent().
+21 Oct 93
+- Changed Boolean SkelQuery (Integer selector, LongInt *response)
+to LongInt SkelQuery (Integer selector).  Now you can just test the
+return value as the query result.
+30 Oct 93
+- Added SkelTrapAvailable() for checking whether a given trap is
+implemented.
+- Added SkelQuery() query types skelQHasGestalt and skelQHasAppleEvents
+that indicate whether Gestalt() is available and whether Apple Events
+are available.
+01 Nov 93
+- SkelCleanup() now hides all windows back-to-front before removing
+handlers, and closes any open DA's.
+- Added SkelQuery selector type skelQSysVersion for obtaining the
+system software version.
+08 Nov 93
+- Look at 'SIZE' resource -1 to see whether the application wants to
+receive mouse clicks that bring it to the foreground.  (If a click occurs
+in a non-frontmost window, the click is used to select the window, but
+then must be duplicated as a content-area click.)
+11 Nov 93
+- Renamed the idle-time procedures SkelSetBackground() and
+SkelGetBackground() to SkelSetIdle() and SkelGetIdle() since "background"
+has a meaning other than "idle" in a multitasking environment.  Also
+renamed SkelBackgroundProcPtr type to SkelIdleProcPtr.
+13 Nov 93
+- SkelGetZoom() was declared as SkelWindZoomProcPtr *, not as
+SkelWindZoomProcPtr.  Fixed.
+14 Nov 93
+- Save and restore port in SkelGetWindowDevice() in case window is
+not the active window (e.g., if invisible).
+18 Nov 93
+- Made DoZoom() save and restore the port since it's not known that
+the port is set to the zoomed window if zooming is initiated by the
+application (as opposed to the user clicking in the zoom box of the
+active window).
+- Added SkelActivate() so that application programs can tell TransSkel
+to call a window's activate procedure.  This is useful when you don't
+know a window's activate procedure in your application code.  It's also
+called during disk-insert processing before bringing up the 
+disk-initialization dialog to deactivate the front window.
+- Added SkelClose() so that application programs can tell TransSkel to
+call a window's close procedure.  This is useful when you don't know a
+window's close procedure in your application code.  It also knows how to
+close DA's.
+24 Nov 93
+- No way to specify that window idle procedures should execute differently
+when application is in foreground or background.  The current mechanism
+of determining whether to run the proc depending on whether it runs only
+when the window is frontmost or not makes less sense in a multitasking
+environment.  If a proc runs only when the window's frontmost, but the
+application is suspended, should it run?  Maybe not.  In lieu of a good
+scheme for deciding without a bunch of complexity in TransSkel, I judge
+it best to skip all window idle procs if the application is suspended.
+
+06 Dec 93 Release 3.05
+- SkelClose() provides a way for the application to close any window.  DoClose()
+has assumed the port will be set correctly, but SkelClose() invalidates that
+assumption.  So now the port is saved before and restored afterward.
+07 Dec 93
+- Split out SkelGetWindowDevice() into its own file.
+- Added SkelGetWindTitleHeight(), which determines height of window title bar
+regardless of script system.  Used it in DoZoom(), which should now work
+properly internationally.
+08 Dec 93
+- Renamed SkelGetSuspend(), SkelSetSuspend(), SkelSuspendProcPtr to
+SkelGetSuspendResume(), SkelSetSuspendResume(), SkelSuspendResumeProcPtr.
+
+22 Dec 93 Release 3.06
+- New convenience function SkelGetRectDevice() added.  It's similar to
+SkelGetWindDevice().
+23 Dec 93
+- Added skelQQDVersion selector for SkelQuery() that returns QuickDraw
+version number.
+31 Dec 93
+- SkelGetWindowDevice() now computes screen overlap *including* menu bar,
+since even though the menu bar obscures a window, that is part of the overlap.
+Returned value for usable area on device still doesn't include menu bar.
+- Added several files to the "convenience" portion of TransSkel containing
+routines to perform some common control and dialog item operations.
+02 Jan 94
+Junked the use of “#define function function_” definitions in TransSkel.h to
+force link errors if TransSkel.h isn’t included in a source file that calls
+TransSkel functions. That discipline can be enforced in your application
+simply by turning on the Require Prototypes option in the project.
+03 Jan 94
+- Added auxiliary functions SkelDlogDefaultItem() and SkelDlogCancelItem() for
+specifying which dialog items are the default and cancel items.  These are used
+in conjunction with SkelDlogFilter().
+04 Jan 94
+- Added function SkelDlogFilterYD() for installing filters that can be used
+with the System 7 Standard File dialogs.
+- Changed type of SkelDlogFilter() from SkelDlogFilterProcPtr to
+ModalFilterProcPtr.
+- Undid Integer/LongInt type stuff back to short/long. Nobody else in the world
+uses Integer/LongInt and it just adds another header file requirement.  Goodbye
+Compiler.h.
+
+07 Jan 94 Release 3.07.
+- SkelDlogFilter()/SkelDlogFilterYD() no longer check autoKey.
+13 Jan 94
+- Fixed bug in SkelDlogFilter() handling of return/enter when default button
+inactive and edittext item present.
+15 Jan 94
+- New convenience routines SkelToggleCtlValue() and SkelToggleDlogCtlValue().
+17 Jan 94
+- Fixed SkelRouteEvent() bug.  pIdle was being called on occurrance of null
+events.  However, if the front window was a dialog, DoDialog() handled null
+events first and so pIdle never saw them.  Changed by calling pIdle before
+DoDialog().
+- New convenience routines SkelAlert(), SkelSetAlertPosRatios() and
+SkelGetAlertPosRatios().
+
+28 Jan 94 Release 3.08
+- New convenience function SkelSetDlogType().
+- New core function SkelGetCurrentEvent(), which returns a pointer to the last
+event seen by SkelRouteEvent().
+- Eliminated ghastly explanation about DA's and pseudo null events from
+SkelEventLoop() code.  Check Snippets/3.07-SkelEventLoop if you want to see
+what it was all about.
+- Eliminated some superfluous prototypes.
+
+31 Jan 94 Release 3.09
+- Added new core routines SkelGetWindContentRect() and SkelGetStructureRect(),
+for returning a window’s content and structure rectangles.  These are to a
+large degree what the guts of SkelGetWindTitleHeight() was, so that function
+was rewritten in terms of them.
+01 Feb 94
+- Rewrote SkelGetRectDevice() to be more general, made it a core instead of
+a convenience routine, rewrote SkelGetWindowDevice() in terms of it.  This
+eliminates the former redundancy between the two routines.  SkelGetRectDevice()
+now has two more arguments, though, so it's incompatible with pre-3.09 releases.
+- Fixed bug in SkelGetRectDevice() -- was testing for appropriate devices
+using "if(!condition && !condition)" instead of "if(!condition || !condition)."
+- Offset window userState rectangle when window is dragged in SkelRouteEvent().
+Otherwise it's hard to save window positions accurately.
+- Added new convenience routine SkelPause() for pausing process execution.
+02 Feb 94
+- Added new SkelQuery() selector skelQGrayRgn which returns a copy of the
+desktop region.

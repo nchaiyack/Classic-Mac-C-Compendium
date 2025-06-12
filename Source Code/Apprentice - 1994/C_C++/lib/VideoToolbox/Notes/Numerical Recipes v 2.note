@@ -1,1 +1,26 @@
-VideoToolbox: "Improve Numerical Recipes v 2.note"June 15, 1993These comments apply to version 2 of the Numerical Recipes in C. There is a separate file for version 1.Numerical Recipes C Diskette for Macintosh, 2nd ed. $31.96 (software)Numerical Recipes in C: The Art of Scientific Computing, 2nd ed. $39.96 (book)ORNumerical Recipes C Set for Macintosh (main book, example book, and disk) $90Useful book and mathematical library in source form, so you can read the code, understand what’s going on, and modify it if necessary. From:Cambridge University Press40 West 20th StreetNew York, NY 10010-4211(800)-227-0247The VideoToolbox routines that use the recipes assume that you have made the following five changes to the Numerical Recipes in C routines: 1A.In every file, change every "float" to "FLOAT", and add "#include <nr.h>" at the beginning. Insert the statement "typedef double FLOAT;" in the file nr.h. This is because the Macintosh computes doubles much faster than floats. 1B. Alternatively, if you'd rather run slowly than modify your Numerical Recipes files, then you will need to insert  "typedef float FLOAT;"  in CalibrateLuminance.c and PsychometricFit.c in order to compile those files. The rest of the VideoToolbox doesn't care.2. Add "#include <nrutil.h>" as second line of nrutil.c.3. Add "#pragma once" at the top of nr.h and nrutil.h. This will allow you to include these headers freely in your THINK C files, without worrying about whether you've inadvertently included them twice.4. In order to produce reasonable polynomial fits it is necessary to reduce the TOL parameter in the file SVDFIT.C to a small value, e.g. 1.0e-14. Otherwise the fits will not be very good, and will have the nonintuitive property that the fit will get WORSE as the order of the polynomial is increased.5. I like to include the precompiled header VideoToolbox in a prefix line for my whole project. This causes it to be included in the Numerical Recipes files, which don't need it. The only conflict I've found is that PI is defined both in VideoToolbox.h and in BNLDEV.C, which I fixed by making it conditional in the BNLDEV.c:#ifndef PI		// Made conditional by dgp, for compatibility with VideoToolbox.h	#define PI 3.141592654#endif
+VideoToolbox: "Improve Numerical Recipes v 2.note"
+June 15, 1993
+
+These comments apply to version 2 of the Numerical Recipes in C. There is a separate file for version 1.
+
+Numerical Recipes C Diskette for Macintosh, 2nd ed. $31.96 (software)
+Numerical Recipes in C: The Art of Scientific Computing, 2nd ed. $39.96 (book)
+OR
+Numerical Recipes C Set for Macintosh (main book, example book, and disk) $90
+Useful book and mathematical library in source form, so you can read the code, understand what’s going on, and modify it if necessary. From:
+Cambridge University Press
+40 West 20th Street
+New York, NY 10010-4211
+(800)-227-0247
+
+The VideoToolbox routines that use the recipes assume that you have made the following five changes to the Numerical Recipes in C routines: 
+1A.In every file, change every "float" to "FLOAT", and add "#include <nr.h>" at the beginning. Insert the statement "typedef double FLOAT;" in the file nr.h. This is because the Macintosh computes doubles much faster than floats. 
+1B. Alternatively, if you'd rather run slowly than modify your Numerical Recipes files, then you will need to insert  "typedef float FLOAT;"  in CalibrateLuminance.c and PsychometricFit.c in order to compile those files. The rest of the VideoToolbox doesn't care.
+2. Add "#include <nrutil.h>" as second line of nrutil.c.
+3. Add "#pragma once" at the top of nr.h and nrutil.h. This will allow you to include these headers freely in your THINK C files, without worrying about whether you've inadvertently included them twice.
+4. In order to produce reasonable polynomial fits it is necessary to reduce the TOL parameter in the file SVDFIT.C to a small value, e.g. 1.0e-14. Otherwise the fits will not be very good, and will have the nonintuitive property that the fit will get WORSE as the order of the polynomial is increased.
+5. I like to include the precompiled header VideoToolbox in a prefix line for my whole project. This causes it to be included in the Numerical Recipes files, which don't need it. The only conflict I've found is that PI is defined both in VideoToolbox.h and in BNLDEV.C, which I fixed by making it conditional in the BNLDEV.c:
+#ifndef PI		// Made conditional by dgp, for compatibility with VideoToolbox.h
+	#define PI 3.141592654
+#endif
+

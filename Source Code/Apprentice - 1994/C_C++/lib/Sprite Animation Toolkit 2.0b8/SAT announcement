@@ -1,1 +1,61 @@
-Sprite Animation Toolkit (SAT)=============================Version 2.0SAT is a library for programmers who want to make arcade games or other programs involving animation. It is distributed as a compiled library, together with numerous example programs.Cost:====SAT is Copyright (C) Ingemar Ragnemalm 1992-1994, all rights reserved.SAT is free of charge for making freeware and shareware programs. I only demand a free copy of games/programs produced with it. For further details, see the documentation.(Actually, SAT is also sort of "jobware" - I hope it will make some employer impressed enough to hire me.)Noteable features:================- Direct-to-screen animation in B/W, 4-bit color and 8-bit color, written in optimized assembly language OR safe QuickDraw-based graphics in any screen depth.- Compatible with system 6 and 7.- Compatible with all Macs (see below).- Easy to program, using callback routines to give a programming interface similar to object oriented programming, but avoiding the overhead of OO.- Designed for making games that supports several screen depths.- Can re-configure itself after screen depth changes.- Switches between color and b/w graphics with minimal programming effort.- Includes utilities for menu bar hiding, setting mouse position, asynchronous sound etc.- Six demo programs included with source code, ranging from a trivial animation (less than two pages of source code) to the complete arcade game HeartQuest (53 k of source code), complete with high scores, menu and window handling etc.- Developed by an experienced shareware game programmer. The library has already been used to make four arcade games that have been released (Slime Invaders, Bachman, HeartQuest, ISG), and more are coming.- Thoroughly tested by several (programming) beta testers.System requirement:===================Compiler: Think Pascal or Think C. All demos are included in Pascal verion, and most demos are included in C versions.System: A color capable Mac is recommended but not required.Notes on compatibility:====================Of course there is no way to guarantee that it will work on all configurations, and I expect problems with certain odd kinds of video boards. It is, however, tested on a wide range of Macs: by myself on Plus/6.0.7, SE/6.0.7, LC/6.0.7, IIsi/6.0.7, LC/7.0, IIfx/7.1, PB170/7.1, PB180/7.1, Quadra 950/7.1, and on many other systems by the beta testers.*If* a demo program refuses to run on your Mac, try giving it more memory. (Usually, the demos will quit gracefully when out of memory, reporting the problem.) The memory demand is proportional to your screen depth, so if you run in 16 or 32 bits, you *will* run out of memory with the default settings.If you use Think C v6 and you get link errors, it's all Symantec's fault. I'll fix it as soon as I get a chance.Ingemar Ragnemalm, ingemar@isy.liu.se(That's Sweden - with the mooses, aeroplanes and cars, not the watches.)
+
+Sprite Animation Toolkit (SAT)
+=============================
+Version 2.0
+
+SAT is a library for programmers who want to make arcade games or other programs involving animation. It is distributed as a compiled library, together with numerous example programs.
+
+Cost:
+====
+
+SAT is Copyright (C) Ingemar Ragnemalm 1992-1994, all rights reserved.
+
+SAT is free of charge for making freeware and shareware programs. I only demand a free copy of games/programs produced with it. For further details, see the documentation.
+
+(Actually, SAT is also sort of "jobware" - I hope it will make some employer impressed enough to hire me.)
+
+Noteable features:
+================
+
+- Direct-to-screen animation in B/W, 4-bit color and 8-bit color, written in optimized assembly language OR safe QuickDraw-based graphics in any screen depth.
+
+- Compatible with system 6 and 7.
+
+- Compatible with all Macs (see below).
+
+- Easy to program, using callback routines to give a programming interface similar to object oriented programming, but avoiding the overhead of OO.
+
+- Designed for making games that supports several screen depths.
+
+- Can re-configure itself after screen depth changes.
+
+- Switches between color and b/w graphics with minimal programming effort.
+
+- Includes utilities for menu bar hiding, setting mouse position, asynchronous sound etc.
+
+- Six demo programs included with source code, ranging from a trivial animation (less than two pages of source code) to the complete arcade game HeartQuest (53 k of source code), complete with high scores, menu and window handling etc.
+
+- Developed by an experienced shareware game programmer. The library has already been used to make four arcade games that have been released (Slime Invaders, Bachman, HeartQuest, ISG), and more are coming.
+
+- Thoroughly tested by several (programming) beta testers.
+
+System requirement:
+===================
+
+Compiler: Think Pascal or Think C. All demos are included in Pascal verion, and most demos are included in C versions.
+
+System: A color capable Mac is recommended but not required.
+
+
+Notes on compatibility:
+====================
+
+Of course there is no way to guarantee that it will work on all configurations, and I expect problems with certain odd kinds of video boards. It is, however, tested on a wide range of Macs: by myself on Plus/6.0.7, SE/6.0.7, LC/6.0.7, IIsi/6.0.7, LC/7.0, IIfx/7.1, PB170/7.1, PB180/7.1, Quadra 950/7.1, and on many other systems by the beta testers.
+
+*If* a demo program refuses to run on your Mac, try giving it more memory. (Usually, the demos will quit gracefully when out of memory, reporting the problem.) The memory demand is proportional to your screen depth, so if you run in 16 or 32 bits, you *will* run out of memory with the default settings.
+
+If you use Think C v6 and you get link errors, it's all Symantec's fault. I'll fix it as soon as I get a chance.
+
+
+Ingemar Ragnemalm, ingemar@isy.liu.se
+(That's Sweden - with the mooses, aeroplanes and cars, not the watches.)

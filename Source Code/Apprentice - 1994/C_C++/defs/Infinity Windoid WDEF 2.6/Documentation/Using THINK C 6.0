@@ -1,1 +1,12 @@
-C O M P I L I N G    I N F I N I T Y    W I N D O I D    W I T H    T H I N K    C    6 . 0----------------------------------------------------------------------by Troy GaulInfinity SystemsJanuary 1994The file InfinityWindoid.¹ is a THINK C 5.0 project file. In order to compile the Windoid WDEF under THINK C 6.0, simply open this project file with THINK C 6.0 and allow it to convert the file for use with the newer version. I have tested this procedure and it works fine, so I found it unnecessary to include project files for both version of THINK C. Note, however, that doing this will cause the project file to be unusable with THINK C 5 in the future. (If this is important, simply duplicate the project file before opening it in THINK C 6 so that you have an untouched version.)
+C O M P I L I N G    I N F I N I T Y    W I N D O I D    W I T H    T H I N K    C    6 . 0
+----------------------------------------------------------------------
+by Troy Gaul
+Infinity Systems
+January 1994
+
+
+The file InfinityWindoid.¹ is a THINK C 5.0 project file. 
+
+In order to compile the Windoid WDEF under THINK C 6.0, simply open this project file with THINK C 6.0 and allow it to convert the file for use with the newer version. I have tested this procedure and it works fine, so I found it unnecessary to include project files for both version of THINK C. 
+
+Note, however, that doing this will cause the project file to be unusable with THINK C 5 in the future. (If this is important, simply duplicate the project file before opening it in THINK C 6 so that you have an untouched version.)

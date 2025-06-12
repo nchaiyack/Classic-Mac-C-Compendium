@@ -1,1 +1,26 @@
-Name: CFlexiDataFileVersion: 1.1Category: classesContributor: Jamie McCarthy <k044477@kzoo.edu>Date: 92-11TCL-Version: 1.1.xTCL-Language: CCopyright: Copyright (C) 1992 by Jamie R. McCarthy. All rights reserved. A subclass of CDataFile which lets you pretend that a resource,a handle, or even just a section of RAM is a data fork.  This ismostly useful because of the abstraction--other classes don't haveto know where the data is coming from. The partial resource calls (except size-changes) work undersystem 6, because the code makes use of JPartialResources(not included).  You can, for example, read or write the middleten bytes of a ten-meg resource, without loading any of itinto RAM (except those ten bytes). (c) Copyright 1992 by Jamie R. McCarthy.  All rights reserved.This code can be both distributed and used freely.Internet: k044477@kzoo.edu       AppleLink: j.mccarthy (This file must be converted with BinHex 4.0)
+Name: CFlexiDataFile
+Version: 1.1
+Category: classes
+Contributor: Jamie McCarthy <k044477@kzoo.edu>
+Date: 92-11
+TCL-Version: 1.1.x
+TCL-Language: C
+Copyright: Copyright (C) 1992 by Jamie R. McCarthy. All rights reserved. 
+
+A subclass of CDataFile which lets you pretend that a resource,
+a handle, or even just a section of RAM is a data fork.  This is
+mostly useful because of the abstraction--other classes don't have
+to know where the data is coming from.
+ 
+The partial resource calls (except size-changes) work under
+system 6, because the code makes use of JPartialResources
+(not included).  You can, for example, read or write the middle
+ten bytes of a ten-meg resource, without loading any of it
+into RAM (except those ten bytes).
+ 
+(c) Copyright 1992 by Jamie R. McCarthy.  All rights reserved.
+This code can be both distributed and used freely.
+Internet: k044477@kzoo.edu       AppleLink: j.mccarthy
+ 
+(This file must be converted with BinHex 4.0)
+

@@ -1,1 +1,11 @@
-if {HasRamDisk}	files -d {RamKilde} |	StreamEdit -d -e '¥,° Replace -c ° /:/ ""' ¶	-e '/Å/ pr "set K_"." {RamKilde}".":; cd {K_"."}"' ¶	> {tmp2}	ex {tmp2}endecho -n > {mpw}Userstartup¥Windowsflush
+if {HasRamDisk}
+	files -d {RamKilde} |
+	StreamEdit -d -e '¥,° Replace -c ° /:/ ""' ¶
+	-e '/Å/ pr "set K_"." {RamKilde}".":; cd {K_"."}"' ¶
+	> {tmp2}
+	ex {tmp2}
+end
+
+echo -n > {mpw}Userstartup¥Windows
+
+flush

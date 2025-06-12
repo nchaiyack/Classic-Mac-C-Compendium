@@ -1,1 +1,109 @@
-•  MacGzip 0.2 (gzip 1.2.4) This application is the GNU’s gzip for the Macintosh. Works only with system 7.x or later (I guess)•  Using MacGzip You can gzip files, but be careful; the resource fork will be lost. If you want gzip files with resource & info fork, use a macbinary translator first. When you gunzip a file, if the ascii option is selected, newlines will be converted. You can process files by opening them from "File" menu or by 'Drag&Drop' on MacGzip's closed icon. In the first case the process (compress or uncompress) is the one selected in the “gzip” menu. In the second case; it depends on the keyboard status (hold the selected key until a window pop's up):        None:   The file will be uncompressed in binary or ascii mode depending on the prefs saved.        'option key': The file will be gziped (prefs won't be changed)        'a':  If you are uncompressing, force ascii mode (prefs won't be changed)        'b':  If you are uncompressing, force binary mode (prefs won't be changed) When the process ends,  in the first case MacGzip will quit if you have set this flag in the prefs dialog; in the second case, it will always quit. -Preferences:  Suffix…  Is an optional suffix to use instead of '.gz'. If you are using the standard suffixes, let it empty.  Compression Level is used when compressing.  The higher level, the slower and better compression. (gunzip does not use this setting.)	Hint: you can use cmd-arrow keys to change the level.  Text creator…  Is the signature of files uncompressed in ascii mode.            -Notes: Cmd-period will raise a SIGINT (the program execution will terminate) When uncompressing large .Z files, the process ends a while after the grey bar is full•  Tech. doc. I have changed most of the stderr & stdout outputs to Mac alerts. if in your screen flashes the console window, this is a bug (please, report to the address below) The menu “ascii” means “-a” option The pref. Force… means “-f” option The pref. Suffix... means "-S" option When uncompressing, option -N is always on I have used the following file Types:   suffix  type   creator    .gz      Gzip     Gzip  gziped    .Z        ZIVU    Gzip  compressed (from maccompress)    .z        pZIP     Gzip  pkziped    (from UnZip 2.0.1) Anyway, read GNU’s gzip.doc to find out about formats. The settings (Preferences and the gzip menu settings) are stored in the prefs folder. If you want to have two or more copies to perform different tasks, you can change the STR #128: Example: A copy called “gunzip -a” to use it as a grinder to gunzip text files (STR #128 = 'gunzip-a prefs'; for example).•  About types & creators    When you download a file from a non-mac host, the program that you are using to download must assign it two flags: File Type and File Creator.  These are two four character words that the Mac uses to know what icon they must have, what application must be opened when you make a double click on it, and if one SFGetFile (the 'open' dialog) should show the file or not.    So, you should use a downloading application with a "suffix mapping" menu or preference, or at least, a drag&drop file typer.  You can find one, for example in        pinus.slu.se      /pub/mac/mirror-umich/util/diskfile/typeresolve2.01.cpt.hqx 0 0 ftp.sunet.se      /pub/mac/mirror-umich/util/diskfile/typeresolve2.01.cpt.hqx 0 0   With this version of MacGzip, you don't need to use the correct type, but is a good idea to keep your files well typed.• Warranty & so    The guarantee is directly proportional to the price of the application: NONE. (OK, if you loose a very important file with 2.3 Mb of data, let me know it and I  will send you a few words of condolence). BTW: if you have uncompressed a text file in binary mode, you can recover it by compressing it again and uncompressing it as ascii.  But if you have uncompressed a binary file in ascii mode, you have lost the file.  READ RIGHT NOW THESE FILES ON "gzip-1.2.4 sources":    COPYING    gzip.doc    README• Thanks to: Timothy Murphy ("tim@maths.tcd.ie" ) for Posix lib. tree@uvm.edu for SpinCursors code Greg Robbins for Prefs code C.K. Haun (Apple DTS) for Movable Modal code Dave Rubinic for Easy Errors 1.0 resources Lloyd Chambers (MacCompress) for Icons idea And all other people whose source code I used ‘for documentation’ At last, thanks to myself    macspd@ivo.cps.unizar.es    jazz@ws4.cps.unizar.es    AppleLink: SPA0301 for being so nice company.• REWARD 0.000.000 $  BUGS (dead or alive)    ...porque ahora mismo puedo escuhar    cada latido de mi corazón    como el ritmo de una canción    que nunca empieza a sonar    En otoño...                              Surfin' bichos			      
+•  MacGzip 0.2 (gzip 1.2.4)
+
+ This application is the GNU’s gzip for the Macintosh.
+ Works only with system 7.x or later (I guess)
+
+•  Using MacGzip
+
+ You can gzip files, but be careful; the resource fork will be lost. If you want gzip files with resource & info fork, use a macbinary translator first.
+
+ When you gunzip a file, if the ascii option is selected, newlines will be converted.
+
+ You can process files by opening them from "File" menu or by 'Drag&Drop' on MacGzip's closed icon.
+ In the first case the process (compress or uncompress) is the one selected in the “gzip” menu.
+ In the second case; it depends on the keyboard status (hold the selected key until a window pop's up):
+
+        None:   The file will be uncompressed in binary or ascii mode depending on the prefs saved.
+        'option key': The file will be gziped (prefs won't be changed)
+        'a':  If you are uncompressing, force ascii mode (prefs won't be changed)
+        'b':  If you are uncompressing, force binary mode (prefs won't be changed)
+
+ When the process ends,  in the first case MacGzip will quit if you have set this flag in the prefs dialog; in the second case, it will always quit.
+
+ -Preferences:
+
+  Suffix…  Is an optional suffix to use instead of '.gz'. If you are using the standard suffixes, let it empty.
+
+  Compression Level is used when compressing.  The higher level, the slower and better compression. (gunzip does not use this setting.)
+	Hint: you can use cmd-arrow keys to change the level.
+
+  Text creator…  Is the signature of files uncompressed in ascii mode.
+            
+-Notes:
+
+ Cmd-period will raise a SIGINT (the program execution will terminate)
+
+ When uncompressing large .Z files, the process ends a while after the grey bar is full
+
+•  Tech. doc.
+
+ I have changed most of the stderr & stdout outputs to Mac alerts. if in your screen flashes the console window, this is a bug (please, report to the address below)
+
+ The menu “ascii” means “-a” option
+ The pref. Force… means “-f” option
+ The pref. Suffix... means "-S" option
+ When uncompressing, option -N is always on
+
+ I have used the following file Types:
+   suffix  type   creator
+    .gz      Gzip     Gzip  gziped
+    .Z        ZIVU    Gzip  compressed (from maccompress)
+    .z        pZIP     Gzip  pkziped    (from UnZip 2.0.1)
+ Anyway, read GNU’s gzip.doc to find out about formats.
+
+ The settings (Preferences and the gzip menu settings) are stored in the prefs folder. If you want to have two or more copies to perform different tasks, you can change the STR #128:
+
+ Example: A copy called “gunzip -a” to use it as a grinder to gunzip text files (STR #128 = 'gunzip-a prefs'; for example).
+
+•  About types & creators
+
+    When you download a file from a non-mac host, the program that you are using to download must assign it two flags: File Type and File Creator.  These are two four character words that the Mac uses to know what icon they must have, what application must be opened when you make a double click on it, and if one SFGetFile (the 'open' dialog) should show the file or not.
+
+    So, you should use a downloading application with a "suffix mapping" menu or preference, or at least, a drag&drop file typer.  You can find one, for example in
+        
+pinus.slu.se      
+/pub/mac/mirror-umich/util/diskfile/typeresolve2.01.cpt.hqx 0 0 
+
+ftp.sunet.se      
+/pub/mac/mirror-umich/util/diskfile/typeresolve2.01.cpt.hqx 0 0 
+
+  With this version of MacGzip, you don't need to use the correct type, but is a good idea to keep your files well typed.
+
+• Warranty & so
+
+    The guarantee is directly proportional to the price of the application: NONE. (OK, if you loose a very important file with 2.3 Mb of data, let me know it and I  will send you a few words of condolence).
+
+ BTW: if you have uncompressed a text file in binary mode, you can recover it by compressing it again and uncompressing it as ascii.  But if you have uncompressed a binary file in ascii mode, you have lost the file.
+
+  READ RIGHT NOW THESE FILES ON "gzip-1.2.4 sources":
+
+    COPYING
+    gzip.doc
+    README
+
+• Thanks to:
+
+ Timothy Murphy ("tim@maths.tcd.ie" ) for Posix lib.
+ tree@uvm.edu for SpinCursors code
+ Greg Robbins for Prefs code
+ C.K. Haun (Apple DTS) for Movable Modal code
+ Dave Rubinic for Easy Errors 1.0 resources
+ Lloyd Chambers (MacCompress) for Icons idea
+ And all other people whose source code I used ‘for documentation’
+
+ At last, thanks to myself
+    macspd@ivo.cps.unizar.es
+    jazz@ws4.cps.unizar.es
+    AppleLink: SPA0301
+ for being so nice company.
+
+• REWARD 0.000.000 $
+  BUGS (dead or alive)
+
+    ...porque ahora mismo puedo escuhar
+    cada latido de mi corazón
+    como el ritmo de una canción
+    que nunca empieza a sonar
+    En otoño...
+                              Surfin' bichos
+			      

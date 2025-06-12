@@ -1,1 +1,40 @@
-Changes 0.2 -> 0.2.1¥ Fixed 'write to NIL' bugChanges 0.1§3 -> 0.2¥ Enabled '(don't) Quit When Finished' Preference (see README)¥ Fixed bug with name too long¥ Cmd-Arrow keys change Compression Level in Prefs Dialog¥ Do osEvt & diskEvt¥ Cosmetic changes in Prefs dialog, About & progress window¥ Aligned ics* icons for .Z files (Rebuild your Desktop!)¥ gzip called always with -N (see GNU docs)Changes 0.1§2 -> 0.1§3¥ Fixed odd adress in 68000. (0.1§3 runs on Plus and SE)Changes 0.0§ -> 0.1§2¥ Included source¥ Modified 'About...' dialog to show GNU's Public Licence¥ Now the warning when resource fork is not empty pops up when opening documents from finder, too.¥ Compiled for 68000 instead of 68020 (yes, there are SE's with system 7)¥ Remember window position in the prefs fileChanges 0.0§ -> 0.1§¥  Now MacGzip accepts any type of file.  WARNING: If you are updating from version 0.0§, probably you should rebuild your desktop to be able of Drag&Drop any files on MacGzip. (To do this, press cmd-opt when the Finder is starting)¥  When compressing files, MacGzip will warn you if the input file has resource fork.¥  Now uncompress large Unix compress files (.Z) works correctly¥  When you Drag&Drop files on MacGzip, you can use the next keys to override your existing settings:        'option key' :    The file will be compressed        'a'               :    Use ascii mode (uncompress only)        'b'               :    Use binary mode (uncompress only)¥  Now, the 'done' sound is not a system beep.¥  Not used option "-q" (more warnings and explanations)¥  Fixed a bug that made the Mac crash when the input file was corrupted
+Changes 0.2 -> 0.2.1
+
+¥ Fixed 'write to NIL' bug
+
+Changes 0.1§3 -> 0.2
+
+¥ Enabled '(don't) Quit When Finished' Preference (see README)
+¥ Fixed bug with name too long
+¥ Cmd-Arrow keys change Compression Level in Prefs Dialog
+
+¥ Do osEvt & diskEvt
+¥ Cosmetic changes in Prefs dialog, About & progress window
+¥ Aligned ics* icons for .Z files (Rebuild your Desktop!)
+¥ gzip called always with -N (see GNU docs)
+
+Changes 0.1§2 -> 0.1§3
+
+¥ Fixed odd adress in 68000. (0.1§3 runs on Plus and SE)
+
+Changes 0.0§ -> 0.1§2
+
+¥ Included source
+¥ Modified 'About...' dialog to show GNU's Public Licence
+¥ Now the warning when resource fork is not empty pops up when opening documents from finder, too.
+¥ Compiled for 68000 instead of 68020 (yes, there are SE's with system 7)
+¥ Remember window position in the prefs file
+
+Changes 0.0§ -> 0.1§
+
+¥  Now MacGzip accepts any type of file.  WARNING: If you are updating from version 0.0§, probably you should rebuild your desktop to be able of Drag&Drop any files on MacGzip. (To do this, press cmd-opt when the Finder is starting)
+¥  When compressing files, MacGzip will warn you if the input file has resource fork.
+¥  Now uncompress large Unix compress files (.Z) works correctly
+¥  When you Drag&Drop files on MacGzip, you can use the next keys to override your existing settings:
+
+        'option key' :    The file will be compressed
+        'a'               :    Use ascii mode (uncompress only)
+        'b'               :    Use binary mode (uncompress only)
+¥  Now, the 'done' sound is not a system beep.
+¥  Not used option "-q" (more warnings and explanations)
+¥  Fixed a bug that made the Mac crash when the input file was corrupted

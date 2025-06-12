@@ -1,1 +1,10 @@
-SATminimal===========SATminimal demonstrates the most trivial SAT program I could imagine. It is only about two pages long, in *two small source files*. It's a good place to start, I think.The main program initializes SAT and the sprite unit, sets up a few sprites and runs the animation until the mouse button is clicked. The sprite unit describes the sprites being used, moving them in each frame and changing "face", making a sound when they hit the border.Note: I use the speed field of the Sprite record. This field does not have to be used as speed, and it is not automatically applied on the sprites. You define the movement yourself the way you like it, using the data structures you decide on."Bug": SATminimal does not hide nor shield the cursor. Thus, you get "mouse droppings" if you move the cursor over an area where animation is being performed. This little "flaw" is intentionally left there, simply since I find it amusing to make mouse droppings :-), and to show you why you must hide or shield the cursor.
+SATminimal
+===========
+
+SATminimal demonstrates the most trivial SAT program I could imagine. It is only about two pages long, in *two small source files*. It's a good place to start, I think.
+
+The main program initializes SAT and the sprite unit, sets up a few sprites and runs the animation until the mouse button is clicked. The sprite unit describes the sprites being used, moving them in each frame and changing "face", making a sound when they hit the border.
+
+Note: I use the speed field of the Sprite record. This field does not have to be used as speed, and it is not automatically applied on the sprites. You define the movement yourself the way you like it, using the data structures you decide on.
+
+"Bug": SATminimal does not hide nor shield the cursor. Thus, you get "mouse droppings" if you move the cursor over an area where animation is being performed. This little "flaw" is intentionally left there, simply since I find it amusing to make mouse droppings :-), and to show you why you must hide or shield the cursor.

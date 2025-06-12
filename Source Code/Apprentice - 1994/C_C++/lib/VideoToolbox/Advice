@@ -1,1 +1,275 @@
-VideoToolbox: AdviceApril 25, 1994Advice to beginners,If you want to do vision experiments on your Macintosh computer, and haven’t programmed a Mac before, there are various things you should get for yourself. I’ve listed what I consider essential. The stuff I use. There are lots of baby books that hold your hand while you learn, but the ones that I’ve looked at weren’t helpful for setting up vision experiments. They’re oriented towards producing Mac-like applications with the right look and feel, which is unimportant when the experimenter is the only person that will ever run the program. Be warned that the bible, Inside Macintosh, is intimidating at first. The classic comment about Inside Mac is that you have to have read the rest to understand any part. Fortunately, the new edition, called the New Inside Macintosh--of which only part has been published--is much more readily assimilable. Mac programming is tough going at first, but I’ve come to like it, as the Apple routines are generally intelligent solutions to complicated problems. Anyway, by looking at the sources for the various demos in the VideoToolbox you should be able to get going much more quickly than I did. Good luck. -Denis PelliIf you like this file, you may also want to read Mike Kelly’s help file “csmp-faq-1.txt”, which answers some frequently asked questions for the Mac programming section of UseNet. It’s in the Info-Mac archives in /tech.ESSENTIAL BOOKS AND SOFTWARE:The C Programming Language, Second EditionKernighan and RitchiePrentice Hall, 1988This book describes the new Standard C. Most new C compilers are 99% compliant.THINK C 7A C compiler and programming environment (combined editor, linker, librarian, loader). It’s the best that I’ve ever used on any computer. For a little more money you can get Symantec C++, which includes THINK C 7 as part of the package, but the VideoToolbox makes no use of C++.Symantec Corporation10201 Torre AveCupertino, CA 95014(800) 800-1438 fax(800) 441-7234Metrowerks CodeWarrior C Compiler on a CDUntil now the main alternative to THINK C has been Apple’s MPW C, which is slow, and clumsy, at least in comparison to THINK C. (The only thing I use MPW for is CompareFiles.) However, MetroWerks released their "Code Warrior" C compiler in January, 1994. Apparently they have copied everything that Symantec did right, and then added their own improvements. There are three versions: Bronze $199 generates 680x0 code; Silver $299 generates PowerPC code; Gold $399 generates both.Order from (or from BookMasters, below):APDA, address appears below(Note: APDA is offering a special bundle including Code Warrior and Apple's CD-ROM for PowerPC development.)Questions:Metrowerks Inc.The Trimex BuildingRoute 11Mooers, NY 12958(514)-747-5999(514)-747-2822 faxmetro@info.uqam.caEDUCATIONAL PRICES:                 Gold    $99.00 US                Silver  $79.00 US                Bronze  $59.00 US$15.00 shipping and handling for US orders. You must fax BookMasters proof that you are either a student or officially affilliated with a University. BookMasters1-800-247-6553(419) 281-6883 faxTHINK Reference 2Also from Symantec. This program acts as an online reference manual to the information in the Inside Mac books, volumes I-VI. Highly recommended. $129Numerical Recipes C Set for Macintosh, 2nd ed. (textbook, example book, and disk) $90Useful book and mathematical library in source form. You can read the code, understand what’s going on, and modify it if necessary. From:Cambridge University Press40 West 20th StreetNew York, NY 10010-4211(800)-431-1580914-937-9600Inside Macintosh: Volumes I to VI, and X-Reference (i.e. index)New Inside Macintosh: Files, Memory, Processes, Imaging, ...Designing Cards and Drivers, 3rd editionfrom:Addison-Wesley(800)-447-2226or APDAYou’ll need these books. Apple is in the process of issuing the new edition of Inside Mac. So far they’ve only issued a few volumes. The old edition had numbered volumes--I to VI--the new edition has named volumes, e.g. Files. The new edition is significantly easier to use than the original and includes examples in C, not just Pascal.MAGAZINES AND CATALOGS:MacWEEKCustomer Service DepartmentP.O. Box 5821Cherry Hill, NJ 08034(609)-428-5000Try to get a free subscription.MacTech MagazinePO Box 250055Los Angeles, CA 90025-9555310-575-4343310-575-0925 faxcustservice@xplain.comThe only Mac magazine for programmers.TidBITSA free weekly email newsletter about Macintosh software and hardware published by Adam and Tonya Engst. To subscribe send email to info@tidbits.comAPDAApple Programmers and Developers AssociationApple Computer, Inc.20525 Mariani Avenue, M/S 33GCupertino, CA 95014-62991-800-282-2732(408)-562-3971 faxAPDA@applelink.apple.comGet an APDA catalog, since some Apple software and documentation is ONLY available from them.develop: The Apple Technical Journal (with the Developer Essentials CD-ROM),$30/year.Apple Computer, Inc.PO Box 531Mt. Morris, IL  61054U.S.A.800-545-9364 (U.S.A. only)815-734-6309 (anywhere)815-734-4205 faxDEV.SUBS@applelink.apple.comThe develop magazine has four issues per year. It has lots of examples and helpful in-depth explanations. Each issue includes the latest Developer Essentials CD-ROM disk. Useful.Subscription to the Developer Mailing. Each month you receive a newsletter and a CD.$250/year plus shippingAPDAEssential Tools and Objects CD-ROM (also called “ETO”)$1,300 for first year, $300/year thereafter.APDAI don’t subscribe to this--it’s too expensive--but you may want to. It’s updated several times a year and has the latest versions of Apple’s development tools, MPW, C, etc.ONLINE SERVICES:UseNetThe comp.sys.mac.programming UseNet news group has knowledgeable active discussion. Experts at Apple often jump in with helpful answers to thorny questions. You can participate in UseNet from your your Mac using telnet (NCSA Telnet and MacIP are both free) to log into a local unix system. Or you might use Nuntius (available by ftp from the Info-Mac archive) if you can get tcp/ip access to a net news server.CompuServe Information ServiceP.O. Box 20212Columbus, OH 43220(800)-848-8199If you can’t join UseNet, then you may want to join CompuServe, to follow the discussions and post your seemingly insoluble Macintosh problems on the bulletin boards, MacPro, MacDev, or Symantec:THINK C, to get free advice from experts. Buy the program Navigator from CompuServe, as it makes CompuServe much easier to use. You’ll need a modem.AppleLink(408) 974-3309ALINK.MGMT@applelink.apple.comAppleLink is Apple’s bulletin board and email system. It provides some system software updates and technical information. Most companies that make Macintosh products have AppleLink accounts, and you can use the online directory to get their email addresses. You’ll need a modem.Anyone can submit a bug report to APPLE.BUGS@Applelink.Apple.com. They prefer, but don’t require, a certain format that is produced automatically by a hypercard stack called Apple Bug Reporter, which can be downloaded from ftp.apple.com in /dts/mac/bugs.SOFTWARE ARCHIVES ACCESSIBLE THROUGH THE INTERNET:"Anarchie" is a great new program that makes it easy to find and download software available on public internet sites. You tell it the name (possibly incomplete) of the program you want. It consults an archie server and tells you from which sites it's available (with dates and sizes) and you can just double click any line to download the file. Here are two sites from which you can download Anarchie:ftp://ftp.cac.psu.edu/pub/mac/comm/anarchie/Anarchie110.hqxftp://ftp.halcyon.com/pub/tidbits/tisk/mactcp/ftp/anarchie-110.hqxThe Internet Starter Kit for Macintosh, by Adam C. Engst.This book is pretty good and includes a free disk that has MacTCP (a $50 value) and lots of other important utilities for accessing the Internet.Published by Hayden Books. ISBN 1-56830-064-6.$29.95 USA $37.95 Canada. (Mention the magic code "310D" for a 20% discount.)Hayden Books201 West 103rd StreetIndianapolis, IN 46290 USA800/428-5331 orders317/581-3500 orders800/448-3804 fax317-581-3550 faxorders@hayden.comFTP is a file transfer protocol used to transfer files across the Internet. FTP programs typically have very rudimentary user interfaces. Some of the bigger ftp servers are now also Gopher servers. Gopher (developed at University of Minnesota, originally for a campus-wide information server)  is sort of a superset of ftp that provides a quite good user interface and allows access to a wide variety of Internet resources. Public ftp servers require that you log in as “anonymous and will accept any password, but it is considered a courtesy to supply your electronic address as the password. If for some reason you can’t use ftp or gopher, some of the sites will help you out by allowing you to request transmission of files to you by email.There are two ways to use ftp from your Mac. The traditional, indirect, approach is to remotely log into a mainframe (preferably one running unix), use its ftp facilities to move the file to it, and then download the file from it. The modern, direct, approach requires that your AppleTalk network have a gateway to the Internet, so that you can run an ftp program on your Mac (provided you have Apple’s MacTCP init, available from APDA; many universities have site licenses). I recommend TurboGopher for anonymous ftp downloading and Fetch 2.1 for general ftp uploading and downloading. Both are free from the Info-Mac archive.Info-Mac archives  (VideoToolbox is in info-mac/Development/SourceCode/)ftp: sumex-aim.stanford.edu [36.44.0.6]gopher: Info-Mac Archivesemail: send a query to Info-Mac-Request@sumex-aim.stanford.eduThis is the largest collection of public domain Mac software. Info-Mac CD-ROM II (May '93) $49.95 plus shipping.You can buy this May ‘93 snapshot of the info-mac archive in a CD-ROM from:Pacific HiTech, Inc.4760 Highland Drive, Suite 204Salt Lake City, Utah 84124800-765-8369 (orders only)801-278-2042801-278-2666 (fax)71175.3152@compuserve.com(It's got the Feb 25 1993 edition of the VideoToolbox, and 600 MB of otherstuff.)MacPsych archivesftp: ftp.stolaf.edu [130.71.128.9] (look in /pub/macpsych/). gopher: St. Olaf University/Network Resources/St. Olaf Mailing Lists/MacPsych/email: send a query to macpsych-request@stolaf.eduApple archivesftp: ftp.apple.com [130.43.2.3] (look in /dts/mac/).(ftp.apple.com is an alias for bric-a-brac.apple.com.)EMAIL:Your email service ought to have a gateway to Internet; complain if it doesn’t. Here’s how to send Internet mail to various commercial services when you only know the person’s service-specific address:America Online: “Adam Engst” becomes “adamengst@aol.com”.  AppleLink: “DENIS” becomes “DENIS@applelink.apple.com”. BIX: “user” becomes “user@dcibix.das.net”.CompuServe: “1234,567” becomes “1234.567@compuserve.com”. Note: “,” becomes “.”.GEnie: “username” becomes “username@genie.geis.com”.MCI: Joe Doe 123-4567 becomes “Joe_Doe@mcimail.com” or “1234567@mcimail.com”.Prodigy: user ID “abcd12a” becomes “abcd12a@prodigy.com”HARDWARE:In my experience a plain old (now obsolete) Mac II is fast enough for most things, but faster Macs can show bigger movies. If you’re going to synthesize images then make sure your computer has a floating point chip. So far we’ve never needed more than 8-bit color, making the obsolete Apple Toby and TFB video cards our favorites, because they work perfectly (unlike Apple’s 1992 crop of video cards--see Video synch), and they’re available for $90 from Shreve Systems (800-227-3971), but, of course, they don’t support the latest large monitors. We also like the built-in video on all of Apple’s newer computers because you can load images into them at extremely high speeds (try the demo TimeVideo), since they bypass the NuBus bottleneck. We use the mouse or keyboard to collect observer responses. We’ve bought a few Data Translation A/D boards to automate our photometry, moving the cards from machine to machine as needed, but they are probably not the best brand.We’ve done nearly all our research using Apple’s High Resolution Monochrome monitors, which are inexpensive and adequate, though one could wish for higher luminance (100 cd/m^2 peak when new), better high voltage regulation, and dc coupling instead of dc restoration. I suspect that a color monitor might be better regulated and might be excellent used as a monochrome monitor. Use with the ISR Video Attenuator would require that you: 1. use only the green channel, or 2. build a video amplifier to drive all three channels from the single output of the video attenuator, or 3. snip two of the 75 ohm termination resistors inside the monitor and tie all three channels together.You’ll want a fast CD-ROM drive, mainly to read Apple’s Developer Essentials CD-ROM disk.You’ll need a modem to call CompuServe or AppleLink, and to dial in from home and elsewhere using AppleTalk Remote Access (ARA). You can now buy v32bis (i.e. 14,400 baud) modems for several hundred dollars. Phone lines are still expensive though, so you may want to cost-share by using a shared modem and a single phone line, in which case you'll want to devote an old Mac or buy an AppleTalk Remote Access server to connect the modem to your AppleTalk network.APS Turbo DAT $1,399APS Technologies6131 DeramusPO Box 4987Kansas City, MO 642120=0087(800)-354-1213816-483-6100816-483-3077 faxMy department uses a single DAT tape drive (with compression, from APS) and the Retrospect program to backup dozens of Macs every night automatically. We’re very happy with it. Retrospect maintains a historical backup so you can go back to older versions of your data, many backups ago. Get a sufficiently large-capacity tape drive so that you can do unattended incremental backups without having to change the tape.Moustrak Pad (large 9”x11”, blue or gray). One for each Mac. You really need this. $9Chip Merchant9285 Chesapeake DriveSan Diego, CA 92123(619)-268-4774(619)-268-0874 faxAt $30 per megabyte it’s worth buying enough memory to take your computer up to at least 8 MB. This outfit has good prices.RECOMMENDED:(The free stuff is available from Info-Mac or CompuServe or both. You can use TurboGopher to do an “Archie” search of most ftp sites in the world for a file name. To search Compuserve use their “GO MACFF” command.)After Dark - cute screen saver.ApplWindows - INIT helps you go quickly go to any window of any application. Free.ARA Commander - streamlines your use of Appletalk Remote Access. Shareware.ATM 3.6 - Adobe Type Manager, $7.50 from Adobe at 800-521-1976 x4400. Canvas - drawing figures that aren’t graphs. (Ted Adelson convinced me.)Conflict Catcher - my favorite INIT manager. Disinfectant - remove viruses. This is the best. Free.DocuComp II - compare versions of a manuscript.DOS Mounter Plus - read DOS floppies with the same convenience as Mac floppies.EndNote Plus & EndLink - download references from DIALOG & stick ‘em in papersExcel - massage data before plotting it.Fetch 2.1.1 - ftp uploading and downloading. Free.Kaleidagraph 3.0 - plot data. Can be remotely controled via AppleEvents.Klutz - view the contents of the clut (Color Lookup Table). Free.MacsBug - low-level debugger from Apple. Free.MacTCP - required by most ftp programs. $100 from APDA.Mathematica - modeling.MathType - create equations for use in any word processor, especially Word.MATLAB - analyze data (crude but fast).Norton Essentials for the Powerbook - good battery management.Now Up To Date - first appointment calendar (and to-do list) that I like.Now Utilities - includes Super Boomerang. Helpful.On Location - lightning-fast searches by content. Helpful.PopChar - shows all the characters in the current font. Free.Programmer’s Key - use your keyboard’s power key to invoke the debugger. Free.QuickDEX II - like a RoloDEX, keeps addresses and phone numbers. Lightning fast.QuickMail - email. Connects to Internet, AppleLink, and uucp via optional gateways.RAMDoubler - makes it appear that you have twice the RAM memory. $50?ResEdit CODE editor - free from ftp.apple.com:/dts/mac/tools/resedit/Retrospect & Retrospect Remote 10-pack - best backup program. $139 & $139SCSIProbe - mount and unmount SCSI disks. Free.SuperClock! - time of day. Free.Synchronize! - merge updates of folders on different computers. $30?System Errors 7.01- explains all the Systems errors. Free. TurboGopher - gopher and anonymous ftp downloading. Free from Info-Mac archive. Vantage - word (un)wrapping and quote (un)curling. $90 Preferred Publishers.Word - only word processor fully compatible with MathType and DocuComp.ADDRESSES:Preferred Publishers, Inc.5100 Poplar Ave., Suite 617Memphis, TN 38137(800) 446-6393.(901) 683-3383
+VideoToolbox: Advice
+April 25, 1994
+
+Advice to beginners,
+
+If you want to do vision experiments on your Macintosh computer, and haven’t programmed a Mac before, there are various things you should get for yourself. I’ve listed what I consider essential. The stuff I use. There are lots of baby books that hold your hand while you learn, but the ones that I’ve looked at weren’t helpful for setting up vision experiments. They’re oriented towards producing Mac-like applications with the right look and feel, which is unimportant when the experimenter is the only person that will ever run the program. Be warned that the bible, Inside Macintosh, is intimidating at first. The classic comment about Inside Mac is that you have to have read the rest to understand any part. Fortunately, the new edition, called the New Inside Macintosh--of which only part has been published--is much more readily assimilable. Mac programming is tough going at first, but I’ve come to like it, as the Apple routines are generally intelligent solutions to complicated problems. Anyway, by looking at the sources for the various demos in the VideoToolbox you should be able to get going much more quickly than I did. Good luck. -Denis Pelli
+
+If you like this file, you may also want to read Mike Kelly’s help file “csmp-faq-1.txt”, which answers some frequently asked questions for the Mac programming section of UseNet. It’s in the Info-Mac archives in /tech.
+
+ESSENTIAL BOOKS AND SOFTWARE:
+
+The C Programming Language, Second Edition
+Kernighan and Ritchie
+Prentice Hall, 1988
+This book describes the new Standard C. Most new C compilers are 99% compliant.
+
+THINK C 7
+A C compiler and programming environment (combined editor, linker, librarian, loader). It’s the best that I’ve ever used on any computer. For a little more money you can get Symantec C++, which includes THINK C 7 as part of the package, but the VideoToolbox makes no use of C++.
+Symantec Corporation
+10201 Torre Ave
+Cupertino, CA 95014
+(800) 800-1438 fax
+(800) 441-7234
+
+Metrowerks CodeWarrior C Compiler on a CD
+Until now the main alternative to THINK C has been Apple’s MPW C, which is slow, and clumsy, at least in comparison to THINK C. (The only thing I use MPW for is CompareFiles.) However, MetroWerks released their "Code Warrior" C compiler in January, 1994. Apparently they have copied everything that Symantec did right, and then added their own improvements. There are three versions: Bronze $199 generates 680x0 code; Silver $299 generates PowerPC code; Gold $399 generates both.
+Order from (or from BookMasters, below):
+APDA, address appears below
+(Note: APDA is offering a special bundle including Code Warrior and Apple's CD-ROM for PowerPC development.)
+Questions:
+Metrowerks Inc.
+The Trimex Building
+Route 11
+Mooers, NY 12958
+(514)-747-5999
+(514)-747-2822 fax
+metro@info.uqam.ca
+
+EDUCATIONAL PRICES:
+                 Gold    $99.00 US
+                Silver  $79.00 US
+                Bronze  $59.00 US
+$15.00 shipping and handling for US orders. You must fax BookMasters proof that you are either a student or officially affilliated with a University. 
+BookMasters
+1-800-247-6553
+(419) 281-6883 fax
+
+THINK Reference 2
+Also from Symantec. This program acts as an online reference manual to the information in the Inside Mac books, volumes I-VI. Highly recommended. $129
+
+Numerical Recipes C Set for Macintosh, 2nd ed. 
+(textbook, example book, and disk) $90
+Useful book and mathematical library in source form. You can read the code, understand what’s going on, and modify it if necessary. From:
+Cambridge University Press
+40 West 20th Street
+New York, NY 10010-4211
+(800)-431-1580
+914-937-9600
+
+Inside Macintosh: Volumes I to VI, and X-Reference (i.e. index)
+New Inside Macintosh: Files, Memory, Processes, Imaging, ...
+Designing Cards and Drivers, 3rd edition
+from:
+Addison-Wesley
+(800)-447-2226
+or APDA
+You’ll need these books. Apple is in the process of issuing the new edition of Inside Mac. So far they’ve only issued a few volumes. The old edition had numbered volumes--I to VI--the new edition has named volumes, e.g. Files. The new edition is significantly easier to use than the original and includes examples in C, not just Pascal.
+
+MAGAZINES AND CATALOGS:
+
+MacWEEK
+Customer Service Department
+P.O. Box 5821
+Cherry Hill, NJ 08034
+(609)-428-5000
+Try to get a free subscription.
+
+MacTech Magazine
+PO Box 250055
+Los Angeles, CA 90025-9555
+310-575-4343
+310-575-0925 fax
+custservice@xplain.com
+The only Mac magazine for programmers.
+
+TidBITS
+A free weekly email newsletter about Macintosh software and hardware published by Adam and Tonya Engst. To subscribe send email to info@tidbits.com
+
+APDA
+Apple Programmers and Developers Association
+Apple Computer, Inc.
+20525 Mariani Avenue, M/S 33G
+Cupertino, CA 95014-6299
+1-800-282-2732
+(408)-562-3971 fax
+APDA@applelink.apple.com
+Get an APDA catalog, since some Apple software and documentation is ONLY available from them.
+
+develop: The Apple Technical Journal (with the Developer Essentials CD-ROM),
+$30/year.
+Apple Computer, Inc.
+PO Box 531
+Mt. Morris, IL  61054
+U.S.A.
+800-545-9364 (U.S.A. only)
+815-734-6309 (anywhere)
+815-734-4205 fax
+DEV.SUBS@applelink.apple.com
+The develop magazine has four issues per year. It has lots of examples and helpful in-depth explanations. Each issue includes the latest Developer Essentials CD-ROM disk. Useful.
+
+Subscription to the Developer Mailing. Each month you receive a newsletter and a CD.
+$250/year plus shipping
+APDA
+
+Essential Tools and Objects CD-ROM (also called “ETO”)
+$1,300 for first year, $300/year thereafter.
+APDA
+I don’t subscribe to this--it’s too expensive--but you may want to. It’s updated several times a year and has the latest versions of Apple’s development tools, MPW, C, etc.
+
+ONLINE SERVICES:
+
+UseNet
+The comp.sys.mac.programming UseNet news group has knowledgeable active discussion. Experts at Apple often jump in with helpful answers to thorny questions. You can participate in UseNet from your your Mac using telnet (NCSA Telnet and MacIP are both free) to log into a local unix system. Or you might use Nuntius (available by ftp from the Info-Mac archive) if you can get tcp/ip access to a net news server.
+
+CompuServe Information Service
+P.O. Box 20212
+Columbus, OH 43220
+(800)-848-8199
+If you can’t join UseNet, then you may want to join CompuServe, to follow the discussions and post your seemingly insoluble Macintosh problems on the bulletin boards, MacPro, MacDev, or Symantec:THINK C, to get free advice from experts. Buy the program Navigator from CompuServe, as it makes CompuServe much easier to use. You’ll need a modem.
+
+AppleLink
+(408) 974-3309
+ALINK.MGMT@applelink.apple.com
+AppleLink is Apple’s bulletin board and email system. It provides some system software updates and technical information. Most companies that make Macintosh products have AppleLink accounts, and you can use the online directory to get their email addresses. You’ll need a modem.
+
+Anyone can submit a bug report to APPLE.BUGS@Applelink.Apple.com. They prefer, but don’t require, a certain format that is produced automatically by a hypercard stack called Apple Bug Reporter, which can be downloaded from ftp.apple.com in /dts/mac/bugs.
+
+SOFTWARE ARCHIVES ACCESSIBLE THROUGH THE INTERNET:
+
+"Anarchie" is a great new program that makes it easy to find and download software available on public internet sites. You tell it the name (possibly incomplete) of the program you want. It consults an archie server and tells you from which sites it's available (with dates and sizes) and you can just double click any line to download the file. Here are two sites from which you can download Anarchie:
+ftp://ftp.cac.psu.edu/pub/mac/comm/anarchie/Anarchie110.hqx
+ftp://ftp.halcyon.com/pub/tidbits/tisk/mactcp/ftp/anarchie-110.hqx
+
+The Internet Starter Kit for Macintosh, by Adam C. Engst.
+This book is pretty good and includes a free disk that has MacTCP (a $50 value) and lots of other important utilities for accessing the Internet.
+Published by Hayden Books. ISBN 1-56830-064-6.
+$29.95 USA $37.95 Canada. (Mention the magic code "310D" for a 20% discount.)
+Hayden Books
+201 West 103rd Street
+Indianapolis, IN 46290 USA
+800/428-5331 orders
+317/581-3500 orders
+800/448-3804 fax
+317-581-3550 fax
+orders@hayden.com
+
+FTP is a file transfer protocol used to transfer files across the Internet. FTP programs typically have very rudimentary user interfaces. Some of the bigger ftp servers are now also Gopher servers. Gopher (developed at University of Minnesota, originally for a campus-wide information server)  is sort of a superset of ftp that provides a quite good user interface and allows access to a wide variety of Internet resources. Public ftp servers require that you log in as “anonymous and will accept any password, but it is considered a courtesy to supply your electronic address as the password. If for some reason you can’t use ftp or gopher, some of the sites will help you out by allowing you to request transmission of files to you by email.
+
+There are two ways to use ftp from your Mac. The traditional, indirect, approach is to remotely log into a mainframe (preferably one running unix), use its ftp facilities to move the file to it, and then download the file from it. The modern, direct, approach requires that your AppleTalk network have a gateway to the Internet, so that you can run an ftp program on your Mac (provided you have Apple’s MacTCP init, available from APDA; many universities have site licenses). I recommend TurboGopher for anonymous ftp downloading and Fetch 2.1 for general ftp uploading and downloading. Both are free from the Info-Mac archive.
+
+Info-Mac archives  (VideoToolbox is in info-mac/Development/SourceCode/)
+ftp: sumex-aim.stanford.edu [36.44.0.6]
+gopher: Info-Mac Archives
+email: send a query to Info-Mac-Request@sumex-aim.stanford.edu
+This is the largest collection of public domain Mac software. 
+
+Info-Mac CD-ROM II (May '93) $49.95 plus shipping.
+You can buy this May ‘93 snapshot of the info-mac archive in a CD-ROM from:
+Pacific HiTech, Inc.
+4760 Highland Drive, Suite 204
+Salt Lake City, Utah 84124
+800-765-8369 (orders only)
+801-278-2042
+801-278-2666 (fax)
+71175.3152@compuserve.com
+(It's got the Feb 25 1993 edition of the VideoToolbox, and 600 MB of other
+stuff.)
+
+MacPsych archives
+ftp: ftp.stolaf.edu [130.71.128.9] (look in /pub/macpsych/). 
+gopher: St. Olaf University/Network Resources/St. Olaf Mailing Lists/MacPsych/
+email: send a query to macpsych-request@stolaf.edu
+
+Apple archives
+ftp: ftp.apple.com [130.43.2.3] (look in /dts/mac/).
+(ftp.apple.com is an alias for bric-a-brac.apple.com.)
+
+EMAIL:
+
+Your email service ought to have a gateway to Internet; complain if it doesn’t. Here’s how to send Internet mail to various commercial services when you only know the person’s service-specific address:
+America Online: “Adam Engst” becomes “adamengst@aol.com”.  
+AppleLink: “DENIS” becomes “DENIS@applelink.apple.com”. 
+BIX: “user” becomes “user@dcibix.das.net”.
+CompuServe: “1234,567” becomes “1234.567@compuserve.com”. Note: “,” becomes “.”.
+GEnie: “username” becomes “username@genie.geis.com”.
+MCI: Joe Doe 123-4567 becomes “Joe_Doe@mcimail.com” or “1234567@mcimail.com”.
+Prodigy: user ID “abcd12a” becomes “abcd12a@prodigy.com”
+
+HARDWARE:
+
+In my experience a plain old (now obsolete) Mac II is fast enough for most things, but faster Macs can show bigger movies. If you’re going to synthesize images then make sure your computer has a floating point chip. So far we’ve never needed more than 8-bit color, making the obsolete Apple Toby and TFB video cards our favorites, because they work perfectly (unlike Apple’s 1992 crop of video cards--see Video synch), and they’re available for $90 from Shreve Systems (800-227-3971), but, of course, they don’t support the latest large monitors. We also like the built-in video on all of Apple’s newer computers because you can load images into them at extremely high speeds (try the demo TimeVideo), since they bypass the NuBus bottleneck. We use the mouse or keyboard to collect observer responses. We’ve bought a few Data Translation A/D boards to automate our photometry, moving the cards from machine to machine as needed, but they are probably not the best brand.
+
+We’ve done nearly all our research using Apple’s High Resolution Monochrome monitors, which are inexpensive and adequate, though one could wish for higher luminance (100 cd/m^2 peak when new), better high voltage regulation, and dc coupling instead of dc restoration. I suspect that a color monitor might be better regulated and might be excellent used as a monochrome monitor. Use with the ISR Video Attenuator would require that you: 1. use only the green channel, or 2. build a video amplifier to drive all three channels from the single output of the video attenuator, or 3. snip two of the 75 ohm termination resistors inside the monitor and tie all three channels together.
+
+You’ll want a fast CD-ROM drive, mainly to read Apple’s Developer Essentials CD-ROM disk.
+
+You’ll need a modem to call CompuServe or AppleLink, and to dial in from home and elsewhere using AppleTalk Remote Access (ARA). You can now buy v32bis (i.e. 14,400 baud) modems for several hundred dollars. Phone lines are still expensive though, so you may want to cost-share by using a shared modem and a single phone line, in which case you'll want to devote an old Mac or buy an AppleTalk Remote Access server to connect the modem to your AppleTalk network.
+
+APS Turbo DAT $1,399
+APS Technologies
+6131 Deramus
+PO Box 4987
+Kansas City, MO 642120=0087
+(800)-354-1213
+816-483-6100
+816-483-3077 fax
+My department uses a single DAT tape drive (with compression, from APS) and the Retrospect program to backup dozens of Macs every night automatically. We’re very happy with it. Retrospect maintains a historical backup so you can go back to older versions of your data, many backups ago. Get a sufficiently large-capacity tape drive so that you can do unattended incremental backups without having to change the tape.
+
+Moustrak Pad (large 9”x11”, blue or gray). One for each Mac. You really need this. $9
+
+Chip Merchant
+9285 Chesapeake Drive
+San Diego, CA 92123
+(619)-268-4774
+(619)-268-0874 fax
+At $30 per megabyte it’s worth buying enough memory to take your computer up to at least 8 MB. This outfit has good prices.
+
+RECOMMENDED:
+(The free stuff is available from Info-Mac or CompuServe or both. You can use TurboGopher to do an “Archie” search of most ftp sites in the world for a file name. To search Compuserve use their “GO MACFF” command.)
+
+After Dark - cute screen saver.
+ApplWindows - INIT helps you go quickly go to any window of any application. Free.
+ARA Commander - streamlines your use of Appletalk Remote Access. Shareware.
+ATM 3.6 - Adobe Type Manager, $7.50 from Adobe at 800-521-1976 x4400. 
+Canvas - drawing figures that aren’t graphs. (Ted Adelson convinced me.)
+Conflict Catcher - my favorite INIT manager. 
+Disinfectant - remove viruses. This is the best. Free.
+DocuComp II - compare versions of a manuscript.
+DOS Mounter Plus - read DOS floppies with the same convenience as Mac floppies.
+EndNote Plus & EndLink - download references from DIALOG & stick ‘em in papers
+Excel - massage data before plotting it.
+Fetch 2.1.1 - ftp uploading and downloading. Free.
+Kaleidagraph 3.0 - plot data. Can be remotely controled via AppleEvents.
+Klutz - view the contents of the clut (Color Lookup Table). Free.
+MacsBug - low-level debugger from Apple. Free.
+MacTCP - required by most ftp programs. $100 from APDA.
+Mathematica - modeling.
+MathType - create equations for use in any word processor, especially Word.
+MATLAB - analyze data (crude but fast).
+Norton Essentials for the Powerbook - good battery management.
+Now Up To Date - first appointment calendar (and to-do list) that I like.
+Now Utilities - includes Super Boomerang. Helpful.
+On Location - lightning-fast searches by content. Helpful.
+PopChar - shows all the characters in the current font. Free.
+Programmer’s Key - use your keyboard’s power key to invoke the debugger. Free.
+QuickDEX II - like a RoloDEX, keeps addresses and phone numbers. Lightning fast.
+QuickMail - email. Connects to Internet, AppleLink, and uucp via optional gateways.
+RAMDoubler - makes it appear that you have twice the RAM memory. $50?
+ResEdit CODE editor - free from ftp.apple.com:/dts/mac/tools/resedit/
+Retrospect & Retrospect Remote 10-pack - best backup program. $139 & $139
+SCSIProbe - mount and unmount SCSI disks. Free.
+SuperClock! - time of day. Free.
+Synchronize! - merge updates of folders on different computers. $30?
+System Errors 7.01- explains all the Systems errors. Free. 
+TurboGopher - gopher and anonymous ftp downloading. Free from Info-Mac archive. 
+Vantage - word (un)wrapping and quote (un)curling. $90 Preferred Publishers.
+Word - only word processor fully compatible with MathType and DocuComp.
+
+ADDRESSES:
+
+Preferred Publishers, Inc.
+5100 Poplar Ave., Suite 617
+Memphis, TN 38137
+(800) 446-6393.
+(901) 683-3383

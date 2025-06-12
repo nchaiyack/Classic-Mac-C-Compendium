@@ -1,1 +1,31 @@
-README 7/16/91Xdiff_______________________________________________________________________________BEFORE YOU BEGINPlease read the README.FIRST file - found at the root level of this server - for general information and instructions on unarchiving and uncompressingfiles.The README.BROCHURE also contains helpful descriptions of this and othersoftware offered on the ftp server._______________________________________________________________________________XDIFFXDIFF/XFIX is a set of programs for quickly determining the changeswhich were made during an editing session on a text file.Those changes are written to an update file by XDIFF and then uploaded or transferred to a remote computer and the new fileis reassembled with XFIX.  Checksumming is used to guarantee thatthe new file is correct after being updated.The Source folder contains Macintosh and Unix system source code.Use the makefile for Unix systems, the xdiff.make build file for MPW C 3.0.These programs and documentation are in the public domain.Tim KrauskopfNCSA
+README 7/16/91
+Xdiff
+
+_______________________________________________________________________________
+BEFORE YOU BEGIN
+
+Please read the README.FIRST file - found at the root level of this server - 
+for general information and instructions on unarchiving and uncompressing
+files.
+
+The README.BROCHURE also contains helpful descriptions of this and other
+software offered on the ftp server.
+
+_______________________________________________________________________________
+XDIFF
+
+XDIFF/XFIX is a set of programs for quickly determining the changes
+which were made during an editing session on a text file.
+Those changes are written to an update file by XDIFF and then 
+uploaded or transferred to a remote computer and the new file
+is reassembled with XFIX.  Checksumming is used to guarantee that
+the new file is correct after being updated.
+
+The Source folder contains Macintosh and Unix system source code.
+Use the makefile for Unix systems, the xdiff.make build file for 
+MPW C 3.0.
+
+These programs and documentation are in the public domain.
+
+Tim Krauskopf
+NCSA

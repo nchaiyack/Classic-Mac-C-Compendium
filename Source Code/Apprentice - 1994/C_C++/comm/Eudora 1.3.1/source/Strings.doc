@@ -1,1 +1,109 @@
-5602 ALERT_TIMEOUT The number of seconds before alerts are automatically dismissed.5604 ALIAS_A_WIDTH Width of the Nickname list column in the Nicknames window.5605 ALIAS_CMD DON'T TOUCH.5606 ALIAS_E_LABEL Label for the addresses section of the nicknames window.5607 ALIAS_FILE Name of nickname file.5608 ALIAS_ADDR_PC Percent of vertical space to allot to addresses in nicknames.5614 ALREADY_READ Status header (substring) for already-read message.5615 APPL_FONT Name of application font.5801 BINHEX BinHex intro line, used to recognize BinHex files.  DON'T TOUCH.5808 BINHEX_OUT BinHex intro line, put on outgoing messages.  DON'T TOUCH.5816 BUFFER_SIZE Disk I/O buffer size.6001 COMP_TOP_MARGIN Height of icon bar.6017 CTB_NEWLINE Newline used during CTB connections.6020 DATE_HEADER DON'T TOUCH.6201 DATE_STRING_FMT DON'T TOUCH.6203 DELIMITERS DON'T TOUCH.6205 DOUBLE_TOLERANCE Double-click mouse movement tolerance.6211 FILE_LINE_FMT Don't touch.6213 FLUSH_SECS Number of seconds between FlushVol calls.6214 FOLDER_NAME Name of Eudora folder.6219 ICMP_SECONDS Number of seconds to leave ICMP messages on-screen.6220 IN Name of In mailbox (be sure to change Mailbox && Transfer menus, too.)6401 INFINITE_STRING DON'T TOUCH.6408 FRAGMENT_SIZE Size at which to split messages.  Must satisfy FRAGMENT_SIZE<SPLIT_THRESH<32K6411 MBOX_MOVE Mailboxes window button name.6412 MBOX_MOVE_BACK Mailboxes window button name.6413 MBOX_NEW Mailboxes window button name.6414 MBOX_REMOVE Mailboxes window button name.6415 MBOX_RENAME Mailboxes window button name.6416 NOTE_CMD Command used for notes in nicknames window.6602 NAVIN Navigation In string name.6603 NAVOUT Navigation Out string name.6604 NEWLINE TCP newline string.6804 OPEN_TIMEOUT Timeout for opening connections.6805 OUT Name of Out mailbox (be sure to change Mailbox menu, too.)6806 PARTIAL_TICKS Number of ticks before Live Nicknames moves pointer.6812 PH_HOST Default ph host.6814 PH_PORT Port used for ph.6815 PH_QUERY Query command used in ph.  It MUST end in a space.6816 PH_QUIT Quit command used in ph.6820 POP_PORT Port used for POP3.7002 POSITION_NAME Names of window size resources.7004 PRINT_FONT Default print font.7005 PRINT_H_FONT Print header font.7006 PRINT_H_MAR Print header margin.7007 PRINT_H_SIZE Print header fontsize.7008 QUEUE_BUTTON Name of Queue button.7009 QUOTE_PREFIX Prefix for quoted sections.7016 RECEIVED_HEAD Don't touch.7017 RECV_TIMEOUT Receive timeout, in seconds.7207 SEND_BUTTON Name of Send button.7208 SETTINGS_FILE Name of settings/signature file.7209 SHORT_TIMEOUT Number of seconds for timeouts during navigation.7211 SMTP_PORT Port for SMTP.7213 STATE_LABELS Message state labels.7214 STATUS Header that gives message status.7216 FWD_INTRO String to insert before quoted Forward text7218 TAB_DISTANCE Number of chars to indent for a tab.7219 TCP_BUFFER_SIZE Buffer size for network.7220 TCP_DRIVER Name of tcp/ip driver.7402 TEMP_SUFFIX Temp file suffix.7403 TEXT_CREATOR Default TEXT file creator.7408 TOC_SUFFIX Suffix for table of contents files.7411 TRANSFER_PREFIX Prefix for use in Transfer menu.7412 TRASH Name of Trash mailbox (be sure to change Mailbox && Transfer menus, too.)7413 TS_CONNECT_FMT CTB connect request string.7419 WRAP_LIMIT Number of chars at which to wrap messages.7604 ABOMINATION Header line that warns of uuencoded applesingle attachments.7605 NAVMID Navigation Mid string name.7606 PRINT_LEFT_MAR Left printout margin.7607 PRINT_RIGHT_MAR Right printout margin.7609 CTB_ME SMTP Helo argument for dialups.7610 TCP_ME SMTP Helo argument for networks.7611 NO_PLAIN_OPEN Message when there is a plain file named Eudora Folder in the system folder.7612 DEF_MWIDTH Message width when PREF_MWIDTH is not set.7613 UU_BAD_LENGTH Message when an incorrect line length is found in uuencoded data.7614 HEX_SIZE_PERCENT Eudora will decode a BinHex file if the message is at least this percent of the size the BinHex file reports, or...7615 HEX_SIZE_THRESH if the message is less than this size.7616 BIG_MESSAGE Size limit for Skip Big Messages.7619 SPLIT_THRESH Size at which a message must be split.  Must satisfy FRAGMENT_SIZE<SPLIT_THRESH<32K7620 BOX_SIZE_FMT Size display format for mailbox windows.7801 BOX_SIZE_SIZE size of mailbox size display7804 BOX_SIZE_FONT_SIZE Size of font for mailbox size box.7805 ALIAS_VERBOTEN Characters forbidden in aliases.7813 BCC_ONLY Put in the To: field if a message has only Bcc:'s.7817 FWD_TRAIL String to put after forwarded text7818 REP_SEND_ATTR Reply to sender attribution8008 DESK_LEFT_STRIP extra desktop margin on the left when creating a window8009 DESK_RIGHT_STRIP ditto, but on the right8010 DESK_BOTTOM_STRIP ditto, but on the bottom8011 DESK_TOP_STRIP ditto, but on the top8012 SENDER Sender: header8014 ME Nicknames for sender.8015 REPLY text for normal reply8016 REPLY_ALL text if PREF_REPLY_ALL is set8203 NEVER_WARN Never warn the user of mail to be sent this many hours into the future8204 BIG_MESSAGE_FRAGMENT # of body lines of a skipped big message to download8205 ATTRIBUTION # attribution line; from, date, subject8206 ALIAS_N_LABEL Label for private notes section of nicknames8207 LOCAL_PORT Port from which Eudora connects; leave at 08216 PW_PORT Port for password-change protocol8402 QUOTE_LIMIT Wrap limit for quoted sections8403 FINGER_PORT Port for finger requests8404 PRIORITY_FMT Format for the priority header.8406 COMPACT_WASTE_PER Percentage of waste space that triggers a compaction8407 COMPACT_FREE_PER Percentage of free disk space that triggers a compaction8410 FWD_QUOTE Quote character for forwards8604 DATE_SUM_FMT Format for date summaries; time, date, timezone8610 MESS_TITLE_PLUG Message titling string; 0 mailbox, 1 sender, 2 date, 3 subject.
+5602 ALERT_TIMEOUT The number of seconds before alerts are automatically dismissed.
+5604 ALIAS_A_WIDTH Width of the Nickname list column in the Nicknames window.
+5605 ALIAS_CMD DON'T TOUCH.
+5606 ALIAS_E_LABEL Label for the addresses section of the nicknames window.
+5607 ALIAS_FILE Name of nickname file.
+5608 ALIAS_ADDR_PC Percent of vertical space to allot to addresses in nicknames.
+5614 ALREADY_READ Status header (substring) for already-read message.
+5615 APPL_FONT Name of application font.
+5801 BINHEX BinHex intro line, used to recognize BinHex files.  DON'T TOUCH.
+5808 BINHEX_OUT BinHex intro line, put on outgoing messages.  DON'T TOUCH.
+5816 BUFFER_SIZE Disk I/O buffer size.
+6001 COMP_TOP_MARGIN Height of icon bar.
+6017 CTB_NEWLINE Newline used during CTB connections.
+6020 DATE_HEADER DON'T TOUCH.
+6201 DATE_STRING_FMT DON'T TOUCH.
+6203 DELIMITERS DON'T TOUCH.
+6205 DOUBLE_TOLERANCE Double-click mouse movement tolerance.
+6211 FILE_LINE_FMT Don't touch.
+6213 FLUSH_SECS Number of seconds between FlushVol calls.
+6214 FOLDER_NAME Name of Eudora folder.
+6219 ICMP_SECONDS Number of seconds to leave ICMP messages on-screen.
+6220 IN Name of In mailbox (be sure to change Mailbox && Transfer menus, too.)
+6401 INFINITE_STRING DON'T TOUCH.
+6408 FRAGMENT_SIZE Size at which to split messages.  Must satisfy FRAGMENT_SIZE<SPLIT_THRESH<32K
+6411 MBOX_MOVE Mailboxes window button name.
+6412 MBOX_MOVE_BACK Mailboxes window button name.
+6413 MBOX_NEW Mailboxes window button name.
+6414 MBOX_REMOVE Mailboxes window button name.
+6415 MBOX_RENAME Mailboxes window button name.
+6416 NOTE_CMD Command used for notes in nicknames window.
+6602 NAVIN Navigation In string name.
+6603 NAVOUT Navigation Out string name.
+6604 NEWLINE TCP newline string.
+6804 OPEN_TIMEOUT Timeout for opening connections.
+6805 OUT Name of Out mailbox (be sure to change Mailbox menu, too.)
+6806 PARTIAL_TICKS Number of ticks before Live Nicknames moves pointer.
+6812 PH_HOST Default ph host.
+6814 PH_PORT Port used for ph.
+6815 PH_QUERY Query command used in ph.  It MUST end in a space.
+6816 PH_QUIT Quit command used in ph.
+6820 POP_PORT Port used for POP3.
+7002 POSITION_NAME Names of window size resources.
+7004 PRINT_FONT Default print font.
+7005 PRINT_H_FONT Print header font.
+7006 PRINT_H_MAR Print header margin.
+7007 PRINT_H_SIZE Print header fontsize.
+7008 QUEUE_BUTTON Name of Queue button.
+7009 QUOTE_PREFIX Prefix for quoted sections.
+7016 RECEIVED_HEAD Don't touch.
+7017 RECV_TIMEOUT Receive timeout, in seconds.
+7207 SEND_BUTTON Name of Send button.
+7208 SETTINGS_FILE Name of settings/signature file.
+7209 SHORT_TIMEOUT Number of seconds for timeouts during navigation.
+7211 SMTP_PORT Port for SMTP.
+7213 STATE_LABELS Message state labels.
+7214 STATUS Header that gives message status.
+7216 FWD_INTRO String to insert before quoted Forward text
+7218 TAB_DISTANCE Number of chars to indent for a tab.
+7219 TCP_BUFFER_SIZE Buffer size for network.
+7220 TCP_DRIVER Name of tcp/ip driver.
+7402 TEMP_SUFFIX Temp file suffix.
+7403 TEXT_CREATOR Default TEXT file creator.
+7408 TOC_SUFFIX Suffix for table of contents files.
+7411 TRANSFER_PREFIX Prefix for use in Transfer menu.
+7412 TRASH Name of Trash mailbox (be sure to change Mailbox && Transfer menus, too.)
+7413 TS_CONNECT_FMT CTB connect request string.
+7419 WRAP_LIMIT Number of chars at which to wrap messages.
+7604 ABOMINATION Header line that warns of uuencoded applesingle attachments.
+7605 NAVMID Navigation Mid string name.
+7606 PRINT_LEFT_MAR Left printout margin.
+7607 PRINT_RIGHT_MAR Right printout margin.
+7609 CTB_ME SMTP Helo argument for dialups.
+7610 TCP_ME SMTP Helo argument for networks.
+7611 NO_PLAIN_OPEN Message when there is a plain file named Eudora Folder in the system folder.
+7612 DEF_MWIDTH Message width when PREF_MWIDTH is not set.
+7613 UU_BAD_LENGTH Message when an incorrect line length is found in uuencoded data.
+7614 HEX_SIZE_PERCENT Eudora will decode a BinHex file if the message is at least this percent of the size the BinHex file reports, or...
+7615 HEX_SIZE_THRESH if the message is less than this size.
+7616 BIG_MESSAGE Size limit for Skip Big Messages.
+7619 SPLIT_THRESH Size at which a message must be split.  Must satisfy FRAGMENT_SIZE<SPLIT_THRESH<32K
+7620 BOX_SIZE_FMT Size display format for mailbox windows.
+7801 BOX_SIZE_SIZE size of mailbox size display
+7804 BOX_SIZE_FONT_SIZE Size of font for mailbox size box.
+7805 ALIAS_VERBOTEN Characters forbidden in aliases.
+7813 BCC_ONLY Put in the To: field if a message has only Bcc:'s.
+7817 FWD_TRAIL String to put after forwarded text
+7818 REP_SEND_ATTR Reply to sender attribution
+8008 DESK_LEFT_STRIP extra desktop margin on the left when creating a window
+8009 DESK_RIGHT_STRIP ditto, but on the right
+8010 DESK_BOTTOM_STRIP ditto, but on the bottom
+8011 DESK_TOP_STRIP ditto, but on the top
+8012 SENDER Sender: header
+8014 ME Nicknames for sender.
+8015 REPLY text for normal reply
+8016 REPLY_ALL text if PREF_REPLY_ALL is set
+8203 NEVER_WARN Never warn the user of mail to be sent this many hours into the future
+8204 BIG_MESSAGE_FRAGMENT # of body lines of a skipped big message to download
+8205 ATTRIBUTION # attribution line; from, date, subject
+8206 ALIAS_N_LABEL Label for private notes section of nicknames
+8207 LOCAL_PORT Port from which Eudora connects; leave at 0
+8216 PW_PORT Port for password-change protocol
+8402 QUOTE_LIMIT Wrap limit for quoted sections
+8403 FINGER_PORT Port for finger requests
+8404 PRIORITY_FMT Format for the priority header.
+8406 COMPACT_WASTE_PER Percentage of waste space that triggers a compaction
+8407 COMPACT_FREE_PER Percentage of free disk space that triggers a compaction
+8410 FWD_QUOTE Quote character for forwards
+8604 DATE_SUM_FMT Format for date summaries; time, date, timezone
+8610 MESS_TITLE_PLUG Message titling string; 0 mailbox, 1 sender, 2 date, 3 subject.

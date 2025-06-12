@@ -1,1 +1,33 @@
-I’d just delivered an application to a customer - right on the deadline,and was just relaxing a bit and playing around with my program, when Isuddenly realised I’d completely forgotten about the help stuff. So Iwrote this thing, typed half of the manual into it, and sent 1.2 to myclient. He hadn’t noticed something was missing.As this help thing looks rather cool, I thought I’d share it. You are freeto do with this code as you like (It’s no big deal anyway). No royalties,no fees, don’t put me in your about box (suppose I got associated with youryukkie program), you don’t even have to buy me a beer. If you realy like it,post me a message. If you think it stinks, don’t bother.Help is an easy to use and fast to set up help system.It builds a list of subjects based upon the 'MHLP' resources.Each MHLP resource gives you one page in the help window. Theentry in the subject list is the title of the MHLP resource. Inthe MHLP you specify weather the resource to be displayed is aPICT or a TEXT/styl resource, and you supply their ID.You may run into a problem when you insert items later, since the orderin which items are displayed in the list is the order in whichthey were created. This is readily solved by opening the MHLP window,doing a select all, cut, save, paste, save.Also notice that the ok-button does not look ok at all. This isbecause I’m using MacGadgets’ buttons. I can’t go around distributing them.However, any 3-D button will do.Herbert PutteneersAppleLink: Putteneers.HCServe:    100143,2154
+I’d just delivered an application to a customer - right on the deadline,
+and was just relaxing a bit and playing around with my program, when I
+suddenly realised I’d completely forgotten about the help stuff. So I
+wrote this thing, typed half of the manual into it, and sent 1.2 to my
+client. He hadn’t noticed something was missing.
+
+As this help thing looks rather cool, I thought I’d share it. You are free
+to do with this code as you like (It’s no big deal anyway). No royalties,
+no fees, don’t put me in your about box (suppose I got associated with your
+yukkie program), you don’t even have to buy me a beer. If you realy like it,
+post me a message. If you think it stinks, don’t bother.
+
+Help is an easy to use and fast to set up help system.
+It builds a list of subjects based upon the 'MHLP' resources.
+Each MHLP resource gives you one page in the help window. The
+entry in the subject list is the title of the MHLP resource. In
+the MHLP you specify weather the resource to be displayed is a
+PICT or a TEXT/styl resource, and you supply their ID.
+
+You may run into a problem when you insert items later, since the order
+in which items are displayed in the list is the order in which
+they were created. This is readily solved by opening the MHLP window,
+doing a select all, cut, save, paste, save.
+
+Also notice that the ok-button does not look ok at all. This is
+because I’m using MacGadgets’ buttons. I can’t go around distributing them.
+However, any 3-D button will do.
+
+
+Herbert Putteneers
+
+AppleLink: Putteneers.H
+CServe:    100143,2154

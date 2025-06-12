@@ -1,1 +1,19 @@
-const long kCurrentXXXXVersion = 1;const long kMinXXXXVersion = 1;void XXXX::DoRead(TStream *aStream){	long version = aStream->ReadLong();	MyStreamCheckVersion(version, kMinXXXXVersion, kCurrentXXXXVersion, "XXXX");}void XXXX::DoWrite(TStream *aStream){	aStream->WriteLong(kCurrentXXXXVersion);}long XXXX::NeededDiskSpace(){	return	sizeof(long) +									// version number					0;}
+const long kCurrentXXXXVersion = 1;
+const long kMinXXXXVersion = 1;
+
+void XXXX::DoRead(TStream *aStream)
+{
+	long version = aStream->ReadLong();
+	MyStreamCheckVersion(version, kMinXXXXVersion, kCurrentXXXXVersion, "XXXX");
+}
+
+void XXXX::DoWrite(TStream *aStream)
+{
+	aStream->WriteLong(kCurrentXXXXVersion);
+}
+
+long XXXX::NeededDiskSpace()
+{
+	return	sizeof(long) +									// version number
+					0;
+}

@@ -1,1 +1,2 @@
-@rename %1 %2
+@rename %1 %2
+

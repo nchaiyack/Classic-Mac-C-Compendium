@@ -1,1 +1,21 @@
-## Definitions pertaining to architecture SGI (Silicon Graphics)## Define the name of this architecture here.# This is used as a subdirectory name where all the objects for this# architecture live: $(TOP)/Build/$(ARCH)#ARCH=		sgi# The system libraries to link with programs that use termcap and X11#LIBTERMCAP=	-ltermcapLIBX11=		-lX11 -lbsd# Pretend it's an ANSI compiler (not quite true but close)# This assumes IRIX 3.3 or higher#ARCHOPTS=	-prototypes -acppARCHDEFS=	-D__STDC__
+
+#
+# Definitions pertaining to architecture SGI (Silicon Graphics)
+#
+
+# Define the name of this architecture here.
+# This is used as a subdirectory name where all the objects for this
+# architecture live: $(TOP)/Build/$(ARCH)
+#
+ARCH=		sgi
+
+# The system libraries to link with programs that use termcap and X11
+#
+LIBTERMCAP=	-ltermcap
+LIBX11=		-lX11 -lbsd
+
+# Pretend it's an ANSI compiler (not quite true but close)
+# This assumes IRIX 3.3 or higher
+#
+ARCHOPTS=	-prototypes -acpp
+ARCHDEFS=	-D__STDC__

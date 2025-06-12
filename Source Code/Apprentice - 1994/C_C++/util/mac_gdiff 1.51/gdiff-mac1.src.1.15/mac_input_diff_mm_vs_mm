@@ -1,1 +1,2 @@
-gdiff +recursive "boot:mm" "c&c:Special Projects:mm" > boot:gdiff.out
+gdiff +recursive "boot:mm" "c&c:Special Projects:mm" > boot:gdiff.out
+

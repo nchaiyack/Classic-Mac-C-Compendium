@@ -1,1 +1,30 @@
-About Icon LDEF -	Makes a list similar to the Chooser: an icon with text	underneath. Cell data should be of the format:				<Icon Family ID> <Text Data>		   (2 Bytes)      (? Bytes)		    		             - or -			<Arbitrary Data Not for Display>		           (? Bytes)	            	 	 This LDEF is optimized to use the System 7 icon plotting utils 	 if available, but will construct reasonable imitations under System 6.	 For earlier systems, the normal (unhilited) icon will be plotted	 from the 'ICN#' resource of the given ID, and the hilited icon will	 be plotted by using the mask of the same resource.	 	 The only difference between this LDEF and the System 7-specific icon	 LDEF is that this one loads the icons from disk each time they are drawn.	 The other requires the icons be loaded and the family icon handle passed.	 	 Do not let the system auto-calc the cell size (by passing size	 (0,0)), or your icons wont fit. Cells should be (40, 60) to 	 accomodate the icons and titles.	Written by - Matt Slot, fprefect@umich.edu
+About Icon LDEF -
+
+	Makes a list similar to the Chooser: an icon with text
+	underneath. Cell data should be of the format:
+	
+	
+		<Icon Family ID> <Text Data>
+		   (2 Bytes)      (? Bytes)
+		    
+		             - or -
+	
+		<Arbitrary Data Not for Display>
+		           (? Bytes)
+	            
+	 
+	 This LDEF is optimized to use the System 7 icon plotting utils 
+	 if available, but will construct reasonable imitations under System 6.
+	 For earlier systems, the normal (unhilited) icon will be plotted
+	 from the 'ICN#' resource of the given ID, and the hilited icon will
+	 be plotted by using the mask of the same resource.
+	 
+	 The only difference between this LDEF and the System 7-specific icon
+	 LDEF is that this one loads the icons from disk each time they are drawn.
+	 The other requires the icons be loaded and the family icon handle passed.
+	 
+	 Do not let the system auto-calc the cell size (by passing size
+	 (0,0)), or your icons wont fit. Cells should be (40, 60) to 
+	 accomodate the icons and titles.
+	
+Written by - Matt Slot, fprefect@umich.edu

@@ -1,1 +1,417 @@
-Newsgroups: ruc.mail.nuntiusPath: ruc.dk!daemonFrom: aaron@med.cornell.edu (Aaron B. Freimark)Subject: Monthly Nuntius FAQ posting (2/23/94)Version: 5.5 -- Copyright (c) 1991/92, Anastasios KotsikonasTo: Multiple recipients of list <nuntius-l@cornell.edu>Message-ID: <199403071454.JAA05466@cumc.cornell.edu>Followup-To: posterOriginator: nuntius-announce-l@cornell.eduSender: nuntius-l@cornell.eduReply-To: nuntius-l@cornell.eduOrganization: N/AComment:  Nuntius Newsreader DiscussionErrors-To: aaron@med.cornell.eduDistribution: localDate: Mon, 7 Mar 1994 15:12:43 GMTReturn-Path: <nuntius-l@cornell.edu>Approved: Postmaster@ruc.dkLines: 396               ===========================================               THE NUNTIUS FREQUENTLY ASKED QUESTIONS LIST               ===========================================                              7 MARCH 1994* Note: ALL COMMENTS ARE WELCOME!*       Please direct these comments to _me_ (not to the list).*       I am very grateful to those who have contributed (knowingly or not)*       to this project.**       This FAQ is an on-going project, of course.  Please feel free to*       help out by making suggestions, corrections, clarifications,*       additions, and ruminations.  Thank you.**    -- Aaron Freimark (aaron@med.cornell.edu)*       NUNTIUS-L and NUNTIUS-ANNOUNCE-L list "owner"*       and happy Nuntius user.TABLE OF CONTENTS-----------------A. Listserv Questions        1. What are the Nuntius listserv lists?        2. How do I subscribe to the lists?        3. How do I unsubscribe from the lists?B. General Nuntius Questions        1. What does "Nuntius" mean?        2. Where can I get Nuntius?        3. Is there documentation for Nuntius?        4. What's the difference between "Nuntius Personal Files"           and "Nuntius Public Files"?        5. How can I configure Nuntius to work in a public lab?        6. Where are the group descriptions that Nuntius claims to fetch?        7. How do I change my news server?        8. Can Nuntius decode ROT-13?        9. What's the difference between "SAVE", "SAVE AS", and "SAVE A           COPY AS"?       10. Can Nuntius show the date, or search for text? or have a           built-in editor? or a built-in mailer? or support for           cross-posted articles?C. Article Posting & Sorting Questions        1. How does Nuntius sort articles?        2. How come other follow-up's don't end up in the same string?        3. What do NEW, UNREAD, and UPDATED TODAY mean?        4. How do I know whether posting works?        5. How come I can't see the article I just posted?        6. Where is a FREE nntp server?D. Common Nuntius Problems        1. I can't "Quit"!!!        2. Does it work properly under A/UX 3.0?A. LISTSERV QUESTIONS---------------------(A.1)   What are the Nuntius listserv lists?        There are currently two mailing lists concerning Nuntius,        NUNTIUS-L and NUNTIUS-ANNOUNCE-L.  Both are hosted by Cornell        University.  However, Cornell does not sponsor Nuntius in any        way (I'm sure they wanted me to say that).        NUNTIUS-L is for DISCUSSION concerning Nuntius.  NUNTIUS-ANNOUNCE-L        carries only ANNOUNCEMENTS of new releases, major bugs, etc.        NUNTIUS-L is sometimes quite high traffic (sometimes a dozen        messages a day), while NUNTIUS-ANNOUNCE-L can often lapse for a        few months without a post.        This is because NUNTIUS-ANNOUNCE-L is moderated, while NUNTIUS-L        is "open."        There is no need to subscribe to both; all posts to        NUNTIUS-ANNOUNCE-L will be automatically delivered to each        subscriber of NUNTIUS-L.        The administrator for the lists is me (aaron@med.cornell.edu).        I am always willing to help subscribers (or potential subscribers)        IF they ask politely.(A.2)   How do I subscribe to the lists?        Send an E-mail message to <listserv@cornell.edu>.  The subject        can be blank, but make sure the "From:" address is not anything        odd.  Odd addresses only cause the list administrator headaches.        In the body of the message, type this one line:        SUBSCRIBE NUNTIUS-L your name        or        SUBSCRIBE NUNTIUS-ANNOUNCE-L your name        For example, use "SUBSCRIBE NUNTIUS-L Aaron Freimark".        You will receive a confirmation with instructions on how to        communicate with the list.  KEEP THESE INSTRUCTIONS!  You can        always get help by sending the command "HELP" in the body of a        message to <listserv@cornell.edu> (* NOT TO THE LIST ADDRESS *).(A.3)    How do I unsubscribe from the lists?        Send an E-mail message to <listserv@cornell.edu>.  Make sure the        "From:" address is the same as the address from which you        originally subscribed (that is very important!).  Type the        following one line in the body of the message:        UNSUBSCRIBE NUNTIUS-L        or        UNSUBSCRIBE NUNTIUS-ANNOUNCE-L        Note that your name doesn't appear here.  The listserver will send        you confirmation.  If you have any problems, please kindly ask the        list administrator for help (aaron@med.cornell.edu).B. GENERAL NUNTIUS QUESTIONS----------------------------(B.1)   What does "Nuntius" mean?        According to Erik Reuter (e-reuter@uiuc.edu), "`Nuntius' is a Latin        noun which translates to `messenger'."  He suggests that it is        pronounced nun-tee-uss (not noon-tee-uss).  "But if you ask someone        familiar with `Church Latin' you may get a different answer."(B.2)   Where can I get Nuntius?        Peter Speck (speck@ruc.dk), the author of Nuntius, puts all his        versions and sources at the anonymous ftp site "frederik.ruc.dk".        It is a Macintosh running Peter Lewis' great-but-slow "ftpd."        For North American users, you may find that a mirror at Cornell        University may be easier to use.  Ftp to "ftp.cit.cornell.edu",        and look in the directory "/pub/mac/comm/test" for the Nuntius        archive mirror.        Peter also regularly uploads Nuntius to the archives at sumex-aim,        etc.(B.3)   Is there documentation for Nuntius?        Nothing official.  However, Mike Kuniavsky (mikek@umich.edu) has        made available some University of Michigan documentation on        Nuntius.  Ftp to "ftp.css.itd.umich.edu", and look in        "/users/mikek" for "new-nuntius.word5.hqx" and "new-nuntius.rtf"        for Binhexed Mac Word 5 and RTF files.        There's also Cornell University documentation (written by me :-)        at "ftp.cit.cornell.edu", in "pub/mac/bear-access/docs/glued" as        "Nuntius.bin".  It's in an odd format -- the viewer is there as        "viewer.bin".        This FAQ resides on "ftp.cit.cornell.edu", in        "/pub/mac/comm/test/Nuntius-archive-mirror".(B.4)   What's the difference between "Nuntius Personal Files" and        "Nuntius Public Files"?        From John T. Chapman (jtc1@cornell.edu):       "These folders store information on the various groups and        articles.  The Personal Folder contains information on what        articles _you_ have read.  The Public Folder contains article        subjects, etc.       "From what I've seen, you can delete all newsgroup items from the        Public Folder. Nuntius will need to rebuild all of these the next        time it opens those groups and will thus be slower. However, I've        seen large amounts of space reclaimed (more than a meg). This is        probably due to some inefficiency in the way Nuntius updates these        files; the full rebuild causes some 'housecleaning'.  Deleting        items from the Personal Folder will result in you losing track of        what items you have marked as read.       "Supposedly, one or both folders can be Aliased to someplace        outside the System Folder (a server volume?)       "There is also the 'dummy file' trick from the Nuntius Notes file -        replace the 'Nuntius personal folder' with a dummy file and Nuntius        will only open when a Nuntius Preferences file is double-clicked        on. This helps administrators configure Macs that will be used by        several people (e.g. public labs)."(B.5)   How can I configure Nuntius to work in a public lab?        * Not written yet *(B.6)   Where are the group descriptions that Nuntius claims to fetch?        Turn on Balloon Help and look in the List of All Groups.  Pretty        cool, huh?(B.7)   How do I change my news server?        That information is stuck inside the Nuntius Preferences document.        You will need to trash that document, and start from scratch.(B.8)   Can Nuntius decode ROT-13?        Not by itself.  But you can download the font "Zbanpb 9" from        ftp.cit.cornell.edu.  It is based on Monaco 9.  When you wish to        "decode" a ROT-13 article, simply change the font.(B.9)   What's the difference between "SAVE", "SAVE AS", and "SAVE A COPY        AS"?        SAVE is the easiest way to save; it simply updates the disk file with        the same name as the title.        SAVE AS... alows me to change the name of the document.  For        example, I may save as "Aaron's Other Groups".  The window's        title will change to "Aaron's Other Groups".  The file        "Aaron's Groups" will still be on the disk, but it may contain        older information.        SAVE A COPY AS... does just that.  If the current title is        "Aaron's Groups", and I save a copy as "Aaron's Other Groups",        then the window title will remain "Aaron's Groups" (but there        will be an "Aaron's Other Groups" file on the disk, as well as        "Aaron's Groups").  If I then SAVE, the "Aaron's Groups" file        will be updated (not "Other").        Or, as Kevin Boyce (boyce@lheavx.gsfc.nasa.gov) says, "Gawrsh,        it's just the same as in any other program, why was I so confused?"(B.10)  Can Nuntius show the date, or search for text? or have a built-in        editor? or a built-in mailer? or support for cross-posted articles?        No.  But the source code (in C++ & MacApp) is available (see B.2,        above).  You are free to add it yourself.C. ARTICLE POSTING & SORTING QUESTIONS--------------------------------------(C.1)   How does Nuntius sort articles?        Nuntius is a "threaded" news reader.  This means that it sorts        articles into threads.        What's a thread?  A thread is an article and all the followups        (responses or modifications) to it.  A simple example of a thread        is an article with the question "What's the sum of 2 and 2?", and        it's response, "Re: What's the sum of 2 and 2?".        Followups are designated by two methods.  (1) the phrase "Re:",        meaning "regarding" or "response to" is placed in the subject of        the followup.  (2) A header is added to the followup with a        reference to the original (parent) article.  Not every newsreader        uses both methods (Nuntius does).        Nuntius sorts by grouping articles which share references.(C.2)   How come other follow-up's don't end up in the same string?        Some newsreaders do not put the reference header in a followup.        Nuntius therefore thinks that this is a new post (regardless of        it's subject), and places it in a new thread.        Newswatcher, for example, sorts by subject.  However, this is not        necessarily better than reference-sorting.        Peter has said that subject-sorting will be added in version 1.2.(C.3)   What do NEW, UNREAD, and UPDATED TODAY mean?        NEW articles have been fetched from the server since the last time        I opened the newsgroup.  They are marked with a bullet (Black Dot,        option-8).        UNREAD articles have not yet been read by me.  That is, I may have        opened the newsgroup (read the subjects), but I have not opened the        thread containing the article (not read the article).  NEW articles        are a subset of UNREAD articles.  UNREAD articles which are not NEW        are marked with a dash.        UPDATED TODAY articles have been fetched from the server today.        They may contain NEW, UNREAD and/or READ articles.  There is no        special marking for these articles.        For example, I open comp.sys.ibm.pc.misc, a group I have never        before seen, and all of the articles are marked with a bullet        (NEW).  I read a few of the articles, then close the group.        The next day, I open the group again.  Now, the articles which        have been posted since yesterday have a bullet (NEW).  The articles        which are older, but which I didn't read yesterday, are marked with        a dash (UNREAD, but not NEW).  And the articles which I have read        have no mark.(C.4)   How do I know whether posting works?        Post to a test group, such as "misc.test".  On that group, in        particular, are a number of automatic responders which send you        mail when they see your message.(C.5)   How come I can't see the article I just posted?        Not every news server shows articles immediately.  Cornell's        Sparc 10 running INN shows a posted article within 30 seconds,        but I had to wait half a day on my previous VAX 6250 with VMSNEWS.(C.6)   Where is a FREE nntp server?        From Dr. Chaos:       "Arnold Lesikar has produced a compilation of publicly addressable        news sources, annotated with comments like whether or not they        allow posting, etc.  Before you get too excited and go looking for        a site carrying alt.binaries.pictures.erotica, forget it ... the        administrators at these sites know that their systems are going to        be on the list, so it's unlikely this list will provide you with        that kind of source.  You can get the latest version of the list        from nctuccca.edu.tw (Taiwan) located in Lesikar.NNTP-Servers in        the documents/Internet/MaasInfo/Other directory.  Alternatively,        'finger lesikar@tigger.stcloud.msus.edu'.  Included in the file are        the Gopher bookmark entries to access these sites."D. COMMON NUNTIUS PROBLEMS--------------------------(D.1)   I can't "Quit"!!!        Or, "My "Quit" menu choice is greyed-out!  This is one that people        occasionally see, but that Peter hasn't been able to figure out        yet.  He has, however, hacked in "fix".  If you hold down the        Control key when you click in the menu bar, "Quit" should be        enabled.(D.2)   Does it work properly under A/UX 3.0?        Darrell Budic (budic@vms2.macc.wisc.edu) replies:       "Yes, mostly. I use it myself, and there are two main 'quirks' with        it.       "One is built into Nuntius, and it tells you nicely that you can't        'Reply to author by mail because this hack doesn't work under        A/UX.' Any chance of a fix to this one soon? Maybe apple event        support and reply-by-mail that way?       "The other is a bit more painful, and is a consequence of the unix        file system, and the mac interface to it. You can't post an article        with a : (colon) in it, since A/UX tries to interpret it as part of        the file name, thinks its a directory delimiter, and calmly tells        you the volume is unavailable. This doesn't seem that bad, but        consider 'post followup article' -> "Re: whatever" always fails        because of the : on the Re. Pain in the neck, and then some. I        suppose that if you created a volume named 'Re', or maybe a root        level dir ('/Re'), it might be a workaround, but I've just taken to        changing the : to a - when I followup. You could also probably        change this with res edit, but I haven't bothered to try that        either."--------------END OF THE FAQ---------------------------------------------------------------------------
+Newsgroups: ruc.mail.nuntius
+Path: ruc.dk!daemon
+From: aaron@med.cornell.edu (Aaron B. Freimark)
+Subject: Monthly Nuntius FAQ posting (2/23/94)
+Version: 5.5 -- Copyright (c) 1991/92, Anastasios Kotsikonas
+To: Multiple recipients of list <nuntius-l@cornell.edu>
+Message-ID: <199403071454.JAA05466@cumc.cornell.edu>
+Followup-To: poster
+Originator: nuntius-announce-l@cornell.edu
+Sender: nuntius-l@cornell.edu
+Reply-To: nuntius-l@cornell.edu
+Organization: N/A
+Comment:  Nuntius Newsreader Discussion
+Errors-To: aaron@med.cornell.edu
+Distribution: local
+Date: Mon, 7 Mar 1994 15:12:43 GMT
+Return-Path: <nuntius-l@cornell.edu>
+Approved: Postmaster@ruc.dk
+Lines: 396
+
+               ===========================================
+               THE NUNTIUS FREQUENTLY ASKED QUESTIONS LIST
+               ===========================================
+                              7 MARCH 1994
+
+
+
+* Note: ALL COMMENTS ARE WELCOME!
+*       Please direct these comments to _me_ (not to the list).
+*       I am very grateful to those who have contributed (knowingly or not)
+*       to this project.
+*
+*       This FAQ is an on-going project, of course.  Please feel free to
+*       help out by making suggestions, corrections, clarifications,
+*       additions, and ruminations.  Thank you.
+*
+*    -- Aaron Freimark (aaron@med.cornell.edu)
+*       NUNTIUS-L and NUNTIUS-ANNOUNCE-L list "owner"
+*       and happy Nuntius user.
+
+
+
+
+TABLE OF CONTENTS
+-----------------
+
+A. Listserv Questions
+
+        1. What are the Nuntius listserv lists?
+        2. How do I subscribe to the lists?
+        3. How do I unsubscribe from the lists?
+
+B. General Nuntius Questions
+
+        1. What does "Nuntius" mean?
+        2. Where can I get Nuntius?
+        3. Is there documentation for Nuntius?
+        4. What's the difference between "Nuntius Personal Files"
+           and "Nuntius Public Files"?
+        5. How can I configure Nuntius to work in a public lab?
+        6. Where are the group descriptions that Nuntius claims to fetch?
+        7. How do I change my news server?
+        8. Can Nuntius decode ROT-13?
+        9. What's the difference between "SAVE", "SAVE AS", and "SAVE A
+           COPY AS"?
+       10. Can Nuntius show the date, or search for text? or have a
+           built-in editor? or a built-in mailer? or support for
+           cross-posted articles?
+
+C. Article Posting & Sorting Questions
+
+        1. How does Nuntius sort articles?
+        2. How come other follow-up's don't end up in the same string?
+        3. What do NEW, UNREAD, and UPDATED TODAY mean?
+        4. How do I know whether posting works?
+        5. How come I can't see the article I just posted?
+        6. Where is a FREE nntp server?
+
+D. Common Nuntius Problems
+
+        1. I can't "Quit"!!!
+        2. Does it work properly under A/UX 3.0?
+
+
+A. LISTSERV QUESTIONS
+---------------------
+(A.1)   What are the Nuntius listserv lists?
+
+        There are currently two mailing lists concerning Nuntius,
+        NUNTIUS-L and NUNTIUS-ANNOUNCE-L.  Both are hosted by Cornell
+        University.  However, Cornell does not sponsor Nuntius in any
+        way (I'm sure they wanted me to say that).
+
+        NUNTIUS-L is for DISCUSSION concerning Nuntius.  NUNTIUS-ANNOUNCE-L
+        carries only ANNOUNCEMENTS of new releases, major bugs, etc.
+        NUNTIUS-L is sometimes quite high traffic (sometimes a dozen
+        messages a day), while NUNTIUS-ANNOUNCE-L can often lapse for a
+        few months without a post.
+
+        This is because NUNTIUS-ANNOUNCE-L is moderated, while NUNTIUS-L
+        is "open."
+
+        There is no need to subscribe to both; all posts to
+        NUNTIUS-ANNOUNCE-L will be automatically delivered to each
+        subscriber of NUNTIUS-L.
+
+        The administrator for the lists is me (aaron@med.cornell.edu).
+        I am always willing to help subscribers (or potential subscribers)
+        IF they ask politely.
+
+
+(A.2)   How do I subscribe to the lists?
+
+        Send an E-mail message to <listserv@cornell.edu>.  The subject
+        can be blank, but make sure the "From:" address is not anything
+        odd.  Odd addresses only cause the list administrator headaches.
+
+        In the body of the message, type this one line:
+
+        SUBSCRIBE NUNTIUS-L your name
+
+        or
+
+        SUBSCRIBE NUNTIUS-ANNOUNCE-L your name
+
+        For example, use "SUBSCRIBE NUNTIUS-L Aaron Freimark".
+
+        You will receive a confirmation with instructions on how to
+        communicate with the list.  KEEP THESE INSTRUCTIONS!  You can
+        always get help by sending the command "HELP" in the body of a
+        message to <listserv@cornell.edu> (* NOT TO THE LIST ADDRESS *).
+
+(A.3)    How do I unsubscribe from the lists?
+
+        Send an E-mail message to <listserv@cornell.edu>.  Make sure the
+        "From:" address is the same as the address from which you
+        originally subscribed (that is very important!).  Type the
+        following one line in the body of the message:
+
+        UNSUBSCRIBE NUNTIUS-L
+
+        or
+
+        UNSUBSCRIBE NUNTIUS-ANNOUNCE-L
+
+        Note that your name doesn't appear here.  The listserver will send
+        you confirmation.  If you have any problems, please kindly ask the
+        list administrator for help (aaron@med.cornell.edu).
+
+
+B. GENERAL NUNTIUS QUESTIONS
+----------------------------
+
+(B.1)   What does "Nuntius" mean?
+
+        According to Erik Reuter (e-reuter@uiuc.edu), "`Nuntius' is a Latin
+        noun which translates to `messenger'."  He suggests that it is
+        pronounced nun-tee-uss (not noon-tee-uss).  "But if you ask someone
+        familiar with `Church Latin' you may get a different answer."
+
+
+(B.2)   Where can I get Nuntius?
+
+        Peter Speck (speck@ruc.dk), the author of Nuntius, puts all his
+        versions and sources at the anonymous ftp site "frederik.ruc.dk".
+        It is a Macintosh running Peter Lewis' great-but-slow "ftpd."
+
+        For North American users, you may find that a mirror at Cornell
+        University may be easier to use.  Ftp to "ftp.cit.cornell.edu",
+        and look in the directory "/pub/mac/comm/test" for the Nuntius
+        archive mirror.
+
+        Peter also regularly uploads Nuntius to the archives at sumex-aim,
+        etc.
+
+
+(B.3)   Is there documentation for Nuntius?
+
+        Nothing official.  However, Mike Kuniavsky (mikek@umich.edu) has
+        made available some University of Michigan documentation on
+        Nuntius.  Ftp to "ftp.css.itd.umich.edu", and look in
+        "/users/mikek" for "new-nuntius.word5.hqx" and "new-nuntius.rtf"
+        for Binhexed Mac Word 5 and RTF files.
+
+        There's also Cornell University documentation (written by me :-)
+        at "ftp.cit.cornell.edu", in "pub/mac/bear-access/docs/glued" as
+        "Nuntius.bin".  It's in an odd format -- the viewer is there as
+        "viewer.bin".
+
+        This FAQ resides on "ftp.cit.cornell.edu", in
+        "/pub/mac/comm/test/Nuntius-archive-mirror".
+
+
+(B.4)   What's the difference between "Nuntius Personal Files" and
+        "Nuntius Public Files"?
+
+        From John T. Chapman (jtc1@cornell.edu):
+
+       "These folders store information on the various groups and
+        articles.  The Personal Folder contains information on what
+        articles _you_ have read.  The Public Folder contains article
+        subjects, etc.
+
+       "From what I've seen, you can delete all newsgroup items from the
+        Public Folder. Nuntius will need to rebuild all of these the next
+        time it opens those groups and will thus be slower. However, I've
+        seen large amounts of space reclaimed (more than a meg). This is
+        probably due to some inefficiency in the way Nuntius updates these
+        files; the full rebuild causes some 'housecleaning'.  Deleting
+        items from the Personal Folder will result in you losing track of
+        what items you have marked as read.
+
+       "Supposedly, one or both folders can be Aliased to someplace
+        outside the System Folder (a server volume?)
+
+       "There is also the 'dummy file' trick from the Nuntius Notes file -
+        replace the 'Nuntius personal folder' with a dummy file and Nuntius
+        will only open when a Nuntius Preferences file is double-clicked
+        on. This helps administrators configure Macs that will be used by
+        several people (e.g. public labs)."
+
+
+(B.5)   How can I configure Nuntius to work in a public lab?
+
+        * Not written yet *
+
+
+(B.6)   Where are the group descriptions that Nuntius claims to fetch?
+
+        Turn on Balloon Help and look in the List of All Groups.  Pretty
+        cool, huh?
+
+
+(B.7)   How do I change my news server?
+
+        That information is stuck inside the Nuntius Preferences document.
+        You will need to trash that document, and start from scratch.
+
+
+(B.8)   Can Nuntius decode ROT-13?
+
+        Not by itself.  But you can download the font "Zbanpb 9" from
+        ftp.cit.cornell.edu.  It is based on Monaco 9.  When you wish to
+        "decode" a ROT-13 article, simply change the font.
+
+
+(B.9)   What's the difference between "SAVE", "SAVE AS", and "SAVE A COPY
+        AS"?
+
+        SAVE is the easiest way to save; it simply updates the disk file with
+        the same name as the title.
+
+        SAVE AS... alows me to change the name of the document.  For
+        example, I may save as "Aaron's Other Groups".  The window's
+        title will change to "Aaron's Other Groups".  The file
+        "Aaron's Groups" will still be on the disk, but it may contain
+        older information.
+
+        SAVE A COPY AS... does just that.  If the current title is
+        "Aaron's Groups", and I save a copy as "Aaron's Other Groups",
+        then the window title will remain "Aaron's Groups" (but there
+        will be an "Aaron's Other Groups" file on the disk, as well as
+        "Aaron's Groups").  If I then SAVE, the "Aaron's Groups" file
+        will be updated (not "Other").
+
+        Or, as Kevin Boyce (boyce@lheavx.gsfc.nasa.gov) says, "Gawrsh,
+        it's just the same as in any other program, why was I so confused?"
+
+
+(B.10)  Can Nuntius show the date, or search for text? or have a built-in
+        editor? or a built-in mailer? or support for cross-posted articles?
+
+        No.  But the source code (in C++ & MacApp) is available (see B.2,
+        above).  You are free to add it yourself.
+
+
+
+C. ARTICLE POSTING & SORTING QUESTIONS
+--------------------------------------
+
+(C.1)   How does Nuntius sort articles?
+
+        Nuntius is a "threaded" news reader.  This means that it sorts
+        articles into threads.
+
+        What's a thread?  A thread is an article and all the followups
+        (responses or modifications) to it.  A simple example of a thread
+        is an article with the question "What's the sum of 2 and 2?", and
+        it's response, "Re: What's the sum of 2 and 2?".
+
+        Followups are designated by two methods.  (1) the phrase "Re:",
+        meaning "regarding" or "response to" is placed in the subject of
+        the followup.  (2) A header is added to the followup with a
+        reference to the original (parent) article.  Not every newsreader
+        uses both methods (Nuntius does).
+
+        Nuntius sorts by grouping articles which share references.
+
+
+(C.2)   How come other follow-up's don't end up in the same string?
+
+        Some newsreaders do not put the reference header in a followup.
+        Nuntius therefore thinks that this is a new post (regardless of
+        it's subject), and places it in a new thread.
+
+        Newswatcher, for example, sorts by subject.  However, this is not
+        necessarily better than reference-sorting.
+
+        Peter has said that subject-sorting will be added in version 1.2.
+
+
+(C.3)   What do NEW, UNREAD, and UPDATED TODAY mean?
+
+        NEW articles have been fetched from the server since the last time
+        I opened the newsgroup.  They are marked with a bullet (Black Dot,
+        option-8).
+
+        UNREAD articles have not yet been read by me.  That is, I may have
+        opened the newsgroup (read the subjects), but I have not opened the
+        thread containing the article (not read the article).  NEW articles
+        are a subset of UNREAD articles.  UNREAD articles which are not NEW
+        are marked with a dash.
+
+        UPDATED TODAY articles have been fetched from the server today.
+        They may contain NEW, UNREAD and/or READ articles.  There is no
+        special marking for these articles.
+
+        For example, I open comp.sys.ibm.pc.misc, a group I have never
+        before seen, and all of the articles are marked with a bullet
+        (NEW).  I read a few of the articles, then close the group.
+
+        The next day, I open the group again.  Now, the articles which
+        have been posted since yesterday have a bullet (NEW).  The articles
+        which are older, but which I didn't read yesterday, are marked with
+        a dash (UNREAD, but not NEW).  And the articles which I have read
+        have no mark.
+
+
+(C.4)   How do I know whether posting works?
+
+        Post to a test group, such as "misc.test".  On that group, in
+        particular, are a number of automatic responders which send you
+        mail when they see your message.
+
+
+(C.5)   How come I can't see the article I just posted?
+
+        Not every news server shows articles immediately.  Cornell's
+        Sparc 10 running INN shows a posted article within 30 seconds,
+        but I had to wait half a day on my previous VAX 6250 with VMSNEWS.
+
+
+(C.6)   Where is a FREE nntp server?
+
+        From Dr. Chaos:
+
+       "Arnold Lesikar has produced a compilation of publicly addressable
+        news sources, annotated with comments like whether or not they
+        allow posting, etc.  Before you get too excited and go looking for
+        a site carrying alt.binaries.pictures.erotica, forget it ... the
+        administrators at these sites know that their systems are going to
+        be on the list, so it's unlikely this list will provide you with
+        that kind of source.  You can get the latest version of the list
+        from nctuccca.edu.tw (Taiwan) located in Lesikar.NNTP-Servers in
+        the documents/Internet/MaasInfo/Other directory.  Alternatively,
+        'finger lesikar@tigger.stcloud.msus.edu'.  Included in the file are
+        the Gopher bookmark entries to access these sites."
+
+
+D. COMMON NUNTIUS PROBLEMS
+--------------------------
+
+(D.1)   I can't "Quit"!!!
+
+        Or, "My "Quit" menu choice is greyed-out!  This is one that people
+        occasionally see, but that Peter hasn't been able to figure out
+        yet.  He has, however, hacked in "fix".  If you hold down the
+        Control key when you click in the menu bar, "Quit" should be
+        enabled.
+
+
+(D.2)   Does it work properly under A/UX 3.0?
+
+        Darrell Budic (budic@vms2.macc.wisc.edu) replies:
+
+       "Yes, mostly. I use it myself, and there are two main 'quirks' with
+        it.
+
+       "One is built into Nuntius, and it tells you nicely that you can't
+        'Reply to author by mail because this hack doesn't work under
+        A/UX.' Any chance of a fix to this one soon? Maybe apple event
+        support and reply-by-mail that way?
+
+       "The other is a bit more painful, and is a consequence of the unix
+        file system, and the mac interface to it. You can't post an article
+        with a : (colon) in it, since A/UX tries to interpret it as part of
+        the file name, thinks its a directory delimiter, and calmly tells
+        you the volume is unavailable. This doesn't seem that bad, but
+        consider 'post followup article' -> "Re: whatever" always fails
+        because of the : on the Re. Pain in the neck, and then some. I
+        suppose that if you created a volume named 'Re', or maybe a root
+        level dir ('/Re'), it might be a workaround, but I've just taken to
+        changing the : to a - when I followup. You could also probably
+        change this with res edit, but I haven't bothered to try that
+        either."
+
+--------------
+END OF THE FAQ
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------

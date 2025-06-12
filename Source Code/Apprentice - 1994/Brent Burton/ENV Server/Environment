@@ -1,1 +1,18 @@
-## My default environment setup.## Comments are valid, and the scanning routine is smart enough to# NOT require quotations; thus, the ORGANIZATION var below is read as# it appears, with no quotes required.#SHELL=/usr/local/bin/bashLANG=POSIXTERM=vt102HOME=Innie:usr:home:brentORGANIZATION=ytisrevinU M&A saxeT          # who I give $$$ to.OPENWIN_HOME=/usr/brokenwin
+#
+# My default environment setup.
+#
+# Comments are valid, and the scanning routine is smart enough to
+# NOT require quotations; thus, the ORGANIZATION var below is read as
+# it appears, with no quotes required.
+#
+
+SHELL=/usr/local/bin/bash
+LANG=POSIX
+TERM=vt102
+
+HOME=Innie:usr:home:brent
+
+ORGANIZATION=ytisrevinU M&A saxeT          # who I give $$$ to.
+
+OPENWIN_HOME=/usr/brokenwin
+

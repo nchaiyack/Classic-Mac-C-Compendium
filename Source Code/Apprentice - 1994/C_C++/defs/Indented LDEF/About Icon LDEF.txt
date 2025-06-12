@@ -1,1 +1,15 @@
-About Indented LDEF -	Makes a simple list with optional (fixed-width) indents:				<0 or more Tabs '\t'> <Text Data>		   (? Bytes)           (? Bytes)		    	 	 Each tab will indent 12 pixels, and you can include as many as you	 like at the front of the cell.	 	Written by - Matt Slot, fprefect@umich.edu
+About Indented LDEF -
+
+	Makes a simple list with optional (fixed-width) indents:
+	
+	
+		<0 or more Tabs '\t'> <Text Data>
+		   (? Bytes)           (? Bytes)
+		    
+	 
+	 Each tab will indent 12 pixels, and you can include as many as you
+	 like at the front of the cell.
+	 
+	
+Written by - Matt Slot, fprefect@umich.edu
+

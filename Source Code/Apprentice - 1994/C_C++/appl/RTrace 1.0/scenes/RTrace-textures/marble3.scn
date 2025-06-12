@@ -1,1 +1,5 @@
-eye 1.6  1.6  1.6light directional -1 -1 1 whitemarble rainbow.mapsphere 0 0 0 1           % sphere object 
+eye 1.6  1.6  1.6
+light directional -1 -1 1 white
+marble rainbow.map
+sphere 0 0 0 1           % sphere object
+ 

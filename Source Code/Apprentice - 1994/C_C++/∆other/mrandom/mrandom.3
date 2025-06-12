@@ -1,1 +1,208 @@
-.TH MRANDOM 3 "11 September 1991".SH NAMEmrandom, frandom, init_rng, save_rng, restart_rng, reconstruct_rng, describe_rng \- wrappers for 4.3bsd random.SH SYNOPSIS.nf.B long  mrandom(m).B long m;.LP.B double frandom().LP.B int init_rng(seed, filename).B long seed;.B char *filename;.LP.B int  save_rng(filename).B char *filename;.LP .B int restart_rng(filename).B char *filename;.LP.B void reconstruct_rng(seed, count1, count2).B long seed;.B long count1;.B long count2;.LP.B char  *describe_rng(rngid).B char  rngid[RNGIDSTRLEN];.fi.IX  "mrandom function"  ""  "\fLmrandom\fP \(em generate random integer mod m".IX  "frandom function"  ""  "\fLfrandom\fP \(em generate random 64-bit float".IX  "init_rng function"  ""  "\fLinit_rng\fP \(em initialize random generator".IX  "save_rng function"  "" "\fLsave_rng\fP \(em save random generator to file".IX  "restart_rng function"  "" "\fLrestart_rng\fP \(em restart random generator from file".IX  "reconstruct_rng function"  ""  "\fLreconstruct_rng\fP \(em restore random generator from (seed, count1, count2) values".IX  "describe_rng function"  "" "\fLdescribe_rng\fP \(em construct short string describing generator state" .IX  "random number generator"  "\fLmrandom\fP".IX  "random number generator"  "\fLfrandom\fP".IX  "random number generator"  "\fLinit_rng\fP".IX  "random number generator"  "\fLsave_rng\fP".IX  "random number generator"  "\fLrestart_rng\fP".IX  "random number generator"  "\fLreconstruct_rng\fP".IX  "random number generator"  "\fLdescribe_rng\fP".IX  "generate random numbers"  "\fLmrandom\fP".IX  "generate random numbers"  "\fLfrandom\fP".IX  "generate random numbers"  "\fLinit_rng\fP".IX  "generate random numbers"  "\fLsave_rng\fP".IX  "generate random numbers"  "\fLrestart_rng\fP".IX  "generate random numbers"  "\fLreconstruct_rng\fP".IX  "generate random numbers"  "\fLdescribe_rng\fP".SH DESCRIPTION.LP.I mrandom(m)generates random integers in the range 0 to m-1, using a call to the4.3bsd random() function.This is a non-linear additive feedback random number generator.The main advantage of mrandom(m) over random() is that you can save thecomplete state of the random number generator to a disk file,for later continuation of the same pseudorandom sequence.The period of mrandom(m)'s pseudorandom output is thus guaranteed to be long.In contrast, random()'s period can be quite short if you repeatedlysave and restore its state using setstate(), because some of random()'sstate is private..LPTo use mrandom(), you must first initialize the random number generator.The easiest way to do this is to make a call to .I init_rng(seed, filename).If all goes well, this call will return the value 1,indicating that a file has been createddescribing the initial state of your generator.Hereafter, this file will be called an RNG state file..LP.I init_rngwill perform some error checks on the RNG state file after it is written,returning the value 0 if a problem is detected..LPAfter an.I init_rng(seed, filename)call, the random number generator is in the same state as it wouldbe if you had directly called.I srandom(seed)or.I initstate(seed, state, 128)on a ``fresh'' copy of the random() code..LPWarning: do not write your own calls to.I srandom(), initstate(), random(),or.I setstate()if you are using the mrandom package.If you do so, the long-period advantages of mrandom will be lost,and a later call to save_rng or restore_rng may fail..LPIt is good experimental practice to preserve copies ofyour RNG state files, in case you ever want to reproduce a result.The state file is ASCII text, so it is portable across systems..LPAnother good experimental practice is to ``stamp'' each printoutwith a record of the initial RNG state.You can do this by including a copy of the RNG state file, althoughthis is a dozen lines long and a few hundred characters.A more convenient method is to use a call to.I describe_rng(rngid).This puts a one-line short-form of the current RNG state in thecharacter string rngid..LP.I describe_rng(rngid)returns the value of rngid, for convenience.To print this short-form RNG descriptor, for example,you can execute printf(describe_rng(rngid)).Note: you must declare storage for rngid in your own program witha declaration such as.I char rngid[RNGIDSTRLEN]..I RNGIDSTRLENis defined with the value 80 in the current release of mrandom..LPThe short-form description provided by.I describe_rngcan be used, at a later date, to reconstruct the state of the RNG. This can be a slow process, since it involves seeding a virgin copyof the random() generator, then calling random() a number of times.The relevant call in the mrandom package is.I reconstruct_rng(seed, count1, count2),where seed is the initial seed, count1 is the total number of calls to random() since initialization, mod one billion,and count2 is a ``div one billion'' counter..LPI hope you never have occasion to call.I reconstruct_rngif count2 is greater than zero!This is one reason to preserve occasional copies of the completeRNG state, as recorded in the RNG state file.If you have a state file, then.I restart_rng(filename)will always give rapid results.If the RNG state file is internally inconsistent,restart_rng will return 0, otherwise it returns 1..LPJust before exiting a program that uses mrandom, a call to.I save_rng(filename)will preserve the final state of the RNG on disk.Note: I have found it helpful to make asave_rng call only upon normal exit frommy experimental codes.  In case of an error exit, it is convenientto leave the RNG state file in its initial condition.This makes it easy to retry the experiment after fixing the bug..SH AUTHORClark Thomborson, cthombor@gw.d.umn.edu.SH DIAGNOSTICSIf the error-checking code in.I init_rng, restart_rng,and.I save_rngdiscovers a problem, an error message is printed on the stderr stream.Also, if.I reconstruct_rngis called with count2 > 0, a warning message is printed on stderr..LPA demonstration routine, named.I mrtest.c,is included with this software distribution to help get you started with the.I mrandompackage..SH "SEE ALSO"random(3), rand(3C), drand48(3).SH BUGSA little slower than.I random()..LPAs far as I know,it is a subject of current research to decide if the pseudorandom sequence of.I mrandom()is superior to that of a high-precision multiplicative generator such as.I drand48().A low-precision multiplicative generator, such as.I rand(3C),will cause problems in many applications, since non-random behavioris noticeable in the least-significant twenty bits of its output..LPCurrently, the best theoretical guarantees for pseudorandomness come from thetheory of universal hash functions.The idea is to use a high-precision multiplicative generator withrandom coefficients.Thus one might consider using the mrandom package to generate randomcoefficients, modulo large primes, for the drand48 pseudorandom numbergenerator..LPBy examination of the object code for random(), I deduce thatit uses the following algorithm in its default (31-word table)configuration..IDlong random(){   static int j=4, k=1;   long r;      rngstate[j] += rngstate[k];   r = (rngstate[j]>>1) & 0x7fffffff;   j++;   if (j>31) j=1;   k++;   if (k>31) k=1;   return(r);}.DEThe initial values for rngstate are obtained from a linear congruentialgenerator.  Any defects of this scheme will be inherited by mrandom.
+.TH MRANDOM 3 "11 September 1991"
+.SH NAME
+mrandom, frandom, init_rng, save_rng, restart_rng, reconstruct_rng, describe_rng \- wrappers for 4.3bsd random
+.SH SYNOPSIS
+.nf
+.B long  mrandom(m)
+.B long m;
+.LP
+.B double frandom()
+.LP
+.B int init_rng(seed, filename)
+.B long seed;
+.B char *filename;
+.LP
+.B int  save_rng(filename)
+.B char *filename;
+.LP 
+.B int restart_rng(filename)
+.B char *filename;
+.LP
+.B void reconstruct_rng(seed, count1, count2)
+.B long seed;
+.B long count1;
+.B long count2;
+.LP
+.B char  *describe_rng(rngid)
+.B char  rngid[RNGIDSTRLEN];
+.fi
+.IX  "mrandom function"  ""  "\fLmrandom\fP \(em generate random integer mod m"
+.IX  "frandom function"  ""  "\fLfrandom\fP \(em generate random 64-bit float"
+.IX  "init_rng function"  ""  "\fLinit_rng\fP \(em initialize random generator"
+.IX  "save_rng function"  "" "\fLsave_rng\fP \(em save random generator to file"
+.IX  "restart_rng function"  "" "\fLrestart_rng\fP \(em restart random generator from file"
+.IX  "reconstruct_rng function"  ""  "\fLreconstruct_rng\fP \(em restore random generator from (seed, count1, count2) values"
+.IX  "describe_rng function"  "" "\fLdescribe_rng\fP \(em construct short string describing generator state" 
+.IX  "random number generator"  "\fLmrandom\fP"
+.IX  "random number generator"  "\fLfrandom\fP"
+.IX  "random number generator"  "\fLinit_rng\fP"
+.IX  "random number generator"  "\fLsave_rng\fP"
+.IX  "random number generator"  "\fLrestart_rng\fP"
+.IX  "random number generator"  "\fLreconstruct_rng\fP"
+.IX  "random number generator"  "\fLdescribe_rng\fP"
+.IX  "generate random numbers"  "\fLmrandom\fP"
+.IX  "generate random numbers"  "\fLfrandom\fP"
+.IX  "generate random numbers"  "\fLinit_rng\fP"
+.IX  "generate random numbers"  "\fLsave_rng\fP"
+.IX  "generate random numbers"  "\fLrestart_rng\fP"
+.IX  "generate random numbers"  "\fLreconstruct_rng\fP"
+.IX  "generate random numbers"  "\fLdescribe_rng\fP"
+.SH DESCRIPTION
+.LP
+.I mrandom(m)
+generates random integers in the range 0 to m-1, using a call to the
+4.3bsd random() function.
+This is a non-linear additive feedback random number generator.
+The main advantage of mrandom(m) over random() is that you can save the
+complete state of the random number generator to a disk file,
+for later continuation of the same pseudorandom sequence.
+The period of mrandom(m)'s pseudorandom output is thus guaranteed to be long.
+In contrast, random()'s period can be quite short if you repeatedly
+save and restore its state using setstate(), because some of random()'s
+state is private.
+.LP
+To use mrandom(), you must first initialize the random number generator.
+The easiest way to do this is to make a call to 
+.I init_rng(seed, filename).
+If all goes well, this call will return the value 1,
+indicating that a file has been created
+describing the initial state of your generator.
+Hereafter, this file will be called an RNG state file.
+.LP
+.I init_rng
+will perform some error checks on the RNG state file after it is written,
+returning the value 0 if a problem is detected.
+.LP
+After an
+.I init_rng(seed, filename)
+call, the random number generator is in the same state as it would
+be if you had directly called
+.I srandom(seed)
+or
+.I initstate(seed, state, 128)
+on a ``fresh'' copy of the random() code.
+.LP
+Warning: do not write your own calls to
+.I srandom(), initstate(), random(),
+or
+.I setstate()
+if you are using the mrandom package.
+If you do so, the long-period advantages of mrandom will be lost,
+and a later call to save_rng or restore_rng may fail.
+.LP
+It is good experimental practice to preserve copies of
+your RNG state files, in case you ever want to reproduce a result.
+The state file is ASCII text, so it is portable across systems.
+.LP
+Another good experimental practice is to ``stamp'' each printout
+with a record of the initial RNG state.
+You can do this by including a copy of the RNG state file, although
+this is a dozen lines long and a few hundred characters.
+A more convenient method is to use a call to
+.I describe_rng(rngid).
+This puts a one-line short-form of the current RNG state in the
+character string rngid.
+.LP
+.I describe_rng(rngid)
+returns the value of rngid, for convenience.
+To print this short-form RNG descriptor, for example,
+you can execute printf(describe_rng(rngid)).
+Note: you must declare storage for rngid in your own program with
+a declaration such as
+.I char rngid[RNGIDSTRLEN].
+.I RNGIDSTRLEN
+is defined with the value 80 in the current release of mrandom.
+.LP
+The short-form description provided by
+.I describe_rng
+can be used, at a later date, to reconstruct the state of the RNG. 
+This can be a slow process, since it involves seeding a virgin copy
+of the random() generator, then calling random() a number of times.
+The relevant call in the mrandom package is
+.I reconstruct_rng(seed, count1, count2),
+where seed is the initial seed, count1 is the total number of calls to 
+random() since initialization, mod one billion,
+and count2 is a ``div one billion'' counter.
+.LP
+I hope you never have occasion to call
+.I reconstruct_rng
+if count2 is greater than zero!
+This is one reason to preserve occasional copies of the complete
+RNG state, as recorded in the RNG state file.
+If you have a state file, then
+.I restart_rng(filename)
+will always give rapid results.
+If the RNG state file is internally inconsistent,
+restart_rng will return 0, otherwise it returns 1.
+.LP
+Just before exiting a program that uses mrandom, a call to
+.I save_rng(filename)
+will preserve the final state of the RNG on disk.
+Note: I have found it helpful to make a
+save_rng call only upon normal exit from
+my experimental codes.  In case of an error exit, it is convenient
+to leave the RNG state file in its initial condition.
+This makes it easy to retry the experiment after fixing the bug.
+.SH AUTHOR
+Clark Thomborson, cthombor@gw.d.umn.edu
+.SH DIAGNOSTICS
+If the error-checking code in
+.I init_rng, restart_rng,
+and
+.I save_rng
+discovers a problem, an error message is printed on the stderr stream.
+Also, if
+.I reconstruct_rng
+is called with count2 > 0, a warning message is printed on stderr.
+.LP
+A demonstration routine, named
+.I mrtest.c,
+is included with this software distribution to help get you started with the
+.I mrandom
+package.
+.SH "SEE ALSO"
+random(3), rand(3C), drand48(3)
+.SH BUGS
+A little slower than
+.I random().
+.LP
+As far as I know,
+it is a subject of current research to decide if the pseudorandom sequence of
+.I mrandom()
+is superior to that of a high-precision multiplicative generator such as
+.I drand48().
+A low-precision multiplicative generator, such as
+.I rand(3C),
+will cause problems in many applications, since non-random behavior
+is noticeable in the least-significant twenty bits of its output.
+.LP
+Currently, the best theoretical guarantees for pseudorandomness come from the
+theory of universal hash functions.
+The idea is to use a high-precision multiplicative generator with
+random coefficients.
+Thus one might consider using the mrandom package to generate random
+coefficients, modulo large primes, for the drand48 pseudorandom number
+generator.
+.LP
+By examination of the object code for random(), I deduce that
+it uses the following algorithm in its default (31-word table)
+configuration.
+
+.ID
+long random()
+{
+   static int j=4, k=1;
+   long r;   
+   rngstate[j] += rngstate[k];
+   r = (rngstate[j]>>1) & 0x7fffffff;
+   j++;
+   if (j>31) j=1;
+   k++;
+   if (k>31) k=1;
+   return(r);
+
+}
+.DE
+
+The initial values for rngstate are obtained from a linear congruential
+generator.  Any defects of this scheme will be inherited by mrandom.

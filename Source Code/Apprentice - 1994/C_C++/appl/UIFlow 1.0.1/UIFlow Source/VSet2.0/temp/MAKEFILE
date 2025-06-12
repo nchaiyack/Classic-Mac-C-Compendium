@@ -1,1 +1,202 @@
-all Ä vt1 vt2 vt3 vt4 vt5 vt6 vshow vmake vtesthi vshow2moveall Ä ¶	"{TarGalLibraries}"libvgf.o ¶	"{TarGalTools}"vshowCOptions=  -d MAC -d Machine=MacII  -d MPW -mc68020 -mc68881  -mbg full  -t -r -sym full -opt full#-d LISPLinkOptions= -sym fullTOOLLIBS= ¶	"{TarGalLibraries}"df.a ¶	"{Libraries}"Runtime.o ¶	"{Libraries}"Interface.o ¶	"{CLibraries}"CLib881.o ¶	"{CLibraries}"StdCLib.o     "{TarGalLibraries}"libvgf.o Ä libvg.o	Duplicate -y libvg.o "{TarGalLibraries}"libvgf.o	"{TarGalLibraries}"vset-prototypes.h Ä vset-prototypes.h	Duplicate -y vset-prototypes.h "{TarGalLibraries}"vset-prototypes.h	"{TarGalTools}"vshow Ä vshow	Duplicate -y vshow "{TarGalTools}"vshow libvg.o ÄÄ vg.c.o vrw.c.o vio.c.o vparse.c.o  vconv.c.o vsetf.c.o vgp.c.o vhi.c.o #vgF.c.o           	lib -sym full -d -o libvg.o vg.c.o vrw.c.o vio.c.o vparse.c.o  vconv.c.o vsetf.c.o vgp.c.o  vhi.c.o	#vgF.c.o 	   vg.c.o Ä vg.c vg.h 	C {COptions} vg.cvparse.c.o Ä vparse.c vg.h 	C  {COptions} vparse.cvio.c.o Ä vio.c vg.h 	C  {COptions} vio.cvhi.c.o Ä vhi.c vg.h	C {COptions} vhi.c	vrw.c.o Ä vrw.c vg.h 	C  {COptions}  vrw.cvconv.c.o Ä vconv.c vg.h 	C  {COptions} vconv.cvsetf.c.o Ä vsetf.c vg.h 	C  {COptions}  vsetf.c		vgp.c.o Ä vgp.c vg.h 	C  {COptions}  vgp.cvgF.c.o Ä vgF.c vg.h 	C  {COptions}  vgF.c# MPW tools...vshow.c.o Ä vshow.c vg.h 	C  {COptions}  vshow.cvshow2.c.o Ä vshow2.c vg.h 	C  {COptions}  vshow2.c	vmake.c.o Ä vmake.c vg.h 	C   {COptions} vmake.cvshow ÄÄ vshow.c.o libvg.o 	link -opt On,Info -d -t MPST -c "MPS " {LinkOptions} ¶	 vshow.c.o libvg.o  ¶	 "{TarGalLibraries}"c_debug_window.c.o ¶    {TOOLLIBS} ¶	-o vshow	vshow2 ÄÄ vshow2.c.o libvg.o 	link -d -t MPST -c "MPS " {LinkOptions} ¶	 vshow2.c.o libvg.o  ¶	 "{TarGalLibraries}"c_debug_window.c.o ¶    {TOOLLIBS} ¶	-o vshow2	#vmake ÄÄ "{MPW}"Interfaces:Rincludes:SIOW.r#	Rez -a "{MPW}"Interfaces:Rincludes:SIOW.r -o vmake	vmake ÄÄ vmake.c.o libvg.o 	link -d -t MPST -c "MPS " {LinkOptions} ¶	 vmake.c.o libvg.o  ¶	 "{TarGalLibraries}"c_debug_window.c.o ¶    {TOOLLIBS} ¶	-o vmake	#	Link -d -c '????' -t APPL ¶#		"{CLibraries}"CSANELib.o ¶#		"{CLibraries}"Math.o ¶#		#"{CLibraries}"Complex.o ¶#		"{CLibraries}"StdClib.o ¶#		"{MPW}"Libraries:Libraries:SIOW.o ¶#		"{Libraries}"Runtime.o ¶#		"{Libraries}"Interface.o ¶#		"{TarGalLibraries}"c_debug_window.c.o ¶#		"{TarGalLibraries}"df.a ¶#		vmake.c.o libvg.o  ¶#		-o vmake	# Test programsvtest1.c.o Ä vtest1.c      C  {COptions} vtest1.cvt1 ÄÄ vtest1.c.o libvg.o 	link -d -t MPST -c "MPS " {LinkOptions} ¶	 vtest1.c.o libvg.o  ¶	 "{TarGalLibraries}"c_debug_window.c.o ¶    {TOOLLIBS} ¶	-o vt1	vtest2.c.o Ä vtest2.c      C  {COptions} vtest2.c	vt2 ÄÄ vtest2.c.o libvg.o 	link -d -t MPST -c "MPS " {LinkOptions} ¶	vtest2.c.o libvg.o  ¶	 "{TarGalLibraries}"c_debug_window.c.o ¶    {TOOLLIBS} ¶	-o vt2vtest3.c.o Ä vtest3.c      C  {COptions} vtest3.c	vt3 ÄÄ vtest3.c.o libvg.o 	link -d -t MPST -c "MPS " {LinkOptions} ¶	 vtest3.c.o libvg.o  ¶	 	"{TarGalLibraries}"c_debug_window.c.o ¶    {TOOLLIBS} ¶	-o vt3		vt4 ÄÄ vtest4.c.o libvg.o 	link -d -t MPST -c "MPS "  {LinkOptions} ¶	vtest4.c.o libvg.o  ¶	"{TarGalLibraries}"c_debug_window.c.o ¶    {TOOLLIBS} ¶	-o vt4	vtest4.c.o Ä vtest4.c      C  {COptions} vtest4.c	vt5 ÄÄ vtest5.c.o libvg.o 	link -d -t MPST -c "MPS " {LinkOptions} ¶	 vtest5.c.o libvg.o  ¶	 "{TarGalLibraries}"c_debug_window.c.o ¶    {TOOLLIBS} ¶	-o vt5	vtest5.c.o Ä vtest5.c      C  {COptions} vtest5.c	vt6 ÄÄ vtest6.c.o libvg.o 	link -d -t MPST -c "MPS " {LinkOptions} ¶	 vtest6.c.o libvg.o  ¶	 "{TarGalLibraries}"c_debug_window.c.o ¶    {TOOLLIBS} ¶	-o vt6	vtest6.c.o Ä vtest6.c      C  {COptions} vtest6.c		vt7 ÄÄ vtest7.c.o libvg.o 	link -d -t MPST -c "MPS " {LinkOptions} ¶	 vtest7.c.o libvg.o  ¶	 "{TarGalLibraries}"c_debug_window.c.o ¶    {TOOLLIBS} ¶	-o vt7	vtest7.c.o Ä vtest7.c      C  {COptions} vtest7.c		vtesthi ÄÄ vtesthi.c.o libvg.o 	link -d -t MPST -c "MPS " {LinkOptions} ¶	 vtesthi.c.o libvg.o  ¶	 "{TarGalLibraries}"c_debug_window.c.o ¶    {TOOLLIBS} ¶	-o vtesthi
+all Ä vt1 vt2 vt3 vt4 vt5 vt6 vshow vmake vtesthi vshow2
+
+moveall Ä ¶
+	"{TarGalLibraries}"libvgf.o ¶
+	"{TarGalTools}"vshow
+
+COptions=  -d MAC -d Machine=MacII  -d MPW -mc68020 -mc68881  -mbg full  -t -r -sym full -opt full
+#-d LISP
+LinkOptions= -sym full
+TOOLLIBS= ¶
+	"{TarGalLibraries}"df.a ¶
+	"{Libraries}"Runtime.o ¶
+	"{Libraries}"Interface.o ¶
+	"{CLibraries}"CLib881.o ¶
+	"{CLibraries}"StdCLib.o 
+    
+
+
+
+"{TarGalLibraries}"libvgf.o Ä libvg.o
+	Duplicate -y libvg.o "{TarGalLibraries}"libvgf.o
+	
+"{TarGalLibraries}"vset-prototypes.h Ä vset-prototypes.h
+	Duplicate -y vset-prototypes.h "{TarGalLibraries}"vset-prototypes.h
+	
+"{TarGalTools}"vshow Ä vshow
+	Duplicate -y vshow "{TarGalTools}"vshow 
+libvg.o ÄÄ vg.c.o vrw.c.o vio.c.o vparse.c.o  vconv.c.o vsetf.c.o vgp.c.o vhi.c.o #vgF.c.o           
+	lib -sym full -d -o libvg.o vg.c.o vrw.c.o vio.c.o vparse.c.o  vconv.c.o vsetf.c.o vgp.c.o  vhi.c.o
+	#vgF.c.o 
+	   
+
+
+
+vg.c.o Ä vg.c vg.h 
+	C {COptions} vg.c
+vparse.c.o Ä vparse.c vg.h 
+	C  {COptions} vparse.c
+
+vio.c.o Ä vio.c vg.h 
+	C  {COptions} vio.c
+
+vhi.c.o Ä vhi.c vg.h
+	C {COptions} vhi.c
+	
+vrw.c.o Ä vrw.c vg.h 
+	C  {COptions}  vrw.c
+
+vconv.c.o Ä vconv.c vg.h 
+	C  {COptions} vconv.c
+
+
+vsetf.c.o Ä vsetf.c vg.h 
+	C  {COptions}  vsetf.c
+	
+	
+vgp.c.o Ä vgp.c vg.h 
+	C  {COptions}  vgp.c
+
+
+
+vgF.c.o Ä vgF.c vg.h 
+	C  {COptions}  vgF.c
+
+
+
+# MPW tools...
+
+vshow.c.o Ä vshow.c vg.h 
+	C  {COptions}  vshow.c
+
+
+vshow2.c.o Ä vshow2.c vg.h 
+	C  {COptions}  vshow2.c
+	
+vmake.c.o Ä vmake.c vg.h 
+	C   {COptions} vmake.c
+
+
+
+vshow ÄÄ vshow.c.o libvg.o 
+	link -opt On,Info -d -t MPST -c "MPS " {LinkOptions} ¶
+	 vshow.c.o libvg.o  ¶
+	 "{TarGalLibraries}"c_debug_window.c.o ¶
+    {TOOLLIBS} ¶
+	-o vshow
+	
+vshow2 ÄÄ vshow2.c.o libvg.o 
+	link -d -t MPST -c "MPS " {LinkOptions} ¶
+	 vshow2.c.o libvg.o  ¶
+	 "{TarGalLibraries}"c_debug_window.c.o ¶
+    {TOOLLIBS} ¶
+	-o vshow2
+	
+
+#vmake ÄÄ "{MPW}"Interfaces:Rincludes:SIOW.r
+#	Rez -a "{MPW}"Interfaces:Rincludes:SIOW.r -o vmake
+	
+vmake ÄÄ vmake.c.o libvg.o 
+	link -d -t MPST -c "MPS " {LinkOptions} ¶
+	 vmake.c.o libvg.o  ¶
+	 "{TarGalLibraries}"c_debug_window.c.o ¶
+    {TOOLLIBS} ¶
+	-o vmake
+	
+#	Link -d -c '????' -t APPL ¶
+#		"{CLibraries}"CSANELib.o ¶
+#		"{CLibraries}"Math.o ¶
+#		#"{CLibraries}"Complex.o ¶
+#		"{CLibraries}"StdClib.o ¶
+#		"{MPW}"Libraries:Libraries:SIOW.o ¶
+#		"{Libraries}"Runtime.o ¶
+#		"{Libraries}"Interface.o ¶
+#		"{TarGalLibraries}"c_debug_window.c.o ¶
+#		"{TarGalLibraries}"df.a ¶
+#		vmake.c.o libvg.o  ¶
+#		-o vmake
+
+
+	
+
+# Test programs
+vtest1.c.o Ä vtest1.c  
+    C  {COptions} vtest1.c
+
+vt1 ÄÄ vtest1.c.o libvg.o 
+	link -d -t MPST -c "MPS " {LinkOptions} ¶
+	 vtest1.c.o libvg.o  ¶
+	 "{TarGalLibraries}"c_debug_window.c.o ¶
+    {TOOLLIBS} ¶
+	-o vt1
+	
+vtest2.c.o Ä vtest2.c  
+    C  {COptions} vtest2.c
+	
+vt2 ÄÄ vtest2.c.o libvg.o 
+	link -d -t MPST -c "MPS " {LinkOptions} ¶
+	vtest2.c.o libvg.o  ¶
+	 "{TarGalLibraries}"c_debug_window.c.o ¶
+    {TOOLLIBS} ¶
+	-o vt2
+
+vtest3.c.o Ä vtest3.c  
+    C  {COptions} vtest3.c
+	
+vt3 ÄÄ vtest3.c.o libvg.o 
+	link -d -t MPST -c "MPS " {LinkOptions} ¶
+	 vtest3.c.o libvg.o  ¶
+	 	"{TarGalLibraries}"c_debug_window.c.o ¶
+    {TOOLLIBS} ¶
+	-o vt3
+	
+
+	
+vt4 ÄÄ vtest4.c.o libvg.o 
+	link -d -t MPST -c "MPS "  {LinkOptions} ¶
+	vtest4.c.o libvg.o  ¶
+	"{TarGalLibraries}"c_debug_window.c.o ¶
+    {TOOLLIBS} ¶
+	-o vt4
+	
+vtest4.c.o Ä vtest4.c  
+    C  {COptions} vtest4.c
+	
+vt5 ÄÄ vtest5.c.o libvg.o 
+	link -d -t MPST -c "MPS " {LinkOptions} ¶
+	 vtest5.c.o libvg.o  ¶
+	 "{TarGalLibraries}"c_debug_window.c.o ¶
+    {TOOLLIBS} ¶
+	-o vt5
+	
+vtest5.c.o Ä vtest5.c  
+    C  {COptions} vtest5.c
+	
+vt6 ÄÄ vtest6.c.o libvg.o 
+	link -d -t MPST -c "MPS " {LinkOptions} ¶
+	 vtest6.c.o libvg.o  ¶
+	 "{TarGalLibraries}"c_debug_window.c.o ¶
+    {TOOLLIBS} ¶
+	-o vt6
+	
+vtest6.c.o Ä vtest6.c  
+    C  {COptions} vtest6.c
+	
+	
+vt7 ÄÄ vtest7.c.o libvg.o 
+	link -d -t MPST -c "MPS " {LinkOptions} ¶
+	 vtest7.c.o libvg.o  ¶
+	 "{TarGalLibraries}"c_debug_window.c.o ¶
+    {TOOLLIBS} ¶
+	-o vt7
+	
+vtest7.c.o Ä vtest7.c  
+    C  {COptions} vtest7.c
+	
+	
+vtesthi ÄÄ vtesthi.c.o libvg.o 
+	link -d -t MPST -c "MPS " {LinkOptions} ¶
+	 vtesthi.c.o libvg.o  ¶
+	 "{TarGalLibraries}"c_debug_window.c.o ¶
+    {TOOLLIBS} ¶
+	-o vtesthi

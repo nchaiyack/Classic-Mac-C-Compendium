@@ -1,1 +1,18 @@
-From: Paul Pederson <decvax!ittvax!bunkerb!pop@Ucb-Vax.ARPA>To: net.sourcesSubject: Financial HelperDate: 16 Apr 85 21:19:14 GMTThis is a program which you may find useful for calculating differentfinancial formulas.  Probably the most interesting of the calculationsis the amortization schedule.Compile as follows:	cc -O -ltermcap -lm -o <outfile> <infile>	where:	<infile> is the name you have chosen for this source file	<outfile> is the name of the executable file
+From: Paul Pederson <decvax!ittvax!bunkerb!pop@Ucb-Vax.ARPA>
+To: net.sources
+Subject: Financial Helper
+Date: 16 Apr 85 21:19:14 GMT
+
+This is a program which you may find useful for calculating different
+financial formulas.  Probably the most interesting of the calculations
+is the amortization schedule.
+
+Compile as follows:
+
+	cc -O -ltermcap -lm -o <outfile> <infile>
+
+	where:
+
+	<infile> is the name you have chosen for this source file
+
+	<outfile> is the name of the executable file

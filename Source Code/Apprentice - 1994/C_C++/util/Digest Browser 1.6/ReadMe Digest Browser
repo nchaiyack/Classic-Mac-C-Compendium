@@ -1,1 +1,183 @@
-Date: September 16, 1992From: Manuel A. Perez (perezM#aol.com)Subject: Copyright InfoYou may distribute this program, as long as the whole package is distributed (ReadMe, source code, etc.).  You may not sell this software unless you my permission.This program is copyrighted by the author.  Portions arecopyrighted by others.Manuel A. PerezEMail: perezM@aol.comDate: September 16, 1992From: Manuel A. Perez (perezM@aol.com)Subject: What is Digest Browser?Digest Browser is a Mac application that reads Info-Macdigests.  It displays a window with two panes, the top panecontains an index to the digest, the bottom shows the messageselected in the index.  I have used it also to read saved EMailmessages, and other digests (for example csmp, vaporware).The release includes a Think C 5.0 project with the sourcecode.  It was developed using the TCL.Have fun,ManuelDate: Dec 13, 1991From: Manuel A. Perez (perezM@aol.com)Subject: Digest Browser v1.0This simple programs displays Info-Mac Digests in ahierarchical editor.  A window is divided in two panes,the top pane has the names of senders of the messages,and the bottom pane shows the contents of the message.Multiple documents may be opened at a time, limited onlyby available memory.  The parser is based on C code writtenby Mike Gleason.  His code is available in the info-macsources (I beleive in the Unix directory).  The original codeworks for VT-100 type terminals using inverse video.The Macintosh version was built with Symantec's THINK Cand the THINK Class Library (TCL).  I haven't decided onwhat to do with the source for this project, but for nowI will keep it.  There are a few other features that I willlike to add.  Please send me  your comments and wishlists.  I will see what I can do.  If there is enough interestI can make the source code available (it is very small).I was also thinking about an X-windows version, but notime for that yet.  If you find other uses for the program,please let me know how it behaves (right now, I save myemail files, and read them with the browser.  The fileformat is similar enough that it kind-of-works).This program has been tested in a Mac LC, II, and IIfx using System 6.0.7 and System 7.0.  It was developedwith THINK C 4.0.5, and recompiled with THINK C 5.0.Be forewarned that I haven't pushed it to the limits asfar as testing for strange or abnormal situations.Have fun,Manuel A. PerezEMail: perezM@aol.comDate: March 10, 1992From: Manuel A. Perez (perezM@aol.com)Subject: Digest Browser v1.2Here is an update for the Digest Browser.  This new versionfeatures bug fixes and suggestions received since v 1.0 wasmade available on info-mac.  It also includes the source codefor the whole project.Fixes- Scrollbar is repositioned at the top of the scrolling areawhen a new item is selected in the top pane.- Printing will print the message pane (I have no idea whatit was doing before).New features- New menu "Index" with the choices From, Date and Subject.- Default choice for Index is "Subject".- Source code is included.This time, the program has only been tested on a Mac II,using System 7.0.  It was developed with THINK C 5.0.As before,  I haven't pushed it to the limits asfar as testing for strange or abnormal situations.You may distribute this program for free, as long asthis notice is included with it.  You may not, under anycircumstances, sell this program or the source code,or very bad things might happen to you and/or your dog.I will like to keep track of developments to the DigestBrowser,  if you make any extensions,  could you send me(or info-mac) a note on what you did to it?Have fun,Manuel A. PerezEMail: perezM@aol.comDate: 2 April 1992From: Bob Boonstra (jrb@mbunix.mitre.org)Subject: Digest Browser v1.3Digest Browser is a program written by Manuel A. Pérez to display Info-Mac Digests in a hierarchical editor.  Version 1.3 contains the following enhancements:• The relative size of the index and text panes can be changed• An additional option allows display of subject, date, and author in the index• Up/down arrow keys can be used to scroll thru the index• The index allows access to prepended material contained in some digests-- Bob Boonstra-- jrb@mbunix.mitre.orgDisclaimer:  Macs are a hobby for me; my employer has nothing to do with this.Date: Aug 30, 1992From: Manuel A. Perez (perezM@aol.com)Subject: Digest Browser v1.5This version was never released.  See the comments in 1.6 for features.Manuel A. PerezEMail: perezM@aol.comDate: September 16, 1992From: Manuel A. Perez (perezM@aol.com)Subject: Digest Browser v1.6Here is a new version of the Digest Browser.  It has been updated tofix a few errors, and to add some of the most requested features. I hope you enjoy using this program.  Keep your suggestions and ideascoming in.New Features & Modifications:• It now requires System 7.0.  Let me know if this is an inconvenience,and I will make the appropriate changes.• Keys used for scrolling the top pane are: up/down keys (moveselection up/down one line), return/enter key (move selection down),home/pageUp/'<' (move selection to the first item), end/pageDown/'>'(move selection to the last item).• Some fine tuning was performed on the parser to read the messages. If you find any problems reading any messages from info-mac archives,please send me a note with the name of the archive that gave you theproblem.• Added a Mark Item command.  You can now mark (or tag) items in thedisplay panel. Marked items can then be saved to a separate file.• Added a Save Marked Items… command.  Items marked with the MarkItem command can be saved to a different file.• Added a Append Marked Items… command.  Items marked with the MarkItem command can be appended to an existing file.• Fixed the Marked Items bug described in the v1.5 release note. (version1.5 was never released)• Added icons for the Saved Documents.  The documents are still TEXTdocuments, so they can be read with TeachText or any other text editor.(this might not be working correctly)• Drag and Drop now works.There are still a few bugs, but none of them make the program unsuable.For example, the font size on the top panel (index) is wrong when youfirst open the document.  It is fixed as soon as you change the index onthe top panel.  If you have problems running out of memory, just increasethe memory partition using the Finder's Get Info command.Hope you have fun using this program.  As before, this is a freeware, butit is copyrighted by myself.  Portions of the program are copyright ofothers.Manuel A. PerezEMail: perezM@aol.com---- end ----
+Date: September 16, 1992
+From: Manuel A. Perez (perezM#aol.com)
+Subject: Copyright Info
+
+You may distribute this program, as long as the whole package is distributed (ReadMe, source code, etc.).  You may not sell this software unless you my permission.
+
+This program is copyrighted by the author.  Portions are
+copyrighted by others.
+
+Manuel A. Perez
+EMail: perezM@aol.com
+
+Date: September 16, 1992
+From: Manuel A. Perez (perezM@aol.com)
+Subject: What is Digest Browser?
+
+Digest Browser is a Mac application that reads Info-Mac
+digests.  It displays a window with two panes, the top pane
+contains an index to the digest, the bottom shows the message
+selected in the index.  I have used it also to read saved EMail
+messages, and other digests (for example csmp, vaporware).
+
+The release includes a Think C 5.0 project with the source
+code.  It was developed using the TCL.
+
+Have fun,
+
+Manuel
+
+
+Date: Dec 13, 1991
+From: Manuel A. Perez (perezM@aol.com)
+Subject: Digest Browser v1.0
+
+This simple programs displays Info-Mac Digests in a
+hierarchical editor.  A window is divided in two panes,
+the top pane has the names of senders of the messages,
+and the bottom pane shows the contents of the message.
+
+Multiple documents may be opened at a time, limited only
+by available memory.  The parser is based on C code written
+by Mike Gleason.  His code is available in the info-mac
+sources (I beleive in the Unix directory).  The original code
+works for VT-100 type terminals using inverse video.
+
+The Macintosh version was built with Symantec's THINK C
+and the THINK Class Library (TCL).  I haven't decided on
+what to do with the source for this project, but for now
+I will keep it.  There are a few other features that I will
+like to add.  Please send me  your comments and wish
+lists.  I will see what I can do.  If there is enough interest
+I can make the source code available (it is very small).
+I was also thinking about an X-windows version, but no
+time for that yet.  If you find other uses for the program,
+please let me know how it behaves (right now, I save my
+email files, and read them with the browser.  The file
+format is similar enough that it kind-of-works).
+
+This program has been tested in a Mac LC, II, and IIfx 
+using System 6.0.7 and System 7.0.  It was developed
+with THINK C 4.0.5, and recompiled with THINK C 5.0.
+Be forewarned that I haven't pushed it to the limits as
+far as testing for strange or abnormal situations.
+
+Have fun,
+
+Manuel A. Perez
+EMail: perezM@aol.com
+
+Date: March 10, 1992
+From: Manuel A. Perez (perezM@aol.com)
+Subject: Digest Browser v1.2
+
+Here is an update for the Digest Browser.  This new version
+features bug fixes and suggestions received since v 1.0 was
+made available on info-mac.  It also includes the source code
+for the whole project.
+
+Fixes
+- Scrollbar is repositioned at the top of the scrolling area
+when a new item is selected in the top pane.
+- Printing will print the message pane (I have no idea what
+it was doing before).
+
+New features
+- New menu "Index" with the choices From, Date and Subject.
+- Default choice for Index is "Subject".
+- Source code is included.
+
+This time, the program has only been tested on a Mac II,
+using System 7.0.  It was developed with THINK C 5.0.
+As before,  I haven't pushed it to the limits as
+far as testing for strange or abnormal situations.
+
+You may distribute this program for free, as long as
+this notice is included with it.  You may not, under any
+circumstances, sell this program or the source code,
+or very bad things might happen to you and/or your dog.
+
+I will like to keep track of developments to the Digest
+Browser,  if you make any extensions,  could you send me
+(or info-mac) a note on what you did to it?
+
+Have fun,
+
+Manuel A. Perez
+EMail: perezM@aol.com
+
+Date: 2 April 1992
+From: Bob Boonstra (jrb@mbunix.mitre.org)
+Subject: Digest Browser v1.3
+
+Digest Browser is a program written by Manuel A. Pérez to display Info-Mac Digests in a hierarchical editor.  Version 1.3 contains the following enhancements:
+
+• The relative size of the index and text panes can be changed
+• An additional option allows display of subject, date, and author in the index
+• Up/down arrow keys can be used to scroll thru the index
+• The index allows access to prepended material contained in some digests
+
+-- Bob Boonstra
+-- jrb@mbunix.mitre.org
+
+Disclaimer:  Macs are a hobby for me; my employer has nothing to do with this.
+
+Date: Aug 30, 1992
+From: Manuel A. Perez (perezM@aol.com)
+Subject: Digest Browser v1.5
+
+This version was never released.  See the comments in 1.6 for features.
+
+Manuel A. Perez
+EMail: perezM@aol.com
+
+
+Date: September 16, 1992
+From: Manuel A. Perez (perezM@aol.com)
+Subject: Digest Browser v1.6
+
+Here is a new version of the Digest Browser.  It has been updated to
+fix a few errors, and to add some of the most requested features. 
+I hope you enjoy using this program.  Keep your suggestions and ideas
+coming in.
+
+New Features & Modifications:
+• It now requires System 7.0.  Let me know if this is an inconvenience,
+and I will make the appropriate changes.
+• Keys used for scrolling the top pane are: up/down keys (move
+selection up/down one line), return/enter key (move selection down),
+home/pageUp/'<' (move selection to the first item), end/pageDown/'>'
+(move selection to the last item).
+• Some fine tuning was performed on the parser to read the messages. 
+If you find any problems reading any messages from info-mac archives,
+please send me a note with the name of the archive that gave you the
+problem.
+• Added a Mark Item command.  You can now mark (or tag) items in the
+display panel. Marked items can then be saved to a separate file.
+• Added a Save Marked Items… command.  Items marked with the Mark
+Item command can be saved to a different file.
+• Added a Append Marked Items… command.  Items marked with the Mark
+Item command can be appended to an existing file.
+• Fixed the Marked Items bug described in the v1.5 release note. (version
+1.5 was never released)
+• Added icons for the Saved Documents.  The documents are still TEXT
+documents, so they can be read with TeachText or any other text editor.
+(this might not be working correctly)
+• Drag and Drop now works.
+
+There are still a few bugs, but none of them make the program unsuable.
+For example, the font size on the top panel (index) is wrong when you
+first open the document.  It is fixed as soon as you change the index on
+the top panel.  If you have problems running out of memory, just increase
+the memory partition using the Finder's Get Info command.
+
+Hope you have fun using this program.  As before, this is a freeware, but
+it is copyrighted by myself.  Portions of the program are copyright of
+others.
+
+Manuel A. Perez
+EMail: perezM@aol.com
+
+
+
+---- end ----

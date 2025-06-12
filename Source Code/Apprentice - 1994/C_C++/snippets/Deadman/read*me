@@ -1,1 +1,28 @@
-About "Deadman"This is a very simple time manager task to count seconds (under interrupt control), while an even simpler faceless mainline job resets the counter.  If the counter ever underflows, a reset is performed, resulting in a modicum of safety, since in my experience the majority of "crashes" only hang the mainline, not the interrupt routines.Source code for all.  I will try to answer questions, but I wrote this quite a while ago...Think C6, currently.Free to all.Chuck Pliskechuckp@u.washington.eduIncluded are a couple of test applications: a "hanger", and a "rebooter".  If you run them, they do what their names suggest.CAUTION:  Many app will sense that they are the foreground app and not bother to give up the cpu for perhaps many minutes.  4th Dimension and Retrospect come to mind as excellent examples.  I'm not responsible for any problems that may result from getting your machine rebooted, although in my experience it has never been a problem.Enjoy
+About "Deadman"
+
+This is a very simple time manager task to count seconds (under interrupt 
+control), while an even simpler faceless mainline job resets the 
+counter.  If the counter ever underflows, a reset is performed, resulting 
+in a modicum of safety, since in my experience the majority of "crashes" 
+only hang the mainline, not the interrupt routines.
+
+Source code for all.  I will try to answer questions, but I wrote this 
+quite a while ago...
+
+Think C6, currently.
+
+Free to all.
+
+Chuck Pliske
+chuckp@u.washington.edu
+
+Included are a couple of test applications: a "hanger", and a 
+"rebooter".  If you run them, they do what their names suggest.
+
+CAUTION:  Many app will sense that they are the foreground app and 
+not bother to give up the cpu for perhaps many minutes.  4th Dimension 
+and Retrospect come to mind as excellent examples.  I'm not responsible 
+for any problems that may result from getting your machine rebooted, 
+although in my experience it has never been a problem.
+
+Enjoy

@@ -1,1 +1,16 @@
-HeartQuest as SAT demo======================HeartQuest is the biggest demo in SAT. This obviously makes it hardest to grasp, but it includes a bunch of useful routines that you may need, including:¥ Menu and window handling, using the TransSkel package.¥ A score and level display, updated using SAT's background modification functions.¥ High score list.¥ Crystal Quest-style mouse control using fixed-point numbers. (Note: never use floating point in an arcade game!)¥ Optionally zooms to fill the entire screen (though the sprites stay the same size).¥ Dithered background generated on-line by QuickDraw calls.¥ Centering dialogs.¥ Preference file in the appropriate place in the system folder.¥ Uses SATSetStrings to make it possible to localize without recompiling.Binary not included, since it will be distributed separately.
+HeartQuest as SAT demo
+======================
+
+HeartQuest is the biggest demo in SAT. This obviously makes it hardest to grasp, but it includes a bunch of useful routines that you may need, including:
+
+¥ Menu and window handling, using the TransSkel package.
+¥ A score and level display, updated using SAT's background modification functions.
+¥ High score list.
+¥ Crystal Quest-style mouse control using fixed-point numbers. (Note: never use floating point in an arcade game!)
+¥ Optionally zooms to fill the entire screen (though the sprites stay the same size).
+¥ Dithered background generated on-line by QuickDraw calls.
+¥ Centering dialogs.
+¥ Preference file in the appropriate place in the system folder.
+¥ Uses SATSetStrings to make it possible to localize without recompiling.
+
+Binary not included, since it will be distributed separately.

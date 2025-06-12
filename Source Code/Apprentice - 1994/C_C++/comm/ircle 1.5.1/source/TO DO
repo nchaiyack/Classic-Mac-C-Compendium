@@ -1,1 +1,23 @@
-{ *****  Bugs etc ****** }{long answer lines from /who etc... ?}{}{}{ ***** Improvements to do ***** }{Handle triple clicks}{Handle long lines better}{Improve TCP timeout handling}{}{}{}{ *****  Remarks  ****** }{}{Current use of TCP PUSH:}{IRCAux.PutLine - no}{DCC . DCCSendfile - no}{ DCC . DCCgotline - yes}{DCC . DCCChatSend - no}{}unit dummy;interfaceimplementationend.
+{ *****  Bugs etc ****** }
+{long answer lines from /who etc... ?}
+{}
+{}
+{ ***** Improvements to do ***** }
+{Handle triple clicks}
+{Handle long lines better}
+{Improve TCP timeout handling}
+{}
+{}
+{}
+{ *****  Remarks  ****** }
+{}
+{Current use of TCP PUSH:}
+{IRCAux.PutLine - no}
+{DCC . DCCSendfile - no}
+{ DCC . DCCgotline - yes}
+{DCC . DCCChatSend - no}
+{}
+unit dummy;
+interface
+implementation
+end.

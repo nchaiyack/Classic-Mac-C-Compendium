@@ -1,1 +1,1398 @@
-		Massachusetts Institute of Technology		       77 Massachusetts Avenue		        Cambridge, MA 02139		      mrandom 3.0 User's Manual				by			  Robert Plotkin	Department of Electrical Engineering and Computer Science			     May 19931 Introduction----------------------------The mrandom package contains a library of routines for using randomnumber generators (RNGs) in C in the Unix 4.3bsd environment.  ThisUser's Manual is designed as a guide for programmers who wish to use themrandom package within their own programs.  The current version ofmrandom (version 3.0) is a major rewrite of mrandom version 2.1,released by Clark Thomborson in July 1992 (available via anonymousftp from theory.lcs.mit.edu).  The package now provides:* A standardized interface to many simultaneously-active RNGs,* A standardized, and unbiased, method for generating randomintegers in the range 0..m-1,* A standardized method for generating floating point numbersuniformly distributed in [0.0, 1.0),* Two standardized methods for generating pseudorandom bitstreams,* Time-efficient vectorized calls, returning multiple uniformvariates,* Buffered and unbuffered calls for efficient generation ofpseudorandom generates in both large and small quantities,* The ability to ``split'' RNGs to produce parallel output streamsusing the ``leapfrog'' method,* A shorthand notation for completely specifying thealgorithm and current state of an RNG, in an 80-character human-readable ASCII string,* A method for reconstructing an RNG state from its shorthandnotation,* A standardized method for adding new RNGs to the package,and* A file-I/O interface allowing fast saves and restarts of RNG statevectors.You can obtain the complete distribution of mrandom by anonymous ftpfrom theory.lcs.mit.edu.  Take the file `mrandom.tar.Z' from thedirectory /pub/cthombor/Mrandom/V3.0.  The distribution contains allsource code, instructions, and this manual.In addition, the mrandom package includes an unsupported set of routinesfor testing the statistical properties of the RNGs in the package.  Theroutines are packaged in an executable called mrtest.  Information aboutmrtest is available in the doc/mrtest directory of the distribution.Although mrtest is included in the current distribution, it is notsupported.Questions, comments, bug reports, etc. should be sent to ClarkThomborson at cthombor@ub.d.umn.edu.2 Files in the Distribution Directory--------------------------------------------------------------------------The mrandom source code distribution includes the followingfiles:makefile	The makefile for creating the mrtest program and the	mrandom.a library.README	General information about the mrandom package, including	changes to the last version.mrandom.c mrandom.h	The source and header files for the main mrandom module.bentley.c bentley.h	The source and header files for Bentley's version of the	generator described in Knuth Vol 2, Section 3.6.pcrand.c pcrand.h	The source and header files for the Portable Combined RNG.ran0.c ran0.h ran1.c ran1.h ran2.c ran2.h	The source and header files for Press and Teukolsky's ran0,	ran1, and ran2.ultra.c ultra.h	The source and header files for Marsaglia's Ultra generator.mrtest.c	The mrtest source file.xsq.c xsq.h	Code used by mrtest.rngs.h	The header file for the UNIX RNGs and the trivial RNG.newrng.c newrng.h	Source and header file templates for a new RNG.mrandom.3	The man pages for mrandom.mrtest.1	The man pages for mrtest.script	A test script for mrtest.mrandom.tex	The latex source for this manual.latexinfo.sty	The style file needed to latex this manual.mrandom.txt	Plain ASCII text version of this manual.mrandom.ps	PostScript version of this manual.3 Installing mrandom----------------------------------------Preparing the mrandom package for use by other programs issimple.  Merely position yourself in the directory which contains themrandom files and type:make allThis will compile all necessary source files and create the mrandom.alibrary, as well as the mrtest binary executable.You can also make either the mrandom.a library or the mrtest executableby typing:make mrandom.aormake mrtestrespectively.To save disk space, various intermediate object files can be removedwith:make cleanThe system can be restored to its original state with:make realcleanThe mrandom package is written in ANSI C, and should beeasily portable to any UNIX-based system supporting a C languagecompiler.  However, when compiling on a new system, confirm thatthe long type is represented in 32 bits.4 What is an RNG?----------------------------------Within the mrandom package, an RNG is represented by the RNGdatastructure.  An RNG has several abstract characteristics which aredescribed in this section.  For a more detailed description of therepresentation of the RNGdata structure in C, seeAppendix A.Associated with every RNG is:* an algorithm number, which determines which algorithm the RNGuses to produce pseudorandom generates.  For descriptions of thealgorithms which are currently installed in the package, see Appendix B.* an ``mrandom algorithm number,'' which determines whichalgorithm the mrandomrv routine will use to producerestricted-range integers when called with the RNG.  (See thedescription of mrandomrv in Section 5.4.2 for moreinformation.)* a state vector, which contains the current state of the RNG.* the size of the state vector.* a seed vector, which contains the seeds which were used toseed the RNG.* the size of the seed vector.* a count of the number of times the RNG has been called sinceit was initialized.* two buffers	- a bit buffer for bit generates	- a main buffer for all other generates.See Section 5.4.2 for a description of how the two buffers work.* a split value, which determines how many generates to skipbetween values which are returned from the RNG.  For a detaileddescription of the split value, see Section 5.4.7.* a string containing the human-readable name of the RNG.* the range of the RNG, such that the RNG is capable ofproducing integers with a maximum value of range-1.5 Using the mrandom package------------------------------------------------------5.1 Overview of the LibraryThis section describes the mrandom library.  The proceduresin the library are gathered into the following groups:* functions for initializing and de-initializing (killing) RNGs* functions for returning generates from RNGs* functions for saving and restarting RNGs* a function for seeding RNGs* a function for checking the integrity of RNG state vectors* a function for producing a human-readable ASCII descriptionof an RNG* functions for examining and modifying characteristics of RNGs5.2 Return codes from mrandom routinesMost mrandom routines follow one of two conventions for returnvalues.For those routines which return pointers to an RNGdatastructure:* A valid pointer to an RNGdata structure is returned upon success.* A null pointer is returned upon failure.For routines which produce vectors of pseudorandom generates:* The first cell of the vector is returned upon success.* The program aborts upon error.For all other routines:* A 0 or -1 is returned upon failure.Details are provided in the description of the mrandom libraryin Section 5.4.5.3 LinkingIn order to use the mrandom library of routines in your programsyou must:* Link the mrandom.a library with your program.  This willtypically involve merely including the library on your compiler'scommand line, such as:cc myprog.c mrandom.aSince mrandom uses some UNIX mathematical functions, you may also needto link a math library with your program, as in the following:cc myprog.c mrandom.a -lmCheck the documentation for your C compiler for details.* Include the following line at the top of your source file:#include "mrandom.h"5.4 The mrandom library5.4.1 Initialization and De-InitializationIn order to use an RNG, it must first be initialized.  This isaccomplished by first declaring a pointer to an RNGdata structure, andthen calling init_rng, which allocates memory for the RNG and readies itfor use by the other routines in the package.	RNGdata *init_rng(alg,mrandom_alg,seed,count1,count2,bufsize)	long alg;	long mrandom_alg;	long *seed;	long count1, count2;	long bufsize;	int kill_rng(rng)	RNGdata *rng;init_rng returns a pointer to an initialized RNG.  A pointer returned byinit_rng is valid for use by all other mrandom routines.alg is the number of the algorithm to be used by the RNG.  (See AppendixB.)mrandom_alg is the algorithm to be used by mrandomrv when called withthe RNG.  (See Section 5.4.2.)seed is a pointer to a seed vector to be used to seed the RNG.(See Section 5.4.4.)count1 and count2 determine the number of initial values to be generatedby the RNG and then discarded, according to the formula:number to discard = count1 + BILLION*count2,where BILLION is defined in 'mrandom.h' as the decimal constant1000000000.bufsize is the size of the RNG's main buffer.  A non-positive value ofbufsize will be interpreted as a value of 1.  (See Section 5.4.2 formore information on buffering.)kill_rng destroys the RNG, making it invalid for use.  This procedurede-allocates the space used by the RNG, and should therefore be used tokill RNGs which will no longer be used.Do *not* use an RNGdata pointer which points to an active RNGto store the return value of init_rng.  In order to initialize anRNG, you should either:* Declare a new RNGdata pointer, and then use it to store thereturn value of init_rng, as shown in Figure 1.-----------------------------------------------RNGdata *rng;long seed[1];rng=init_rng(2, 0, seed, 10000, 0, 8192);Figure 1: Proper initialization of an RNG-----------------------------------------------* Use kill_rng to de-initialize an RNGdata pointer which points to anactive RNG, and then use that pointer to store to the return value ofinit_rng, as shown in Figure 2.  Figure 3 shows how an RNG should *notbe re-initialized.-----------------------------------------------RNGdata *myrng;long seed[1];seed[0]=12345;myrng=init_rng(2, 0, seed, 10000, 0, 8192);kill_rng(myrng);myrng=init_rng(3, 0, seed, 5000, 0, 2048);Figure 2: Proper re-initialization of an RNG----------------------------------------------------------------------------------------------RNGdata *myrng;long seed[1];seed[0]=12345;myrng=init_rng(2, 0, seed, 10000, 0, 8192);myrng=init_rng(3, 0, seed, 5000, 0, 2048);Figure 3: Improper re-initialization of an RNG-----------------------------------------------5.4.2 Procedures for Generating Pseudorandom NumbersAn initialized RNG can be used to generate pseudorandom numbers by usinga variety of routines described in this section.Routines are provided for producing generates of four types:* double precision floating point generates in the range [0,1)* single precision floating point generates in the range [0,1)* long integer generates in the range 0..r-1, where r is the range ofthe RNG being used to produce generates* long integer generates in the range 0..m-1, for any1 <= m < range_rng(rng)Note that although both single and double precision floats can bereturned by the generate-producing routines, the actual precision of thegenerates produced is determined by the precision of the underlyinggenerator being used.  In other words, the difference between routineswhich return generates of type double and those which return generatesof type float is merely in the ``packaging'' of the generates, not inthe precision they provide.  Information about the precision of the RNGscurrently installed in the package is in Appendix B; such informationcan also be obtained at run-time through the range_rng routine (seeSection 5.4.7).  The current version of the package only supports RNGswith precisions of no more than 32 bits.Both buffered and unbuffered routines are provided.  Unbuffered routinescall the underlying RNG only as many times as are needed to produce therequested number of generates, while buffered routines maintain buffersof generates, so that generates may be produced efficiently even whenrequested in small quantities.  Roughly, buffered routines arepreferable when generates are requested one at a time or in smallquantities, while unbuffered routines are preferable when generates arerequested in large quantities.  Some other differences between bufferedand unbuffered routines are discussed later in this section.  The sizeof the buffer used by an RNG is determined at the time of the RNG'sinitialization; effective buffer sizes will vary from application toapplication.The name of a routine denotes the type of the value which the routinereturns and whether the routine is buffered or unbuffered. The firstletter of a routine denotes the type of value which it returns: ``d''for double precision and ``f'' for single precision floating point inthe range [0,1); ``l'' for long integer in the range0..(range_rng(rng)-1), and ``b'' for bit (either a 0 or a 1).  If thesecond letter of the routine's name is an ``x'', then the routine isunbuffered.  Otherwise, the routine is buffered.For convenience in user programming, we also provide a number of macrosthat supply default parameter values.  The last two letters of all ourfundamental routines is ``rv''.  This means that they must be providedwith both a pointer to an RNGdata structure and a vector to fill withgenerates from the RNG.  Macros whose names do not contain an ``r'' havethe RNGdata pointer omitted from their parameter list; they use themost-recently initialized or restarted RNG to produce generates.  Macroswhose names do not contain a ``v'' have the vector and number ofgenerates omitted from their parameter list; they produce and return asingle generate.All generating routines abort with a message to stderr if called with aninvalid RNGdata pointer.BufferingThe operation of the buffered routines and their interaction with theunbuffered routines requires some elaboration.  Each RNG maintains twoseparate buffers: one for buffering bit values (the ``bit buffer''), andone for buffering all other values (the ``main buffer'').  The size ofthe main buffer of an RNG is determined at the time of the RNG'sinitialization, while the size of the bit buffer is currently fixed at32 bits.Consider a freshly-initialized RNG with a main buffer size of 1000.  Arequest is made for a single generate of type long.  The RNG's buffergets filled with 1000 generates, and the first such generate is returnedto the user.  So the buffer now contains 999 generates.  If anothergenerate of type long, double, or float, is requested, a generate willbe pulled from the buffer and returned to the user after being convertedto the proper type.  If the user continues to request generates in thisway and the main buffer becomes depleted, it will be filled again with1000 generates, and so on.The unbuffered routines do not interfere with either of the RNG'sbuffers.  Again, consider our RNG, with its buffer filled with 1000generates.  The user now makes a request for a single unbufferedgenerate.  The underlying RNG will then be called once, returning asingle generate, leaving our buffer of 1000 generates untouched, andstill ready to be accessed by the buffered routines.  If, in aparticular application, it is necessary to always use consecutivegenerates from an RNG, then that RNG should always be called *either*with buffered or unbuffered routines, but not with a combination ofboth.The bit buffer of an RNG operates similarly to the main buffer, with onekey difference: the bit buffer is filled by sequentially retrievinggenerates from the main buffer.  Once again, consider our RNG, with itsbuffer filled with 1000 generates, and with its bit buffer empty.  Asingle bit is then requested.  Thirty-two generates will be pulled fromthe main buffer, transformed into thirty-two one-bit 0-1 values, thenstored in the bit buffer.  (For users who are more concerned with speedthan accuracy, we also provide a ``fast'' bit-buffer call, in which asingle 32-bit generate from the main buffer is transformed intothirty-two 0-1 variates.  See the descriptions of bxrandom_f andbrandom_f, below.)Unbuffered and buffered calling procedures	double dxrandomrv(rng, n, v)	double drandomrv(rng, n, v)	RNGdata *rng;	long n;	double v[];	float fxrandomrv(rng, n, v)	float frandomrv(rng, n, v)	RNGdata *rng;	long n;	float v[];	long lxrandomrv(rng, n, v)	long lrandomrv(rng, n, v)	RNGdata *rng;	long n;	long v[];	int bxrandomrv(rng, n, v)	int brandomrv(rng, n, v)	RNGdata *rng;	long n;	int v[];	int bxrandomrv_f(rng, n, v)	int brandomrv_f(rng, n, v)	RNGdata *rng;	long n;	double v[];These routines fill the vector v with n generates from rng, and returnthe first generate produced (i.e. v[0]).If rng is a null pointer, then the most-recently initialized orrestarted RNG is used to produce generates.  If n is 0, then the vparameter need not be provided, and a single generate is produced andreturned.bxrandomrv uses one generate from rng to generate each bit.  Thisroutine is slower than bxrandomrv_f, but returns bits of higher quality.bxrandomrv_f uses each generate from rng to produce 32 bits.  Therefore,requests for bits in other than multiples of 32 will result in bits fromthe stream being ``lost'' between calls.  The routine returns -1 if itis called with an RNG whose range is not 2^32.  This routine is fasterthan bxrandomrv, but we do not recommend its use, since we know of noone who has rigorously tested such a bit stream.  We gain confidence inour slower bxrandomrv bit stream, in comparison, every time theunderlying generator passes a test sensitive to correlations in theleading digit of its floating point output, or to the most significantbit of its fixed point output.brandomrv_f, the buffered version of bxrandomrv_f, does not exhibit thesame property of ``losing bits'' as does bxrandomrv_f, since bits whichare not used in one call to brandomrv_f are stored in the bit buffer andare available for use upon future calls.	int flush_rng(rng)	RNGdata *rng;	Flushes both of the RNG's buffers.Procedure for generating integers in a restricted range	long mrandomrv(rng, m, n, v)	RNGdata *rng;	long m,n,v[];mrandomrv fills the vector v with n generates in the range 0..m-1 usingrng, where 1 <= m <= range_rng(rng).  If range_rng(rng) < m, the programaborts with an error.The algorithm used by mrandomrv to fill v is set by init_rng or bymralg_rng.  (See Section 5.4.1 and Section 5.4.7.)Algorithm 0 is Thomborson's unbiased method, which produces unbiasedlong integers in the range [0..m).  The algorithm discards any outputsfrom rng which are larger than r-(r mod m), where r is equal torange_rng(rng).  At worst, this code will discard (on long-term average)at most one value of r for every one that is useful.  This worst case isonly encountered for extremely large m; for fixed and moderate m, thiscode will rarely discard a value, and thus will run essentially as fastas algorithm 1.  When the value of m changes on each call to mrandom,however, this code is slower than algorithm 1, due to the necessity ofrecomputing r-(r mod m).The program aborts with an error message to stderr if rng is behaving sonon-randomly that Algorithm 0 must make an excessive number of calls torng in order to produce the requested number of generates.The program aborts with an error to stderr if mrandomrv is asked to useAlgorithm 0 with a value of m for which m > range_rng(rng).Algorithm 1 is the standard (long)(m*dxrandomr(rng)).  This algorithmmay be biased: for large m, some results may be be more likely thanothers.  The bias is (r mod m)/m, which is upper-bounded by 0.1% if m isless than a million and the range r of rng is at least a billion.We do not support, and indeed we actively discourage, generatingrestricted-range integers with lrandomr(rng)%m.  Many RNGs have poorbehavior under this transformation, most noticeably when m is a power of2.  When m is not a power of 2, fixed-point division required by an``%'' operation is time-consuming on many workstations.NOTESThe mrandomrv procedure is capable of generating long integers in thefull range of any RNG for which 1 <= range_rng(rng) <= 2^32.  In orderto accomplish this, with the parameter m a signed long integer, thefollowing mapping is used:Range(mrandom(m)) = 0..m-1		if 1 <= m < 2^31		    0.. 2^32-1  	if m=0		    0..(2^31-m-1)	if -2^31 <= m < 0Macros are defined for easy calling of mrandomrv with various defaultparameters.  See Section 5.4.2 for the naming conventions followed bythe macros.5.4.3 Saving and restarting RNGsRNGs may be saved to disk files in a human-readable ASCII format andlater restarted.  RNG buffers are not saved, and therefore all restartedRNGs have empty buffers, and any data remaining in an RNG's buffer atthe time of its state-save will *not* be reconstructed.	int save_rng(rng, filename)	RNGdata *rng;	char *filename;	RNGdata *restart_rng(filename)	char *filename;save_rng saves rng to the ASCII file named filename.restart_rng restarts an RNG from a previously saved statefile.  Therestarted RNG will begin where the saved RNG ``left off.''  As withinit_rng, the RNGdata pointer used to store the restarted RNG *must* beeither a freshly declared pointer or a pointer to a freshly killed RNG(see Section 5.4.1).RNGs may store their state and seed vectors in any of a number offormats, and this is reflected in the format of the state file.Figure 4 shows a sample state file of an RNG using the Knuth/Bentleylagged-Fibonnacci generator prand (see Appendix B), which stores itsstate and seeds as 32-bit long ints.  Figure 5 shows a sample statefile of an RNG using 4.3bsd nrand48, which stores its state and seedsas 16-bit ints.--------------------------------------RNG statefile for algorithm 2, (Knuth/Bentley prand: lagged Fibbonacci)Buffer size = 1024 bytesInitial seed table =   00000927Number of calls to underlying RNG after seeding = 0 billion + 2000Next value in this pseudorandom sequence = 0b64d0eaThis RNG returns every 1 generatesThis RNG uses mrandom algorithm 0RNG state table =   0911c27a 10641ca0 2ba00807 1aabed0a   273ff367 1ab88564 2ae76a9e 2a7e6bc0   35c7568e 201b6b04 3ad90695 303208b2   1e718896 054c9886 00e8c93f 130a41cb   11de97bf 0da54e15 2f4fcca0 0ebb1f70   01c195c3 3283980e 37dee108 0893a89b   326849b0 167bb45e 19cc9765 33d97b51   36b425d1 35704e34 29a638ca 280a086f   11dfa5d6 14dcbcc4 2610bdf4 02534109   2817daf4 0bcf76ab 19b0a07d 0eebf7f6   113c003e 31b996b0 12bab234 05eddb36   1ed71381 377742a3 3878e079 2668c922   22cc8033 22368c85 18e960ea 2002b06f   22ff23e8 251187dc 340c3dcd 00000023   00000004Figure 4: A sample RNG state file for the Knuth/Bentley prand().----------------------------------------------------------------------------RNG statefile for algorithm 4, (4.3bsd nrand48.c: 48-bit multiplicative)Buffer size = 8192 bytesInitial seed table =   0096   b43f   0034   bf15Number of calls to underlying RNG after seeding = 0 billion + 11000Next value in this pseudorandom sequence = 04a3689eThis RNG returns every 1 generatesThis RNG uses mrandom algorithm 0RNG state table =   07c5   8f2d   0000   a7d6Figure 5: A sample RNG state table for nrand48--------------------------------------A few examples of how to save and restart RNGs are displayed in Figure6.--------------------------------------/* Proper way to re-initialize an active RNG */mrandom(rng,10,n,v);kill_rng(rng);rng=restart_rng("mystatefile");/* Proper way to restart an inactive RNG */RNGdata *rng;rng=restart_rng("mystatefile");/* Improper way to restart an active RNG */mrandom(rng,10,n,v);rng=restart_rng("mystatefile");Figure 6: Examples of saving and restarting RNGs--------------------------------------5.4.4 SeedingEach RNG is initially seeded during initialization by init_rng.  An RNGmay also be reseeded at any time after initialization.	void seed_rng(rng,seed) 	RNGdata *rng; 	long *seed;seed_rng seeds rng with the seed table pointed to by seed.  The RNG'scounter is reset to 0 and its buffers are flushed.5.4.5 Checking RNG integrityAn RNG can be checked to see if it has been corrupted or is otherwisenot in proper condition for use.	int check_rng(rng);	RNGdata *rng;check_rng checks the integrity of the RNG, in order to determine whetherit can be used by the other mrandom library routines.5.4.6 Obtaining a human-readable description of the RNG	char *describe_rng(rng,rngid)	RNGdata *rng;	char rngid[RNGIDSTRLEN];describe_rng places a human-readable description of rng inthe string rngid.  The string has the following format:RNG state identifier is (alg, mralg: seed1, seed2; count1,count2;bufsize, split)where* alg is the number of the algorithm used by rng to generatepseudorandom numbers.  (See Appendix B.)* mralg is the number of the algorithm used bymrandomrv when called with rng.  (See Section 5.4.2.)* seed1 and seed2 are the first and second entries in trng's seed table.If rng's seed table has more than two entries, only the first two areincluded in its description.  (See Section 5.4.4.)* count1 and count2 represent rng's counter.  (See Section 5.4.1.)* bufsize is the number of entries in rng's buffer.  (See Section5.4.2.)* split is rng's current split value.  (See Section 5.4.7.)describe_rng exits with a message to stderr if called with an invalidRNGdata pointer.5.4.7 Procedures for examining and modifying RNG parametersProcedures are available for examining and modifying an RNG's parametersonce it has been initialized.	int mralg_rng(rng, new_value)	RNGdata *rng;	long new_value;	int split_rng(rng, new_value)	RNGdata *rng;	long new_value;	double range_rng(rng)	RNGdata *rng;mralg_rng sets rng's mrandom algorithm number (See Section 5.4.2 forinformation on mrandom algorithm numbers).  It returns 0 if new_value isan invalid value.split_rng sets the split value of rng.  It returns 0 if new_value < 0.An RNG's split value is set to SPLIT_DEF upon initialization.  SPLIT_DEFis #defined in 'mrandom.h', and currently has a value of 0.The function of the split value is to simulate one ``branch'' of agenerator which has been ``split'' into two or more generators.  This isbest illustrated with an example.  Consider an (apparently non-random)RNG which returns the raw sequence:0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 ...The split value indicates how many elements of the sequence to skipbetween generates.  For example, if our sample RNG were given a splitvalue of 1 immediately after initialization, it would then return the followingsequence:0 2 4 6 8 10 ...A split value of 2 after initialization would produce:0 3 6 9 12 15 ...An RNG may be split at any time after its initialization.  So, forexample, our sample RNG might be initialized and then made to generatethe following values:0 1 2 3 4 5before being split with a split value of 3, producing the followinggenerates:6 10 14 18 22 ...Splitting can be used to create several ``leapfrogged'' RNGs from oneRNG, as shown in Figure 7.------------------------------------RNGdata *rngs[10];long seed;int i;seed=12345;for (i=0; i<10; i++) {  /* RNG #i gets cycled i times */  rng[i]=init_rng(2,0,&seed,i,0,1024);  split(rng[i],9);}Figure 7: Creating ``leapfrogged'' RNGs.------------------------------------This operation may be useful in parallel codes, as in testing an RNG forlong-range correlations.  Unfortunately, our current implementation isinefficient for leapfrogging large numbers of RNGs.  A more efficientmethod may be included in a future version of mrandom.The split value affects all of the pseudorandom number generatingroutines (See Section 5.4.2).range_rng returns the range of rng.NOTESThese procedures exit with a message to stderr if rng does notpoint to a valid RNGdata structure.6 Adding new RNGs to the Package----------------------------------------------------------------This section is designed for the programmer who wishes to add new RNGsto the mrandom package.  The section first describes the routines whichmust be provided by the programmer to serve as an interface between theRNG and the mrandom package.  It then describes the RNG parameters whichmust be defined in a header file for the RNG, and how these parametersare to be incorporated into the code for mrandom itself.  Finally, itdescribes how to remake the mrandom package after adding or modifyingRNGs.  Appendix B contains descriptions of the ten RNGs installed in thecurrent version of the package.6.1 Routines Provided by the ProgrammerThis section describes routines which must be provided by each RNG inthe package.The routines provided by the programmer must manipulate anRNGdata structure.  In order to facilitate this, two macros areavailable for accessing an RNG's state and seed vectors:* RNGstate refers to the RNG's state vector.* RNGseed refers to the RNG's seed vector.These vectors are one-dimensional C arrays, e.g.  RNGstate[0] is thefirst element in the RNG's state vector, RNGstate[1] is the secondelement, etc.  In order to make use of these macros, the name of theRNGdata pointer in your routines' parameter lists *must be rng, as shownin the examples in this section.The names used as examples in this section begin with ``myrng'';however, there are no restrictions on naming of routines provided by anRNG.  However, for ease of readability and consistency, we suggest thatthe naming conventions used in this section be followed.The routines described in this section should be included in a single .cfile.  A template for such a source file, called `newrng.c', is includedin the distribution and displayed in Figure 8.Remember that all RNG state information must be included in the RNGstatefield of the RNGdata structure.  In particular, do *not use global orstatic variables to hold RNG state information.  Doing so will make itimpossible to run several instantiations of your RNG simulataneously.------------------------------------/* newrng.c *//* RNG source file template *//* Robert Plotkin/* 5/3/93 */#include "newrng.h"/* Generating procedure *//* Only one of the following two procedures should be *//* defined, depending on the kind of value that *//* your RNG returns */long newrng_lgen(rng)RNGdata *rng;{/* Your generating procedure goes here */}double newrng_dgen(rng)RNGdata *rng;{/* Your generating procedure goes here */}/* Seeding procedure */void newrng_seed(rng,seed)RNGdata *rng;long *seed;{/* Your seeding procedure goes here */}/* Checking procedure */int newrng_check(rng)RNGdata *rng;{/* Your checking procedure goes here */}Figure 8: RNG source file template------------------------------------6.1.3 Seeding Routinevoid myrng_seed(rng, seed)RNGdata *rng;long *seed;This procedure is used for seeding the RNG.  The interpretation of theseed parameter is left entirely to the programmer.  It may, for example,point to a single integer or to an array of 5,000 integers.  One of theRNGs currently installed in the package interprets the seed parameter aspointing to three 16-bit integers.  Obviously, RNGs which are capable ofbeing seeded with a variable number of seeds need to be passed a seedpointer which contains adequate information about the number of seeds towhich it points.Although the seeding procedure is passed an entire RNGdatastructure as a parameter, it should only manipulate the RNGstatefield of that structure.  (See Appendix A for informationon the RNGdata structure.)  Many RNG seeding procedures will simplycopy the seed parameter into RNGstate, as shown in Figure 9.------------------------------------void myrng_seed(rng, seed)RNGdata *rng;long *seed;{RNGstate[0]=seed[0];RNGstate[1]=seed[1]; /* This RNG uses two long seeds */}Figure 9: A sample seeding procedure------------------------------------Other seeding procedures may fill RNGstate with the resultsof some complicated function performed on the initial seed table.6.1.3 Pseudorandom Number Generating Procedurelong myrng_lgen(rng)RNGdata *rng;double myrng_dgen(rng)RNGdata *rng;The programmer must provide *one* procedure, matching one of the twoprototypes given above, which returns a single generate from the RNG.The routine may return either:* a double precision floating point number in the range [0,1), or* a long (32-bit) integer in the range 0..range_rng(rng)-1It is pointless for the programmer to provide procedures of both types.If this is done, only one of them will be accessible by any user code,depending on the value given to RNGreturns, RNGdgen, and RNGlgen (seeSection 6.2).Although the generating procedure is passed an entire RNGdatastructure, it should only manipulate the RNGstate field of thestructure.  A sample generating procedure is displayed in Figure 10.------------------------------------long myrng_lgen(rng)RNGdata *rng;{RNGstate[0]*=12345+6789;return(RNGstate[0]);}Figure 10: A sample generating procedure------------------------------------6.1.4 RNG Checking Procedureint myrng_check(rng)RNGdata *rng;The programmer must provide a procedure to check the integrity of theRNGdata structure.  The procedure returns a value of 1 if the RNG is fitfor use, and returns 0 otherwise.  The coding of the procedure isentirely RNG-specific, and may be extremely simple or extremelycomplicated, depending on the nature of the RNG and the extent ofintegrity desired.  On one extreme is the procedure which alwaysdeclares success, and on the other extreme is the perfect (and slow)procedure which creates a new RNG, seeds it with the seeds of the RNG tobe checked, cycles it through the number of generates which wereproduced by the RNG to be checked, and compares the state tables of thetwo RNGs.  Clearly, the procedure should not modify the RNG in any way.When writing a checking procedure it might be useful to examine thoseincluded in the existing package.6.2 RNG Header FilesFor each RNG included in the package, there must be a correspondingheader file.  The header file contains information about the RNG whichis used by the mrandom library routines.  This section describes theinformation contained in RNG header files, and describes how to use suchheader files to incorporate new RNGs into the mrandom package.  Atemplate for such a header file, called `newrng.h', is included inthe distribution and displayed in Figure 11.------------------------------------/* newrng.h *//* RNG header file template *//* Robert Plotkin/* 5/3/93 */#include "mrandom.h"/* Information for mrandom */#define RNGstatesize_n    #define RNGseedsize_2#define RNGrange_2#define RNGname_2#define RNGreturns_2#define RNGstatetype_2#define RNGdgen_2#define RNGlgen_2#define RNGseed_2#define RNGcheck_2/* mrandom interface routines */long newrng_gen(/* RNGdata * */);void newrng_seed(/* RNGdata *, long * */);int newrng_check(/* RNGdata * */);Figure 11: RNG header file template------------------------------------6.2.1 Information in Header FilesEach header file should begin with the following directives:#ifndef MRANDOM#include "mrandom.h"#endifDefinition of RNG parametersThe next set of lines in the file should contain #define statementswhich assign values to the RNG's parameters.  The names used in the#define statements must contain the RNG's number.  There are currentlyten RNGs included in the package, labeled 0 through 9.  The next RNGincluded in the package should be labeled number 10, and so on.  The``n'' in each parameter name in the following list should be interpretedas the RNG's number.RNGname_n	A string constant containing the name of the RNG, terminated	with a newline character.RNGstatesize_n	The number of entries in the RNG's state table.  Each entry is a	(32-bit) long.  If the RNG is capable of using state tables of	varying sizes, RNGstatesize_n should be defined as the maximum	possible size.RNGseedsize_n	The number of entries in the RNG's seed table.  Each entry is a	(32-bit) long.  If the RNG is capable of using seed tables of	varying sizes, RNGseedsize_n should be defined as the maximum	possible size.RNGrange_n	The range of the RNG, expressed as a double precision floating	point number.  The range of the RNG is one more than the maximum	value the RNG is capable of generating.  For RNGs which produce	double precision generates with a precision of p (i.e. in the	range [0,(RNGrange-1.0)/(1<<p)), RNGrange should be defined as	2^p.  For example, an RNG which produces 8-byte IEEE	floating-point generates using single-precision IEEE arithmetic	(24-bit mantissas) has a range of 16777216.0.RNGreturns_n	A number signifying the type of the generate returned by the	RNG.  An RNG can return a value of one of two types:		* a long in the range 0..RNGrange-1		* a double in the range [0,1)	RNGs which return values of type long and double return	types RET_LONG and RET_DOUBLE, respectively, as defined in	mrandom.h.RNGstatetype	A number signifying the interpretation of the values stored in	the RNG's state and seed vectors.  This value is used by the	routines that read and write the ASCII state files, thereby	allowing portability of state files across machines with	different byte orderings (see Section 5.4.3).  The following	values are currently supported:			Value		Type			---------------------------			STATE_CHAR	8-bit character			STATE_INT	16-bit integer			STATE_LONG	32-bit long integer	The values of STATE_FLOAT (IEEE-standard 32-bit float) and	STATE_DOUBLE (IEEE-standard 64-bit float) are not currently	supported and are reserved for future use.RNGdgen_n and RNGlgen_n	The label of the procedure to be used for generating	pseudorandom numbers.  If the RNG returns doubles, then RNG_dgen	should be defined as the label of the RNG generating procedure,	and RNG_lgen should be defined as 0.  If the RNG returns longs,	then RNG_lgen should be defined as the label of the RNG	generating procedure, and RNG_dgen should be defined as 0.RNGseed_n	The label of the procedure to be used for seeding the RNG.RNGcheck_n	The label of the procedure to be used for checking the integrityof the RNG.Procedure prototypesFinally, the header file must contain function prototypes forthe three procedures provided by the RNG, so that the procedurescan be accessed by the main mrandom code.  For example:long myrng_gen();void myrng_seed();int myrng_check();6.3 Modifying the mrandom codeOnly a few lines of mrandom.h and mrandom.c need to be modified whenadding a new RNG to the package.* The number of RNGs currently installed in the package is defined asNUM_RNGS in `mrandom.h'.  The current value is 10.  This value should beincremented when a new RNG is added to the package.* The header file for the new RNG needs to be #included in mrandom.c.The #include directive should be included in the section marked by thecomment ``Header files for RNGs currently included in package.''* Several additions need to be made in mrandom.c in the section markedby the comment ``Arrays to hold information about RNGs.''  This sectionof the code declares and initializes several arrays which holdinformation about the RNGs included in the package.  When installing anew RNG, the appropriate #defined values need to be inserted at the endof each initialization list.  For example, the declaration of RNGname_acurrently reads:char RNGname_a[NUM_RNGS][RNGIDSTRLEN]={RNGname_0, RNGname_1,      RNGname_2, RNGname_3, RNGname_4, RNGname_5, RNGname_6,      RNGname_7, RNGname_8, RNGname_9};After adding a new RNG to the package, this declaration would read:char RNGname_a[NUM_RNGS][RNGIDSTRLEN]={RNGname_0, RNGname_1,      RNGname_2, RNGname_3, RNGname_4, RNGname_5, RNGname_6,      RNGname_7, RNGname_8, RNGname_9,      /* RNG #10 added -> */ RNGname_10};The arrays statesize_a, seedsize_a, range_a, returns_a, statetype_a,seed_a, dgen_a, lgen_a, and check_a need to be similarly modified.6.4 Remaking the mrandom PackageOnce you have added an RNG to the package as described in theprevious sections, you will need to remake the mrandom package.  To dothis:* Make sure that all of the files for the mrandom package, include thesource and header files for your new RNG, are in the same directory.* Include the names of your header, source, and object files in makefileon the lines labeled INCS, SRCS, and OBJS, respectively, as show inFigure 12.* Follow the instructions for making the mrandom package, asdescribed in Section 3.Once the package has been remade it will be ready for use, with your newRNG, by other programs.--------------------------------INCS = mrandom.h bentley.h pcrand.h ran0.h ran1.h ran2.h ultra.h xsq.h myrng.hSRCS = mrtest.c mrandom.c bentley.c pcrand.c ran0.c ran1.c ran2.c ultra.c xsq.c myrng.cOBJS = mrandom.o bentley.o pcrand.o ran0.o ran1.o ran2.o ultra.o xsq.o myrng.oFigure 12: Addition of myrng to makefile--------------------------------A The RNGdata Structure----------------------------------------------A.1 IntroductionThis section describes the representation in C of the RNGdata structurewhich is used by the mrandom package to represent RNGs.  This structureneed never be manipulated by the programmer, except as described inSection 6.1.  This section, therefore, is intended for those who areinterested in learning a little more about the inner workings of themrandom package.In order to generate random numbers, the user must first declare apointer to an RNGdata structure, and use init_rng to allocate space forthe RNG and perform various initialization functions.  The user uses theRNG entirely through calls provided by the interface described inSection 5.4; i.e. the user should not directly manipulate the RNGdatastructure.A.2 Inside the Structure	The definition of the RNGdata structure is displayed inFigure 13.--------------------------------struct rngdata {	long rngalg;	long mrandom_alg;	long *rngstate;	long *rngseed;	long rngcount1;	long rngcount2;	struct {		long size;		long nleft;		long nbleft;		double *dbuf,*dbufp;		long *lbuf,*lbufp;		int *bbuf,*bbufp;	} buffer;	long rngnextval;	long rngsplit;	char rngname[];	long rngstatesize;	long rngseedsize;	long rngrangem1;	double rngrange;	signed int rngreturns;}; typedef struct rngdata RNGdata;Figure 13: The RNGdata structure--------------------------------Descriptions of its fields are as follows:rngalg	A number identifying the algorithm to be used by the RNG to	produce pseudorandom generates.  Algorithms in the package are	numbered sequentially starting with 0; currently there are 10	algorithms installed, numbered 0 through 9.  A table of RNGs	which are currently installed in the mrandom package, with their	corresponding algorithm numbers, is in Appendix B.mrandom_alg	The algorithm use by mrandomrv when called with this RNG.	See Section 5.4.2 for more on mrandomrv.rngstate	A pointer to the RNG's state vector, used to store the current	state of the RNG.  See Sections 5.4.3, 6.1, and 6.2.1 for more	information on RNG state vectors.rngseed	A pointer to the RNG's seed vector.  See Section 5.4.4	for more information on RNG seed vectors.rngcount1, rngcount2	These two values represent the number of generates the RNG has	produced since initialization, according to the formula:		rngcount1+rngcount2*BILLION	where BILLION is defined in `mrandom.h'.  Please note that the	value represented by rngcount1 and rngcount2 is the *total*	number of generates produced by the RNG since initialization,	including those discarded due to splitting of the RNG.  (See	Section 5.4.7 for more information about splitting RNGs.)rngnextval	The next value to be output from the RNG.  This	value is used internally by the mrandom library and is not	guaranteed to be accurate.rngsplit	Every (split+1)-th generate of the underlying RNG will be	returned by the RNG calling procedures.  rngsplit is set to	DEF_SPLIT upon initialization of the RNG, as defined in	`mrandom.h'.  See Section 5.4.7 for more information about	splitting RNGs.buffer	This structure contains information about the RNG's buffer and	its bit buffer.  (See Section 5.4.2 for more information on RNG	buffers.)  It contains several fields:	size		The number of entries in the RNG's buffer.	nleft		The number of values left in the RNG's buffer.	nbleft		The number of values left in the RNG's bit buffer.	dbuf, dbufp		A pointer to the first entry in the double		buffer, and a pointer to the next entry to be retrieved		from the double buffer.	lbuf, lbufp		Same for the long buffer.	bbuf, bbufp		Same for the bit buffer.The remaining values in the RNGdata structure are derivedfrom the RNG's header file upon initialization.  For more information onthe values of these fields, see Section 6.2.1.B RNGs Currently Installed in the Package----------------------------------------------------------------------------------There are currently ten RNGs installed in the mrandom package.  Thisappendix provides brief descriptions of each of them.  References areprovided for those who are interested in finding out about the RNGs inmore detail.RNG algorithm 0: A trivial RNG	A trivial RNG is included in the package, primarily for testing	purposes.  The generates it produces are not ``random'' in	virtually any sense of the word; it simply produces generates	from an arithmetical progression determined by its initial	seeds.  For example, if it is seeded with 5 and 7, respectively,	it will produce the sequence 5, 12, 19, 26, etc.	This RNG takes two longs as seeds.  It returns generates of type	long.RNG algorithm 1: 4.3bsd random	This is UNIX 4.3bsd random.  It is a 31-bit nonlinear	additive feedback generator with a range of 2^31 and a period of	approximately 16*2^31-1.  It is nominally able to save and	restore state, but its state-saving code is buggy.  Therefore,	when using random with the mrandom package, no more than one RNG	should use random at a time.	This RNG takes a single long as a seed.  It returns generates of	type long.RNG algorithm 2: the Knuth/Bentley prand	This lagged-Fibonacci RNG was introduced by Jon Bentley in his	``Software Exploratorium'' column in Unix Review, Vol. 10, No.	6, June 1992, and is based on one first presented in Donald E.	Knuth's The Art of Computer Programming , Vol. 2,	Addison-Wesley, Reading, Mass., 1981.  It has a range of	1,000,000,000.	This RNG takes a single long as a seed.  It returns generates of	type long.RNG algorithm 3: The Portable Combined RNG	This combined prime multiplicative congruential RNG was	developed based on algorithms and selections of prime numbers	presented in ``Efficient and Portable Combined Random Number	Generators,'' Pierre L'Ecuyer, Communications of the ACM, Vol.	10, No.  6, June 1992, and ``Random Number Generators: Good Ones	are Hard to Find,'' Stephen Park and Keith Miller,	Communications of the ACM, Vol.  31, No. 10, October 1992.  It	has a range of 2147483561.	This RNG takes two longs as seeds.  It returns generates of type	long.RNG algorithm 4: 4.3bsd nrand48	This is UNIX 4.3bsd nrand48.  It produces generates using a	linear congruential algorithm and 48-bit integer arithmetic.  It	has a range of 2^31.	This RNG takes three unsigned shorts as seeds.  They are passed	to the seeding procedure as two longs, and are interpreted in	the following way:		* The 16 least significant bits of the second long is		the first seed.		* The 16 least significant bits of the first long is the		second seed.		* The 16 most significant bits of the first long is the		third seed.		* The 16 most significant bits of the second long is		ignored.	This RNG returns generates of type long.RNG algorithm 5: 4.3bsd rand	This is UNIX 4.3bsd rand.  It uses a multiplicative congruential	algorithm.  It has a period of 2^32 and a range of 2^31.	This RNG takes a single long as a seed.  It returns generates of	type long.RNG algorithm 6, 7, and 8: Press and Teukolsky's ran0, ran1, and ran2	These three multiplicative congruential RNGs are adapted from	those presented in ``Portable Random Number Generators,''	William H.  Press and Saul A. Teukolsky, Computers in Physics,	Vol. 6, No. 5, Sep/Oct 1992.  They all have a period of	2^31-2 and a range of 2^31-1.	These RNGs take a single long as a seed.  They return generates	of type double. RNG algorithm 9: Marsaglia's Ultra RNG	We obtained the source code for this generator by anonymous ftp	from nic.funit.fi (take the file fsultra.zip from the directory	/pub/msdos/science/math/fsultra).  A note in the readme file	says: ``To obtain permission to incorporate this program into	any commercial product, please contact the authors at the e-mail	address given above [afir@stat.fsu.edu or geo@stat.fsu.edu] or	at Department of Statistics and Supercomputer Computations	Research Institute, Florida State University, Tallahassee, FL	32306.''  This RNG is one of those originally presented in ``A	New Class of Random Number Generators,'' George Marsaglia and	Arif Zaman, The Annals of Applied Probability, Vol.  1, No. 3,	1991.  It is a ``subtract-with-borrow'' generator with a range	of 2^32 and a staggering period of 10^354.	This RNG takes two unsigned longs as seeds.  It returns	generates of type double.
+		Massachusetts Institute of Technology
+		       77 Massachusetts Avenue
+		        Cambridge, MA 02139
+
+
+		      mrandom 3.0 User's Manual
+
+
+				by
+
+
+			  Robert Plotkin
+
+
+
+	Department of Electrical Engineering and Computer Science
+
+			     May 1993
+
+
+1 Introduction
+--------------
+--------------
+
+The mrandom package contains a library of routines for using random
+number generators (RNGs) in C in the Unix 4.3bsd environment.  This
+User's Manual is designed as a guide for programmers who wish to use the
+mrandom package within their own programs.  The current version of
+mrandom (version 3.0) is a major rewrite of mrandom version 2.1,
+released by Clark Thomborson in July 1992 (available via anonymous
+ftp from theory.lcs.mit.edu).  The package now provides:
+
+* A standardized interface to many simultaneously-active RNGs,
+* A standardized, and unbiased, method for generating random
+integers in the range 0..m-1,
+* A standardized method for generating floating point numbers
+uniformly distributed in [0.0, 1.0),
+* Two standardized methods for generating pseudorandom bit
+streams,
+* Time-efficient vectorized calls, returning multiple uniform
+variates,
+* Buffered and unbuffered calls for efficient generation of
+pseudorandom generates in both large and small quantities,
+* The ability to ``split'' RNGs to produce parallel output streams
+using the ``leapfrog'' method,
+* A shorthand notation for completely specifying the
+algorithm and current state of an RNG, in an 80-character human-
+readable ASCII string,
+* A method for reconstructing an RNG state from its shorthand
+notation,
+* A standardized method for adding new RNGs to the package,
+and
+* A file-I/O interface allowing fast saves and restarts of RNG state
+vectors.
+
+You can obtain the complete distribution of mrandom by anonymous ftp
+from theory.lcs.mit.edu.  Take the file `mrandom.tar.Z' from the
+directory /pub/cthombor/Mrandom/V3.0.  The distribution contains all
+source code, instructions, and this manual.
+
+In addition, the mrandom package includes an unsupported set of routines
+for testing the statistical properties of the RNGs in the package.  The
+routines are packaged in an executable called mrtest.  Information about
+mrtest is available in the doc/mrtest directory of the distribution.
+Although mrtest is included in the current distribution, it is not
+supported.
+
+Questions, comments, bug reports, etc. should be sent to Clark
+Thomborson at cthombor@ub.d.umn.edu.
+
+2 Files in the Distribution Directory
+-------------------------------------
+-------------------------------------
+
+The mrandom source code distribution includes the following
+files:
+
+makefile
+	The makefile for creating the mrtest program and the
+	mrandom.a library.
+README
+	General information about the mrandom package, including
+	changes to the last version.
+mrandom.c mrandom.h
+	The source and header files for the main mrandom module.
+bentley.c bentley.h
+	The source and header files for Bentley's version of the
+	generator described in Knuth Vol 2, Section 3.6.
+pcrand.c pcrand.h
+	The source and header files for the Portable Combined RNG.
+ran0.c ran0.h ran1.c ran1.h ran2.c ran2.h
+	The source and header files for Press and Teukolsky's ran0,
+	ran1, and ran2.
+ultra.c ultra.h
+	The source and header files for Marsaglia's Ultra generator.
+mrtest.c
+	The mrtest source file.
+xsq.c xsq.h
+	Code used by mrtest.
+rngs.h
+	The header file for the UNIX RNGs and the trivial RNG.
+newrng.c newrng.h
+	Source and header file templates for a new RNG.
+mrandom.3
+	The man pages for mrandom.
+mrtest.1
+	The man pages for mrtest.
+script
+	A test script for mrtest.
+mrandom.tex
+	The latex source for this manual.
+latexinfo.sty
+	The style file needed to latex this manual.
+mrandom.txt
+	Plain ASCII text version of this manual.
+mrandom.ps
+	PostScript version of this manual.
+
+3 Installing mrandom
+--------------------
+--------------------
+
+Preparing the mrandom package for use by other programs is
+simple.  Merely position yourself in the directory which contains the
+mrandom files and type:
+
+make all
+
+This will compile all necessary source files and create the mrandom.a
+library, as well as the mrtest binary executable.
+
+You can also make either the mrandom.a library or the mrtest executable
+by typing:
+
+make mrandom.a
+
+or
+
+make mrtest
+
+respectively.
+
+To save disk space, various intermediate object files can be removed
+with:
+
+make clean
+
+The system can be restored to its original state with:
+
+make realclean
+
+The mrandom package is written in ANSI C, and should be
+easily portable to any UNIX-based system supporting a C language
+compiler.  However, when compiling on a new system, confirm that
+the long type is represented in 32 bits.
+
+4 What is an RNG?
+-----------------
+-----------------
+
+Within the mrandom package, an RNG is represented by the RNGdata
+structure.  An RNG has several abstract characteristics which are
+described in this section.  For a more detailed description of the
+representation of the RNGdata structure in C, see
+Appendix A.
+
+Associated with every RNG is:
+
+* an algorithm number, which determines which algorithm the RNG
+uses to produce pseudorandom generates.  For descriptions of the
+algorithms which are currently installed in the package, see Appendix B.
+* an ``mrandom algorithm number,'' which determines which
+algorithm the mrandomrv routine will use to produce
+restricted-range integers when called with the RNG.  (See the
+description of mrandomrv in Section 5.4.2 for more
+information.)
+* a state vector, which contains the current state of the RNG.
+* the size of the state vector.
+* a seed vector, which contains the seeds which were used to
+seed the RNG.
+* the size of the seed vector.
+* a count of the number of times the RNG has been called since
+it was initialized.
+* two buffers
+	- a bit buffer for bit generates
+	- a main buffer for all other generates.
+See Section 5.4.2 for a description of how the two buffers work.
+* a split value, which determines how many generates to skip
+between values which are returned from the RNG.  For a detailed
+description of the split value, see Section 5.4.7.
+* a string containing the human-readable name of the RNG.
+* the range of the RNG, such that the RNG is capable of
+producing integers with a maximum value of range-1.
+
+5 Using the mrandom package
+---------------------------
+---------------------------
+
+5.1 Overview of the Library
+
+This section describes the mrandom library.  The procedures
+in the library are gathered into the following groups:
+
+* functions for initializing and de-initializing (killing) RNGs
+* functions for returning generates from RNGs
+* functions for saving and restarting RNGs
+* a function for seeding RNGs
+* a function for checking the integrity of RNG state vectors
+* a function for producing a human-readable ASCII description
+of an RNG
+* functions for examining and modifying characteristics of RNGs
+
+5.2 Return codes from mrandom routines
+
+Most mrandom routines follow one of two conventions for return
+values.
+
+For those routines which return pointers to an RNGdata
+structure:
+
+* A valid pointer to an RNGdata structure is returned upon success.
+* A null pointer is returned upon failure.
+
+For routines which produce vectors of pseudorandom generates:
+
+* The first cell of the vector is returned upon success.
+* The program aborts upon error.
+
+For all other routines:
+
+* A 0 or -1 is returned upon failure.
+
+Details are provided in the description of the mrandom library
+in Section 5.4.
+
+5.3 Linking
+
+In order to use the mrandom library of routines in your programs
+you must:
+
+* Link the mrandom.a library with your program.  This will
+typically involve merely including the library on your compiler's
+command line, such as:
+
+cc myprog.c mrandom.a
+
+Since mrandom uses some UNIX mathematical functions, you may also need
+to link a math library with your program, as in the following:
+
+cc myprog.c mrandom.a -lm
+
+Check the documentation for your C compiler for details.
+* Include the following line at the top of your source file:
+
+#include "mrandom.h"
+
+5.4 The mrandom library
+
+5.4.1 Initialization and De-Initialization
+
+In order to use an RNG, it must first be initialized.  This is
+accomplished by first declaring a pointer to an RNGdata structure, and
+then calling init_rng, which allocates memory for the RNG and readies it
+for use by the other routines in the package.
+
+	RNGdata *init_rng(alg,mrandom_alg,seed,count1,count2,bufsize)
+	long alg;
+	long mrandom_alg;
+	long *seed;
+	long count1, count2;
+	long bufsize;
+
+	int kill_rng(rng)
+	RNGdata *rng;
+
+init_rng returns a pointer to an initialized RNG.  A pointer returned by
+init_rng is valid for use by all other mrandom routines.
+
+alg is the number of the algorithm to be used by the RNG.  (See Appendix
+B.)
+
+mrandom_alg is the algorithm to be used by mrandomrv when called with
+the RNG.  (See Section 5.4.2.)
+
+seed is a pointer to a seed vector to be used to seed the RNG.
+(See Section 5.4.4.)
+
+count1 and count2 determine the number of initial values to be generated
+by the RNG and then discarded, according to the formula:
+
+number to discard = count1 + BILLION*count2,
+
+where BILLION is defined in 'mrandom.h' as the decimal constant
+1000000000.
+
+bufsize is the size of the RNG's main buffer.  A non-positive value of
+bufsize will be interpreted as a value of 1.  (See Section 5.4.2 for
+more information on buffering.)
+
+kill_rng destroys the RNG, making it invalid for use.  This procedure
+de-allocates the space used by the RNG, and should therefore be used to
+kill RNGs which will no longer be used.
+
+Do *not* use an RNGdata pointer which points to an active RNG
+to store the return value of init_rng.  In order to initialize an
+RNG, you should either:
+
+* Declare a new RNGdata pointer, and then use it to store the
+return value of init_rng, as shown in Figure 1.
+
+-----------------------------------------------
+RNGdata *rng;
+long seed[1];
+
+rng=init_rng(2, 0, seed, 10000, 0, 8192);
+
+Figure 1: Proper initialization of an RNG
+-----------------------------------------------
+
+* Use kill_rng to de-initialize an RNGdata pointer which points to an
+active RNG, and then use that pointer to store to the return value of
+init_rng, as shown in Figure 2.  Figure 3 shows how an RNG should *not
+be re-initialized.
+
+-----------------------------------------------
+RNGdata *myrng;
+long seed[1];
+
+seed[0]=12345;
+myrng=init_rng(2, 0, seed, 10000, 0, 8192);
+kill_rng(myrng);
+myrng=init_rng(3, 0, seed, 5000, 0, 2048);
+
+Figure 2: Proper re-initialization of an RNG
+-----------------------------------------------
+
+-----------------------------------------------
+RNGdata *myrng;
+long seed[1];
+
+seed[0]=12345;
+myrng=init_rng(2, 0, seed, 10000, 0, 8192);
+myrng=init_rng(3, 0, seed, 5000, 0, 2048);
+
+Figure 3: Improper re-initialization of an RNG
+-----------------------------------------------
+
+5.4.2 Procedures for Generating Pseudorandom Numbers
+
+An initialized RNG can be used to generate pseudorandom numbers by using
+a variety of routines described in this section.
+
+Routines are provided for producing generates of four types:
+
+* double precision floating point generates in the range [0,1)
+* single precision floating point generates in the range [0,1)
+* long integer generates in the range 0..r-1, where r is the range of
+the RNG being used to produce generates
+* long integer generates in the range 0..m-1, for any
+1 <= m < range_rng(rng)
+
+Note that although both single and double precision floats can be
+returned by the generate-producing routines, the actual precision of the
+generates produced is determined by the precision of the underlying
+generator being used.  In other words, the difference between routines
+which return generates of type double and those which return generates
+of type float is merely in the ``packaging'' of the generates, not in
+the precision they provide.  Information about the precision of the RNGs
+currently installed in the package is in Appendix B; such information
+can also be obtained at run-time through the range_rng routine (see
+Section 5.4.7).  The current version of the package only supports RNGs
+with precisions of no more than 32 bits.
+
+Both buffered and unbuffered routines are provided.  Unbuffered routines
+call the underlying RNG only as many times as are needed to produce the
+requested number of generates, while buffered routines maintain buffers
+of generates, so that generates may be produced efficiently even when
+requested in small quantities.  Roughly, buffered routines are
+preferable when generates are requested one at a time or in small
+quantities, while unbuffered routines are preferable when generates are
+requested in large quantities.  Some other differences between buffered
+and unbuffered routines are discussed later in this section.  The size
+of the buffer used by an RNG is determined at the time of the RNG's
+initialization; effective buffer sizes will vary from application to
+application.
+
+The name of a routine denotes the type of the value which the routine
+returns and whether the routine is buffered or unbuffered. The first
+letter of a routine denotes the type of value which it returns: ``d''
+for double precision and ``f'' for single precision floating point in
+the range [0,1); ``l'' for long integer in the range
+0..(range_rng(rng)-1), and ``b'' for bit (either a 0 or a 1).  If the
+second letter of the routine's name is an ``x'', then the routine is
+unbuffered.  Otherwise, the routine is buffered.
+
+For convenience in user programming, we also provide a number of macros
+that supply default parameter values.  The last two letters of all our
+fundamental routines is ``rv''.  This means that they must be provided
+with both a pointer to an RNGdata structure and a vector to fill with
+generates from the RNG.  Macros whose names do not contain an ``r'' have
+the RNGdata pointer omitted from their parameter list; they use the
+most-recently initialized or restarted RNG to produce generates.  Macros
+whose names do not contain a ``v'' have the vector and number of
+generates omitted from their parameter list; they produce and return a
+single generate.
+
+All generating routines abort with a message to stderr if called with an
+invalid RNGdata pointer.
+
+Buffering
+
+The operation of the buffered routines and their interaction with the
+unbuffered routines requires some elaboration.  Each RNG maintains two
+separate buffers: one for buffering bit values (the ``bit buffer''), and
+one for buffering all other values (the ``main buffer'').  The size of
+the main buffer of an RNG is determined at the time of the RNG's
+initialization, while the size of the bit buffer is currently fixed at
+32 bits.
+
+Consider a freshly-initialized RNG with a main buffer size of 1000.  A
+request is made for a single generate of type long.  The RNG's buffer
+gets filled with 1000 generates, and the first such generate is returned
+to the user.  So the buffer now contains 999 generates.  If another
+generate of type long, double, or float, is requested, a generate will
+be pulled from the buffer and returned to the user after being converted
+to the proper type.  If the user continues to request generates in this
+way and the main buffer becomes depleted, it will be filled again with
+1000 generates, and so on.
+
+The unbuffered routines do not interfere with either of the RNG's
+buffers.  Again, consider our RNG, with its buffer filled with 1000
+generates.  The user now makes a request for a single unbuffered
+generate.  The underlying RNG will then be called once, returning a
+single generate, leaving our buffer of 1000 generates untouched, and
+still ready to be accessed by the buffered routines.  If, in a
+particular application, it is necessary to always use consecutive
+generates from an RNG, then that RNG should always be called *either*
+with buffered or unbuffered routines, but not with a combination of
+both.
+
+The bit buffer of an RNG operates similarly to the main buffer, with one
+key difference: the bit buffer is filled by sequentially retrieving
+generates from the main buffer.  Once again, consider our RNG, with its
+buffer filled with 1000 generates, and with its bit buffer empty.  A
+single bit is then requested.  Thirty-two generates will be pulled from
+the main buffer, transformed into thirty-two one-bit 0-1 values, then
+stored in the bit buffer.  (For users who are more concerned with speed
+than accuracy, we also provide a ``fast'' bit-buffer call, in which a
+single 32-bit generate from the main buffer is transformed into
+thirty-two 0-1 variates.  See the descriptions of bxrandom_f and
+brandom_f, below.)
+
+Unbuffered and buffered calling procedures
+
+	double dxrandomrv(rng, n, v)
+	double drandomrv(rng, n, v)
+	RNGdata *rng;
+	long n;
+	double v[];
+
+	float fxrandomrv(rng, n, v)
+	float frandomrv(rng, n, v)
+	RNGdata *rng;
+	long n;
+	float v[];
+
+	long lxrandomrv(rng, n, v)
+	long lrandomrv(rng, n, v)
+	RNGdata *rng;
+	long n;
+	long v[];
+
+	int bxrandomrv(rng, n, v)
+	int brandomrv(rng, n, v)
+	RNGdata *rng;
+	long n;
+	int v[];
+
+	int bxrandomrv_f(rng, n, v)
+	int brandomrv_f(rng, n, v)
+	RNGdata *rng;
+	long n;
+	double v[];
+
+These routines fill the vector v with n generates from rng, and return
+the first generate produced (i.e. v[0]).
+
+If rng is a null pointer, then the most-recently initialized or
+restarted RNG is used to produce generates.  If n is 0, then the v
+parameter need not be provided, and a single generate is produced and
+returned.
+
+bxrandomrv uses one generate from rng to generate each bit.  This
+routine is slower than bxrandomrv_f, but returns bits of higher quality.
+
+bxrandomrv_f uses each generate from rng to produce 32 bits.  Therefore,
+requests for bits in other than multiples of 32 will result in bits from
+the stream being ``lost'' between calls.  The routine returns -1 if it
+is called with an RNG whose range is not 2^32.  This routine is faster
+than bxrandomrv, but we do not recommend its use, since we know of no
+one who has rigorously tested such a bit stream.  We gain confidence in
+our slower bxrandomrv bit stream, in comparison, every time the
+underlying generator passes a test sensitive to correlations in the
+leading digit of its floating point output, or to the most significant
+bit of its fixed point output.
+
+brandomrv_f, the buffered version of bxrandomrv_f, does not exhibit the
+same property of ``losing bits'' as does bxrandomrv_f, since bits which
+are not used in one call to brandomrv_f are stored in the bit buffer and
+are available for use upon future calls.
+
+	int flush_rng(rng)
+	RNGdata *rng;
+
+	Flushes both of the RNG's buffers.
+
+Procedure for generating integers in a restricted range
+
+	long mrandomrv(rng, m, n, v)
+	RNGdata *rng;
+	long m,n,v[];
+
+mrandomrv fills the vector v with n generates in the range 0..m-1 using
+rng, where 1 <= m <= range_rng(rng).  If range_rng(rng) < m, the program
+aborts with an error.
+
+The algorithm used by mrandomrv to fill v is set by init_rng or by
+mralg_rng.  (See Section 5.4.1 and Section 5.4.7.)
+
+Algorithm 0 is Thomborson's unbiased method, which produces unbiased
+long integers in the range [0..m).  The algorithm discards any outputs
+from rng which are larger than r-(r mod m), where r is equal to
+range_rng(rng).  At worst, this code will discard (on long-term average)
+at most one value of r for every one that is useful.  This worst case is
+only encountered for extremely large m; for fixed and moderate m, this
+code will rarely discard a value, and thus will run essentially as fast
+as algorithm 1.  When the value of m changes on each call to mrandom,
+however, this code is slower than algorithm 1, due to the necessity of
+recomputing r-(r mod m).
+
+The program aborts with an error message to stderr if rng is behaving so
+non-randomly that Algorithm 0 must make an excessive number of calls to
+rng in order to produce the requested number of generates.
+
+The program aborts with an error to stderr if mrandomrv is asked to use
+Algorithm 0 with a value of m for which m > range_rng(rng).
+
+
+Algorithm 1 is the standard (long)(m*dxrandomr(rng)).  This algorithm
+may be biased: for large m, some results may be be more likely than
+others.  The bias is (r mod m)/m, which is upper-bounded by 0.1% if m is
+less than a million and the range r of rng is at least a billion.
+
+We do not support, and indeed we actively discourage, generating
+restricted-range integers with lrandomr(rng)%m.  Many RNGs have poor
+behavior under this transformation, most noticeably when m is a power of
+2.  When m is not a power of 2, fixed-point division required by an
+``%'' operation is time-consuming on many workstations.
+
+NOTES
+The mrandomrv procedure is capable of generating long integers in the
+full range of any RNG for which 1 <= range_rng(rng) <= 2^32.  In order
+to accomplish this, with the parameter m a signed long integer, the
+following mapping is used:
+
+Range(mrandom(m)) = 0..m-1		if 1 <= m < 2^31
+		    0.. 2^32-1  	if m=0
+		    0..(2^31-m-1)	if -2^31 <= m < 0
+
+Macros are defined for easy calling of mrandomrv with various default
+parameters.  See Section 5.4.2 for the naming conventions followed by
+the macros.
+
+5.4.3 Saving and restarting RNGs
+
+RNGs may be saved to disk files in a human-readable ASCII format and
+later restarted.  RNG buffers are not saved, and therefore all restarted
+RNGs have empty buffers, and any data remaining in an RNG's buffer at
+the time of its state-save will *not* be reconstructed.
+
+	int save_rng(rng, filename)
+	RNGdata *rng;
+	char *filename;
+
+	RNGdata *restart_rng(filename)
+	char *filename;
+
+save_rng saves rng to the ASCII file named filename.
+
+restart_rng restarts an RNG from a previously saved statefile.  The
+restarted RNG will begin where the saved RNG ``left off.''  As with
+init_rng, the RNGdata pointer used to store the restarted RNG *must* be
+either a freshly declared pointer or a pointer to a freshly killed RNG
+(see Section 5.4.1).
+
+RNGs may store their state and seed vectors in any of a number of
+formats, and this is reflected in the format of the state file.
+Figure 4 shows a sample state file of an RNG using the Knuth/Bentley
+lagged-Fibonnacci generator prand (see Appendix B), which stores its
+state and seeds as 32-bit long ints.  Figure 5 shows a sample state
+file of an RNG using 4.3bsd nrand48, which stores its state and seeds
+as 16-bit ints.
+
+--------------------------------------
+RNG statefile for algorithm 2, (Knuth/Bentley prand: lagged Fibbonacci)
+Buffer size = 1024 bytes
+Initial seed table =
+   00000927
+Number of calls to underlying RNG after seeding = 0 billion + 2000
+Next value in this pseudorandom sequence = 0b64d0ea
+This RNG returns every 1 generates
+This RNG uses mrandom algorithm 0
+RNG state table =
+   0911c27a 10641ca0 2ba00807 1aabed0a
+   273ff367 1ab88564 2ae76a9e 2a7e6bc0
+   35c7568e 201b6b04 3ad90695 303208b2
+   1e718896 054c9886 00e8c93f 130a41cb
+   11de97bf 0da54e15 2f4fcca0 0ebb1f70
+   01c195c3 3283980e 37dee108 0893a89b
+   326849b0 167bb45e 19cc9765 33d97b51
+   36b425d1 35704e34 29a638ca 280a086f
+   11dfa5d6 14dcbcc4 2610bdf4 02534109
+   2817daf4 0bcf76ab 19b0a07d 0eebf7f6
+   113c003e 31b996b0 12bab234 05eddb36
+   1ed71381 377742a3 3878e079 2668c922
+   22cc8033 22368c85 18e960ea 2002b06f
+   22ff23e8 251187dc 340c3dcd 00000023
+   00000004
+
+Figure 4: A sample RNG state file for the Knuth/Bentley prand().
+--------------------------------------
+
+--------------------------------------
+RNG statefile for algorithm 4, (4.3bsd nrand48.c: 48-bit multiplicative)
+Buffer size = 8192 bytes
+Initial seed table =
+   0096   b43f   0034   bf15
+
+Number of calls to underlying RNG after seeding = 0 billion + 11000
+Next value in this pseudorandom sequence = 04a3689e
+This RNG returns every 1 generates
+This RNG uses mrandom algorithm 0
+RNG state table =
+   07c5   8f2d   0000   a7d6
+
+Figure 5: A sample RNG state table for nrand48
+--------------------------------------
+
+A few examples of how to save and restart RNGs are displayed in Figure
+6.
+
+--------------------------------------
+/* Proper way to re-initialize an active RNG */
+mrandom(rng,10,n,v);
+kill_rng(rng);
+rng=restart_rng("mystatefile");
+
+/* Proper way to restart an inactive RNG */
+RNGdata *rng;
+rng=restart_rng("mystatefile");
+
+/* Improper way to restart an active RNG */
+mrandom(rng,10,n,v);
+rng=restart_rng("mystatefile");
+
+Figure 6: Examples of saving and restarting RNGs
+--------------------------------------
+
+5.4.4 Seeding
+
+Each RNG is initially seeded during initialization by init_rng.  An RNG
+may also be reseeded at any time after initialization.
+
+	void seed_rng(rng,seed)
+ 	RNGdata *rng;
+ 	long *seed;
+
+seed_rng seeds rng with the seed table pointed to by seed.  The RNG's
+counter is reset to 0 and its buffers are flushed.
+
+5.4.5 Checking RNG integrity
+
+An RNG can be checked to see if it has been corrupted or is otherwise
+not in proper condition for use.
+
+	int check_rng(rng);
+	RNGdata *rng;
+
+check_rng checks the integrity of the RNG, in order to determine whether
+it can be used by the other mrandom library routines.
+
+5.4.6 Obtaining a human-readable description of the RNG
+
+	char *describe_rng(rng,rngid)
+	RNGdata *rng;
+	char rngid[RNGIDSTRLEN];
+
+describe_rng places a human-readable description of rng in
+the string rngid.  The string has the following format:
+
+RNG state identifier is (alg, mralg: seed1, seed2; count1,count2;
+bufsize, split)
+
+where
+
+* alg is the number of the algorithm used by rng to generate
+pseudorandom numbers.  (See Appendix B.)
+* mralg is the number of the algorithm used by
+mrandomrv when called with rng.  (See Section 5.4.2.)
+* seed1 and seed2 are the first and second entries in trng's seed table.
+If rng's seed table has more than two entries, only the first two are
+included in its description.  (See Section 5.4.4.)
+* count1 and count2 represent rng's counter.  (See Section 5.4.1.)
+* bufsize is the number of entries in rng's buffer.  (See Section
+5.4.2.)
+* split is rng's current split value.  (See Section 5.4.7.)
+
+describe_rng exits with a message to stderr if called with an invalid
+RNGdata pointer.
+
+5.4.7 Procedures for examining and modifying RNG parameters
+
+Procedures are available for examining and modifying an RNG's parameters
+once it has been initialized.
+
+	int mralg_rng(rng, new_value)
+	RNGdata *rng;
+	long new_value;
+
+	int split_rng(rng, new_value)
+	RNGdata *rng;
+	long new_value;
+
+	double range_rng(rng)
+	RNGdata *rng;
+
+mralg_rng sets rng's mrandom algorithm number (See Section 5.4.2 for
+information on mrandom algorithm numbers).  It returns 0 if new_value is
+an invalid value.
+
+split_rng sets the split value of rng.  It returns 0 if new_value < 0.
+An RNG's split value is set to SPLIT_DEF upon initialization.  SPLIT_DEF
+is #defined in 'mrandom.h', and currently has a value of 0.
+
+The function of the split value is to simulate one ``branch'' of a
+generator which has been ``split'' into two or more generators.  This is
+best illustrated with an example.  Consider an (apparently non-random)
+RNG which returns the raw sequence:
+
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 ...
+
+The split value indicates how many elements of the sequence to skip
+between generates.  For example, if our sample RNG were given a split
+value of 1 immediately after initialization, it would then return the following
+sequence:
+
+0 2 4 6 8 10 ...
+
+A split value of 2 after initialization would produce:
+
+0 3 6 9 12 15 ...
+
+An RNG may be split at any time after its initialization.  So, for
+example, our sample RNG might be initialized and then made to generate
+the following values:
+
+0 1 2 3 4 5
+
+before being split with a split value of 3, producing the following
+generates:
+
+6 10 14 18 22 ...
+
+Splitting can be used to create several ``leapfrogged'' RNGs from one
+RNG, as shown in Figure 7.
+
+------------------------------------
+RNGdata *rngs[10];
+long seed;
+int i;
+
+seed=12345;
+for (i=0; i<10; i++) {
+  /* RNG #i gets cycled i times */
+  rng[i]=init_rng(2,0,&seed,i,0,1024);
+  split(rng[i],9);
+}
+
+Figure 7: Creating ``leapfrogged'' RNGs.
+------------------------------------
+
+This operation may be useful in parallel codes, as in testing an RNG for
+long-range correlations.  Unfortunately, our current implementation is
+inefficient for leapfrogging large numbers of RNGs.  A more efficient
+method may be included in a future version of mrandom.
+
+The split value affects all of the pseudorandom number generating
+routines (See Section 5.4.2).
+
+range_rng returns the range of rng.
+
+NOTES
+These procedures exit with a message to stderr if rng does not
+point to a valid RNGdata structure.
+
+6 Adding new RNGs to the Package
+--------------------------------
+--------------------------------
+
+This section is designed for the programmer who wishes to add new RNGs
+to the mrandom package.  The section first describes the routines which
+must be provided by the programmer to serve as an interface between the
+RNG and the mrandom package.  It then describes the RNG parameters which
+must be defined in a header file for the RNG, and how these parameters
+are to be incorporated into the code for mrandom itself.  Finally, it
+describes how to remake the mrandom package after adding or modifying
+RNGs.  Appendix B contains descriptions of the ten RNGs installed in the
+current version of the package.
+
+6.1 Routines Provided by the Programmer
+
+This section describes routines which must be provided by each RNG in
+the package.
+
+The routines provided by the programmer must manipulate an
+RNGdata structure.  In order to facilitate this, two macros are
+available for accessing an RNG's state and seed vectors:
+
+* RNGstate refers to the RNG's state vector.
+* RNGseed refers to the RNG's seed vector.
+
+These vectors are one-dimensional C arrays, e.g.  RNGstate[0] is the
+first element in the RNG's state vector, RNGstate[1] is the second
+element, etc.  In order to make use of these macros, the name of the
+RNGdata pointer in your routines' parameter lists *must be rng, as shown
+in the examples in this section.
+
+The names used as examples in this section begin with ``myrng'';
+however, there are no restrictions on naming of routines provided by an
+RNG.  However, for ease of readability and consistency, we suggest that
+the naming conventions used in this section be followed.
+
+The routines described in this section should be included in a single .c
+file.  A template for such a source file, called `newrng.c', is included
+in the distribution and displayed in Figure 8.
+
+Remember that all RNG state information must be included in the RNGstate
+field of the RNGdata structure.  In particular, do *not use global or
+static variables to hold RNG state information.  Doing so will make it
+impossible to run several instantiations of your RNG simulataneously.
+
+------------------------------------
+/* newrng.c */
+/* RNG source file template */
+/* Robert Plotkin
+/* 5/3/93 */
+
+#include "newrng.h"
+
+/* Generating procedure */
+/* Only one of the following two procedures should be */
+/* defined, depending on the kind of value that */
+/* your RNG returns */
+
+long newrng_lgen(rng)
+RNGdata *rng;
+{
+/* Your generating procedure goes here */
+}
+
+double newrng_dgen(rng)
+RNGdata *rng;
+{
+/* Your generating procedure goes here */
+}
+
+/* Seeding procedure */
+void newrng_seed(rng,seed)
+RNGdata *rng;
+long *seed;
+{
+/* Your seeding procedure goes here */
+}
+
+/* Checking procedure */
+int newrng_check(rng)
+RNGdata *rng;
+{
+/* Your checking procedure goes here */
+}
+
+Figure 8: RNG source file template
+------------------------------------
+
+6.1.3 Seeding Routine
+
+void myrng_seed(rng, seed)
+RNGdata *rng;
+long *seed;
+
+This procedure is used for seeding the RNG.  The interpretation of the
+seed parameter is left entirely to the programmer.  It may, for example,
+point to a single integer or to an array of 5,000 integers.  One of the
+RNGs currently installed in the package interprets the seed parameter as
+pointing to three 16-bit integers.  Obviously, RNGs which are capable of
+being seeded with a variable number of seeds need to be passed a seed
+pointer which contains adequate information about the number of seeds to
+which it points.
+
+Although the seeding procedure is passed an entire RNGdata
+structure as a parameter, it should only manipulate the RNGstate
+field of that structure.  (See Appendix A for information
+on the RNGdata structure.)  Many RNG seeding procedures will simply
+copy the seed parameter into RNGstate, as shown in Figure 9.
+
+------------------------------------
+void myrng_seed(rng, seed)
+RNGdata *rng;
+long *seed;
+{
+RNGstate[0]=seed[0];
+RNGstate[1]=seed[1]; /* This RNG uses two long seeds */
+}
+
+Figure 9: A sample seeding procedure
+------------------------------------
+
+Other seeding procedures may fill RNGstate with the results
+of some complicated function performed on the initial seed table.
+
+6.1.3 Pseudorandom Number Generating Procedure
+
+long myrng_lgen(rng)
+RNGdata *rng;
+
+double myrng_dgen(rng)
+RNGdata *rng;
+
+The programmer must provide *one* procedure, matching one of the two
+prototypes given above, which returns a single generate from the RNG.
+The routine may return either:
+
+* a double precision floating point number in the range [0,1), or
+* a long (32-bit) integer in the range 0..range_rng(rng)-1
+
+It is pointless for the programmer to provide procedures of both types.
+If this is done, only one of them will be accessible by any user code,
+depending on the value given to RNGreturns, RNGdgen, and RNGlgen (see
+Section 6.2).
+
+Although the generating procedure is passed an entire RNGdata
+structure, it should only manipulate the RNGstate field of the
+structure.  A sample generating procedure is displayed in Figure 10.
+
+------------------------------------
+long myrng_lgen(rng)
+RNGdata *rng;
+{
+RNGstate[0]*=12345+6789;
+return(RNGstate[0]);
+}
+
+Figure 10: A sample generating procedure
+------------------------------------
+
+6.1.4 RNG Checking Procedure
+
+int myrng_check(rng)
+RNGdata *rng;
+
+The programmer must provide a procedure to check the integrity of the
+RNGdata structure.  The procedure returns a value of 1 if the RNG is fit
+for use, and returns 0 otherwise.  The coding of the procedure is
+entirely RNG-specific, and may be extremely simple or extremely
+complicated, depending on the nature of the RNG and the extent of
+integrity desired.  On one extreme is the procedure which always
+declares success, and on the other extreme is the perfect (and slow)
+procedure which creates a new RNG, seeds it with the seeds of the RNG to
+be checked, cycles it through the number of generates which were
+produced by the RNG to be checked, and compares the state tables of the
+two RNGs.  Clearly, the procedure should not modify the RNG in any way.
+When writing a checking procedure it might be useful to examine those
+included in the existing package.
+
+6.2 RNG Header Files
+
+For each RNG included in the package, there must be a corresponding
+header file.  The header file contains information about the RNG which
+is used by the mrandom library routines.  This section describes the
+information contained in RNG header files, and describes how to use such
+header files to incorporate new RNGs into the mrandom package.  A
+template for such a header file, called `newrng.h', is included in
+the distribution and displayed in Figure 11.
+
+------------------------------------
+/* newrng.h */
+/* RNG header file template */
+/* Robert Plotkin
+/* 5/3/93 */
+
+#include "mrandom.h"
+
+/* Information for mrandom */
+#define RNGstatesize_n    
+#define RNGseedsize_2
+#define RNGrange_2
+#define RNGname_2
+#define RNGreturns_2
+#define RNGstatetype_2
+#define RNGdgen_2
+#define RNGlgen_2
+#define RNGseed_2
+#define RNGcheck_2
+
+/* mrandom interface routines */
+long newrng_gen(/* RNGdata * */);
+void newrng_seed(/* RNGdata *, long * */);
+int newrng_check(/* RNGdata * */);
+
+Figure 11: RNG header file template
+------------------------------------
+
+6.2.1 Information in Header Files
+
+Each header file should begin with the following directives:
+
+#ifndef MRANDOM
+#include "mrandom.h"
+#endif
+
+Definition of RNG parameters
+
+The next set of lines in the file should contain #define statements
+which assign values to the RNG's parameters.  The names used in the
+#define statements must contain the RNG's number.  There are currently
+ten RNGs included in the package, labeled 0 through 9.  The next RNG
+included in the package should be labeled number 10, and so on.  The
+``n'' in each parameter name in the following list should be interpreted
+as the RNG's number.
+
+RNGname_n
+	A string constant containing the name of the RNG, terminated
+	with a newline character.
+RNGstatesize_n
+	The number of entries in the RNG's state table.  Each entry is a
+	(32-bit) long.  If the RNG is capable of using state tables of
+	varying sizes, RNGstatesize_n should be defined as the maximum
+	possible size.
+RNGseedsize_n
+	The number of entries in the RNG's seed table.  Each entry is a
+	(32-bit) long.  If the RNG is capable of using seed tables of
+	varying sizes, RNGseedsize_n should be defined as the maximum
+	possible size.
+RNGrange_n
+	The range of the RNG, expressed as a double precision floating
+	point number.  The range of the RNG is one more than the maximum
+	value the RNG is capable of generating.  For RNGs which produce
+	double precision generates with a precision of p (i.e. in the
+	range [0,(RNGrange-1.0)/(1<<p)), RNGrange should be defined as
+	2^p.  For example, an RNG which produces 8-byte IEEE
+	floating-point generates using single-precision IEEE arithmetic
+	(24-bit mantissas) has a range of 16777216.0.
+
+RNGreturns_n
+	A number signifying the type of the generate returned by the
+	RNG.  An RNG can return a value of one of two types:
+		* a long in the range 0..RNGrange-1
+		* a double in the range [0,1)
+	RNGs which return values of type long and double return
+	types RET_LONG and RET_DOUBLE, respectively, as defined in
+	mrandom.h.
+RNGstatetype
+	A number signifying the interpretation of the values stored in
+	the RNG's state and seed vectors.  This value is used by the
+	routines that read and write the ASCII state files, thereby
+	allowing portability of state files across machines with
+	different byte orderings (see Section 5.4.3).  The following
+	values are currently supported:
+
+			Value		Type
+			---------------------------
+			STATE_CHAR	8-bit character
+			STATE_INT	16-bit integer
+			STATE_LONG	32-bit long integer
+
+	The values of STATE_FLOAT (IEEE-standard 32-bit float) and
+	STATE_DOUBLE (IEEE-standard 64-bit float) are not currently
+	supported and are reserved for future use.
+RNGdgen_n and RNGlgen_n
+	The label of the procedure to be used for generating
+	pseudorandom numbers.  If the RNG returns doubles, then RNG_dgen
+	should be defined as the label of the RNG generating procedure,
+	and RNG_lgen should be defined as 0.  If the RNG returns longs,
+	then RNG_lgen should be defined as the label of the RNG
+	generating procedure, and RNG_dgen should be defined as 0.
+RNGseed_n
+	The label of the procedure to be used for seeding the RNG.
+RNGcheck_n
+	The label of the procedure to be used for checking the integrity
+of the RNG.
+
+Procedure prototypes
+
+Finally, the header file must contain function prototypes for
+the three procedures provided by the RNG, so that the procedures
+can be accessed by the main mrandom code.  For example:
+
+long myrng_gen();
+void myrng_seed();
+int myrng_check();
+
+6.3 Modifying the mrandom code
+
+Only a few lines of mrandom.h and mrandom.c need to be modified when
+adding a new RNG to the package.
+
+* The number of RNGs currently installed in the package is defined as
+NUM_RNGS in `mrandom.h'.  The current value is 10.  This value should be
+incremented when a new RNG is added to the package.
+* The header file for the new RNG needs to be #included in mrandom.c.
+The #include directive should be included in the section marked by the
+comment ``Header files for RNGs currently included in package.''
+* Several additions need to be made in mrandom.c in the section marked
+by the comment ``Arrays to hold information about RNGs.''  This section
+of the code declares and initializes several arrays which hold
+information about the RNGs included in the package.  When installing a
+new RNG, the appropriate #defined values need to be inserted at the end
+of each initialization list.  For example, the declaration of RNGname_a
+currently reads:
+
+char RNGname_a[NUM_RNGS][RNGIDSTRLEN]={RNGname_0, RNGname_1,
+      RNGname_2, RNGname_3, RNGname_4, RNGname_5, RNGname_6,
+      RNGname_7, RNGname_8, RNGname_9};
+
+After adding a new RNG to the package, this declaration would read:
+
+char RNGname_a[NUM_RNGS][RNGIDSTRLEN]={RNGname_0, RNGname_1,
+      RNGname_2, RNGname_3, RNGname_4, RNGname_5, RNGname_6,
+      RNGname_7, RNGname_8, RNGname_9,
+      /* RNG #10 added -> */ RNGname_10};
+
+The arrays statesize_a, seedsize_a, range_a, returns_a, statetype_a,
+seed_a, dgen_a, lgen_a, and check_a need to be similarly modified.
+
+6.4 Remaking the mrandom Package
+
+Once you have added an RNG to the package as described in the
+previous sections, you will need to remake the mrandom package.  To do
+this:
+
+
+* Make sure that all of the files for the mrandom package, include the
+source and header files for your new RNG, are in the same directory.
+* Include the names of your header, source, and object files in makefile
+on the lines labeled INCS, SRCS, and OBJS, respectively, as show in
+Figure 12.
+* Follow the instructions for making the mrandom package, as
+described in Section 3.
+Once the package has been remade it will be ready for use, with your new
+RNG, by other programs.
+
+--------------------------------
+INCS = mrandom.h bentley.h pcrand.h ran0.h ran1.h ran2.h ultra.h xsq.h myrng.h
+SRCS = mrtest.c mrandom.c bentley.c pcrand.c ran0.c ran1.c ran2.c ultra.c xsq.c myrng.c
+OBJS = mrandom.o bentley.o pcrand.o ran0.o ran1.o ran2.o ultra.o xsq.o myrng.o
+
+Figure 12: Addition of myrng to makefile
+--------------------------------
+
+
+A The RNGdata Structure
+-----------------------
+-----------------------
+
+A.1 Introduction
+
+This section describes the representation in C of the RNGdata structure
+which is used by the mrandom package to represent RNGs.  This structure
+need never be manipulated by the programmer, except as described in
+Section 6.1.  This section, therefore, is intended for those who are
+interested in learning a little more about the inner workings of the
+mrandom package.
+
+In order to generate random numbers, the user must first declare a
+pointer to an RNGdata structure, and use init_rng to allocate space for
+the RNG and perform various initialization functions.  The user uses the
+RNG entirely through calls provided by the interface described in
+Section 5.4; i.e. the user should not directly manipulate the RNGdata
+structure.
+
+A.2 Inside the Structure
+	The definition of the RNGdata structure is displayed in
+Figure 13.
+
+--------------------------------
+struct rngdata {
+	long rngalg;
+	long mrandom_alg;
+	long *rngstate;
+	long *rngseed;
+	long rngcount1;
+	long rngcount2;
+	struct {
+		long size;
+		long nleft;
+		long nbleft;
+		double *dbuf,*dbufp;
+		long *lbuf,*lbufp;
+		int *bbuf,*bbufp;
+	} buffer;
+	long rngnextval;
+	long rngsplit;
+	char rngname[];
+	long rngstatesize;
+	long rngseedsize;
+	long rngrangem1;
+	double rngrange;
+	signed int rngreturns;
+}; 
+typedef struct rngdata RNGdata;
+
+Figure 13: The RNGdata structure
+--------------------------------
+
+Descriptions of its fields are as follows:
+
+rngalg
+	A number identifying the algorithm to be used by the RNG to
+	produce pseudorandom generates.  Algorithms in the package are
+	numbered sequentially starting with 0; currently there are 10
+	algorithms installed, numbered 0 through 9.  A table of RNGs
+	which are currently installed in the mrandom package, with their
+	corresponding algorithm numbers, is in Appendix B.
+mrandom_alg
+	The algorithm use by mrandomrv when called with this RNG.
+	See Section 5.4.2 for more on mrandomrv.
+rngstate
+	A pointer to the RNG's state vector, used to store the current
+	state of the RNG.  See Sections 5.4.3, 6.1, and 6.2.1 for more
+	information on RNG state vectors.
+rngseed
+	A pointer to the RNG's seed vector.  See Section 5.4.4
+	for more information on RNG seed vectors.
+rngcount1, rngcount2
+	These two values represent the number of generates the RNG has
+	produced since initialization, according to the formula:
+		rngcount1+rngcount2*BILLION
+
+	where BILLION is defined in `mrandom.h'.  Please note that the
+	value represented by rngcount1 and rngcount2 is the *total*
+	number of generates produced by the RNG since initialization,
+	including those discarded due to splitting of the RNG.  (See
+	Section 5.4.7 for more information about splitting RNGs.)
+rngnextval
+	The next value to be output from the RNG.  This
+	value is used internally by the mrandom library and is not
+	guaranteed to be accurate.
+rngsplit
+	Every (split+1)-th generate of the underlying RNG will be
+	returned by the RNG calling procedures.  rngsplit is set to
+	DEF_SPLIT upon initialization of the RNG, as defined in
+	`mrandom.h'.  See Section 5.4.7 for more information about
+	splitting RNGs.
+buffer
+	This structure contains information about the RNG's buffer and
+	its bit buffer.  (See Section 5.4.2 for more information on RNG
+	buffers.)  It contains several fields:
+
+	size
+		The number of entries in the RNG's buffer.
+	nleft
+		The number of values left in the RNG's buffer.
+	nbleft
+		The number of values left in the RNG's bit buffer.
+	dbuf, dbufp
+		A pointer to the first entry in the double
+		buffer, and a pointer to the next entry to be retrieved
+		from the double buffer.
+	lbuf, lbufp
+		Same for the long buffer.
+	bbuf, bbufp
+		Same for the bit buffer.
+
+The remaining values in the RNGdata structure are derived
+from the RNG's header file upon initialization.  For more information on
+the values of these fields, see Section 6.2.1.
+
+
+B RNGs Currently Installed in the Package
+-----------------------------------------
+-----------------------------------------
+
+There are currently ten RNGs installed in the mrandom package.  This
+appendix provides brief descriptions of each of them.  References are
+provided for those who are interested in finding out about the RNGs in
+more detail.
+
+RNG algorithm 0: A trivial RNG
+	A trivial RNG is included in the package, primarily for testing
+	purposes.  The generates it produces are not ``random'' in
+	virtually any sense of the word; it simply produces generates
+	from an arithmetical progression determined by its initial
+	seeds.  For example, if it is seeded with 5 and 7, respectively,
+	it will produce the sequence 5, 12, 19, 26, etc.
+
+	This RNG takes two longs as seeds.  It returns generates of type
+	long.
+
+RNG algorithm 1: 4.3bsd random
+	This is UNIX 4.3bsd random.  It is a 31-bit nonlinear
+	additive feedback generator with a range of 2^31 and a period of
+	approximately 16*2^31-1.  It is nominally able to save and
+	restore state, but its state-saving code is buggy.  Therefore,
+	when using random with the mrandom package, no more than one RNG
+	should use random at a time.
+
+	This RNG takes a single long as a seed.  It returns generates of
+	type long.
+
+RNG algorithm 2: the Knuth/Bentley prand
+	This lagged-Fibonacci RNG was introduced by Jon Bentley in his
+	``Software Exploratorium'' column in Unix Review, Vol. 10, No.
+	6, June 1992, and is based on one first presented in Donald E.
+	Knuth's The Art of Computer Programming , Vol. 2,
+	Addison-Wesley, Reading, Mass., 1981.  It has a range of
+	1,000,000,000.
+
+	This RNG takes a single long as a seed.  It returns generates of
+	type long.
+
+RNG algorithm 3: The Portable Combined RNG
+	This combined prime multiplicative congruential RNG was
+	developed based on algorithms and selections of prime numbers
+	presented in ``Efficient and Portable Combined Random Number
+	Generators,'' Pierre L'Ecuyer, Communications of the ACM, Vol.
+	10, No.  6, June 1992, and ``Random Number Generators: Good Ones
+	are Hard to Find,'' Stephen Park and Keith Miller,
+	Communications of the ACM, Vol.  31, No. 10, October 1992.  It
+	has a range of 2147483561.
+
+	This RNG takes two longs as seeds.  It returns generates of type
+	long.
+
+RNG algorithm 4: 4.3bsd nrand48
+	This is UNIX 4.3bsd nrand48.  It produces generates using a
+	linear congruential algorithm and 48-bit integer arithmetic.  It
+	has a range of 2^31.
+
+	This RNG takes three unsigned shorts as seeds.  They are passed
+	to the seeding procedure as two longs, and are interpreted in
+	the following way:
+
+		* The 16 least significant bits of the second long is
+		the first seed.
+		* The 16 least significant bits of the first long is the
+		second seed.
+		* The 16 most significant bits of the first long is the
+		third seed.
+		* The 16 most significant bits of the second long is
+		ignored.
+
+	This RNG returns generates of type long.
+
+RNG algorithm 5: 4.3bsd rand
+	This is UNIX 4.3bsd rand.  It uses a multiplicative congruential
+	algorithm.  It has a period of 2^32 and a range of 2^31.
+
+	This RNG takes a single long as a seed.  It returns generates of
+	type long.
+
+RNG algorithm 6, 7, and 8: Press and Teukolsky's ran0, ran1, and ran2
+	These three multiplicative congruential RNGs are adapted from
+	those presented in ``Portable Random Number Generators,''
+	William H.  Press and Saul A. Teukolsky, Computers in Physics,
+	Vol. 6, No. 5, Sep/Oct 1992.  They all have a period of
+	2^31-2 and a range of 2^31-1.
+
+	These RNGs take a single long as a seed.  They return generates
+	of type double.
+ 
+RNG algorithm 9: Marsaglia's Ultra RNG
+
+	We obtained the source code for this generator by anonymous ftp
+	from nic.funit.fi (take the file fsultra.zip from the directory
+	/pub/msdos/science/math/fsultra).  A note in the readme file
+	says: ``To obtain permission to incorporate this program into
+	any commercial product, please contact the authors at the e-mail
+	address given above [afir@stat.fsu.edu or geo@stat.fsu.edu] or
+	at Department of Statistics and Supercomputer Computations
+	Research Institute, Florida State University, Tallahassee, FL
+	32306.''  This RNG is one of those originally presented in ``A
+	New Class of Random Number Generators,'' George Marsaglia and
+	Arif Zaman, The Annals of Applied Probability, Vol.  1, No. 3,
+	1991.  It is a ``subtract-with-borrow'' generator with a range
+	of 2^32 and a staggering period of 10^354.
+
+	This RNG takes two unsigned longs as seeds.  It returns
+	generates of type double.

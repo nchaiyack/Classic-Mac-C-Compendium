@@ -1,1 +1,46 @@
-    Copyright © General Consulting & Research Inc. 1993-1994 All rights reserved.  	Author: 	Peter H. Teeson     CIS:		72647,3674    AppleLink:	CDA0197 	Date:		1 June 1993   	Path:IconShow++ Ä:ReadMeIS.note 		This code is my own Symantec C++ 6.0.1 version of how to display INIT icons 	at startup. Without the wonderful THINK products, from Symantec, programming 	would actually be work!	 	I studied and learned from others, specifically:			(0) ShowINIT.asm (v1.1b2) by Paul Mercer, Darin Adler,Paul Snively, 		Steve Capps et al.			(1) ShowIcon7.c by James W. Walker which was based on Patrick C. Beard's 		ShowIconFamily.c, which in turn was derived from the original ShowINIT					(2) 'An Example INIT' from THINK Reference 'Code Example Orphans' in Managers		(3) The helpful comments in the Symantec SYMDEVTOOLS CIS forum from 		Dennis Brothers, Phil Shapiro, Brian Fitzgerald, Steve Stockman, 		Ken Broomfield, Steve Zellers, and others.			(4) The grey book: The C++ Programming Language 2nd Edition Bjarne Stroustrup		Addison-Wesley ISBN 0-201-53992-6			(5) The purple book: Advanced C++ Programming Styles and Idioms James O. Coplien		Addison-Wesley ISBN 0-201-54855-0 	(6) The crimson book: Object Oriented Design with Applications Grady Booch		Benjamin Cummings ISBN 0-8053-0091-0					Instructions for use:				Refer to the ReadMeES.note.			Peter Teeson		  		  		  		  		  		  		  		  
+    Copyright © General Consulting & Research Inc. 1993-1994 All rights reserved.
+  	Author: 	Peter H. Teeson 
+    CIS:		72647,3674
+    AppleLink:	CDA0197
+ 	Date:		1 June 1993 
+  	Path:IconShow++ Ä:ReadMeIS.note
+ 	
+	This code is my own Symantec C++ 6.0.1 version of how to display INIT icons 
+	at startup. Without the wonderful THINK products, from Symantec, programming 
+	would actually be work!
+	 
+	I studied and learned from others, specifically:
+		
+	(0) ShowINIT.asm (v1.1b2) by Paul Mercer, Darin Adler,Paul Snively, 
+		Steve Capps et al.
+		
+	(1) ShowIcon7.c by James W. Walker which was based on Patrick C. Beard's 
+		ShowIconFamily.c, which in turn was derived from the original ShowINIT	
+			
+	(2) 'An Example INIT' from THINK Reference 'Code Example Orphans' in Managers
+	
+	(3) The helpful comments in the Symantec SYMDEVTOOLS CIS forum from 
+		Dennis Brothers, Phil Shapiro, Brian Fitzgerald, Steve Stockman, 
+		Ken Broomfield, Steve Zellers, and others.
+		
+	(4) The grey book: The C++ Programming Language 2nd Edition Bjarne Stroustrup
+		Addison-Wesley ISBN 0-201-53992-6
+		
+	(5) The purple book: Advanced C++ Programming Styles and Idioms James O. Coplien
+		Addison-Wesley ISBN 0-201-54855-0
+ 
+	(6) The crimson book: Object Oriented Design with Applications Grady Booch
+		Benjamin Cummings ISBN 0-8053-0091-0
+				
+	Instructions for use:
+		
+		Refer to the ReadMeES.note.
+		
+	Peter Teeson		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  

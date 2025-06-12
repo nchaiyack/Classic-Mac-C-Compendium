@@ -1,1 +1,25 @@
-  File:   0 "MacTraps"  File:   1 "trench.c"  File:   2 "ANSI"Segment "%GlobalData" size=$000180	qd								-$000180(A5)				file="MacTraps"	randSeed						-$000134(A5)	screenBits						-$000130(A5)	arrow							-$000122(A5)	dkGray							-$0000DE(A5)	ltGray							-$0000D6(A5)	gray							-$0000CE(A5)	black							-$0000C6(A5)	white							-$0000BE(A5)	thePort							-$0000B6(A5)	wlines							-$0000B2(A5)				file="trench.c"	wRecord							-$0000B0(A5)	myWindow						-$000014(A5)	screenRect						-$000010(A5)Segment "Seg2" size=$000334 rsrcid=2	Draw_Lines						$000004	SetUp							$0000A6	main							$0001DA	  JT=$000072(A5)
+  File:   0 "MacTraps"
+  File:   1 "trench.c"
+  File:   2 "ANSI"
+
+Segment "%GlobalData" size=$000180
+	qd								-$000180(A5)				file="MacTraps"
+	randSeed						-$000134(A5)
+	screenBits						-$000130(A5)
+	arrow							-$000122(A5)
+	dkGray							-$0000DE(A5)
+	ltGray							-$0000D6(A5)
+	gray							-$0000CE(A5)
+	black							-$0000C6(A5)
+	white							-$0000BE(A5)
+	thePort							-$0000B6(A5)
+	wlines							-$0000B2(A5)				file="trench.c"
+	wRecord							-$0000B0(A5)
+	myWindow						-$000014(A5)
+	screenRect						-$000010(A5)
+
+Segment "Seg2" size=$000334 rsrcid=2
+	Draw_Lines						$000004
+	SetUp							$0000A6
+	main							$0001DA	  JT=$000072(A5)
+

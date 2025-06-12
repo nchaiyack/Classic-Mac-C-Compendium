@@ -1,1 +1,44 @@
-Dragonsmithby Paul M. HoffmanDrag-and-drop application kit for THINK C 5.0 and 6.0version 1.1.115 Jan 1994Description-----------The Dragonsmith kit lets THINK C programmers easily create drag-and-drop applications (or "dragons") for use in System 7 or greater.The Dragon class is the foundation of an object-oriented (non-THINK Class Library) framework for a simple drag-and-drop application.  To create your own dragons, you'll create a subclass of Dragon and override one (or possibly more) of Dragon's methods.Three sample "dragons" are provided, along with their THINK C project and source files.  "File Paths" is a handy programming tool, and you'll need "Passer" to debug your own dragons.  "File Cleaver" is a text file splitter.*** All source code is included. ***Version 1.1.1 is a bug-fix and THINK C 6.0 compatibility release only and does not contain any new features.Setup instructions----------------- 	1.	Extract the remaining files in this archive, if you haven't already done so 	2.	Open the file "Dragonsmith Programmer's Manual" (or "Dragonsmith Manual (text)" if you don't have Microsoft Word) and read the sections "Introduction" and "Getting Started"Miscellaneous notes------------------System 7 is required -- dragons without drag-and-drop would be rather pointless.You don't need to know anything about the THINK Class Library to use Dragonsmith.All source code in the Dragonsmith kit is Copyright 1992-1994 by Paul Hoffman but may be freely used, altered, and distributed in any way as long as it is GIVEN away rather than sold (except as expressly permitted by the author).Paul M. Hoffman302 W. Davis #2Ann Arbor MI 48103USAInternet: paul.hoffman@umich.edu -or- dragonsmith@umich.eduAFS: /afs/umich.edu/user/n/k/nkuitse"Dragons do not enter into this story."
+Dragonsmith
+by Paul M. Hoffman
+
+Drag-and-drop application kit for THINK C 5.0 and 6.0
+version 1.1.1
+15 Jan 1994
+
+Description
+-----------
+
+The Dragonsmith kit lets THINK C programmers easily create drag-and-drop applications (or "dragons") for use in System 7 or greater.
+
+The Dragon class is the foundation of an object-oriented (non-THINK Class Library) framework for a simple drag-and-drop application.  To create your own dragons, you'll create a subclass of Dragon and override one (or possibly more) of Dragon's methods.
+
+Three sample "dragons" are provided, along with their THINK C project and source files.  "File Paths" is a handy programming tool, and you'll need "Passer" to debug your own dragons.  "File Cleaver" is a text file splitter.
+
+*** All source code is included. ***
+
+Version 1.1.1 is a bug-fix and THINK C 6.0 compatibility release only and does not contain any new features.
+
+Setup instructions
+-----------------
+
+ 	1.	Extract the remaining files in this archive, if you haven't already done so
+ 	2.	Open the file "Dragonsmith Programmer's Manual" (or "Dragonsmith Manual (text)" if you don't have Microsoft Word) and read the sections "Introduction" and "Getting Started"
+
+Miscellaneous notes
+------------------
+
+System 7 is required -- dragons without drag-and-drop would be rather pointless.
+
+You don't need to know anything about the THINK Class Library to use Dragonsmith.
+
+All source code in the Dragonsmith kit is Copyright 1992-1994 by Paul Hoffman but may be freely used, altered, and distributed in any way as long as it is GIVEN away rather than sold (except as expressly permitted by the author).
+
+Paul M. Hoffman
+302 W. Davis #2
+Ann Arbor MI 48103
+USA
+
+Internet: paul.hoffman@umich.edu -or- dragonsmith@umich.edu
+AFS: /afs/umich.edu/user/n/k/nkuitse
+
+"Dragons do not enter into this story."

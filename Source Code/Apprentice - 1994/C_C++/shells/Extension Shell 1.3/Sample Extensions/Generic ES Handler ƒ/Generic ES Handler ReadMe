@@ -1,1 +1,57 @@
-Generic ES Handler------------------The Generic ES Handler is a generic Handler resource for use with Extension Shell. As it stands it won'tactually do anything, but you can use it as a starting point for writing your own handlers. You may findit more usefull to clone one of the sample Extensions, depending on what you're writing.When cloning the generic handler, you will have to change the following #defines:	• The #defines in "ES Handler.h". In particular, the details that are relevent to	  error strings, disabled icons, and enabled icons may need to be changed for your	  particular Extension.  	• The #defines in "CodeConstants.h". For each item you want to install with Extension	  Shell, you should #define its name to a valid index value for the code details array.	  This #define is used both by the handler (for setting up the code resource's details in	  the code details array, and for interpreting the errorIndex field of the ESParamBlock)	  and by your actual code resources themselves. They can use this constant to find out	  which slot in the address table contains their information. If you use an address table,	  this is a good place to define the selector associated with your Extension's table. You	  should also supply defines for the resource type, and ID, of your installed code.And the actual routines:  	• The InitialiseParamBlock() function in "ES Handler.c". The code that deals with icons,	  and bombing out if System 7 isn't present is generic, and won't need to be changed.	  However, the actual installation details will need to be changed for your particular	  Extension - basically by putting the relevent #defines into the supplied templates.		  NB - The logic flow for Extensions and Control Panels is different for when it comes	  to handling disabling-due-to-mouse-down-at-startup situations. See	  ‘Extension Shell (Source) ReadMe’ for the reason.		• The InitialiseAddrsTable() function in "ES Handler.c". You may or may not need to	  initialise the address table. The idea of this message was to make Extension Shell	  more suitable for writing Control Panels. In a Control Panel, the address table code	  will probably have been replaced by some custom code that embeds an address table	  at the start of a larger structure. The other fields in this structure will be some sort	  of preferences resource that installed code (trap patches, etc) can read to find out	  what to do. InitialiseAddrsTable() should read a preferences resource in and store the	  relevent values away for the later code to find. It will be called after the address table	  has been installed, but before any other code has been installed.		• The HandleTheError() function in "ES Handler.c". You may or may not want to beep, post	  error messages, and uninstall any already installed code. This is basically a matter of	  setting fields to true or false, but you may need to flesh out the details of the switch	  statement if you're planning to do any error handling. Again, the icon handling code is	  generic.Of course, if you also want to use a custom address table, you will need to clone the 'AddrsTable.π'project.
+Generic ES Handler
+------------------
+
+The Generic ES Handler is a generic Handler resource for use with Extension Shell. As it stands it won't
+actually do anything, but you can use it as a starting point for writing your own handlers. You may find
+it more usefull to clone one of the sample Extensions, depending on what you're writing.
+
+
+When cloning the generic handler, you will have to change the following #defines:
+
+
+	• The #defines in "ES Handler.h". In particular, the details that are relevent to
+	  error strings, disabled icons, and enabled icons may need to be changed for your
+	  particular Extension.
+  
+	• The #defines in "CodeConstants.h". For each item you want to install with Extension
+	  Shell, you should #define its name to a valid index value for the code details array.
+	  This #define is used both by the handler (for setting up the code resource's details in
+	  the code details array, and for interpreting the errorIndex field of the ESParamBlock)
+	  and by your actual code resources themselves. They can use this constant to find out
+	  which slot in the address table contains their information. If you use an address table,
+	  this is a good place to define the selector associated with your Extension's table. You
+	  should also supply defines for the resource type, and ID, of your installed code.
+
+
+
+And the actual routines:
+  
+	• The InitialiseParamBlock() function in "ES Handler.c". The code that deals with icons,
+	  and bombing out if System 7 isn't present is generic, and won't need to be changed.
+	  However, the actual installation details will need to be changed for your particular
+	  Extension - basically by putting the relevent #defines into the supplied templates.
+	
+	  NB - The logic flow for Extensions and Control Panels is different for when it comes
+	  to handling disabling-due-to-mouse-down-at-startup situations. See
+	  ‘Extension Shell (Source) ReadMe’ for the reason.
+	
+	• The InitialiseAddrsTable() function in "ES Handler.c". You may or may not need to
+	  initialise the address table. The idea of this message was to make Extension Shell
+	  more suitable for writing Control Panels. In a Control Panel, the address table code
+	  will probably have been replaced by some custom code that embeds an address table
+	  at the start of a larger structure. The other fields in this structure will be some sort
+	  of preferences resource that installed code (trap patches, etc) can read to find out
+	  what to do. InitialiseAddrsTable() should read a preferences resource in and store the
+	  relevent values away for the later code to find. It will be called after the address table
+	  has been installed, but before any other code has been installed.
+	
+	• The HandleTheError() function in "ES Handler.c". You may or may not want to beep, post
+	  error messages, and uninstall any already installed code. This is basically a matter of
+	  setting fields to true or false, but you may need to flesh out the details of the switch
+	  statement if you're planning to do any error handling. Again, the icon handling code is
+	  generic.
+
+
+
+Of course, if you also want to use a custom address table, you will need to clone the 'AddrsTable.π'
+project.
