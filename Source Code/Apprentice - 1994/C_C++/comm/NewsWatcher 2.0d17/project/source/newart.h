@@ -1,0 +1,1 @@
+void DoCheckNewArticles(WindowPtr wind);

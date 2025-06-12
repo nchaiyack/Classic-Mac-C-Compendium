@@ -1,0 +1,1 @@
+## Definitions pertaining to Sun3 (mc680x0) architecture## Define the name of this architecture here.# This is used as a subdirectory name where all the objects for this# architecture live: $(TOP)/Build/$(ARCH)#ARCH=		sun3OSINCLS=	-I/usr/local/X/usr/include

@@ -1,0 +1,1 @@
+for d in scratch-1:csm:comp.≈	cd {d}	echo {d} >> dev:stderr	echo -n > article_index	echo -n > qz	rm q≈ article_index	MakeArticleIndex	setfile -c 'MPS ' ≈endcd {nuntius}

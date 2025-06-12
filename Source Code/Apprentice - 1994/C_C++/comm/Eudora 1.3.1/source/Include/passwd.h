@@ -1,0 +1,1 @@
+void PasswdWindow(void);

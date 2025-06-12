@@ -1,0 +1,1 @@
+@appendix Summary of GDL SyntaxWhitespace is never significant, except to separate two symbols or withina string or escaped symbols.form ::= module-form | ...module-form ::= (game-module [ name ] [ game-module-property-binding ] * )game-module-property-binding ::= (game-module-property-name value)[etc]

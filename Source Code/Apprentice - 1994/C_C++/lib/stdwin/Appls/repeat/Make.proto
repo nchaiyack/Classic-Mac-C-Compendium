@@ -1,0 +1,1 @@
+## Makefile prototype for repeat application#REPEAT=		$(APPLS)/repeatSRCS=		\		$(REPEAT)/repeat.call:		repeat_bootstrap:	@putprogmf repeat $(SRCS)

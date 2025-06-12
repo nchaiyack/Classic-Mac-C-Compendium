@@ -1,0 +1,1 @@
+## Definitions pertaining to  the TAHOE architecture## The name of this architectureARCH=		tahoe# Program to update Makefile dependencies#MKDEP=		$(CONF)/slowmkdep

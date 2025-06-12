@@ -1,0 +1,1 @@
+/* Definitions of types of plans. */DEF_PLAN("none", PLAN_NONE)DEF_PLAN("passive", PLAN_PASSIVE)DEF_PLAN("defensive", PLAN_DEFENSIVE)DEF_PLAN("exploratory", PLAN_EXPLORATORY)DEF_PLAN("offensive", PLAN_OFFENSIVE)DEF_PLAN("random", PLAN_RANDOM)

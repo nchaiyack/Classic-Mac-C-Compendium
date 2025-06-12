@@ -1,0 +1,1 @@
+C  -i ::VSet2.0:temp,::HDF3.1r4:Src -d MAC  -d MPW -mc68020 -mc68881 -mbg full -t -r -sym full -opt full spvreader.cC  -i ::VSet2.0:temp,::HDF3.1r4:Src -d MAC  -d MPW -mc68020 -mc68881 -mbg full -t -r -sym full -opt full convert.cfortran uiflowvs.f -MC68881 -opt=1 -bkg=0

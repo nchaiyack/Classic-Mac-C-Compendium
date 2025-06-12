@@ -1,0 +1,1 @@
+## Definitions pertaining to  the DEC VAX architecture## The name of this architectureARCH=		vax# Program to update Makefile dependencies#MKDEP=		$(CONF)/slowmkdep

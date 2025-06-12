@@ -1,0 +1,1 @@
+void FontWasChanged (Boolean listFont);

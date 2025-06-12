@@ -1,0 +1,1 @@
+void Scale_rect( Rect *what, Rect *for_print, Rect *for_preview );

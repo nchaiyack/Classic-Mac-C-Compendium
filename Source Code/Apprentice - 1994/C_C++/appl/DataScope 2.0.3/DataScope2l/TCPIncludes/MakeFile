@@ -1,0 +1,1 @@
+###################################	BuildProgram for DataScope TCPIncludes##################################macwhatami.h		Ä	netevent.h 	SetFile -m . macwhatami.h#whatami.h			Ä	netevent.h 	SetFile -m . whatami.h#protocol.h			Ä	whatami.h 	SetFile -m . protocol.h#data.h				Ä	macdefs.h 	SetFile -m . data.h#

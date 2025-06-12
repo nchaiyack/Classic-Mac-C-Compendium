@@ -1,0 +1,1 @@
+WhatKey-------WhatKey is an example of using Extension Shell to install a low-memory filter routine. It adds itself ontothe jGNE filter and draws the character for every keyDown event up beside the Apple menu.WhatKey was based on source code provided by James Thomson.

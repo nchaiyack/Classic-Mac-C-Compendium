@@ -1,0 +1,1 @@
+## Definitions pertaining to DEC Ultrix (tested with 2.2 or 3.0)#OS=		ultrix# MKDEP is defined in proto.arch.{vax,mips}LIBTERMCAP=	-ltermcapLIBX11=		-lX11LIBMATH=	-lm

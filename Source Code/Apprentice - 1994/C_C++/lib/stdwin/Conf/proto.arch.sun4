@@ -1,0 +1,1 @@
+## Definitions pertaining to Sun4 (SPARC) architecture## Define the name of this architecture here.# This is used as a subdirectory name where all the objects for this# architecture live: $(TOP)/Build/$(ARCH)#ARCH=		sun4

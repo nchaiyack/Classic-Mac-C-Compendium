@@ -1,0 +1,1 @@
+set SFK "boot:SoftKiss.src.1.5"export SFKset SFK_Includes "{SFK}:core,{SFK}:dbo,{SFK}:driver_shell,{SFK}:init,{SFK}:lib"export SFK_Includesset CIncludes "adsk:FixedIncludes,{SFK_Includes}"export CIncludesdirectory "{SFK}:"check -k4 -Rmmerror -Rmacmail -Rmmorder Å.c

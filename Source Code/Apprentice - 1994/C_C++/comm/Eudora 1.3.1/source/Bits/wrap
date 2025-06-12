@@ -1,0 +1,1 @@
+perl -x -s "{0}" {"Parameters"}Exit {Status}#!/usr/local/bin/perlwhile (<>){  chop;	split;	$len = 0;	foreach $w (@_)	{		if ($len && length($w)+$len > 76) {print "\n"; $len = 0;}		$len += length($w)+1;		print "$w ";	}	print "\n";}

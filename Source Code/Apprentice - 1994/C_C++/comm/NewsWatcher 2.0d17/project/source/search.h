@@ -1,0 +1,1 @@
+void DoSearch (WindowPtr wind);

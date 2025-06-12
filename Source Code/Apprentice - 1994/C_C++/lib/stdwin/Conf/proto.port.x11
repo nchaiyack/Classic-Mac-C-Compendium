@@ -1,0 +1,1 @@
+## Definitions pertaining to the X11 port#PORT=		x11# Libraries to link with for the X11 portPORTOWNLIBS=	$(PORTBUILD)/lib/lib.aPORTSYSLIBS=	$(LIBX11)PORTLIBS=	$(PORTOWNLIBS) $(PORTSYSLIBS)

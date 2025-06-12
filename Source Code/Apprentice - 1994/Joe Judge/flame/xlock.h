@@ -1,0 +1,1 @@
+// Boolean HasColorQD(void);

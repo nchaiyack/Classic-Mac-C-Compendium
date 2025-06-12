@@ -1,0 +1,1 @@
+#	Symbolic Application Debugging Environment	1.3 ##	Copyright Apple Computer, Inc. 1987-1992#	All rights reserved.Sourcepath 'MacIIci:ARTAbrot'	Target 'MacIIci:ARTAbrot:ARTAbrot'Break solve_brot.(78)dump word data_mem 800

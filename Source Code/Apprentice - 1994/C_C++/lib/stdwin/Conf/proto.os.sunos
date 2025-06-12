@@ -1,0 +1,1 @@
+## Definitions pertaining to SunOS (hopefully all versions)## Define the name of this O.S. here.#OS=		sunos# The mkdep using cc -M will work for any architecture (I hope)#MKDEP=		$(CONF)/fastmkdep# The system libraries to link with programs that use termcap and X11#LIBTERMCAP=	-ltermcapLIBX11=		-lX11# Similar for the math library#LIBMATH=	-lm

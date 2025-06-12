@@ -1,0 +1,1 @@
+Hi there,here is the source code for Incognito 1.1, a network management tool. To compile, you’ll need the following:Universal Headers, which should be on the newest developer discExceptions.h, from develop.GestaltValue.o, from apple.you’ll also have to write a couple of dialog utilities, like getBox/getValue and replace dialogutil.h with something else.Manuel

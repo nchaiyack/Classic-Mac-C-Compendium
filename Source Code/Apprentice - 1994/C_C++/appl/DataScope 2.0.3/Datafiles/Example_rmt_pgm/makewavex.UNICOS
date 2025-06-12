@@ -1,0 +1,1 @@
+cc -DUNICOS -c dscall.ccf77 wavex.f dscall.o -o wavex -lnet

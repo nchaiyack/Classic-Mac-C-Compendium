@@ -1,0 +1,1 @@
+## Definitions pertaining to the DEC mips architecture## The name of this architectureARCH=		mips# Script to add dependencies to MakefileMKDEP=		$(CONF)/fastmkdep

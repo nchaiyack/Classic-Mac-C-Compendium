@@ -1,0 +1,1 @@
+## Definitions pertaining to BSD (4.3)#OS=		bsd# MKDEP is defined in proto.arch.*LIBTERMCAP=	-ltermcapLIBX11=		-lX11LIBMATH=	-lm

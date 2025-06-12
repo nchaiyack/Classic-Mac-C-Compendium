@@ -1,0 +1,1 @@
+Boolean DoCloseWindow (WindowPtr wind);

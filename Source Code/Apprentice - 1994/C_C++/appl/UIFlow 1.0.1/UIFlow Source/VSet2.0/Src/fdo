@@ -1,0 +1,1 @@
+# This is one way you can compile a Fortran program that uses Vset.#f77 $1.f  libvg.a -ldf -L/ncsa/apps/hdf/lib -o $1echo $1 done

@@ -1,0 +1,1 @@
+	/* first block */	viewingDistance=57.1;	trials=40;	message="Monitor calibrated November 21, 1993 by Katie Burns";	a=3;		// second block	logC=-1.0;	a[0]=1;		// third block	logC=-2; 	a[1][1]=1.1;a[0][0]=-INF;

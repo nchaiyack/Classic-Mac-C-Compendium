@@ -1,0 +1,1 @@
+cc -DSUN -c dscall.cf77 wavex.f dscall.o -o wavex
