@@ -1,1 +1,147 @@
-unit Menus;interface	uses		AboutWndo, Dialogs, Sound, GameUtils, Enemies, GlyphaGuts, MainWndo, Initialize;	procedure DoPause;	procedure DoQuit;	procedure Handle_My_Menu (theMenu, theItem: integer; var theInput: TEHandle); {Handle menu selection}{===================================}implementation	procedure DoPause;	begin		pausing := not pausing;	end;{===================================}	procedure DoQuit;	begin		doneFlag := TRUE;		SetEventMask(EveryEvent);		InitCursor;	end;{===================================}	procedure Handle_My_Menu;               {Handle menu selections realtime}		const			L_Apple = 201;					{Menu list}			C_About_Glypha = 1;			L_Game = 202;					{Menu list}			C_Begin = 1;			C_Pause = 2;			C_End = 3;			C_Quit = 5;			L_Options = 203;				{Menu list}			C_Configure_Game = 1;			C_Configure_Controls = 2;			C_Help = 4;			C_Clear_HiScores = 5;		var			DNA, index: integer;		{For opening DAs}			BoolHolder: boolean;		{For SystemEdit result}			DAName: Str255;			{For getting DA name}			SavePort: GrafPtr;			{Save current port when opening DAs}	begin		case theMenu of                       {Do selected menu list}			L_Apple: 				begin					case theItem of                   {Handle all commands in this menu list}						C_About_Glypha: 							begin								D_AboutWndo(rightOffset, downOffset);			{Call a dialog for this menu selection}							end;						otherwise				{Handle the DAs}							begin								GetPort(SavePort);								GetItem(AppleMenu, theItem, DAName); {Get the name of the DA selected}								DNA := OpenDeskAcc(DAName);   {Open the DA selected}								SetPort(SavePort);							end;					end;						{End of item case}				end;						{End for this list}			L_Game: 				begin					case theItem of			{Handle all commands in this menu list}						C_Begin: 							begin								if (pausing) then									begin										DoPause;									end								else									begin										if (not playing) then											begin												playing := TRUE;												SetEventMask(playMask);												if (downOffset) < 20 then													begin														ClearMenuBar;														DrawMenuBar;														FlashMenuBar(0);													end;												levelOn := levelStart - 1;												mortals := mortalsStart;												score := 0;												oldScore := 0;												gameCycle := 0;												nextMortal := 20000;												SetCursor(ahnkCursor^^);												if (keyboardControl) then													HideCursor;												AdvanceALevel;												EnterANewMortal;												lastLoopTime := TickCount;											end										else											begin											end;									end;							end;						C_Pause: 							DoPause;						C_End: 							DoEnd;						C_Quit: 							DoQuit;						otherwise							begin							end;					end;								{End of item case	}				end;								{End for this list		}			L_Options: 				begin					case theItem of				{Handle all commands in this menu list	}						C_Configure_Game: 							D_ConfigureGameWndo(mortalsStart, levelStart, delayFor, soundOn, inhibitSound);        {Call a dialog for this menu selection}						C_Configure_Controls: 							D_ControlsWndo(keyboardControl);	{Call a dialog for this menu selection}						C_Help: 							DoHelpScreen;						C_Clear_HiScores: 							FlushTheScores;						otherwise							begin							end;					end;						{End of item case		}				end;						{End for this list			}			otherwise				begin				end;		end;							{End for lists								}		HiliteMenu(0);				{Turn menu selection off				}	end;								{End of procedure Handle_My_Menu	}{===================================}end.								{End of unit								}
+unit Menus;
+
+interface
+
+	uses
+		AboutWndo, Dialogs, Sound, GameUtils, Enemies, GlyphaGuts, MainWndo, Initialize;
+
+	procedure DoPause;
+	procedure DoQuit;
+	procedure Handle_My_Menu (theMenu, theItem: integer; var theInput: TEHandle); {Handle menu selection}
+
+{===================================}
+
+implementation
+
+	procedure DoPause;
+	begin
+		pausing := not pausing;
+	end;
+
+{===================================}
+
+	procedure DoQuit;
+	begin
+		doneFlag := TRUE;
+		SetEventMask(EveryEvent);
+		InitCursor;
+	end;
+
+{===================================}
+
+	procedure Handle_My_Menu;               {Handle menu selections realtime}
+		const
+			L_Apple = 201;					{Menu list}
+			C_About_Glypha = 1;
+			L_Game = 202;					{Menu list}
+			C_Begin = 1;
+			C_Pause = 2;
+			C_End = 3;
+			C_Quit = 5;
+			L_Options = 203;				{Menu list}
+			C_Configure_Game = 1;
+			C_Configure_Controls = 2;
+			C_Help = 4;
+			C_Clear_HiScores = 5;
+		var
+			DNA, index: integer;		{For opening DAs}
+			BoolHolder: boolean;		{For SystemEdit result}
+			DAName: Str255;			{For getting DA name}
+			SavePort: GrafPtr;			{Save current port when opening DAs}
+
+	begin
+		case theMenu of                       {Do selected menu list}
+			L_Apple: 
+				begin
+					case theItem of                   {Handle all commands in this menu list}
+						C_About_Glypha: 
+							begin
+								D_AboutWndo(rightOffset, downOffset);			{Call a dialog for this menu selection}
+							end;
+						otherwise				{Handle the DAs}
+							begin
+								GetPort(SavePort);
+								GetItem(AppleMenu, theItem, DAName); {Get the name of the DA selected}
+								DNA := OpenDeskAcc(DAName);   {Open the DA selected}
+								SetPort(SavePort);
+							end;
+					end;						{End of item case}
+				end;						{End for this list}
+
+			L_Game: 
+				begin
+					case theItem of			{Handle all commands in this menu list}
+						C_Begin: 
+							begin
+								if (pausing) then
+									begin
+										DoPause;
+									end
+								else
+									begin
+										if (not playing) then
+											begin
+												playing := TRUE;
+												SetEventMask(playMask);
+												if (downOffset) < 20 then
+													begin
+														ClearMenuBar;
+														DrawMenuBar;
+														FlashMenuBar(0);
+													end;
+												levelOn := levelStart - 1;
+												mortals := mortalsStart;
+												score := 0;
+												oldScore := 0;
+												gameCycle := 0;
+												nextMortal := 20000;
+												SetCursor(ahnkCursor^^);
+												if (keyboardControl) then
+													HideCursor;
+												AdvanceALevel;
+												EnterANewMortal;
+												lastLoopTime := TickCount;
+											end
+										else
+											begin
+											end;
+									end;
+							end;
+						C_Pause: 
+							DoPause;
+						C_End: 
+							DoEnd;
+						C_Quit: 
+							DoQuit;
+						otherwise
+							begin
+							end;
+					end;								{End of item case	}
+				end;								{End for this list		}
+
+			L_Options: 
+				begin
+					case theItem of				{Handle all commands in this menu list	}
+						C_Configure_Game: 
+							D_ConfigureGameWndo(mortalsStart, levelStart, delayFor, soundOn, inhibitSound);        {Call a dialog for this menu selection}
+						C_Configure_Controls: 
+							D_ControlsWndo(keyboardControl);	{Call a dialog for this menu selection}
+						C_Help: 
+							DoHelpScreen;
+						C_Clear_HiScores: 
+							FlushTheScores;
+						otherwise
+							begin
+							end;
+					end;						{End of item case		}
+				end;						{End for this list			}
+			otherwise
+				begin
+				end;
+		end;							{End for lists								}
+		HiliteMenu(0);				{Turn menu selection off				}
+	end;								{End of procedure Handle_My_Menu	}
+
+{===================================}
+
+end.								{End of unit								}

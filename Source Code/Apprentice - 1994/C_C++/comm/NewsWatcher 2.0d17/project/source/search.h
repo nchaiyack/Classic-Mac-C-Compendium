@@ -1,1 +1,1 @@
-void DoSearch (WindowPtr wind);
+void DoSearch (WindowPtr wind);

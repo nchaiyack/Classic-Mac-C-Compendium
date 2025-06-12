@@ -1,1 +1,2 @@
-void DrawSectionMessage (WindowPtr wind);void HandleUpdate (WindowPtr wind);
+void DrawSectionMessage (WindowPtr wind);
+void HandleUpdate (WindowPtr wind);

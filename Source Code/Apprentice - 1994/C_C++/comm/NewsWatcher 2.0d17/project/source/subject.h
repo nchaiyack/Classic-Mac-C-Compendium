@@ -1,1 +1,1 @@
-short OpenGroupCell (WindowPtr wind, Cell theCell);
+short OpenGroupCell (WindowPtr wind, Cell theCell);

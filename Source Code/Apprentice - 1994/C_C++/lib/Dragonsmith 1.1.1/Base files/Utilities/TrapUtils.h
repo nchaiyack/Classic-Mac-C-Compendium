@@ -1,1 +1,7 @@
-/*	TrapUtils.h*/#pragma onceBoolean TrapAvailable (short theTrap);
+/*
+	TrapUtils.h
+*/
+
+#pragma once
+
+Boolean TrapAvailable (short theTrap);

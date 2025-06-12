@@ -1,1 +1,1 @@
-void ToolBoxInit( void );
+void ToolBoxInit( void );

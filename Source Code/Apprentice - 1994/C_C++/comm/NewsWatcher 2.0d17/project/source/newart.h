@@ -1,1 +1,1 @@
-void DoCheckNewArticles(WindowPtr wind);
+void DoCheckNewArticles(WindowPtr wind);

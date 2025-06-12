@@ -1,1 +1,60 @@
-{===============================================}{================= Shot sprite unit ================}{===============================================}{ Example file for Ingemars Sprite Animation Toolkit. }{ © Ingemar Ragnemalm 1992 }{ See doc files for legal terms for using this code. }unit sShot;{ Sprite unit. A sprite unit should include the following routines:}{ Init-procedure, that initializes private bitmaps}{ Setup-procedure, that sets variables other than the standard ones set by MakeSprite }{ Handle-procedure, to be called once per iteration until the sprite dies }{ Hittask-procedure (optional), for advanced collission handling. }{ Shot object for the SATInvaders sample game. }interface	uses		SAT, SoundConst, GameGlobals;	procedure InitShot;	procedure SetupShot (sp: SpritePtr);	procedure HandleShot (me: SpritePtr);implementation	const		shotSpeed = 15;	var		shotFace: FacePtr;	procedure InitShot;	begin		shotFace := GetFace(135);	end;	procedure SetupShot (sp: SpritePtr);	begin		sp^.face := shotFace;		SetRect(sp^.hotRect, 0, 0, 8, 12); {How big are we?}	end;	procedure HandleShot (me: SpritePtr);	begin		if me^.kind <> 1 then {Hit something - remove}			begin				me^.task := nil;{No sound here - we assume that the bad guys (sEnemy and sMissile) do that }			end;		me^.position.v := me^.position.v - shotSpeed;		if me^.position.v < 0 then			me^.task := nil; {Outside - remove}	end;end.
+{===============================================}
+{================= Shot sprite unit ================}
+{===============================================}
+
+{ Example file for Ingemars Sprite Animation Toolkit. }
+{ © Ingemar Ragnemalm 1992 }
+{ See doc files for legal terms for using this code. }
+
+unit sShot;
+
+{ Sprite unit. A sprite unit should include the following routines:}
+{ Init-procedure, that initializes private bitmaps}
+{ Setup-procedure, that sets variables other than the standard ones set by MakeSprite }
+{ Handle-procedure, to be called once per iteration until the sprite dies }
+{ Hittask-procedure (optional), for advanced collission handling. }
+
+{ Shot object for the SATInvaders sample game. }
+
+interface
+
+	uses
+		SAT, SoundConst, GameGlobals;
+
+	procedure InitShot;
+	procedure SetupShot (sp: SpritePtr);
+	procedure HandleShot (me: SpritePtr);
+
+implementation
+
+	const
+		shotSpeed = 15;
+
+	var
+		shotFace: FacePtr;
+
+	procedure InitShot;
+	begin
+		shotFace := GetFace(135);
+	end;
+
+	procedure SetupShot (sp: SpritePtr);
+	begin
+		sp^.face := shotFace;
+		SetRect(sp^.hotRect, 0, 0, 8, 12); {How big are we?}
+	end;
+
+	procedure HandleShot (me: SpritePtr);
+	begin
+		if me^.kind <> 1 then {Hit something - remove}
+			begin
+				me^.task := nil;
+{No sound here - we assume that the bad guys (sEnemy and sMissile) do that }
+			end;
+
+		me^.position.v := me^.position.v - shotSpeed;
+		if me^.position.v < 0 then
+			me^.task := nil; {Outside - remove}
+	end;
+
+end.

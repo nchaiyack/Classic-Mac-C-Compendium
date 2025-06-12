@@ -1,1 +1,2 @@
-void DoPageSetup (void);void DoPrint (WindowPtr wind);
+void DoPageSetup (void);
+void DoPrint (WindowPtr wind);

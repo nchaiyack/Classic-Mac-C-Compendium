@@ -1,1 +1,737 @@
-{	ircle - Internet Relay Chat client	}{	File: DCC	}{	Copyright © 1992 Olaf Titz (s_titz@ira.uka.de)	}{	This program is free software; you can redistribute it and/or modify	}{	it under the terms of the GNU General Public License as published by	}{	the Free Software Foundation; either version 2 of the License, or	}{	(at your option) any later version.	}{	This program is distributed in the hope that it will be useful,	}{	but WITHOUT ANY WARRANTY; without even the implied warranty of	}{	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	}{	GNU General Public License for more details.	}{	You should have received a copy of the GNU General Public License	}{	along with this program; if not, write to the Free Software	}{	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.	}unit DCC;{ Handles DCC connections }interfaceuses	TCPTypes, TCPStuff, TCPConnections, ApplBase, MiscGlue, MsgWindows, {}	IRCGlobals, IRCaux, IRCChannels;procedure InitDCC;{ startup }procedure DCCRequest (var fr, s: string);{ Request for DCC from outside }procedure DCCcommand (var s: string);{ user DCC command }procedure DCCChatSend (var s: string);{ send line over DCC CHAT }implementation{ Largely an adaption of the IRCII DCC code by Troy Rollo }{$SETC DCCenable=true}{$SETC DEBUG=false}{$IFC DISTRIBUTION }{$SETC DEBUG=FALSE }{$ENDC}const	BUFSIZ = 4096;{$IFC DCCenable}type	DCCType = (CHAT, SEND, GET);	DCCFlagsType = (CLOSED, WAITING, OFFERED, OPENING, OPEN);	DCCPtr = ^DCCrec;	DCCrec = record			next: DCCPtr;			{ Link }			flag: DCCFlagsType;	{ status }			peer: string[16];		{ peer (nick) }			host, port: longint;		{ TCP host/port }			sock: ConnectionIndex;	{ socket }			case typ : DCCType of				CHAT: (						win: MWHndl;	{ window for DCC CHAT messages }				);				SEND: (						sfil: SFReply;	{ contains file parameters }						sfref: integer;	{ file refnum }						stext: boolean;	{ textfile conversion }						sendbuf: CharsPtr;{ Buffer pointer }						sent: longint;	{ Bytes already sent }						sendmax: longint;	{ Bytes to send }				);				GET: (						gfil: SFReply;	{ contains file parameters }						gfref: integer;	{ file refnum }						gtext: boolean;	{ textfile conversion }						getbuf: CharsPtr;	{ Buffer pointer }						gotten: longint;	{ Bytes received }				);		end;var	FDCC: DCCPtr;{ The following is really not beautiful, but DCC protocol requires IP addresses }{ to be given as unsigned long in ASCII, while this compiler has only signed longint. Sigh. }{$V-}function ulongval (var s: string): longint;	var		l: longint;		i, j: integer;	begin		l := 0;		i := 1;		repeat			if i > length(s) then				leave;			j := ord(s[i]) - 48;			if (j < 0) or (j > 9) then				leave;			l := 10 * l + j;			i := succ(i);		until false;		ulongval := l;	end;procedure str10neg (var s: string);{ Given s as a 10-digit ASCII number, this will compute 2^32-s, i.e. the }{ 32-bit twos complement of s. }	var		y: string[10];		i, x, c: integer;	begin		y := '4294967296'; { 2^32 }		c := 0;		for i := 10 downto 1 do begin			x := ord(y[i]) - ord(s[i]) - c;			if x < 0 then begin				c := 1;				x := x + 10			end			else				c := 0;			s[i] := chr(x + 48)		end	end;procedure ulongstr (l: longint; var s: string);	var		i: integer;		n: boolean;	begin		if l = 0 then			debugstr('Bogus IP/port number 0'); { here it is guaranteed to be nonzero! }		n := (l < 0);		l := abs(l);		for i := 10 downto 1 do begin			s[i] := chr((l mod 10) + 48);			l := l div 10		end;		s[0] := chr(10);		if n then			str10neg(s);		while s[1] = '0' do			delete(s, 1, 1);	end;{ U*X open/create substitutes }function openoldfile (x: DCCPtr): OSErr;	begin		openoldfile := FSOpen(x^.sfil.fName, x^.sfil.vRefNum, x^.sfref)	end;function opennewfile (x: DCCPtr): OSErr;	var		e: OSErr;		b1, b2: OSType;	begin		if x^.gtext then begin			b1 := 'EDIT';			b2 := 'TEXT';		end		else begin			b1[0] := chr(0);			b1[1] := chr(0);			b1[2] := chr(0);			b1[3] := chr(0);			b2 := b1		end;		e := create(x^.gfil.fName, x^.gfil.vRefNum, b1, b2);		if (e = noErr) or (e = dupFNErr) then			e := openoldfile(x); { XX: assumes sfil==gfil }		opennewfile := e	end;function getDCC (ty: DCCType; var from: string; var f: DCCPtr): boolean;{ will return true if dcc already existed, allocate it otherwise }	begin		getDCC := true;		f := FDCC;		while f <> nil do			with f^ do begin				if (typ = ty) and (peer = from) then					exit(getDCC);				f := f^.next;			end;		new(f);		if f = nil then			exit(getDCC); { error condition, will lead to collision msg }		with f^ do begin			next := FDCC;			typ := ty;			flag := CLOSED;			peer := from;			host := 0;			port := 0;			sock := 0;			win := nil;			sfref := 0;			if (ty = SEND) or (ty = GET) then { XX: assume sendbuf==getbuf }				begin				sendbuf := CharsPtr(NewPtr(BUFSIZ));				if MemError <> 0 then					exit(getDCC);			end;		end;		FDCC := f;		getDCC := false;	end;procedure killDCC (x: DCCPtr);	var		p: DCCPtr;		t: string[12];		i: integer;	begin		if x^.sock <> 0 then	{ Forcibly close connection }			AbortConnection(x^.sock);		if x^.win <> nil then begin	{ inactivate chat window }			t := concat(DCC_CHAT_PREFIX, x^.peer, DCC_CHAT_POSTFIX);			Inactive(t);			x^.win := nil		end;		if x^.sfref <> 0 then	{ close file }			i := FSClose(x^.sfref);		if (x^.typ = SEND) or (x^.typ = GET) then begin			DisposPtr(Ptr(x^.sendbuf));			if x^.flag = OPEN then begin	{ sync FT counter }				NFT := pred(NFT);				UpdateStatusLine			end		end;		if x = FDCC then			FDCC := x^.next		else begin			p := FDCC;			while p^.next <> x do begin				if p^.next = nil then					debugstr('Error in DCC chain');				p := p^.next			end;			p^.next := x^.next;		end;		dispose(x);	end;{ Cleanly close DCC }procedure closeDCC (x: DCCPtr);	begin		if x^.sock <> 0 then begin			CloseConnection(x^.sock);			x^.sock := 0;		end;		killDCC(x)	end;{ Give message for failed DCC and close }procedure failedDCC (x: DCCPtr; e: string);	var		s: string[120];	begin		s := stringof('*** ', e, ' DCC ', x^.typ, ' connection to ', x^.peer);		Message(s);		killDCC(x)	end;{ This gets called on user closing active DCC CHAT window }procedure closeDChat (w: WindowPtr);	var		x: DCCPtr;		t: str255;		inac: boolean;	begin		GetWTitle(w, t);		DoPart(t);		delete(t, 1, 1);		t[0] := pred(t[0]);		if not inac then begin			if not getDCC(CHAT, t, x) then				debugstr(concat('Bogus DCC CHAT window ', t));			x^.win := nil; { window is already closed }			CloseDCC(x);		end;	end;{ Send a portion of BUFSIZ bytes over DCC. }{ XX: DCC SEND protocol assumes that receiver sends acknowledge as }{ four byte high-endian integer (htonl format). Mac is high-endian so no conversion is needed. }procedure DCCsendfile (p: DCCPtr; c: TCPConnectionPtr);	var		nn: longint;		i, e: integer;		s: string[80];	begin		nn := p^.sendmax;		if nn = 0 then begin			s := stringof('*** Completed DCC SEND to ', p^.peer);			Message(s);			CloseDCC(p);			exit(DCCSendfile)		end;		if nn > BUFSIZ then			nn := BUFSIZ;		if FSRead(p^.sfref, nn, Ptr(p^.sendbuf)) = 0 then begin			if p^.stext then				for i := 0 to nn - 1 do					p^.sendbuf^[i] := ISOEncode^^[p^.sendbuf^[i]];			p^.sendmax := p^.sendmax - nn;			p^.sent := p^.sent + nn;{$IFC DEBUG}			s := stringof('* Sending ', nn : 1, ' bytes');			Message(s);{$ENDC}			e := 0;			i := TCPSendAsync(c, Ptr(p^.sendbuf), nn, false, @e);			if i = 0 then begin				repeat					ApplRun				until i <> inProgress;			end;			if (i <> 0) or (e <> 0) then				failedDCC(p, 'Lost (send error)');		end		else			failedDCC(p, 'Lost (file read error)');	end;procedure DCCgotline (p: DCCPtr; c: CEPtr);	var		s: string;		nn: longint;		b: boolean;		i, j: integer;	begin		case p^.typ of			CHAT: 				begin				nn := 1;				if TCPReceiveUpTo(c^.tcpc, 10, readTimeout, @s[0], 250, nn, b) = 0 then begin					j := nn - 1;					while (j > 0) and ((s[j] = chr(10)) or (s[j] = chr(13))) do						j := pred(j);					s[0] := chr(j);					for i := 1 to j do						s[i] := ISODecode^^[s[i]];					MWMessage(p^.win, s);				end			end;			SEND: 				begin				if TCPReceiveChars(c^.tcpc, @nn, sizeof(nn)) = 0 then begin {$IFC DEBUG}					s := stringof('* Acknowledged ', nn : 1, ' bytes');					Message(s);{$ENDC}					if nn = p^.sent then						DCCsendfile(p, c^.tcpc)					else if nn > p^.sent then						failedDCC(p, 'Lost (bogus acknowledge)')				end				else					failedDCC(p, 'Lost (no acknowledge)');			end;			GET: 				begin				nn := TCPCharsAvailable(c^.tcpc);				if nn > BUFSIZ then					nn := BUFSIZ;				if TCPReceiveChars(c^.tcpc, Ptr(p^.getbuf), nn) = 0 then begin					if p^.gtext then begin						for i := 0 to nn - 1 do							p^.getbuf^[i] := ISODecode^^[p^.getbuf^[i]];					end;					if FSWrite(p^.gfref, nn, Ptr(p^.getbuf)) = 0 then begin						p^.gotten := p^.gotten + nn;{$IFC DEBUG}						s := stringof('* Received ', p^.gotten : 1, ' bytes');						Message(s);{$ENDC}						if TCPSend(c^.tcpc, @p^.gotten, sizeof(longint), true) <> 0 then							failedDCC(p, 'Lost');					end					else						failedDCC(p, 'Lost (file write error)');				end				else					failedDCC(p, 'Lost (receive error)');			end;		end;	end;procedure DCCConnOpened (p: DCCPtr; c: CEPtr);	var		t: string[16];	begin		p^.flag := OPEN;		case p^.typ of			CHAT: 				begin				t := concat(DCC_CHAT_PREFIX, p^.peer, DCC_CHAT_POSTFIX);				p^.win := DoJoin(t);				if p^.win <> nil then					p^.win^^.whenDone := @closeDChat; { XX }			end;			SEND: 				begin				NFT := succ(NFT);				UpdateStatusLine;				if openoldfile(p) = 0 then begin					if getEOF(p^.sfref, p^.sendmax) = 0 then begin						p^.sent := 0;						DCCsendfile(p, c^.tcpc);						exit(DCCConnOpened)					end;				end;				killDCC(p);			end;			GET: 				begin				if opennewfile(p) = 0 then begin					NFT := succ(NFT);					UpdateStatusLine;					p^.gotten := 0;				end				else					killDCC(p)			end;		end;	end;function netEvent (var e: EventRecord): boolean;	var		p: DCCPtr;		c: CEPtr;	begin		c := CEPtr(e.message);		p := FDCC;		while p <> nil do begin			if p^.sock = c^.connection then begin				case c^.event of					C_Established: 						DCCConnOpened(p, c);					C_FailedToOpen: 						failedDCC(p, 'Failed to open');					C_Closing: 						failedDCC(p, 'Closing');					C_Closed: 						failedDCC(p, 'Closed');					C_CharsAvailable: 						DCCgotline(p, c)				end;				netEvent := true;				exit(netEvent)			end;			p := p^.next;		end;		netEvent := false;	end;procedure openDCC (x: DCCPtr);	var		t: TCPConnectionPtr;		ipa, pn: string[12];		des: string[64];		s: string[150];		i: integer;	begin		if x^.flag = CLOSED then begin			if TCPGetMyIPAddr(x^.host) = 0 then				if NewPassiveConnection(x^.sock, 8192, 0, 0, 0, nil) = 0 then begin					GetConnectionTCPC(x^.sock, t);					x^.port := TCPLocalPort(t);					ulongstr(x^.host, ipa);					if x^.port < 0 then						x^.port := x^.port + 65536;					ulongstr(x^.port, pn);					if x^.typ = CHAT then						des := 'chat'					else						des := x^.sfil.fName;					repeat						i := pos(' ', des);						if i = 0 then							leave;						des[i] := '_'					until false;					s := stringof('PRIVMSG ', x^.peer, ' :', chr(1), 'DCC ', x^.typ, ' ', des, ' ', ipa, ' ', pn, chr(1));					PutLine(s);					s := stringof('Requesting DCC ', x^.typ, ' connection with ', x^.peer);					Message(s);					x^.flag := WAITING;					exit(openDCC)				end;			failedDCC(x, 'Failed to create');		end		else if x^.flag = OFFERED then begin			if NewActiveConnection(x^.sock, 8192, x^.host, x^.port, nil) = 0 then				x^.flag := OPENING			else				failedDCC(x, 'Failed to open');		end;	end;{$ENDC}{ Process incoming DCC request }procedure DCCRequest (var fr, s: string);	var		c: str255;{$IFC DCCenable}		x: DCCPtr;		t: DCCType;		i: integer;		des: string[64];{$ENDC}	begin		NextArg(s, c);		uprString(c, false);{$IFC DCCenable}		if c = 'CHAT' then			t := CHAT		else if c = 'SEND' then			t := SEND		else begin{$ENDC}			c := concat('NOTICE ', fr, ' :', chr(1), 'ERRMSG DCC ', c, ' :Unsupported request', chr(1));			if serverStatus = S_CONN then				PutLine(c);			exit(DCCRequest);{$IFC DCCenable}		end;		if getDCC(t, fr, x) then begin			c := stringof('*** DCC collision for ', t, ' request from ', fr);			Message(c);			killDCC(x)		end		else begin { request from peer }			NextArg(s, des);			repeat				i := pos('/', des);				if i = 0 then					leave;				delete(des, 1, i)			until false;			repeat				i := pos(':', des);				if i = 0 then					leave;				des[i] := '_'			until false;			NextArg(s, c);			x^.host := ulongval(c);			StringtoNum(s, x^.port);			x^.flag := OFFERED;			if x^.typ = SEND then begin				x^.typ := GET;				x^.gfil.fName := des;			end;			c := stringof('*** DCC ', t, ' request from ', fr, ' (', des, ')');			Message(c);		end{$ENDC}	end;procedure DCCcommand (var s: string);	label		39;	var		c: str255;{$IFC DCCenable}		des: string[64];		x: DCCPtr;		t: DCCType;		b: boolean;		p: Point;		ty: SFTypeList;{$ENDC}	begin		NextArg(s, c);		UprString(c, false);{$IFC DCCenable}		if IsChannel(s) then			c := '*** Target of DCC must be client'		else if c = 'CHAT' then			if s = '' then				c := '*** Nickname needed for DCC CHAT'			else begin				b := getDCC(CHAT, s, x);				c := '';				if (x^.flag = WAITING) or (x^.flag = OPENING) or (x^.flag = OPEN) then					c := concat('*** DCC CHAT connection with ', s, ' exists already')				else					openDCC(x);			end		else if c = 'CLOSE' then begin			NextArg(s, c);			UprString(c, false);			if c = 'CHAT' then				t := CHAT			else if c = 'SEND' then				t := SEND			else if c = 'GET' then				t := GET			else				goto 39;			NextArg(s, c);			if c <> '' then begin				if not getDCC(t, c, x) then					c := stringof('*** No DCC ', t, ' connection to ', c)				else					c := stringof('*** DCC ', t, ' to ', c, ' closed');				killDCC(x);			end			else39: { Oh yes I know this is spaghetti code ;-) }				c := '*** You must supply type and nick for DCC CLOSE';		end		else if (c = '') or (c = 'LIST') then begin			x := FDCC;			while x <> nil do begin				if x^.typ = CHAT then					des := 'chat'				else					des := x^.sfil.fName;				c := stringof(x^.typ : 5, x^.peer : 11, x^.flag : 10, ' ', des);				Message(c);				x := x^.next			end;			c := ''		end		else if (c = 'TSEND') or (c = 'SEND') then begin			if s = '' then				c := '*** You must supply a nick for DCC SEND'			else begin				b := getDCC(SEND, s, x);				if (x^.flag = WAITING) or (x^.flag = OPENING) or (x^.flag = OPEN) then					c := concat('*** DCC SEND connection with ', s, ' exists already')				else begin					x^.stext := (c[1] = 'T');					SetPt(p, 80, 30);					ty[0] := 'TEXT';					c := '';					if x^.stext then						SFGetFile(p, '', nil, 1, ty, nil, x^.sfil)					else						SFGetFile(p, '', nil, -1, ty, nil, x^.sfil);					if x^.sfil.good then						openDCC(x)					else						killDCC(x);				end			end		end		else if (c = 'TGET') or (c = 'GET') then begin			if s = '' then				c := '*** You must supply a nick for DCC GET'			else begin				b := getDCC(GET, s, x);				if x^.flag = OFFERED then begin					x^.gtext := (c[1] = 'T');					c := '';					SetPt(p, 80, 30);					if x^.gtext then						SFPutFile(p, 'Save TEXT file as:', x^.gfil.fName, nil, x^.gfil)					else						SFPutFile(p, 'Save file as:', x^.gfil.fName, nil, x^.gfil);					if x^.gfil.good then						openDCC(x);				end				else begin					c := concat('*** No DCC SEND offered from ', s);					killDCC(x)				end			end		end		else			c := concat('*** Unknown DCC command: ', c);{$ELSEC}		c := '*** DCC not implemented';{$ENDC}		if c <> '' then			Message(c);	end;procedure DCCChatSend (var s: string);{$IFC DCCEnable}	var		i, n, oe: integer;		p: TCPConnectionPtr;		x: DCCPtr;		t: string[12];{$ENDC}	begin{$IFC DCCEnable}		t := CurrentTarget;		delete(t, 1, 1);		t[0] := pred(t[0]);		if not getDCC(CHAT, t, x) then			debugstr(concat('Bogus DCC CHAT target ', CurrentTarget));		insert('> ', s, 1);		ChannelMsg(CurrentTarget, s);		n := length(s);		for i := 1 to n do			s[i] := ISOEncode^^[s[i]];		s[n + 1] := chr(10);		GetConnectionTCPC(x^.sock, p);		i := TCPSendAsync(p, @s[3], n - 1, false, @oe);		if i <> 0 then			killDCC(x)		else begin			repeat				ApplRun			until oe <> inProgress;			if oe <> 0 then				killDCC(x);		end;{$ENDC}	end;procedure InitDCC;	var		i: integer;	begin{$IFC DCCenable}		FDCC := nil;		i := ApplTask(@netEvent, TCPMsg);{$ENDC}	end;end.
+{	ircle - Internet Relay Chat client	}
+{	File: DCC	}
+{	Copyright © 1992 Olaf Titz (s_titz@ira.uka.de)	}
+
+{	This program is free software; you can redistribute it and/or modify	}
+{	it under the terms of the GNU General Public License as published by	}
+{	the Free Software Foundation; either version 2 of the License, or	}
+{	(at your option) any later version.	}
+
+{	This program is distributed in the hope that it will be useful,	}
+{	but WITHOUT ANY WARRANTY; without even the implied warranty of	}
+{	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	}
+{	GNU General Public License for more details.	}
+
+{	You should have received a copy of the GNU General Public License	}
+{	along with this program; if not, write to the Free Software	}
+{	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.	}
+
+unit DCC;
+{ Handles DCC connections }
+
+interface
+uses
+	TCPTypes, TCPStuff, TCPConnections, ApplBase, MiscGlue, MsgWindows, {}
+	IRCGlobals, IRCaux, IRCChannels;
+
+procedure InitDCC;
+{ startup }
+
+procedure DCCRequest (var fr, s: string);
+{ Request for DCC from outside }
+
+procedure DCCcommand (var s: string);
+{ user DCC command }
+
+procedure DCCChatSend (var s: string);
+{ send line over DCC CHAT }
+
+implementation
+{ Largely an adaption of the IRCII DCC code by Troy Rollo }
+
+{$SETC DCCenable=true}
+{$SETC DEBUG=false}
+
+{$IFC DISTRIBUTION }
+{$SETC DEBUG=FALSE }
+{$ENDC}
+
+const
+	BUFSIZ = 4096;
+
+{$IFC DCCenable}
+type
+	DCCType = (CHAT, SEND, GET);
+	DCCFlagsType = (CLOSED, WAITING, OFFERED, OPENING, OPEN);
+	DCCPtr = ^DCCrec;
+	DCCrec = record
+			next: DCCPtr;			{ Link }
+			flag: DCCFlagsType;	{ status }
+			peer: string[16];		{ peer (nick) }
+			host, port: longint;		{ TCP host/port }
+			sock: ConnectionIndex;	{ socket }
+			case typ : DCCType of
+				CHAT: (
+						win: MWHndl;	{ window for DCC CHAT messages }
+				);
+				SEND: (
+						sfil: SFReply;	{ contains file parameters }
+						sfref: integer;	{ file refnum }
+						stext: boolean;	{ textfile conversion }
+						sendbuf: CharsPtr;{ Buffer pointer }
+						sent: longint;	{ Bytes already sent }
+						sendmax: longint;	{ Bytes to send }
+				);
+				GET: (
+						gfil: SFReply;	{ contains file parameters }
+						gfref: integer;	{ file refnum }
+						gtext: boolean;	{ textfile conversion }
+						getbuf: CharsPtr;	{ Buffer pointer }
+						gotten: longint;	{ Bytes received }
+				);
+		end;
+
+var
+	FDCC: DCCPtr;
+
+{ The following is really not beautiful, but DCC protocol requires IP addresses }
+{ to be given as unsigned long in ASCII, while this compiler has only signed longint. Sigh. }
+{$V-}
+function ulongval (var s: string): longint;
+	var
+		l: longint;
+		i, j: integer;
+	begin
+		l := 0;
+		i := 1;
+		repeat
+			if i > length(s) then
+				leave;
+			j := ord(s[i]) - 48;
+			if (j < 0) or (j > 9) then
+				leave;
+			l := 10 * l + j;
+			i := succ(i);
+		until false;
+		ulongval := l;
+	end;
+
+procedure str10neg (var s: string);
+{ Given s as a 10-digit ASCII number, this will compute 2^32-s, i.e. the }
+{ 32-bit twos complement of s. }
+	var
+		y: string[10];
+		i, x, c: integer;
+	begin
+		y := '4294967296'; { 2^32 }
+		c := 0;
+		for i := 10 downto 1 do begin
+			x := ord(y[i]) - ord(s[i]) - c;
+			if x < 0 then begin
+				c := 1;
+				x := x + 10
+			end
+			else
+				c := 0;
+			s[i] := chr(x + 48)
+		end
+	end;
+
+procedure ulongstr (l: longint; var s: string);
+	var
+		i: integer;
+		n: boolean;
+	begin
+		if l = 0 then
+			debugstr('Bogus IP/port number 0'); { here it is guaranteed to be nonzero! }
+		n := (l < 0);
+		l := abs(l);
+		for i := 10 downto 1 do begin
+			s[i] := chr((l mod 10) + 48);
+			l := l div 10
+		end;
+		s[0] := chr(10);
+		if n then
+			str10neg(s);
+		while s[1] = '0' do
+			delete(s, 1, 1);
+	end;
+
+
+{ U*X open/create substitutes }
+
+function openoldfile (x: DCCPtr): OSErr;
+	begin
+		openoldfile := FSOpen(x^.sfil.fName, x^.sfil.vRefNum, x^.sfref)
+	end;
+
+function opennewfile (x: DCCPtr): OSErr;
+	var
+		e: OSErr;
+		b1, b2: OSType;
+	begin
+		if x^.gtext then begin
+			b1 := 'EDIT';
+			b2 := 'TEXT';
+		end
+		else begin
+			b1[0] := chr(0);
+			b1[1] := chr(0);
+			b1[2] := chr(0);
+			b1[3] := chr(0);
+			b2 := b1
+		end;
+		e := create(x^.gfil.fName, x^.gfil.vRefNum, b1, b2);
+		if (e = noErr) or (e = dupFNErr) then
+			e := openoldfile(x); { XX: assumes sfil==gfil }
+		opennewfile := e
+	end;
+
+function getDCC (ty: DCCType; var from: string; var f: DCCPtr): boolean;
+{ will return true if dcc already existed, allocate it otherwise }
+	begin
+		getDCC := true;
+		f := FDCC;
+		while f <> nil do
+			with f^ do begin
+				if (typ = ty) and (peer = from) then
+					exit(getDCC);
+				f := f^.next;
+			end;
+		new(f);
+		if f = nil then
+			exit(getDCC); { error condition, will lead to collision msg }
+		with f^ do begin
+			next := FDCC;
+			typ := ty;
+			flag := CLOSED;
+			peer := from;
+			host := 0;
+			port := 0;
+			sock := 0;
+			win := nil;
+			sfref := 0;
+			if (ty = SEND) or (ty = GET) then { XX: assume sendbuf==getbuf }
+				begin
+				sendbuf := CharsPtr(NewPtr(BUFSIZ));
+				if MemError <> 0 then
+					exit(getDCC);
+			end;
+		end;
+		FDCC := f;
+		getDCC := false;
+	end;
+
+procedure killDCC (x: DCCPtr);
+	var
+		p: DCCPtr;
+		t: string[12];
+		i: integer;
+	begin
+		if x^.sock <> 0 then	{ Forcibly close connection }
+			AbortConnection(x^.sock);
+		if x^.win <> nil then begin	{ inactivate chat window }
+			t := concat(DCC_CHAT_PREFIX, x^.peer, DCC_CHAT_POSTFIX);
+			Inactive(t);
+			x^.win := nil
+		end;
+		if x^.sfref <> 0 then	{ close file }
+			i := FSClose(x^.sfref);
+		if (x^.typ = SEND) or (x^.typ = GET) then begin
+			DisposPtr(Ptr(x^.sendbuf));
+			if x^.flag = OPEN then begin	{ sync FT counter }
+				NFT := pred(NFT);
+				UpdateStatusLine
+			end
+		end;
+		if x = FDCC then
+			FDCC := x^.next
+		else begin
+			p := FDCC;
+			while p^.next <> x do begin
+				if p^.next = nil then
+					debugstr('Error in DCC chain');
+				p := p^.next
+			end;
+			p^.next := x^.next;
+		end;
+		dispose(x);
+	end;
+
+{ Cleanly close DCC }
+procedure closeDCC (x: DCCPtr);
+	begin
+		if x^.sock <> 0 then begin
+			CloseConnection(x^.sock);
+			x^.sock := 0;
+		end;
+		killDCC(x)
+	end;
+
+{ Give message for failed DCC and close }
+procedure failedDCC (x: DCCPtr; e: string);
+	var
+		s: string[120];
+	begin
+		s := stringof('*** ', e, ' DCC ', x^.typ, ' connection to ', x^.peer);
+		Message(s);
+		killDCC(x)
+	end;
+
+{ This gets called on user closing active DCC CHAT window }
+procedure closeDChat (w: WindowPtr);
+	var
+		x: DCCPtr;
+		t: str255;
+		inac: boolean;
+	begin
+		GetWTitle(w, t);
+		DoPart(t);
+		delete(t, 1, 1);
+		t[0] := pred(t[0]);
+		if not inac then begin
+			if not getDCC(CHAT, t, x) then
+				debugstr(concat('Bogus DCC CHAT window ', t));
+			x^.win := nil; { window is already closed }
+			CloseDCC(x);
+		end;
+	end;
+
+{ Send a portion of BUFSIZ bytes over DCC. }
+{ XX: DCC SEND protocol assumes that receiver sends acknowledge as }
+{ four byte high-endian integer (htonl format). Mac is high-endian so no conversion is needed. }
+procedure DCCsendfile (p: DCCPtr; c: TCPConnectionPtr);
+	var
+		nn: longint;
+		i, e: integer;
+		s: string[80];
+	begin
+		nn := p^.sendmax;
+		if nn = 0 then begin
+			s := stringof('*** Completed DCC SEND to ', p^.peer);
+			Message(s);
+			CloseDCC(p);
+			exit(DCCSendfile)
+		end;
+		if nn > BUFSIZ then
+			nn := BUFSIZ;
+		if FSRead(p^.sfref, nn, Ptr(p^.sendbuf)) = 0 then begin
+			if p^.stext then
+				for i := 0 to nn - 1 do
+					p^.sendbuf^[i] := ISOEncode^^[p^.sendbuf^[i]];
+			p^.sendmax := p^.sendmax - nn;
+			p^.sent := p^.sent + nn;
+{$IFC DEBUG}
+			s := stringof('* Sending ', nn : 1, ' bytes');
+			Message(s);
+{$ENDC}
+			e := 0;
+			i := TCPSendAsync(c, Ptr(p^.sendbuf), nn, false, @e);
+			if i = 0 then begin
+				repeat
+					ApplRun
+				until i <> inProgress;
+			end;
+			if (i <> 0) or (e <> 0) then
+				failedDCC(p, 'Lost (send error)');
+		end
+		else
+			failedDCC(p, 'Lost (file read error)');
+	end;
+
+
+procedure DCCgotline (p: DCCPtr; c: CEPtr);
+	var
+		s: string;
+		nn: longint;
+		b: boolean;
+		i, j: integer;
+	begin
+		case p^.typ of
+			CHAT: 
+				begin
+				nn := 1;
+				if TCPReceiveUpTo(c^.tcpc, 10, readTimeout, @s[0], 250, nn, b) = 0 then begin
+					j := nn - 1;
+					while (j > 0) and ((s[j] = chr(10)) or (s[j] = chr(13))) do
+						j := pred(j);
+					s[0] := chr(j);
+					for i := 1 to j do
+						s[i] := ISODecode^^[s[i]];
+					MWMessage(p^.win, s);
+				end
+			end;
+			SEND: 
+				begin
+				if TCPReceiveChars(c^.tcpc, @nn, sizeof(nn)) = 0 then begin
+ {$IFC DEBUG}
+					s := stringof('* Acknowledged ', nn : 1, ' bytes');
+					Message(s);
+{$ENDC}
+					if nn = p^.sent then
+						DCCsendfile(p, c^.tcpc)
+					else if nn > p^.sent then
+						failedDCC(p, 'Lost (bogus acknowledge)')
+				end
+				else
+					failedDCC(p, 'Lost (no acknowledge)');
+			end;
+			GET: 
+				begin
+				nn := TCPCharsAvailable(c^.tcpc);
+				if nn > BUFSIZ then
+					nn := BUFSIZ;
+				if TCPReceiveChars(c^.tcpc, Ptr(p^.getbuf), nn) = 0 then begin
+					if p^.gtext then begin
+						for i := 0 to nn - 1 do
+							p^.getbuf^[i] := ISODecode^^[p^.getbuf^[i]];
+					end;
+					if FSWrite(p^.gfref, nn, Ptr(p^.getbuf)) = 0 then begin
+						p^.gotten := p^.gotten + nn;
+{$IFC DEBUG}
+						s := stringof('* Received ', p^.gotten : 1, ' bytes');
+						Message(s);
+{$ENDC}
+						if TCPSend(c^.tcpc, @p^.gotten, sizeof(longint), true) <> 0 then
+							failedDCC(p, 'Lost');
+					end
+					else
+						failedDCC(p, 'Lost (file write error)');
+				end
+				else
+					failedDCC(p, 'Lost (receive error)');
+			end;
+		end;
+	end;
+
+procedure DCCConnOpened (p: DCCPtr; c: CEPtr);
+	var
+		t: string[16];
+	begin
+		p^.flag := OPEN;
+		case p^.typ of
+			CHAT: 
+				begin
+				t := concat(DCC_CHAT_PREFIX, p^.peer, DCC_CHAT_POSTFIX);
+				p^.win := DoJoin(t);
+				if p^.win <> nil then
+					p^.win^^.whenDone := @closeDChat; { XX }
+			end;
+			SEND: 
+				begin
+				NFT := succ(NFT);
+				UpdateStatusLine;
+				if openoldfile(p) = 0 then begin
+					if getEOF(p^.sfref, p^.sendmax) = 0 then begin
+						p^.sent := 0;
+						DCCsendfile(p, c^.tcpc);
+						exit(DCCConnOpened)
+					end;
+				end;
+				killDCC(p);
+			end;
+			GET: 
+				begin
+				if opennewfile(p) = 0 then begin
+					NFT := succ(NFT);
+					UpdateStatusLine;
+					p^.gotten := 0;
+				end
+				else
+					killDCC(p)
+			end;
+		end;
+	end;
+
+
+function netEvent (var e: EventRecord): boolean;
+	var
+		p: DCCPtr;
+		c: CEPtr;
+	begin
+		c := CEPtr(e.message);
+		p := FDCC;
+		while p <> nil do begin
+			if p^.sock = c^.connection then begin
+				case c^.event of
+					C_Established: 
+						DCCConnOpened(p, c);
+					C_FailedToOpen: 
+						failedDCC(p, 'Failed to open');
+					C_Closing: 
+						failedDCC(p, 'Closing');
+					C_Closed: 
+						failedDCC(p, 'Closed');
+					C_CharsAvailable: 
+						DCCgotline(p, c)
+				end;
+				netEvent := true;
+				exit(netEvent)
+			end;
+			p := p^.next;
+		end;
+		netEvent := false;
+	end;
+
+procedure openDCC (x: DCCPtr);
+	var
+		t: TCPConnectionPtr;
+		ipa, pn: string[12];
+		des: string[64];
+		s: string[150];
+		i: integer;
+	begin
+		if x^.flag = CLOSED then begin
+			if TCPGetMyIPAddr(x^.host) = 0 then
+				if NewPassiveConnection(x^.sock, 8192, 0, 0, 0, nil) = 0 then begin
+					GetConnectionTCPC(x^.sock, t);
+					x^.port := TCPLocalPort(t);
+					ulongstr(x^.host, ipa);
+					if x^.port < 0 then
+						x^.port := x^.port + 65536;
+					ulongstr(x^.port, pn);
+					if x^.typ = CHAT then
+						des := 'chat'
+					else
+						des := x^.sfil.fName;
+					repeat
+						i := pos(' ', des);
+						if i = 0 then
+							leave;
+						des[i] := '_'
+					until false;
+					s := stringof('PRIVMSG ', x^.peer, ' :', chr(1), 'DCC ', x^.typ, ' ', des, ' ', ipa, ' ', pn, chr(1));
+					PutLine(s);
+					s := stringof('Requesting DCC ', x^.typ, ' connection with ', x^.peer);
+					Message(s);
+					x^.flag := WAITING;
+					exit(openDCC)
+				end;
+			failedDCC(x, 'Failed to create');
+		end
+		else if x^.flag = OFFERED then begin
+			if NewActiveConnection(x^.sock, 8192, x^.host, x^.port, nil) = 0 then
+				x^.flag := OPENING
+			else
+				failedDCC(x, 'Failed to open');
+		end;
+	end;
+
+{$ENDC}
+
+{ Process incoming DCC request }
+procedure DCCRequest (var fr, s: string);
+	var
+		c: str255;
+{$IFC DCCenable}
+		x: DCCPtr;
+		t: DCCType;
+		i: integer;
+		des: string[64];
+{$ENDC}
+	begin
+		NextArg(s, c);
+		uprString(c, false);
+{$IFC DCCenable}
+		if c = 'CHAT' then
+			t := CHAT
+		else if c = 'SEND' then
+			t := SEND
+		else begin
+{$ENDC}
+			c := concat('NOTICE ', fr, ' :', chr(1), 'ERRMSG DCC ', c, ' :Unsupported request', chr(1));
+			if serverStatus = S_CONN then
+				PutLine(c);
+			exit(DCCRequest);
+{$IFC DCCenable}
+		end;
+		if getDCC(t, fr, x) then begin
+			c := stringof('*** DCC collision for ', t, ' request from ', fr);
+			Message(c);
+			killDCC(x)
+		end
+		else begin { request from peer }
+			NextArg(s, des);
+			repeat
+				i := pos('/', des);
+				if i = 0 then
+					leave;
+				delete(des, 1, i)
+			until false;
+			repeat
+				i := pos(':', des);
+				if i = 0 then
+					leave;
+				des[i] := '_'
+			until false;
+			NextArg(s, c);
+			x^.host := ulongval(c);
+			StringtoNum(s, x^.port);
+			x^.flag := OFFERED;
+			if x^.typ = SEND then begin
+				x^.typ := GET;
+				x^.gfil.fName := des;
+			end;
+			c := stringof('*** DCC ', t, ' request from ', fr, ' (', des, ')');
+			Message(c);
+		end
+{$ENDC}
+	end;
+
+procedure DCCcommand (var s: string);
+	label
+		39;
+	var
+		c: str255;
+{$IFC DCCenable}
+		des: string[64];
+		x: DCCPtr;
+		t: DCCType;
+		b: boolean;
+		p: Point;
+		ty: SFTypeList;
+{$ENDC}
+	begin
+		NextArg(s, c);
+		UprString(c, false);
+{$IFC DCCenable}
+		if IsChannel(s) then
+			c := '*** Target of DCC must be client'
+		else if c = 'CHAT' then
+			if s = '' then
+				c := '*** Nickname needed for DCC CHAT'
+			else begin
+				b := getDCC(CHAT, s, x);
+				c := '';
+				if (x^.flag = WAITING) or (x^.flag = OPENING) or (x^.flag = OPEN) then
+					c := concat('*** DCC CHAT connection with ', s, ' exists already')
+				else
+					openDCC(x);
+			end
+		else if c = 'CLOSE' then begin
+			NextArg(s, c);
+			UprString(c, false);
+			if c = 'CHAT' then
+				t := CHAT
+			else if c = 'SEND' then
+				t := SEND
+			else if c = 'GET' then
+				t := GET
+			else
+				goto 39;
+			NextArg(s, c);
+			if c <> '' then begin
+				if not getDCC(t, c, x) then
+					c := stringof('*** No DCC ', t, ' connection to ', c)
+				else
+					c := stringof('*** DCC ', t, ' to ', c, ' closed');
+				killDCC(x);
+			end
+			else
+39: { Oh yes I know this is spaghetti code ;-) }
+				c := '*** You must supply type and nick for DCC CLOSE';
+		end
+		else if (c = '') or (c = 'LIST') then begin
+			x := FDCC;
+			while x <> nil do begin
+				if x^.typ = CHAT then
+					des := 'chat'
+				else
+					des := x^.sfil.fName;
+				c := stringof(x^.typ : 5, x^.peer : 11, x^.flag : 10, ' ', des);
+				Message(c);
+				x := x^.next
+			end;
+			c := ''
+		end
+		else if (c = 'TSEND') or (c = 'SEND') then begin
+			if s = '' then
+				c := '*** You must supply a nick for DCC SEND'
+			else begin
+				b := getDCC(SEND, s, x);
+				if (x^.flag = WAITING) or (x^.flag = OPENING) or (x^.flag = OPEN) then
+					c := concat('*** DCC SEND connection with ', s, ' exists already')
+				else begin
+					x^.stext := (c[1] = 'T');
+					SetPt(p, 80, 30);
+					ty[0] := 'TEXT';
+					c := '';
+					if x^.stext then
+						SFGetFile(p, '', nil, 1, ty, nil, x^.sfil)
+					else
+						SFGetFile(p, '', nil, -1, ty, nil, x^.sfil);
+					if x^.sfil.good then
+						openDCC(x)
+					else
+						killDCC(x);
+				end
+			end
+		end
+		else if (c = 'TGET') or (c = 'GET') then begin
+			if s = '' then
+				c := '*** You must supply a nick for DCC GET'
+			else begin
+				b := getDCC(GET, s, x);
+				if x^.flag = OFFERED then begin
+					x^.gtext := (c[1] = 'T');
+					c := '';
+					SetPt(p, 80, 30);
+					if x^.gtext then
+						SFPutFile(p, 'Save TEXT file as:', x^.gfil.fName, nil, x^.gfil)
+					else
+						SFPutFile(p, 'Save file as:', x^.gfil.fName, nil, x^.gfil);
+					if x^.gfil.good then
+						openDCC(x);
+				end
+				else begin
+					c := concat('*** No DCC SEND offered from ', s);
+					killDCC(x)
+				end
+			end
+		end
+		else
+			c := concat('*** Unknown DCC command: ', c);
+{$ELSEC}
+		c := '*** DCC not implemented';
+{$ENDC}
+		if c <> '' then
+			Message(c);
+	end;
+
+
+procedure DCCChatSend (var s: string);
+{$IFC DCCEnable}
+	var
+		i, n, oe: integer;
+		p: TCPConnectionPtr;
+		x: DCCPtr;
+		t: string[12];
+{$ENDC}
+	begin
+{$IFC DCCEnable}
+		t := CurrentTarget;
+		delete(t, 1, 1);
+		t[0] := pred(t[0]);
+		if not getDCC(CHAT, t, x) then
+			debugstr(concat('Bogus DCC CHAT target ', CurrentTarget));
+		insert('> ', s, 1);
+		ChannelMsg(CurrentTarget, s);
+		n := length(s);
+		for i := 1 to n do
+			s[i] := ISOEncode^^[s[i]];
+		s[n + 1] := chr(10);
+		GetConnectionTCPC(x^.sock, p);
+		i := TCPSendAsync(p, @s[3], n - 1, false, @oe);
+		if i <> 0 then
+			killDCC(x)
+		else begin
+			repeat
+				ApplRun
+			until oe <> inProgress;
+			if oe <> 0 then
+				killDCC(x);
+		end;
+{$ENDC}
+	end;
+
+procedure InitDCC;
+	var
+		i: integer;
+	begin
+{$IFC DCCenable}
+		FDCC := nil;
+		i := ApplTask(@netEvent, TCPMsg);
+{$ENDC}
+	end;
+
+end.

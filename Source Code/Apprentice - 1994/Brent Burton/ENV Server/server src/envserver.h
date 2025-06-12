@@ -1,1 +1,8 @@
-/*** envserver.h**** contains definitions/declarations of junk*/void Cleanup(void);
+/*
+** envserver.h
+**
+** contains definitions/declarations of junk
+*/
+
+void Cleanup(void);
+

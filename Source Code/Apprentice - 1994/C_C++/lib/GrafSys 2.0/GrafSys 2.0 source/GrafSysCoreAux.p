@@ -1,1 +1,61 @@
-unit GrafSysCoreAux;{this unit holds implementation of various object procedures that are not as }{important as the core itself. }interface	uses		Matrix, Transformations, GrafSysCore;implementation	procedure TPoint3D.SetKoords (Koordinates: Vector4);	begin		Koord := Koordinates;	end;	function TPoint3D.GetKoords: Vector4;	begin		GetKoords := VMult(Koord, xForm)	end;	procedure TPoint3D.Init;	begin		inherited Init;		SetVector4(Koord, 0, 0, 0);	end;	procedure TPoint3D.Reset;	begin		inherited Reset;		SetVector4(Koord, 0, 0, 0);	end;	procedure TLine3D.Init;	begin		inherited Init;		SetVector4(FromLoc, 0, 0, 0);		SetVector4(toLoc, 0, 0, 0);	end;	procedure TLine3D.Reset;	begin		inherited Reset;		SetVector4(FromLoc, 0, 0, 0);		SetVector4(toLoc, 0, 0, 0);	end;	procedure TLine3D.SetKoords (K1, K2: Vector4);	begin		FromLoc := K1;		ToLoc := K2;	end;	procedure TLine3D.GetKoords (var K1, K2: Vector4);	begin		K1 := VMult(FromLoc, xForm);		K2 := VMult(ToLoc, xForm);	end;end.
+unit GrafSysCoreAux;
+{this unit holds implementation of various object procedures that are not as }
+{important as the core itself. }
+
+
+interface
+
+	uses
+		Matrix, Transformations, GrafSysCore;
+
+implementation
+
+	procedure TPoint3D.SetKoords (Koordinates: Vector4);
+	begin
+		Koord := Koordinates;
+	end;
+
+	function TPoint3D.GetKoords: Vector4;
+	begin
+		GetKoords := VMult(Koord, xForm)
+	end;
+
+	procedure TPoint3D.Init;
+	begin
+		inherited Init;
+		SetVector4(Koord, 0, 0, 0);
+	end;
+
+	procedure TPoint3D.Reset;
+	begin
+		inherited Reset;
+		SetVector4(Koord, 0, 0, 0);
+	end;
+
+	procedure TLine3D.Init;
+	begin
+		inherited Init;
+		SetVector4(FromLoc, 0, 0, 0);
+		SetVector4(toLoc, 0, 0, 0);
+	end;
+
+	procedure TLine3D.Reset;
+	begin
+		inherited Reset;
+		SetVector4(FromLoc, 0, 0, 0);
+		SetVector4(toLoc, 0, 0, 0);
+	end;
+
+	procedure TLine3D.SetKoords (K1, K2: Vector4);
+	begin
+		FromLoc := K1;
+		ToLoc := K2;
+	end;
+
+	procedure TLine3D.GetKoords (var K1, K2: Vector4);
+	begin
+		K1 := VMult(FromLoc, xForm);
+		K2 := VMult(ToLoc, xForm);
+	end;
+
+end.

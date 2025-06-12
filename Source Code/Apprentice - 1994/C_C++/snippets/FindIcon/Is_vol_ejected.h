@@ -1,1 +1,1 @@
-Boolean	Is_vol_ejected( short vRefNum );
+Boolean	Is_vol_ejected( short vRefNum );

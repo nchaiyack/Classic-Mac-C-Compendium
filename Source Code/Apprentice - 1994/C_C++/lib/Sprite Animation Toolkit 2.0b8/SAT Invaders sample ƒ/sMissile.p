@@ -1,1 +1,74 @@
-{===============================================}{================= Missile sprite unit ================}{===============================================}{ Example file for Ingemars Sprite Animation Toolkit. }{ © Ingemar Ragnemalm 1992 }{ See doc files for legal terms for using this code. }unit sMissile;{ Sprite unit. A sprite unit should include the following routines:}{ Init-procedure, that initializes private bitmaps}{ Setup-procedure, that sets variables other than the standard ones set by MakeSprite }{ Handle-procedure, to be called once per iteration until the sprite dies }{ Hittask-procedure (optional), for advanced collission handling. }{ Missile object for the SATInvaders sample game. }interface	uses		SAT, SoundConst, GameGlobals;	var		missilecount: integer; { Exported since it has to be reset by SetupLevel }	procedure InitMissile;	procedure SetupMissile (sp: SpritePtr);	procedure HandleMissile (me: SpritePtr);implementation	const		missileSpeed = 10;		maxMissiles = 5;	var		missileFace: FacePtr;	procedure InitMissile;	begin		missileFace := GetFace(136);	end;	procedure SetupMissile (sp: SpritePtr);	begin		sp^.face := missileFace;		SetRect(sp^.hotRect, 3, 0, 13, 17); {How big are we?}		if missilecount >= maxMissiles then			sp^.task := nil { If too many, remove us immediately }		else			missilecount := succ(missilecount); {One missile more}	end;	procedure HandleMissile (me: SpritePtr);	begin		if me^.kind <> -1 then {Hit something}			begin				me^.task := nil; {Remove us}				missilecount := pred(missilecount); {One missile less}				SATSoundPlay(dunkH, 1, false); {Play a sound (with rather low priority) }			end;		me^.position.v := me^.position.v + missileSpeed; {Move down}		if me^.position.v > gSAT.offSizeV then {Outside - remove}			begin				me^.task := nil;				missilecount := pred(missilecount);			end;	end;end.
+{===============================================}
+{================= Missile sprite unit ================}
+{===============================================}
+
+{ Example file for Ingemars Sprite Animation Toolkit. }
+{ © Ingemar Ragnemalm 1992 }
+{ See doc files for legal terms for using this code. }
+
+unit sMissile;
+
+{ Sprite unit. A sprite unit should include the following routines:}
+{ Init-procedure, that initializes private bitmaps}
+{ Setup-procedure, that sets variables other than the standard ones set by MakeSprite }
+{ Handle-procedure, to be called once per iteration until the sprite dies }
+{ Hittask-procedure (optional), for advanced collission handling. }
+
+{ Missile object for the SATInvaders sample game. }
+
+interface
+
+	uses
+		SAT, SoundConst, GameGlobals;
+
+	var
+		missilecount: integer; { Exported since it has to be reset by SetupLevel }
+
+	procedure InitMissile;
+	procedure SetupMissile (sp: SpritePtr);
+	procedure HandleMissile (me: SpritePtr);
+
+implementation
+
+	const
+		missileSpeed = 10;
+		maxMissiles = 5;
+
+	var
+		missileFace: FacePtr;
+
+	procedure InitMissile;
+	begin
+		missileFace := GetFace(136);
+	end;
+
+	procedure SetupMissile (sp: SpritePtr);
+	begin
+		sp^.face := missileFace;
+		SetRect(sp^.hotRect, 3, 0, 13, 17); {How big are we?}
+
+		if missilecount >= maxMissiles then
+			sp^.task := nil { If too many, remove us immediately }
+		else
+			missilecount := succ(missilecount); {One missile more}
+	end;
+
+	procedure HandleMissile (me: SpritePtr);
+	begin
+		if me^.kind <> -1 then {Hit something}
+			begin
+				me^.task := nil; {Remove us}
+				missilecount := pred(missilecount); {One missile less}
+				SATSoundPlay(dunkH, 1, false); {Play a sound (with rather low priority) }
+			end;
+
+		me^.position.v := me^.position.v + missileSpeed; {Move down}
+
+		if me^.position.v > gSAT.offSizeV then {Outside - remove}
+			begin
+				me^.task := nil;
+				missilecount := pred(missilecount);
+			end;
+	end;
+
+end.

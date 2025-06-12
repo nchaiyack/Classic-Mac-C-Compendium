@@ -1,1 +1,709 @@
-program Pararena;	uses		LogoWindo, Sound, Globals, Unlock, Dialogs, Utilities, Guts, Initialize, TheMenus;	var		eventHappened: Boolean;		tempInt: Integer;{________________________________}	procedure WriteOutScores;		type			scoreHandle = ^scorePtr;			scorePtr = ^score;			score = record					data: array[0..47] of Integer;				end;			nameHandle = ^namePtr;			namePtr = ^name;			name = record					data: array[0..11, 0..14] of Char;				end;			prefHandle = ^prefPtr;			prefPtr = ^pref;			pref = record					data: array[0..24] of Char;				end;			gamePrefs = record					isLocked, isSoundOn: Boolean;					isSoundArray: array[1..5] of Boolean;					whenToLock, isDelayTime: Integer;				end;			gamePrefsPtr = ^gamePrefs;			gamePrefsHand = ^gamePrefsPtr;		var			index, index2, i: integer;			theScores: scoreHandle;			theNamesGreat, theNamesDelta: nameHandle;			thePrefs: prefHandle;			theGamePrefs: gamePrefsHand;	begin		thePrefs := prefHandle(NewHandle(SIZEOF(pref)));		HLock(Handle(thePrefs));		Handle(thePrefs) := GetResource('pref', 128);		for index := 0 to 24 do			thePrefs^^.data[index] := COPY(prefsStr, index + 1, 1);		ChangedResource(Handle(thePrefs));		WriteResource(Handle(thePrefs));		HUnlock(Handle(thePrefs));		theGamePrefs := gamePrefsHand(NewHandle(SIZEOF(gamePrefs)));		Handle(theGamePrefs) := GetResource('pref', 129);		HLock(Handle(theGamePrefs));		with theGamePrefs^^ do			begin				isSoundOn := soundOn;				for i := 1 to 5 do					isSoundArray[i] := soundArray[i];				isLocked := locked;				whenToLock := timeToLock;				isDelayTime := delayTime;			end;		ChangedResource(Handle(theGamePrefs));		WriteResource(Handle(theGamePrefs));		HUnlock(Handle(theGamePrefs));		if (scoresChanged) then			begin				theScores := scoreHandle(NewHandle(SIZEOF(score)));				MoveHHi(Handle(theScores));				HLock(Handle(theScores));				Handle(theScores) := GetResource('scrs', 128);				with hiScores do					for index := 0 to 11 do						begin							theScores^^.data[index] := greatScores[index, 0];							theScores^^.data[index + 12] := greatScores[index, 1];							theScores^^.data[index + 24] := deltaScores[index, 0];							theScores^^.data[index + 36] := deltaScores[index, 1];						end;				ChangedResource(Handle(theScores));				WriteResource(Handle(theScores));				HUnlock(Handle(theScores));				theNamesGreat := nameHandle(NewHandle(SIZEOF(name)));				HLock(Handle(theNamesGreat));				Handle(theNamesGreat) := GetResource('name', 128);				with hiScores do					for index := 0 to 11 do						for index2 := 0 to 14 do							theNamesGreat^^.data[index, index2] := COPY(greatNames[index], index2 + 1, 1);				ChangedResource(Handle(theNamesGreat));				WriteResource(Handle(theNamesGreat));				HUnlock(Handle(theNamesGreat));				theNamesDelta := nameHandle(NewHandle(SIZEOF(name)));				HLock(Handle(theNamesDelta));				Handle(theNamesDelta) := GetResource('name', 129);				with hiScores do					for index := 0 to 11 do						for index2 := 0 to 14 do							theNamesDelta^^.data[index, index2] := COPY(deltaNames[index], index2 + 1, 1);				ChangedResource(Handle(theNamesDelta));				WriteResource(Handle(theNamesDelta));				HUnlock(Handle(theNamesDelta));			end;	end;{________________________________}	function AbortGame: Boolean;		var			dummyInt: Integer;			line1, line2: Str255;			alertHandle: AlertTHndl;			alertRect: Rect;	begin		AbortGame := FALSE;		InitCursor;		alertHandle := AlertTHndl(Get1Resource('ALRT', yesNoAlertID));		if (alertHandle <> nil) then			begin				HNoPurge(Handle(alertHandle));				alertRect := alertHandle^^.boundsRect;				OffsetRect(alertRect, -alertRect.left, -alertRect.top);				dummyInt := (screenBits.bounds.right - alertRect.right) div 2;				OffsetRect(alertRect, dummyInt, 0);				dummyInt := (screenBits.bounds.bottom - alertRect.bottom) div 3;				OffsetRect(alertRect, 0, dummyInt);				alertHandle^^.boundsRect := alertRect;				HPurge(Handle(alertHandle));			end;		dummyInt := Alert(yesNoAlertID, nil);		if (dummyInt = 1) then			AbortGame := TRUE;	end;{________________________________}	procedure ReturnToGame;	begin		if (not cursorVis) then			HideCursor;		CopyBits(offVirginMap, mainWndo^.portBits, wholeScreen, wholeScreen, srcCopy, wholeRgn);	end;{________________________________}	procedure DoOpeningAnimation;		var			index, lift, tempInt: Integer;	begin		SetPort(mainWndo);		tileLit := tileLit + 1;		if (tileLit > 5) then			begin				tileLit := 0;				tileToggle := 1 - tileToggle;			end;		SetPort(offVirginPort);		InvertRgn(tileRgns[tileLit, tileToggle]);		SetPort(offLoadPort);		for index := 0 to 7 do			with titleLetters[index] do				begin					velX := velX + forceTable[posX div 1000, posZ div 1000, 0];					velZ := velZ + forceTable[posX div 1000, posZ div 1000, 1];					posX := posX + velX;					posZ := posZ + velZ;					screenH := centerH + posX div 100;					HLock(Handle(vertTable));					screenV := vertTable^^.data[ABS(posX div 300), posZ div 300] + 20;					HUnlock(Handle(vertTable));					if index = 0 then						SetRect(dest, screenH - 14, screenV - 33, screenH + 14, screenV)					else						SetRect(dest, screenH - 13, screenV - 25, screenH + 13, screenV);					UnionRect(oldDest, dest, mask);					CopyBits(offVirginMap, offLoadMap, mask, mask, srcCopy, nil);				end;		for index := 0 to 7 do			with titleLetters[index] do				begin					CopyMask(offPlayerMap, offPlayerMap, offLoadMap, titleSrc[index], titleMask[index], dest);				end;		SetPort(mainWndo);		InvertRgn(tileRgns[tileLit, tileToggle]);		SetPort(offVirginPort);		for index := 0 to 7 do			with titleLetters[index] do				begin					CopyBits(offLoadMap, mainWndo^.portBits, mask, mask, srcCopy, mainWndo^.visRgn);					oldDest := dest;				end;	end;{________________________________}	procedure UpDateMainWndo;		var			leftEdge, topEdge, rightEdge, bottomEdge: Integer;			tempRect: Rect;	begin		SetPort(mainWndo);		SetRect(tempRect, -rightOffset, -downOffset, 512 + rightOffset, 342 + downOffset);		ClipRect(tempRect);		leftEdge := mainWndo^.portBits.bounds.left;		topEdge := mainWndo^.portBits.bounds.top;		rightEdge := mainWndo^.portBits.bounds.right;		bottomEdge := mainWndo^.portBits.bounds.bottom;		SetRect(tempRect, leftEdge, topEdge, 0, bottomEdge);		FillRect(tempRect, black);		SetRect(tempRect, 512, topEdge, rightEdge, bottomEdge);		FillRect(tempRect, black);		SetRect(tempRect, 0, topEdge, 512, 0);		FillRect(tempRect, black);		SetRect(tempRect, 0, 342, 512, bottomEdge);		FillRect(tempRect, black);		SetRect(tempRect, 0, 0, 512, 342);		CopyBits(offVirginMap, mainWndo^.portBits, tempRect, tempRect, srcCopy, wholeRgn);		PenNormal;		InsetRect(tempRect, -1, -1);		ForeColor(redColor);		FrameRect(tempRect);		ForeColor(blackColor);		ClipRect(wholeScreen);		if (not playing) then			DrawMenuBar;		SetPort(offVirginPort);	end;{________________________________}	procedure InitToolBox;		var			index: Integer;			ignore: Boolean;	begin		SetApplLimit(Ptr(LongInt(GetApplLimit) - StackSize));		MaxApplZone;		for index := 1 to 12 do			MoreMasters;		InitGraf(@thePort);		InitFonts;		FlushEvents(everyEvent, 0);		InitWindows;		InitMenus;		TEInit;		InitDialogs(nil);		ErrorSound(@DoErrorSound);		for index := 1 to 3 do			ignore := EventAvail(EveryEvent, theEvent);		inBackground := FALSE;	end;{________________________________}	procedure CloseUpShop;		var			index: Integer;			err: OSErr;	begin		ShowMenuBar;		DisposHandle(Handle(vertTable));		DisposeRgn(ballVisRgn);		DisposeRgn(wholeRgn);		for index := 0 to 5 do			begin				DisposeRgn(tileRgns[index, 0]);				DisposeRgn(tileRgns[index, 1]);			end;		if (chanPtr <> nil) then			err := SndDisposeChannel(chanPtr, TRUE);		ClosePort(offPlayerPort);		DisposPtr(Ptr(offPlayerPort));		ClosePort(offLoadPort);		DisposPtr(Ptr(offLoadPort));		ClosePort(offVirginPort);		DisposPtr(Ptr(offVirginPort));		WriteOutScores;		DisposeWindow(mainWndo);		mainWndo := nil;	end;{________________________________}	procedure DoMouseDown;		var			code, theMenu, theItem: Integer;			whichWindow: WindowPtr;			mResult: LongInt;	begin		code := FindWindow(theEvent.where, whichWindow);		if (code = inMenuBar) then			begin				mResult := MenuSelect(theEvent.Where);				theMenu := HiWord(mResult);				theItem := LoWord(mResult);				Handle_My_Menu(theMenu, theItem);			end;		if (code = inSysWindow) then			SystemClick(theEvent, whichWindow);	end;{________________________________}	procedure DoKeyDown;		var			theChar: Char;			theMenu, theItem: Integer;			mResult: LongInt;	begin		with theEvent do			begin				theChar := CHR(BitAnd(message, CharCodeMask));				if (Odd(modifiers div CmdKey)) then					begin						mResult := MenuKey(theChar);						theMenu := HiWord(mResult);						theItem := LoWord(mResult);						if (theMenu <> 0) then							Handle_My_Menu(theMenu, theItem);					end;			end;	end;{________________________________}	procedure DoUpdates;		var			whichWindow: WindowPtr;	begin		whichWindow := WindowPtr(theEvent.message);		BeginUpdate(whichWindow);		UpDateMainWndo;		EndUpdate(whichWindow);	end;{________________________________}	procedure DoDiskEvent;		var			cornerPt: Point;			theErr: OSErr;	begin		if (HiWrd(theEvent.message) <> noErr) then			begin				SetPt(cornerPt, 85 + rightOffset, 50 + downOffset);				theErr := DIBadMount(cornerPt, theEvent.message);			end;	end;{________________________________}	procedure DoOSEvent;		var			theErr: OSErr;	begin		case BSR(theEvent.message, 24) of	{high byte of message}			1:  						{suspendResumeMessage}				if (BitAnd(theEvent.message, suspendResumeBit) = resuming) then					begin						if (playing) then							HideMenuBar;						inBackground := FALSE;		{it was a resume event}					end				else					begin						inBackground := TRUE;		{it was a suspend event}						if (chanPtr <> nil) then							theErr := SndDisposeChannel(chanPtr, TRUE);						chanPtr := nil;						ShowMenuBar;					end;			otherwise				;		end; {CASE}	end; {osEvt}{________________________________}	procedure TwinkleStars;		var			i: Integer;	begin		SetPort(mainWndo);		PenMode(patXOr);		for i := 0 to numberOfStars do			begin				tempInt := DoRandom(45);				MoveTo(stars[tempInt, 0], stars[tempInt, 1]);				Line(0, 0);			end;		PenMode(patCopy);		SetPort(offLoadPort);		if (TickCount < lastLoopTime) then			begin				if (numberOfStars < 33) then					numberOfStars := numberOfStars + 2;			end		else if (numberOfStars > 0) then			numberOfStars := numberOfStars div 2;	end;{________________________________}	procedure HandlePlayLoop;		var			dummyLong, tempTime: longint;			tempInt: integer;			theInput: TEHandle;			theKeys: KeyMap;{---------------}		procedure HandlePracticeSkating;		begin			Delay(1, dummyLong);			WheresMouse;			if (player.timeKeeper < 0) then				PlayerInTransit			else				NewPlayerPosition;			DrawPlayer;		end;{---------------}		procedure HandlePracticeBall;		begin			Delay(1, dummyLong);			WheresMouse;			if (player.timeKeeper < 0) then				PlayerInTransit			else				NewPlayerPosition;			if (ball.timeKeeper < 0) then				BallInTransit			else				NewBallPosition;			DrawPlayerAndBall;		end;{---------------}		procedure HandlePeriodGames;		begin			tempTime := periodTime - LapsedTime;			if (tempTime < 0) then				begin					ResetArrows;					EndOfPeriod;				end			else				DisplayTime(tempTime);			WheresMouse;			if (player.timeKeeper < 0) then				PlayerInTransit			else				NewPlayerPosition;			if (opponent.timeKeeper < 0) then				OpponentInTransit			else				NewOpponentPosition;			if (ball.timeKeeper < 0) then				BallInTransit			else				NewBallPosition;			if (player.posZ < opponent.posZ) then				DrawPlayerOpponent			else				DrawOpponentPlayer;		end;{---------------}		procedure HandleFirstToThirteen;		begin			WheresMouse;			if (player.timeKeeper < 0) then				PlayerInTransit			else				NewPlayerPosition;			if (opponent.timeKeeper < 0) then				OpponentInTransit			else				NewOpponentPosition;			if (ball.timeKeeper < 0) then				BallInTransit			else				NewBallPosition;			if (player.posZ < opponent.posZ) then				DrawPlayerOpponent			else				DrawOpponentPlayer;			if ((taygetePoints > 12) or (earthPoints > 12)) then				EndOfPeriod;		end;{---------------}		procedure HandleDeltaFive;		begin			WheresMouse;			if (player.timeKeeper < 0) then				PlayerInTransit			else				NewPlayerPosition;			if (opponent.timeKeeper < 0) then				OpponentInTransit			else				NewOpponentPosition;			if (ball.timeKeeper < 0) then				BallInTransit			else				NewBallPosition;			if (player.posZ < opponent.posZ) then				DrawPlayerOpponent			else				DrawOpponentPlayer;			if (ABS(taygetePoints - earthPoints) > 4) then				EndOfPeriod;		end;{---------------}		procedure HandlePause;		begin			tempTime := TickCount div 60;			repeat				GetKeys(theKeys);			until (not theKeys[kPauseKey]);			repeat				GetKeys(theKeys);			until (theKeys[kPauseKey]);			repeat				GetKeys(theKeys);			until (not theKeys[kPauseKey]);			periodTime := periodTime + (TickCount div 60 - tempTime);		end;{---------------}	begin		case whichGame of			practiceSkating: 				HandlePracticeSkating;			practiceWBall: 				HandlePracticeBall;			fourOfFive, fourOfNine: 				HandlePeriodGames;			firstToThirteen: 				HandleFirstToThirteen;			deltaFive: 				HandleDeltaFive;			otherwise		end;		GetKeys(theKeys);		if ((theKeys[$37]) and (theKeys[$0E])) then			begin				if AbortGame then					Handle_My_Menu(mGame, iEnd)				else					ReturnToGame;			end;		if ((theKeys[$37]) and (theKeys[$0C])) then			begin				if AbortGame then					Handle_My_Menu(mGame, iQuit)				else					ReturnToGame;			end;		if (theKeys[kPauseKey]) then			HandlePause;		TwinkleStars;		if (not cursorVis) then			HideCursor;		repeat		until (TickCount >= lastLoopTime);		lastLoopTime := TickCount + delayTime;	end;{________________________________}{$I-}begin	InitToolBox;	OpenLogo;	InitVariables;	ResetTitleVars;	UnloadSeg(@InitVariables);	CloseLogo;	InitCursor;	repeat		if (hasWNE) then			eventHappened := WaitNextEvent(everyEvent, theEvent, sleep, nil)		else			begin				SystemTask;				eventHappened := GetNextEvent(everyEvent, theEvent);			end;		if (eventHappened) then			case theEvent.what of				MouseDown: 					DoMouseDown;				KeyDown: 					DoKeyDown;				UpDateEvt: 					DoUpdates;				DiskEvt: 					DoDiskEvent;				App4Evt: 					DoOSEvent;				otherwise			end;		while (playing) do			HandlePlayLoop;		if (justQuit) then			begin				if (tileLit <> -1) then					begin						SetPort(offVirginPort);						InvertRgn(tileRgns[tileLit, tileToggle]);						tileLit := -1;					end;				CopyBits(offVirginMap, mainWndo^.portBits, wholeScreen, wholeScreen, srcCopy, wholeRgn);				CopyBits(offVirginMap, offLoadMap, wholeScreen, wholeScreen, srcCopy, nil);				justQuit := FALSE;				InitCursor;				DrawMenuBar;			end;		if ((not inBackground) and (not pausing) and (mainWndo = FrontWindow)) then			begin				TwinkleStars;				numberOfStars := 4;				DoOpeningAnimation;				if (jetsOut) then					DoJets				else					begin						tempInt := DoRandom(1000);						if (tempInt = 0) then							begin								jetsOut := TRUE;								SetRect(jetsRects[2], -72, 275, 0, 325);							end;					end;			end;	until doneFlag;                       {End of the event loop}	CloseUpShop;end.                                    {End of the program}
+program Pararena;
+
+	uses
+		LogoWindo, Sound, Globals, Unlock, Dialogs, Utilities, Guts, Initialize, TheMenus;
+	var
+		eventHappened: Boolean;
+		tempInt: Integer;
+
+{________________________________}
+
+	procedure WriteOutScores;
+
+		type
+			scoreHandle = ^scorePtr;
+			scorePtr = ^score;
+			score = record
+					data: array[0..47] of Integer;
+				end;
+
+			nameHandle = ^namePtr;
+			namePtr = ^name;
+			name = record
+					data: array[0..11, 0..14] of Char;
+				end;
+
+			prefHandle = ^prefPtr;
+			prefPtr = ^pref;
+			pref = record
+					data: array[0..24] of Char;
+				end;
+
+			gamePrefs = record
+					isLocked, isSoundOn: Boolean;
+					isSoundArray: array[1..5] of Boolean;
+					whenToLock, isDelayTime: Integer;
+				end;
+			gamePrefsPtr = ^gamePrefs;
+			gamePrefsHand = ^gamePrefsPtr;
+
+		var
+			index, index2, i: integer;
+			theScores: scoreHandle;
+			theNamesGreat, theNamesDelta: nameHandle;
+			thePrefs: prefHandle;
+			theGamePrefs: gamePrefsHand;
+
+	begin
+		thePrefs := prefHandle(NewHandle(SIZEOF(pref)));
+		HLock(Handle(thePrefs));
+		Handle(thePrefs) := GetResource('pref', 128);
+		for index := 0 to 24 do
+			thePrefs^^.data[index] := COPY(prefsStr, index + 1, 1);
+		ChangedResource(Handle(thePrefs));
+		WriteResource(Handle(thePrefs));
+		HUnlock(Handle(thePrefs));
+
+		theGamePrefs := gamePrefsHand(NewHandle(SIZEOF(gamePrefs)));
+		Handle(theGamePrefs) := GetResource('pref', 129);
+		HLock(Handle(theGamePrefs));
+		with theGamePrefs^^ do
+			begin
+				isSoundOn := soundOn;
+				for i := 1 to 5 do
+					isSoundArray[i] := soundArray[i];
+				isLocked := locked;
+				whenToLock := timeToLock;
+				isDelayTime := delayTime;
+			end;
+		ChangedResource(Handle(theGamePrefs));
+		WriteResource(Handle(theGamePrefs));
+		HUnlock(Handle(theGamePrefs));
+
+		if (scoresChanged) then
+			begin
+				theScores := scoreHandle(NewHandle(SIZEOF(score)));
+				MoveHHi(Handle(theScores));
+				HLock(Handle(theScores));
+				Handle(theScores) := GetResource('scrs', 128);
+				with hiScores do
+					for index := 0 to 11 do
+						begin
+							theScores^^.data[index] := greatScores[index, 0];
+							theScores^^.data[index + 12] := greatScores[index, 1];
+							theScores^^.data[index + 24] := deltaScores[index, 0];
+							theScores^^.data[index + 36] := deltaScores[index, 1];
+						end;
+				ChangedResource(Handle(theScores));
+				WriteResource(Handle(theScores));
+				HUnlock(Handle(theScores));
+
+				theNamesGreat := nameHandle(NewHandle(SIZEOF(name)));
+				HLock(Handle(theNamesGreat));
+				Handle(theNamesGreat) := GetResource('name', 128);
+				with hiScores do
+					for index := 0 to 11 do
+						for index2 := 0 to 14 do
+							theNamesGreat^^.data[index, index2] := COPY(greatNames[index], index2 + 1, 1);
+				ChangedResource(Handle(theNamesGreat));
+				WriteResource(Handle(theNamesGreat));
+				HUnlock(Handle(theNamesGreat));
+
+				theNamesDelta := nameHandle(NewHandle(SIZEOF(name)));
+				HLock(Handle(theNamesDelta));
+				Handle(theNamesDelta) := GetResource('name', 129);
+				with hiScores do
+					for index := 0 to 11 do
+						for index2 := 0 to 14 do
+							theNamesDelta^^.data[index, index2] := COPY(deltaNames[index], index2 + 1, 1);
+				ChangedResource(Handle(theNamesDelta));
+				WriteResource(Handle(theNamesDelta));
+				HUnlock(Handle(theNamesDelta));
+			end;
+	end;
+
+{________________________________}
+
+	function AbortGame: Boolean;
+		var
+			dummyInt: Integer;
+			line1, line2: Str255;
+			alertHandle: AlertTHndl;
+			alertRect: Rect;
+	begin
+		AbortGame := FALSE;
+		InitCursor;
+
+		alertHandle := AlertTHndl(Get1Resource('ALRT', yesNoAlertID));
+		if (alertHandle <> nil) then
+			begin
+				HNoPurge(Handle(alertHandle));
+				alertRect := alertHandle^^.boundsRect;
+				OffsetRect(alertRect, -alertRect.left, -alertRect.top);
+				dummyInt := (screenBits.bounds.right - alertRect.right) div 2;
+				OffsetRect(alertRect, dummyInt, 0);
+				dummyInt := (screenBits.bounds.bottom - alertRect.bottom) div 3;
+				OffsetRect(alertRect, 0, dummyInt);
+				alertHandle^^.boundsRect := alertRect;
+				HPurge(Handle(alertHandle));
+			end;
+		dummyInt := Alert(yesNoAlertID, nil);
+		if (dummyInt = 1) then
+			AbortGame := TRUE;
+	end;
+
+{________________________________}
+
+	procedure ReturnToGame;
+	begin
+		if (not cursorVis) then
+			HideCursor;
+		CopyBits(offVirginMap, mainWndo^.portBits, wholeScreen, wholeScreen, srcCopy, wholeRgn);
+	end;
+
+{________________________________}
+
+	procedure DoOpeningAnimation;
+		var
+			index, lift, tempInt: Integer;
+	begin
+		SetPort(mainWndo);
+		tileLit := tileLit + 1;
+		if (tileLit > 5) then
+			begin
+				tileLit := 0;
+				tileToggle := 1 - tileToggle;
+			end;
+		SetPort(offVirginPort);
+		InvertRgn(tileRgns[tileLit, tileToggle]);
+		SetPort(offLoadPort);
+
+		for index := 0 to 7 do
+			with titleLetters[index] do
+				begin
+					velX := velX + forceTable[posX div 1000, posZ div 1000, 0];
+					velZ := velZ + forceTable[posX div 1000, posZ div 1000, 1];
+					posX := posX + velX;
+					posZ := posZ + velZ;
+					screenH := centerH + posX div 100;
+					HLock(Handle(vertTable));
+					screenV := vertTable^^.data[ABS(posX div 300), posZ div 300] + 20;
+					HUnlock(Handle(vertTable));
+					if index = 0 then
+						SetRect(dest, screenH - 14, screenV - 33, screenH + 14, screenV)
+					else
+						SetRect(dest, screenH - 13, screenV - 25, screenH + 13, screenV);
+					UnionRect(oldDest, dest, mask);
+					CopyBits(offVirginMap, offLoadMap, mask, mask, srcCopy, nil);
+				end;
+
+		for index := 0 to 7 do
+			with titleLetters[index] do
+				begin
+					CopyMask(offPlayerMap, offPlayerMap, offLoadMap, titleSrc[index], titleMask[index], dest);
+				end;
+
+		SetPort(mainWndo);
+		InvertRgn(tileRgns[tileLit, tileToggle]);
+		SetPort(offVirginPort);
+
+		for index := 0 to 7 do
+			with titleLetters[index] do
+				begin
+					CopyBits(offLoadMap, mainWndo^.portBits, mask, mask, srcCopy, mainWndo^.visRgn);
+					oldDest := dest;
+				end;
+	end;
+
+{________________________________}
+
+	procedure UpDateMainWndo;
+		var
+			leftEdge, topEdge, rightEdge, bottomEdge: Integer;
+			tempRect: Rect;
+	begin
+		SetPort(mainWndo);
+		SetRect(tempRect, -rightOffset, -downOffset, 512 + rightOffset, 342 + downOffset);
+		ClipRect(tempRect);
+		leftEdge := mainWndo^.portBits.bounds.left;
+		topEdge := mainWndo^.portBits.bounds.top;
+		rightEdge := mainWndo^.portBits.bounds.right;
+		bottomEdge := mainWndo^.portBits.bounds.bottom;
+		SetRect(tempRect, leftEdge, topEdge, 0, bottomEdge);
+		FillRect(tempRect, black);
+		SetRect(tempRect, 512, topEdge, rightEdge, bottomEdge);
+		FillRect(tempRect, black);
+		SetRect(tempRect, 0, topEdge, 512, 0);
+		FillRect(tempRect, black);
+		SetRect(tempRect, 0, 342, 512, bottomEdge);
+		FillRect(tempRect, black);
+		SetRect(tempRect, 0, 0, 512, 342);
+		CopyBits(offVirginMap, mainWndo^.portBits, tempRect, tempRect, srcCopy, wholeRgn);
+
+		PenNormal;
+		InsetRect(tempRect, -1, -1);
+		ForeColor(redColor);
+		FrameRect(tempRect);
+		ForeColor(blackColor);
+
+		ClipRect(wholeScreen);
+		if (not playing) then
+			DrawMenuBar;
+		SetPort(offVirginPort);
+	end;
+
+{________________________________}
+
+	procedure InitToolBox;
+		var
+			index: Integer;
+			ignore: Boolean;
+	begin
+		SetApplLimit(Ptr(LongInt(GetApplLimit) - StackSize));
+		MaxApplZone;
+		for index := 1 to 12 do
+			MoreMasters;
+		InitGraf(@thePort);
+		InitFonts;
+		FlushEvents(everyEvent, 0);
+		InitWindows;
+		InitMenus;
+		TEInit;
+		InitDialogs(nil);
+
+		ErrorSound(@DoErrorSound);
+
+		for index := 1 to 3 do
+			ignore := EventAvail(EveryEvent, theEvent);
+		inBackground := FALSE;
+	end;
+
+{________________________________}
+
+
+	procedure CloseUpShop;
+		var
+			index: Integer;
+			err: OSErr;
+	begin
+		ShowMenuBar;
+
+		DisposHandle(Handle(vertTable));
+
+		DisposeRgn(ballVisRgn);
+		DisposeRgn(wholeRgn);
+
+		for index := 0 to 5 do
+			begin
+				DisposeRgn(tileRgns[index, 0]);
+				DisposeRgn(tileRgns[index, 1]);
+			end;
+
+		if (chanPtr <> nil) then
+			err := SndDisposeChannel(chanPtr, TRUE);
+
+		ClosePort(offPlayerPort);
+		DisposPtr(Ptr(offPlayerPort));
+		ClosePort(offLoadPort);
+		DisposPtr(Ptr(offLoadPort));
+		ClosePort(offVirginPort);
+		DisposPtr(Ptr(offVirginPort));
+
+		WriteOutScores;
+
+		DisposeWindow(mainWndo);
+		mainWndo := nil;
+	end;
+
+{________________________________}
+
+	procedure DoMouseDown;
+		var
+			code, theMenu, theItem: Integer;
+			whichWindow: WindowPtr;
+			mResult: LongInt;
+	begin
+		code := FindWindow(theEvent.where, whichWindow);
+		if (code = inMenuBar) then
+			begin
+				mResult := MenuSelect(theEvent.Where);
+				theMenu := HiWord(mResult);
+				theItem := LoWord(mResult);
+				Handle_My_Menu(theMenu, theItem);
+			end;
+		if (code = inSysWindow) then
+			SystemClick(theEvent, whichWindow);
+	end;
+
+{________________________________}
+
+	procedure DoKeyDown;
+		var
+			theChar: Char;
+			theMenu, theItem: Integer;
+			mResult: LongInt;
+	begin
+		with theEvent do
+			begin
+				theChar := CHR(BitAnd(message, CharCodeMask));
+				if (Odd(modifiers div CmdKey)) then
+					begin
+						mResult := MenuKey(theChar);
+						theMenu := HiWord(mResult);
+						theItem := LoWord(mResult);
+						if (theMenu <> 0) then
+							Handle_My_Menu(theMenu, theItem);
+					end;
+			end;
+	end;
+
+{________________________________}
+
+	procedure DoUpdates;
+		var
+			whichWindow: WindowPtr;
+	begin
+		whichWindow := WindowPtr(theEvent.message);
+		BeginUpdate(whichWindow);
+		UpDateMainWndo;
+		EndUpdate(whichWindow);
+	end;
+
+{________________________________}
+
+	procedure DoDiskEvent;
+		var
+			cornerPt: Point;
+			theErr: OSErr;
+	begin
+		if (HiWrd(theEvent.message) <> noErr) then
+			begin
+				SetPt(cornerPt, 85 + rightOffset, 50 + downOffset);
+				theErr := DIBadMount(cornerPt, theEvent.message);
+			end;
+	end;
+
+{________________________________}
+
+	procedure DoOSEvent;
+		var
+			theErr: OSErr;
+	begin
+		case BSR(theEvent.message, 24) of	{high byte of message}
+
+			1:  						{suspendResumeMessage}
+				if (BitAnd(theEvent.message, suspendResumeBit) = resuming) then
+					begin
+						if (playing) then
+							HideMenuBar;
+						inBackground := FALSE;		{it was a resume event}
+					end
+				else
+					begin
+						inBackground := TRUE;		{it was a suspend event}
+						if (chanPtr <> nil) then
+							theErr := SndDisposeChannel(chanPtr, TRUE);
+						chanPtr := nil;
+						ShowMenuBar;
+					end;
+			otherwise
+				;
+		end; {CASE}
+	end; {osEvt}
+
+{________________________________}
+
+	procedure TwinkleStars;
+		var
+			i: Integer;
+	begin
+		SetPort(mainWndo);
+		PenMode(patXOr);
+		for i := 0 to numberOfStars do
+			begin
+				tempInt := DoRandom(45);
+				MoveTo(stars[tempInt, 0], stars[tempInt, 1]);
+				Line(0, 0);
+			end;
+		PenMode(patCopy);
+		SetPort(offLoadPort);
+
+		if (TickCount < lastLoopTime) then
+			begin
+				if (numberOfStars < 33) then
+					numberOfStars := numberOfStars + 2;
+			end
+		else if (numberOfStars > 0) then
+			numberOfStars := numberOfStars div 2;
+	end;
+
+{________________________________}
+
+	procedure HandlePlayLoop;
+		var
+			dummyLong, tempTime: longint;
+			tempInt: integer;
+			theInput: TEHandle;
+			theKeys: KeyMap;
+
+{---------------}
+
+		procedure HandlePracticeSkating;
+		begin
+			Delay(1, dummyLong);
+			WheresMouse;
+			if (player.timeKeeper < 0) then
+				PlayerInTransit
+			else
+				NewPlayerPosition;
+			DrawPlayer;
+		end;
+
+{---------------}
+
+		procedure HandlePracticeBall;
+		begin
+			Delay(1, dummyLong);
+			WheresMouse;
+			if (player.timeKeeper < 0) then
+				PlayerInTransit
+			else
+				NewPlayerPosition;
+			if (ball.timeKeeper < 0) then
+				BallInTransit
+			else
+				NewBallPosition;
+			DrawPlayerAndBall;
+		end;
+
+{---------------}
+
+		procedure HandlePeriodGames;
+		begin
+			tempTime := periodTime - LapsedTime;
+			if (tempTime < 0) then
+				begin
+					ResetArrows;
+					EndOfPeriod;
+				end
+			else
+				DisplayTime(tempTime);
+
+			WheresMouse;
+
+			if (player.timeKeeper < 0) then
+				PlayerInTransit
+			else
+				NewPlayerPosition;
+
+			if (opponent.timeKeeper < 0) then
+				OpponentInTransit
+			else
+				NewOpponentPosition;
+
+			if (ball.timeKeeper < 0) then
+				BallInTransit
+			else
+				NewBallPosition;
+
+			if (player.posZ < opponent.posZ) then
+				DrawPlayerOpponent
+			else
+				DrawOpponentPlayer;
+		end;
+
+{---------------}
+
+		procedure HandleFirstToThirteen;
+		begin
+			WheresMouse;
+
+			if (player.timeKeeper < 0) then
+				PlayerInTransit
+			else
+				NewPlayerPosition;
+
+			if (opponent.timeKeeper < 0) then
+				OpponentInTransit
+			else
+				NewOpponentPosition;
+
+			if (ball.timeKeeper < 0) then
+				BallInTransit
+			else
+				NewBallPosition;
+
+			if (player.posZ < opponent.posZ) then
+				DrawPlayerOpponent
+			else
+				DrawOpponentPlayer;
+
+			if ((taygetePoints > 12) or (earthPoints > 12)) then
+				EndOfPeriod;
+		end;
+
+{---------------}
+
+		procedure HandleDeltaFive;
+		begin
+			WheresMouse;
+
+			if (player.timeKeeper < 0) then
+				PlayerInTransit
+			else
+				NewPlayerPosition;
+
+			if (opponent.timeKeeper < 0) then
+				OpponentInTransit
+			else
+				NewOpponentPosition;
+
+			if (ball.timeKeeper < 0) then
+				BallInTransit
+			else
+				NewBallPosition;
+
+			if (player.posZ < opponent.posZ) then
+				DrawPlayerOpponent
+			else
+				DrawOpponentPlayer;
+
+			if (ABS(taygetePoints - earthPoints) > 4) then
+				EndOfPeriod;
+		end;
+
+{---------------}
+
+		procedure HandlePause;
+		begin
+			tempTime := TickCount div 60;
+			repeat
+				GetKeys(theKeys);
+			until (not theKeys[kPauseKey]);
+			repeat
+				GetKeys(theKeys);
+			until (theKeys[kPauseKey]);
+			repeat
+				GetKeys(theKeys);
+			until (not theKeys[kPauseKey]);
+			periodTime := periodTime + (TickCount div 60 - tempTime);
+		end;
+
+{---------------}
+
+	begin
+		case whichGame of
+			practiceSkating: 
+				HandlePracticeSkating;
+			practiceWBall: 
+				HandlePracticeBall;
+			fourOfFive, fourOfNine: 
+				HandlePeriodGames;
+			firstToThirteen: 
+				HandleFirstToThirteen;
+			deltaFive: 
+				HandleDeltaFive;
+			otherwise
+		end;
+
+		GetKeys(theKeys);
+
+		if ((theKeys[$37]) and (theKeys[$0E])) then
+			begin
+				if AbortGame then
+					Handle_My_Menu(mGame, iEnd)
+				else
+					ReturnToGame;
+			end;
+
+		if ((theKeys[$37]) and (theKeys[$0C])) then
+			begin
+				if AbortGame then
+					Handle_My_Menu(mGame, iQuit)
+				else
+					ReturnToGame;
+			end;
+
+		if (theKeys[kPauseKey]) then
+			HandlePause;
+
+		TwinkleStars;
+
+		if (not cursorVis) then
+			HideCursor;
+
+		repeat
+		until (TickCount >= lastLoopTime);
+		lastLoopTime := TickCount + delayTime;
+
+	end;
+
+{________________________________}
+
+{$I-}
+begin
+	InitToolBox;
+	OpenLogo;
+
+	InitVariables;
+	ResetTitleVars;
+	UnloadSeg(@InitVariables);
+	CloseLogo;
+	InitCursor;
+
+	repeat
+
+		if (hasWNE) then
+			eventHappened := WaitNextEvent(everyEvent, theEvent, sleep, nil)
+		else
+			begin
+				SystemTask;
+				eventHappened := GetNextEvent(everyEvent, theEvent);
+			end;
+
+		if (eventHappened) then
+			case theEvent.what of
+				MouseDown: 
+					DoMouseDown;
+				KeyDown: 
+					DoKeyDown;
+				UpDateEvt: 
+					DoUpdates;
+				DiskEvt: 
+					DoDiskEvent;
+				App4Evt: 
+					DoOSEvent;
+				otherwise
+			end;
+
+		while (playing) do
+			HandlePlayLoop;
+
+		if (justQuit) then
+			begin
+				if (tileLit <> -1) then
+					begin
+						SetPort(offVirginPort);
+						InvertRgn(tileRgns[tileLit, tileToggle]);
+						tileLit := -1;
+					end;
+				CopyBits(offVirginMap, mainWndo^.portBits, wholeScreen, wholeScreen, srcCopy, wholeRgn);
+				CopyBits(offVirginMap, offLoadMap, wholeScreen, wholeScreen, srcCopy, nil);
+				justQuit := FALSE;
+				InitCursor;
+				DrawMenuBar;
+			end;
+
+		if ((not inBackground) and (not pausing) and (mainWndo = FrontWindow)) then
+			begin
+				TwinkleStars;
+				numberOfStars := 4;
+				DoOpeningAnimation;
+				if (jetsOut) then
+					DoJets
+				else
+					begin
+						tempInt := DoRandom(1000);
+						if (tempInt = 0) then
+							begin
+								jetsOut := TRUE;
+								SetRect(jetsRects[2], -72, 275, 0, 325);
+							end;
+					end;
+			end;
+
+	until doneFlag;                       {End of the event loop}
+
+	CloseUpShop;
+
+end.                                    {End of the program}

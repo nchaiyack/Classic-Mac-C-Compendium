@@ -1,1 +1,626 @@
-unit OffscreenCore;{ this unit defines all procedures required to create, manage and dispose off-screen bitmaps }{ this unit contains the generic off-screen functions while higher units will have specialized }{ procedures for handling off-screen graphics }{ © 1993 by Christian Franz }interface	type		TOffscreenRec = record (* offscreen data management *)				thePort: CGrafPtr;				theDevice: GDHandle;				theColors: CTabHandle;				mainDevice: GDHandle;			end;	function CreateGDevice (basePixMap: PixMapHandle;		{Handle to the PixMap to base GDevice on}									var retGDevice: GDHandle					{Returns a handle to the new GDevice}									): OSErr;	function SetUpPixMap (depth: Integer;		{Desired number of bits/pixel in off-screen}									bound: Rect;       				{Bounding rectangle of off-screen}									colors: CTabHandle;			{Color table to assign to off-screen}									bytesPerRow: Integer;			{Number of bytes in each row of pixels}									aPixMap: PixMapHandle		{Handle to the PixMap being initialized}									): OSErr;	function CreateOffScreen (bounds: Rect;		{Bounding rectangle of off-screen}									depth: Integer;    					{Desired number of bits per pixel in off-screen}									colors: CTabHandle; 				{Color table to assign to off-screen}									var retPort: CGrafPtr;   			{Returns a pointer to the new CGrafPort}									var retGDevice: GDHandle    		{Returns a handle to the new GDevice}									): OSErr;	function UpdateOffScreen (newBounds: Rect;		{New bounding rectangle of off-screen}									newDepth: Integer;    					{New number of bits per pixel in off-screen}									newColors: CTabHandle; 				{New color table to assign to off-screen}									updPort: CGrafPtr;						{Returns a pointer to the updated CGrafPort}									updGDevice: GDHandle					{Returns a handle to the updated GDevice}									): OSErr;	procedure DisposeOffScreen (var doomedPort: CGrafPtr; 	{Pointer to the CGrafPort we’re getting rid of}									var doomedGDevice: GDHandle 					{Handle to the GDevice we’re getting rid of}									);implementation	function CreateGDevice (basePixMap: PixMapHandle;		{Handle to the PixMap to base GDevice on}									var retGDevice: GDHandle					{Returns a handle to the new GDevice}									): OSErr;		const			kITabRes = 4; {Inverse-table resolution}		var			newDevice: GDHandle;   {Handle to the new GDevice}			embryoITab: ITabHandle; {Handle to the embryonic inverse table}			error: OSErr;      {Error code}	begin   (* Initialize a few things before we begin *)		error := noErr;		newDevice := nil;		embryoITab := nil;   (* Allocate memory for the new GDevice *)		newDevice := GDHandle(NewHandle(SizeOf(GDevice)));		if newDevice <> nil then			begin         (* Allocate the embryonic inverse table *)				embryoITab := ITabHandle(NewHandleClear(2));				if embryoITab <> nil then					begin               (* Initialize the new GDevice fields *)						with newDevice^^ do							begin								gdRefNum := 0;                 {Only used for screens}								gdID := 0;                     {Won’t normally use}								if basePixMap^^.pixelSize <= 8 then									gdType := clutType          {Depth≤8; clut device}								else									gdType := directType;       {Depth>8; direct device}								gdITable := embryoITab;        {2-byte handle for now}								gdResPref := kITabRes;         {Normal inv table res}								gdSearchProc := nil;           {No color-search proc}								gdCompProc := nil;             {No complement proc}								gdFlags := 0;                  {Will set these later}								gdPMap := basePixMap;          {Reference our PixMap}								gdRefCon := 0;                 {Won’t normally use}								gdNextGD := nil;               {Not in GDevice list}								gdRect := basePixMap^^.bounds; {Use PixMap dimensions}								gdMode := -1;                  {For nonscreens}								gdCCBytes := 0;                {Only used for screens}								gdCCDepth := 0;                {Only used for screens}								gdCCXData := nil;              {Only used for screens}								gdCCXMask := nil;              {Only used for screens}								gdReserved := 0;               {Currently unused}							end;               (* Set color-device bit if PixMap isn’t black & white *)						if basePixMap^^.pixelSize > 1 then							SetDeviceAttribute(newDevice, gdDevType, true);               (* Set bit to indicate that the GDevice has no video driver *)						SetDeviceAttribute(newDevice, noDriver, true);               (* Initialize the inverse table *)						if basePixMap^^.pixelSize <= 8 then							begin								MakeITable(basePixMap^^.pmTable, newDevice^^.gdITable, newDevice^^.gdResPref);								error := QDError;							end;					end				else					error := MemError;			end		else			error := MemError;   (* Handle any errors along the way *)		if error <> noErr then			begin				if embryoITab <> nil then					DisposHandle(Handle(embryoITab));				if newDevice <> nil then					DisposHandle(Handle(newDevice));			end		else			retGDevice := newDevice;   (* Return a handle to the new GDevice *)		CreateGDevice := error;	end;	function SetUpPixMap (depth: Integer;		{Desired number of bits/pixel in off-screen}									bound: Rect;       				{Bounding rectangle of off-screen}									colors: CTabHandle;			{Color table to assign to off-screen}									bytesPerRow: Integer;			{Number of bytes in each row of pixels}									aPixMap: PixMapHandle		{Handle to the PixMap being initialized}									): OSErr;		const			kDefaultRes = $00480000; {Default resolution is 72 DPI; Fixed type}		var			newColors: CTabHandle; {Color table used for the off-screen PixMap}			offBaseAddr: Ptr;        {Pointer to the off-screen pixel image}			error: OSErr;      {Returns error code}	begin		error := noErr;		newColors := nil;		offBaseAddr := nil;   (* Clone the clut if indexed color; allocate a dummy clut if direct color *)		if depth <= 8 then			begin				newColors := colors;				error := HandToHand(Handle(newColors));			end		else			begin				newColors := CTabHandle(NewHandle(SizeOf(ColorTable) - SizeOf(CSpecArray)));				error := MemError;			end;		if error = noErr then			begin         (* Allocate pixel image; long integer multiplication avoids overflow *)				offBaseAddr := NewPtr(LongInt(bytesPerRow) * (bound.bottom - bound.top));				if offBaseAddr <> nil then					with aPixMap^^ do						begin                  (* Initialize fields common to indexed and direct PixMaps *)							baseAddr := offBaseAddr;     {Point to image}							rowBytes := BOR(bytesPerRow, $8000); {MSB set for PixMap}							bounds := bound;             {Use given bounds}							pmVersion := 0;              {No special stuff}							packType := 0;               {Default PICT pack}							packSize := 0;               {Always zero when in memory}							hRes := kDefaultRes;         {72 DPI default resolution}							vRes := kDefaultRes;         {72 DPI default resolution}							pixelSize := depth;          {Set number of bits/pixel}							planeBytes := 0;             {Not used}							pmReserved := 0;             {Not used}                  (* Initialize fields specific to indexed and direct PixMaps *)							if depth <= 8 then								begin                        (* PixMap is indexed *)									pixelType := 0;       {Indicates indexed}									cmpCount := 1;        {Have 1 component}									cmpSize := depth;     {Component size=depth}									pmTable := newColors; {Handle to CLUT}								end							else								begin                        (* PixMap is direct *)									pixelType := RGBDirect; {Indicates direct}									cmpCount := 3;          {Have 3 components}									if depth = 16 then										cmpSize := 5         {5 bits/component}									else										cmpSize := 8;        {8 bits/component}                        (* Initialize fields of the dummy color table *)									newColors^^.ctSeed := 3 * aPixMap^^.cmpSize;									newColors^^.ctFlags := 0;									newColors^^.ctSize := 0;									pmTable := newColors;								end;						end				else					error := MemError;			end		else			newColors := nil;   (* If no errors occurred, return a handle to the new off-screen PixMap *)		if error <> noErr then			begin				if newColors <> nil then					DisposCTable(newColors);			end;    (* Return the error code *)		SetUpPixMap := error;	end;	function CreateOffScreen (bounds: Rect;		{Bounding rectangle of off-screen}									depth: Integer;    					{Desired number of bits per pixel in off-screen}									colors: CTabHandle; 				{Color table to assign to off-screen}									var retPort: CGrafPtr;   			{Returns a pointer to the new CGrafPort}									var retGDevice: GDHandle    		{Returns a handle to the new GDevice}									): OSErr;		const			kMaxRowBytes = $3FFE; {Maximum number of bytes in a row of pixels}		var			newPort: CGrafPtr;     		{Pointer to the new off-screen CGrafPort}			newPixMap: PixMapHandle; 	{Handle to the new off-screen PixMap}			newDevice: GDHandle;     		{Handle to the new off-screen GDevice}			qdVersion: LongInt;      		{Version of QuickDraw currently in use}			savedPort: GrafPtr;      		{Pointer to GrafPort used for save/restore}			savedState: SignedByte;   	{Saved state of color table handle}			bytesPerRow: Integer;      	{Number of bytes per row in the PixMap}			error: OSErr;        				{Returns error code}			BlackRGB, WhiteRGB: RGBColor; {for setting fore- and backgroundcolors }	begin   (* Initialize a few things before we begin *)		newPort := nil;		newPixMap := nil;		newDevice := nil;		error := noErr;   (* Save the color table’s current state and make sure it isn’t purgeable *)		if colors <> nil then			begin				savedState := HGetState(Handle(colors));				HNoPurge(Handle(colors));			end;   (* Calculate the number of bytes per row in the off-screen PixMap *)		bytesPerRow := ((depth * (bounds.right - bounds.left) + 31) div 32) * 4;   (* Get the current QuickDraw version *)		error := Gestalt(gestaltQuickdrawVersion, qdVersion);		error := noErr;   (* Make sure depth is indexed or depth is direct and 32-Bit QD installed *)		if (depth = 1) or (depth = 2) or (depth = 4) or (depth = 8) or (((depth = 16) or (depth = 32)) and (qdVersion >= gestalt32BitQD)) then			begin         (* Maximum number of bytes per row is 16,382; make sure within range *)				if bytesPerRow <= kMaxRowBytes then					begin               (* Make sure a color table is provided if the depth is indexed *)						if depth <= 8 then							if colors = nil then                     (* Indexed depth and clut is NIL; is parameter error *)								error := paramErr;					end				else            (* # of bytes per row is more than 16,382; is parameter error *)					error := paramErr;			end		else      (* Pixel depth isn’t valid; is parameter error *)			error := paramErr;   (* If sanity checks succeed, then allocate a new CGrafPort *)		if error = noErr then			begin				newPort := CGrafPtr(NewPtr(SizeOf(CGrafPort)));				if newPort <> nil then					begin               (* Save the current port *)						GetPort(savedPort);               (* Initialize the new CGrafPort and make it the current port *)						OpenCPort(newPort);               (* Set portRect, visRgn, and clipRgn to the given bounds rect *)						newPort^.portRect := bounds;						RectRgn(newPort^.visRgn, bounds);						ClipRect(bounds);               (* Initialize the new PixMap for off-screen drawing *)						error := SetUpPixMap(depth, bounds, colors, bytesPerRow, newPort^.portPixMap);						if error = noErr then							begin                     (* Grab the initialized PixMap handle *)								newPixMap := newPort^.portPixMap;                     (* Allocate and initialize a new GDevice *)								error := CreateGDevice(newPixMap, newDevice);							end;               (* set drawing colors and erase whole pixmap *)						BlackRGB.red := 0;						BlackRGB.green := 0;						BlackRGB.blue := 0;						WhiteRGB.red := $ffff;						WhiteRGB.green := $ffff;						WhiteRGB.blue := $ffff;						RGBForeColor(BlackRGB);						RGBBackColor(WhiteRGB);						EraseRect(bounds);               (* Restore the saved port *)						SetPort(savedPort);					end				else					error := MemError;			end;   (* Restore the given state of the color table *)		if colors <> nil then			HSetState(Handle(colors), savedState);   (* One Last Look Around The House Before We Go… *)		if error <> noErr then			begin         (* Some error occurred; dispose of everything we allocated *)				if newPixMap <> nil then					begin						DisposCTable(newPixMap^^.pmTable);						DisposPtr(newPixMap^^.baseAddr);					end;				if newDevice <> nil then					begin						DisposHandle(Handle(newDevice^^.gdITable));						DisposHandle(Handle(newDevice));					end;				if newPort <> nil then					begin						CloseCPort(newPort);						DisposPtr(Ptr(newPort));					end;			end		else			begin         (* Everything’s OK; return refs to off-screen CGrafPort and GDevice *)				retPort := newPort;				retGDevice := newDevice;			end;		CreateOffScreen := error;	end;	function UpdateOffScreen (newBounds: Rect;		{New bounding rectangle of off-screen}									newDepth: Integer;    					{New number of bits per pixel in off-screen}									newColors: CTabHandle; 				{New color table to assign to off-screen}									updPort: CGrafPtr;						{Returns a pointer to the updated CGrafPort}									updGDevice: GDHandle					{Returns a handle to the updated GDevice}									): OSErr;		const			kMaxRowBytes = $3FFE; {Maximum number of bytes per row of pixels}		var			newPixMap: PixMapHandle; {Handle to the new off-screen PixMap}			oldPixMap: PixMapHandle; {Handle to the old off-screen PixMap}			bounds: Rect;         {Boundary rectangle of off-screen}			depth: Integer;      {Depth of the off-screen PixMap}			bytesPerRow: Integer;      {Number of bytes per row in the PixMap}			colors: CTabHandle;   {Colors for the off-screen PixMap}			savedFore: RGBColor;     {Saved foreground color}			savedBack: RGBColor;     {Saved background color}			aColor: RGBColor;     {Used to set foreground and background color}			qdVersion: LongInt;      {Version of QuickDraw currently in use}			savedPort: GrafPtr;      {Pointer to GrafPort used for save/restore}			savedDevice: GDHandle;     {Handle to GDevice used for save/restore}			savedState: SignedByte;   {Saved state of color table handle}			error: OSErr;        {Returns error code}	begin   (* Initialize a few things before we begin *)		newPixMap := nil;		error := noErr;   (* Keep the old bounds rectangle, or get the new one *)		if EmptyRect(newBounds) then			bounds := updPort^.portRect		else			bounds := newBounds;   (* Keep the old depth, or get the old one *)		if newDepth = 0 then			depth := updPort^.portPixMap^^.pixelSize		else			depth := newDepth;   (* Get the old clut, or save new clut’s state and make it nonpurgeable *)		if newColors = nil then			colors := updPort^.portPixMap^^.pmTable		else			begin				savedState := HGetState(Handle(newColors));				HNoPurge(Handle(newColors));				colors := newColors;			end;   (* Calculate the number of bytes per row in the off-screen PixMap *)		bytesPerRow := ((depth * (bounds.right - bounds.left) + 31) div 32) * 4;   (* Get the current QuickDraw version *)		error := Gestalt(gestaltQuickdrawVersion, qdVersion);		error := noErr;   (* Make sure depth is indexed or depth is direct and 32-Bit QD installed *)		if (depth = 1) or (depth = 2) or (depth = 4) or (depth = 8) or (((depth = 16) or (depth = 32)) and (qdVersion >= gestalt32BitQD)) then			begin         (* Maximum number of bytes per row is 16,382; make sure within range *)				if bytesPerRow <= kMaxRowBytes then					begin               (* Make sure a color table is provided if the depth is indexed *)						if depth <= 8 then							if colors = nil then                     (* Indexed depth and clut is NIL; is parameter error *)								error := paramErr;					end				else            (* # of bytes per row is more than 16,382; is parameter error *)					error := paramErr;			end		else      (* Pixel depth isn’t valid; is parameter error *)			error := paramErr;   (* If sanity checks succeed, attempt to update the graphics environment *)		if error = noErr then			begin         (* Allocate a new PixMap *)				newPixMap := PixMapHandle(NewHandleClear(SizeOf(PixMap)));				if newPixMap <> nil then					begin               (* Initialize the new PixMap for off-screen drawing *)						error := SetUpPixMap(depth, bounds, colors, bytesPerRow, newPixMap);						if error = noErr then							begin                     (* Save old PixMap and install new, initialized one *)								oldPixMap := updPort^.portPixMap;								updPort^.portPixMap := newPixMap;                     (* Save current port & GDevice; set ones we’re updating *)								GetPort(savedPort);								savedDevice := GetGDevice;								SetPort(GrafPtr(updPort));								SetGDevice(updGDevice);                     (* Set portRect, visRgn, clipRgn to given bounds rect *)								updPort^.portRect := bounds;								RectRgn(updPort^.visRgn, bounds);								ClipRect(bounds);                     (* Update the GDevice *)								if newPixMap^^.pixelSize <= 8 then									updGDevice^^.gdType := clutType								else									updGDevice^^.gdType := directType;								updGDevice^^.gdPMap := newPixMap;								updGDevice^^.gdRect := newPixMap^^.bounds;                     (* Set color-device bit if PixMap isn’t black & white *)								if newPixMap^^.pixelSize > 1 then									SetDeviceAttribute(updGDevice, gdDevType, TRUE)								else									SetDeviceAttribute(updGDevice, gdDevType, FALSE);                     (* Save current fore/back colors and set to B&W *)								GetForeColor(savedFore);								GetBackColor(savedBack);								aColor.red := 0;								aColor.green := 0;								aColor.blue := 0;								RGBForeColor(aColor);								aColor.red := $FFFF;								aColor.green := $FFFF;								aColor.blue := $FFFF;								RGBBackColor(aColor);                     (* Copy old image to the new graphics environment *)								HLock(Handle(oldPixMap));								CopyBits(BitMapPtr(oldPixMap^)^, GrafPtr(updPort)^.portBits, oldPixMap^^.bounds, updPort^.portRect, srcCopy, nil);								HUnlock(Handle(oldPixMap));                     (* Restore the foreground/background color *)								RGBForeColor(savedFore);								RGBBackColor(savedBack);                     (* Restore the saved port *)								SetPort(savedPort);								SetGDevice(savedDevice);                     (* Get rid of the old PixMap and its dependents *)								DisposPtr(oldPixMap^^.baseAddr);								DisposeCTable(oldPixMap^^.pmTable);								DisposHandle(Handle(oldPixMap));							end;					end				else					error := MemError;			end;   (* Restore the given state of the color table *)		if colors <> nil then			HSetState(Handle(colors), savedState);   (* One Last Look Around The House Before We Go… *)		if error <> noErr then			begin				if newPixMap <> nil then					begin						if newPixMap^^.pmTable <> nil then							DisposCTable(newPixMap^^.pmTable);						if newPixMap^^.baseAddr <> nil then							DisposPtr(newPixMap^^.baseAddr);						DisposHandle(Handle(newPixMap));					end;			end;		UpdateOffScreen := error;	end;	procedure DisposeOffScreen (var doomedPort: CGrafPtr; 	{Pointer to the CGrafPort we’re getting rid of}									var doomedGDevice: GDHandle 					{Handle to the GDevice we’re getting rid of}									);		var			currPort: CGrafPtr; {Pointer to the current port}			currGDevice: GDHandle; {Handle to the current GDevice}	begin   (* Check to see whether the doomed CGrafPort is the current port *)		GetPort(GrafPtr(currPort));		if currPort = doomedPort then			begin         (* It is; set current port to Window Manager CGrafPort *)				GetCWMgrPort(currPort);				SetPort(GrafPtr(currPort));			end;   (* Check to see whether the doomed GDevice is the current GDevice *)		currGDevice := GetGDevice;		if currGDevice = doomedGDevice then      (* It is; set current GDevice to the main screen’s GDevice *)			SetGDevice(GetMainDevice);   (* Throw everything away *)		doomedGDevice^^.gdPMap := nil;		DisposGDevice(doomedGDevice);		DisposPtr(doomedPort^.portPixMap^^.baseAddr);		if doomedPort^.portPixMap^^.pmTable <> nil then			DisposCTable(doomedPort^.portPixMap^^.pmTable);		CloseCPort(doomedPort);		DisposPtr(Ptr(doomedPort));		doomedPort := nil;		doomedGDevice := nil;	end;	procedure LockOffScreen (offScreenPort: CGrafPtr {Ptr to off-screen CGrafPort}									);		var			offImageHnd: Handle; {Handle to the off-screen pixel image}	begin   (* Get the saved handle to the off-screen pixel image *)		offImageHnd := Handle(offScreenPort^.portPixMap^^.baseAddr);   (* Lock the handle to the pixel image *)		HLock(offImageHnd);   (* Put pixel image master pointer into baseAddr so that QuickDraw can use it *)		offScreenPort^.portPixMap^^.baseAddr := offImageHnd^;	end;	procedure UnlockOffScreen (offScreenPort: CGrafPtr {Ptr to off-screen port}									);		var			offImagePtr: Ptr;    {Pointer to the off-screen pixel image}			offImageHnd: Handle; {Handle to the off-screen pixel image}	begin   (* Get the handle to the off-screen pixel image *)		offImagePtr := offScreenPort^.portPixMap^^.baseAddr;		offImageHnd := RecoverHandle(offImagePtr);   (* Unlock the handle *)		HUnlock(offImageHnd);   (* Save the handle back in the baseAddr field *)		offScreenPort^.portPixMap^^.baseAddr := Ptr(offImageHnd);	end;end.
+unit OffscreenCore;
+
+{ this unit defines all procedures required to create, manage and dispose off-screen bitmaps }
+{ this unit contains the generic off-screen functions while higher units will have specialized }
+{ procedures for handling off-screen graphics }
+
+{ © 1993 by Christian Franz }
+
+interface
+
+
+	type
+
+		TOffscreenRec = record (* offscreen data management *)
+				thePort: CGrafPtr;
+				theDevice: GDHandle;
+				theColors: CTabHandle;
+				mainDevice: GDHandle;
+			end;
+
+	function CreateGDevice (basePixMap: PixMapHandle;		{Handle to the PixMap to base GDevice on}
+									var retGDevice: GDHandle					{Returns a handle to the new GDevice}
+									): OSErr;
+
+	function SetUpPixMap (depth: Integer;		{Desired number of bits/pixel in off-screen}
+									bound: Rect;       				{Bounding rectangle of off-screen}
+									colors: CTabHandle;			{Color table to assign to off-screen}
+									bytesPerRow: Integer;			{Number of bytes in each row of pixels}
+									aPixMap: PixMapHandle		{Handle to the PixMap being initialized}
+									): OSErr;
+
+	function CreateOffScreen (bounds: Rect;		{Bounding rectangle of off-screen}
+									depth: Integer;    					{Desired number of bits per pixel in off-screen}
+									colors: CTabHandle; 				{Color table to assign to off-screen}
+									var retPort: CGrafPtr;   			{Returns a pointer to the new CGrafPort}
+									var retGDevice: GDHandle    		{Returns a handle to the new GDevice}
+									): OSErr;
+
+	function UpdateOffScreen (newBounds: Rect;		{New bounding rectangle of off-screen}
+									newDepth: Integer;    					{New number of bits per pixel in off-screen}
+									newColors: CTabHandle; 				{New color table to assign to off-screen}
+									updPort: CGrafPtr;						{Returns a pointer to the updated CGrafPort}
+									updGDevice: GDHandle					{Returns a handle to the updated GDevice}
+									): OSErr;
+
+	procedure DisposeOffScreen (var doomedPort: CGrafPtr; 	{Pointer to the CGrafPort we’re getting rid of}
+									var doomedGDevice: GDHandle 					{Handle to the GDevice we’re getting rid of}
+									);
+
+
+implementation
+
+
+	function CreateGDevice (basePixMap: PixMapHandle;		{Handle to the PixMap to base GDevice on}
+									var retGDevice: GDHandle					{Returns a handle to the new GDevice}
+									): OSErr;
+
+		const
+			kITabRes = 4; {Inverse-table resolution}
+
+		var
+			newDevice: GDHandle;   {Handle to the new GDevice}
+			embryoITab: ITabHandle; {Handle to the embryonic inverse table}
+			error: OSErr;      {Error code}
+
+	begin
+   (* Initialize a few things before we begin *)
+		error := noErr;
+		newDevice := nil;
+		embryoITab := nil;
+
+   (* Allocate memory for the new GDevice *)
+		newDevice := GDHandle(NewHandle(SizeOf(GDevice)));
+		if newDevice <> nil then
+			begin
+         (* Allocate the embryonic inverse table *)
+				embryoITab := ITabHandle(NewHandleClear(2));
+				if embryoITab <> nil then
+					begin
+               (* Initialize the new GDevice fields *)
+						with newDevice^^ do
+							begin
+								gdRefNum := 0;                 {Only used for screens}
+								gdID := 0;                     {Won’t normally use}
+								if basePixMap^^.pixelSize <= 8 then
+									gdType := clutType          {Depth≤8; clut device}
+								else
+									gdType := directType;       {Depth>8; direct device}
+								gdITable := embryoITab;        {2-byte handle for now}
+								gdResPref := kITabRes;         {Normal inv table res}
+								gdSearchProc := nil;           {No color-search proc}
+								gdCompProc := nil;             {No complement proc}
+								gdFlags := 0;                  {Will set these later}
+								gdPMap := basePixMap;          {Reference our PixMap}
+								gdRefCon := 0;                 {Won’t normally use}
+								gdNextGD := nil;               {Not in GDevice list}
+								gdRect := basePixMap^^.bounds; {Use PixMap dimensions}
+								gdMode := -1;                  {For nonscreens}
+								gdCCBytes := 0;                {Only used for screens}
+								gdCCDepth := 0;                {Only used for screens}
+								gdCCXData := nil;              {Only used for screens}
+								gdCCXMask := nil;              {Only used for screens}
+								gdReserved := 0;               {Currently unused}
+							end;
+
+               (* Set color-device bit if PixMap isn’t black & white *)
+						if basePixMap^^.pixelSize > 1 then
+							SetDeviceAttribute(newDevice, gdDevType, true);
+
+               (* Set bit to indicate that the GDevice has no video driver *)
+						SetDeviceAttribute(newDevice, noDriver, true);
+
+               (* Initialize the inverse table *)
+						if basePixMap^^.pixelSize <= 8 then
+							begin
+								MakeITable(basePixMap^^.pmTable, newDevice^^.gdITable, newDevice^^.gdResPref);
+								error := QDError;
+							end;
+					end
+				else
+					error := MemError;
+			end
+		else
+			error := MemError;
+
+   (* Handle any errors along the way *)
+		if error <> noErr then
+			begin
+				if embryoITab <> nil then
+					DisposHandle(Handle(embryoITab));
+				if newDevice <> nil then
+					DisposHandle(Handle(newDevice));
+			end
+		else
+			retGDevice := newDevice;
+
+   (* Return a handle to the new GDevice *)
+		CreateGDevice := error;
+	end;
+
+
+	function SetUpPixMap (depth: Integer;		{Desired number of bits/pixel in off-screen}
+									bound: Rect;       				{Bounding rectangle of off-screen}
+									colors: CTabHandle;			{Color table to assign to off-screen}
+									bytesPerRow: Integer;			{Number of bytes in each row of pixels}
+									aPixMap: PixMapHandle		{Handle to the PixMap being initialized}
+									): OSErr;
+
+		const
+			kDefaultRes = $00480000; {Default resolution is 72 DPI; Fixed type}
+
+		var
+			newColors: CTabHandle; {Color table used for the off-screen PixMap}
+			offBaseAddr: Ptr;        {Pointer to the off-screen pixel image}
+			error: OSErr;      {Returns error code}
+
+	begin
+		error := noErr;
+		newColors := nil;
+		offBaseAddr := nil;
+
+   (* Clone the clut if indexed color; allocate a dummy clut if direct color *)
+		if depth <= 8 then
+			begin
+				newColors := colors;
+				error := HandToHand(Handle(newColors));
+			end
+		else
+			begin
+				newColors := CTabHandle(NewHandle(SizeOf(ColorTable) - SizeOf(CSpecArray)));
+				error := MemError;
+			end;
+		if error = noErr then
+			begin
+         (* Allocate pixel image; long integer multiplication avoids overflow *)
+				offBaseAddr := NewPtr(LongInt(bytesPerRow) * (bound.bottom - bound.top));
+				if offBaseAddr <> nil then
+					with aPixMap^^ do
+						begin
+                  (* Initialize fields common to indexed and direct PixMaps *)
+							baseAddr := offBaseAddr;     {Point to image}
+							rowBytes := BOR(bytesPerRow, $8000); {MSB set for PixMap}
+							bounds := bound;             {Use given bounds}
+							pmVersion := 0;              {No special stuff}
+							packType := 0;               {Default PICT pack}
+							packSize := 0;               {Always zero when in memory}
+							hRes := kDefaultRes;         {72 DPI default resolution}
+							vRes := kDefaultRes;         {72 DPI default resolution}
+							pixelSize := depth;          {Set number of bits/pixel}
+							planeBytes := 0;             {Not used}
+							pmReserved := 0;             {Not used}
+
+                  (* Initialize fields specific to indexed and direct PixMaps *)
+							if depth <= 8 then
+								begin
+                        (* PixMap is indexed *)
+									pixelType := 0;       {Indicates indexed}
+									cmpCount := 1;        {Have 1 component}
+									cmpSize := depth;     {Component size=depth}
+									pmTable := newColors; {Handle to CLUT}
+								end
+							else
+								begin
+                        (* PixMap is direct *)
+									pixelType := RGBDirect; {Indicates direct}
+									cmpCount := 3;          {Have 3 components}
+									if depth = 16 then
+										cmpSize := 5         {5 bits/component}
+									else
+										cmpSize := 8;        {8 bits/component}
+
+                        (* Initialize fields of the dummy color table *)
+									newColors^^.ctSeed := 3 * aPixMap^^.cmpSize;
+									newColors^^.ctFlags := 0;
+									newColors^^.ctSize := 0;
+									pmTable := newColors;
+								end;
+						end
+				else
+					error := MemError;
+			end
+		else
+			newColors := nil;
+
+   (* If no errors occurred, return a handle to the new off-screen PixMap *)
+		if error <> noErr then
+			begin
+				if newColors <> nil then
+					DisposCTable(newColors);
+			end;
+
+    (* Return the error code *)
+		SetUpPixMap := error;
+	end;
+
+
+	function CreateOffScreen (bounds: Rect;		{Bounding rectangle of off-screen}
+									depth: Integer;    					{Desired number of bits per pixel in off-screen}
+									colors: CTabHandle; 				{Color table to assign to off-screen}
+									var retPort: CGrafPtr;   			{Returns a pointer to the new CGrafPort}
+									var retGDevice: GDHandle    		{Returns a handle to the new GDevice}
+									): OSErr;
+
+		const
+			kMaxRowBytes = $3FFE; {Maximum number of bytes in a row of pixels}
+
+		var
+			newPort: CGrafPtr;     		{Pointer to the new off-screen CGrafPort}
+			newPixMap: PixMapHandle; 	{Handle to the new off-screen PixMap}
+			newDevice: GDHandle;     		{Handle to the new off-screen GDevice}
+			qdVersion: LongInt;      		{Version of QuickDraw currently in use}
+			savedPort: GrafPtr;      		{Pointer to GrafPort used for save/restore}
+			savedState: SignedByte;   	{Saved state of color table handle}
+			bytesPerRow: Integer;      	{Number of bytes per row in the PixMap}
+			error: OSErr;        				{Returns error code}
+			BlackRGB, WhiteRGB: RGBColor; {for setting fore- and backgroundcolors }
+
+	begin
+   (* Initialize a few things before we begin *)
+		newPort := nil;
+		newPixMap := nil;
+		newDevice := nil;
+		error := noErr;
+
+   (* Save the color table’s current state and make sure it isn’t purgeable *)
+		if colors <> nil then
+			begin
+				savedState := HGetState(Handle(colors));
+				HNoPurge(Handle(colors));
+			end;
+
+   (* Calculate the number of bytes per row in the off-screen PixMap *)
+		bytesPerRow := ((depth * (bounds.right - bounds.left) + 31) div 32) * 4;
+
+   (* Get the current QuickDraw version *)
+		error := Gestalt(gestaltQuickdrawVersion, qdVersion);
+		error := noErr;
+
+   (* Make sure depth is indexed or depth is direct and 32-Bit QD installed *)
+		if (depth = 1) or (depth = 2) or (depth = 4) or (depth = 8) or (((depth = 16) or (depth = 32)) and (qdVersion >= gestalt32BitQD)) then
+			begin
+         (* Maximum number of bytes per row is 16,382; make sure within range *)
+				if bytesPerRow <= kMaxRowBytes then
+					begin
+               (* Make sure a color table is provided if the depth is indexed *)
+						if depth <= 8 then
+							if colors = nil then
+                     (* Indexed depth and clut is NIL; is parameter error *)
+								error := paramErr;
+					end
+				else
+            (* # of bytes per row is more than 16,382; is parameter error *)
+					error := paramErr;
+			end
+		else
+      (* Pixel depth isn’t valid; is parameter error *)
+			error := paramErr;
+
+   (* If sanity checks succeed, then allocate a new CGrafPort *)
+		if error = noErr then
+			begin
+				newPort := CGrafPtr(NewPtr(SizeOf(CGrafPort)));
+				if newPort <> nil then
+					begin
+               (* Save the current port *)
+						GetPort(savedPort);
+
+               (* Initialize the new CGrafPort and make it the current port *)
+						OpenCPort(newPort);
+
+               (* Set portRect, visRgn, and clipRgn to the given bounds rect *)
+						newPort^.portRect := bounds;
+						RectRgn(newPort^.visRgn, bounds);
+						ClipRect(bounds);
+
+               (* Initialize the new PixMap for off-screen drawing *)
+						error := SetUpPixMap(depth, bounds, colors, bytesPerRow, newPort^.portPixMap);
+						if error = noErr then
+							begin
+                     (* Grab the initialized PixMap handle *)
+								newPixMap := newPort^.portPixMap;
+
+                     (* Allocate and initialize a new GDevice *)
+								error := CreateGDevice(newPixMap, newDevice);
+							end;
+
+               (* set drawing colors and erase whole pixmap *)
+						BlackRGB.red := 0;
+						BlackRGB.green := 0;
+						BlackRGB.blue := 0;
+						WhiteRGB.red := $ffff;
+						WhiteRGB.green := $ffff;
+						WhiteRGB.blue := $ffff;
+						RGBForeColor(BlackRGB);
+						RGBBackColor(WhiteRGB);
+						EraseRect(bounds);
+               (* Restore the saved port *)
+						SetPort(savedPort);
+					end
+				else
+					error := MemError;
+			end;
+
+   (* Restore the given state of the color table *)
+		if colors <> nil then
+			HSetState(Handle(colors), savedState);
+
+   (* One Last Look Around The House Before We Go… *)
+		if error <> noErr then
+			begin
+         (* Some error occurred; dispose of everything we allocated *)
+				if newPixMap <> nil then
+					begin
+						DisposCTable(newPixMap^^.pmTable);
+						DisposPtr(newPixMap^^.baseAddr);
+					end;
+				if newDevice <> nil then
+					begin
+						DisposHandle(Handle(newDevice^^.gdITable));
+						DisposHandle(Handle(newDevice));
+					end;
+				if newPort <> nil then
+					begin
+						CloseCPort(newPort);
+						DisposPtr(Ptr(newPort));
+					end;
+			end
+		else
+			begin
+         (* Everything’s OK; return refs to off-screen CGrafPort and GDevice *)
+				retPort := newPort;
+				retGDevice := newDevice;
+			end;
+		CreateOffScreen := error;
+	end;
+
+	function UpdateOffScreen (newBounds: Rect;		{New bounding rectangle of off-screen}
+									newDepth: Integer;    					{New number of bits per pixel in off-screen}
+									newColors: CTabHandle; 				{New color table to assign to off-screen}
+									updPort: CGrafPtr;						{Returns a pointer to the updated CGrafPort}
+									updGDevice: GDHandle					{Returns a handle to the updated GDevice}
+									): OSErr;
+
+		const
+			kMaxRowBytes = $3FFE; {Maximum number of bytes per row of pixels}
+
+		var
+			newPixMap: PixMapHandle; {Handle to the new off-screen PixMap}
+			oldPixMap: PixMapHandle; {Handle to the old off-screen PixMap}
+			bounds: Rect;         {Boundary rectangle of off-screen}
+			depth: Integer;      {Depth of the off-screen PixMap}
+			bytesPerRow: Integer;      {Number of bytes per row in the PixMap}
+			colors: CTabHandle;   {Colors for the off-screen PixMap}
+			savedFore: RGBColor;     {Saved foreground color}
+			savedBack: RGBColor;     {Saved background color}
+			aColor: RGBColor;     {Used to set foreground and background color}
+			qdVersion: LongInt;      {Version of QuickDraw currently in use}
+			savedPort: GrafPtr;      {Pointer to GrafPort used for save/restore}
+			savedDevice: GDHandle;     {Handle to GDevice used for save/restore}
+			savedState: SignedByte;   {Saved state of color table handle}
+			error: OSErr;        {Returns error code}
+
+	begin
+   (* Initialize a few things before we begin *)
+		newPixMap := nil;
+		error := noErr;
+
+   (* Keep the old bounds rectangle, or get the new one *)
+		if EmptyRect(newBounds) then
+			bounds := updPort^.portRect
+		else
+			bounds := newBounds;
+
+   (* Keep the old depth, or get the old one *)
+		if newDepth = 0 then
+			depth := updPort^.portPixMap^^.pixelSize
+		else
+			depth := newDepth;
+
+   (* Get the old clut, or save new clut’s state and make it nonpurgeable *)
+		if newColors = nil then
+			colors := updPort^.portPixMap^^.pmTable
+		else
+			begin
+				savedState := HGetState(Handle(newColors));
+				HNoPurge(Handle(newColors));
+				colors := newColors;
+			end;
+
+   (* Calculate the number of bytes per row in the off-screen PixMap *)
+		bytesPerRow := ((depth * (bounds.right - bounds.left) + 31) div 32) * 4;
+
+   (* Get the current QuickDraw version *)
+		error := Gestalt(gestaltQuickdrawVersion, qdVersion);
+		error := noErr;
+
+   (* Make sure depth is indexed or depth is direct and 32-Bit QD installed *)
+		if (depth = 1) or (depth = 2) or (depth = 4) or (depth = 8) or (((depth = 16) or (depth = 32)) and (qdVersion >= gestalt32BitQD)) then
+			begin
+         (* Maximum number of bytes per row is 16,382; make sure within range *)
+				if bytesPerRow <= kMaxRowBytes then
+					begin
+               (* Make sure a color table is provided if the depth is indexed *)
+						if depth <= 8 then
+							if colors = nil then
+                     (* Indexed depth and clut is NIL; is parameter error *)
+								error := paramErr;
+					end
+				else
+            (* # of bytes per row is more than 16,382; is parameter error *)
+					error := paramErr;
+			end
+		else
+      (* Pixel depth isn’t valid; is parameter error *)
+			error := paramErr;
+
+   (* If sanity checks succeed, attempt to update the graphics environment *)
+		if error = noErr then
+			begin
+         (* Allocate a new PixMap *)
+				newPixMap := PixMapHandle(NewHandleClear(SizeOf(PixMap)));
+				if newPixMap <> nil then
+					begin
+               (* Initialize the new PixMap for off-screen drawing *)
+						error := SetUpPixMap(depth, bounds, colors, bytesPerRow, newPixMap);
+						if error = noErr then
+							begin
+                     (* Save old PixMap and install new, initialized one *)
+								oldPixMap := updPort^.portPixMap;
+								updPort^.portPixMap := newPixMap;
+
+                     (* Save current port & GDevice; set ones we’re updating *)
+								GetPort(savedPort);
+								savedDevice := GetGDevice;
+								SetPort(GrafPtr(updPort));
+								SetGDevice(updGDevice);
+
+                     (* Set portRect, visRgn, clipRgn to given bounds rect *)
+								updPort^.portRect := bounds;
+								RectRgn(updPort^.visRgn, bounds);
+								ClipRect(bounds);
+
+                     (* Update the GDevice *)
+								if newPixMap^^.pixelSize <= 8 then
+									updGDevice^^.gdType := clutType
+								else
+									updGDevice^^.gdType := directType;
+								updGDevice^^.gdPMap := newPixMap;
+								updGDevice^^.gdRect := newPixMap^^.bounds;
+
+                     (* Set color-device bit if PixMap isn’t black & white *)
+								if newPixMap^^.pixelSize > 1 then
+									SetDeviceAttribute(updGDevice, gdDevType, TRUE)
+								else
+									SetDeviceAttribute(updGDevice, gdDevType, FALSE);
+
+                     (* Save current fore/back colors and set to B&W *)
+								GetForeColor(savedFore);
+								GetBackColor(savedBack);
+								aColor.red := 0;
+								aColor.green := 0;
+								aColor.blue := 0;
+								RGBForeColor(aColor);
+								aColor.red := $FFFF;
+								aColor.green := $FFFF;
+								aColor.blue := $FFFF;
+								RGBBackColor(aColor);
+
+                     (* Copy old image to the new graphics environment *)
+								HLock(Handle(oldPixMap));
+								CopyBits(BitMapPtr(oldPixMap^)^, GrafPtr(updPort)^.portBits, oldPixMap^^.bounds, updPort^.portRect, srcCopy, nil);
+								HUnlock(Handle(oldPixMap));
+
+                     (* Restore the foreground/background color *)
+								RGBForeColor(savedFore);
+								RGBBackColor(savedBack);
+
+                     (* Restore the saved port *)
+								SetPort(savedPort);
+								SetGDevice(savedDevice);
+
+                     (* Get rid of the old PixMap and its dependents *)
+								DisposPtr(oldPixMap^^.baseAddr);
+								DisposeCTable(oldPixMap^^.pmTable);
+								DisposHandle(Handle(oldPixMap));
+							end;
+					end
+				else
+					error := MemError;
+			end;
+
+   (* Restore the given state of the color table *)
+		if colors <> nil then
+			HSetState(Handle(colors), savedState);
+
+   (* One Last Look Around The House Before We Go… *)
+		if error <> noErr then
+			begin
+				if newPixMap <> nil then
+					begin
+						if newPixMap^^.pmTable <> nil then
+							DisposCTable(newPixMap^^.pmTable);
+						if newPixMap^^.baseAddr <> nil then
+							DisposPtr(newPixMap^^.baseAddr);
+						DisposHandle(Handle(newPixMap));
+					end;
+			end;
+		UpdateOffScreen := error;
+	end;
+
+
+	procedure DisposeOffScreen (var doomedPort: CGrafPtr; 	{Pointer to the CGrafPort we’re getting rid of}
+									var doomedGDevice: GDHandle 					{Handle to the GDevice we’re getting rid of}
+									);
+
+		var
+			currPort: CGrafPtr; {Pointer to the current port}
+			currGDevice: GDHandle; {Handle to the current GDevice}
+
+	begin
+   (* Check to see whether the doomed CGrafPort is the current port *)
+		GetPort(GrafPtr(currPort));
+		if currPort = doomedPort then
+			begin
+         (* It is; set current port to Window Manager CGrafPort *)
+				GetCWMgrPort(currPort);
+				SetPort(GrafPtr(currPort));
+			end;
+
+   (* Check to see whether the doomed GDevice is the current GDevice *)
+		currGDevice := GetGDevice;
+		if currGDevice = doomedGDevice then
+      (* It is; set current GDevice to the main screen’s GDevice *)
+			SetGDevice(GetMainDevice);
+
+   (* Throw everything away *)
+		doomedGDevice^^.gdPMap := nil;
+		DisposGDevice(doomedGDevice);
+		DisposPtr(doomedPort^.portPixMap^^.baseAddr);
+		if doomedPort^.portPixMap^^.pmTable <> nil then
+			DisposCTable(doomedPort^.portPixMap^^.pmTable);
+		CloseCPort(doomedPort);
+		DisposPtr(Ptr(doomedPort));
+		doomedPort := nil;
+		doomedGDevice := nil;
+	end;
+
+	procedure LockOffScreen (offScreenPort: CGrafPtr {Ptr to off-screen CGrafPort}
+									);
+
+		var
+			offImageHnd: Handle; {Handle to the off-screen pixel image}
+
+	begin
+   (* Get the saved handle to the off-screen pixel image *)
+		offImageHnd := Handle(offScreenPort^.portPixMap^^.baseAddr);
+
+   (* Lock the handle to the pixel image *)
+		HLock(offImageHnd);
+
+   (* Put pixel image master pointer into baseAddr so that QuickDraw can use it *)
+		offScreenPort^.portPixMap^^.baseAddr := offImageHnd^;
+	end;
+
+
+	procedure UnlockOffScreen (offScreenPort: CGrafPtr {Ptr to off-screen port}
+									);
+
+		var
+			offImagePtr: Ptr;    {Pointer to the off-screen pixel image}
+			offImageHnd: Handle; {Handle to the off-screen pixel image}
+
+	begin
+   (* Get the handle to the off-screen pixel image *)
+		offImagePtr := offScreenPort^.portPixMap^^.baseAddr;
+		offImageHnd := RecoverHandle(offImagePtr);
+
+   (* Unlock the handle *)
+		HUnlock(offImageHnd);
+
+   (* Save the handle back in the baseAddr field *)
+		offScreenPort^.portPixMap^^.baseAddr := Ptr(offImageHnd);
+	end;
+
+
+end.

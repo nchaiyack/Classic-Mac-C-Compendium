@@ -1,1 +1,349 @@
-{================================================}{=============== HeartQuest main unit ================}{================================================}{ Example file for Ingemars Sprite Animation Toolkit. }{ © Ingemar Ragnemalm 1992 }{ See doc files for legal terms for using this code. }{ HeartQuest is a very simple game demonstrating how to use the Sprite Animation}{ Toolkit. I originally wrote the game as my present to my wife Eva for Valentine's}{ day 1992. You can still tell that this file once started as the Skel example in the}{ TransSkel package by Paul DuBois and Owen Hartnett. }{ This "main" file is rather small, and holds very little game specific code.}{ Its main concern is to initialize the various parts of the game, and to hold the}{ file and edit menu handlers. }program HeartQuest;	uses		TransSkel, SAT, GameGlobals, GameWind, {sound,}		SoundConst, scores, CenterStuff, Preferences, AppleEvents;{Variables for the main program}	var		keys: KeyMap;		zoomFlag: Boolean;		ignore: longint;						{For UnloadScrap error}		gAppleEventsInitialized: Boolean;	{For initializing Apple Events when necessary}{ -------------------------------------------------------------------- }{						Menu handling procedures						}{ -------------------------------------------------------------------- }{	Handle selection of "About…" item from Apple menu}	procedure DoAbout;		var			ignore: integer;	begin		ignore := DoAlert(43, aboutAlrt, nil);	end;{	Process selection from File menu.}{	HelpEnemies	Shows a help box. }{	Quit	Request a halt by calling SkelHalt().  This makes SkelMain}{			return.}	procedure DoFileMenu (item: integer);		var			ignore: integer;	begin		case item of			helpenemies: 				ignore := DoAlert(43, helpenemiesAlrt, nil);			quit: 				begin					if pauseFlag then						DoGameOver;					SkelWhoa;				end;			otherwise				;		end;	end;	procedure DoEditMenu;	begin	end;{	Initialize menus.  Tell TransSkel to process the Apple menu}{	automatically, and associate the proper procedures with the}{	File and Edit menus.}	procedure SetUpMenus;	begin		SkelApple(MyGetIndString(aboutStrID), @DoAbout); {string 1: About HeartQuest…}		fileMenu := GetMenu(fileMenuRes);		editMenu := GetMenu(editMenuRes);		GameMenu := GetMenu(GameMenuRes);		highMenu := GetMenu(highMenuRes);		dummy := SkelMenu(fileMenu, @DoFileMenu, nil, false);		dummy := SkelMenu(editMenu, @DoEditMenu, nil, false);		dummy := SkelMenu(GameMenu, @DoGameMenu, nil, false);		dummy := SkelMenu(highMenu, @DoHighMenu, nil, true);	end;{ Initialize settings resources. These are saved in the game file itself. This is elegant,}{ but a bit "server-hostile". An alternative is to create a preference file in the system}{ folder. }	procedure InitSettings;	begin		UseResFile(prefFile); {set the resfile to the pref file, if any. If none, prefFile will be the app itself!}		features := featHnd(GetResource('Feat', 0));		{ Load the settings }		if features = nil then								{ Settings doesn't exist; create new }			begin				features := featHnd(NewHandle(Sizeof(featRec)));				CheckNoMem(Ptr(features));				features^^.sound := true;				features^^.allowBG := false;				features^^.player := MyGetIndString(anonymousStrID); {str 2: Anonymous}				features^^.macho := false;				AddResource(handle(features), 'Feat', 0, 'Settings');			end		else													{Did exist - check the size!}			if GetHandleSize(Handle(features)) < sizeof(featHnd) then				SetHandleSize(Handle(features), sizeof(featHnd));		UseResFile(applFile);{ Fix all checkmarks in the menus }		if features^^.sound then			begin				features^^.sound := false;				DoGameMenu(sound);			end		else			begin				features^^.sound := true;				DoGameMenu(sound);			end;		if features^^.macho then			begin				features^^.macho := false;				DoGameMenu(macho);			end		else			begin				features^^.macho := true;				DoGameMenu(macho);			end;		if features^^.PlotFast then			begin				features^^.PlotFast := false;				DoGameMenu(FastAnimation);			end		else			begin				features^^.PlotFast := true;				DoGameMenu(FastAnimation);			end;		if features^^.allowBG then			begin				features^^.allowBG := false;				DoGameMenu(allowBG);			end		else			begin				features^^.allowBG := true;				DoGameMenu(allowBG);			end;	end;{ ******* MultiFinder and Apple events: ******* }{MultiFinder events - suspend and reume - have been handled by HeartQuest since very early versions,}{since I want it to hide its window when switched out.}{AppleEvents are added, mostly because I wanted to learn about it. I learned one thing: Apple Events are}{tedious. I tried simplifying AppleEvent support by installing my handlers first after getting an Apple}{Event (getting rid of all checking for its existence - if it sends events to me, it exists) - but the interface}{files needed are horrible. To speed up compilation, I made a stripped down interface file, HQAE.p.}{All I really got by supporting Apple Events is that I can quit after getting the 'quit' Apple event.}{Handle the required Apple events:}{DoOpenApp,DoOpenDoc,DoPrintDoc,DoQuitApp}{MyGotRequiredParams: From MSG demo my Mark Pilgrim, tells whether we have handled all we have to or not.}	function MyGotRequiredParams (theAppleEvent: AppleEvent): OSErr;		var			returnedType: DescType;			actualSize: Size;	begin		if AEGetAttributePtr(theAppleEvent, keyMissedKeywordAttr, typeWildCard, returnedType, nil, 0, actualSize) = errAEDescNotFound then			MyGotRequiredParams := noErr		else			MyGotRequiredParams := errAEParamMissed;	end;	function DoOpenApp (theAppleEvent, reply: AppleEvent; refCon: Longint): OSErr;	begin{What am I supposed to do here?}		DoOpenApp := MyGotRequiredParams(theAppleEvent);	end;	function DoOpenDoc (theAppleEvent, reply: AppleEvent; refCon: Longint): OSErr;	begin		DoOpenDoc := errAEEventNotHandled; {We don't open any documents!}	end;	function DoPrintDoc (theAppleEvent, reply: AppleEvent; refCon: Longint): OSErr;	begin		DoPrintDoc := errAEEventNotHandled; {We don't print any documents!}	end;	function DoQuitApp (theAppleEvent, reply: AppleEvent; refCon: Longint): OSErr;	begin		SkelWhoa;			{If I'm told to quit, I'll quit.}		DoQuitApp := MyGotRequiredParams(theAppleEvent);	end;{Init Apple events}{Perhaps I'm cheating, but I don't call this until I get the first Apple event.}{IMHO, that's the simplest way to support them without a lot of boring Gestalt checks.}	procedure AppleEventInit;		var			error: OSerr;	begin		if gAppleEventsInitialized then			exit(AppleEventInit);		gAppleEventsInitialized := true;		error := AEInstallEventHandler(kCoreEventClass, kAEOpenApplication, @DoOpenApp, 0, false);		error := AEInstallEventHandler(kCoreEventClass, kAEOpenDocuments, @DoOpenDoc, 0, false);		error := AEInstallEventHandler(kCoreEventClass, kAEPrintDocuments, @DoPrintDoc, 0, false);		error := AEInstallEventHandler(kCoreEventClass, kAEQuitApplication, @DoQuitApp, 0, false);{I ignore errors.}	end;{Event processing that TransSkel doesn't handle (in the version I use here):}{MultiFinder events: Hide gameWindow on suspend, so the user can get access to disk icons etc.}{Apple Events: Handle the required Apple events.}	procedure DoSuspendResume (b: boolean);	begin		if b then			begin				ShowWindow(gSAT.wind);				SelectWindow(gSAT.wind);			end		else			HideWindow(gSAT.wind)	end;	function DoEvt (e: eventRecord): boolean;	begin		if e.what = OSevt then			begin				if BAND(BROTL(e.message, 8), $FF) = SuspendResumeMessage then					DoSuspendResume(BAnd(e.message, 1) <> 0);				DoEvt := true;			end		else if e.what = kHighLevelEvent then			begin				if not gAppleEventsInitialized then {My little "cheat" into compatibility}					AppleEventInit;				if AEProcessAppleEvent(e) <> noErr then					;			end		else			DoEvt := false;	end; { DoEvt }{Do a quick approximation of how much memory we need.}{(This is rather unnecessary since SAT has all the checks we need. I put it in in the old days when}{SAT still had a few missing error checks - which I hope are all fixed now.)}	function GetMemoryDemand: Longint;		const			faceCount = 19;			spriteCount = 30; {We can get *lots* of sprites in this game!}		var			theWorld: SysEnvRec;			error: OSerr;			testDepth, testHeight, testWidth: Longint;			offScreenMem, faceMem: Longint;	begin{SAT will set the its gSAT.colorFlag later, but we set it right now since we want to check the screen depth}{before SAT knows what screen it will use.}		error := SysEnvirons(1, theWorld);		if error = noErr then			colorFlag := theWorld.hasColorQD		else			colorFlag := false; {If SysEnvirons won't work, let's assume we don't have color.}		if colorFlag then			testDepth := GetMainDevice^^.gdPMap^^.pixelSize		else			testDepth := 1;{Dimensions of game area, zoom or not, plus extra margins}		if zoomFlag then			begin				testHeight := GetMainDevice^^.gdPMap^^.bounds.bottom - GetMainDevice^^.gdPMap^^.bounds.top + 128;				testWidth := GetMainDevice^^.gdPMap^^.bounds.right - GetMainDevice^^.gdPMap^^.bounds.left + 128;			end		else			begin				testHeight := 322 + 128;				testWidth := 512 + 128;			end;{Sum an approximation of the amount of memory needed.}{Many calculations are not simplified below for clarity}{Note that many small memory structures are not counted, so we have to reserve a bit extra}{in the end.}		offScreenMem := testDepth * testHeight * testWidth div 8; {Size of pixel data of one offscreen buffer.}		faceMem := (32 * 32 * TestDepth div 8) + sizeof(Sprite);		if testDepth = 4 then			faceMem := faceMem * 2; {In 4 bits, we need a bit more, close to twice the amount}		GetMemoryDemand := 2 * offScreenMem + faceCount * faceMem + spriteCount * sizeof(sprite);	end;{ -------------------------------------------------------------------- }{									Main								}{ -------------------------------------------------------------------- }begin	SkelInit(6, nil);				{ initialize }	SetUpMenus;				{ install menu handlers }{Is the user holding down a modifier key? If so, we should use the whole screen.}	GetKeys(keys);	zoomFlag := keys[55] or keys[56] or keys[58] or keys[59]; {cmd, shift, alt, ctrl}{Before starting, check if we have enough memory! UnloadScrap, check depth and dimensions against FreeMem}	ignore := UnloadScrap; {Ignore any error}	if GetMemoryDemand + 50000 > FreeMem then {Unreasonably little memory!}		begin			ReportStr(MyGetIndString(memerrStrID));{'Too little memory. Give me some more (or use fewer colors).'}			halt; {We can quit without any cleanup. (I.e. we havn't allocated any sound channel.)}		end;{Tell SAT that we want it to rescale the PICTs}	ConfigureSAT(true, kVPositionSort, kKindCollision, 32);{Send strings from resources to SAT, so the program can be localized.}	SATSetStrings(MyGetIndString(okStrID), MyGetIndString(yesStrID), MyGetIndString(noStrID), MyGetIndString(quitStrID), MyGetIndString(memerrStrID), MyGetIndString(noscreenStrID), MyGetIndString(satnopictStrID), MyGetIndString(nowindStrID));{ Initialize the Sprite Animation Toolkit, set up offscreen buffers and make the window. }	if zoomFlag then {if cmd, shift, alt, ctrl}		InitSAT(0, 0, 32000, 32000) {Very big - makes SAT cut it down to the main screen.}	else		InitSAT(0, 0, 512, 322); {Standard size}{ Init all the different parts of the game. }	GameWindInit;	{ Init the game window }	Loadsounds;		{ preload all sound resources }	InitScores;		{ Init the score module, check if a pref file should be created }	InitSettings;	{ Load the settings }{ Set the randseed to something that is random enough. }	randSeed := TickCount;	SkelEventHook(@DoEvt); { handle MultiFinder-events }	SkelMain;				{ loop 'til Quit selected }	SkelClobber;				{ clean up }	SATSoundShutUp;			{ Terminate sounds }end.
+{================================================}
+{=============== HeartQuest main unit ================}
+{================================================}
+
+{ Example file for Ingemars Sprite Animation Toolkit. }
+{ © Ingemar Ragnemalm 1992 }
+{ See doc files for legal terms for using this code. }
+
+{ HeartQuest is a very simple game demonstrating how to use the Sprite Animation}
+{ Toolkit. I originally wrote the game as my present to my wife Eva for Valentine's}
+{ day 1992. You can still tell that this file once started as the Skel example in the}
+{ TransSkel package by Paul DuBois and Owen Hartnett. }
+
+{ This "main" file is rather small, and holds very little game specific code.}
+{ Its main concern is to initialize the various parts of the game, and to hold the}
+{ file and edit menu handlers. }
+
+program HeartQuest;
+
+	uses
+		TransSkel, SAT, GameGlobals, GameWind, {sound,}
+		SoundConst, scores, CenterStuff, Preferences, AppleEvents;
+
+{Variables for the main program}
+	var
+		keys: KeyMap;
+		zoomFlag: Boolean;
+		ignore: longint;						{For UnloadScrap error}
+		gAppleEventsInitialized: Boolean;	{For initializing Apple Events when necessary}
+
+{ -------------------------------------------------------------------- }
+{						Menu handling procedures						}
+{ -------------------------------------------------------------------- }
+
+{	Handle selection of "About…" item from Apple menu}
+
+	procedure DoAbout;
+		var
+			ignore: integer;
+	begin
+		ignore := DoAlert(43, aboutAlrt, nil);
+	end;
+
+{	Process selection from File menu.}
+
+{	HelpEnemies	Shows a help box. }
+{	Quit	Request a halt by calling SkelHalt().  This makes SkelMain}
+{			return.}
+
+	procedure DoFileMenu (item: integer);
+		var
+			ignore: integer;
+	begin
+		case item of
+			helpenemies: 
+				ignore := DoAlert(43, helpenemiesAlrt, nil);
+			quit: 
+				begin
+					if pauseFlag then
+						DoGameOver;
+					SkelWhoa;
+				end;
+			otherwise
+				;
+		end;
+	end;
+
+	procedure DoEditMenu;
+	begin
+	end;
+
+{	Initialize menus.  Tell TransSkel to process the Apple menu}
+{	automatically, and associate the proper procedures with the}
+{	File and Edit menus.}
+
+	procedure SetUpMenus;
+	begin
+		SkelApple(MyGetIndString(aboutStrID), @DoAbout); {string 1: About HeartQuest…}
+		fileMenu := GetMenu(fileMenuRes);
+		editMenu := GetMenu(editMenuRes);
+		GameMenu := GetMenu(GameMenuRes);
+		highMenu := GetMenu(highMenuRes);
+		dummy := SkelMenu(fileMenu, @DoFileMenu, nil, false);
+		dummy := SkelMenu(editMenu, @DoEditMenu, nil, false);
+		dummy := SkelMenu(GameMenu, @DoGameMenu, nil, false);
+		dummy := SkelMenu(highMenu, @DoHighMenu, nil, true);
+	end;
+
+{ Initialize settings resources. These are saved in the game file itself. This is elegant,}
+{ but a bit "server-hostile". An alternative is to create a preference file in the system}
+{ folder. }
+
+	procedure InitSettings;
+	begin
+		UseResFile(prefFile); {set the resfile to the pref file, if any. If none, prefFile will be the app itself!}
+		features := featHnd(GetResource('Feat', 0));		{ Load the settings }
+		if features = nil then								{ Settings doesn't exist; create new }
+			begin
+				features := featHnd(NewHandle(Sizeof(featRec)));
+				CheckNoMem(Ptr(features));
+				features^^.sound := true;
+				features^^.allowBG := false;
+				features^^.player := MyGetIndString(anonymousStrID); {str 2: Anonymous}
+				features^^.macho := false;
+				AddResource(handle(features), 'Feat', 0, 'Settings');
+			end
+		else													{Did exist - check the size!}
+			if GetHandleSize(Handle(features)) < sizeof(featHnd) then
+				SetHandleSize(Handle(features), sizeof(featHnd));
+		UseResFile(applFile);
+
+{ Fix all checkmarks in the menus }
+		if features^^.sound then
+			begin
+				features^^.sound := false;
+				DoGameMenu(sound);
+			end
+		else
+			begin
+				features^^.sound := true;
+				DoGameMenu(sound);
+			end;
+		if features^^.macho then
+			begin
+				features^^.macho := false;
+				DoGameMenu(macho);
+			end
+		else
+			begin
+				features^^.macho := true;
+				DoGameMenu(macho);
+			end;
+		if features^^.PlotFast then
+			begin
+				features^^.PlotFast := false;
+				DoGameMenu(FastAnimation);
+			end
+		else
+			begin
+				features^^.PlotFast := true;
+				DoGameMenu(FastAnimation);
+			end;
+		if features^^.allowBG then
+			begin
+				features^^.allowBG := false;
+				DoGameMenu(allowBG);
+			end
+		else
+			begin
+				features^^.allowBG := true;
+				DoGameMenu(allowBG);
+			end;
+	end;
+
+
+{ ******* MultiFinder and Apple events: ******* }
+
+{MultiFinder events - suspend and reume - have been handled by HeartQuest since very early versions,}
+{since I want it to hide its window when switched out.}
+{AppleEvents are added, mostly because I wanted to learn about it. I learned one thing: Apple Events are}
+{tedious. I tried simplifying AppleEvent support by installing my handlers first after getting an Apple}
+{Event (getting rid of all checking for its existence - if it sends events to me, it exists) - but the interface}
+{files needed are horrible. To speed up compilation, I made a stripped down interface file, HQAE.p.}
+{All I really got by supporting Apple Events is that I can quit after getting the 'quit' Apple event.}
+
+{Handle the required Apple events:}
+{DoOpenApp,DoOpenDoc,DoPrintDoc,DoQuitApp}
+{MyGotRequiredParams: From MSG demo my Mark Pilgrim, tells whether we have handled all we have to or not.}
+	function MyGotRequiredParams (theAppleEvent: AppleEvent): OSErr;
+		var
+			returnedType: DescType;
+			actualSize: Size;
+	begin
+		if AEGetAttributePtr(theAppleEvent, keyMissedKeywordAttr, typeWildCard, returnedType, nil, 0, actualSize) = errAEDescNotFound then
+			MyGotRequiredParams := noErr
+		else
+			MyGotRequiredParams := errAEParamMissed;
+	end;
+	function DoOpenApp (theAppleEvent, reply: AppleEvent; refCon: Longint): OSErr;
+	begin
+{What am I supposed to do here?}
+		DoOpenApp := MyGotRequiredParams(theAppleEvent);
+	end;
+	function DoOpenDoc (theAppleEvent, reply: AppleEvent; refCon: Longint): OSErr;
+	begin
+		DoOpenDoc := errAEEventNotHandled; {We don't open any documents!}
+	end;
+	function DoPrintDoc (theAppleEvent, reply: AppleEvent; refCon: Longint): OSErr;
+	begin
+		DoPrintDoc := errAEEventNotHandled; {We don't print any documents!}
+	end;
+	function DoQuitApp (theAppleEvent, reply: AppleEvent; refCon: Longint): OSErr;
+	begin
+		SkelWhoa;			{If I'm told to quit, I'll quit.}
+		DoQuitApp := MyGotRequiredParams(theAppleEvent);
+	end;
+
+{Init Apple events}
+{Perhaps I'm cheating, but I don't call this until I get the first Apple event.}
+{IMHO, that's the simplest way to support them without a lot of boring Gestalt checks.}
+	procedure AppleEventInit;
+		var
+			error: OSerr;
+	begin
+		if gAppleEventsInitialized then
+			exit(AppleEventInit);
+		gAppleEventsInitialized := true;
+		error := AEInstallEventHandler(kCoreEventClass, kAEOpenApplication, @DoOpenApp, 0, false);
+		error := AEInstallEventHandler(kCoreEventClass, kAEOpenDocuments, @DoOpenDoc, 0, false);
+		error := AEInstallEventHandler(kCoreEventClass, kAEPrintDocuments, @DoPrintDoc, 0, false);
+		error := AEInstallEventHandler(kCoreEventClass, kAEQuitApplication, @DoQuitApp, 0, false);
+{I ignore errors.}
+	end;
+
+
+{Event processing that TransSkel doesn't handle (in the version I use here):}
+{MultiFinder events: Hide gameWindow on suspend, so the user can get access to disk icons etc.}
+{Apple Events: Handle the required Apple events.}
+
+	procedure DoSuspendResume (b: boolean);
+	begin
+		if b then
+			begin
+				ShowWindow(gSAT.wind);
+				SelectWindow(gSAT.wind);
+			end
+		else
+			HideWindow(gSAT.wind)
+	end;
+
+	function DoEvt (e: eventRecord): boolean;
+	begin
+		if e.what = OSevt then
+			begin
+				if BAND(BROTL(e.message, 8), $FF) = SuspendResumeMessage then
+					DoSuspendResume(BAnd(e.message, 1) <> 0);
+				DoEvt := true;
+			end
+		else if e.what = kHighLevelEvent then
+			begin
+				if not gAppleEventsInitialized then {My little "cheat" into compatibility}
+					AppleEventInit;
+				if AEProcessAppleEvent(e) <> noErr then
+					;
+			end
+		else
+			DoEvt := false;
+	end; { DoEvt }
+
+
+{Do a quick approximation of how much memory we need.}
+{(This is rather unnecessary since SAT has all the checks we need. I put it in in the old days when}
+{SAT still had a few missing error checks - which I hope are all fixed now.)}
+	function GetMemoryDemand: Longint;
+		const
+			faceCount = 19;
+			spriteCount = 30; {We can get *lots* of sprites in this game!}
+		var
+			theWorld: SysEnvRec;
+			error: OSerr;
+			testDepth, testHeight, testWidth: Longint;
+			offScreenMem, faceMem: Longint;
+	begin
+{SAT will set the its gSAT.colorFlag later, but we set it right now since we want to check the screen depth}
+{before SAT knows what screen it will use.}
+		error := SysEnvirons(1, theWorld);
+		if error = noErr then
+			colorFlag := theWorld.hasColorQD
+		else
+			colorFlag := false; {If SysEnvirons won't work, let's assume we don't have color.}
+
+		if colorFlag then
+			testDepth := GetMainDevice^^.gdPMap^^.pixelSize
+		else
+			testDepth := 1;
+
+{Dimensions of game area, zoom or not, plus extra margins}
+		if zoomFlag then
+			begin
+				testHeight := GetMainDevice^^.gdPMap^^.bounds.bottom - GetMainDevice^^.gdPMap^^.bounds.top + 128;
+				testWidth := GetMainDevice^^.gdPMap^^.bounds.right - GetMainDevice^^.gdPMap^^.bounds.left + 128;
+			end
+		else
+			begin
+				testHeight := 322 + 128;
+				testWidth := 512 + 128;
+			end;
+
+{Sum an approximation of the amount of memory needed.}
+{Many calculations are not simplified below for clarity}
+{Note that many small memory structures are not counted, so we have to reserve a bit extra}
+{in the end.}
+
+		offScreenMem := testDepth * testHeight * testWidth div 8; {Size of pixel data of one offscreen buffer.}
+		faceMem := (32 * 32 * TestDepth div 8) + sizeof(Sprite);
+		if testDepth = 4 then
+			faceMem := faceMem * 2; {In 4 bits, we need a bit more, close to twice the amount}
+
+		GetMemoryDemand := 2 * offScreenMem + faceCount * faceMem + spriteCount * sizeof(sprite);
+	end;
+
+{ -------------------------------------------------------------------- }
+{									Main								}
+{ -------------------------------------------------------------------- }
+
+begin
+	SkelInit(6, nil);				{ initialize }
+	SetUpMenus;				{ install menu handlers }
+
+{Is the user holding down a modifier key? If so, we should use the whole screen.}
+	GetKeys(keys);
+	zoomFlag := keys[55] or keys[56] or keys[58] or keys[59]; {cmd, shift, alt, ctrl}
+
+{Before starting, check if we have enough memory! UnloadScrap, check depth and dimensions against FreeMem}
+	ignore := UnloadScrap; {Ignore any error}
+
+	if GetMemoryDemand + 50000 > FreeMem then {Unreasonably little memory!}
+		begin
+			ReportStr(MyGetIndString(memerrStrID));{'Too little memory. Give me some more (or use fewer colors).'}
+			halt; {We can quit without any cleanup. (I.e. we havn't allocated any sound channel.)}
+		end;
+
+{Tell SAT that we want it to rescale the PICTs}
+	ConfigureSAT(true, kVPositionSort, kKindCollision, 32);
+
+{Send strings from resources to SAT, so the program can be localized.}
+	SATSetStrings(MyGetIndString(okStrID), MyGetIndString(yesStrID), MyGetIndString(noStrID), MyGetIndString(quitStrID), MyGetIndString(memerrStrID), MyGetIndString(noscreenStrID), MyGetIndString(satnopictStrID), MyGetIndString(nowindStrID));
+
+{ Initialize the Sprite Animation Toolkit, set up offscreen buffers and make the window. }
+	if zoomFlag then {if cmd, shift, alt, ctrl}
+		InitSAT(0, 0, 32000, 32000) {Very big - makes SAT cut it down to the main screen.}
+	else
+		InitSAT(0, 0, 512, 322); {Standard size}
+
+{ Init all the different parts of the game. }
+	GameWindInit;	{ Init the game window }
+	Loadsounds;		{ preload all sound resources }
+	InitScores;		{ Init the score module, check if a pref file should be created }
+	InitSettings;	{ Load the settings }
+
+{ Set the randseed to something that is random enough. }
+	randSeed := TickCount;
+
+	SkelEventHook(@DoEvt); { handle MultiFinder-events }
+
+	SkelMain;				{ loop 'til Quit selected }
+	SkelClobber;				{ clean up }
+	SATSoundShutUp;			{ Terminate sounds }
+end.

@@ -1,1 +1,1255 @@
-## Makefile for NCSA Telnet 2.6## Rick Watson# The University of Texas at Austin# Networking Services# r.watson@utexas.edu## 9/29/93## location of Kerberos common sources for NCSA/Brown -- might vary on your system.KSRC= ::krb:# DESLIB is only used if building a version that does not use the hooks into#  the Cornell driver -- no longer normally the case.#DESLIB= ":::ncsa:telsrc:deslib:des.lib"DESLIB=OBJS= ¶	:obj:debug.c.o ¶	:obj:configure.c.o ¶	:obj:prefs.c.o ¶	:obj:Sets.c.o ¶	:obj:binsubs.c.o ¶	:obj:bkgr.c.o ¶	:obj:ftpbin.c.o ¶	:obj:macutil.c.o ¶#	:obj:rcp.c.o ¶	:obj:iNetwork.c.o ¶	:obj:init.c.o ¶	:obj:ae.c.o ¶	:obj:Connections.c.o ¶	:obj:DlogUtils.c.o ¶	:obj:errors.c.o ¶	:obj:event.c.o ¶	:obj:maclook.c.o ¶	:obj:macros.c.o ¶	:obj:mainseg.c.o ¶	:obj:menuseg.c.o ¶	:obj:parse.c.o ¶	:obj:popup.c.o ¶	:obj:printing.c.o ¶	:obj:translate.c.o ¶	:obj:finger.c.o ¶	:obj:mydnr.c.o ¶	:obj:netevent.c.o ¶	:obj:dnr.c.o ¶	:obj:network.c.o ¶	:obj:rg0.c.o ¶#	:obj:rghp.c.o ¶	:obj:rgmp.c.o ¶	:obj:tekrgmac.c.o ¶	:obj:tekstor.c.o ¶	:obj:vgtek.c.o ¶	:obj:vdevice.c.o ¶	:obj:vr.c.o ¶	:obj:vrrgmac.c.o ¶	:obj:rsmac.c.o ¶	:obj:vsem.c.o ¶	:obj:vsinterf.c.o ¶	:obj:vsintern.c.o ¶	:obj:enc_des.c.o ¶	:obj:encrypt.c.o ¶	:obj:kerberos.c.o ¶	:obj:wdefpatch.c.o ¶	:obj:des_cornell.c.o ## How to compile most of the C programs#:obj: Ä ¶	: ¶	:config: ¶	:ftp: ¶	:init: ¶	:main: ¶	:network: ¶	:network:mactcp: ¶	:tek: ¶	:vr: ¶	:vs: ¶	{KSRC}includes = :config:,:ftp:,:init:,:main:,:network:,:network:mactcp:,:tek:,:vr:,:vs:,{KSRC}#COptions = -sym full -mbg ch8 -b -r -d MPW -d MAC -d NCSA_ENC -i {includes}COptions = -sym full -mbg ch8 -b -r -d MPW -d MAC -i {includes}:obj:.c.o Ä .c	C -o "{TargDir}{Default}.c.o" "{Default}.c" {COptions}## System headers dump file#:obj:sys.dump Ä sysheaders.c mpw.h	C -o :obj:sysheaders.c.o sysheaders.c {COptions}## build Telnet#LinkOptions = -srt -sym full -model farTelnet Ä {OBJS} "::--Telnet.rsrc"	Duplicate -y "::--Telnet.rsrc" "Telnet"	link -o Telnet -br on -d -t APPL -c NCSA {LinkOptions} -ra =preload ¶	 	{OBJS} ¶		{DESLIB} ¶		"{CLibraries}"StdCLib.o ¶ 		"{Libraries}"Interface.o ¶ 		"{Libraries}"Runtime.o ¶		-map > telnet.map# proto Ä {PTYPES}.proto.h.new Ä .c	mkptypes -A -e -W "{DepDir}{Default}.c" > "{TargDir}{Default}.proto.h.new"	equal -d -q "{DepDir}{Default}.proto.h" "{TargDir}{Default}.proto.h.new" || ¶		duplicate -y "{TargDir}{Default}.proto.h.new" "{DepDir}{Default}.proto.h"## tags#SRCS= ¶	:debug.c ¶	:debug.h ¶	:globaldefs.h ¶	:mpw.h ¶	:newresrc.h ¶	:resrcdefs.h ¶	:TelnetHeader.h ¶	:typedefs.h ¶	:config:configure.c ¶	:config:configure.proto.h ¶	:config:Preferences.h ¶	:config:prefs.c ¶	:config:prefs.proto.h ¶	:config:Sets.c ¶	:config:Sets.proto.h ¶	:ftp:binsubs.c ¶	:ftp:binsubs.proto.h ¶	:ftp:bkgr.c ¶	:ftp:bkgr.proto.h ¶	:ftp:ftpbin.c ¶	:ftp:ftpbin.proto.h ¶	:ftp:ftppi.h ¶	:ftp:macbinary.h ¶	:ftp:macutil.c ¶	:ftp:macutil.proto.h ¶	:ftp:rcp.c ¶	:init:iNetwork.c ¶	:init:iNetwork.proto.h ¶	:init:init.c ¶	:init:init.proto.h ¶	:main:ae.c ¶	:main:Connections.c ¶	:main:Connections.proto.h ¶	:main:DlogUtils.c ¶	:main:DlogUtils.proto.h ¶	:main:errors.c ¶	:main:telneterrors.h ¶	:main:errors.proto.h ¶	:main:event.c ¶	:main:event.proto.h ¶	:main:maclook.c ¶	:main:maclook.proto.h ¶	:main:macros.c ¶	:main:macros.proto.h ¶	:main:mainseg.c ¶	:main:mainseg.proto.h ¶	:main:menuseg.c ¶	:main:menuseg.proto.h ¶	:main:optsdebug.h ¶	:main:parse.c ¶	:main:parse.h ¶	:main:parse.proto.h ¶	:main:popup.c ¶	:main:Popup.h ¶	:main:popup.proto.h ¶	:main:printing.c ¶	:main:printing.proto.h ¶	:main:translate.c ¶	:main:translate.proto.h ¶	:network:finger.c ¶	:network:finger.proto.h ¶	:network:fingerstructure.h ¶	:network:InternalEvents.h ¶	:network:mydnr.c ¶	:network:mydnr.proto.h ¶	:network:netevent.c ¶	:network:netevent.proto.h ¶	:network:MacTCP:AddressXlation.h ¶	:network:MacTCP:dnr.c ¶	:network:MacTCP:dnr.proto.h ¶	:network:MacTCP:GetMyIPAddr.h ¶	:network:MacTCP:MacTCPCommonTypes.h ¶	:network:MacTCP:MyMacTCPstructures.h ¶	:network:MacTCP:network.c ¶	:network:MacTCP:network.proto.h ¶	:network:MacTCP:TCPPB.h ¶	:tek:rg0.c ¶	:tek:rg0.proto.h ¶	:tek:rghp.c ¶	:tek:rghp.proto.h ¶	:tek:rgmp.c ¶	:tek:rgmp.proto.h ¶	:tek:tekdefs.h ¶	:tek:tekrgmac.c ¶	:tek:tekrgmac.proto.h ¶	:tek:tekstor.c ¶	:tek:tekstor.proto.h ¶	:tek:vgfont.h ¶	:tek:vgtek.c ¶	:tek:vgtek.proto.h ¶	:vr:vdevice.c ¶	:vr:vdevice.h ¶	:vr:vdevice.proto.h ¶	:vr:vr.c ¶	:vr:vr.h ¶	:vr:vr.proto.h ¶	:vr:vrrgmac.c ¶	:vr:vrrgmac.proto.h ¶	:vs:rsdefs.h ¶	:vs:rsmac.c ¶	:vs:rsmac.proto.h ¶	:vs:vsdata.h ¶	:vs:vsem.c ¶	:vs:vsem.proto.h ¶	:vs:vsinit.h ¶	:vs:vsinterf.c ¶	:vs:vsinterf.proto.h ¶	:vs:vsintern.c ¶	:vs:vsintern.proto.h ¶	:vs:vskeys.h ¶	:vs:wind.h ¶	:main:wdefpatch.c ¶	{KSRC}enc_des.c ¶	{KSRC}encrypt.c ¶	{KSRC}encrypt.h ¶	{KSRC}kerberos.c ¶	{KSRC}KrbDriver.h ¶	{KSRC}desproto.h ¶	{KSRC}glue.h ¶	{KSRC}des_cornell.c tags Ä {SRCS}	CTags -local -update -d MPW -d MAC -i {Includes} {NewerDeps}## dependancies# Build "depend" to rebuild the dependancies. You only need to do this if you # change which include files are included by various sources.  Due to the .cpp# files only depending on the .c files, you should "full build" this target unless# you are only making small changes.#CPP = ¶	:cpp:debug.cpp ¶	:cpp:sysheaders.cpp ¶	:cpp:configure.cpp ¶	:cpp:prefs.cpp ¶	:cpp:Sets.cpp ¶	:cpp:binsubs.cpp ¶	:cpp:bkgr.cpp ¶	:cpp:ftpbin.cpp ¶	:cpp:macutil.cpp ¶	:cpp:rcp.cpp ¶	:cpp:iNetwork.cpp ¶	:cpp:init.cpp ¶	:cpp:ae.cpp ¶	:cpp:Connections.cpp ¶	:cpp:DlogUtils.cpp ¶	:cpp:errors.cpp ¶	:cpp:event.cpp ¶	:cpp:maclook.cpp ¶	:cpp:macros.cpp ¶	:cpp:mainseg.cpp ¶	:cpp:menuseg.cpp ¶	:cpp:parse.cpp ¶	:cpp:popup.cpp ¶	:cpp:printing.cpp ¶	:cpp:translate.cpp ¶	:cpp:finger.cpp ¶	:cpp:mydnr.cpp ¶	:cpp:netevent.cpp ¶	:cpp:dnr.cpp ¶	:cpp:network.cpp ¶	:cpp:rg0.cpp ¶	:cpp:rghp.cpp ¶	:cpp:rgmp.cpp ¶	:cpp:tekrgmac.cpp ¶	:cpp:tekstor.cpp ¶	:cpp:vgtek.cpp ¶	:cpp:vdevice.cpp ¶	:cpp:vr.cpp ¶	:cpp:vrrgmac.cpp ¶	:cpp:rsmac.cpp ¶	:cpp:vsem.cpp ¶	:cpp:vsinterf.cpp ¶	:cpp:vsintern.cpp ¶	:cpp:enc_des.cpp ¶	:cpp:encrypt.cpp ¶	:cpp:kerberos.cpp ¶	:cpp:wdefpatch.cpp ¶	:cpp:des_cornell.cpp# default rule for relating object files to source files:cpp: Ä ¶	: ¶	:config: ¶	:ftp: ¶	:init: ¶	:main: ¶	:network: ¶	:network:mactcp: ¶	:tek: ¶	:vr: ¶	:vs: ¶	{KSRC}# Rule to build .cpp preprocessor output files. Syntax check only and write cpp output..cpp Ä .c	C "{DepDir}{Default}.c" -e2 -c {COptions} > "{TargDir}{Default}.cpp"	depend Ä {CPP}	perl {mpw}local:depend.perl Makefile ":cpp:" ":obj:" {CPP}	Rename -y Makefile Makefile.bak	Rename -y Makefile.new Makefile	Echo "Include ¶"Makefile.bak¶" 'ckid';" | Rez -m -a -o "Makefile" #Transfer the ckid# DO NOT DELETE THIS LINE -- mkdep uses it.# DO NOT PUT ANYTHING AFTER THIS LINE. IT WILL GO AWAY.:obj:debug.c.o Ä "TelnetHeader.h":obj:debug.c.o Ä "::krb:kerberos.h":obj:debug.c.o Ä ":vs:vsinterf.proto.h":obj:debug.c.o Ä ":obj:sys.dump":obj:debug.c.o Ä "debug.c":obj:debug.c.o Ä ":vs:wind.h":obj:debug.c.o Ä "typedefs.h":obj:debug.c.o Ä ":vs:rsmac.proto.h":obj:debug.c.o Ä ":main:parse.proto.h":obj:debug.c.o Ä ":vs:vsdata.h":obj:debug.c.o Ä "resrcdefs.h":obj:debug.c.o Ä "::krb:KrbDriver.h":obj:debug.c.o Ä ":config:Preferences.h":obj:debug.c.o Ä "::krb:encrypt.h":obj:debug.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:debug.c.o Ä "debug.h":obj:debug.c.o Ä "globaldefs.h":obj:sysheaders.c.o Ä "sysheaders.c":obj:sysheaders.c.o Ä "mpw.h":obj:configure.c.o Ä "TelnetHeader.h":obj:configure.c.o Ä ":obj:sys.dump":obj:configure.c.o Ä "typedefs.h":obj:configure.c.o Ä ":ftp:macutil.proto.h":obj:configure.c.o Ä ":ftp:bkgr.proto.h":obj:configure.c.o Ä "resrcdefs.h":obj:configure.c.o Ä ":main:DlogUtils.proto.h":obj:configure.c.o Ä ":config:Preferences.h":obj:configure.c.o Ä ":config:configure.proto.h":obj:configure.c.o Ä ":network:netevent.proto.h":obj:configure.c.o Ä ":config:prefs.proto.h":obj:configure.c.o Ä "globaldefs.h":obj:configure.c.o Ä ":config:configure.c":obj:configure.c.o Ä "newresrc.h":obj:configure.c.o Ä ":main:popup.proto.h":obj:configure.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:configure.c.o Ä ":main:menuseg.proto.h":obj:configure.c.o Ä ":main:popup.h":obj:prefs.c.o Ä "TelnetHeader.h":obj:prefs.c.o Ä ":obj:sys.dump":obj:prefs.c.o Ä "typedefs.h":obj:prefs.c.o Ä ":config:prefs.c":obj:prefs.c.o Ä ":main:telneterrors.h":obj:prefs.c.o Ä "resrcdefs.h":obj:prefs.c.o Ä ":main:errors.proto.h":obj:prefs.c.o Ä ":config:Preferences.h":obj:prefs.c.o Ä ":main:mainseg.proto.h":obj:prefs.c.o Ä ":config:prefs.proto.h":obj:prefs.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:prefs.c.o Ä "debug.h":obj:prefs.c.o Ä "globaldefs.h":obj:Sets.c.o Ä "TelnetHeader.h":obj:Sets.c.o Ä ":obj:sys.dump":obj:Sets.c.o Ä "typedefs.h":obj:Sets.c.o Ä ":config:Sets.c":obj:Sets.c.o Ä ":main:telneterrors.h":obj:Sets.c.o Ä "resrcdefs.h":obj:Sets.c.o Ä ":config:Preferences.h":obj:Sets.c.o Ä ":config:prefs.proto.h":obj:Sets.c.o Ä "debug.h":obj:Sets.c.o Ä "globaldefs.h":obj:Sets.c.o Ä ":vs:vsinterf.proto.h":obj:Sets.c.o Ä "::krb:kerberos.h":obj:Sets.c.o Ä ":vs:wind.h":obj:Sets.c.o Ä ":main:Connections.proto.h":obj:Sets.c.o Ä ":vs:rsmac.proto.h":obj:Sets.c.o Ä ":vs:vsdata.h":obj:Sets.c.o Ä ":config:Sets.proto.h":obj:Sets.c.o Ä "::krb:KrbDriver.h":obj:Sets.c.o Ä ":main:macros.proto.h":obj:Sets.c.o Ä ":main:errors.proto.h":obj:Sets.c.o Ä "::krb:encrypt.h":obj:Sets.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:binsubs.c.o Ä "TelnetHeader.h":obj:binsubs.c.o Ä ":obj:sys.dump":obj:binsubs.c.o Ä "typedefs.h":obj:binsubs.c.o Ä ":main:telneterrors.h":obj:binsubs.c.o Ä ":ftp:bkgr.proto.h":obj:binsubs.c.o Ä "resrcdefs.h":obj:binsubs.c.o Ä ":ftp:binsubs.proto.h":obj:binsubs.c.o Ä ":config:Preferences.h":obj:binsubs.c.o Ä ":ftp:binsubs.c":obj:binsubs.c.o Ä "debug.h":obj:binsubs.c.o Ä "globaldefs.h":obj:binsubs.c.o Ä ":main:maclook.proto.h":obj:binsubs.c.o Ä ":ftp:MacBinary.h":obj:binsubs.c.o Ä ":main:translate.proto.h":obj:binsubs.c.o Ä ":main:errors.proto.h":obj:binsubs.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:bkgr.c.o Ä "TelnetHeader.h":obj:bkgr.c.o Ä ":network:mydnr.proto.h":obj:bkgr.c.o Ä ":network:mactcp:network.proto.h":obj:bkgr.c.o Ä ":obj:sys.dump":obj:bkgr.c.o Ä "typedefs.h":obj:bkgr.c.o Ä ":ftp:macutil.proto.h":obj:bkgr.c.o Ä ":main:telneterrors.h":obj:bkgr.c.o Ä ":ftp:bkgr.proto.h":obj:bkgr.c.o Ä "resrcdefs.h":obj:bkgr.c.o Ä ":ftp:bkgr.c":obj:bkgr.c.o Ä ":main:DlogUtils.proto.h":obj:bkgr.c.o Ä ":ftp:binsubs.proto.h":obj:bkgr.c.o Ä ":config:Preferences.h":obj:bkgr.c.o Ä ":main:mainseg.proto.h":obj:bkgr.c.o Ä ":network:netevent.proto.h":obj:bkgr.c.o Ä "globaldefs.h":obj:bkgr.c.o Ä ":vs:vsinterf.proto.h":obj:bkgr.c.o Ä "::krb:kerberos.h":obj:bkgr.c.o Ä ":vs:wind.h":obj:bkgr.c.o Ä ":main:maclook.proto.h":obj:bkgr.c.o Ä ":ftp:macbinary.h":obj:bkgr.c.o Ä ":vs:vsdata.h":obj:bkgr.c.o Ä "::krb:KrbDriver.h":obj:bkgr.c.o Ä ":main:translate.proto.h":obj:bkgr.c.o Ä ":main:errors.proto.h":obj:bkgr.c.o Ä ":network:InternalEvents.h":obj:bkgr.c.o Ä "::krb:encrypt.h":obj:bkgr.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:bkgr.c.o Ä ":main:menuseg.proto.h":obj:ftpbin.c.o Ä "TelnetHeader.h":obj:ftpbin.c.o Ä ":network:mydnr.proto.h":obj:ftpbin.c.o Ä ":network:mactcp:network.proto.h":obj:ftpbin.c.o Ä ":obj:sys.dump":obj:ftpbin.c.o Ä ":vs:VSkeys.h":obj:ftpbin.c.o Ä "typedefs.h":obj:ftpbin.c.o Ä ":ftp:macutil.proto.h":obj:ftpbin.c.o Ä ":ftp:bkgr.proto.h":obj:ftpbin.c.o Ä "resrcdefs.h":obj:ftpbin.c.o Ä ":ftp:binsubs.proto.h":obj:ftpbin.c.o Ä ":config:Preferences.h":obj:ftpbin.c.o Ä ":network:netevent.proto.h":obj:ftpbin.c.o Ä "debug.h":obj:ftpbin.c.o Ä "globaldefs.h":obj:ftpbin.c.o Ä ":ftp:ftpbin.proto.h":obj:ftpbin.c.o Ä ":vs:vsinterf.proto.h":obj:ftpbin.c.o Ä ":ftp:ftpbin.c":obj:ftpbin.c.o Ä "::krb:kerberos.h":obj:ftpbin.c.o Ä ":main:maclook.proto.h":obj:ftpbin.c.o Ä ":vs:wind.h":obj:ftpbin.c.o Ä ":main:Connections.proto.h":obj:ftpbin.c.o Ä ":ftp:macbinary.h":obj:ftpbin.c.o Ä ":vs:rsmac.proto.h":obj:ftpbin.c.o Ä ":main:parse.proto.h":obj:ftpbin.c.o Ä ":vs:vsdata.h":obj:ftpbin.c.o Ä "::krb:KrbDriver.h":obj:ftpbin.c.o Ä ":ftp:ftppi.h":obj:ftpbin.c.o Ä ":network:InternalEvents.h":obj:ftpbin.c.o Ä "::krb:encrypt.h":obj:ftpbin.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:ftpbin.c.o Ä ":main:menuseg.proto.h":obj:macutil.c.o Ä "TelnetHeader.h":obj:macutil.c.o Ä ":obj:sys.dump":obj:macutil.c.o Ä ":ftp:macutil.c":obj:macutil.c.o Ä ":main:maclook.proto.h":obj:macutil.c.o Ä "typedefs.h":obj:macutil.c.o Ä ":ftp:macutil.proto.h":obj:macutil.c.o Ä ":main:telneterrors.h":obj:macutil.c.o Ä "resrcdefs.h":obj:macutil.c.o Ä ":main:DlogUtils.proto.h":obj:macutil.c.o Ä ":main:errors.proto.h":obj:macutil.c.o Ä ":config:Preferences.h":obj:macutil.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:macutil.c.o Ä "debug.h":obj:macutil.c.o Ä "globaldefs.h":obj:rcp.c.o Ä ":ftp:rcp.c":obj:iNetwork.c.o Ä ":init:iNetwork.proto.h":obj:iNetwork.c.o Ä "TelnetHeader.h":obj:iNetwork.c.o Ä ":network:mactcp:network.proto.h":obj:iNetwork.c.o Ä ":obj:sys.dump":obj:iNetwork.c.o Ä ":init:iNetwork.c":obj:iNetwork.c.o Ä "typedefs.h":obj:iNetwork.c.o Ä ":ftp:bkgr.proto.h":obj:iNetwork.c.o Ä ":main:telneterrors.h":obj:iNetwork.c.o Ä "resrcdefs.h":obj:iNetwork.c.o Ä ":main:errors.proto.h":obj:iNetwork.c.o Ä ":network:InternalEvents.h":obj:iNetwork.c.o Ä ":config:Preferences.h":obj:iNetwork.c.o Ä ":network:netevent.proto.h":obj:iNetwork.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:iNetwork.c.o Ä "debug.h":obj:iNetwork.c.o Ä "globaldefs.h":obj:init.c.o Ä "typedefs.h":obj:init.c.o Ä "resrcdefs.h":obj:init.c.o Ä ":main:DlogUtils.proto.h":obj:init.c.o Ä ":config:Preferences.h":obj:init.c.o Ä ":init:init.proto.h":obj:init.c.o Ä "debug.h":obj:init.c.o Ä ":network:mactcp:dnr.proto.h":obj:init.c.o Ä ":vs:rsmac.proto.h":obj:init.c.o Ä "::krb:KrbDriver.h":obj:init.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:init.c.o Ä ":main:menuseg.proto.h":obj:init.c.o Ä ":vr:vrrgmac.proto.h":obj:init.c.o Ä "TelnetHeader.h":obj:init.c.o Ä ":init:iNetwork.proto.h":obj:init.c.o Ä ":tek:tekrgmac.proto.h":obj:init.c.o Ä ":obj:sys.dump":obj:init.c.o Ä ":main:telneterrors.h":obj:init.c.o Ä ":ftp:binsubs.proto.h":obj:init.c.o Ä "::krb:desproto.h":obj:init.c.o Ä ":tek:vgtek.proto.h":obj:init.c.o Ä ":main:mainseg.proto.h":obj:init.c.o Ä ":config:prefs.proto.h":obj:init.c.o Ä "globaldefs.h":obj:init.c.o Ä ":init:init.c":obj:init.c.o Ä "::krb:kerberos.h":obj:init.c.o Ä ":vs:vsinterf.proto.h":obj:init.c.o Ä ":vs:wind.h":obj:init.c.o Ä ":ftp:MacBinary.h":obj:init.c.o Ä ":vs:vsdata.h":obj:init.c.o Ä ":config:Sets.proto.h":obj:init.c.o Ä ":main:translate.proto.h":obj:init.c.o Ä ":main:errors.proto.h":obj:init.c.o Ä ":main:macros.proto.h":obj:init.c.o Ä ":vr:vr.proto.h":obj:init.c.o Ä "::krb:encrypt.h":obj:init.c.o Ä ":vr:vr.h":obj:init.c.o Ä ":main:ae.proto.h":obj:ae.c.o Ä "TelnetHeader.h":obj:ae.c.o Ä ":obj:sys.dump":obj:ae.c.o Ä "typedefs.h":obj:ae.c.o Ä ":config:Sets.proto.h":obj:ae.c.o Ä "resrcdefs.h":obj:ae.c.o Ä ":config:Preferences.h":obj:ae.c.o Ä ":main:ae.c":obj:ae.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:ae.c.o Ä "debug.h":obj:ae.c.o Ä ":main:menuseg.proto.h":obj:ae.c.o Ä "globaldefs.h":obj:ae.c.o Ä ":main:ae.proto.h":obj:Connections.c.o Ä ":network:mydnr.proto.h":obj:Connections.c.o Ä "typedefs.h":obj:Connections.c.o Ä "resrcdefs.h":obj:Connections.c.o Ä ":main:DlogUtils.proto.h":obj:Connections.c.o Ä ":config:Preferences.h":obj:Connections.c.o Ä ":vs:rsmac.proto.h":obj:Connections.c.o Ä "::krb:KrbDriver.h":obj:Connections.c.o Ä ":main:event.proto.h":obj:Connections.c.o Ä ":network:InternalEvents.h":obj:Connections.c.o Ä ":main:Connections.c":obj:Connections.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:Connections.c.o Ä ":main:menuseg.proto.h":obj:Connections.c.o Ä ":vr:vrrgmac.proto.h":obj:Connections.c.o Ä "TelnetHeader.h":obj:Connections.c.o Ä ":obj:sys.dump":obj:Connections.c.o Ä ":tek:tekrgmac.proto.h":obj:Connections.c.o Ä ":network:mactcp:network.proto.h":obj:Connections.c.o Ä ":main:parse.h":obj:Connections.c.o Ä ":vs:vskeys.h":obj:Connections.c.o Ä ":main:telneterrors.h":obj:Connections.c.o Ä "::krb:encrypt.proto.h":obj:Connections.c.o Ä ":main:wdefpatch.proto.h":obj:Connections.c.o Ä ":tek:vgtek.proto.h":obj:Connections.c.o Ä ":config:configure.proto.h":obj:Connections.c.o Ä ":config:prefs.proto.h":obj:Connections.c.o Ä "globaldefs.h":obj:Connections.c.o Ä "::krb:kerberos.h":obj:Connections.c.o Ä ":vs:vsinterf.proto.h":obj:Connections.c.o Ä ":vs:wind.h":obj:Connections.c.o Ä ":main:maclook.proto.h":obj:Connections.c.o Ä ":main:Connections.proto.h":obj:Connections.c.o Ä ":vs:vsdata.h":obj:Connections.c.o Ä ":main:parse.proto.h":obj:Connections.c.o Ä ":main:errors.proto.h":obj:Connections.c.o Ä ":vr:vr.proto.h":obj:Connections.c.o Ä ":main:popup.proto.h":obj:Connections.c.o Ä "::krb:encrypt.h":obj:Connections.c.o Ä ":vr:vr.h":obj:Connections.c.o Ä ":main:popup.h":obj:DlogUtils.c.o Ä "TelnetHeader.h":obj:DlogUtils.c.o Ä ":obj:sys.dump":obj:DlogUtils.c.o Ä "typedefs.h":obj:DlogUtils.c.o Ä "resrcdefs.h":obj:DlogUtils.c.o Ä ":main:DlogUtils.proto.h":obj:DlogUtils.c.o Ä "newresrc.h":obj:DlogUtils.c.o Ä ":config:Preferences.h":obj:DlogUtils.c.o Ä ":main:popup.proto.h":obj:DlogUtils.c.o Ä ":main:DlogUtils.c":obj:DlogUtils.c.o Ä ":network:netevent.proto.h":obj:DlogUtils.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:DlogUtils.c.o Ä ":main:Popup.h":obj:DlogUtils.c.o Ä "globaldefs.h":obj:errors.c.o Ä "TelnetHeader.h":obj:errors.c.o Ä ":obj:sys.dump":obj:errors.c.o Ä "typedefs.h":obj:errors.c.o Ä ":main:telneterrors.h":obj:errors.c.o Ä "resrcdefs.h":obj:errors.c.o Ä ":main:DlogUtils.proto.h":obj:errors.c.o Ä ":main:errors.proto.h":obj:errors.c.o Ä ":network:InternalEvents.h":obj:errors.c.o Ä ":config:Preferences.h":obj:errors.c.o Ä ":main:mainseg.proto.h":obj:errors.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:errors.c.o Ä ":main:errors.c":obj:errors.c.o Ä "globaldefs.h":obj:event.c.o Ä ":vr:vrrgmac.proto.h":obj:event.c.o Ä "TelnetHeader.h":obj:event.c.o Ä ":tek:tekrgmac.proto.h":obj:event.c.o Ä ":network:mydnr.proto.h":obj:event.c.o Ä ":network:mactcp:network.proto.h":obj:event.c.o Ä ":obj:sys.dump":obj:event.c.o Ä ":vs:VSkeys.h":obj:event.c.o Ä "typedefs.h":obj:event.c.o Ä ":ftp:bkgr.proto.h":obj:event.c.o Ä "resrcdefs.h":obj:event.c.o Ä ":config:Preferences.h":obj:event.c.o Ä ":network:netevent.proto.h":obj:event.c.o Ä "debug.h":obj:event.c.o Ä "globaldefs.h":obj:event.c.o Ä ":ftp:ftpbin.proto.h":obj:event.c.o Ä ":vs:vsinterf.proto.h":obj:event.c.o Ä "::krb:kerberos.h":obj:event.c.o Ä ":main:maclook.proto.h":obj:event.c.o Ä ":vs:wind.h":obj:event.c.o Ä ":main:Connections.proto.h":obj:event.c.o Ä ":vs:rsmac.proto.h":obj:event.c.o Ä ":main:parse.proto.h":obj:event.c.o Ä ":vs:vsdata.h":obj:event.c.o Ä "::krb:KrbDriver.h":obj:event.c.o Ä ":main:translate.proto.h":obj:event.c.o Ä ":main:event.proto.h":obj:event.c.o Ä ":main:macros.proto.h":obj:event.c.o Ä ":network:InternalEvents.h":obj:event.c.o Ä ":main:event.c":obj:event.c.o Ä "::krb:encrypt.h":obj:event.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:event.c.o Ä ":main:menuseg.proto.h":obj:maclook.c.o Ä ":network:mydnr.proto.h":obj:maclook.c.o Ä "typedefs.h":obj:maclook.c.o Ä ":ftp:macutil.proto.h":obj:maclook.c.o Ä "resrcdefs.h":obj:maclook.c.o Ä ":main:DlogUtils.proto.h":obj:maclook.c.o Ä ":config:Preferences.h":obj:maclook.c.o Ä ":vs:rsmac.proto.h":obj:maclook.c.o Ä "::krb:KrbDriver.h":obj:maclook.c.o Ä ":main:event.proto.h":obj:maclook.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:maclook.c.o Ä ":main:menuseg.proto.h":obj:maclook.c.o Ä ":vr:vrrgmac.proto.h":obj:maclook.c.o Ä "TelnetHeader.h":obj:maclook.c.o Ä ":network:mactcp:network.proto.h":obj:maclook.c.o Ä ":obj:sys.dump":obj:maclook.c.o Ä ":tek:tekrgmac.proto.h":obj:maclook.c.o Ä ":vs:vskeys.h":obj:maclook.c.o Ä ":main:telneterrors.h":obj:maclook.c.o Ä ":tek:vgtek.proto.h":obj:maclook.c.o Ä ":network:netevent.proto.h":obj:maclook.c.o Ä ":config:prefs.proto.h":obj:maclook.c.o Ä "globaldefs.h":obj:maclook.c.o Ä "::krb:kerberos.h":obj:maclook.c.o Ä ":main:maclook.c":obj:maclook.c.o Ä ":vs:vsinterf.proto.h":obj:maclook.c.o Ä ":main:maclook.proto.h":obj:maclook.c.o Ä ":vs:wind.h":obj:maclook.c.o Ä ":vs:vsdata.h":obj:maclook.c.o Ä ":main:errors.proto.h":obj:maclook.c.o Ä ":vr:vr.proto.h":obj:maclook.c.o Ä ":main:popup.proto.h":obj:maclook.c.o Ä "::krb:encrypt.h":obj:maclook.c.o Ä ":vr:vr.h":obj:maclook.c.o Ä ":main:popup.h":obj:macros.c.o Ä ":ftp:ftpbin.proto.h":obj:macros.c.o Ä "TelnetHeader.h":obj:macros.c.o Ä ":vs:vsinterf.proto.h":obj:macros.c.o Ä "::krb:kerberos.h":obj:macros.c.o Ä ":network:mactcp:network.proto.h":obj:macros.c.o Ä ":obj:sys.dump":obj:macros.c.o Ä ":vs:wind.h":obj:macros.c.o Ä "typedefs.h":obj:macros.c.o Ä ":vs:vsdata.h":obj:macros.c.o Ä ":main:parse.proto.h":obj:macros.c.o Ä "resrcdefs.h":obj:macros.c.o Ä ":main:DlogUtils.proto.h":obj:macros.c.o Ä "::krb:KrbDriver.h":obj:macros.c.o Ä ":main:event.proto.h":obj:macros.c.o Ä ":main:translate.proto.h":obj:macros.c.o Ä ":main:macros.proto.h":obj:macros.c.o Ä ":config:Preferences.h":obj:macros.c.o Ä "::krb:encrypt.h":obj:macros.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:macros.c.o Ä ":main:macros.c":obj:macros.c.o Ä "globaldefs.h":obj:mainseg.c.o Ä "typedefs.h":obj:mainseg.c.o Ä "resrcdefs.h":obj:mainseg.c.o Ä ":main:printing.proto.h":obj:mainseg.c.o Ä ":config:Preferences.h":obj:mainseg.c.o Ä ":init:init.proto.h":obj:mainseg.c.o Ä ":network:mactcp:dnr.proto.h":obj:mainseg.c.o Ä ":ftp:ftpbin.proto.h":obj:mainseg.c.o Ä ":vs:rsmac.proto.h":obj:mainseg.c.o Ä ":config:sets.proto.h":obj:mainseg.c.o Ä "::krb:KrbDriver.h":obj:mainseg.c.o Ä ":main:event.proto.h":obj:mainseg.c.o Ä ":main:mainseg.c":obj:mainseg.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:mainseg.c.o Ä "TelnetHeader.h":obj:mainseg.c.o Ä ":obj:sys.dump":obj:mainseg.c.o Ä ":network:mactcp:network.proto.h":obj:mainseg.c.o Ä ":ftp:bkgr.proto.h":obj:mainseg.c.o Ä ":ftp:binsubs.proto.h":obj:mainseg.c.o Ä ":tek:vgtek.proto.h":obj:mainseg.c.o Ä ":vs:vsem.proto.h":obj:mainseg.c.o Ä ":config:configure.proto.h":obj:mainseg.c.o Ä ":main:mainseg.proto.h":obj:mainseg.c.o Ä ":network:netevent.proto.h":obj:mainseg.c.o Ä "globaldefs.h":obj:mainseg.c.o Ä ":tek:rgmp.proto.h":obj:mainseg.c.o Ä "::krb:kerberos.h":obj:mainseg.c.o Ä ":main:maclook.proto.h":obj:mainseg.c.o Ä ":vs:wind.h":obj:mainseg.c.o Ä ":ftp:MacBinary.h":obj:mainseg.c.o Ä ":tek:rg0.proto.h":obj:mainseg.c.o Ä ":vr:vr.proto.h":obj:mainseg.c.o Ä ":main:macros.proto.h":obj:mainseg.c.o Ä "::krb:encrypt.h":obj:mainseg.c.o Ä ":vr:vr.h":obj:menuseg.c.o Ä ":network:mydnr.proto.h":obj:menuseg.c.o Ä "typedefs.h":obj:menuseg.c.o Ä "resrcdefs.h":obj:menuseg.c.o Ä ":main:DlogUtils.proto.h":obj:menuseg.c.o Ä ":main:printing.proto.h":obj:menuseg.c.o Ä ":config:Preferences.h":obj:menuseg.c.o Ä "debug.h":obj:menuseg.c.o Ä ":vs:rsmac.proto.h":obj:menuseg.c.o Ä "::krb:KrbDriver.h":obj:menuseg.c.o Ä ":main:event.proto.h":obj:menuseg.c.o Ä ":network:InternalEvents.h":obj:menuseg.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:menuseg.c.o Ä ":main:menuseg.proto.h":obj:menuseg.c.o Ä ":vr:vrrgmac.proto.h":obj:menuseg.c.o Ä "TelnetHeader.h":obj:menuseg.c.o Ä ":obj:sys.dump":obj:menuseg.c.o Ä ":network:mactcp:network.proto.h":obj:menuseg.c.o Ä ":tek:tekrgmac.proto.h":obj:menuseg.c.o Ä ":main:telneterrors.h":obj:menuseg.c.o Ä ":tek:vgtek.proto.h":obj:menuseg.c.o Ä ":config:configure.proto.h":obj:menuseg.c.o Ä ":main:mainseg.proto.h":obj:menuseg.c.o Ä ":network:netevent.proto.h":obj:menuseg.c.o Ä "globaldefs.h":obj:menuseg.c.o Ä "::krb:kerberos.h":obj:menuseg.c.o Ä ":tek:rgmp.proto.h":obj:menuseg.c.o Ä ":vs:vsinterf.proto.h":obj:menuseg.c.o Ä ":vs:wind.h":obj:menuseg.c.o Ä ":main:maclook.proto.h":obj:menuseg.c.o Ä ":main:Connections.proto.h":obj:menuseg.c.o Ä ":main:parse.proto.h":obj:menuseg.c.o Ä ":vs:vsdata.h":obj:menuseg.c.o Ä ":config:Sets.proto.h":obj:menuseg.c.o Ä ":main:translate.proto.h":obj:menuseg.c.o Ä ":main:errors.proto.h":obj:menuseg.c.o Ä ":main:macros.proto.h":obj:menuseg.c.o Ä "::krb:encrypt.h":obj:menuseg.c.o Ä ":main:menuseg.c":obj:parse.c.o Ä "TelnetHeader.h":obj:parse.c.o Ä ":tek:tekrgmac.proto.h":obj:parse.c.o Ä ":network:mactcp:network.proto.h":obj:parse.c.o Ä ":main:parse.h":obj:parse.c.o Ä ":obj:sys.dump":obj:parse.c.o Ä "typedefs.h":obj:parse.c.o Ä "resrcdefs.h":obj:parse.c.o Ä "::krb:encrypt.proto.h":obj:parse.c.o Ä ":config:Preferences.h":obj:parse.c.o Ä ":main:wdefpatch.proto.h":obj:parse.c.o Ä ":tek:vgtek.proto.h":obj:parse.c.o Ä "debug.h":obj:parse.c.o Ä ":main:parse.c":obj:parse.c.o Ä "globaldefs.h":obj:parse.c.o Ä "::krb:kerberos.proto.h":obj:parse.c.o Ä "::krb:kerberos.h":obj:parse.c.o Ä ":vs:vsinterf.proto.h":obj:parse.c.o Ä ":vs:wind.h":obj:parse.c.o Ä ":main:maclook.proto.h":obj:parse.c.o Ä ":main:parse.proto.h":obj:parse.c.o Ä ":vs:vsdata.h":obj:parse.c.o Ä "::krb:KrbDriver.h":obj:parse.c.o Ä ":vr:vr.proto.h":obj:parse.c.o Ä "::krb:encrypt.h":obj:parse.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:parse.c.o Ä ":vr:vr.h":obj:parse.c.o Ä ":main:menuseg.proto.h":obj:popup.c.o Ä "TelnetHeader.h":obj:popup.c.o Ä ":obj:sys.dump":obj:popup.c.o Ä "typedefs.h":obj:popup.c.o Ä "resrcdefs.h":obj:popup.c.o Ä ":config:Preferences.h":obj:popup.c.o Ä ":main:popup.proto.h":obj:popup.c.o Ä ":main:popup.c":obj:popup.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:popup.c.o Ä ":main:popup.h":obj:popup.c.o Ä "globaldefs.h":obj:printing.c.o Ä "TelnetHeader.h":obj:printing.c.o Ä ":tek:tekrgmac.proto.h":obj:printing.c.o Ä ":obj:sys.dump":obj:printing.c.o Ä ":main:printing.c":obj:printing.c.o Ä "typedefs.h":obj:printing.c.o Ä "resrcdefs.h":obj:printing.c.o Ä ":main:printing.proto.h":obj:printing.c.o Ä ":config:Preferences.h":obj:printing.c.o Ä ":tek:vgtek.proto.h":obj:printing.c.o Ä ":network:netevent.proto.h":obj:printing.c.o Ä "debug.h":obj:printing.c.o Ä "globaldefs.h":obj:printing.c.o Ä ":vs:vsinterf.proto.h":obj:printing.c.o Ä ":tek:rgmp.proto.h":obj:printing.c.o Ä "::krb:kerberos.h":obj:printing.c.o Ä ":vs:wind.h":obj:printing.c.o Ä ":vs:rsmac.proto.h":obj:printing.c.o Ä ":vs:vsdata.h":obj:printing.c.o Ä "::krb:KrbDriver.h":obj:printing.c.o Ä ":main:event.proto.h":obj:printing.c.o Ä "::krb:encrypt.h":obj:printing.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:translate.c.o Ä "TelnetHeader.h":obj:translate.c.o Ä ":vs:vsinterf.proto.h":obj:translate.c.o Ä "::krb:kerberos.h":obj:translate.c.o Ä ":obj:sys.dump":obj:translate.c.o Ä ":vs:wind.h":obj:translate.c.o Ä "typedefs.h":obj:translate.c.o Ä ":main:translate.c":obj:translate.c.o Ä ":main:telneterrors.h":obj:translate.c.o Ä ":vs:vsdata.h":obj:translate.c.o Ä "resrcdefs.h":obj:translate.c.o Ä "::krb:KrbDriver.h":obj:translate.c.o Ä ":main:translate.proto.h":obj:translate.c.o Ä ":main:errors.proto.h":obj:translate.c.o Ä ":config:Preferences.h":obj:translate.c.o Ä "::krb:encrypt.h":obj:translate.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:translate.c.o Ä "debug.h":obj:translate.c.o Ä "globaldefs.h":obj:finger.c.o Ä ":network:finger.c":obj:mydnr.c.o Ä "TelnetHeader.h":obj:mydnr.c.o Ä ":network:mydnr.proto.h":obj:mydnr.c.o Ä ":obj:sys.dump":obj:mydnr.c.o Ä "typedefs.h":obj:mydnr.c.o Ä ":network:mactcp:AddressXlation.h":obj:mydnr.c.o Ä ":main:telneterrors.h":obj:mydnr.c.o Ä ":ftp:bkgr.proto.h":obj:mydnr.c.o Ä "resrcdefs.h":obj:mydnr.c.o Ä ":config:Preferences.h":obj:mydnr.c.o Ä ":network:netevent.proto.h":obj:mydnr.c.o Ä "globaldefs.h":obj:mydnr.c.o Ä ":main:Connections.proto.h":obj:mydnr.c.o Ä ":network:InternalEvents.h":obj:mydnr.c.o Ä ":main:errors.proto.h":obj:mydnr.c.o Ä ":network:mydnr.c":obj:mydnr.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:netevent.c.o Ä ":vr:vrrgmac.proto.h":obj:netevent.c.o Ä "TelnetHeader.h":obj:netevent.c.o Ä ":tek:tekrgmac.proto.h":obj:netevent.c.o Ä ":network:mactcp:network.proto.h":obj:netevent.c.o Ä ":network:mydnr.proto.h":obj:netevent.c.o Ä ":obj:sys.dump":obj:netevent.c.o Ä ":vs:vskeys.h":obj:netevent.c.o Ä "typedefs.h":obj:netevent.c.o Ä ":main:telneterrors.h":obj:netevent.c.o Ä ":ftp:bkgr.proto.h":obj:netevent.c.o Ä "resrcdefs.h":obj:netevent.c.o Ä ":config:Preferences.h":obj:netevent.c.o Ä ":network:netevent.c":obj:netevent.c.o Ä ":network:netevent.proto.h":obj:netevent.c.o Ä "debug.h":obj:netevent.c.o Ä "globaldefs.h":obj:netevent.c.o Ä ":ftp:ftpbin.proto.h":obj:netevent.c.o Ä "::krb:kerberos.h":obj:netevent.c.o Ä ":vs:wind.h":obj:netevent.c.o Ä ":main:maclook.proto.h":obj:netevent.c.o Ä ":main:Connections.proto.h":obj:netevent.c.o Ä ":vs:rsmac.proto.h":obj:netevent.c.o Ä ":main:parse.proto.h":obj:netevent.c.o Ä ":vs:vsdata.h":obj:netevent.c.o Ä "::krb:KrbDriver.h":obj:netevent.c.o Ä ":main:event.proto.h":obj:netevent.c.o Ä ":main:translate.proto.h":obj:netevent.c.o Ä ":main:errors.proto.h":obj:netevent.c.o Ä ":network:InternalEvents.h":obj:netevent.c.o Ä "::krb:encrypt.h":obj:netevent.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:netevent.c.o Ä ":main:menuseg.proto.h":obj:dnr.c.o Ä ":network:mactcp:dnr.proto.h":obj:dnr.c.o Ä ":network:mactcp:dnr.c":obj:network.c.o Ä "TelnetHeader.h":obj:network.c.o Ä ":network:mactcp:network.proto.h":obj:network.c.o Ä ":obj:sys.dump":obj:network.c.o Ä "typedefs.h":obj:network.c.o Ä ":main:telneterrors.h":obj:network.c.o Ä "resrcdefs.h":obj:network.c.o Ä "::krb:encrypt.proto.h":obj:network.c.o Ä ":config:Preferences.h":obj:network.c.o Ä ":network:mactcp:MyMacTCPstructures.h":obj:network.c.o Ä ":network:netevent.proto.h":obj:network.c.o Ä ":main:mainseg.proto.h":obj:network.c.o Ä "debug.h":obj:network.c.o Ä "globaldefs.h":obj:network.c.o Ä "::krb:kerberos.h":obj:network.c.o Ä ":main:maclook.proto.h":obj:network.c.o Ä ":vs:wind.h":obj:network.c.o Ä ":network:mactcp:getmyipaddr.h":obj:network.c.o Ä "::krb:KrbDriver.h":obj:network.c.o Ä ":network:mactcp:TCPPB.h":obj:network.c.o Ä ":main:errors.proto.h":obj:network.c.o Ä ":network:InternalEvents.h":obj:network.c.o Ä "::krb:encrypt.h":obj:network.c.o Ä ":network:mactcp:network.c":obj:network.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:network.c.o Ä ":main:menuseg.proto.h":obj:rg0.c.o Ä ":tek:rg0.c":obj:rg0.c.o Ä ":tek:rg0.proto.h":obj:rghp.c.o Ä ":tek:rghp.c":obj:rghp.c.o Ä ":tek:rghp.proto.h":obj:rgmp.c.o Ä "TelnetHeader.h":obj:rgmp.c.o Ä ":tek:rgmp.proto.h":obj:rgmp.c.o Ä ":obj:sys.dump":obj:rgmp.c.o Ä ":tek:rgmp.c":obj:rgmp.c.o Ä "typedefs.h":obj:rgmp.c.o Ä "resrcdefs.h":obj:rgmp.c.o Ä ":config:Preferences.h":obj:rgmp.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:rgmp.c.o Ä "globaldefs.h":obj:tekrgmac.c.o Ä "TelnetHeader.h":obj:tekrgmac.c.o Ä ":network:mydnr.proto.h":obj:tekrgmac.c.o Ä ":obj:sys.dump":obj:tekrgmac.c.o Ä ":tek:tekrgmac.proto.h":obj:tekrgmac.c.o Ä "typedefs.h":obj:tekrgmac.c.o Ä "resrcdefs.h":obj:tekrgmac.c.o Ä ":tek:tekrgmac.c":obj:tekrgmac.c.o Ä ":config:Preferences.h":obj:tekrgmac.c.o Ä ":tek:vgtek.proto.h":obj:tekrgmac.c.o Ä ":network:netevent.proto.h":obj:tekrgmac.c.o Ä "debug.h":obj:tekrgmac.c.o Ä "globaldefs.h":obj:tekrgmac.c.o Ä ":tek:rgmp.proto.h":obj:tekrgmac.c.o Ä ":main:maclook.proto.h":obj:tekrgmac.c.o Ä ":tek:rg0.proto.h":obj:tekrgmac.c.o Ä ":vs:rsmac.proto.h":obj:tekrgmac.c.o Ä ":tek:tekdefs.h":obj:tekrgmac.c.o Ä ":network:InternalEvents.h":obj:tekrgmac.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:tekstor.c.o Ä "TelnetHeader.h":obj:tekstor.c.o Ä ":tek:tekrgmac.proto.h":obj:tekstor.c.o Ä ":tek:rgmp.proto.h":obj:tekstor.c.o Ä ":obj:sys.dump":obj:tekstor.c.o Ä ":tek:tekstor.c":obj:tekstor.c.o Ä "typedefs.h":obj:tekstor.c.o Ä ":tek:rg0.proto.h":obj:tekstor.c.o Ä "resrcdefs.h":obj:tekstor.c.o Ä ":tek:tekdefs.h":obj:tekstor.c.o Ä ":config:Preferences.h":obj:tekstor.c.o Ä ":tek:vgtek.proto.h":obj:tekstor.c.o Ä ":tek:tekstor.proto.h":obj:tekstor.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:tekstor.c.o Ä "globaldefs.h":obj:vgtek.c.o Ä "TelnetHeader.h":obj:vgtek.c.o Ä ":tek:tekrgmac.proto.h":obj:vgtek.c.o Ä ":obj:sys.dump":obj:vgtek.c.o Ä "typedefs.h":obj:vgtek.c.o Ä ":tek:vgtek.c":obj:vgtek.c.o Ä "resrcdefs.h":obj:vgtek.c.o Ä ":config:Preferences.h":obj:vgtek.c.o Ä ":tek:vgtek.proto.h":obj:vgtek.c.o Ä "globaldefs.h":obj:vgtek.c.o Ä ":tek:rgmp.proto.h":obj:vgtek.c.o Ä "::krb:kerberos.h":obj:vgtek.c.o Ä ":vs:vsinterf.proto.h":obj:vgtek.c.o Ä ":main:maclook.proto.h":obj:vgtek.c.o Ä ":vs:wind.h":obj:vgtek.c.o Ä ":tek:rg0.proto.h":obj:vgtek.c.o Ä ":vs:vsdata.h":obj:vgtek.c.o Ä "::krb:KrbDriver.h":obj:vgtek.c.o Ä ":tek:vgfont.h":obj:vgtek.c.o Ä ":main:event.proto.h":obj:vgtek.c.o Ä ":tek:tekdefs.h":obj:vgtek.c.o Ä "::krb:encrypt.h":obj:vgtek.c.o Ä ":tek:tekstor.proto.h":obj:vgtek.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:vdevice.c.o Ä "TelnetHeader.h":obj:vdevice.c.o Ä ":vr:vdevice.proto.h":obj:vdevice.c.o Ä ":obj:sys.dump":obj:vdevice.c.o Ä "typedefs.h":obj:vdevice.c.o Ä "resrcdefs.h":obj:vdevice.c.o Ä ":config:Preferences.h":obj:vdevice.c.o Ä ":vr:vdevice.c":obj:vdevice.c.o Ä ":vr:vdevice.h":obj:vdevice.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:vdevice.c.o Ä "globaldefs.h":obj:vr.c.o Ä ":vr:vrrgmac.proto.h":obj:vr.c.o Ä "TelnetHeader.h":obj:vr.c.o Ä ":obj:sys.dump":obj:vr.c.o Ä "typedefs.h":obj:vr.c.o Ä "resrcdefs.h":obj:vr.c.o Ä ":vr:vr.c":obj:vr.c.o Ä ":vr:vr.proto.h":obj:vr.c.o Ä ":config:Preferences.h":obj:vr.c.o Ä ":vr:vr.h":obj:vr.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:vr.c.o Ä "globaldefs.h":obj:vrrgmac.c.o Ä ":vr:vrrgmac.proto.h":obj:vrrgmac.c.o Ä "TelnetHeader.h":obj:vrrgmac.c.o Ä ":vr:vdevice.proto.h":obj:vrrgmac.c.o Ä ":obj:sys.dump":obj:vrrgmac.c.o Ä ":main:maclook.proto.h":obj:vrrgmac.c.o Ä "typedefs.h":obj:vrrgmac.c.o Ä ":main:telneterrors.h":obj:vrrgmac.c.o Ä "resrcdefs.h":obj:vrrgmac.c.o Ä ":vr:vrrgmac.c":obj:vrrgmac.c.o Ä ":main:errors.proto.h":obj:vrrgmac.c.o Ä ":network:InternalEvents.h":obj:vrrgmac.c.o Ä ":vr:vr.proto.h":obj:vrrgmac.c.o Ä ":config:Preferences.h":obj:vrrgmac.c.o Ä ":vr:vr.h":obj:vrrgmac.c.o Ä ":vr:vdevice.h":obj:vrrgmac.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:vrrgmac.c.o Ä "debug.h":obj:vrrgmac.c.o Ä "globaldefs.h":obj:rsmac.c.o Ä "TelnetHeader.h":obj:rsmac.c.o Ä ":network:mactcp:network.proto.h":obj:rsmac.c.o Ä ":obj:sys.dump":obj:rsmac.c.o Ä ":vs:vskeys.h":obj:rsmac.c.o Ä "typedefs.h":obj:rsmac.c.o Ä ":vs:rsdefs.h":obj:rsmac.c.o Ä ":main:telneterrors.h":obj:rsmac.c.o Ä "resrcdefs.h":obj:rsmac.c.o Ä ":main:DlogUtils.proto.h":obj:rsmac.c.o Ä ":config:Preferences.h":obj:rsmac.c.o Ä ":main:wdefpatch.proto.h":obj:rsmac.c.o Ä ":config:configure.proto.h":obj:rsmac.c.o Ä "globaldefs.h":obj:rsmac.c.o Ä "::krb:kerberos.h":obj:rsmac.c.o Ä ":vs:vsinterf.proto.h":obj:rsmac.c.o Ä ":vs:wind.h":obj:rsmac.c.o Ä ":main:maclook.proto.h":obj:rsmac.c.o Ä ":vs:rsmac.proto.h":obj:rsmac.c.o Ä ":main:parse.proto.h":obj:rsmac.c.o Ä ":vs:vsdata.h":obj:rsmac.c.o Ä "::krb:KrbDriver.h":obj:rsmac.c.o Ä ":main:errors.proto.h":obj:rsmac.c.o Ä ":vs:vsintern.proto.h":obj:rsmac.c.o Ä "::krb:encrypt.h":obj:rsmac.c.o Ä ":vs:rsmac.c":obj:rsmac.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:rsmac.c.o Ä ":main:menuseg.proto.h":obj:vsem.c.o Ä "TelnetHeader.h":obj:vsem.c.o Ä ":obj:sys.dump":obj:vsem.c.o Ä ":vs:vskeys.h":obj:vsem.c.o Ä "typedefs.h":obj:vsem.c.o Ä "resrcdefs.h":obj:vsem.c.o Ä ":main:printing.proto.h":obj:vsem.c.o Ä ":config:Preferences.h":obj:vsem.c.o Ä ":vs:vsem.proto.h":obj:vsem.c.o Ä "debug.h":obj:vsem.c.o Ä "globaldefs.h":obj:vsem.c.o Ä ":vs:vsem.c":obj:vsem.c.o Ä ":vs:vsinterf.proto.h":obj:vsem.c.o Ä "::krb:kerberos.h":obj:vsem.c.o Ä ":main:maclook.proto.h":obj:vsem.c.o Ä ":vs:wind.h":obj:vsem.c.o Ä ":vs:rsmac.proto.h":obj:vsem.c.o Ä ":vs:vsdata.h":obj:vsem.c.o Ä "::krb:KrbDriver.h":obj:vsem.c.o Ä ":main:event.proto.h":obj:vsem.c.o Ä ":main:translate.proto.h":obj:vsem.c.o Ä ":vs:vsintern.proto.h":obj:vsem.c.o Ä "::krb:encrypt.h":obj:vsem.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:vsem.c.o Ä ":main:menuseg.proto.h":obj:vsinterf.c.o Ä "TelnetHeader.h":obj:vsinterf.c.o Ä ":obj:sys.dump":obj:vsinterf.c.o Ä ":vs:vskeys.h":obj:vsinterf.c.o Ä "typedefs.h":obj:vsinterf.c.o Ä "resrcdefs.h":obj:vsinterf.c.o Ä ":vs:vsinterf.c":obj:vsinterf.c.o Ä ":main:DlogUtils.proto.h":obj:vsinterf.c.o Ä ":config:Preferences.h":obj:vsinterf.c.o Ä ":vs:vsem.proto.h":obj:vsinterf.c.o Ä "debug.h":obj:vsinterf.c.o Ä "globaldefs.h":obj:vsinterf.c.o Ä ":vs:vsinterf.proto.h":obj:vsinterf.c.o Ä "::krb:kerberos.h":obj:vsinterf.c.o Ä ":main:maclook.proto.h":obj:vsinterf.c.o Ä ":vs:Wind.h":obj:vsinterf.c.o Ä ":vs:rsmac.proto.h":obj:vsinterf.c.o Ä ":vs:vsdata.h":obj:vsinterf.c.o Ä "::krb:KrbDriver.h":obj:vsinterf.c.o Ä ":vs:vsinit.h":obj:vsinterf.c.o Ä ":main:errors.proto.h":obj:vsinterf.c.o Ä ":vs:vsintern.proto.h":obj:vsinterf.c.o Ä "::krb:encrypt.h":obj:vsinterf.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:vsintern.c.o Ä "TelnetHeader.h":obj:vsintern.c.o Ä ":obj:sys.dump":obj:vsintern.c.o Ä ":vs:vskeys.h":obj:vsintern.c.o Ä "typedefs.h":obj:vsintern.c.o Ä "resrcdefs.h":obj:vsintern.c.o Ä ":config:Preferences.h":obj:vsintern.c.o Ä ":vs:vsintern.c":obj:vsintern.c.o Ä "globaldefs.h":obj:vsintern.c.o Ä ":vs:vsinterf.proto.h":obj:vsintern.c.o Ä "::krb:kerberos.h":obj:vsintern.c.o Ä ":main:maclook.proto.h":obj:vsintern.c.o Ä ":vs:wind.h":obj:vsintern.c.o Ä ":vs:rsmac.proto.h":obj:vsintern.c.o Ä ":vs:vsdata.h":obj:vsintern.c.o Ä "::krb:KrbDriver.h":obj:vsintern.c.o Ä ":vs:vsintern.proto.h":obj:vsintern.c.o Ä "::krb:encrypt.h":obj:vsintern.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:enc_des.c.o Ä "TelnetHeader.h":obj:enc_des.c.o Ä ":obj:sys.dump":obj:enc_des.c.o Ä "typedefs.h":obj:enc_des.c.o Ä "::krb:enc_des.proto.h":obj:enc_des.c.o Ä "resrcdefs.h":obj:enc_des.c.o Ä "::krb:encrypt.proto.h":obj:enc_des.c.o Ä ":config:Preferences.h":obj:enc_des.c.o Ä "::krb:desproto.h":obj:enc_des.c.o Ä "::krb:enc_des.c":obj:enc_des.c.o Ä "globaldefs.h":obj:enc_des.c.o Ä "::krb:kerberos.proto.h":obj:enc_des.c.o Ä "::krb:kerberos.h":obj:enc_des.c.o Ä ":vs:wind.h":obj:enc_des.c.o Ä ":main:parse.proto.h":obj:enc_des.c.o Ä "::krb:KrbDriver.h":obj:enc_des.c.o Ä "::krb:encrypt.h":obj:enc_des.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:encrypt.c.o Ä "::krb:kerberos.proto.h":obj:encrypt.c.o Ä "TelnetHeader.h":obj:encrypt.c.o Ä "::krb:encrypt.c":obj:encrypt.c.o Ä "::krb:kerberos.h":obj:encrypt.c.o Ä ":obj:sys.dump":obj:encrypt.c.o Ä ":vs:wind.h":obj:encrypt.c.o Ä "typedefs.h":obj:encrypt.c.o Ä "::krb:enc_des.proto.h":obj:encrypt.c.o Ä ":main:parse.proto.h":obj:encrypt.c.o Ä "resrcdefs.h":obj:encrypt.c.o Ä "::krb:KrbDriver.h":obj:encrypt.c.o Ä "::krb:encrypt.proto.h":obj:encrypt.c.o Ä ":config:Preferences.h":obj:encrypt.c.o Ä "::krb:encrypt.h":obj:encrypt.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:encrypt.c.o Ä "globaldefs.h":obj:kerberos.c.o Ä "TelnetHeader.h":obj:kerberos.c.o Ä ":obj:sys.dump":obj:kerberos.c.o Ä "typedefs.h":obj:kerberos.c.o Ä "resrcdefs.h":obj:kerberos.c.o Ä "::krb:encrypt.proto.h":obj:kerberos.c.o Ä ":config:Preferences.h":obj:kerberos.c.o Ä "::krb:desproto.h":obj:kerberos.c.o Ä "globaldefs.h":obj:kerberos.c.o Ä "::krb:kerberos.proto.h":obj:kerberos.c.o Ä "::krb:kerberos.h":obj:kerberos.c.o Ä ":vs:wind.h":obj:kerberos.c.o Ä ":main:parse.proto.h":obj:kerberos.c.o Ä "::krb:KrbDriver.h":obj:kerberos.c.o Ä "::krb:kerberos.c":obj:kerberos.c.o Ä "::krb:encrypt.h":obj:kerberos.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:wdefpatch.c.o Ä "TelnetHeader.h":obj:wdefpatch.c.o Ä ":obj:sys.dump":obj:wdefpatch.c.o Ä "typedefs.h":obj:wdefpatch.c.o Ä "resrcdefs.h":obj:wdefpatch.c.o Ä ":config:Preferences.h":obj:wdefpatch.c.o Ä ":main:wdefpatch.proto.h":obj:wdefpatch.c.o Ä "globaldefs.h":obj:wdefpatch.c.o Ä "::krb:kerberos.h":obj:wdefpatch.c.o Ä ":vs:wind.h":obj:wdefpatch.c.o Ä ":main:wdefpatch.c":obj:wdefpatch.c.o Ä "::krb:KrbDriver.h":obj:wdefpatch.c.o Ä "::krb:encrypt.h":obj:wdefpatch.c.o Ä ":network:mactcp:MacTCPCommonTypes.h":obj:des_cornell.c.o Ä "::krb:glue.h":obj:des_cornell.c.o Ä "::krb:des_cornell.c":obj:des_cornell.c.o Ä "::krb:KrbDriver.h":obj:des_cornell.c.o Ä "::krb:desproto.h":obj:des_cornell.c.o Ä "::krb:encrypt.h"# IF YOU PUT ANYTHING HERE IT WILL GO AWAY
+#
+# Makefile for NCSA Telnet 2.6
+#
+# Rick Watson
+# The University of Texas at Austin
+# Networking Services
+# r.watson@utexas.edu
+#
+# 9/29/93
+#
+
+# location of Kerberos common sources for NCSA/Brown -- might vary on your system.
+KSRC= ::krb:
+
+# DESLIB is only used if building a version that does not use the hooks into
+#  the Cornell driver -- no longer normally the case.
+#DESLIB= ":::ncsa:telsrc:deslib:des.lib"
+DESLIB=
+
+OBJS= ¶
+	:obj:debug.c.o ¶
+	:obj:configure.c.o ¶
+	:obj:prefs.c.o ¶
+	:obj:Sets.c.o ¶
+	:obj:binsubs.c.o ¶
+	:obj:bkgr.c.o ¶
+	:obj:ftpbin.c.o ¶
+	:obj:macutil.c.o ¶
+#	:obj:rcp.c.o ¶
+	:obj:iNetwork.c.o ¶
+	:obj:init.c.o ¶
+	:obj:ae.c.o ¶
+	:obj:Connections.c.o ¶
+	:obj:DlogUtils.c.o ¶
+	:obj:errors.c.o ¶
+	:obj:event.c.o ¶
+	:obj:maclook.c.o ¶
+	:obj:macros.c.o ¶
+	:obj:mainseg.c.o ¶
+	:obj:menuseg.c.o ¶
+	:obj:parse.c.o ¶
+	:obj:popup.c.o ¶
+	:obj:printing.c.o ¶
+	:obj:translate.c.o ¶
+	:obj:finger.c.o ¶
+	:obj:mydnr.c.o ¶
+	:obj:netevent.c.o ¶
+	:obj:dnr.c.o ¶
+	:obj:network.c.o ¶
+	:obj:rg0.c.o ¶
+#	:obj:rghp.c.o ¶
+	:obj:rgmp.c.o ¶
+	:obj:tekrgmac.c.o ¶
+	:obj:tekstor.c.o ¶
+	:obj:vgtek.c.o ¶
+	:obj:vdevice.c.o ¶
+	:obj:vr.c.o ¶
+	:obj:vrrgmac.c.o ¶
+	:obj:rsmac.c.o ¶
+	:obj:vsem.c.o ¶
+	:obj:vsinterf.c.o ¶
+	:obj:vsintern.c.o ¶
+	:obj:enc_des.c.o ¶
+	:obj:encrypt.c.o ¶
+	:obj:kerberos.c.o ¶
+	:obj:wdefpatch.c.o ¶
+	:obj:des_cornell.c.o 
+
+#
+# How to compile most of the C programs
+#
+:obj: Ä ¶
+	: ¶
+	:config: ¶
+	:ftp: ¶
+	:init: ¶
+	:main: ¶
+	:network: ¶
+	:network:mactcp: ¶
+	:tek: ¶
+	:vr: ¶
+	:vs: ¶
+	{KSRC}
+
+includes = :config:,:ftp:,:init:,:main:,:network:,:network:mactcp:,:tek:,:vr:,:vs:,{KSRC}
+#COptions = -sym full -mbg ch8 -b -r -d MPW -d MAC -d NCSA_ENC -i {includes}
+COptions = -sym full -mbg ch8 -b -r -d MPW -d MAC -i {includes}
+
+:obj:.c.o Ä .c
+	C -o "{TargDir}{Default}.c.o" "{Default}.c" {COptions}
+
+#
+# System headers dump file
+#
+:obj:sys.dump Ä sysheaders.c mpw.h
+	C -o :obj:sysheaders.c.o sysheaders.c {COptions}
+
+#
+# build Telnet
+#
+LinkOptions = -srt -sym full -model far
+
+Telnet Ä {OBJS} "::--Telnet.rsrc"
+	Duplicate -y "::--Telnet.rsrc" "Telnet"
+	link -o Telnet -br on -d -t APPL -c NCSA {LinkOptions} -ra =preload ¶
+	 	{OBJS} ¶
+		{DESLIB} ¶
+		"{CLibraries}"StdCLib.o ¶
+ 		"{Libraries}"Interface.o ¶
+ 		"{Libraries}"Runtime.o ¶
+		-map > telnet.map
+
+
+# proto Ä {PTYPES}
+
+.proto.h.new Ä .c
+	mkptypes -A -e -W "{DepDir}{Default}.c" > "{TargDir}{Default}.proto.h.new"
+	equal -d -q "{DepDir}{Default}.proto.h" "{TargDir}{Default}.proto.h.new" || ¶
+		duplicate -y "{TargDir}{Default}.proto.h.new" "{DepDir}{Default}.proto.h"
+
+#
+# tags
+#
+SRCS= ¶
+	:debug.c ¶
+	:debug.h ¶
+	:globaldefs.h ¶
+	:mpw.h ¶
+	:newresrc.h ¶
+	:resrcdefs.h ¶
+	:TelnetHeader.h ¶
+	:typedefs.h ¶
+	:config:configure.c ¶
+	:config:configure.proto.h ¶
+	:config:Preferences.h ¶
+	:config:prefs.c ¶
+	:config:prefs.proto.h ¶
+	:config:Sets.c ¶
+	:config:Sets.proto.h ¶
+	:ftp:binsubs.c ¶
+	:ftp:binsubs.proto.h ¶
+	:ftp:bkgr.c ¶
+	:ftp:bkgr.proto.h ¶
+	:ftp:ftpbin.c ¶
+	:ftp:ftpbin.proto.h ¶
+	:ftp:ftppi.h ¶
+	:ftp:macbinary.h ¶
+	:ftp:macutil.c ¶
+	:ftp:macutil.proto.h ¶
+	:ftp:rcp.c ¶
+	:init:iNetwork.c ¶
+	:init:iNetwork.proto.h ¶
+	:init:init.c ¶
+	:init:init.proto.h ¶
+	:main:ae.c ¶
+	:main:Connections.c ¶
+	:main:Connections.proto.h ¶
+	:main:DlogUtils.c ¶
+	:main:DlogUtils.proto.h ¶
+	:main:errors.c ¶
+	:main:telneterrors.h ¶
+	:main:errors.proto.h ¶
+	:main:event.c ¶
+	:main:event.proto.h ¶
+	:main:maclook.c ¶
+	:main:maclook.proto.h ¶
+	:main:macros.c ¶
+	:main:macros.proto.h ¶
+	:main:mainseg.c ¶
+	:main:mainseg.proto.h ¶
+	:main:menuseg.c ¶
+	:main:menuseg.proto.h ¶
+	:main:optsdebug.h ¶
+	:main:parse.c ¶
+	:main:parse.h ¶
+	:main:parse.proto.h ¶
+	:main:popup.c ¶
+	:main:Popup.h ¶
+	:main:popup.proto.h ¶
+	:main:printing.c ¶
+	:main:printing.proto.h ¶
+	:main:translate.c ¶
+	:main:translate.proto.h ¶
+	:network:finger.c ¶
+	:network:finger.proto.h ¶
+	:network:fingerstructure.h ¶
+	:network:InternalEvents.h ¶
+	:network:mydnr.c ¶
+	:network:mydnr.proto.h ¶
+	:network:netevent.c ¶
+	:network:netevent.proto.h ¶
+	:network:MacTCP:AddressXlation.h ¶
+	:network:MacTCP:dnr.c ¶
+	:network:MacTCP:dnr.proto.h ¶
+	:network:MacTCP:GetMyIPAddr.h ¶
+	:network:MacTCP:MacTCPCommonTypes.h ¶
+	:network:MacTCP:MyMacTCPstructures.h ¶
+	:network:MacTCP:network.c ¶
+	:network:MacTCP:network.proto.h ¶
+	:network:MacTCP:TCPPB.h ¶
+	:tek:rg0.c ¶
+	:tek:rg0.proto.h ¶
+	:tek:rghp.c ¶
+	:tek:rghp.proto.h ¶
+	:tek:rgmp.c ¶
+	:tek:rgmp.proto.h ¶
+	:tek:tekdefs.h ¶
+	:tek:tekrgmac.c ¶
+	:tek:tekrgmac.proto.h ¶
+	:tek:tekstor.c ¶
+	:tek:tekstor.proto.h ¶
+	:tek:vgfont.h ¶
+	:tek:vgtek.c ¶
+	:tek:vgtek.proto.h ¶
+	:vr:vdevice.c ¶
+	:vr:vdevice.h ¶
+	:vr:vdevice.proto.h ¶
+	:vr:vr.c ¶
+	:vr:vr.h ¶
+	:vr:vr.proto.h ¶
+	:vr:vrrgmac.c ¶
+	:vr:vrrgmac.proto.h ¶
+	:vs:rsdefs.h ¶
+	:vs:rsmac.c ¶
+	:vs:rsmac.proto.h ¶
+	:vs:vsdata.h ¶
+	:vs:vsem.c ¶
+	:vs:vsem.proto.h ¶
+	:vs:vsinit.h ¶
+	:vs:vsinterf.c ¶
+	:vs:vsinterf.proto.h ¶
+	:vs:vsintern.c ¶
+	:vs:vsintern.proto.h ¶
+	:vs:vskeys.h ¶
+	:vs:wind.h ¶
+	:main:wdefpatch.c ¶
+	{KSRC}enc_des.c ¶
+	{KSRC}encrypt.c ¶
+	{KSRC}encrypt.h ¶
+	{KSRC}kerberos.c ¶
+	{KSRC}KrbDriver.h ¶
+	{KSRC}desproto.h ¶
+	{KSRC}glue.h ¶
+	{KSRC}des_cornell.c 
+
+tags Ä {SRCS}
+	CTags -local -update -d MPW -d MAC -i {Includes} {NewerDeps}
+
+#
+# dependancies
+# Build "depend" to rebuild the dependancies. You only need to do this if you 
+# change which include files are included by various sources.  Due to the .cpp
+# files only depending on the .c files, you should "full build" this target unless
+# you are only making small changes.
+#
+CPP = ¶
+	:cpp:debug.cpp ¶
+	:cpp:sysheaders.cpp ¶
+	:cpp:configure.cpp ¶
+	:cpp:prefs.cpp ¶
+	:cpp:Sets.cpp ¶
+	:cpp:binsubs.cpp ¶
+	:cpp:bkgr.cpp ¶
+	:cpp:ftpbin.cpp ¶
+	:cpp:macutil.cpp ¶
+	:cpp:rcp.cpp ¶
+	:cpp:iNetwork.cpp ¶
+	:cpp:init.cpp ¶
+	:cpp:ae.cpp ¶
+	:cpp:Connections.cpp ¶
+	:cpp:DlogUtils.cpp ¶
+	:cpp:errors.cpp ¶
+	:cpp:event.cpp ¶
+	:cpp:maclook.cpp ¶
+	:cpp:macros.cpp ¶
+	:cpp:mainseg.cpp ¶
+	:cpp:menuseg.cpp ¶
+	:cpp:parse.cpp ¶
+	:cpp:popup.cpp ¶
+	:cpp:printing.cpp ¶
+	:cpp:translate.cpp ¶
+	:cpp:finger.cpp ¶
+	:cpp:mydnr.cpp ¶
+	:cpp:netevent.cpp ¶
+	:cpp:dnr.cpp ¶
+	:cpp:network.cpp ¶
+	:cpp:rg0.cpp ¶
+	:cpp:rghp.cpp ¶
+	:cpp:rgmp.cpp ¶
+	:cpp:tekrgmac.cpp ¶
+	:cpp:tekstor.cpp ¶
+	:cpp:vgtek.cpp ¶
+	:cpp:vdevice.cpp ¶
+	:cpp:vr.cpp ¶
+	:cpp:vrrgmac.cpp ¶
+	:cpp:rsmac.cpp ¶
+	:cpp:vsem.cpp ¶
+	:cpp:vsinterf.cpp ¶
+	:cpp:vsintern.cpp ¶
+	:cpp:enc_des.cpp ¶
+	:cpp:encrypt.cpp ¶
+	:cpp:kerberos.cpp ¶
+	:cpp:wdefpatch.cpp ¶
+	:cpp:des_cornell.cpp
+
+# default rule for relating object files to source files
+:cpp: Ä ¶
+	: ¶
+	:config: ¶
+	:ftp: ¶
+	:init: ¶
+	:main: ¶
+	:network: ¶
+	:network:mactcp: ¶
+	:tek: ¶
+	:vr: ¶
+	:vs: ¶
+	{KSRC}
+
+# Rule to build .cpp preprocessor output files. Syntax check only and write cpp output.
+.cpp Ä .c
+	C "{DepDir}{Default}.c" -e2 -c {COptions} > "{TargDir}{Default}.cpp"
+	
+depend Ä {CPP}
+	perl {mpw}local:depend.perl Makefile ":cpp:" ":obj:" {CPP}
+	Rename -y Makefile Makefile.bak
+	Rename -y Makefile.new Makefile
+	Echo "Include ¶"Makefile.bak¶" 'ckid';" | Rez -m -a -o "Makefile" #Transfer the ckid
+
+# DO NOT DELETE THIS LINE -- mkdep uses it.
+# DO NOT PUT ANYTHING AFTER THIS LINE. IT WILL GO AWAY.
+
+:obj:debug.c.o Ä "TelnetHeader.h"
+:obj:debug.c.o Ä "::krb:kerberos.h"
+:obj:debug.c.o Ä ":vs:vsinterf.proto.h"
+:obj:debug.c.o Ä ":obj:sys.dump"
+:obj:debug.c.o Ä "debug.c"
+:obj:debug.c.o Ä ":vs:wind.h"
+:obj:debug.c.o Ä "typedefs.h"
+:obj:debug.c.o Ä ":vs:rsmac.proto.h"
+:obj:debug.c.o Ä ":main:parse.proto.h"
+:obj:debug.c.o Ä ":vs:vsdata.h"
+:obj:debug.c.o Ä "resrcdefs.h"
+:obj:debug.c.o Ä "::krb:KrbDriver.h"
+:obj:debug.c.o Ä ":config:Preferences.h"
+:obj:debug.c.o Ä "::krb:encrypt.h"
+:obj:debug.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:debug.c.o Ä "debug.h"
+:obj:debug.c.o Ä "globaldefs.h"
+
+:obj:sysheaders.c.o Ä "sysheaders.c"
+:obj:sysheaders.c.o Ä "mpw.h"
+
+:obj:configure.c.o Ä "TelnetHeader.h"
+:obj:configure.c.o Ä ":obj:sys.dump"
+:obj:configure.c.o Ä "typedefs.h"
+:obj:configure.c.o Ä ":ftp:macutil.proto.h"
+:obj:configure.c.o Ä ":ftp:bkgr.proto.h"
+:obj:configure.c.o Ä "resrcdefs.h"
+:obj:configure.c.o Ä ":main:DlogUtils.proto.h"
+:obj:configure.c.o Ä ":config:Preferences.h"
+:obj:configure.c.o Ä ":config:configure.proto.h"
+:obj:configure.c.o Ä ":network:netevent.proto.h"
+:obj:configure.c.o Ä ":config:prefs.proto.h"
+:obj:configure.c.o Ä "globaldefs.h"
+:obj:configure.c.o Ä ":config:configure.c"
+:obj:configure.c.o Ä "newresrc.h"
+:obj:configure.c.o Ä ":main:popup.proto.h"
+:obj:configure.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:configure.c.o Ä ":main:menuseg.proto.h"
+:obj:configure.c.o Ä ":main:popup.h"
+
+:obj:prefs.c.o Ä "TelnetHeader.h"
+:obj:prefs.c.o Ä ":obj:sys.dump"
+:obj:prefs.c.o Ä "typedefs.h"
+:obj:prefs.c.o Ä ":config:prefs.c"
+:obj:prefs.c.o Ä ":main:telneterrors.h"
+:obj:prefs.c.o Ä "resrcdefs.h"
+:obj:prefs.c.o Ä ":main:errors.proto.h"
+:obj:prefs.c.o Ä ":config:Preferences.h"
+:obj:prefs.c.o Ä ":main:mainseg.proto.h"
+:obj:prefs.c.o Ä ":config:prefs.proto.h"
+:obj:prefs.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:prefs.c.o Ä "debug.h"
+:obj:prefs.c.o Ä "globaldefs.h"
+
+:obj:Sets.c.o Ä "TelnetHeader.h"
+:obj:Sets.c.o Ä ":obj:sys.dump"
+:obj:Sets.c.o Ä "typedefs.h"
+:obj:Sets.c.o Ä ":config:Sets.c"
+:obj:Sets.c.o Ä ":main:telneterrors.h"
+:obj:Sets.c.o Ä "resrcdefs.h"
+:obj:Sets.c.o Ä ":config:Preferences.h"
+:obj:Sets.c.o Ä ":config:prefs.proto.h"
+:obj:Sets.c.o Ä "debug.h"
+:obj:Sets.c.o Ä "globaldefs.h"
+:obj:Sets.c.o Ä ":vs:vsinterf.proto.h"
+:obj:Sets.c.o Ä "::krb:kerberos.h"
+:obj:Sets.c.o Ä ":vs:wind.h"
+:obj:Sets.c.o Ä ":main:Connections.proto.h"
+:obj:Sets.c.o Ä ":vs:rsmac.proto.h"
+:obj:Sets.c.o Ä ":vs:vsdata.h"
+:obj:Sets.c.o Ä ":config:Sets.proto.h"
+:obj:Sets.c.o Ä "::krb:KrbDriver.h"
+:obj:Sets.c.o Ä ":main:macros.proto.h"
+:obj:Sets.c.o Ä ":main:errors.proto.h"
+:obj:Sets.c.o Ä "::krb:encrypt.h"
+:obj:Sets.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+
+:obj:binsubs.c.o Ä "TelnetHeader.h"
+:obj:binsubs.c.o Ä ":obj:sys.dump"
+:obj:binsubs.c.o Ä "typedefs.h"
+:obj:binsubs.c.o Ä ":main:telneterrors.h"
+:obj:binsubs.c.o Ä ":ftp:bkgr.proto.h"
+:obj:binsubs.c.o Ä "resrcdefs.h"
+:obj:binsubs.c.o Ä ":ftp:binsubs.proto.h"
+:obj:binsubs.c.o Ä ":config:Preferences.h"
+:obj:binsubs.c.o Ä ":ftp:binsubs.c"
+:obj:binsubs.c.o Ä "debug.h"
+:obj:binsubs.c.o Ä "globaldefs.h"
+:obj:binsubs.c.o Ä ":main:maclook.proto.h"
+:obj:binsubs.c.o Ä ":ftp:MacBinary.h"
+:obj:binsubs.c.o Ä ":main:translate.proto.h"
+:obj:binsubs.c.o Ä ":main:errors.proto.h"
+:obj:binsubs.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+
+:obj:bkgr.c.o Ä "TelnetHeader.h"
+:obj:bkgr.c.o Ä ":network:mydnr.proto.h"
+:obj:bkgr.c.o Ä ":network:mactcp:network.proto.h"
+:obj:bkgr.c.o Ä ":obj:sys.dump"
+:obj:bkgr.c.o Ä "typedefs.h"
+:obj:bkgr.c.o Ä ":ftp:macutil.proto.h"
+:obj:bkgr.c.o Ä ":main:telneterrors.h"
+:obj:bkgr.c.o Ä ":ftp:bkgr.proto.h"
+:obj:bkgr.c.o Ä "resrcdefs.h"
+:obj:bkgr.c.o Ä ":ftp:bkgr.c"
+:obj:bkgr.c.o Ä ":main:DlogUtils.proto.h"
+:obj:bkgr.c.o Ä ":ftp:binsubs.proto.h"
+:obj:bkgr.c.o Ä ":config:Preferences.h"
+:obj:bkgr.c.o Ä ":main:mainseg.proto.h"
+:obj:bkgr.c.o Ä ":network:netevent.proto.h"
+:obj:bkgr.c.o Ä "globaldefs.h"
+:obj:bkgr.c.o Ä ":vs:vsinterf.proto.h"
+:obj:bkgr.c.o Ä "::krb:kerberos.h"
+:obj:bkgr.c.o Ä ":vs:wind.h"
+:obj:bkgr.c.o Ä ":main:maclook.proto.h"
+:obj:bkgr.c.o Ä ":ftp:macbinary.h"
+:obj:bkgr.c.o Ä ":vs:vsdata.h"
+:obj:bkgr.c.o Ä "::krb:KrbDriver.h"
+:obj:bkgr.c.o Ä ":main:translate.proto.h"
+:obj:bkgr.c.o Ä ":main:errors.proto.h"
+:obj:bkgr.c.o Ä ":network:InternalEvents.h"
+:obj:bkgr.c.o Ä "::krb:encrypt.h"
+:obj:bkgr.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:bkgr.c.o Ä ":main:menuseg.proto.h"
+
+:obj:ftpbin.c.o Ä "TelnetHeader.h"
+:obj:ftpbin.c.o Ä ":network:mydnr.proto.h"
+:obj:ftpbin.c.o Ä ":network:mactcp:network.proto.h"
+:obj:ftpbin.c.o Ä ":obj:sys.dump"
+:obj:ftpbin.c.o Ä ":vs:VSkeys.h"
+:obj:ftpbin.c.o Ä "typedefs.h"
+:obj:ftpbin.c.o Ä ":ftp:macutil.proto.h"
+:obj:ftpbin.c.o Ä ":ftp:bkgr.proto.h"
+:obj:ftpbin.c.o Ä "resrcdefs.h"
+:obj:ftpbin.c.o Ä ":ftp:binsubs.proto.h"
+:obj:ftpbin.c.o Ä ":config:Preferences.h"
+:obj:ftpbin.c.o Ä ":network:netevent.proto.h"
+:obj:ftpbin.c.o Ä "debug.h"
+:obj:ftpbin.c.o Ä "globaldefs.h"
+:obj:ftpbin.c.o Ä ":ftp:ftpbin.proto.h"
+:obj:ftpbin.c.o Ä ":vs:vsinterf.proto.h"
+:obj:ftpbin.c.o Ä ":ftp:ftpbin.c"
+:obj:ftpbin.c.o Ä "::krb:kerberos.h"
+:obj:ftpbin.c.o Ä ":main:maclook.proto.h"
+:obj:ftpbin.c.o Ä ":vs:wind.h"
+:obj:ftpbin.c.o Ä ":main:Connections.proto.h"
+:obj:ftpbin.c.o Ä ":ftp:macbinary.h"
+:obj:ftpbin.c.o Ä ":vs:rsmac.proto.h"
+:obj:ftpbin.c.o Ä ":main:parse.proto.h"
+:obj:ftpbin.c.o Ä ":vs:vsdata.h"
+:obj:ftpbin.c.o Ä "::krb:KrbDriver.h"
+:obj:ftpbin.c.o Ä ":ftp:ftppi.h"
+:obj:ftpbin.c.o Ä ":network:InternalEvents.h"
+:obj:ftpbin.c.o Ä "::krb:encrypt.h"
+:obj:ftpbin.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:ftpbin.c.o Ä ":main:menuseg.proto.h"
+
+:obj:macutil.c.o Ä "TelnetHeader.h"
+:obj:macutil.c.o Ä ":obj:sys.dump"
+:obj:macutil.c.o Ä ":ftp:macutil.c"
+:obj:macutil.c.o Ä ":main:maclook.proto.h"
+:obj:macutil.c.o Ä "typedefs.h"
+:obj:macutil.c.o Ä ":ftp:macutil.proto.h"
+:obj:macutil.c.o Ä ":main:telneterrors.h"
+:obj:macutil.c.o Ä "resrcdefs.h"
+:obj:macutil.c.o Ä ":main:DlogUtils.proto.h"
+:obj:macutil.c.o Ä ":main:errors.proto.h"
+:obj:macutil.c.o Ä ":config:Preferences.h"
+:obj:macutil.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:macutil.c.o Ä "debug.h"
+:obj:macutil.c.o Ä "globaldefs.h"
+
+:obj:rcp.c.o Ä ":ftp:rcp.c"
+
+:obj:iNetwork.c.o Ä ":init:iNetwork.proto.h"
+:obj:iNetwork.c.o Ä "TelnetHeader.h"
+:obj:iNetwork.c.o Ä ":network:mactcp:network.proto.h"
+:obj:iNetwork.c.o Ä ":obj:sys.dump"
+:obj:iNetwork.c.o Ä ":init:iNetwork.c"
+:obj:iNetwork.c.o Ä "typedefs.h"
+:obj:iNetwork.c.o Ä ":ftp:bkgr.proto.h"
+:obj:iNetwork.c.o Ä ":main:telneterrors.h"
+:obj:iNetwork.c.o Ä "resrcdefs.h"
+:obj:iNetwork.c.o Ä ":main:errors.proto.h"
+:obj:iNetwork.c.o Ä ":network:InternalEvents.h"
+:obj:iNetwork.c.o Ä ":config:Preferences.h"
+:obj:iNetwork.c.o Ä ":network:netevent.proto.h"
+:obj:iNetwork.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:iNetwork.c.o Ä "debug.h"
+:obj:iNetwork.c.o Ä "globaldefs.h"
+
+:obj:init.c.o Ä "typedefs.h"
+:obj:init.c.o Ä "resrcdefs.h"
+:obj:init.c.o Ä ":main:DlogUtils.proto.h"
+:obj:init.c.o Ä ":config:Preferences.h"
+:obj:init.c.o Ä ":init:init.proto.h"
+:obj:init.c.o Ä "debug.h"
+:obj:init.c.o Ä ":network:mactcp:dnr.proto.h"
+:obj:init.c.o Ä ":vs:rsmac.proto.h"
+:obj:init.c.o Ä "::krb:KrbDriver.h"
+:obj:init.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:init.c.o Ä ":main:menuseg.proto.h"
+:obj:init.c.o Ä ":vr:vrrgmac.proto.h"
+:obj:init.c.o Ä "TelnetHeader.h"
+:obj:init.c.o Ä ":init:iNetwork.proto.h"
+:obj:init.c.o Ä ":tek:tekrgmac.proto.h"
+:obj:init.c.o Ä ":obj:sys.dump"
+:obj:init.c.o Ä ":main:telneterrors.h"
+:obj:init.c.o Ä ":ftp:binsubs.proto.h"
+:obj:init.c.o Ä "::krb:desproto.h"
+:obj:init.c.o Ä ":tek:vgtek.proto.h"
+:obj:init.c.o Ä ":main:mainseg.proto.h"
+:obj:init.c.o Ä ":config:prefs.proto.h"
+:obj:init.c.o Ä "globaldefs.h"
+:obj:init.c.o Ä ":init:init.c"
+:obj:init.c.o Ä "::krb:kerberos.h"
+:obj:init.c.o Ä ":vs:vsinterf.proto.h"
+:obj:init.c.o Ä ":vs:wind.h"
+:obj:init.c.o Ä ":ftp:MacBinary.h"
+:obj:init.c.o Ä ":vs:vsdata.h"
+:obj:init.c.o Ä ":config:Sets.proto.h"
+:obj:init.c.o Ä ":main:translate.proto.h"
+:obj:init.c.o Ä ":main:errors.proto.h"
+:obj:init.c.o Ä ":main:macros.proto.h"
+:obj:init.c.o Ä ":vr:vr.proto.h"
+:obj:init.c.o Ä "::krb:encrypt.h"
+:obj:init.c.o Ä ":vr:vr.h"
+:obj:init.c.o Ä ":main:ae.proto.h"
+
+:obj:ae.c.o Ä "TelnetHeader.h"
+:obj:ae.c.o Ä ":obj:sys.dump"
+:obj:ae.c.o Ä "typedefs.h"
+:obj:ae.c.o Ä ":config:Sets.proto.h"
+:obj:ae.c.o Ä "resrcdefs.h"
+:obj:ae.c.o Ä ":config:Preferences.h"
+:obj:ae.c.o Ä ":main:ae.c"
+:obj:ae.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:ae.c.o Ä "debug.h"
+:obj:ae.c.o Ä ":main:menuseg.proto.h"
+:obj:ae.c.o Ä "globaldefs.h"
+:obj:ae.c.o Ä ":main:ae.proto.h"
+
+:obj:Connections.c.o Ä ":network:mydnr.proto.h"
+:obj:Connections.c.o Ä "typedefs.h"
+:obj:Connections.c.o Ä "resrcdefs.h"
+:obj:Connections.c.o Ä ":main:DlogUtils.proto.h"
+:obj:Connections.c.o Ä ":config:Preferences.h"
+:obj:Connections.c.o Ä ":vs:rsmac.proto.h"
+:obj:Connections.c.o Ä "::krb:KrbDriver.h"
+:obj:Connections.c.o Ä ":main:event.proto.h"
+:obj:Connections.c.o Ä ":network:InternalEvents.h"
+:obj:Connections.c.o Ä ":main:Connections.c"
+:obj:Connections.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:Connections.c.o Ä ":main:menuseg.proto.h"
+:obj:Connections.c.o Ä ":vr:vrrgmac.proto.h"
+:obj:Connections.c.o Ä "TelnetHeader.h"
+:obj:Connections.c.o Ä ":obj:sys.dump"
+:obj:Connections.c.o Ä ":tek:tekrgmac.proto.h"
+:obj:Connections.c.o Ä ":network:mactcp:network.proto.h"
+:obj:Connections.c.o Ä ":main:parse.h"
+:obj:Connections.c.o Ä ":vs:vskeys.h"
+:obj:Connections.c.o Ä ":main:telneterrors.h"
+:obj:Connections.c.o Ä "::krb:encrypt.proto.h"
+:obj:Connections.c.o Ä ":main:wdefpatch.proto.h"
+:obj:Connections.c.o Ä ":tek:vgtek.proto.h"
+:obj:Connections.c.o Ä ":config:configure.proto.h"
+:obj:Connections.c.o Ä ":config:prefs.proto.h"
+:obj:Connections.c.o Ä "globaldefs.h"
+:obj:Connections.c.o Ä "::krb:kerberos.h"
+:obj:Connections.c.o Ä ":vs:vsinterf.proto.h"
+:obj:Connections.c.o Ä ":vs:wind.h"
+:obj:Connections.c.o Ä ":main:maclook.proto.h"
+:obj:Connections.c.o Ä ":main:Connections.proto.h"
+:obj:Connections.c.o Ä ":vs:vsdata.h"
+:obj:Connections.c.o Ä ":main:parse.proto.h"
+:obj:Connections.c.o Ä ":main:errors.proto.h"
+:obj:Connections.c.o Ä ":vr:vr.proto.h"
+:obj:Connections.c.o Ä ":main:popup.proto.h"
+:obj:Connections.c.o Ä "::krb:encrypt.h"
+:obj:Connections.c.o Ä ":vr:vr.h"
+:obj:Connections.c.o Ä ":main:popup.h"
+
+:obj:DlogUtils.c.o Ä "TelnetHeader.h"
+:obj:DlogUtils.c.o Ä ":obj:sys.dump"
+:obj:DlogUtils.c.o Ä "typedefs.h"
+:obj:DlogUtils.c.o Ä "resrcdefs.h"
+:obj:DlogUtils.c.o Ä ":main:DlogUtils.proto.h"
+:obj:DlogUtils.c.o Ä "newresrc.h"
+:obj:DlogUtils.c.o Ä ":config:Preferences.h"
+:obj:DlogUtils.c.o Ä ":main:popup.proto.h"
+:obj:DlogUtils.c.o Ä ":main:DlogUtils.c"
+:obj:DlogUtils.c.o Ä ":network:netevent.proto.h"
+:obj:DlogUtils.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:DlogUtils.c.o Ä ":main:Popup.h"
+:obj:DlogUtils.c.o Ä "globaldefs.h"
+
+:obj:errors.c.o Ä "TelnetHeader.h"
+:obj:errors.c.o Ä ":obj:sys.dump"
+:obj:errors.c.o Ä "typedefs.h"
+:obj:errors.c.o Ä ":main:telneterrors.h"
+:obj:errors.c.o Ä "resrcdefs.h"
+:obj:errors.c.o Ä ":main:DlogUtils.proto.h"
+:obj:errors.c.o Ä ":main:errors.proto.h"
+:obj:errors.c.o Ä ":network:InternalEvents.h"
+:obj:errors.c.o Ä ":config:Preferences.h"
+:obj:errors.c.o Ä ":main:mainseg.proto.h"
+:obj:errors.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:errors.c.o Ä ":main:errors.c"
+:obj:errors.c.o Ä "globaldefs.h"
+
+:obj:event.c.o Ä ":vr:vrrgmac.proto.h"
+:obj:event.c.o Ä "TelnetHeader.h"
+:obj:event.c.o Ä ":tek:tekrgmac.proto.h"
+:obj:event.c.o Ä ":network:mydnr.proto.h"
+:obj:event.c.o Ä ":network:mactcp:network.proto.h"
+:obj:event.c.o Ä ":obj:sys.dump"
+:obj:event.c.o Ä ":vs:VSkeys.h"
+:obj:event.c.o Ä "typedefs.h"
+:obj:event.c.o Ä ":ftp:bkgr.proto.h"
+:obj:event.c.o Ä "resrcdefs.h"
+:obj:event.c.o Ä ":config:Preferences.h"
+:obj:event.c.o Ä ":network:netevent.proto.h"
+:obj:event.c.o Ä "debug.h"
+:obj:event.c.o Ä "globaldefs.h"
+:obj:event.c.o Ä ":ftp:ftpbin.proto.h"
+:obj:event.c.o Ä ":vs:vsinterf.proto.h"
+:obj:event.c.o Ä "::krb:kerberos.h"
+:obj:event.c.o Ä ":main:maclook.proto.h"
+:obj:event.c.o Ä ":vs:wind.h"
+:obj:event.c.o Ä ":main:Connections.proto.h"
+:obj:event.c.o Ä ":vs:rsmac.proto.h"
+:obj:event.c.o Ä ":main:parse.proto.h"
+:obj:event.c.o Ä ":vs:vsdata.h"
+:obj:event.c.o Ä "::krb:KrbDriver.h"
+:obj:event.c.o Ä ":main:translate.proto.h"
+:obj:event.c.o Ä ":main:event.proto.h"
+:obj:event.c.o Ä ":main:macros.proto.h"
+:obj:event.c.o Ä ":network:InternalEvents.h"
+:obj:event.c.o Ä ":main:event.c"
+:obj:event.c.o Ä "::krb:encrypt.h"
+:obj:event.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:event.c.o Ä ":main:menuseg.proto.h"
+
+:obj:maclook.c.o Ä ":network:mydnr.proto.h"
+:obj:maclook.c.o Ä "typedefs.h"
+:obj:maclook.c.o Ä ":ftp:macutil.proto.h"
+:obj:maclook.c.o Ä "resrcdefs.h"
+:obj:maclook.c.o Ä ":main:DlogUtils.proto.h"
+:obj:maclook.c.o Ä ":config:Preferences.h"
+:obj:maclook.c.o Ä ":vs:rsmac.proto.h"
+:obj:maclook.c.o Ä "::krb:KrbDriver.h"
+:obj:maclook.c.o Ä ":main:event.proto.h"
+:obj:maclook.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:maclook.c.o Ä ":main:menuseg.proto.h"
+:obj:maclook.c.o Ä ":vr:vrrgmac.proto.h"
+:obj:maclook.c.o Ä "TelnetHeader.h"
+:obj:maclook.c.o Ä ":network:mactcp:network.proto.h"
+:obj:maclook.c.o Ä ":obj:sys.dump"
+:obj:maclook.c.o Ä ":tek:tekrgmac.proto.h"
+:obj:maclook.c.o Ä ":vs:vskeys.h"
+:obj:maclook.c.o Ä ":main:telneterrors.h"
+:obj:maclook.c.o Ä ":tek:vgtek.proto.h"
+:obj:maclook.c.o Ä ":network:netevent.proto.h"
+:obj:maclook.c.o Ä ":config:prefs.proto.h"
+:obj:maclook.c.o Ä "globaldefs.h"
+:obj:maclook.c.o Ä "::krb:kerberos.h"
+:obj:maclook.c.o Ä ":main:maclook.c"
+:obj:maclook.c.o Ä ":vs:vsinterf.proto.h"
+:obj:maclook.c.o Ä ":main:maclook.proto.h"
+:obj:maclook.c.o Ä ":vs:wind.h"
+:obj:maclook.c.o Ä ":vs:vsdata.h"
+:obj:maclook.c.o Ä ":main:errors.proto.h"
+:obj:maclook.c.o Ä ":vr:vr.proto.h"
+:obj:maclook.c.o Ä ":main:popup.proto.h"
+:obj:maclook.c.o Ä "::krb:encrypt.h"
+:obj:maclook.c.o Ä ":vr:vr.h"
+:obj:maclook.c.o Ä ":main:popup.h"
+
+:obj:macros.c.o Ä ":ftp:ftpbin.proto.h"
+:obj:macros.c.o Ä "TelnetHeader.h"
+:obj:macros.c.o Ä ":vs:vsinterf.proto.h"
+:obj:macros.c.o Ä "::krb:kerberos.h"
+:obj:macros.c.o Ä ":network:mactcp:network.proto.h"
+:obj:macros.c.o Ä ":obj:sys.dump"
+:obj:macros.c.o Ä ":vs:wind.h"
+:obj:macros.c.o Ä "typedefs.h"
+:obj:macros.c.o Ä ":vs:vsdata.h"
+:obj:macros.c.o Ä ":main:parse.proto.h"
+:obj:macros.c.o Ä "resrcdefs.h"
+:obj:macros.c.o Ä ":main:DlogUtils.proto.h"
+:obj:macros.c.o Ä "::krb:KrbDriver.h"
+:obj:macros.c.o Ä ":main:event.proto.h"
+:obj:macros.c.o Ä ":main:translate.proto.h"
+:obj:macros.c.o Ä ":main:macros.proto.h"
+:obj:macros.c.o Ä ":config:Preferences.h"
+:obj:macros.c.o Ä "::krb:encrypt.h"
+:obj:macros.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:macros.c.o Ä ":main:macros.c"
+:obj:macros.c.o Ä "globaldefs.h"
+
+:obj:mainseg.c.o Ä "typedefs.h"
+:obj:mainseg.c.o Ä "resrcdefs.h"
+:obj:mainseg.c.o Ä ":main:printing.proto.h"
+:obj:mainseg.c.o Ä ":config:Preferences.h"
+:obj:mainseg.c.o Ä ":init:init.proto.h"
+:obj:mainseg.c.o Ä ":network:mactcp:dnr.proto.h"
+:obj:mainseg.c.o Ä ":ftp:ftpbin.proto.h"
+:obj:mainseg.c.o Ä ":vs:rsmac.proto.h"
+:obj:mainseg.c.o Ä ":config:sets.proto.h"
+:obj:mainseg.c.o Ä "::krb:KrbDriver.h"
+:obj:mainseg.c.o Ä ":main:event.proto.h"
+:obj:mainseg.c.o Ä ":main:mainseg.c"
+:obj:mainseg.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:mainseg.c.o Ä "TelnetHeader.h"
+:obj:mainseg.c.o Ä ":obj:sys.dump"
+:obj:mainseg.c.o Ä ":network:mactcp:network.proto.h"
+:obj:mainseg.c.o Ä ":ftp:bkgr.proto.h"
+:obj:mainseg.c.o Ä ":ftp:binsubs.proto.h"
+:obj:mainseg.c.o Ä ":tek:vgtek.proto.h"
+:obj:mainseg.c.o Ä ":vs:vsem.proto.h"
+:obj:mainseg.c.o Ä ":config:configure.proto.h"
+:obj:mainseg.c.o Ä ":main:mainseg.proto.h"
+:obj:mainseg.c.o Ä ":network:netevent.proto.h"
+:obj:mainseg.c.o Ä "globaldefs.h"
+:obj:mainseg.c.o Ä ":tek:rgmp.proto.h"
+:obj:mainseg.c.o Ä "::krb:kerberos.h"
+:obj:mainseg.c.o Ä ":main:maclook.proto.h"
+:obj:mainseg.c.o Ä ":vs:wind.h"
+:obj:mainseg.c.o Ä ":ftp:MacBinary.h"
+:obj:mainseg.c.o Ä ":tek:rg0.proto.h"
+:obj:mainseg.c.o Ä ":vr:vr.proto.h"
+:obj:mainseg.c.o Ä ":main:macros.proto.h"
+:obj:mainseg.c.o Ä "::krb:encrypt.h"
+:obj:mainseg.c.o Ä ":vr:vr.h"
+
+:obj:menuseg.c.o Ä ":network:mydnr.proto.h"
+:obj:menuseg.c.o Ä "typedefs.h"
+:obj:menuseg.c.o Ä "resrcdefs.h"
+:obj:menuseg.c.o Ä ":main:DlogUtils.proto.h"
+:obj:menuseg.c.o Ä ":main:printing.proto.h"
+:obj:menuseg.c.o Ä ":config:Preferences.h"
+:obj:menuseg.c.o Ä "debug.h"
+:obj:menuseg.c.o Ä ":vs:rsmac.proto.h"
+:obj:menuseg.c.o Ä "::krb:KrbDriver.h"
+:obj:menuseg.c.o Ä ":main:event.proto.h"
+:obj:menuseg.c.o Ä ":network:InternalEvents.h"
+:obj:menuseg.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:menuseg.c.o Ä ":main:menuseg.proto.h"
+:obj:menuseg.c.o Ä ":vr:vrrgmac.proto.h"
+:obj:menuseg.c.o Ä "TelnetHeader.h"
+:obj:menuseg.c.o Ä ":obj:sys.dump"
+:obj:menuseg.c.o Ä ":network:mactcp:network.proto.h"
+:obj:menuseg.c.o Ä ":tek:tekrgmac.proto.h"
+:obj:menuseg.c.o Ä ":main:telneterrors.h"
+:obj:menuseg.c.o Ä ":tek:vgtek.proto.h"
+:obj:menuseg.c.o Ä ":config:configure.proto.h"
+:obj:menuseg.c.o Ä ":main:mainseg.proto.h"
+:obj:menuseg.c.o Ä ":network:netevent.proto.h"
+:obj:menuseg.c.o Ä "globaldefs.h"
+:obj:menuseg.c.o Ä "::krb:kerberos.h"
+:obj:menuseg.c.o Ä ":tek:rgmp.proto.h"
+:obj:menuseg.c.o Ä ":vs:vsinterf.proto.h"
+:obj:menuseg.c.o Ä ":vs:wind.h"
+:obj:menuseg.c.o Ä ":main:maclook.proto.h"
+:obj:menuseg.c.o Ä ":main:Connections.proto.h"
+:obj:menuseg.c.o Ä ":main:parse.proto.h"
+:obj:menuseg.c.o Ä ":vs:vsdata.h"
+:obj:menuseg.c.o Ä ":config:Sets.proto.h"
+:obj:menuseg.c.o Ä ":main:translate.proto.h"
+:obj:menuseg.c.o Ä ":main:errors.proto.h"
+:obj:menuseg.c.o Ä ":main:macros.proto.h"
+:obj:menuseg.c.o Ä "::krb:encrypt.h"
+:obj:menuseg.c.o Ä ":main:menuseg.c"
+
+:obj:parse.c.o Ä "TelnetHeader.h"
+:obj:parse.c.o Ä ":tek:tekrgmac.proto.h"
+:obj:parse.c.o Ä ":network:mactcp:network.proto.h"
+:obj:parse.c.o Ä ":main:parse.h"
+:obj:parse.c.o Ä ":obj:sys.dump"
+:obj:parse.c.o Ä "typedefs.h"
+:obj:parse.c.o Ä "resrcdefs.h"
+:obj:parse.c.o Ä "::krb:encrypt.proto.h"
+:obj:parse.c.o Ä ":config:Preferences.h"
+:obj:parse.c.o Ä ":main:wdefpatch.proto.h"
+:obj:parse.c.o Ä ":tek:vgtek.proto.h"
+:obj:parse.c.o Ä "debug.h"
+:obj:parse.c.o Ä ":main:parse.c"
+:obj:parse.c.o Ä "globaldefs.h"
+:obj:parse.c.o Ä "::krb:kerberos.proto.h"
+:obj:parse.c.o Ä "::krb:kerberos.h"
+:obj:parse.c.o Ä ":vs:vsinterf.proto.h"
+:obj:parse.c.o Ä ":vs:wind.h"
+:obj:parse.c.o Ä ":main:maclook.proto.h"
+:obj:parse.c.o Ä ":main:parse.proto.h"
+:obj:parse.c.o Ä ":vs:vsdata.h"
+:obj:parse.c.o Ä "::krb:KrbDriver.h"
+:obj:parse.c.o Ä ":vr:vr.proto.h"
+:obj:parse.c.o Ä "::krb:encrypt.h"
+:obj:parse.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:parse.c.o Ä ":vr:vr.h"
+:obj:parse.c.o Ä ":main:menuseg.proto.h"
+
+:obj:popup.c.o Ä "TelnetHeader.h"
+:obj:popup.c.o Ä ":obj:sys.dump"
+:obj:popup.c.o Ä "typedefs.h"
+:obj:popup.c.o Ä "resrcdefs.h"
+:obj:popup.c.o Ä ":config:Preferences.h"
+:obj:popup.c.o Ä ":main:popup.proto.h"
+:obj:popup.c.o Ä ":main:popup.c"
+:obj:popup.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:popup.c.o Ä ":main:popup.h"
+:obj:popup.c.o Ä "globaldefs.h"
+
+:obj:printing.c.o Ä "TelnetHeader.h"
+:obj:printing.c.o Ä ":tek:tekrgmac.proto.h"
+:obj:printing.c.o Ä ":obj:sys.dump"
+:obj:printing.c.o Ä ":main:printing.c"
+:obj:printing.c.o Ä "typedefs.h"
+:obj:printing.c.o Ä "resrcdefs.h"
+:obj:printing.c.o Ä ":main:printing.proto.h"
+:obj:printing.c.o Ä ":config:Preferences.h"
+:obj:printing.c.o Ä ":tek:vgtek.proto.h"
+:obj:printing.c.o Ä ":network:netevent.proto.h"
+:obj:printing.c.o Ä "debug.h"
+:obj:printing.c.o Ä "globaldefs.h"
+:obj:printing.c.o Ä ":vs:vsinterf.proto.h"
+:obj:printing.c.o Ä ":tek:rgmp.proto.h"
+:obj:printing.c.o Ä "::krb:kerberos.h"
+:obj:printing.c.o Ä ":vs:wind.h"
+:obj:printing.c.o Ä ":vs:rsmac.proto.h"
+:obj:printing.c.o Ä ":vs:vsdata.h"
+:obj:printing.c.o Ä "::krb:KrbDriver.h"
+:obj:printing.c.o Ä ":main:event.proto.h"
+:obj:printing.c.o Ä "::krb:encrypt.h"
+:obj:printing.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+
+:obj:translate.c.o Ä "TelnetHeader.h"
+:obj:translate.c.o Ä ":vs:vsinterf.proto.h"
+:obj:translate.c.o Ä "::krb:kerberos.h"
+:obj:translate.c.o Ä ":obj:sys.dump"
+:obj:translate.c.o Ä ":vs:wind.h"
+:obj:translate.c.o Ä "typedefs.h"
+:obj:translate.c.o Ä ":main:translate.c"
+:obj:translate.c.o Ä ":main:telneterrors.h"
+:obj:translate.c.o Ä ":vs:vsdata.h"
+:obj:translate.c.o Ä "resrcdefs.h"
+:obj:translate.c.o Ä "::krb:KrbDriver.h"
+:obj:translate.c.o Ä ":main:translate.proto.h"
+:obj:translate.c.o Ä ":main:errors.proto.h"
+:obj:translate.c.o Ä ":config:Preferences.h"
+:obj:translate.c.o Ä "::krb:encrypt.h"
+:obj:translate.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:translate.c.o Ä "debug.h"
+:obj:translate.c.o Ä "globaldefs.h"
+
+:obj:finger.c.o Ä ":network:finger.c"
+
+:obj:mydnr.c.o Ä "TelnetHeader.h"
+:obj:mydnr.c.o Ä ":network:mydnr.proto.h"
+:obj:mydnr.c.o Ä ":obj:sys.dump"
+:obj:mydnr.c.o Ä "typedefs.h"
+:obj:mydnr.c.o Ä ":network:mactcp:AddressXlation.h"
+:obj:mydnr.c.o Ä ":main:telneterrors.h"
+:obj:mydnr.c.o Ä ":ftp:bkgr.proto.h"
+:obj:mydnr.c.o Ä "resrcdefs.h"
+:obj:mydnr.c.o Ä ":config:Preferences.h"
+:obj:mydnr.c.o Ä ":network:netevent.proto.h"
+:obj:mydnr.c.o Ä "globaldefs.h"
+:obj:mydnr.c.o Ä ":main:Connections.proto.h"
+:obj:mydnr.c.o Ä ":network:InternalEvents.h"
+:obj:mydnr.c.o Ä ":main:errors.proto.h"
+:obj:mydnr.c.o Ä ":network:mydnr.c"
+:obj:mydnr.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+
+:obj:netevent.c.o Ä ":vr:vrrgmac.proto.h"
+:obj:netevent.c.o Ä "TelnetHeader.h"
+:obj:netevent.c.o Ä ":tek:tekrgmac.proto.h"
+:obj:netevent.c.o Ä ":network:mactcp:network.proto.h"
+:obj:netevent.c.o Ä ":network:mydnr.proto.h"
+:obj:netevent.c.o Ä ":obj:sys.dump"
+:obj:netevent.c.o Ä ":vs:vskeys.h"
+:obj:netevent.c.o Ä "typedefs.h"
+:obj:netevent.c.o Ä ":main:telneterrors.h"
+:obj:netevent.c.o Ä ":ftp:bkgr.proto.h"
+:obj:netevent.c.o Ä "resrcdefs.h"
+:obj:netevent.c.o Ä ":config:Preferences.h"
+:obj:netevent.c.o Ä ":network:netevent.c"
+:obj:netevent.c.o Ä ":network:netevent.proto.h"
+:obj:netevent.c.o Ä "debug.h"
+:obj:netevent.c.o Ä "globaldefs.h"
+:obj:netevent.c.o Ä ":ftp:ftpbin.proto.h"
+:obj:netevent.c.o Ä "::krb:kerberos.h"
+:obj:netevent.c.o Ä ":vs:wind.h"
+:obj:netevent.c.o Ä ":main:maclook.proto.h"
+:obj:netevent.c.o Ä ":main:Connections.proto.h"
+:obj:netevent.c.o Ä ":vs:rsmac.proto.h"
+:obj:netevent.c.o Ä ":main:parse.proto.h"
+:obj:netevent.c.o Ä ":vs:vsdata.h"
+:obj:netevent.c.o Ä "::krb:KrbDriver.h"
+:obj:netevent.c.o Ä ":main:event.proto.h"
+:obj:netevent.c.o Ä ":main:translate.proto.h"
+:obj:netevent.c.o Ä ":main:errors.proto.h"
+:obj:netevent.c.o Ä ":network:InternalEvents.h"
+:obj:netevent.c.o Ä "::krb:encrypt.h"
+:obj:netevent.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:netevent.c.o Ä ":main:menuseg.proto.h"
+
+:obj:dnr.c.o Ä ":network:mactcp:dnr.proto.h"
+:obj:dnr.c.o Ä ":network:mactcp:dnr.c"
+
+:obj:network.c.o Ä "TelnetHeader.h"
+:obj:network.c.o Ä ":network:mactcp:network.proto.h"
+:obj:network.c.o Ä ":obj:sys.dump"
+:obj:network.c.o Ä "typedefs.h"
+:obj:network.c.o Ä ":main:telneterrors.h"
+:obj:network.c.o Ä "resrcdefs.h"
+:obj:network.c.o Ä "::krb:encrypt.proto.h"
+:obj:network.c.o Ä ":config:Preferences.h"
+:obj:network.c.o Ä ":network:mactcp:MyMacTCPstructures.h"
+:obj:network.c.o Ä ":network:netevent.proto.h"
+:obj:network.c.o Ä ":main:mainseg.proto.h"
+:obj:network.c.o Ä "debug.h"
+:obj:network.c.o Ä "globaldefs.h"
+:obj:network.c.o Ä "::krb:kerberos.h"
+:obj:network.c.o Ä ":main:maclook.proto.h"
+:obj:network.c.o Ä ":vs:wind.h"
+:obj:network.c.o Ä ":network:mactcp:getmyipaddr.h"
+:obj:network.c.o Ä "::krb:KrbDriver.h"
+:obj:network.c.o Ä ":network:mactcp:TCPPB.h"
+:obj:network.c.o Ä ":main:errors.proto.h"
+:obj:network.c.o Ä ":network:InternalEvents.h"
+:obj:network.c.o Ä "::krb:encrypt.h"
+:obj:network.c.o Ä ":network:mactcp:network.c"
+:obj:network.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:network.c.o Ä ":main:menuseg.proto.h"
+
+:obj:rg0.c.o Ä ":tek:rg0.c"
+:obj:rg0.c.o Ä ":tek:rg0.proto.h"
+
+:obj:rghp.c.o Ä ":tek:rghp.c"
+:obj:rghp.c.o Ä ":tek:rghp.proto.h"
+
+:obj:rgmp.c.o Ä "TelnetHeader.h"
+:obj:rgmp.c.o Ä ":tek:rgmp.proto.h"
+:obj:rgmp.c.o Ä ":obj:sys.dump"
+:obj:rgmp.c.o Ä ":tek:rgmp.c"
+:obj:rgmp.c.o Ä "typedefs.h"
+:obj:rgmp.c.o Ä "resrcdefs.h"
+:obj:rgmp.c.o Ä ":config:Preferences.h"
+:obj:rgmp.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:rgmp.c.o Ä "globaldefs.h"
+
+:obj:tekrgmac.c.o Ä "TelnetHeader.h"
+:obj:tekrgmac.c.o Ä ":network:mydnr.proto.h"
+:obj:tekrgmac.c.o Ä ":obj:sys.dump"
+:obj:tekrgmac.c.o Ä ":tek:tekrgmac.proto.h"
+:obj:tekrgmac.c.o Ä "typedefs.h"
+:obj:tekrgmac.c.o Ä "resrcdefs.h"
+:obj:tekrgmac.c.o Ä ":tek:tekrgmac.c"
+:obj:tekrgmac.c.o Ä ":config:Preferences.h"
+:obj:tekrgmac.c.o Ä ":tek:vgtek.proto.h"
+:obj:tekrgmac.c.o Ä ":network:netevent.proto.h"
+:obj:tekrgmac.c.o Ä "debug.h"
+:obj:tekrgmac.c.o Ä "globaldefs.h"
+:obj:tekrgmac.c.o Ä ":tek:rgmp.proto.h"
+:obj:tekrgmac.c.o Ä ":main:maclook.proto.h"
+:obj:tekrgmac.c.o Ä ":tek:rg0.proto.h"
+:obj:tekrgmac.c.o Ä ":vs:rsmac.proto.h"
+:obj:tekrgmac.c.o Ä ":tek:tekdefs.h"
+:obj:tekrgmac.c.o Ä ":network:InternalEvents.h"
+:obj:tekrgmac.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+
+:obj:tekstor.c.o Ä "TelnetHeader.h"
+:obj:tekstor.c.o Ä ":tek:tekrgmac.proto.h"
+:obj:tekstor.c.o Ä ":tek:rgmp.proto.h"
+:obj:tekstor.c.o Ä ":obj:sys.dump"
+:obj:tekstor.c.o Ä ":tek:tekstor.c"
+:obj:tekstor.c.o Ä "typedefs.h"
+:obj:tekstor.c.o Ä ":tek:rg0.proto.h"
+:obj:tekstor.c.o Ä "resrcdefs.h"
+:obj:tekstor.c.o Ä ":tek:tekdefs.h"
+:obj:tekstor.c.o Ä ":config:Preferences.h"
+:obj:tekstor.c.o Ä ":tek:vgtek.proto.h"
+:obj:tekstor.c.o Ä ":tek:tekstor.proto.h"
+:obj:tekstor.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:tekstor.c.o Ä "globaldefs.h"
+
+:obj:vgtek.c.o Ä "TelnetHeader.h"
+:obj:vgtek.c.o Ä ":tek:tekrgmac.proto.h"
+:obj:vgtek.c.o Ä ":obj:sys.dump"
+:obj:vgtek.c.o Ä "typedefs.h"
+:obj:vgtek.c.o Ä ":tek:vgtek.c"
+:obj:vgtek.c.o Ä "resrcdefs.h"
+:obj:vgtek.c.o Ä ":config:Preferences.h"
+:obj:vgtek.c.o Ä ":tek:vgtek.proto.h"
+:obj:vgtek.c.o Ä "globaldefs.h"
+:obj:vgtek.c.o Ä ":tek:rgmp.proto.h"
+:obj:vgtek.c.o Ä "::krb:kerberos.h"
+:obj:vgtek.c.o Ä ":vs:vsinterf.proto.h"
+:obj:vgtek.c.o Ä ":main:maclook.proto.h"
+:obj:vgtek.c.o Ä ":vs:wind.h"
+:obj:vgtek.c.o Ä ":tek:rg0.proto.h"
+:obj:vgtek.c.o Ä ":vs:vsdata.h"
+:obj:vgtek.c.o Ä "::krb:KrbDriver.h"
+:obj:vgtek.c.o Ä ":tek:vgfont.h"
+:obj:vgtek.c.o Ä ":main:event.proto.h"
+:obj:vgtek.c.o Ä ":tek:tekdefs.h"
+:obj:vgtek.c.o Ä "::krb:encrypt.h"
+:obj:vgtek.c.o Ä ":tek:tekstor.proto.h"
+:obj:vgtek.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+
+:obj:vdevice.c.o Ä "TelnetHeader.h"
+:obj:vdevice.c.o Ä ":vr:vdevice.proto.h"
+:obj:vdevice.c.o Ä ":obj:sys.dump"
+:obj:vdevice.c.o Ä "typedefs.h"
+:obj:vdevice.c.o Ä "resrcdefs.h"
+:obj:vdevice.c.o Ä ":config:Preferences.h"
+:obj:vdevice.c.o Ä ":vr:vdevice.c"
+:obj:vdevice.c.o Ä ":vr:vdevice.h"
+:obj:vdevice.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:vdevice.c.o Ä "globaldefs.h"
+
+:obj:vr.c.o Ä ":vr:vrrgmac.proto.h"
+:obj:vr.c.o Ä "TelnetHeader.h"
+:obj:vr.c.o Ä ":obj:sys.dump"
+:obj:vr.c.o Ä "typedefs.h"
+:obj:vr.c.o Ä "resrcdefs.h"
+:obj:vr.c.o Ä ":vr:vr.c"
+:obj:vr.c.o Ä ":vr:vr.proto.h"
+:obj:vr.c.o Ä ":config:Preferences.h"
+:obj:vr.c.o Ä ":vr:vr.h"
+:obj:vr.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:vr.c.o Ä "globaldefs.h"
+
+:obj:vrrgmac.c.o Ä ":vr:vrrgmac.proto.h"
+:obj:vrrgmac.c.o Ä "TelnetHeader.h"
+:obj:vrrgmac.c.o Ä ":vr:vdevice.proto.h"
+:obj:vrrgmac.c.o Ä ":obj:sys.dump"
+:obj:vrrgmac.c.o Ä ":main:maclook.proto.h"
+:obj:vrrgmac.c.o Ä "typedefs.h"
+:obj:vrrgmac.c.o Ä ":main:telneterrors.h"
+:obj:vrrgmac.c.o Ä "resrcdefs.h"
+:obj:vrrgmac.c.o Ä ":vr:vrrgmac.c"
+:obj:vrrgmac.c.o Ä ":main:errors.proto.h"
+:obj:vrrgmac.c.o Ä ":network:InternalEvents.h"
+:obj:vrrgmac.c.o Ä ":vr:vr.proto.h"
+:obj:vrrgmac.c.o Ä ":config:Preferences.h"
+:obj:vrrgmac.c.o Ä ":vr:vr.h"
+:obj:vrrgmac.c.o Ä ":vr:vdevice.h"
+:obj:vrrgmac.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:vrrgmac.c.o Ä "debug.h"
+:obj:vrrgmac.c.o Ä "globaldefs.h"
+
+:obj:rsmac.c.o Ä "TelnetHeader.h"
+:obj:rsmac.c.o Ä ":network:mactcp:network.proto.h"
+:obj:rsmac.c.o Ä ":obj:sys.dump"
+:obj:rsmac.c.o Ä ":vs:vskeys.h"
+:obj:rsmac.c.o Ä "typedefs.h"
+:obj:rsmac.c.o Ä ":vs:rsdefs.h"
+:obj:rsmac.c.o Ä ":main:telneterrors.h"
+:obj:rsmac.c.o Ä "resrcdefs.h"
+:obj:rsmac.c.o Ä ":main:DlogUtils.proto.h"
+:obj:rsmac.c.o Ä ":config:Preferences.h"
+:obj:rsmac.c.o Ä ":main:wdefpatch.proto.h"
+:obj:rsmac.c.o Ä ":config:configure.proto.h"
+:obj:rsmac.c.o Ä "globaldefs.h"
+:obj:rsmac.c.o Ä "::krb:kerberos.h"
+:obj:rsmac.c.o Ä ":vs:vsinterf.proto.h"
+:obj:rsmac.c.o Ä ":vs:wind.h"
+:obj:rsmac.c.o Ä ":main:maclook.proto.h"
+:obj:rsmac.c.o Ä ":vs:rsmac.proto.h"
+:obj:rsmac.c.o Ä ":main:parse.proto.h"
+:obj:rsmac.c.o Ä ":vs:vsdata.h"
+:obj:rsmac.c.o Ä "::krb:KrbDriver.h"
+:obj:rsmac.c.o Ä ":main:errors.proto.h"
+:obj:rsmac.c.o Ä ":vs:vsintern.proto.h"
+:obj:rsmac.c.o Ä "::krb:encrypt.h"
+:obj:rsmac.c.o Ä ":vs:rsmac.c"
+:obj:rsmac.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:rsmac.c.o Ä ":main:menuseg.proto.h"
+
+:obj:vsem.c.o Ä "TelnetHeader.h"
+:obj:vsem.c.o Ä ":obj:sys.dump"
+:obj:vsem.c.o Ä ":vs:vskeys.h"
+:obj:vsem.c.o Ä "typedefs.h"
+:obj:vsem.c.o Ä "resrcdefs.h"
+:obj:vsem.c.o Ä ":main:printing.proto.h"
+:obj:vsem.c.o Ä ":config:Preferences.h"
+:obj:vsem.c.o Ä ":vs:vsem.proto.h"
+:obj:vsem.c.o Ä "debug.h"
+:obj:vsem.c.o Ä "globaldefs.h"
+:obj:vsem.c.o Ä ":vs:vsem.c"
+:obj:vsem.c.o Ä ":vs:vsinterf.proto.h"
+:obj:vsem.c.o Ä "::krb:kerberos.h"
+:obj:vsem.c.o Ä ":main:maclook.proto.h"
+:obj:vsem.c.o Ä ":vs:wind.h"
+:obj:vsem.c.o Ä ":vs:rsmac.proto.h"
+:obj:vsem.c.o Ä ":vs:vsdata.h"
+:obj:vsem.c.o Ä "::krb:KrbDriver.h"
+:obj:vsem.c.o Ä ":main:event.proto.h"
+:obj:vsem.c.o Ä ":main:translate.proto.h"
+:obj:vsem.c.o Ä ":vs:vsintern.proto.h"
+:obj:vsem.c.o Ä "::krb:encrypt.h"
+:obj:vsem.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:vsem.c.o Ä ":main:menuseg.proto.h"
+
+:obj:vsinterf.c.o Ä "TelnetHeader.h"
+:obj:vsinterf.c.o Ä ":obj:sys.dump"
+:obj:vsinterf.c.o Ä ":vs:vskeys.h"
+:obj:vsinterf.c.o Ä "typedefs.h"
+:obj:vsinterf.c.o Ä "resrcdefs.h"
+:obj:vsinterf.c.o Ä ":vs:vsinterf.c"
+:obj:vsinterf.c.o Ä ":main:DlogUtils.proto.h"
+:obj:vsinterf.c.o Ä ":config:Preferences.h"
+:obj:vsinterf.c.o Ä ":vs:vsem.proto.h"
+:obj:vsinterf.c.o Ä "debug.h"
+:obj:vsinterf.c.o Ä "globaldefs.h"
+:obj:vsinterf.c.o Ä ":vs:vsinterf.proto.h"
+:obj:vsinterf.c.o Ä "::krb:kerberos.h"
+:obj:vsinterf.c.o Ä ":main:maclook.proto.h"
+:obj:vsinterf.c.o Ä ":vs:Wind.h"
+:obj:vsinterf.c.o Ä ":vs:rsmac.proto.h"
+:obj:vsinterf.c.o Ä ":vs:vsdata.h"
+:obj:vsinterf.c.o Ä "::krb:KrbDriver.h"
+:obj:vsinterf.c.o Ä ":vs:vsinit.h"
+:obj:vsinterf.c.o Ä ":main:errors.proto.h"
+:obj:vsinterf.c.o Ä ":vs:vsintern.proto.h"
+:obj:vsinterf.c.o Ä "::krb:encrypt.h"
+:obj:vsinterf.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+
+:obj:vsintern.c.o Ä "TelnetHeader.h"
+:obj:vsintern.c.o Ä ":obj:sys.dump"
+:obj:vsintern.c.o Ä ":vs:vskeys.h"
+:obj:vsintern.c.o Ä "typedefs.h"
+:obj:vsintern.c.o Ä "resrcdefs.h"
+:obj:vsintern.c.o Ä ":config:Preferences.h"
+:obj:vsintern.c.o Ä ":vs:vsintern.c"
+:obj:vsintern.c.o Ä "globaldefs.h"
+:obj:vsintern.c.o Ä ":vs:vsinterf.proto.h"
+:obj:vsintern.c.o Ä "::krb:kerberos.h"
+:obj:vsintern.c.o Ä ":main:maclook.proto.h"
+:obj:vsintern.c.o Ä ":vs:wind.h"
+:obj:vsintern.c.o Ä ":vs:rsmac.proto.h"
+:obj:vsintern.c.o Ä ":vs:vsdata.h"
+:obj:vsintern.c.o Ä "::krb:KrbDriver.h"
+:obj:vsintern.c.o Ä ":vs:vsintern.proto.h"
+:obj:vsintern.c.o Ä "::krb:encrypt.h"
+:obj:vsintern.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+
+:obj:enc_des.c.o Ä "TelnetHeader.h"
+:obj:enc_des.c.o Ä ":obj:sys.dump"
+:obj:enc_des.c.o Ä "typedefs.h"
+:obj:enc_des.c.o Ä "::krb:enc_des.proto.h"
+:obj:enc_des.c.o Ä "resrcdefs.h"
+:obj:enc_des.c.o Ä "::krb:encrypt.proto.h"
+:obj:enc_des.c.o Ä ":config:Preferences.h"
+:obj:enc_des.c.o Ä "::krb:desproto.h"
+:obj:enc_des.c.o Ä "::krb:enc_des.c"
+:obj:enc_des.c.o Ä "globaldefs.h"
+:obj:enc_des.c.o Ä "::krb:kerberos.proto.h"
+:obj:enc_des.c.o Ä "::krb:kerberos.h"
+:obj:enc_des.c.o Ä ":vs:wind.h"
+:obj:enc_des.c.o Ä ":main:parse.proto.h"
+:obj:enc_des.c.o Ä "::krb:KrbDriver.h"
+:obj:enc_des.c.o Ä "::krb:encrypt.h"
+:obj:enc_des.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+
+:obj:encrypt.c.o Ä "::krb:kerberos.proto.h"
+:obj:encrypt.c.o Ä "TelnetHeader.h"
+:obj:encrypt.c.o Ä "::krb:encrypt.c"
+:obj:encrypt.c.o Ä "::krb:kerberos.h"
+:obj:encrypt.c.o Ä ":obj:sys.dump"
+:obj:encrypt.c.o Ä ":vs:wind.h"
+:obj:encrypt.c.o Ä "typedefs.h"
+:obj:encrypt.c.o Ä "::krb:enc_des.proto.h"
+:obj:encrypt.c.o Ä ":main:parse.proto.h"
+:obj:encrypt.c.o Ä "resrcdefs.h"
+:obj:encrypt.c.o Ä "::krb:KrbDriver.h"
+:obj:encrypt.c.o Ä "::krb:encrypt.proto.h"
+:obj:encrypt.c.o Ä ":config:Preferences.h"
+:obj:encrypt.c.o Ä "::krb:encrypt.h"
+:obj:encrypt.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+:obj:encrypt.c.o Ä "globaldefs.h"
+
+:obj:kerberos.c.o Ä "TelnetHeader.h"
+:obj:kerberos.c.o Ä ":obj:sys.dump"
+:obj:kerberos.c.o Ä "typedefs.h"
+:obj:kerberos.c.o Ä "resrcdefs.h"
+:obj:kerberos.c.o Ä "::krb:encrypt.proto.h"
+:obj:kerberos.c.o Ä ":config:Preferences.h"
+:obj:kerberos.c.o Ä "::krb:desproto.h"
+:obj:kerberos.c.o Ä "globaldefs.h"
+:obj:kerberos.c.o Ä "::krb:kerberos.proto.h"
+:obj:kerberos.c.o Ä "::krb:kerberos.h"
+:obj:kerberos.c.o Ä ":vs:wind.h"
+:obj:kerberos.c.o Ä ":main:parse.proto.h"
+:obj:kerberos.c.o Ä "::krb:KrbDriver.h"
+:obj:kerberos.c.o Ä "::krb:kerberos.c"
+:obj:kerberos.c.o Ä "::krb:encrypt.h"
+:obj:kerberos.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+
+:obj:wdefpatch.c.o Ä "TelnetHeader.h"
+:obj:wdefpatch.c.o Ä ":obj:sys.dump"
+:obj:wdefpatch.c.o Ä "typedefs.h"
+:obj:wdefpatch.c.o Ä "resrcdefs.h"
+:obj:wdefpatch.c.o Ä ":config:Preferences.h"
+:obj:wdefpatch.c.o Ä ":main:wdefpatch.proto.h"
+:obj:wdefpatch.c.o Ä "globaldefs.h"
+:obj:wdefpatch.c.o Ä "::krb:kerberos.h"
+:obj:wdefpatch.c.o Ä ":vs:wind.h"
+:obj:wdefpatch.c.o Ä ":main:wdefpatch.c"
+:obj:wdefpatch.c.o Ä "::krb:KrbDriver.h"
+:obj:wdefpatch.c.o Ä "::krb:encrypt.h"
+:obj:wdefpatch.c.o Ä ":network:mactcp:MacTCPCommonTypes.h"
+
+:obj:des_cornell.c.o Ä "::krb:glue.h"
+:obj:des_cornell.c.o Ä "::krb:des_cornell.c"
+:obj:des_cornell.c.o Ä "::krb:KrbDriver.h"
+:obj:des_cornell.c.o Ä "::krb:desproto.h"
+:obj:des_cornell.c.o Ä "::krb:encrypt.h"
+
+
+# IF YOU PUT ANYTHING HERE IT WILL GO AWAY
+

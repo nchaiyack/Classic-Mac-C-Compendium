@@ -1,1 +1,3 @@
-/* save.c */Boolean DoSave(WDPtr wdp, Boolean save);
+
+/* save.c */
+Boolean DoSave(WDPtr wdp, Boolean save);

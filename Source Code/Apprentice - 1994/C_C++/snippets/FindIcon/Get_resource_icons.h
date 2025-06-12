@@ -1,1 +1,5 @@
-pascal OSErr Get_resource_icons(/* <-- */	Handle *theSuite,/* --> */	short theID,/* --> */	long theSelector);
+pascal OSErr Get_resource_icons(
+/* <-- */	Handle *theSuite,
+/* --> */	short theID,
+/* --> */	long theSelector
+);

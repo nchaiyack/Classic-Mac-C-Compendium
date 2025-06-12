@@ -1,1 +1,221 @@
-{	ircle - Internet Relay Chat client	}{	File: CTCP	}{	Copyright © 1992 Olaf Titz (s_titz@ira.uka.de)	}{	This program is free software; you can redistribute it and/or modify	}{	it under the terms of the GNU General Public License as published by	}{	the Free Software Foundation; either version 2 of the License, or	}{	(at your option) any later version.	}{	This program is distributed in the hope that it will be useful,	}{	but WITHOUT ANY WARRANTY; without even the implied warranty of	}{	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	}{	GNU General Public License for more details.	}{	You should have received a copy of the GNU General Public License	}{	along with this program; if not, write to the Free Software	}{	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.	}unit CTCP;{ Handles CTCP messages }interfaceuses	TCPTypes, TCPStuff, TCPConnections, MiscGlue, MsgWindows,{}	IRCGlobals, IRCaux, IRCChannels, IRCCommands, DCC;procedure doCTCP (var from, target, s: string; isReply: boolean);{ This handles possible CTCP messages - return empty if processed }implementation{ Special thanks to Klaus Zeuge for providing protocol documentation }var	comm, rest: str255;procedure quote (var s: string);	var		i: integer;	begin		i := 1;		while i <= length(s) do begin			case ord(s[i]) of				0: 					begin					s[i] := chr(16);					insert('0', s, i + 1);				end;				10: 					begin					s[i] := chr(16);					insert('n', s, i + 1);				end;				13: 					begin					s[i] := chr(16);					insert('r', s, i + 1);				end;				16: 					begin					i := i + 1;					s[i] := chr(16);					insert(chr(16), s, i);				end;				otherwise					begin				end;			end;			i := i + 1;		end;	end;procedure unquote (var s: string);	var		i: integer;	begin		repeat			i := pos(chr(16), s);			if i = 0 then				leave;			if i = length(s) then				s[0] := chr(i - 1)			else begin				case ord(s[i + 1]) of					48: { 0 }						s[i + 1] := chr(0);					110:  { n }						s[i + 1] := chr(10);					114:  { r }						s[i + 1] := chr(13);					16: { Ctrl-P }						s[i + 1] := chr(16);					otherwise						begin					end;				end;				delete(s, i, 1);			end;		until false;	end;procedure CTCPComm (var fr, ta: string; var co, re: str255);	var		tt: longint;		i: integer;		st: str255;	procedure reply;		begin			quote(st);			st := concat('NOTICE ', fr, ' :', chr(1), co, ' ', st, chr(1));			if serverStatus = S_CONN then				PutLine(st);		end;	begin		UprString(co, false);		if co = 'ACTION' then begin			st := concat(fr, ' ', re);			ChannelMsg(ta, st)		end		else if co = 'CLIENTINFO' then begin			i := pos(' ', re);			if i > 0 then				re[0] := chr(i - 1);			UprString(re, false);			if re = 'ACTION' then				st := 'ACTION contains action descriptions for atmosphere'			else if re = 'CLIENTINFO' then				st := 'CLIENTINFO gives information about available CTCP commands'			else if re = 'DCC' then				st := 'DCC requests a direct client connection'			else if re = 'ECHO' then				st := 'ECHO returns the arguments it receives'			else if re = 'ERRMSG' then				st := 'ERRMSG returns error messages'			else if re = 'FINGER' then				st := 'FINGER shows login name and idle time of user'			else if re = 'PING' then				st := 'PING returns the arguments it receives'			else if re = 'TIME' then				st := 'TIME shows local time of client'			else if re = 'VERSION' then				st := 'VERSION shows information about client version'			else				st := 'ACTION CLIENTINFO DCC ERRMSG FINGER VERSION :Use CLIENTINFO <command> to get information about specific command';			reply;		end		else if co = 'DCC' then			DCCrequest(fr, re)		else if (co = 'ECHO') or (co = 'PING') then begin			st := re;			reply		end		else if co = 'ERRMSG' then begin			st := concat(re, ' :no error');			reply		end		else if co = 'FINGER' then begin			getdatetime(tt);			st := stringof(re, ' :', default^^.userLoginName, ' :idle ', abs(tt - idleTime) : 1, ' second(s)');			reply		end		else if co = 'TIME' then begin			getdatetime(tt);			IUTimeString(tt, false, st);			reply		end		else if co = 'VERSION' then begin			st := concat('ircle :', CL_VERSION, ' :Apple Macintosh (tm)');			reply		end		else begin			st := concat('*** Unknown CTCP from ', fr, ': ', co, ' ', re);			Message(st);			st := concat(co, ' :unknown query');			co := 'ERRMSG';			reply		end;	end;procedure CTCPReply (var fr, ta: string; var co, re: str255);	var		l1, l2: longint;		st: string;	begin		if co = 'PING' then begin			StringToNum(re, l1);			GetDateTime(l2);			st := stringof('CPING time for ', fr, ' : ', l2 - l1 : 1, ' second(s)');		end		else			st := concat('CTCP ', co, ' reply from ', fr, ' : ', re);		Message(st);	end;procedure doCTCP (var from, target, s: string; isReply: boolean);	var		i, j, k: integer;	begin		repeat			i := pos(chr(1), s);			if i = 0 then				leave;			comm := copy(s, i + 1, 255);			j := pos(chr(1), comm);			if j = 0 then				j := 254;			k := pos(' ', comm);			if k = 0 then				k := j;			rest := copy(comm, k + 1, j - k - 1);			comm[0] := chr(k - 1);			delete(s, i, j + 1);			unquote(rest);			if isReply then				CTCPReply(from, target, comm, rest)			else				CTCPComm(from, target, comm, rest);		until false;	end;end.
+{	ircle - Internet Relay Chat client	}
+{	File: CTCP	}
+{	Copyright © 1992 Olaf Titz (s_titz@ira.uka.de)	}
+
+{	This program is free software; you can redistribute it and/or modify	}
+{	it under the terms of the GNU General Public License as published by	}
+{	the Free Software Foundation; either version 2 of the License, or	}
+{	(at your option) any later version.	}
+
+{	This program is distributed in the hope that it will be useful,	}
+{	but WITHOUT ANY WARRANTY; without even the implied warranty of	}
+{	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	}
+{	GNU General Public License for more details.	}
+
+{	You should have received a copy of the GNU General Public License	}
+{	along with this program; if not, write to the Free Software	}
+{	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.	}
+
+unit CTCP;
+{ Handles CTCP messages }
+
+interface
+uses
+	TCPTypes, TCPStuff, TCPConnections, MiscGlue, MsgWindows,{}
+	IRCGlobals, IRCaux, IRCChannels, IRCCommands, DCC;
+
+procedure doCTCP (var from, target, s: string; isReply: boolean);
+{ This handles possible CTCP messages - return empty if processed }
+
+implementation
+{ Special thanks to Klaus Zeuge for providing protocol documentation }
+
+var
+	comm, rest: str255;
+
+procedure quote (var s: string);
+	var
+		i: integer;
+	begin
+		i := 1;
+		while i <= length(s) do begin
+			case ord(s[i]) of
+				0: 
+					begin
+					s[i] := chr(16);
+					insert('0', s, i + 1);
+				end;
+				10: 
+					begin
+					s[i] := chr(16);
+					insert('n', s, i + 1);
+				end;
+				13: 
+					begin
+					s[i] := chr(16);
+					insert('r', s, i + 1);
+				end;
+				16: 
+					begin
+					i := i + 1;
+					s[i] := chr(16);
+					insert(chr(16), s, i);
+				end;
+				otherwise
+					begin
+				end;
+			end;
+			i := i + 1;
+		end;
+	end;
+
+
+procedure unquote (var s: string);
+	var
+		i: integer;
+	begin
+		repeat
+			i := pos(chr(16), s);
+			if i = 0 then
+				leave;
+			if i = length(s) then
+				s[0] := chr(i - 1)
+			else begin
+				case ord(s[i + 1]) of
+					48: { 0 }
+						s[i + 1] := chr(0);
+					110:  { n }
+						s[i + 1] := chr(10);
+					114:  { r }
+						s[i + 1] := chr(13);
+					16: { Ctrl-P }
+						s[i + 1] := chr(16);
+					otherwise
+						begin
+					end;
+				end;
+				delete(s, i, 1);
+			end;
+		until false;
+	end;
+
+procedure CTCPComm (var fr, ta: string; var co, re: str255);
+	var
+		tt: longint;
+		i: integer;
+		st: str255;
+	procedure reply;
+		begin
+			quote(st);
+			st := concat('NOTICE ', fr, ' :', chr(1), co, ' ', st, chr(1));
+			if serverStatus = S_CONN then
+				PutLine(st);
+		end;
+	begin
+		UprString(co, false);
+		if co = 'ACTION' then begin
+			st := concat(fr, ' ', re);
+			ChannelMsg(ta, st)
+		end
+		else if co = 'CLIENTINFO' then begin
+			i := pos(' ', re);
+			if i > 0 then
+				re[0] := chr(i - 1);
+			UprString(re, false);
+			if re = 'ACTION' then
+				st := 'ACTION contains action descriptions for atmosphere'
+			else if re = 'CLIENTINFO' then
+				st := 'CLIENTINFO gives information about available CTCP commands'
+			else if re = 'DCC' then
+				st := 'DCC requests a direct client connection'
+			else if re = 'ECHO' then
+				st := 'ECHO returns the arguments it receives'
+			else if re = 'ERRMSG' then
+				st := 'ERRMSG returns error messages'
+			else if re = 'FINGER' then
+				st := 'FINGER shows login name and idle time of user'
+			else if re = 'PING' then
+				st := 'PING returns the arguments it receives'
+			else if re = 'TIME' then
+				st := 'TIME shows local time of client'
+			else if re = 'VERSION' then
+				st := 'VERSION shows information about client version'
+			else
+				st := 'ACTION CLIENTINFO DCC ERRMSG FINGER VERSION :Use CLIENTINFO <command> to get information about specific command';
+			reply;
+		end
+		else if co = 'DCC' then
+			DCCrequest(fr, re)
+		else if (co = 'ECHO') or (co = 'PING') then begin
+			st := re;
+			reply
+		end
+		else if co = 'ERRMSG' then begin
+			st := concat(re, ' :no error');
+			reply
+		end
+		else if co = 'FINGER' then begin
+			getdatetime(tt);
+			st := stringof(re, ' :', default^^.userLoginName, ' :idle ', abs(tt - idleTime) : 1, ' second(s)');
+			reply
+		end
+		else if co = 'TIME' then begin
+			getdatetime(tt);
+			IUTimeString(tt, false, st);
+			reply
+		end
+		else if co = 'VERSION' then begin
+			st := concat('ircle :', CL_VERSION, ' :Apple Macintosh (tm)');
+			reply
+		end
+		else begin
+			st := concat('*** Unknown CTCP from ', fr, ': ', co, ' ', re);
+			Message(st);
+			st := concat(co, ' :unknown query');
+			co := 'ERRMSG';
+			reply
+		end;
+	end;
+
+procedure CTCPReply (var fr, ta: string; var co, re: str255);
+	var
+		l1, l2: longint;
+		st: string;
+	begin
+		if co = 'PING' then begin
+			StringToNum(re, l1);
+			GetDateTime(l2);
+			st := stringof('CPING time for ', fr, ' : ', l2 - l1 : 1, ' second(s)');
+		end
+		else
+			st := concat('CTCP ', co, ' reply from ', fr, ' : ', re);
+		Message(st);
+	end;
+
+procedure doCTCP (var from, target, s: string; isReply: boolean);
+	var
+		i, j, k: integer;
+	begin
+		repeat
+			i := pos(chr(1), s);
+			if i = 0 then
+				leave;
+			comm := copy(s, i + 1, 255);
+			j := pos(chr(1), comm);
+			if j = 0 then
+				j := 254;
+			k := pos(' ', comm);
+			if k = 0 then
+				k := j;
+			rest := copy(comm, k + 1, j - k - 1);
+			comm[0] := chr(k - 1);
+			delete(s, i, j + 1);
+			unquote(rest);
+			if isReply then
+				CTCPReply(from, target, comm, rest)
+			else
+				CTCPComm(from, target, comm, rest);
+		until false;
+	end;
+
+end.

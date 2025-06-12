@@ -1,1 +1,57 @@
-;		MacTCP a5 world code	blanks off	case onNHApple	PROC	EXPORT;;;		PUBLIC	_BKGRtask,_initBKGR		EXPORT initMyWorld, myWorld, theirWorld, UDPstub, initUDPstubinitMyWorld		LEA		A5ptr,A0		MOVE.L	A5,D0		MOVE.L	D0,0(A0)		RTS	myWorld		LEA		A5save,A0		; Prepare to save current A5		MOVE.L	A5,D0			; Move to valid spot		MOVE.L	D0,(a0)			; store it 		LEA		A5ptr,A0		; Ready to get ours?		MOVEA.L	(a0),A5			; Load 'er up!		RTStheirWorld		LEA		A5save,A0		; Prepare to give control back		MOVEA.L	(a0),a5			; Load 'er up!		RTSinitUDPstub		LEA		UDPaddr,A0		MOVE.L	4(SP),D0		MOVE.L	D0,0(A0)		RTSUDPstub		MOVE.L	a1,-(sp)		; Push ICMP		MOVE.L	d0,-(sp)		; Push eventCode		MOVE.L	a0,-(sp)		; Push StreamPtr		LEA		UDPaddr,A0		MOVEA.L	(a0),a0			; Lets go there!		JSR		(a0)			; Go to the JumpTo Address		ADDA.L	#12,sp		RTS		UDPaddr	DC.L	0A5ptr	DC.L	0A5save	DC.L	0	ENDPROC		END	
+;		MacTCP a5 world code
+
+	blanks off
+	case on
+
+NHApple	PROC	EXPORT
+
+;
+;
+;		PUBLIC	_BKGRtask,_initBKGR
+		EXPORT initMyWorld, myWorld, theirWorld, UDPstub, initUDPstub
+initMyWorld
+		LEA		A5ptr,A0
+		MOVE.L	A5,D0
+		MOVE.L	D0,0(A0)
+
+		RTS
+
+	
+myWorld
+		LEA		A5save,A0		; Prepare to save current A5
+		MOVE.L	A5,D0			; Move to valid spot
+		MOVE.L	D0,(a0)			; store it 
+
+		LEA		A5ptr,A0		; Ready to get ours?
+		MOVEA.L	(a0),A5			; Load 'er up!
+
+		RTS
+theirWorld
+
+		LEA		A5save,A0		; Prepare to give control back
+		MOVEA.L	(a0),a5			; Load 'er up!
+		RTS
+
+initUDPstub
+		LEA		UDPaddr,A0
+		MOVE.L	4(SP),D0
+		MOVE.L	D0,0(A0)
+		RTS
+
+UDPstub
+		MOVE.L	a1,-(sp)		; Push ICMP
+		MOVE.L	d0,-(sp)		; Push eventCode
+		MOVE.L	a0,-(sp)		; Push StreamPtr
+		LEA		UDPaddr,A0
+		MOVEA.L	(a0),a0			; Lets go there!
+		JSR		(a0)			; Go to the JumpTo Address
+		ADDA.L	#12,sp
+		RTS
+		
+UDPaddr	DC.L	0
+A5ptr	DC.L	0
+A5save	DC.L	0
+	ENDPROC
+	
+	END
+	

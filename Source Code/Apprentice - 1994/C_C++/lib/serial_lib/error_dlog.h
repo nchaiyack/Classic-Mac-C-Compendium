@@ -1,1 +1,3 @@
-/* error_dlog.h */void ReportError( char *errMsg, short errNum );
+/* error_dlog.h */
+
+void ReportError( char *errMsg, short errNum );

@@ -1,1 +1,1 @@
-void HandleMouseDown (EventRecord *ev);
+void HandleMouseDown (EventRecord *ev);

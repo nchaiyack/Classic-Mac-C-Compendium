@@ -1,1 +1,2 @@
-void HandleActivate (WindowPtr wind, Boolean actFlag);void HandleSuspendResume (long message);
+void HandleActivate (WindowPtr wind, Boolean actFlag);
+void HandleSuspendResume (long message);

@@ -1,1 +1,3 @@
-OSErr Copy_each_icon(/* <-> */	Handle the_suite);
+OSErr Copy_each_icon(
+/* <-> */	Handle the_suite
+);

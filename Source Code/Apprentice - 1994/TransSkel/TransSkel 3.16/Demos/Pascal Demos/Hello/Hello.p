@@ -1,1 +1,180 @@
-{ TransSkel "hello, world" application in Pascal }{ Presents a window with "Hello, world." displayed centered in the window }{ when the window is active, and "Goodbye, world." when the window is }{ inactive (e.g., when the application is suspended, or when the "About" }{ alert comes up). }{ 04 Feb 94 Version 1.00, Paul DuBois }program Hello;	uses		TransSkel;	const{ strings that appear in window }		hello = 'Hello, world.';		goodbye = 'Goodbye, world.';{ resource numbers }		aboutAlrtRes = 1000;				{ About box }		fileMenuNum = skelAppleMenuID + 1;	{ File menu }{ File menu item numbers }		quit = 1;	var		fileMenu: MenuHandle;		phrase: Str255;				{ current phrase }{--------------------------------------------------------------------}{ Menu handling procedures }{--------------------------------------------------------------------}{ Handle selection of "About Hello..." item from Apple menu }	procedure DoAppleMenu (item: Integer);		var			ignore: Integer;	begin		ignore := SkelAlert(aboutAlrtRes, SkelDlogFilter(nil, true), skelPositionOnParentDevice);		SkelRmveDlogFilter;	end;{ Process selection from File menu }	procedure DoFileMenu (item: Integer);	begin		case item of			quit: 				SkelStopEventLoop;		end;	end;{ Initialize menus.  Tell TransSkel to process the Apple menu }{ automatically, and associate the proper procedure with the }{ File menu. }	procedure SetupMenus;		var			ignore: Boolean;	begin		SkelApple('About Hello…', @DoAppleMenu);		fileMenu := NewMenu(fileMenuNum, 'File');		AppendMenu(fileMenu, 'Quit/Q');		ignore := SkelMenu(fileMenu, @DoFileMenu, nil, false, false);		DrawMenuBar;	end;{--------------------------------------------------------------------}{ Window handling procedures }{--------------------------------------------------------------------}{ Draw grow box of window in lower right hand corner }	procedure DrawGrowBox (w: WindowPtr);		var			oldClip: RgnHandle;			r: Rect;	begin		r := w^.portRect;		r.left := r.right - 15;			{ draw only in corner }		r.top := r.bottom - 15;		oldClip := NewRgn;		GetClip(oldClip);		ClipRect(r);		DrawGrowIcon(w);		SetClip(oldClip);		DisposeRgn(oldClip);	end;	procedure Update (resized: Boolean);		var			w: WindowPtr;			r: Rect;			h, v: Integer;	begin		GetPort(w);		r := w^.portRect;		EraseRect(r);		v := (r.top + r.bottom) div 2;		h := (r.left + r.right - StringWidth(phrase)) div 2;		MoveTo(h, v);		DrawString(phrase);		DrawGrowBox(w);	end;{ Normally the grow icon is drawn on a change of activation state, but since }{ the entire portRect is invalidated here, everything will be redrawn by }{ Update(), anyway, including the grow box.  So don't bother here. }	procedure Activate (active: Boolean);		var			w: WindowPtr;	begin		GetPort(w);		if (active) then			phrase := hello		else			phrase := goodbye;		InvalRect(w^.portRect);	end;	procedure Clobber;		var			w: WindowPtr;	begin		GetPort(w);		DisposeWindow(w);	end;{ Read window from resource file and install handler for it.  Mouse }{ and key clicks are ignored.  There is no close proc since the window }{ doesn't have a close box.  There is no idle proc since nothing is }{ done while the window is in front (all the things that are done are }{ handled by TransSkel). }	procedure WindInit;		var			w: WindowPtr;			bounds: Rect;			ignore: Boolean;	begin		phrase := hello;		SetRect(bounds, 0, 0, 200, 100);		if (SkelQuery(skelQHasColorQD) <> 0) then			w := NewCWindow(nil, bounds, 'Howdy', false, documentProc + 8, WindowPtr(-1), false, 0)		else			w := NewWindow(nil, bounds, 'Howdy', false, documentProc + 8, WindowPtr(-1), false, 0);		SkelPositionWindow(w, skelPositionOnMainDevice, FixRatio(1, 2), FixRatio(1, 5));		ignore := SkelWindow(w, nil, nil, @Update, @Activate, nil, @Clobber, nil, false);		TextFont(0);		{ select system font in default size }		TextSize(0);		SelectWindow(w);		ShowWindow(w);	end;begin	SkelInit(nil);	SetupMenus;	WindInit;	SkelEventLoop;	SkelCleanup;end.
+{ TransSkel "hello, world" application in Pascal }
+
+{ Presents a window with "Hello, world." displayed centered in the window }
+{ when the window is active, and "Goodbye, world." when the window is }
+{ inactive (e.g., when the application is suspended, or when the "About" }
+{ alert comes up). }
+
+{ 04 Feb 94 Version 1.00, Paul DuBois }
+
+program Hello;
+
+	uses
+		TransSkel;
+
+	const
+
+{ strings that appear in window }
+
+		hello = 'Hello, world.';
+		goodbye = 'Goodbye, world.';
+
+{ resource numbers }
+
+		aboutAlrtRes = 1000;				{ About box }
+		fileMenuNum = skelAppleMenuID + 1;	{ File menu }
+
+{ File menu item numbers }
+
+		quit = 1;
+
+	var
+
+		fileMenu: MenuHandle;
+
+		phrase: Str255;				{ current phrase }
+
+
+{--------------------------------------------------------------------}
+{ Menu handling procedures }
+{--------------------------------------------------------------------}
+
+{ Handle selection of "About Hello..." item from Apple menu }
+
+	procedure DoAppleMenu (item: Integer);
+		var
+			ignore: Integer;
+	begin
+		ignore := SkelAlert(aboutAlrtRes, SkelDlogFilter(nil, true), skelPositionOnParentDevice);
+		SkelRmveDlogFilter;
+	end;
+
+
+{ Process selection from File menu }
+
+	procedure DoFileMenu (item: Integer);
+	begin
+		case item of
+			quit: 
+				SkelStopEventLoop;
+		end;
+	end;
+
+
+{ Initialize menus.  Tell TransSkel to process the Apple menu }
+{ automatically, and associate the proper procedure with the }
+{ File menu. }
+
+	procedure SetupMenus;
+		var
+			ignore: Boolean;
+	begin
+		SkelApple('About Hello…', @DoAppleMenu);
+		fileMenu := NewMenu(fileMenuNum, 'File');
+		AppendMenu(fileMenu, 'Quit/Q');
+		ignore := SkelMenu(fileMenu, @DoFileMenu, nil, false, false);
+
+		DrawMenuBar;
+	end;
+
+
+{--------------------------------------------------------------------}
+{ Window handling procedures }
+{--------------------------------------------------------------------}
+
+{ Draw grow box of window in lower right hand corner }
+
+	procedure DrawGrowBox (w: WindowPtr);
+		var
+			oldClip: RgnHandle;
+			r: Rect;
+	begin
+		r := w^.portRect;
+		r.left := r.right - 15;			{ draw only in corner }
+		r.top := r.bottom - 15;
+		oldClip := NewRgn;
+		GetClip(oldClip);
+		ClipRect(r);
+		DrawGrowIcon(w);
+		SetClip(oldClip);
+		DisposeRgn(oldClip);
+	end;
+
+
+	procedure Update (resized: Boolean);
+		var
+			w: WindowPtr;
+			r: Rect;
+			h, v: Integer;
+	begin
+		GetPort(w);
+		r := w^.portRect;
+		EraseRect(r);
+		v := (r.top + r.bottom) div 2;
+		h := (r.left + r.right - StringWidth(phrase)) div 2;
+		MoveTo(h, v);
+		DrawString(phrase);
+		DrawGrowBox(w);
+	end;
+
+
+{ Normally the grow icon is drawn on a change of activation state, but since }
+{ the entire portRect is invalidated here, everything will be redrawn by }
+{ Update(), anyway, including the grow box.  So don't bother here. }
+
+	procedure Activate (active: Boolean);
+		var
+			w: WindowPtr;
+	begin
+		GetPort(w);
+		if (active) then
+			phrase := hello
+		else
+			phrase := goodbye;
+		InvalRect(w^.portRect);
+	end;
+
+
+	procedure Clobber;
+		var
+			w: WindowPtr;
+	begin
+		GetPort(w);
+		DisposeWindow(w);
+	end;
+
+
+{ Read window from resource file and install handler for it.  Mouse }
+{ and key clicks are ignored.  There is no close proc since the window }
+{ doesn't have a close box.  There is no idle proc since nothing is }
+{ done while the window is in front (all the things that are done are }
+{ handled by TransSkel). }
+
+	procedure WindInit;
+		var
+			w: WindowPtr;
+			bounds: Rect;
+			ignore: Boolean;
+	begin
+		phrase := hello;
+		SetRect(bounds, 0, 0, 200, 100);
+		if (SkelQuery(skelQHasColorQD) <> 0) then
+			w := NewCWindow(nil, bounds, 'Howdy', false, documentProc + 8, WindowPtr(-1), false, 0)
+		else
+			w := NewWindow(nil, bounds, 'Howdy', false, documentProc + 8, WindowPtr(-1), false, 0);
+		SkelPositionWindow(w, skelPositionOnMainDevice, FixRatio(1, 2), FixRatio(1, 5));
+		ignore := SkelWindow(w, nil, nil, @Update, @Activate, nil, @Clobber, nil, false);
+		TextFont(0);		{ select system font in default size }
+		TextSize(0);
+		SelectWindow(w);
+		ShowWindow(w);
+	end;
+
+
+begin
+	SkelInit(nil);
+	SetupMenus;
+	WindInit;
+	SkelEventLoop;
+	SkelCleanup;
+end.

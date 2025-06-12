@@ -1,1 +1,3 @@
-/* CMyScrap.c */#include "CMyScrap.h"
+/* CMyScrap.c */
+
+#include "CMyScrap.h"

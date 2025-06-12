@@ -1,1 +1,209 @@
-unit LongControls;{ WASTE DEMO PROJECT: }{ Macintosh Controls with Long Values }{ Copyright © 1993-1994 Merzwaren }{ All Rights Reserved }interface{ creation and destruction }	function LCAttach (hControl: ControlHandle): OSErr;	procedure LCDetach (hControl: ControlHandle);{ setting variables }	procedure LCSetValue (hControl: ControlHandle;									value: LongInt);	procedure LCSetMin (hControl: ControlHandle;									min: LongInt);	procedure LCSetMax (hControl: ControlHandle;									max: LongInt);{ getting variables }	function LCGetValue (hControl: ControlHandle): LongInt;	function LCGetMin (hControl: ControlHandle): LongInt;	function LCGetMax (hControl: ControlHandle): LongInt;{ synchronizing long settings with control (short) settings }	procedure LCSynch (hControl: ControlHandle);implementation	uses		FixMath;{ LongControls private constants and data types }	const		kMaxShort = $7FFF;			{ maximum signed short integer }		kMinShort = $8000;			{ minimum signed short integer }	type{ long control auxiliary record used for keeping long settings }{ a handle to this record is stored in the contrlRfCon field of the control record }		LCAuxRec = record				value: LongInt;				{ long value }				min: LongInt;				{ long min }				max: LongInt;				{ long max }			end;  { LCAuxRec }		LCAuxPtr = ^LCAuxRec;		LCAuxHandle = ^LCAuxPtr;	function LCAttach (hControl: ControlHandle): OSErr;		var			aux: Handle;			pControl: ControlPtr;			pAux: LCAuxPtr;	begin		LCAttach := noErr;{ allocate the auxiliary record that will hold long settings }		aux := NewHandleClear(SizeOf(LCAuxRec));		if (aux = nil) then			begin				LCAttach := MemError;				Exit(LCAttach);			end;{ store a handle to the auxiliary record in the contrlRfCon field }		pControl := hControl^;		pControl^.contrlRfCon := LongInt(aux);{ copy current control settings into the auxiliary record }		pAux := LCAuxHandle(aux)^;		pAux^.value := pControl^.contrlValue;		pAux^.min := pControl^.contrlMin;		pAux^.max := pControl^.contrlMax;	end;  { LCAttach }	procedure LCDetach (hControl: ControlHandle);		var			pControl: ControlPtr;			aux: Handle;	begin		pControl := hControl^;		aux := Handle(pControl^.contrlRfCon);		if (aux <> nil) then			begin				pControl^.contrlRfCon := 0;				DisposHandle(aux);			end	end;  { LCDispose }	procedure LCSetValue (hControl: ControlHandle;									value: LongInt);		var			pControl: ControlPtr;			pAux: LCAuxPtr;			thumb: Integer;	begin		pControl := hControl^;		pAux := LCAuxHandle(pControl^.contrlRfCon)^;{ make sure value is in the range min..max }		if (value < pAux^.min) then			value := pAux^.min;		if (value > pAux^.max) then			value := pAux^.max;{ save value in auxiliary record }		pAux^.value := value;{ calculate new thumb position }		thumb := pControl^.contrlMin + FixRound(FixMul(FixDiv(value - pAux^.min, pAux^.max - pAux^.min), BSL(pControl^.contrlMax - pControl^.contrlMin, 16)));{ do nothing if the thumb position hasn't changed }		if (thumb <> pControl^.contrlValue) then			SetCtlValue(hControl, thumb);	end;  { LCSetValue }	procedure LCSetMin (hControl: ControlHandle;									min: LongInt);		var			pControl: ControlPtr;			pAux: LCAuxPtr;	begin		pControl := hControl^;		pAux := LCAuxHandle(pControl^.contrlRfCon)^;{ make sure min is less than or equal to max }		if (min > pAux^.max) then			min := pAux^.max;{ save min in auxiliary record }		pAux^.min := min;{ set contrlMin field to min or kMinShort, whichever is greater }		if (min < kMinShort) then			min := kMinShort;		pControl^.contrlMin := min;{ reset value }		LCSetValue(hControl, pAux^.value);	end;  { LCSetMin }	procedure LCSetMax (hControl: ControlHandle;									max: LongInt);		var			pControl: ControlPtr;			pAux: LCAuxPtr;	begin		pControl := hControl^;		pAux := LCAuxHandle(pControl^.contrlRfCon)^;{ make sure max is greater than or equal to min }		if (max < pAux^.min) then			max := pAux^.min;{ save max in auxiliary record }		pAux^.max := max;{ set contrlMax field to max or kMaxShort, whichever is less }		if (max > kMaxShort) then			max := kMaxShort;		pControl^.contrlMax := max;{ reset value }		LCSetValue(hControl, pAux^.value);	end;  { LCSetMax }	function LCGetValue (hControl: ControlHandle): LongInt;	begin		LCGetValue := LCAuxHandle(hControl^^.contrlRfCon)^^.value;	end;  { LCGetValue }	function LCGetMin (hControl: ControlHandle): LongInt;	begin		LCGetMin := LCAuxHandle(hControl^^.contrlRfCon)^^.min;	end;  { LCGetMin }	function LCGetMax (hControl: ControlHandle): LongInt;	begin		LCGetMax := LCAuxHandle(hControl^^.contrlRfCon)^^.max;	end;  { LCGetMax }	procedure LCSynch (hControl: ControlHandle);		var			pControl: ControlPtr;			pAux: LCAuxPtr;	begin		pControl := hControl^;		pAux := LCAuxHandle(pControl^.contrlRfCon)^;{ calculate new long value }		pAux^.value := pAux^.min + FixMul(FixRatio(pControl^.contrlValue - pControl^.contrlMin, pControl^.contrlMax - pControl^.contrlMin), pAux^.max - pAux^.min);	end;  { LCSynch }end.
+unit LongControls;
+
+{ WASTE DEMO PROJECT: }
+{ Macintosh Controls with Long Values }
+
+{ Copyright © 1993-1994 Merzwaren }
+{ All Rights Reserved }
+
+interface
+
+{ creation and destruction }
+
+	function LCAttach (hControl: ControlHandle): OSErr;
+	procedure LCDetach (hControl: ControlHandle);
+
+{ setting variables }
+
+	procedure LCSetValue (hControl: ControlHandle;
+									value: LongInt);
+	procedure LCSetMin (hControl: ControlHandle;
+									min: LongInt);
+	procedure LCSetMax (hControl: ControlHandle;
+									max: LongInt);
+
+{ getting variables }
+
+	function LCGetValue (hControl: ControlHandle): LongInt;
+	function LCGetMin (hControl: ControlHandle): LongInt;
+	function LCGetMax (hControl: ControlHandle): LongInt;
+
+{ synchronizing long settings with control (short) settings }
+
+	procedure LCSynch (hControl: ControlHandle);
+
+implementation
+	uses
+		FixMath;
+
+{ LongControls private constants and data types }
+
+	const
+
+		kMaxShort = $7FFF;			{ maximum signed short integer }
+		kMinShort = $8000;			{ minimum signed short integer }
+
+	type
+
+{ long control auxiliary record used for keeping long settings }
+{ a handle to this record is stored in the contrlRfCon field of the control record }
+
+		LCAuxRec = record
+				value: LongInt;				{ long value }
+				min: LongInt;				{ long min }
+				max: LongInt;				{ long max }
+			end;  { LCAuxRec }
+		LCAuxPtr = ^LCAuxRec;
+		LCAuxHandle = ^LCAuxPtr;
+
+	function LCAttach (hControl: ControlHandle): OSErr;
+		var
+			aux: Handle;
+			pControl: ControlPtr;
+			pAux: LCAuxPtr;
+	begin
+		LCAttach := noErr;
+
+{ allocate the auxiliary record that will hold long settings }
+		aux := NewHandleClear(SizeOf(LCAuxRec));
+		if (aux = nil) then
+			begin
+				LCAttach := MemError;
+				Exit(LCAttach);
+			end;
+
+{ store a handle to the auxiliary record in the contrlRfCon field }
+		pControl := hControl^;
+		pControl^.contrlRfCon := LongInt(aux);
+
+{ copy current control settings into the auxiliary record }
+		pAux := LCAuxHandle(aux)^;
+		pAux^.value := pControl^.contrlValue;
+		pAux^.min := pControl^.contrlMin;
+		pAux^.max := pControl^.contrlMax;
+
+	end;  { LCAttach }
+
+	procedure LCDetach (hControl: ControlHandle);
+		var
+			pControl: ControlPtr;
+			aux: Handle;
+	begin
+		pControl := hControl^;
+		aux := Handle(pControl^.contrlRfCon);
+		if (aux <> nil) then
+			begin
+				pControl^.contrlRfCon := 0;
+				DisposHandle(aux);
+			end
+	end;  { LCDispose }
+
+	procedure LCSetValue (hControl: ControlHandle;
+									value: LongInt);
+		var
+			pControl: ControlPtr;
+			pAux: LCAuxPtr;
+			thumb: Integer;
+	begin
+		pControl := hControl^;
+		pAux := LCAuxHandle(pControl^.contrlRfCon)^;
+
+{ make sure value is in the range min..max }
+		if (value < pAux^.min) then
+			value := pAux^.min;
+		if (value > pAux^.max) then
+			value := pAux^.max;
+
+{ save value in auxiliary record }
+		pAux^.value := value;
+
+{ calculate new thumb position }
+		thumb := pControl^.contrlMin + FixRound(FixMul(FixDiv(value - pAux^.min, pAux^.max - pAux^.min), BSL(pControl^.contrlMax - pControl^.contrlMin, 16)));
+
+{ do nothing if the thumb position hasn't changed }
+		if (thumb <> pControl^.contrlValue) then
+			SetCtlValue(hControl, thumb);
+
+	end;  { LCSetValue }
+
+	procedure LCSetMin (hControl: ControlHandle;
+									min: LongInt);
+		var
+			pControl: ControlPtr;
+			pAux: LCAuxPtr;
+	begin
+		pControl := hControl^;
+		pAux := LCAuxHandle(pControl^.contrlRfCon)^;
+
+{ make sure min is less than or equal to max }
+		if (min > pAux^.max) then
+			min := pAux^.max;
+
+{ save min in auxiliary record }
+		pAux^.min := min;
+
+{ set contrlMin field to min or kMinShort, whichever is greater }
+		if (min < kMinShort) then
+			min := kMinShort;
+		pControl^.contrlMin := min;
+
+{ reset value }
+		LCSetValue(hControl, pAux^.value);
+
+	end;  { LCSetMin }
+
+	procedure LCSetMax (hControl: ControlHandle;
+									max: LongInt);
+		var
+			pControl: ControlPtr;
+			pAux: LCAuxPtr;
+	begin
+		pControl := hControl^;
+		pAux := LCAuxHandle(pControl^.contrlRfCon)^;
+
+{ make sure max is greater than or equal to min }
+		if (max < pAux^.min) then
+			max := pAux^.min;
+
+{ save max in auxiliary record }
+		pAux^.max := max;
+
+{ set contrlMax field to max or kMaxShort, whichever is less }
+		if (max > kMaxShort) then
+			max := kMaxShort;
+		pControl^.contrlMax := max;
+
+{ reset value }
+		LCSetValue(hControl, pAux^.value);
+
+	end;  { LCSetMax }
+
+	function LCGetValue (hControl: ControlHandle): LongInt;
+	begin
+		LCGetValue := LCAuxHandle(hControl^^.contrlRfCon)^^.value;
+	end;  { LCGetValue }
+
+	function LCGetMin (hControl: ControlHandle): LongInt;
+	begin
+		LCGetMin := LCAuxHandle(hControl^^.contrlRfCon)^^.min;
+	end;  { LCGetMin }
+
+	function LCGetMax (hControl: ControlHandle): LongInt;
+	begin
+		LCGetMax := LCAuxHandle(hControl^^.contrlRfCon)^^.max;
+	end;  { LCGetMax }
+
+	procedure LCSynch (hControl: ControlHandle);
+		var
+			pControl: ControlPtr;
+			pAux: LCAuxPtr;
+	begin
+		pControl := hControl^;
+		pAux := LCAuxHandle(pControl^.contrlRfCon)^;
+
+{ calculate new long value }
+		pAux^.value := pAux^.min + FixMul(FixRatio(pControl^.contrlValue - pControl^.contrlMin, pControl^.contrlMax - pControl^.contrlMin), pAux^.max - pAux^.min);
+
+	end;  { LCSynch }
+
+end.

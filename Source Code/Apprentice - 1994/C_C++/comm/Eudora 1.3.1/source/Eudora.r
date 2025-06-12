@@ -1,1 +1,2 @@
-include ".pop.proj.rsrc";include "ldef.rsrc";
+include ".pop.proj.rsrc";
+include "ldef.rsrc";

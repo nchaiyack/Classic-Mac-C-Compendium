@@ -1,1 +1,459 @@
-{================================================}{============= Score handling and display ==============}{================================================}{ Example file for Ingemars Sprite Animation Toolkit. }{ © Ingemar Ragnemalm 1992 }{ See doc files for legal terms for using this code. }{ This file manages the display and update of the game scores for HeartQuest.}{ It holds routines for updating high score list, including asking for the name of}{ the player, high score window etc. When making a new game, you will probably}{ need to rewrite this unit a lot. }unit scores;interface	uses		transskel, SAT, Preferences, GameGlobals, SoundConst;	var		score: longint;	procedure DoHighMenu (item: integer);	procedure InitScores;					{ Loads the high score list and the high score window. }	procedure ZeroScore; 					{ Call this on New Game! }	procedure AddScore (amount: longint);	{ Call this when the player gets points, or with addscore(0) just to redisplay. }	procedure AddScoreS (amount: longint);	{ Call this to redisplay when the animation isn't running. }	procedure UpdateHigh;					{ Call this on game over! }implementation{ Highscore record }	type		hsRec = record				HighScores: array[0..10] of longint;				HighPlayer: array[0..10] of str15;			end;		hsPtr = ^hsRec;		hsHnd = ^hsPtr;	var		hs, hsm: hsHnd; { m is for macho mode }		hsh, hshm: Handle;{ Bitmaps and rects for drawhex }{    srcr, erasr: Rect;}{    bm: BitMap;}{    icon: Handle;}{    bma: array[0..9] of BitMap;}{    icons: array[0..9] of Handle;}{Filter function for AskHigh, ok = 1 and cancel = 4}	function Filter (theDialog: DialogPtr; var theEvent: EventRecord; var itemHit: integer): boolean;		var			theChar: Char;			kind: integer;			item: Handle;			box: Rect;	begin		if theEvent.what = keyDown then			begin				theChar := Char(BitAnd(theEvent.message, charCodeMask));				if BitAnd(theEvent.modifiers, cmdkey) <> 0 then					if theChar = '.' then						begin							itemHit := 4;{Highlight the cancel button}							GetDItem(theDialog, 4, kind, item, box);							HiliteControl(ControlHandle(item), 1);							Filter := true;							exit(Filter);						end;				if (theChar = char(13)) or (theChar = char(3)) then					begin						itemHit := 1;{Highlight the OK button}						GetDItem(theDialog, 1, kind, item, box);						HiliteControl(ControlHandle(item), 1);						Filter := true;						exit(Filter);					end;			end;		Filter := false;	end;{Put a frame around a dialog item. There are better ways to do this, though. The right way}{is to draw the frame as response to an update event, not just when opening the dialog.}	procedure FrameDItem (dLog: DialogPtr; iNum: integer);		var			iBox: Rect;			iType: integer;			iHandle: Handle;			oldPenState: PenState;			tmpp: GrafPtr;	begin		GetPort(tmpp);		SetPort(dLog);		GetPenState(oldPenState);		GetDItem(dLog, iNum, iType, iHandle, iBox);		InsetRect(iBox, -4, -4);		PenSize(3, 3);		FrameRoundRect(iBox, 16, 16);		SetPenState(oldPenState);		SetPort(tmpp);	end;{ Ask for players name (at highscore) }	function AskHigh: str255;		var			dialog: DialogPtr;			oldPort: GrafPtr;			dRec: DialogRecord;			itemHit: integer;			itemHandle: Handle;			itemType, item: integer;			itemRect: Rect;			str: str255;			levelstr: str255;	begin		GetPort(oldPort);		dialog := GetNewDialog(HighDlog, @dRec, WindowPtr(-1));		ShowWindow(dialog);		SelectWindow(dialog);		SetPort(dialog);		GetDItem(dialog, 3, itemType, itemHandle, itemRect);		SetIText(itemHandle, features^^.player);		SelIText(dialog, 3, 0, 32767);		FrameDItem(dialog, 1);		itemHit := -1;		while (itemHit <> 1) and (itemHit <> 4) do { 1=ok, 4=cancel }			ModalDialog(@Filter, itemHit);		if itemHit = 4 then			begin				AskHigh := '';			end;		if itemHit = 1 then			begin				GetDItem(dialog, 3, itemType, itemHandle, itemRect);				GetIText(itemHandle, str);				if length(str) > 15 then					str := Copy(str, 1, 15);				features^^.player := str;				AskHigh := str;			end;		CloseDialog(dialog);		SetPort(oldPort);	end;{ 	High Score window handlers }	procedure HighUpdate (resized: boolean);		var			s: str255;			i: integer;	begin		EraseRect(theHigh^.portrect);		TextSize(9);		moveto(10, 20);		DrawString(MyGetIndString(normalStrID)); {str 9: Normal high score list}		MoveTo(150, 20);		DrawString(MyGetIndString(machoStrID)); {str 10: Macho high score list}		MoveTo(0, 22);		LineTo(500, 22);		MoveTo(140, 0);		LineTo(140, 400);		for i := 1 to 10 do			begin				if not LastMacho and (i = LastHigh) then					begin						TextFace([bold]);						ForeColor(redColor);					end;				moveto(10, i * 18 + 20);				DrawString(hs^^.HighPlayer[i]);				moveto(110, i * 18 + 20);				NumToString(hs^^.HighScores[i], s);				DrawString(s);				TextFace([]);				ForeColor(BlackColor);				if LastMacho and (i = LastHigh) then					begin						TextFace([bold]);						ForeColor(redColor);					end;				moveto(150, i * 18 + 20);				DrawString(hsm^^.HighPlayer[i]);				moveto(250, i * 18 + 20);				NumToString(hsm^^.HighScores[i], s);				DrawString(s);				TextFace([]);				ForeColor(BlackColor);			end;		TextSize(12);	end;	procedure HighHalt;	begin		CloseWindow(theHigh);	end;	function InternalAddScore (amount: longint): Rect;		var			s: str255;			r: Rect;	begin		score := score + amount;		SetPort(gSAT.backScreen);		SetRect(r, gSAT.offSizeH - 49, 14, gSAT.offSizeH - 2, 155);		EraseRoundRect(r, 10, 10);		FrameRoundRect(r, 10, 10);		NumToString(Score, s);		MoveTo(gSAT.offSizeH - 47, 30);		DrawString(MyGetIndString(scoreStrID)); {str 11: Score: }		MoveTo(gSAT.offSizeH - 47, 50);		DrawString(s);		NumToString(bonus, s);		MoveTo(gSAT.offSizeH - 47, 80);		DrawString(MyGetIndString(bonusStrID)); {str 12: Bonus: }		MoveTo(gSAT.offSizeH - 47, 100);		DrawString(s);		NumToString(Level, s);		MoveTo(gSAT.offSizeH - 47, 130);		DrawString(MyGetIndString(levelStrID)); {str 13: Level: }		MoveTo(gSAT.offSizeH - 47, 150);		DrawString(s);		InternalAddScore := r;	end;	procedure AddScore (amount: longint);		var			s: str255;			r: Rect;			tmpport: grafptr;	begin		GetPort(tmpPort);		r := InternalAddScore(amount);		SATBackChanged(r); {Let SAT show it on screen}		SetPort(tmpPort);	end;	procedure AddScoreS (amount: longint);		var			s: str255;			r: Rect;			tmpport: grafptr;	begin		GetPort(tmpPort);		r := InternalAddScore(amount);		CopyBits(gSAT.backScreen^.portbits, gSAT.wind^.portBits, r, r, srcCopy, nil);		CopyBits(gSAT.backScreen^.portbits, gSAT.offScreen^.portBits, r, r, srcCopy, nil);		SetPort(tmpPort);	end;	procedure DoHighMenu (item: integer);		var			p: procptr;			i: integer;	begin		case item of			showhs: 				begin					ShowWindow(theHigh);					SelectWindow(theHigh);				end;			clearhs: 				begin					if QuestionStr(MyGetIndString(sureStrID)) then {str 14: Are you sure you want to erase the high scores?}						begin							for i := 1 to 10 do								begin									hs^^.HighScores[i] := 0;			{ skall lŠsas frŒn fil eller resurs }									hs^^.HighPlayer[i] := MyGetIndString(nobodyStrID); {str 15: Nobody}									hsm^^.HighScores[i] := 0;			{ skall lŠsas frŒn fil eller resurs }									hsm^^.HighPlayer[i] := MyGetIndString(nobodyStrID); {str 15}								end;							hs^^.HighScores[0] := 10000;			{ Lowscore }							hsm^^.HighScores[0] := 10000;			{ Lowscore }							ChangedResource(handle(hs));							ChangedResource(handle(hsm));							HideWindow(theHigh);						end;				end;			otherwise				;		end;	end;	procedure WindKey (theChar: char; theMods: integer);	begin	end;{ Call this on game over! }	procedure UpdateHigh;		var			num, len: integer;			name, s: str255;	begin		lastMacho := features^^.macho;		if features^^.macho then			begin				if score > hsm^^.HighScores[10] then					begin						num := 10;						name := AskHigh;						NumToString(level, s); {used below, to append level number}{Max 15 characters! We take some extra trouble to append 'É' too.}						len := length(stringof(' (', s, ')'));						if length(name) > 15 - len then							name := Concat(Copy(name, 1, 15 - len - 1), 'É');						if name = '' then { alt length(name) = 0 }							exit(updatehigh);						while (hsm^^.HighScores[num - 1] < score) and (num > 1) do							begin								hsm^^.HighScores[num] := hsm^^.HighScores[num - 1];								hsm^^.HighPlayer[num] := hsm^^.HighPlayer[num - 1];								num := num - 1;							end;						LastHigh := num; {Remember last high for the highscore display}						hsm^^.HighScores[num] := score;						hsm^^.HighPlayer[num] := stringof(name, ' (', s, ')'); {AskHigh;}						ChangedResource(handle(hsm));						HideWindow(theHigh);						ShowWindow(theHigh);						SelectWindow(theHigh);					end;			end{ if macho }		else if score > hs^^.HighScores[10] then			begin				num := 10;				name := AskHigh;				if length(name) > 15 then					name := Concat(Copy(name, 1, 14), 'É');				if name = '' then { alt length(name) = 0 }					exit(updatehigh);				while (hs^^.HighScores[num - 1] < score) and (num > 1) do					begin						hs^^.HighScores[num] := hs^^.HighScores[num - 1];						hs^^.HighPlayer[num] := hs^^.HighPlayer[num - 1];						num := num - 1;					end;				LastHigh := num; {Remember last high for the highscore display}				hs^^.HighScores[num] := score;				hs^^.HighPlayer[num] := name;				ChangedResource(handle(hs));				HideWindow(theHigh);				ShowWindow(theHigh);				SelectWindow(theHigh);			end;	end;	procedure ZeroScore;	begin		score := 0;		LastHigh := -1;	end;{This procedure copies a resource from the file applFile to prefFile (global file numbers,}{from the unit Preferences).}	procedure CopyResource (resType: OSType; id: integer);		var			h, h2: Handle;			saveFile: integer;	begin		saveFile := CurResFile; {Look where we are so we can restore}		UseResFile(applFile);		h := GetResource(resType, id); {Get res from the appl}		if h <> nil then			begin				UseResFile(prefFile);				h2 := GetResource(resType, id);				if h2 = nil then {It doesn't already exist}					begin						DetachResource(h); {Detach it so we can move it.}						AddResource(h, resType, id, ''); {Put it into the preffile}						ReleaseResource(h);					end				else {The res always exists. Don't copy.}					begin						ReleaseResource(h);						ReleaseResource(h2);					end;			end;		UseResFile(saveFile); {restore}	end;	procedure InitScores;		var			i: integer;	begin		if SetPrefFile then {If a pref file was created, copy high scores to it!}			begin				CopyResource('BŠst', 0); {Normal mode high scores}				CopyResource('BŠst', 1); {Macho mode high scores}				CopyResource('Feat', 0); {Settings}			end;		LastHigh := -1; {no "last"}		theHigh := GetNewWindow(theHighRes, nil, WindowPtr(-1));		SetPort(theHigh);		dummy := SkelWindow(theHigh, nil, @WindKey, @HighUpdate, nil, nil, @HighHalt, nil, false);		UseResFile(prefFile); {set the resfile to the pref file, if any. If none, prefFile will be the app itself!}		hs := hsHnd(GetResource('BŠst', 0));		if hs = nil then {Didn't exist - create it!}			begin				hs := hsHnd(NewHandle(Sizeof(hsRec)));				CheckNoMem(Ptr(hs));				for i := 1 to 10 do					begin						hs^^.HighScores[i] := 0;						hs^^.HighPlayer[i] := MyGetIndString(nobodyStrID); {str 15}					end;				hs^^.HighScores[0] := 10000;			{ Lowscore }				AddResource(handle(hs), 'BŠst', 0, 'High scores');			end		else {Did exist - check the size!}			if GetHandleSize(Handle(hs)) < sizeof(hsHnd) then				SetHandleSize(Handle(hs), sizeof(hsHnd));		hsm := hsHnd(GetResource('BŠst', 1));		if hsm = nil then {Didn't exist - create it!}			begin				hsm := hsHnd(NewHandle(Sizeof(hsRec)));				CheckNoMem(Ptr(hsm));				for i := 1 to 10 do					begin						hsm^^.HighScores[i] := 0;			{ skall lŠsas frŒn fil eller resurs }						hsm^^.HighPlayer[i] := MyGetIndString(nobodyStrID); {str 15}					end;				hsm^^.HighScores[0] := 10000;			{ Lowscore }				AddResource(handle(hsm), 'BŠst', 1, 'High scores');			end		else {Did exist - check the size!}			if GetHandleSize(Handle(hsm)) < sizeof(hsHnd) then				SetHandleSize(Handle(hsm), sizeof(hsHnd));		UseResFile(applFile);		score := 0;	end;end.
+{================================================}
+{============= Score handling and display ==============}
+{================================================}
+
+{ Example file for Ingemars Sprite Animation Toolkit. }
+{ © Ingemar Ragnemalm 1992 }
+{ See doc files for legal terms for using this code. }
+
+{ This file manages the display and update of the game scores for HeartQuest.}
+{ It holds routines for updating high score list, including asking for the name of}
+{ the player, high score window etc. When making a new game, you will probably}
+{ need to rewrite this unit a lot. }
+
+unit scores;
+
+interface
+	uses
+		transskel, SAT, Preferences, GameGlobals, SoundConst;
+
+	var
+		score: longint;
+
+	procedure DoHighMenu (item: integer);
+	procedure InitScores;					{ Loads the high score list and the high score window. }
+	procedure ZeroScore; 					{ Call this on New Game! }
+	procedure AddScore (amount: longint);	{ Call this when the player gets points, or with addscore(0) just to redisplay. }
+	procedure AddScoreS (amount: longint);	{ Call this to redisplay when the animation isn't running. }
+	procedure UpdateHigh;					{ Call this on game over! }
+
+implementation
+
+{ Highscore record }
+	type
+		hsRec = record
+				HighScores: array[0..10] of longint;
+				HighPlayer: array[0..10] of str15;
+			end;
+		hsPtr = ^hsRec;
+		hsHnd = ^hsPtr;
+
+
+	var
+		hs, hsm: hsHnd; { m is for macho mode }
+		hsh, hshm: Handle;
+
+{ Bitmaps and rects for drawhex }
+{    srcr, erasr: Rect;}
+{    bm: BitMap;}
+{    icon: Handle;}
+{    bma: array[0..9] of BitMap;}
+{    icons: array[0..9] of Handle;}
+
+{Filter function for AskHigh, ok = 1 and cancel = 4}
+	function Filter (theDialog: DialogPtr; var theEvent: EventRecord; var itemHit: integer): boolean;
+		var
+			theChar: Char;
+			kind: integer;
+			item: Handle;
+			box: Rect;
+	begin
+		if theEvent.what = keyDown then
+			begin
+				theChar := Char(BitAnd(theEvent.message, charCodeMask));
+				if BitAnd(theEvent.modifiers, cmdkey) <> 0 then
+					if theChar = '.' then
+						begin
+							itemHit := 4;
+{Highlight the cancel button}
+							GetDItem(theDialog, 4, kind, item, box);
+							HiliteControl(ControlHandle(item), 1);
+
+							Filter := true;
+							exit(Filter);
+						end;
+				if (theChar = char(13)) or (theChar = char(3)) then
+					begin
+						itemHit := 1;
+{Highlight the OK button}
+						GetDItem(theDialog, 1, kind, item, box);
+						HiliteControl(ControlHandle(item), 1);
+
+						Filter := true;
+						exit(Filter);
+					end;
+			end;
+		Filter := false;
+	end;
+
+{Put a frame around a dialog item. There are better ways to do this, though. The right way}
+{is to draw the frame as response to an update event, not just when opening the dialog.}
+	procedure FrameDItem (dLog: DialogPtr; iNum: integer);
+		var
+			iBox: Rect;
+			iType: integer;
+			iHandle: Handle;
+			oldPenState: PenState;
+			tmpp: GrafPtr;
+	begin
+		GetPort(tmpp);
+		SetPort(dLog);
+		GetPenState(oldPenState);
+		GetDItem(dLog, iNum, iType, iHandle, iBox);
+		InsetRect(iBox, -4, -4);
+		PenSize(3, 3);
+		FrameRoundRect(iBox, 16, 16);
+		SetPenState(oldPenState);
+		SetPort(tmpp);
+	end;
+
+{ Ask for players name (at highscore) }
+	function AskHigh: str255;
+		var
+			dialog: DialogPtr;
+			oldPort: GrafPtr;
+			dRec: DialogRecord;
+			itemHit: integer;
+			itemHandle: Handle;
+			itemType, item: integer;
+			itemRect: Rect;
+			str: str255;
+			levelstr: str255;
+	begin
+		GetPort(oldPort);
+		dialog := GetNewDialog(HighDlog, @dRec, WindowPtr(-1));
+		ShowWindow(dialog);
+		SelectWindow(dialog);
+		SetPort(dialog);
+
+		GetDItem(dialog, 3, itemType, itemHandle, itemRect);
+		SetIText(itemHandle, features^^.player);
+		SelIText(dialog, 3, 0, 32767);
+		FrameDItem(dialog, 1);
+		itemHit := -1;
+		while (itemHit <> 1) and (itemHit <> 4) do { 1=ok, 4=cancel }
+			ModalDialog(@Filter, itemHit);
+		if itemHit = 4 then
+			begin
+				AskHigh := '';
+			end;
+		if itemHit = 1 then
+			begin
+				GetDItem(dialog, 3, itemType, itemHandle, itemRect);
+				GetIText(itemHandle, str);
+				if length(str) > 15 then
+					str := Copy(str, 1, 15);
+				features^^.player := str;
+				AskHigh := str;
+			end;
+		CloseDialog(dialog);
+		SetPort(oldPort);
+	end;
+
+{ 	High Score window handlers }
+
+	procedure HighUpdate (resized: boolean);
+		var
+			s: str255;
+			i: integer;
+	begin
+		EraseRect(theHigh^.portrect);
+		TextSize(9);
+
+		moveto(10, 20);
+		DrawString(MyGetIndString(normalStrID)); {str 9: Normal high score list}
+		MoveTo(150, 20);
+		DrawString(MyGetIndString(machoStrID)); {str 10: Macho high score list}
+		MoveTo(0, 22);
+		LineTo(500, 22);
+		MoveTo(140, 0);
+		LineTo(140, 400);
+
+		for i := 1 to 10 do
+			begin
+				if not LastMacho and (i = LastHigh) then
+					begin
+						TextFace([bold]);
+						ForeColor(redColor);
+					end;
+				moveto(10, i * 18 + 20);
+				DrawString(hs^^.HighPlayer[i]);
+				moveto(110, i * 18 + 20);
+				NumToString(hs^^.HighScores[i], s);
+				DrawString(s);
+
+				TextFace([]);
+				ForeColor(BlackColor);
+				if LastMacho and (i = LastHigh) then
+					begin
+						TextFace([bold]);
+						ForeColor(redColor);
+					end;
+				moveto(150, i * 18 + 20);
+				DrawString(hsm^^.HighPlayer[i]);
+				moveto(250, i * 18 + 20);
+				NumToString(hsm^^.HighScores[i], s);
+				DrawString(s);
+
+				TextFace([]);
+				ForeColor(BlackColor);
+			end;
+		TextSize(12);
+	end;
+
+	procedure HighHalt;
+	begin
+		CloseWindow(theHigh);
+	end;
+
+	function InternalAddScore (amount: longint): Rect;
+		var
+			s: str255;
+			r: Rect;
+	begin
+		score := score + amount;
+
+		SetPort(gSAT.backScreen);
+		SetRect(r, gSAT.offSizeH - 49, 14, gSAT.offSizeH - 2, 155);
+		EraseRoundRect(r, 10, 10);
+		FrameRoundRect(r, 10, 10);
+		NumToString(Score, s);
+		MoveTo(gSAT.offSizeH - 47, 30);
+		DrawString(MyGetIndString(scoreStrID)); {str 11: Score: }
+		MoveTo(gSAT.offSizeH - 47, 50);
+		DrawString(s);
+
+		NumToString(bonus, s);
+		MoveTo(gSAT.offSizeH - 47, 80);
+		DrawString(MyGetIndString(bonusStrID)); {str 12: Bonus: }
+		MoveTo(gSAT.offSizeH - 47, 100);
+		DrawString(s);
+
+		NumToString(Level, s);
+		MoveTo(gSAT.offSizeH - 47, 130);
+		DrawString(MyGetIndString(levelStrID)); {str 13: Level: }
+		MoveTo(gSAT.offSizeH - 47, 150);
+		DrawString(s);
+		InternalAddScore := r;
+	end;
+
+	procedure AddScore (amount: longint);
+		var
+			s: str255;
+			r: Rect;
+			tmpport: grafptr;
+	begin
+		GetPort(tmpPort);
+		r := InternalAddScore(amount);
+		SATBackChanged(r); {Let SAT show it on screen}
+		SetPort(tmpPort);
+	end;
+
+	procedure AddScoreS (amount: longint);
+		var
+			s: str255;
+			r: Rect;
+			tmpport: grafptr;
+	begin
+		GetPort(tmpPort);
+		r := InternalAddScore(amount);
+		CopyBits(gSAT.backScreen^.portbits, gSAT.wind^.portBits, r, r, srcCopy, nil);
+		CopyBits(gSAT.backScreen^.portbits, gSAT.offScreen^.portBits, r, r, srcCopy, nil);
+		SetPort(tmpPort);
+	end;
+
+	procedure DoHighMenu (item: integer);
+		var
+			p: procptr;
+			i: integer;
+	begin
+		case item of
+			showhs: 
+				begin
+					ShowWindow(theHigh);
+					SelectWindow(theHigh);
+				end;
+			clearhs: 
+				begin
+					if QuestionStr(MyGetIndString(sureStrID)) then {str 14: Are you sure you want to erase the high scores?}
+						begin
+							for i := 1 to 10 do
+								begin
+									hs^^.HighScores[i] := 0;			{ skall lŠsas frŒn fil eller resurs }
+									hs^^.HighPlayer[i] := MyGetIndString(nobodyStrID); {str 15: Nobody}
+									hsm^^.HighScores[i] := 0;			{ skall lŠsas frŒn fil eller resurs }
+									hsm^^.HighPlayer[i] := MyGetIndString(nobodyStrID); {str 15}
+								end;
+							hs^^.HighScores[0] := 10000;			{ Lowscore }
+							hsm^^.HighScores[0] := 10000;			{ Lowscore }
+							ChangedResource(handle(hs));
+							ChangedResource(handle(hsm));
+							HideWindow(theHigh);
+						end;
+				end;
+			otherwise
+				;
+		end;
+	end;
+
+	procedure WindKey (theChar: char; theMods: integer);
+	begin
+	end;
+
+{ Call this on game over! }
+	procedure UpdateHigh;
+		var
+			num, len: integer;
+			name, s: str255;
+	begin
+		lastMacho := features^^.macho;
+
+		if features^^.macho then
+			begin
+				if score > hsm^^.HighScores[10] then
+					begin
+						num := 10;
+						name := AskHigh;
+						NumToString(level, s); {used below, to append level number}
+{Max 15 characters! We take some extra trouble to append 'É' too.}
+						len := length(stringof(' (', s, ')'));
+						if length(name) > 15 - len then
+							name := Concat(Copy(name, 1, 15 - len - 1), 'É');
+
+						if name = '' then { alt length(name) = 0 }
+							exit(updatehigh);
+						while (hsm^^.HighScores[num - 1] < score) and (num > 1) do
+							begin
+								hsm^^.HighScores[num] := hsm^^.HighScores[num - 1];
+								hsm^^.HighPlayer[num] := hsm^^.HighPlayer[num - 1];
+								num := num - 1;
+							end;
+						LastHigh := num; {Remember last high for the highscore display}
+						hsm^^.HighScores[num] := score;
+						hsm^^.HighPlayer[num] := stringof(name, ' (', s, ')'); {AskHigh;}
+						ChangedResource(handle(hsm));
+						HideWindow(theHigh);
+						ShowWindow(theHigh);
+						SelectWindow(theHigh);
+					end;
+			end{ if macho }
+		else if score > hs^^.HighScores[10] then
+			begin
+				num := 10;
+				name := AskHigh;
+				if length(name) > 15 then
+					name := Concat(Copy(name, 1, 14), 'É');
+
+				if name = '' then { alt length(name) = 0 }
+					exit(updatehigh);
+				while (hs^^.HighScores[num - 1] < score) and (num > 1) do
+					begin
+						hs^^.HighScores[num] := hs^^.HighScores[num - 1];
+						hs^^.HighPlayer[num] := hs^^.HighPlayer[num - 1];
+						num := num - 1;
+					end;
+				LastHigh := num; {Remember last high for the highscore display}
+				hs^^.HighScores[num] := score;
+				hs^^.HighPlayer[num] := name;
+				ChangedResource(handle(hs));
+				HideWindow(theHigh);
+				ShowWindow(theHigh);
+				SelectWindow(theHigh);
+			end;
+	end;
+
+	procedure ZeroScore;
+	begin
+		score := 0;
+		LastHigh := -1;
+	end;
+
+{This procedure copies a resource from the file applFile to prefFile (global file numbers,}
+{from the unit Preferences).}
+	procedure CopyResource (resType: OSType; id: integer);
+		var
+			h, h2: Handle;
+			saveFile: integer;
+	begin
+		saveFile := CurResFile; {Look where we are so we can restore}
+		UseResFile(applFile);
+
+		h := GetResource(resType, id); {Get res from the appl}
+		if h <> nil then
+			begin
+				UseResFile(prefFile);
+				h2 := GetResource(resType, id);
+				if h2 = nil then {It doesn't already exist}
+					begin
+						DetachResource(h); {Detach it so we can move it.}
+						AddResource(h, resType, id, ''); {Put it into the preffile}
+						ReleaseResource(h);
+					end
+				else {The res always exists. Don't copy.}
+					begin
+						ReleaseResource(h);
+						ReleaseResource(h2);
+					end;
+			end;
+		UseResFile(saveFile); {restore}
+	end;
+
+	procedure InitScores;
+		var
+			i: integer;
+	begin
+		if SetPrefFile then {If a pref file was created, copy high scores to it!}
+			begin
+				CopyResource('BŠst', 0); {Normal mode high scores}
+				CopyResource('BŠst', 1); {Macho mode high scores}
+				CopyResource('Feat', 0); {Settings}
+			end;
+
+		LastHigh := -1; {no "last"}
+
+		theHigh := GetNewWindow(theHighRes, nil, WindowPtr(-1));
+		SetPort(theHigh);
+		dummy := SkelWindow(theHigh, nil, @WindKey, @HighUpdate, nil, nil, @HighHalt, nil, false);
+
+		UseResFile(prefFile); {set the resfile to the pref file, if any. If none, prefFile will be the app itself!}
+
+		hs := hsHnd(GetResource('BŠst', 0));
+		if hs = nil then {Didn't exist - create it!}
+			begin
+				hs := hsHnd(NewHandle(Sizeof(hsRec)));
+				CheckNoMem(Ptr(hs));
+				for i := 1 to 10 do
+					begin
+						hs^^.HighScores[i] := 0;
+						hs^^.HighPlayer[i] := MyGetIndString(nobodyStrID); {str 15}
+					end;
+				hs^^.HighScores[0] := 10000;			{ Lowscore }
+				AddResource(handle(hs), 'BŠst', 0, 'High scores');
+			end
+		else {Did exist - check the size!}
+			if GetHandleSize(Handle(hs)) < sizeof(hsHnd) then
+				SetHandleSize(Handle(hs), sizeof(hsHnd));
+
+		hsm := hsHnd(GetResource('BŠst', 1));
+		if hsm = nil then {Didn't exist - create it!}
+			begin
+				hsm := hsHnd(NewHandle(Sizeof(hsRec)));
+				CheckNoMem(Ptr(hsm));
+				for i := 1 to 10 do
+					begin
+						hsm^^.HighScores[i] := 0;			{ skall lŠsas frŒn fil eller resurs }
+						hsm^^.HighPlayer[i] := MyGetIndString(nobodyStrID); {str 15}
+					end;
+				hsm^^.HighScores[0] := 10000;			{ Lowscore }
+				AddResource(handle(hsm), 'BŠst', 1, 'High scores');
+			end
+		else {Did exist - check the size!}
+			if GetHandleSize(Handle(hsm)) < sizeof(hsHnd) then
+				SetHandleSize(Handle(hsm), sizeof(hsHnd));
+
+		UseResFile(applFile);
+
+		score := 0;
+	end;
+
+end.

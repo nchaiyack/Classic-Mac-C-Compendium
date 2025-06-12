@@ -1,1 +1,35 @@
-unit LongCoords;{ Long Coordinates }{ Copyright © 1993-1994 Merzwaren }{ All Rights Reserved }interface	type{ long coordinates types }		LongPoint = record				case Integer of					0: (							vh: array[VHSelect] of LongInt;					);					1: (							v, h: LongInt;					);			end;  { LongPoint }		LongRect = record				case Integer of					0: (							topLeft, botRight: LongPoint;					);					1: (							top, left, bottom, right: LongInt;					);			end;  { LongRect }implementationend.
+unit LongCoords;
+
+{ Long Coordinates }
+
+{ Copyright © 1993-1994 Merzwaren }
+{ All Rights Reserved }
+
+interface
+
+	type
+
+{ long coordinates types }
+
+		LongPoint = record
+				case Integer of
+					0: (
+							vh: array[VHSelect] of LongInt;
+					);
+					1: (
+							v, h: LongInt;
+					);
+			end;  { LongPoint }
+
+		LongRect = record
+				case Integer of
+					0: (
+							topLeft, botRight: LongPoint;
+					);
+					1: (
+							top, left, bottom, right: LongInt;
+					);
+			end;  { LongRect }
+
+implementation
+end.

@@ -1,1 +1,2 @@
-/* For use with MPW */#pragma load ":Obj:hack.hdump"
+/* For use with MPW */
+#pragma load ":Obj:hack.hdump"

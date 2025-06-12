@@ -1,1 +1,94 @@
-{===============================================}{================= Enemy sprite unit ================}{===============================================}{ Example file for Ingemars Sprite Animation Toolkit. }{ © Ingemar Ragnemalm 1992 }{ See doc files for legal terms for using this code. }unit sEnemy;{ Sprite unit. A sprite unit should include the following routines:}{ Init-procedure, that initializes private bitmaps}{ Setup-procedure, that sets variables other than the standard ones set by MakeSprite }{ Handle-procedure, to be called once per iteration until the sprite dies }{ Hittask-procedure (optional), for advanced collission handling. }{ Enemy object for the SATInvaders sample game. }interface	uses		SAT, SoundConst, GameGlobals, sMissile;	var		globalspeed: Point;		turnFlag: boolean;		lasth, downcount: integer;	procedure InitEnemy;	procedure SetupEnemy (sp: SpritePtr);	procedure HandleEnemy (me: SpritePtr);implementation	var		enemyFace: array[1..6] of FacePtr;{BMPtr}	procedure InitEnemy;		var			ii: integer;	begin		for ii := 1 to 6 do			enemyFace[ii] := GetFace(127 + ii);		globalspeed.h := 5;		globalspeed.v := 0;		turnFlag := false;		lasth := 5;		downcount := 0;	end;	procedure SetupEnemy (sp: SpritePtr);	begin		sp^.face := enemyFace[1];		sp^.mode := Rand(6) + 1; { icon number }		SetRect(sp^.hotRect, 2, 4, 30, 32);{ Since enemies are only created at the beginning of each level, we re-initialize this stuff here:}		globalspeed.h := 5;		globalspeed.v := 0;		turnFlag := false;		lasth := 5;		downcount := 0;	end;	procedure HandleEnemy (me: SpritePtr);		var			missile: Spriteptr;	begin		if me^.kind <> -3 then			begin				me^.task := nil;				SATSoundPlay(dunkH, 1, false);			end;		me^.mode := me^.mode + 1;		if me^.mode = 7 then			me^.mode := 1;		me^.face := enemyFace[me^.mode];		me^.position.h := me^.position.h + globalspeed.h;		me^.position.v := me^.position.v + globalspeed.v;		if (me^.position.h < 0) or (me^.position.h > gSAT.offSizeH - 32) then			turnflag := true;		if me^.position.v > gSAT.offSizeV then			me^.task := nil;		if Rand100 < 2 then			begin				missile := NewSprite(-1, me^.position.h + 8, me^.position.v + 20, @HandleMissile, @SetupMissile, nil);				SATSoundPlay(piuH, 1, false);			end;	end;end.
+{===============================================}
+{================= Enemy sprite unit ================}
+{===============================================}
+
+{ Example file for Ingemars Sprite Animation Toolkit. }
+{ © Ingemar Ragnemalm 1992 }
+{ See doc files for legal terms for using this code. }
+
+unit sEnemy;
+
+{ Sprite unit. A sprite unit should include the following routines:}
+{ Init-procedure, that initializes private bitmaps}
+{ Setup-procedure, that sets variables other than the standard ones set by MakeSprite }
+{ Handle-procedure, to be called once per iteration until the sprite dies }
+{ Hittask-procedure (optional), for advanced collission handling. }
+
+{ Enemy object for the SATInvaders sample game. }
+
+interface
+
+	uses
+		SAT, SoundConst, GameGlobals, sMissile;
+
+	var
+		globalspeed: Point;
+		turnFlag: boolean;
+		lasth, downcount: integer;
+
+	procedure InitEnemy;
+	procedure SetupEnemy (sp: SpritePtr);
+	procedure HandleEnemy (me: SpritePtr);
+
+implementation
+
+	var
+		enemyFace: array[1..6] of FacePtr;{BMPtr}
+
+	procedure InitEnemy;
+		var
+			ii: integer;
+	begin
+		for ii := 1 to 6 do
+			enemyFace[ii] := GetFace(127 + ii);
+		globalspeed.h := 5;
+		globalspeed.v := 0;
+		turnFlag := false;
+		lasth := 5;
+		downcount := 0;
+	end;
+
+	procedure SetupEnemy (sp: SpritePtr);
+	begin
+		sp^.face := enemyFace[1];
+		sp^.mode := Rand(6) + 1; { icon number }
+		SetRect(sp^.hotRect, 2, 4, 30, 32);
+{ Since enemies are only created at the beginning of each level, we re-initialize this stuff here:}
+		globalspeed.h := 5;
+		globalspeed.v := 0;
+		turnFlag := false;
+		lasth := 5;
+		downcount := 0;
+	end;
+
+	procedure HandleEnemy (me: SpritePtr);
+		var
+			missile: Spriteptr;
+	begin
+		if me^.kind <> -3 then
+			begin
+				me^.task := nil;
+				SATSoundPlay(dunkH, 1, false);
+			end;
+
+		me^.mode := me^.mode + 1;
+		if me^.mode = 7 then
+			me^.mode := 1;
+		me^.face := enemyFace[me^.mode];
+
+		me^.position.h := me^.position.h + globalspeed.h;
+		me^.position.v := me^.position.v + globalspeed.v;
+
+		if (me^.position.h < 0) or (me^.position.h > gSAT.offSizeH - 32) then
+			turnflag := true;
+		if me^.position.v > gSAT.offSizeV then
+			me^.task := nil;
+
+		if Rand100 < 2 then
+			begin
+				missile := NewSprite(-1, me^.position.h + 8, me^.position.v + 20, @HandleMissile, @SetupMissile, nil);
+				SATSoundPlay(piuH, 1, false);
+			end;
+	end;
+
+end.

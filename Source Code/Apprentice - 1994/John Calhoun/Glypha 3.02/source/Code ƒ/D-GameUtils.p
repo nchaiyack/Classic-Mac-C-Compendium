@@ -1,1 +1,948 @@
-unit GameUtils;interface	uses		Dialogs, Sound;	const		liftAmount = -8;		fallAmount = 1;		maxFall = 10;		maxThrust = 16;		defaultNum = 4;		upperLevel = 0;		lowerLevel = 1;		upperEye = 2;		lowerEye = 3;		fastest = 0;		fast = 1;		slow = 3;		slowest = 4;		source = 0;		mask = 1;	type		GameObject = record				oldDest, dest, wholeRect: Rect;				horiVel, vertVel: Integer;				facing: Integer;				mode, otherMode, tempInt: Integer;				state, otherState: Boolean;			end;		Bolt = record				levelStriking: Integer;				leftMode, rightMode: Integer;				leftBolts, rightBolts: array[0..3, 0..3, 0..11] of Point;			end;	var		{Here follow all the major global variables							}		{(yes, there are quite a few)														}		{Here are then menu handles															}		AppleMenu, GameMenu, OptionsMenu: MenuHandle;		{The boolean vars often keep track of the game state		}		playing, pausing, keyboardControl, soundOn, onFastMachine: Boolean;		deadAndGone, scoresChanged, inhibitSound, doneFlag: Boolean;		onward, keyStillDown, stonesSliding: Boolean;		{Integers keep track of numbers, level, modes, etc...		}		numberOfStones, levelOn, mortals, oldDirection: Integer;		beastsKilled, beastsActive, totalToKill, levelStart, mortalsStart: Integer;		delayFor, startStone, playMask, growRate, numberOfEnemies: Integer;		{Score is LongInt for the 12 yr old kids that top	36727	}		gameCycle, score, oldScore, nextMortal, lastLoopTime: LongInt;		{Keep track of the name last entered for the high score	}		nameUsing: Str255;		{And the ahnk (SP?) cursor variable											}		ahnkCursor: CursHandle;		{Here follow the offscreen bitmap and window variables	}		mainWndo: WindowPtr;		playRgn, obeliskRgn1, obeliskRgn2: RgnHandle;		offEnemyArea, offVirginArea, offLoadArea, offPlayerArea: Rect;		offEnemyMap, offVirginMap, offLoadMap, offPlayerMap: BitMap;		offEnemyPort, offVirginPort, offLoadPort, offPlayerPort: GrafPtr;		offEnemyBits, offVirginBits, offLoadBits, offPlayerBits: Ptr;		{Here are some of the object definition records					}		theEye, theHand, thePlayer: GameObject;		lightning: Bolt;		{Miscellaneous rects for the score box, platforms, etc..}		scoreGrabRect, scoreDropRect, littleTombRect, playRect: Rect;		upperTombRect1, upperTombRect2: Rect;		{For the digitized sound																}		chanPtr: sndchannelptr;		{Arrays hold hiscores made and read from .RSRC fork			}		hiScores: array[1..10] of LongInt;		hiStrings: array[1..10] of Str255;		{These vars hold info on the enemies										}		theEnemies: array[0..9] of GameObject;		enemyLift: array[0..2] of Integer;		{These vars hold locations of all artwork on offscreens	}		tombRects: array[-5..6] of Rect;		playerRects: array[0..3, 0..5] of Rect;		enemyRects: array[0..2, 0..5, 0..1, 0..1] of Rect;		boneRects: array[0..1, 6..7, 0..1] of Rect;		absoluteRects: array[0..1, 0..5] of Rect;		eyeRects: array[0..9] of Rect;		handRects: array[0..1, 0..1] of Rect;		ankRects: array[0..15, 0..1] of Rect;		eggRects, gameoverRects, flameRect: array[0..1] of Rect;		running: array[-16..16, 0..1, 0..1] of Integer;		idleLanded: array[-16..16] of Integer;		gliding: array[-16..16, 0..1] of Integer;		impacted: array[-70..16] of Integer;	procedure NewLightning;	procedure StrikeLightning (whichLevel: Integer);	procedure DoTheSound (whichOne: Str255; asynch: Boolean);	function DoRandom (range: Integer): Integer;	procedure ChangeRect;	procedure DrawPlayer (newRect, oldRect: Rect);	procedure DrawBeasts;	procedure DrawHand;	procedure RedoTheBackground;	procedure ShowScore;	procedure DoTheHoopla;	procedure CheckExtraMortal;	procedure ReDrawHiScores;	procedure ReadInScores;	procedure WriteOutScores;	procedure FinalScore;	procedure DoHelpScreen;	procedure FlushTheScores;{=================================}implementation{=================================}	procedure NewLightning;		const			upperHeight = 125;			lowerHeight = 296;			upperEyeHeight = 75;			lowerEyeHeight = 175;			upperDelta = upperHeight - 141;			lowerDelta = lowerHeight - 141;			upperEyeDelta = upperEyeHeight - 141;			lowerEyeDelta = lowerEyeHeight - 141;			pylonToCenter = 124;		var			index, index2, travel, hori, vert: Integer;	begin		with lightning do			begin				levelStriking := upperLevel;				leftMode := DoRandom(4);				rightMode := DoRandom(4);				for index := 0 to 3 do					begin						SetPt(leftBolts[upperLevel, index, 0], 132, 141);						SetPt(rightBolts[upperLevel, index, 0], 378, 141);						SetPt(leftBolts[lowerLevel, index, 0], 132, 141);						SetPt(rightBolts[lowerLevel, index, 0], 378, 141);						SetPt(leftBolts[upperEye, index, 0], 132, 141);						SetPt(rightBolts[upperEye, index, 0], 378, 141);						SetPt(leftBolts[lowerEye, index, 0], 132, 141);						SetPt(rightBolts[lowerEye, index, 0], 378, 141);					end;				for index := 0 to 3 do					for index2 := 1 to 10 do						begin							travel := (6 - ABS(index2 - 6)) * 5;							hori := 132 + (index2 * (pylonToCenter div 12));							vert := 141 + (index2 * (upperDelta div 12));							vert := vert + DoRandom(travel * 2) - travel;							SetPt(leftBolts[upperLevel, index, index2], hori, vert);							hori := 380 - (index2 * (pylonToCenter div 12));							vert := 141 + (index2 * (upperDelta div 12));							vert := vert + DoRandom(travel * 2) - travel;							SetPt(rightBolts[upperLevel, index, index2], hori, vert);							hori := 132 + (index2 * (pylonToCenter div 12));							vert := 141 + (index2 * (lowerDelta div 12));							vert := vert + DoRandom(travel * 2) - travel;							SetPt(leftBolts[lowerLevel, index, index2], hori, vert);							hori := 380 - (index2 * (pylonToCenter div 12));							vert := 141 + (index2 * (lowerDelta div 12));							vert := vert + DoRandom(travel * 2) - travel;							SetPt(rightBolts[lowerLevel, index, index2], hori, vert);							hori := 132 + (index2 * (pylonToCenter div 12));							vert := 141 + (index2 * (upperEyeDelta div 12));							vert := vert + DoRandom(travel * 2) - travel;							SetPt(leftBolts[upperEye, index, index2], hori, vert);							hori := 380 - (index2 * (pylonToCenter div 12));							vert := 141 + (index2 * (upperEyeDelta div 12));							vert := vert + DoRandom(travel * 2) - travel;							SetPt(rightBolts[upperEye, index, index2], hori, vert);							hori := 132 + (index2 * (pylonToCenter div 12));							vert := 141 + (index2 * (lowerEyeDelta div 12));							vert := vert + DoRandom(travel * 2) - travel;							SetPt(leftBolts[lowerEye, index, index2], hori, vert);							hori := 380 - (index2 * (pylonToCenter div 12));							vert := 141 + (index2 * (lowerEyeDelta div 12));							vert := vert + DoRandom(travel * 2) - travel;							SetPt(rightBolts[lowerEye, index, index2], hori, vert);						end;				for index := 0 to 3 do					begin						SetPt(leftBolts[upperLevel, index, 11], 256, upperHeight);						SetPt(rightBolts[upperLevel, index, 11], 254, upperHeight);						SetPt(leftBolts[lowerLevel, index, 11], 256, lowerHeight);						SetPt(rightBolts[lowerLevel, index, 11], 254, lowerHeight);						SetPt(leftBolts[upperEye, index, 11], 256, upperEyeHeight);						SetPt(rightBolts[upperEye, index, 11], 254, upperEyeHeight);						SetPt(leftBolts[lowerEye, index, 11], 256, lowerEyeHeight);						SetPt(rightBolts[lowerEye, index, 11], 254, lowerEyeHeight);					end;			end;	end;{=================================}	procedure StrikeLightning;		var			index: Integer;			isPoint, wasPoint: Point;			savedPort: GrafPtr;	begin		GetPort(savedPort);		SetPort(mainWndo);		InvertRgn(obeliskRgn1);		InvertRgn(obeliskRgn2);		PenNormal;		PenSize(2, 2);		PenMode(patXOr);		with lightning do			begin				leftMode := DoRandom(4);				rightMode := DoRandom(4);				for index := 1 to 11 do					begin						isPoint := leftBolts[whichLevel, leftMode, index];						wasPoint := leftBolts[whichLevel, leftMode, index - 1];						MoveTo(wasPoint.h, wasPoint.v);						LineTo(isPoint.h - 2, isPoint.v);						isPoint := rightBolts[whichLevel, leftMode, index];						wasPoint := rightBolts[whichLevel, leftMode, index - 1];						MoveTo(wasPoint.h, wasPoint.v);						LineTo(isPoint.h + 2, isPoint.v);					end;				for index := 1 to 11 do					begin						isPoint := leftBolts[whichLevel, leftMode, index];						wasPoint := leftBolts[whichLevel, leftMode, index - 1];						MoveTo(wasPoint.h, wasPoint.v);						LineTo(isPoint.h - 2, isPoint.v);						isPoint := rightBolts[whichLevel, leftMode, index];						wasPoint := rightBolts[whichLevel, leftMode, index - 1];						MoveTo(wasPoint.h, wasPoint.v);						LineTo(isPoint.h + 2, isPoint.v);					end;			end;		InvertRgn(obeliskRgn1);		InvertRgn(obeliskRgn2);		SetPort(savedPort);	end;{=================================}	procedure DoTheSound;		var			theSnd: Handle;			err: OSErr;	begin		if (soundOn) then			begin				theSnd := GetNamedResource('snd ', whichOne);				if (theSnd <> nil) and (ResError = noErr) then					begin						if (chanPtr <> nil) then							begin								err := SndDisposeChannel(chanPtr, TRUE);								chanPtr := nil;							end;						if (asynch = true) and (SndNewChannel(chanPtr, 0, initMono, nil) = noErr) then							err := SndPlay(chanPtr, theSnd, TRUE)						else							err := SndPlay(nil, theSnd, FALSE);					end;			end;	end;{=================================}	function DoRandom;		var			rawResult: LongInt;	begin		rawResult := Abs(Random);		DoRandom := (rawResult * range) div 32768	end;{=================================}	procedure ChangeRect;		var			hori, vert: Integer;	begin		with thePlayer do			begin				hori := dest.left;				vert := dest.top;				if (mode < 6) then					dest := absoluteRects[facing, mode]				else					begin						SetRect(dest, 0, 0, 44, 23);						dest.top := dest.top + 15;						dest.bottom := dest.bottom + 15;					end;				dest.left := dest.left + hori;				dest.right := dest.right + hori;				dest.top := dest.top + vert;				dest.bottom := dest.bottom + vert;			end;	end;{=================================}	procedure DrawPlayer;		var			index, hori, vert: integer;			dummyLong: LongInt;			standInRect, standInRect2, tempRect: Rect;	begin		with thePlayer do			case mode of				0..5: 					begin						UnionRect(oldRect, newRect, wholeRect);						CopyBits(offVirginMap, offLoadMap, wholeRect, wholeRect, srcCopy, nil);						CopyMask(offPlayerMap, offPlayerMap, offLoadMap, playerRects[facing, mode], playerRects[facing + 2, mode], newRect);						CopyBits(offLoadMap, mainWndo^.portBits, wholeRect, wholeRect, srcCopy, playRgn);						if (otherState) then							begin								mode := 6;								CopyBits(offVirginMap, mainWndo^.portBits, wholeRect, wholeRect, srcCopy, playRgn);								hori := newRect.left;								vert := newRect.top;								SetRect(newRect, 0, 0, 48, 38);								tempRect := newRect;								newRect.left := newRect.left + hori;								newRect.right := newRect.right + hori;								newRect.top := newRect.top + vert;								newRect.bottom := newRect.bottom + vert;								dest := newRect;								tempRect.left := tempRect.left + 232;								tempRect.right := tempRect.right + 232;								tempRect.top := tempRect.top + 306;								tempRect.bottom := tempRect.bottom + 306;								SetPort(offLoadPort);								for index := 1 to 10 do									begin										EraseRect(tempRect);										CopyBits(offVirginMap, offLoadMap, newRect, tempRect, srcCopy, nil);										CopyMask(offLoadMap, offPlayerMap, offLoadMap, tempRect, boneRects[facing, mode, 1], newRect);										CopyBits(offLoadMap, mainWndo^.portBits, newRect, newRect, srcCopy, playRgn);										Delay(1, dummyLong);										CopyBits(offVirginMap, offLoadMap, newRect, newRect, srcCopy, nil);										CopyMask(offPlayerMap, offPlayerMap, offLoadMap, boneRects[facing, mode, 0], boneRects[facing, mode, 1], newRect);										CopyBits(offLoadMap, mainWndo^.portBits, newRect, newRect, srcCopy, playRgn);									end;								CopyBits(offVirginMap, mainWndo^.portBits, newRect, newRect, srcCopy, playRgn);							end;					end;				6: 					begin						UnionRect(oldRect, newRect, wholeRect);						CopyBits(offVirginMap, offLoadMap, wholeRect, wholeRect, srcCopy, nil);						CopyMask(offPlayerMap, offPlayerMap, offLoadMap, boneRects[facing, mode, 0], boneRects[facing, mode, 1], newRect);						CopyBits(offLoadMap, mainWndo^.portBits, wholeRect, wholeRect, srcCopy, playRgn);					end;				7..100: 					begin						UnionRect(oldRect, newRect, wholeRect);						CopyBits(offVirginMap, offLoadMap, wholeRect, wholeRect, srcCopy, nil);						standInRect := boneRects[facing, 7, 0];						standInRect2 := boneRects[facing, 7, 1];						vert := dest.bottom - dest.top;						standInRect.bottom := standInRect.top + vert;						standInRect2.bottom := standInRect2.top + vert;						CopyMask(offPlayerMap, offPlayerMap, offLoadMap, standInRect, standInRect2, newRect);						CopyBits(offLoadMap, mainWndo^.portBits, wholeRect, wholeRect, srcCopy, playRgn);					end;				otherwise					begin					end;			end;	end;{=================================}	procedure DrawHand;	begin		with theHand do			begin				UnionRect(oldDest, dest, wholeRect);				CopyBits(offVirginMap, offLoadMap, wholeRect, wholeRect, srcCopy, nil);				CopyMask(offPlayerMap, offPlayerMap, offLoadMap, handRects[mode, source], handRects[mode, mask], dest);				CopyBits(offLoadMap, mainWndo^.portBits, wholeRect, wholeRect, srcCopy, playRgn);			end;	end;{=================================}	procedure DrawBeasts;		var			index: Integer;			otherRect, otherMask, tempSrc, tempMask: Rect;	begin{swap flames on background}		CopyBits(offVirginMap, offLoadMap, flameRect[0], flameRect[0], srcCopy, nil);		CopyBits(offVirginMap, offVirginMap, flameRect[1], flameRect[0], srcCopy, nil);		CopyBits(offLoadMap, offVirginMap, flameRect[0], flameRect[1], srcCopy, nil);{copy all neccesary background rects to the load map}		with theEye do			if (mode > 0) then				begin					UnionRect(oldDest, dest, wholeRect);					CopyBits(offVirginMap, offLoadMap, wholeRect, wholeRect, srcCopy, nil);				end;		for index := 1 to numberOfEnemies do			with theEnemies[index] do				begin					UnionRect(oldDest, dest, wholeRect);					CopyBits(offVirginMap, offLoadMap, wholeRect, wholeRect, srcCopy, nil);					oldDest := dest;				end;{copy the beasts through their masks onto the load map}		for index := 1 to numberOfEnemies do			with theEnemies[index] do				begin					if (mode < 6) then						begin							if (mode < 0) then								begin									tempSrc := eggRects[0];									tempMask := eggRects[1];									tempSrc.bottom := tempSrc.top + (dest.bottom - dest.top);									tempMask.bottom := tempMask.top + (dest.bottom - dest.top);									CopyMask(offPlayerMap, offPlayerMap, offLoadMap, tempSrc, tempMask, dest);								end							else								CopyMask(offEnemyMap, offEnemyMap, offLoadMap, enemyRects[otherMode, mode, facing, 0], enemyRects[otherMode, mode, facing, 1], dest)						end					else						begin							otherRect := enemyRects[otherMode, 1, facing, source];							otherRect.bottom := otherRect.top + (dest.bottom - dest.top);							otherMask := enemyRects[otherMode, 1, facing, mask];							otherMask.bottom := otherMask.top + (dest.bottom - dest.top);							CopyMask(offEnemyMap, offEnemyMap, offLoadMap, otherRect, otherMask, dest);						end;				end;		CopyBits(offVirginMap, mainWndo^.portBits, flameRect[0], flameRect[0], srcCopy, nil);		CopyBits(offVirginMap, mainWndo^.portBits, flameRect[1], flameRect[1], srcCopy, nil);		{copy the sum bitmaps to the screen}		for index := 1 to numberOfEnemies do			with theEnemies[index] do				CopyBits(offLoadMap, mainWndo^.portBits, wholeRect, wholeRect, srcCopy, playRgn);		with theEye do			if (mode > 0) then				begin					CopyMask(offPlayerMap, offPlayerMap, offLoadMap, eyeRects[otherMode], eyeRects[otherMode + 5], dest);					CopyBits(offLoadMap, mainWndo^.portBits, wholeRect, wholeRect, srcCopy, playRgn);					oldDest := dest;				end;	end;{=================================}	procedure RedoTheBackground;		var			tempRect, anotherRect: Rect;			Pic_Handle: PicHandle;	begin		SetPort(offVirginPort);		{Set the port to my window}		Pic_Handle := GetPicture(1);	{Get Picture into memory}		SetRect(tempRect, 0, 0, 512, 342);		{left,top,right,bottom}		if (Pic_Handle <> nil) then	{Only use handle if it is valid}			begin				ClipRect(tempRect);		{Clip picture to this rectangle}				HLock(Handle(Pic_Handle));	{Lock the handle before using it}				tempRect.Right := tempRect.Left + (Pic_Handle^^.picFrame.Right - Pic_Handle^^.picFrame.Left);				tempRect.Bottom := tempRect.Top + (Pic_Handle^^.picFrame.Bottom - Pic_Handle^^.picFrame.Top);				HUnLock(Handle(Pic_Handle));{Unlock the picture again}			end;		if (Pic_Handle <> nil) then	{Only use handle if it is valid}			DrawPicture(Pic_Handle, tempRect);{Draw this picture}		ReleaseResource(Handle(Pic_Handle));		if (numberOfStones > 2) then			begin				tempRect := upperTombRect1;				OffsetRect(tempRect, tombRects[3].right - tempRect.right, tombRects[3].top - tempRect.top);				CopyBits(offPlayerMap, offVirginMap, upperTombRect1, tempRect, srcCopy, nil);				tempRect := upperTombRect2;				OffsetRect(tempRect, tombRects[4].left - tempRect.left, tombRects[4].top - tempRect.top);				CopyBits(offPlayerMap, offVirginMap, upperTombRect2, tempRect, srcCopy, nil);			end;		if ((numberOfStones > 4) and (levelOn <> 3)) then			begin				CopyBits(offEnemyMap, offVirginMap, littleTombRect, tombRects[5], srcCopy, nil);			end;		if (levelOn < 3) then			begin				SetRect(tempRect, 166, 316, 346, 332);				anotherRect := tempRect;				anotherRect.left := anotherRect.left - 180;				anotherRect.right := anotherRect.right - 180;				CopyBits(offVirginMap, offVirginMap, tempRect, anotherRect, srcCopy, playRgn);				anotherRect.left := anotherRect.left + 180 + 180;				anotherRect.right := anotherRect.right + 180 + 180;				CopyBits(offVirginMap, offVirginMap, tempRect, anotherRect, srcCopy, playRgn);			end;		SetRect(tempRect, 0, 0, 512, 342);		CopyBits(offVirginMap, mainWndo^.portBits, tempRect, tempRect, srcCopy, nil);	end;{=================================}	procedure ShowScore;		var			tempString: Str255;	begin		CopyBits(offEnemyMap, mainWndo^.portBits, scoreGrabRect, scoreDropRect, srcCopy, nil);		SetPort(mainWndo);		PenNormal;		MoveTo(261, 179);		TextFont(0);		TextSize(12);		NumToString(score, tempString);		DrawString(tempString);	end;{=================================}	procedure DoTheHoopla;		var			index, index2, index3, tempNum: Integer;			dummyLong: LongInt;			theseAhnks: array[1..24] of Rect;			ahnkModes: array[1..24] of Integer;	begin		ShowScore;		tempNum := mortals;		if (tempNum > 24) then			tempNum := 24;		for index := 1 to tempNum do			begin				SetRect(theseAhnks[index], (239 - (mortals * 10) + (index * 20)), 200, (254 - (mortals * 10) + (index * 20)), 224);				CopyMask(offPlayerMap, offPlayerMap, mainWndo^.portBits, ankRects[0, 0], ankRects[0, 1], theseAhnks[index]);				DoTheSound('flip.snd', TRUE);				ahnkModes[index] := 0;				for index2 := 1 to 30 do					for index3 := 1 to index do						begin							ahnkModes[index3] := ahnkModes[index3] + 1;							if (ahnkModes[index3] > 15) then								ahnkModes[index3] := 0;							CopyBits(offVirginMap, offLoadMap, theseAhnks[index3], theseAhnks[index3], srcCopy, nil);							CopyMask(offPlayerMap, offPlayerMap, offLoadMap, ankRects[ahnkModes[index3], 0], ankRects[ahnkModes[index3], 1], theseAhnks[index3]);							CopyBits(offLoadMap, mainWndo^.portBits, theseAhnks[index3], theseAhnks[index3], srcCopy, nil);						end;			end;		for index2 := 1 to 50 do			for index3 := 1 to tempNum do				begin					if (ahnkModes[index3] <> 0) then						ahnkModes[index3] := ahnkModes[index3] + 1;					if (ahnkModes[index3] > 15) then						begin							DoTheSound('ahnk.snd', TRUE);							ahnkModes[index3] := 0;						end;					CopyBits(offVirginMap, offLoadMap, theseAhnks[index3], theseAhnks[index3], srcCopy, nil);					CopyMask(offPlayerMap, offPlayerMap, offLoadMap, ankRects[ahnkModes[index3], 0], ankRects[ahnkModes[index3], 1], theseAhnks[index3]);					CopyBits(offLoadMap, mainWndo^.portBits, theseAhnks[index3], theseAhnks[index3], srcCopy, nil);				end;		for index3 := 1 to tempNum do			CopyBits(offVirginMap, mainWndo^.portBits, theseAhnks[index3], theseAhnks[index3], srcCopy, nil);	end;{=================================}	procedure CheckExtraMortal;	begin		if (score > nextMortal) then			begin				DoTheSound('bonus.snd', FALSE);	{You got an extra player!}				mortals := mortals + 1;				nextMortal := nextMortal + 20000;			end;	end;{=================================}	procedure ReDrawHiScores;		var			index: Integer;			dummyLong: LongInt;			tempRect: Rect;			dummyString: Str255;	begin		SetPort(offLoadPort);		PenNormal;		SetRect(tempRect, 170, 100, 347, 280);		FillRect(tempRect, black);		TextFont(0);		TextSize(12);		TextMode(srcXOr);		MoveTo(184, 125);		DrawString('Glypha 3.0 High Scores');		TextFont(1);		TextSize(9);		for index := 1 to 10 do	{Now we're going to loop through all the scores	}			begin				MoveTo(185, index * 14 + 129);			{Moving the pen down each time	}				DrawString(hiStrings[index]);				{Draw the name of person		}				MoveTo(290, index * 14 + 129);			{Move pen over to the right		}				NumToString(hiScores[index], dummyString);				DrawString(dummyString);						{And draw their score			}			end;							{Copy the screen to the virgin port for updates	}		tempRect.top := tempRect.bottom;		for index := 1 to 86 do			begin				tempRect.top := tempRect.top - 2;				CopyBits(offLoadMap, mainWndo^.portBits, tempRect, tempRect, srcCopy, nil);			end;		CopyBits(mainWndo^.portBits, offVirginMap, mainWndo^.portRect, mainWndo^.portRect, srcCopy, nil);	end;{=================================}	procedure ReadInScores;		type			scoreHandle = ^scorePtr;			scorePtr = ^score;			score = record					data: array[0..9] of LongInt;				end;			nameHandle = ^namePtr;			namePtr = ^name;			name = record					data: array[0..9, 0..14] of Char;				end;			prefHandle = ^prefPtr;			prefPtr = ^pref;			pref = record					data: array[0..31] of Char;				end;		var			index, index2: Integer;			dummyStr: Str255;			theScores: scoreHandle;			theNames: nameHandle;			thePrefs: prefHandle;	begin		theScores := scoreHandle(NewHandle(SIZEOF(score)));		MoveHHi(Handle(theScores));		HLock(Handle(theScores));		Handle(theScores) := GetResource('scrs', 128);		for index := 0 to 9 do			hiScores[index + 1] := theScores^^.data[index];		ReleaseResource(Handle(theScores));		HUnlock(Handle(theScores));		DisposHandle(Handle(theScores));		theNames := nameHandle(NewHandle(SIZEOF(name)));		MoveHHi(Handle(theNames));		HLock(Handle(theNames));		Handle(theNames) := GetResource('name', 128);		for index := 0 to 9 do			begin				dummyStr := '';				for index2 := 0 to 14 do					dummyStr := CONCAT(dummyStr, theNames^^.data[index, index2]);				hiStrings[index + 1] := dummyStr;			end;		ReleaseResource(Handle(theNames));		HUnlock(Handle(theNames));		DisposHandle(Handle(theNames));		thePrefs := prefHandle(NewHandle(SIZEOF(pref)));		MoveHHi(Handle(thePrefs));		HLock(Handle(thePrefs));		Handle(thePrefs) := GetResource('pref', 128);		if (thePrefs^^.data[0] = 'M') then			keyboardControl := FALSE		else			keyboardControl := TRUE;		if (thePrefs^^.data[1] = 'S') then			soundOn := TRUE		else			soundOn := FALSE;		if (inhibitSound) then			soundOn := FALSE;		case thePrefs^^.data[2] of			'L': 				delayFor := slowest;			'S': 				delayFor := slow;			'F': 				delayFor := fast;			'A': 				delayFor := fastest;			otherwise				begin				end;		end;		nameUsing := '';		for index := 1 to 15 do			nameUsing := CONCAT(nameUsing, thePrefs^^.data[index + 16]);		ReleaseResource(Handle(thePrefs));		HUnlock(Handle(thePrefs));		DisposHandle(Handle(thePrefs));		scoresChanged := FALSE;	end;{=================================}	procedure WriteOutScores;		type			scoreHandle = ^scorePtr;			scorePtr = ^score;			score = record					data: array[0..9] of LongInt;				end;			nameHandle = ^namePtr;			namePtr = ^name;			name = record					data: array[0..9, 0..14] of Char;				end;			prefHandle = ^prefPtr;			prefPtr = ^pref;			pref = record					data: array[0..31] of Char;				end;		var			index, index2: Integer;			dummyStr: Str255;			theScores: scoreHandle;			theNames: nameHandle;			thePrefs: prefHandle;	begin		thePrefs := prefHandle(NewHandle(SIZEOF(pref)));		HLock(Handle(thePrefs));		Handle(thePrefs) := GetResource('pref', 128);		if (keyboardControl) then			thePrefs^^.data[0] := 'K'		else			thePrefs^^.data[0] := 'M';		if (soundOn) then			thePrefs^^.data[1] := 'S'		else			thePrefs^^.data[1] := 'N';		case delayFor of			slowest: 				thePrefs^^.data[2] := 'L';			slow: 				thePrefs^^.data[2] := 'S';			fast: 				thePrefs^^.data[2] := 'F';			fastest: 				thePrefs^^.data[2] := 'A';			otherwise				begin				end;		end;		for index := 1 to 15 do			thePrefs^^.data[index + 16] := COPY(nameUsing, index, 1);		ChangedResource(Handle(thePrefs));		WriteResource(Handle(thePrefs));		ReleaseResource(Handle(thePrefs));		HUnlock(Handle(thePrefs));		DisposHandle(Handle(thePrefs));		if (scoresChanged) then			begin				theScores := scoreHandle(NewHandle(SIZEOF(score)));				MoveHHi(Handle(theScores));				HLock(Handle(theScores));				Handle(theScores) := GetResource('scrs', 128);				for index := 0 to 9 do					theScores^^.data[index] := hiScores[index + 1];				ChangedResource(Handle(theScores));				WriteResource(Handle(theScores));				ReleaseResource(Handle(theScores));				HUnlock(Handle(theScores));				DisposHandle(Handle(theScores));				theNames := nameHandle(NewHandle(SIZEOF(name)));				HLock(Handle(theNames));				Handle(theNames) := GetResource('name', 128);				for index := 0 to 9 do					for index2 := 0 to 14 do						theNames^^.data[index, index2] := COPY(hiStrings[index + 1], index2 + 1, 1);				ChangedResource(Handle(theNames));				WriteResource(Handle(theNames));				ReleaseResource(Handle(theNames));				HUnlock(Handle(theNames));				DisposHandle(Handle(theNames));			end;	end;{=================================}	procedure FinalScore;		var			index, ranking: Integer;	begin		FlushEvents(everyEvent, 0);									{Clear all the keystrokes	}		if (score > hiScores[10]) and (mortalsStart = defaultNum) then		{Is it a high score?			}			begin				scoresChanged := TRUE;						{Mark scores as changed			}				DoTheSound('bonus.snd', FALSE);		{Play the bonus sound.			}				ranking := 10;										{And sort through the high	}				for index := 9 downto 1 do				{scores to find the players	}					begin														{ranking.										}						if (score > hiScores[index]) then							ranking := index;					end;				for index := 10 downto ranking + 1 do					begin						hiScores[index] := hiScores[index - 1];		{Move everyone's score}						hiStrings[index] := hiStrings[index - 1];	{down the list.				}					end;				hiScores[ranking] := score;				SetPort(mainWndo);				WhosHiScore(nameUsing);				hiStrings[ranking] := nameUsing;			end;	end;{=================================}	procedure DoHelpScreen;		var			index: Integer;			tempRect, dropRect: Rect;			Pic_Handle: PicHandle;			theEvent: EventRecord;	begin		SetPort(offLoadPort);		Pic_Handle := GetPicture(2000);		SetRect(tempRect, 0, 0, 360, 338);		if (Pic_Handle <> nil) then			begin				ClipRect(tempRect);				HLock(Handle(Pic_Handle));				tempRect.Right := tempRect.Left + (Pic_Handle^^.picFrame.Right - Pic_Handle^^.picFrame.Left);				tempRect.Bottom := tempRect.Top + (Pic_Handle^^.picFrame.Bottom - Pic_Handle^^.picFrame.Top);				HUnLock(Handle(Pic_Handle));			end;		if (Pic_Handle <> nil) then			DrawPicture(Pic_Handle, tempRect);		ReleaseResource(Handle(Pic_Handle));		SetRect(tempRect, 0, 0, 1023, 1023);		ClipRect(tempRect);		SetRect(dropRect, 168, 278, 348, 278);		SetRect(tempRect, 0, 169, 180, 169);		for index := 1 to 169 do			begin				dropRect.top := dropRect.top - 1;				tempRect.top := tempRect.top - 1;				CopyBits(offLoadMap, mainWndo^.portBits, tempRect, dropRect, srcCopy, nil);			end;		SetRect(dropRect, 168, 109, 348, 278);		SetRect(tempRect, 0, 0, 180, 169);		FlushEvents(everyEvent, 0);		SetEventMask(playMask);		repeat		until (GetNextEvent(playMask, theEvent));		for index := 1 to 180 do			begin				tempRect.left := tempRect.left + 1;				tempRect.right := tempRect.right + 1;				CopyBits(offLoadMap, mainWndo^.portBits, tempRect, dropRect, srcCopy, nil);			end;		FlushEvents(everyEvent, 0);		repeat		until (GetNextEvent(playMask, theEvent));		for index := 1 to 169 do			begin				tempRect.top := tempRect.top + 1;				tempRect.bottom := tempRect.bottom + 1;				CopyBits(offLoadMap, mainWndo^.portBits, tempRect, dropRect, srcCopy, nil);			end;		FlushEvents(everyEvent, 0);		repeat		until (GetNextEvent(playMask, theEvent));		for index := 1 to 180 do			begin				tempRect.left := tempRect.left - 1;				tempRect.right := tempRect.right - 1;				CopyBits(offLoadMap, mainWndo^.portBits, tempRect, dropRect, srcCopy, nil);			end;		FlushEvents(everyEvent, 0);		repeat		until (GetNextEvent(playMask, theEvent));		SetEventMask(EveryEvent);		RedrawHiScores;	end;{=================================}	procedure FlushTheScores;		var			index: Integer;	begin		for index := 1 to 10 do			begin				hiScores[index] := 0;				hiStrings[index] := 'Play Me .......';			end;		scoresChanged := TRUE;		RedrawHiScores;	end;{=================================}end.
+unit GameUtils;
+
+interface
+
+	uses
+		Dialogs, Sound;
+
+	const
+		liftAmount = -8;
+		fallAmount = 1;
+		maxFall = 10;
+		maxThrust = 16;
+		defaultNum = 4;
+
+		upperLevel = 0;
+		lowerLevel = 1;
+		upperEye = 2;
+		lowerEye = 3;
+
+		fastest = 0;
+		fast = 1;
+		slow = 3;
+		slowest = 4;
+
+		source = 0;
+		mask = 1;
+
+	type
+		GameObject = record
+				oldDest, dest, wholeRect: Rect;
+				horiVel, vertVel: Integer;
+				facing: Integer;
+				mode, otherMode, tempInt: Integer;
+				state, otherState: Boolean;
+			end;
+
+		Bolt = record
+				levelStriking: Integer;
+				leftMode, rightMode: Integer;
+				leftBolts, rightBolts: array[0..3, 0..3, 0..11] of Point;
+			end;
+
+	var
+		{Here follow all the major global variables							}
+		{(yes, there are quite a few)														}
+		{Here are then menu handles															}
+		AppleMenu, GameMenu, OptionsMenu: MenuHandle;
+
+		{The boolean vars often keep track of the game state		}
+		playing, pausing, keyboardControl, soundOn, onFastMachine: Boolean;
+		deadAndGone, scoresChanged, inhibitSound, doneFlag: Boolean;
+		onward, keyStillDown, stonesSliding: Boolean;
+
+		{Integers keep track of numbers, level, modes, etc...		}
+		numberOfStones, levelOn, mortals, oldDirection: Integer;
+		beastsKilled, beastsActive, totalToKill, levelStart, mortalsStart: Integer;
+		delayFor, startStone, playMask, growRate, numberOfEnemies: Integer;
+
+		{Score is LongInt for the 12 yr old kids that top	36727	}
+		gameCycle, score, oldScore, nextMortal, lastLoopTime: LongInt;
+
+		{Keep track of the name last entered for the high score	}
+		nameUsing: Str255;
+
+		{And the ahnk (SP?) cursor variable											}
+		ahnkCursor: CursHandle;
+
+		{Here follow the offscreen bitmap and window variables	}
+		mainWndo: WindowPtr;
+		playRgn, obeliskRgn1, obeliskRgn2: RgnHandle;
+		offEnemyArea, offVirginArea, offLoadArea, offPlayerArea: Rect;
+		offEnemyMap, offVirginMap, offLoadMap, offPlayerMap: BitMap;
+		offEnemyPort, offVirginPort, offLoadPort, offPlayerPort: GrafPtr;
+		offEnemyBits, offVirginBits, offLoadBits, offPlayerBits: Ptr;
+
+		{Here are some of the object definition records					}
+		theEye, theHand, thePlayer: GameObject;
+		lightning: Bolt;
+
+		{Miscellaneous rects for the score box, platforms, etc..}
+		scoreGrabRect, scoreDropRect, littleTombRect, playRect: Rect;
+		upperTombRect1, upperTombRect2: Rect;
+
+		{For the digitized sound																}
+		chanPtr: sndchannelptr;
+
+		{Arrays hold hiscores made and read from .RSRC fork			}
+		hiScores: array[1..10] of LongInt;
+		hiStrings: array[1..10] of Str255;
+
+		{These vars hold info on the enemies										}
+		theEnemies: array[0..9] of GameObject;
+		enemyLift: array[0..2] of Integer;
+
+		{These vars hold locations of all artwork on offscreens	}
+		tombRects: array[-5..6] of Rect;
+		playerRects: array[0..3, 0..5] of Rect;
+		enemyRects: array[0..2, 0..5, 0..1, 0..1] of Rect;
+		boneRects: array[0..1, 6..7, 0..1] of Rect;
+		absoluteRects: array[0..1, 0..5] of Rect;
+		eyeRects: array[0..9] of Rect;
+		handRects: array[0..1, 0..1] of Rect;
+		ankRects: array[0..15, 0..1] of Rect;
+		eggRects, gameoverRects, flameRect: array[0..1] of Rect;
+		running: array[-16..16, 0..1, 0..1] of Integer;
+		idleLanded: array[-16..16] of Integer;
+		gliding: array[-16..16, 0..1] of Integer;
+		impacted: array[-70..16] of Integer;
+
+	procedure NewLightning;
+	procedure StrikeLightning (whichLevel: Integer);
+	procedure DoTheSound (whichOne: Str255; asynch: Boolean);
+	function DoRandom (range: Integer): Integer;
+	procedure ChangeRect;
+	procedure DrawPlayer (newRect, oldRect: Rect);
+	procedure DrawBeasts;
+	procedure DrawHand;
+	procedure RedoTheBackground;
+	procedure ShowScore;
+	procedure DoTheHoopla;
+	procedure CheckExtraMortal;
+	procedure ReDrawHiScores;
+	procedure ReadInScores;
+	procedure WriteOutScores;
+	procedure FinalScore;
+	procedure DoHelpScreen;
+	procedure FlushTheScores;
+
+{=================================}
+
+implementation
+
+{=================================}
+
+	procedure NewLightning;
+		const
+			upperHeight = 125;
+			lowerHeight = 296;
+			upperEyeHeight = 75;
+			lowerEyeHeight = 175;
+			upperDelta = upperHeight - 141;
+			lowerDelta = lowerHeight - 141;
+			upperEyeDelta = upperEyeHeight - 141;
+			lowerEyeDelta = lowerEyeHeight - 141;
+			pylonToCenter = 124;
+		var
+			index, index2, travel, hori, vert: Integer;
+	begin
+		with lightning do
+			begin
+				levelStriking := upperLevel;
+				leftMode := DoRandom(4);
+				rightMode := DoRandom(4);
+				for index := 0 to 3 do
+					begin
+						SetPt(leftBolts[upperLevel, index, 0], 132, 141);
+						SetPt(rightBolts[upperLevel, index, 0], 378, 141);
+						SetPt(leftBolts[lowerLevel, index, 0], 132, 141);
+						SetPt(rightBolts[lowerLevel, index, 0], 378, 141);
+						SetPt(leftBolts[upperEye, index, 0], 132, 141);
+						SetPt(rightBolts[upperEye, index, 0], 378, 141);
+						SetPt(leftBolts[lowerEye, index, 0], 132, 141);
+						SetPt(rightBolts[lowerEye, index, 0], 378, 141);
+					end;
+				for index := 0 to 3 do
+					for index2 := 1 to 10 do
+						begin
+							travel := (6 - ABS(index2 - 6)) * 5;
+							hori := 132 + (index2 * (pylonToCenter div 12));
+							vert := 141 + (index2 * (upperDelta div 12));
+							vert := vert + DoRandom(travel * 2) - travel;
+							SetPt(leftBolts[upperLevel, index, index2], hori, vert);
+							hori := 380 - (index2 * (pylonToCenter div 12));
+							vert := 141 + (index2 * (upperDelta div 12));
+							vert := vert + DoRandom(travel * 2) - travel;
+							SetPt(rightBolts[upperLevel, index, index2], hori, vert);
+							hori := 132 + (index2 * (pylonToCenter div 12));
+							vert := 141 + (index2 * (lowerDelta div 12));
+							vert := vert + DoRandom(travel * 2) - travel;
+							SetPt(leftBolts[lowerLevel, index, index2], hori, vert);
+							hori := 380 - (index2 * (pylonToCenter div 12));
+							vert := 141 + (index2 * (lowerDelta div 12));
+							vert := vert + DoRandom(travel * 2) - travel;
+							SetPt(rightBolts[lowerLevel, index, index2], hori, vert);
+
+							hori := 132 + (index2 * (pylonToCenter div 12));
+							vert := 141 + (index2 * (upperEyeDelta div 12));
+							vert := vert + DoRandom(travel * 2) - travel;
+							SetPt(leftBolts[upperEye, index, index2], hori, vert);
+							hori := 380 - (index2 * (pylonToCenter div 12));
+							vert := 141 + (index2 * (upperEyeDelta div 12));
+							vert := vert + DoRandom(travel * 2) - travel;
+							SetPt(rightBolts[upperEye, index, index2], hori, vert);
+							hori := 132 + (index2 * (pylonToCenter div 12));
+							vert := 141 + (index2 * (lowerEyeDelta div 12));
+							vert := vert + DoRandom(travel * 2) - travel;
+							SetPt(leftBolts[lowerEye, index, index2], hori, vert);
+							hori := 380 - (index2 * (pylonToCenter div 12));
+							vert := 141 + (index2 * (lowerEyeDelta div 12));
+							vert := vert + DoRandom(travel * 2) - travel;
+							SetPt(rightBolts[lowerEye, index, index2], hori, vert);
+						end;
+				for index := 0 to 3 do
+					begin
+						SetPt(leftBolts[upperLevel, index, 11], 256, upperHeight);
+						SetPt(rightBolts[upperLevel, index, 11], 254, upperHeight);
+						SetPt(leftBolts[lowerLevel, index, 11], 256, lowerHeight);
+						SetPt(rightBolts[lowerLevel, index, 11], 254, lowerHeight);
+						SetPt(leftBolts[upperEye, index, 11], 256, upperEyeHeight);
+						SetPt(rightBolts[upperEye, index, 11], 254, upperEyeHeight);
+						SetPt(leftBolts[lowerEye, index, 11], 256, lowerEyeHeight);
+						SetPt(rightBolts[lowerEye, index, 11], 254, lowerEyeHeight);
+					end;
+			end;
+	end;
+
+{=================================}
+
+	procedure StrikeLightning;
+		var
+			index: Integer;
+			isPoint, wasPoint: Point;
+			savedPort: GrafPtr;
+	begin
+		GetPort(savedPort);
+		SetPort(mainWndo);
+		InvertRgn(obeliskRgn1);
+		InvertRgn(obeliskRgn2);
+		PenNormal;
+		PenSize(2, 2);
+		PenMode(patXOr);
+		with lightning do
+			begin
+				leftMode := DoRandom(4);
+				rightMode := DoRandom(4);
+				for index := 1 to 11 do
+					begin
+						isPoint := leftBolts[whichLevel, leftMode, index];
+						wasPoint := leftBolts[whichLevel, leftMode, index - 1];
+						MoveTo(wasPoint.h, wasPoint.v);
+						LineTo(isPoint.h - 2, isPoint.v);
+						isPoint := rightBolts[whichLevel, leftMode, index];
+						wasPoint := rightBolts[whichLevel, leftMode, index - 1];
+						MoveTo(wasPoint.h, wasPoint.v);
+						LineTo(isPoint.h + 2, isPoint.v);
+					end;
+				for index := 1 to 11 do
+					begin
+						isPoint := leftBolts[whichLevel, leftMode, index];
+						wasPoint := leftBolts[whichLevel, leftMode, index - 1];
+						MoveTo(wasPoint.h, wasPoint.v);
+						LineTo(isPoint.h - 2, isPoint.v);
+						isPoint := rightBolts[whichLevel, leftMode, index];
+						wasPoint := rightBolts[whichLevel, leftMode, index - 1];
+						MoveTo(wasPoint.h, wasPoint.v);
+						LineTo(isPoint.h + 2, isPoint.v);
+					end;
+			end;
+		InvertRgn(obeliskRgn1);
+		InvertRgn(obeliskRgn2);
+		SetPort(savedPort);
+	end;
+
+{=================================}
+
+	procedure DoTheSound;
+		var
+			theSnd: Handle;
+			err: OSErr;
+	begin
+		if (soundOn) then
+			begin
+				theSnd := GetNamedResource('snd ', whichOne);
+				if (theSnd <> nil) and (ResError = noErr) then
+					begin
+						if (chanPtr <> nil) then
+							begin
+								err := SndDisposeChannel(chanPtr, TRUE);
+								chanPtr := nil;
+							end;
+						if (asynch = true) and (SndNewChannel(chanPtr, 0, initMono, nil) = noErr) then
+							err := SndPlay(chanPtr, theSnd, TRUE)
+						else
+							err := SndPlay(nil, theSnd, FALSE);
+					end;
+			end;
+	end;
+
+{=================================}
+
+	function DoRandom;
+		var
+			rawResult: LongInt;
+	begin
+		rawResult := Abs(Random);
+		DoRandom := (rawResult * range) div 32768
+	end;
+
+{=================================}
+
+	procedure ChangeRect;
+		var
+			hori, vert: Integer;
+	begin
+		with thePlayer do
+			begin
+				hori := dest.left;
+				vert := dest.top;
+				if (mode < 6) then
+					dest := absoluteRects[facing, mode]
+				else
+					begin
+						SetRect(dest, 0, 0, 44, 23);
+						dest.top := dest.top + 15;
+						dest.bottom := dest.bottom + 15;
+					end;
+				dest.left := dest.left + hori;
+				dest.right := dest.right + hori;
+				dest.top := dest.top + vert;
+				dest.bottom := dest.bottom + vert;
+			end;
+	end;
+
+{=================================}
+
+	procedure DrawPlayer;
+		var
+			index, hori, vert: integer;
+			dummyLong: LongInt;
+			standInRect, standInRect2, tempRect: Rect;
+	begin
+		with thePlayer do
+			case mode of
+				0..5: 
+					begin
+						UnionRect(oldRect, newRect, wholeRect);
+						CopyBits(offVirginMap, offLoadMap, wholeRect, wholeRect, srcCopy, nil);
+						CopyMask(offPlayerMap, offPlayerMap, offLoadMap, playerRects[facing, mode], playerRects[facing + 2, mode], newRect);
+						CopyBits(offLoadMap, mainWndo^.portBits, wholeRect, wholeRect, srcCopy, playRgn);
+						if (otherState) then
+							begin
+								mode := 6;
+								CopyBits(offVirginMap, mainWndo^.portBits, wholeRect, wholeRect, srcCopy, playRgn);
+								hori := newRect.left;
+								vert := newRect.top;
+								SetRect(newRect, 0, 0, 48, 38);
+								tempRect := newRect;
+								newRect.left := newRect.left + hori;
+								newRect.right := newRect.right + hori;
+								newRect.top := newRect.top + vert;
+								newRect.bottom := newRect.bottom + vert;
+								dest := newRect;
+								tempRect.left := tempRect.left + 232;
+								tempRect.right := tempRect.right + 232;
+								tempRect.top := tempRect.top + 306;
+								tempRect.bottom := tempRect.bottom + 306;
+								SetPort(offLoadPort);
+								for index := 1 to 10 do
+									begin
+										EraseRect(tempRect);
+										CopyBits(offVirginMap, offLoadMap, newRect, tempRect, srcCopy, nil);
+										CopyMask(offLoadMap, offPlayerMap, offLoadMap, tempRect, boneRects[facing, mode, 1], newRect);
+										CopyBits(offLoadMap, mainWndo^.portBits, newRect, newRect, srcCopy, playRgn);
+										Delay(1, dummyLong);
+										CopyBits(offVirginMap, offLoadMap, newRect, newRect, srcCopy, nil);
+										CopyMask(offPlayerMap, offPlayerMap, offLoadMap, boneRects[facing, mode, 0], boneRects[facing, mode, 1], newRect);
+										CopyBits(offLoadMap, mainWndo^.portBits, newRect, newRect, srcCopy, playRgn);
+									end;
+								CopyBits(offVirginMap, mainWndo^.portBits, newRect, newRect, srcCopy, playRgn);
+							end;
+					end;
+				6: 
+					begin
+						UnionRect(oldRect, newRect, wholeRect);
+						CopyBits(offVirginMap, offLoadMap, wholeRect, wholeRect, srcCopy, nil);
+						CopyMask(offPlayerMap, offPlayerMap, offLoadMap, boneRects[facing, mode, 0], boneRects[facing, mode, 1], newRect);
+						CopyBits(offLoadMap, mainWndo^.portBits, wholeRect, wholeRect, srcCopy, playRgn);
+					end;
+				7..100: 
+					begin
+						UnionRect(oldRect, newRect, wholeRect);
+						CopyBits(offVirginMap, offLoadMap, wholeRect, wholeRect, srcCopy, nil);
+						standInRect := boneRects[facing, 7, 0];
+						standInRect2 := boneRects[facing, 7, 1];
+						vert := dest.bottom - dest.top;
+						standInRect.bottom := standInRect.top + vert;
+						standInRect2.bottom := standInRect2.top + vert;
+						CopyMask(offPlayerMap, offPlayerMap, offLoadMap, standInRect, standInRect2, newRect);
+						CopyBits(offLoadMap, mainWndo^.portBits, wholeRect, wholeRect, srcCopy, playRgn);
+					end;
+				otherwise
+					begin
+					end;
+			end;
+	end;
+
+{=================================}
+
+	procedure DrawHand;
+	begin
+		with theHand do
+			begin
+				UnionRect(oldDest, dest, wholeRect);
+				CopyBits(offVirginMap, offLoadMap, wholeRect, wholeRect, srcCopy, nil);
+				CopyMask(offPlayerMap, offPlayerMap, offLoadMap, handRects[mode, source], handRects[mode, mask], dest);
+				CopyBits(offLoadMap, mainWndo^.portBits, wholeRect, wholeRect, srcCopy, playRgn);
+			end;
+	end;
+
+{=================================}
+
+	procedure DrawBeasts;
+		var
+			index: Integer;
+			otherRect, otherMask, tempSrc, tempMask: Rect;
+	begin
+{swap flames on background}
+		CopyBits(offVirginMap, offLoadMap, flameRect[0], flameRect[0], srcCopy, nil);
+		CopyBits(offVirginMap, offVirginMap, flameRect[1], flameRect[0], srcCopy, nil);
+		CopyBits(offLoadMap, offVirginMap, flameRect[0], flameRect[1], srcCopy, nil);
+
+{copy all neccesary background rects to the load map}
+		with theEye do
+			if (mode > 0) then
+				begin
+					UnionRect(oldDest, dest, wholeRect);
+					CopyBits(offVirginMap, offLoadMap, wholeRect, wholeRect, srcCopy, nil);
+				end;
+
+		for index := 1 to numberOfEnemies do
+			with theEnemies[index] do
+				begin
+					UnionRect(oldDest, dest, wholeRect);
+					CopyBits(offVirginMap, offLoadMap, wholeRect, wholeRect, srcCopy, nil);
+					oldDest := dest;
+				end;
+
+{copy the beasts through their masks onto the load map}
+		for index := 1 to numberOfEnemies do
+			with theEnemies[index] do
+				begin
+					if (mode < 6) then
+						begin
+							if (mode < 0) then
+								begin
+									tempSrc := eggRects[0];
+									tempMask := eggRects[1];
+									tempSrc.bottom := tempSrc.top + (dest.bottom - dest.top);
+									tempMask.bottom := tempMask.top + (dest.bottom - dest.top);
+									CopyMask(offPlayerMap, offPlayerMap, offLoadMap, tempSrc, tempMask, dest);
+								end
+							else
+								CopyMask(offEnemyMap, offEnemyMap, offLoadMap, enemyRects[otherMode, mode, facing, 0], enemyRects[otherMode, mode, facing, 1], dest)
+						end
+					else
+						begin
+							otherRect := enemyRects[otherMode, 1, facing, source];
+							otherRect.bottom := otherRect.top + (dest.bottom - dest.top);
+							otherMask := enemyRects[otherMode, 1, facing, mask];
+							otherMask.bottom := otherMask.top + (dest.bottom - dest.top);
+							CopyMask(offEnemyMap, offEnemyMap, offLoadMap, otherRect, otherMask, dest);
+						end;
+				end;
+		CopyBits(offVirginMap, mainWndo^.portBits, flameRect[0], flameRect[0], srcCopy, nil);
+		CopyBits(offVirginMap, mainWndo^.portBits, flameRect[1], flameRect[1], srcCopy, nil);
+		{copy the sum bitmaps to the screen}
+		for index := 1 to numberOfEnemies do
+			with theEnemies[index] do
+				CopyBits(offLoadMap, mainWndo^.portBits, wholeRect, wholeRect, srcCopy, playRgn);
+
+		with theEye do
+			if (mode > 0) then
+				begin
+					CopyMask(offPlayerMap, offPlayerMap, offLoadMap, eyeRects[otherMode], eyeRects[otherMode + 5], dest);
+					CopyBits(offLoadMap, mainWndo^.portBits, wholeRect, wholeRect, srcCopy, playRgn);
+					oldDest := dest;
+				end;
+	end;
+
+{=================================}
+
+	procedure RedoTheBackground;
+		var
+			tempRect, anotherRect: Rect;
+			Pic_Handle: PicHandle;
+	begin
+		SetPort(offVirginPort);		{Set the port to my window}
+		Pic_Handle := GetPicture(1);	{Get Picture into memory}
+		SetRect(tempRect, 0, 0, 512, 342);		{left,top,right,bottom}
+		if (Pic_Handle <> nil) then	{Only use handle if it is valid}
+			begin
+				ClipRect(tempRect);		{Clip picture to this rectangle}
+				HLock(Handle(Pic_Handle));	{Lock the handle before using it}
+				tempRect.Right := tempRect.Left + (Pic_Handle^^.picFrame.Right - Pic_Handle^^.picFrame.Left);
+				tempRect.Bottom := tempRect.Top + (Pic_Handle^^.picFrame.Bottom - Pic_Handle^^.picFrame.Top);
+				HUnLock(Handle(Pic_Handle));{Unlock the picture again}
+			end;
+		if (Pic_Handle <> nil) then	{Only use handle if it is valid}
+			DrawPicture(Pic_Handle, tempRect);{Draw this picture}
+		ReleaseResource(Handle(Pic_Handle));
+		if (numberOfStones > 2) then
+			begin
+				tempRect := upperTombRect1;
+				OffsetRect(tempRect, tombRects[3].right - tempRect.right, tombRects[3].top - tempRect.top);
+				CopyBits(offPlayerMap, offVirginMap, upperTombRect1, tempRect, srcCopy, nil);
+				tempRect := upperTombRect2;
+				OffsetRect(tempRect, tombRects[4].left - tempRect.left, tombRects[4].top - tempRect.top);
+				CopyBits(offPlayerMap, offVirginMap, upperTombRect2, tempRect, srcCopy, nil);
+			end;
+		if ((numberOfStones > 4) and (levelOn <> 3)) then
+			begin
+				CopyBits(offEnemyMap, offVirginMap, littleTombRect, tombRects[5], srcCopy, nil);
+			end;
+		if (levelOn < 3) then
+			begin
+				SetRect(tempRect, 166, 316, 346, 332);
+				anotherRect := tempRect;
+				anotherRect.left := anotherRect.left - 180;
+				anotherRect.right := anotherRect.right - 180;
+				CopyBits(offVirginMap, offVirginMap, tempRect, anotherRect, srcCopy, playRgn);
+				anotherRect.left := anotherRect.left + 180 + 180;
+				anotherRect.right := anotherRect.right + 180 + 180;
+				CopyBits(offVirginMap, offVirginMap, tempRect, anotherRect, srcCopy, playRgn);
+			end;
+
+		SetRect(tempRect, 0, 0, 512, 342);
+		CopyBits(offVirginMap, mainWndo^.portBits, tempRect, tempRect, srcCopy, nil);
+	end;
+
+{=================================}
+
+	procedure ShowScore;
+		var
+			tempString: Str255;
+	begin
+		CopyBits(offEnemyMap, mainWndo^.portBits, scoreGrabRect, scoreDropRect, srcCopy, nil);
+		SetPort(mainWndo);
+		PenNormal;
+		MoveTo(261, 179);
+		TextFont(0);
+		TextSize(12);
+		NumToString(score, tempString);
+		DrawString(tempString);
+	end;
+
+{=================================}
+
+	procedure DoTheHoopla;
+		var
+			index, index2, index3, tempNum: Integer;
+			dummyLong: LongInt;
+			theseAhnks: array[1..24] of Rect;
+			ahnkModes: array[1..24] of Integer;
+	begin
+		ShowScore;
+		tempNum := mortals;
+		if (tempNum > 24) then
+			tempNum := 24;
+		for index := 1 to tempNum do
+			begin
+				SetRect(theseAhnks[index], (239 - (mortals * 10) + (index * 20)), 200, (254 - (mortals * 10) + (index * 20)), 224);
+				CopyMask(offPlayerMap, offPlayerMap, mainWndo^.portBits, ankRects[0, 0], ankRects[0, 1], theseAhnks[index]);
+				DoTheSound('flip.snd', TRUE);
+				ahnkModes[index] := 0;
+				for index2 := 1 to 30 do
+					for index3 := 1 to index do
+						begin
+							ahnkModes[index3] := ahnkModes[index3] + 1;
+							if (ahnkModes[index3] > 15) then
+								ahnkModes[index3] := 0;
+							CopyBits(offVirginMap, offLoadMap, theseAhnks[index3], theseAhnks[index3], srcCopy, nil);
+							CopyMask(offPlayerMap, offPlayerMap, offLoadMap, ankRects[ahnkModes[index3], 0], ankRects[ahnkModes[index3], 1], theseAhnks[index3]);
+							CopyBits(offLoadMap, mainWndo^.portBits, theseAhnks[index3], theseAhnks[index3], srcCopy, nil);
+						end;
+			end;
+		for index2 := 1 to 50 do
+			for index3 := 1 to tempNum do
+				begin
+					if (ahnkModes[index3] <> 0) then
+						ahnkModes[index3] := ahnkModes[index3] + 1;
+					if (ahnkModes[index3] > 15) then
+						begin
+							DoTheSound('ahnk.snd', TRUE);
+							ahnkModes[index3] := 0;
+						end;
+					CopyBits(offVirginMap, offLoadMap, theseAhnks[index3], theseAhnks[index3], srcCopy, nil);
+					CopyMask(offPlayerMap, offPlayerMap, offLoadMap, ankRects[ahnkModes[index3], 0], ankRects[ahnkModes[index3], 1], theseAhnks[index3]);
+					CopyBits(offLoadMap, mainWndo^.portBits, theseAhnks[index3], theseAhnks[index3], srcCopy, nil);
+				end;
+		for index3 := 1 to tempNum do
+			CopyBits(offVirginMap, mainWndo^.portBits, theseAhnks[index3], theseAhnks[index3], srcCopy, nil);
+	end;
+
+{=================================}
+
+	procedure CheckExtraMortal;
+	begin
+		if (score > nextMortal) then
+			begin
+				DoTheSound('bonus.snd', FALSE);	{You got an extra player!}
+				mortals := mortals + 1;
+				nextMortal := nextMortal + 20000;
+			end;
+	end;
+
+{=================================}
+
+	procedure ReDrawHiScores;
+		var
+			index: Integer;
+			dummyLong: LongInt;
+			tempRect: Rect;
+			dummyString: Str255;
+	begin
+		SetPort(offLoadPort);
+		PenNormal;
+		SetRect(tempRect, 170, 100, 347, 280);
+		FillRect(tempRect, black);
+		TextFont(0);
+		TextSize(12);
+		TextMode(srcXOr);
+		MoveTo(184, 125);
+		DrawString('Glypha 3.0 High Scores');
+		TextFont(1);
+		TextSize(9);
+		for index := 1 to 10 do	{Now we're going to loop through all the scores	}
+			begin
+				MoveTo(185, index * 14 + 129);			{Moving the pen down each time	}
+				DrawString(hiStrings[index]);				{Draw the name of person		}
+				MoveTo(290, index * 14 + 129);			{Move pen over to the right		}
+				NumToString(hiScores[index], dummyString);
+				DrawString(dummyString);						{And draw their score			}
+			end;							{Copy the screen to the virgin port for updates	}
+		tempRect.top := tempRect.bottom;
+		for index := 1 to 86 do
+			begin
+				tempRect.top := tempRect.top - 2;
+				CopyBits(offLoadMap, mainWndo^.portBits, tempRect, tempRect, srcCopy, nil);
+			end;
+
+		CopyBits(mainWndo^.portBits, offVirginMap, mainWndo^.portRect, mainWndo^.portRect, srcCopy, nil);
+	end;
+
+{=================================}
+
+	procedure ReadInScores;
+		type
+			scoreHandle = ^scorePtr;
+			scorePtr = ^score;
+			score = record
+					data: array[0..9] of LongInt;
+				end;
+
+			nameHandle = ^namePtr;
+			namePtr = ^name;
+			name = record
+					data: array[0..9, 0..14] of Char;
+				end;
+
+			prefHandle = ^prefPtr;
+			prefPtr = ^pref;
+			pref = record
+					data: array[0..31] of Char;
+				end;
+
+		var
+			index, index2: Integer;
+			dummyStr: Str255;
+			theScores: scoreHandle;
+			theNames: nameHandle;
+			thePrefs: prefHandle;
+
+	begin
+		theScores := scoreHandle(NewHandle(SIZEOF(score)));
+		MoveHHi(Handle(theScores));
+		HLock(Handle(theScores));
+		Handle(theScores) := GetResource('scrs', 128);
+		for index := 0 to 9 do
+			hiScores[index + 1] := theScores^^.data[index];
+		ReleaseResource(Handle(theScores));
+		HUnlock(Handle(theScores));
+		DisposHandle(Handle(theScores));
+
+		theNames := nameHandle(NewHandle(SIZEOF(name)));
+		MoveHHi(Handle(theNames));
+		HLock(Handle(theNames));
+		Handle(theNames) := GetResource('name', 128);
+		for index := 0 to 9 do
+			begin
+				dummyStr := '';
+				for index2 := 0 to 14 do
+					dummyStr := CONCAT(dummyStr, theNames^^.data[index, index2]);
+				hiStrings[index + 1] := dummyStr;
+			end;
+		ReleaseResource(Handle(theNames));
+		HUnlock(Handle(theNames));
+		DisposHandle(Handle(theNames));
+
+		thePrefs := prefHandle(NewHandle(SIZEOF(pref)));
+		MoveHHi(Handle(thePrefs));
+		HLock(Handle(thePrefs));
+		Handle(thePrefs) := GetResource('pref', 128);
+
+		if (thePrefs^^.data[0] = 'M') then
+			keyboardControl := FALSE
+		else
+			keyboardControl := TRUE;
+		if (thePrefs^^.data[1] = 'S') then
+			soundOn := TRUE
+		else
+			soundOn := FALSE;
+		if (inhibitSound) then
+			soundOn := FALSE;
+
+		case thePrefs^^.data[2] of
+			'L': 
+				delayFor := slowest;
+			'S': 
+				delayFor := slow;
+			'F': 
+				delayFor := fast;
+			'A': 
+				delayFor := fastest;
+			otherwise
+				begin
+				end;
+		end;
+
+		nameUsing := '';
+		for index := 1 to 15 do
+			nameUsing := CONCAT(nameUsing, thePrefs^^.data[index + 16]);
+
+		ReleaseResource(Handle(thePrefs));
+		HUnlock(Handle(thePrefs));
+		DisposHandle(Handle(thePrefs));
+
+		scoresChanged := FALSE;
+	end;
+
+{=================================}
+
+	procedure WriteOutScores;
+		type
+			scoreHandle = ^scorePtr;
+			scorePtr = ^score;
+			score = record
+					data: array[0..9] of LongInt;
+				end;
+
+			nameHandle = ^namePtr;
+			namePtr = ^name;
+			name = record
+					data: array[0..9, 0..14] of Char;
+				end;
+
+			prefHandle = ^prefPtr;
+			prefPtr = ^pref;
+			pref = record
+					data: array[0..31] of Char;
+				end;
+
+		var
+			index, index2: Integer;
+			dummyStr: Str255;
+			theScores: scoreHandle;
+			theNames: nameHandle;
+			thePrefs: prefHandle;
+
+	begin
+		thePrefs := prefHandle(NewHandle(SIZEOF(pref)));
+		HLock(Handle(thePrefs));
+		Handle(thePrefs) := GetResource('pref', 128);
+		if (keyboardControl) then
+			thePrefs^^.data[0] := 'K'
+		else
+			thePrefs^^.data[0] := 'M';
+		if (soundOn) then
+			thePrefs^^.data[1] := 'S'
+		else
+			thePrefs^^.data[1] := 'N';
+
+		case delayFor of
+			slowest: 
+				thePrefs^^.data[2] := 'L';
+			slow: 
+				thePrefs^^.data[2] := 'S';
+			fast: 
+				thePrefs^^.data[2] := 'F';
+			fastest: 
+				thePrefs^^.data[2] := 'A';
+			otherwise
+				begin
+				end;
+		end;
+
+		for index := 1 to 15 do
+			thePrefs^^.data[index + 16] := COPY(nameUsing, index, 1);
+		ChangedResource(Handle(thePrefs));
+		WriteResource(Handle(thePrefs));
+		ReleaseResource(Handle(thePrefs));
+		HUnlock(Handle(thePrefs));
+		DisposHandle(Handle(thePrefs));
+
+		if (scoresChanged) then
+			begin
+				theScores := scoreHandle(NewHandle(SIZEOF(score)));
+				MoveHHi(Handle(theScores));
+				HLock(Handle(theScores));
+				Handle(theScores) := GetResource('scrs', 128);
+				for index := 0 to 9 do
+					theScores^^.data[index] := hiScores[index + 1];
+				ChangedResource(Handle(theScores));
+				WriteResource(Handle(theScores));
+				ReleaseResource(Handle(theScores));
+				HUnlock(Handle(theScores));
+				DisposHandle(Handle(theScores));
+
+				theNames := nameHandle(NewHandle(SIZEOF(name)));
+				HLock(Handle(theNames));
+				Handle(theNames) := GetResource('name', 128);
+				for index := 0 to 9 do
+					for index2 := 0 to 14 do
+						theNames^^.data[index, index2] := COPY(hiStrings[index + 1], index2 + 1, 1);
+				ChangedResource(Handle(theNames));
+				WriteResource(Handle(theNames));
+				ReleaseResource(Handle(theNames));
+				HUnlock(Handle(theNames));
+				DisposHandle(Handle(theNames));
+			end;
+	end;
+
+{=================================}
+
+	procedure FinalScore;
+		var
+			index, ranking: Integer;
+	begin
+		FlushEvents(everyEvent, 0);									{Clear all the keystrokes	}
+		if (score > hiScores[10]) and (mortalsStart = defaultNum) then		{Is it a high score?			}
+			begin
+				scoresChanged := TRUE;						{Mark scores as changed			}
+				DoTheSound('bonus.snd', FALSE);		{Play the bonus sound.			}
+				ranking := 10;										{And sort through the high	}
+				for index := 9 downto 1 do				{scores to find the players	}
+					begin														{ranking.										}
+						if (score > hiScores[index]) then
+							ranking := index;
+					end;
+				for index := 10 downto ranking + 1 do
+					begin
+						hiScores[index] := hiScores[index - 1];		{Move everyone's score}
+						hiStrings[index] := hiStrings[index - 1];	{down the list.				}
+					end;
+				hiScores[ranking] := score;
+				SetPort(mainWndo);
+				WhosHiScore(nameUsing);
+				hiStrings[ranking] := nameUsing;
+			end;
+	end;
+
+{=================================}
+
+	procedure DoHelpScreen;
+		var
+			index: Integer;
+			tempRect, dropRect: Rect;
+			Pic_Handle: PicHandle;
+			theEvent: EventRecord;
+	begin
+		SetPort(offLoadPort);
+		Pic_Handle := GetPicture(2000);
+		SetRect(tempRect, 0, 0, 360, 338);
+		if (Pic_Handle <> nil) then
+			begin
+				ClipRect(tempRect);
+				HLock(Handle(Pic_Handle));
+				tempRect.Right := tempRect.Left + (Pic_Handle^^.picFrame.Right - Pic_Handle^^.picFrame.Left);
+				tempRect.Bottom := tempRect.Top + (Pic_Handle^^.picFrame.Bottom - Pic_Handle^^.picFrame.Top);
+				HUnLock(Handle(Pic_Handle));
+			end;
+		if (Pic_Handle <> nil) then
+			DrawPicture(Pic_Handle, tempRect);
+		ReleaseResource(Handle(Pic_Handle));
+		SetRect(tempRect, 0, 0, 1023, 1023);
+		ClipRect(tempRect);
+		SetRect(dropRect, 168, 278, 348, 278);
+		SetRect(tempRect, 0, 169, 180, 169);
+		for index := 1 to 169 do
+			begin
+				dropRect.top := dropRect.top - 1;
+				tempRect.top := tempRect.top - 1;
+				CopyBits(offLoadMap, mainWndo^.portBits, tempRect, dropRect, srcCopy, nil);
+			end;
+		SetRect(dropRect, 168, 109, 348, 278);
+		SetRect(tempRect, 0, 0, 180, 169);
+		FlushEvents(everyEvent, 0);
+		SetEventMask(playMask);
+		repeat
+		until (GetNextEvent(playMask, theEvent));
+		for index := 1 to 180 do
+			begin
+				tempRect.left := tempRect.left + 1;
+				tempRect.right := tempRect.right + 1;
+				CopyBits(offLoadMap, mainWndo^.portBits, tempRect, dropRect, srcCopy, nil);
+			end;
+		FlushEvents(everyEvent, 0);
+		repeat
+		until (GetNextEvent(playMask, theEvent));
+		for index := 1 to 169 do
+			begin
+				tempRect.top := tempRect.top + 1;
+				tempRect.bottom := tempRect.bottom + 1;
+				CopyBits(offLoadMap, mainWndo^.portBits, tempRect, dropRect, srcCopy, nil);
+			end;
+		FlushEvents(everyEvent, 0);
+		repeat
+		until (GetNextEvent(playMask, theEvent));
+		for index := 1 to 180 do
+			begin
+				tempRect.left := tempRect.left - 1;
+				tempRect.right := tempRect.right - 1;
+				CopyBits(offLoadMap, mainWndo^.portBits, tempRect, dropRect, srcCopy, nil);
+			end;
+		FlushEvents(everyEvent, 0);
+		repeat
+		until (GetNextEvent(playMask, theEvent));
+		SetEventMask(EveryEvent);
+		RedrawHiScores;
+	end;
+
+{=================================}
+
+	procedure FlushTheScores;
+		var
+			index: Integer;
+	begin
+		for index := 1 to 10 do
+			begin
+				hiScores[index] := 0;
+				hiStrings[index] := 'Play Me .......';
+			end;
+		scoresChanged := TRUE;
+		RedrawHiScores;
+	end;
+
+{=================================}
+
+end.

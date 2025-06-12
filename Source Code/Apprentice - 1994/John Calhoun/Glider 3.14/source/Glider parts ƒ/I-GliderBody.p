@@ -1,1 +1,323 @@
-program Glider313;		{Glider+ 3.14}{Glider+ version 3.14, © 1989, 1990, 1991 March 13 by John Calhoun.	}{An "arcade-style" game for the Macintosh computer.		}	uses		LogoWindo, AboutIt, Dialogs, Sound, GameUtilities, GliderMain, InitializeAll, HandleTheMenus;	const		stackSize = 24000;		sleep = 1;		suspendResumeBit = $0001;		resuming = 1;		WNETrapNum = $60;		unimplTrapNum = $9F;	var		theMenu, theItem, chCode, code, count: integer;		ch: char;		mResult, dummyLong, timeToLoop: longint;		myEvent: EventRecord;		whichWindow: WindowPtr;		tempRect: Rect;		theInput: TEHandle;		err: OSErr;		prefGet: Str255;		thisWorld: SysEnvRec;		leaving, eventHappened, hasWNE, inBackground, ignore: Boolean;{==================================}	procedure DoErrorSound (soundNumber: Integer);		var			dummyLong: LongInt;			tempVolume, i: Integer;	begin		GetSoundVol(tempVolume);		if (tempVolume <> 0) then			for i := 0 to soundNumber do				begin					FlashMenuBar(0);					Delay(8, dummyLong);					FlashMenuBar(0);				end;	end;{==================================}{$I-}begin	SetApplLimit(Ptr(LongInt(GetApplLimit) - StackSize));	MaxApplZone;	for count := 1 to 12 do		MoreMasters;	InitGraf(@thePort);	InitFonts;	FlushEvents(everyEvent, 0);	InitWindows;	InitMenus;	TEInit;	InitDialogs(nil);	ErrorSound(@DoErrorSound);	for count := 1 to 3 do		ignore := EventAvail(EveryEvent, myEvent);	inBackground := FALSE;	timeToLoop := TickCount;	Init_LogoWindo;											{Set up Soft Dorothy Software Logo window	}	Open_LogoWindo;										{Display her (scanned from 1800's engraving)}	InitAllRooms;											{Set up object data in levelArray				}	ReadInScores(prefGet);								{Call up hi scores and preferences from RSRC	}	InitAllVariables(prefGet);								{Set up all those nasty global variables			}	Init_My_Menus;										{Bring up the menu bar							}	err := SysEnvirons(1, thisWorld);					{Check on the set up of the Mac game is on		}	with thisWorld do		begin			if (machineType <= 0) then						{If less than a Mac Plus (=2) then quit now!	}				ExitToShell			else				begin					if (systemVersion >= $0602) then						begin											{Now, must be 6.02 or greater for the sound	}							soundOn := TRUE;							inhibitSound := FALSE;							CheckItem(GetMenu(L_Options), C_Sound_On, soundOn);						end					else						begin							soundOn := FALSE;							{Otherwise, turn it off, change the menu item,}							inhibitSound := TRUE;							SetItem(GetMenu(L_Options), C_Sound_On, 'No Sound : need ³ Sys 6.02');							DisableItem(GetMenu(L_Options), C_Sound_On);		{and disable it (changing the name is a public	}						end;											{service mssg. to tell them WHY no sound).	}				end;		end;	hasWNE := (NGetTrapAddress(WNETrapNum, ToolTrap) <> NGetTrapAddress(unimplTrapNum, toolTrap));	theInput := nil;	leaving := FALSE;				{The following lines of code deal with the sexy}	count := 0;						{logo for Soft Dorothy Software.  We have		}	repeat							{already brought up the window, now we		}		count := count + 1;			{enter a loop that waits either for the count to}		Delay(10, dummyLong);		{reach 50 passes, or the player to cause an	}		if (count >= 50) then		{event.  I used the playMask because it was 	}			leaving := TRUE;			{handy and already defined above.				}	until (EventAvail(everyEvent, myEvent) or (leaving));	Close_LogoWindo;				{Okay, now we close the window and move on.}	InitCursor;						{Get us that arrow cursor						}	Init_GliderMain;				{Get the main window ready for calling up		}	Open_GliderMain;				{Call it out of the RSRC fork and show it.		}	Init_AboutIt;					{Go ahead and initialize the "About" window	}	GetDateTime(RandSeed);		{This neat simple line keeps the it random.		}	RedrawHiScores;				{Send in the banner gliders with the hiscores	}	highScoresOut := TRUE;		{Let the program know the scores are out.		}	repeat								{Start of main event loop				}		if (hasWNE) then			eventHappened := WaitNextEvent(everyEvent, myEvent, 0, nil)		else			begin				SystemTask;				eventHappened := GetNextEvent(everyEvent, myEvent);			end;		if (eventHappened) then			begin				code := FindWindow(myEvent.where, whichWindow);				case myEvent.what of					MouseDown: 						case code of							inMenuBar: 								begin									mResult := MenuSelect(myEvent.Where);	{Do menu selection				}									theMenu := HiWord(mResult);					{Get the menu list number		}									theItem := LoWord(mResult);					{Get the menu list item number	}									Handle_My_Menu(doneFlag, Pausing, Playing, gliderCraft, soundOn, leftControl, rightControl, theMenu, theItem, theInput);								end;							inGoAway: 								begin									if TrackGoAway(whichWindow, myEvent.where) then										begin											Close_AboutIt;	{Close this window	}											EnableItem(GetMenu(L_Apple), 0);											EnableItem(GetMenu(L_Game), 0);											EnableItem(GetMenu(L_Options), 0);											DrawMenuBar;										end;								end;							inContent: 								begin									{Handle hit inside a window	}									Do_AboutIt(myEvent, theInput);	{Call up dialog routine.		}								end;							inSysWindow: 								SystemClick(myEvent, whichWindow);	{Let other programs in	}							otherwise								begin								end;						end;				{end - case code of		}					KeyDown: 						begin										{Get the key and handle it		}							with myevent do						{Check for menu command keys	}								begin									chCode := BitAnd(message, CharCodeMask);		{Get character	}									ch := CHR(chCode);					{Change to ASCII					}									if (Odd(modifiers div CmdKey)) then										begin											mResult := MenuKey(ch);		{See if menu selection			}											theMenu := HiWord(mResult);	{Get the menu list number		}											theItem := LoWord(mResult);	{Get the menu item number		}											if (theMenu <> 0) then		{See if a list was selected		}												Handle_My_Menu(doneFlag, Pausing, Playing, gliderCraft, soundOn, leftControl, rightControl, theMenu, theItem, theInput); {Do the menu selection}										end;								end;                          {End for with}						end;					UpDateEvt: 						begin							whichWindow := WindowPtr(myEvent.message); {Get the window the update is for}							BeginUpdate(whichWindow);		{Set the clipping to the update area	}							CopyBits(virginMap, mainWindow^.portBits, screenArea, screenArea, srcCopy, mainWindow^.visRgn);							Update_AboutIt(whichWindow);	{Update this window					}							EndUpdate(whichWindow);			{Return to normal clipping area		}						end;					ActivateEvt: 						begin							whichWindow := WindowPtr(myevent.message);	{Get the window to be activated			}							if odd(myEvent.modifiers) then						{Make sure it is Activate				}								SelectWindow(whichWindow);						{Activate the window by selecting it	}						end;					App4Evt: 						case BSR(myEvent.message, 24) of	{high byte of message}							1:  						{suspendResumeMessage}								if (BitAnd(myEvent.message, suspendResumeBit) = resuming) then									inBackground := FALSE								else									begin										inBackground := TRUE;		{it was a suspend event}										if (chanPtr <> nil) then											err := SndDisposeChannel(chanPtr, TRUE);										chanPtr := nil;									end;							otherwise								;						end; {CASE}					otherwise				end;                              {End of case			}			end;                                {end of GetNextEvent	}		while ((Playing) and (not Pausing) and (not inBackground)) do			begin				if (burning) or (crushed) then					DoDyingDisplay		{Burning or crushed gliders fall and die...no player interaction!	}				else					begin						if (hasWNE) then							eventHappened := WaitNextEvent(everyEvent, myEvent, 0, nil)						else							begin								SystemTask;								eventHappened := GetNextEvent(everyEvent, myEvent);							end;						if eventHappened then							begin								code := FindWindow(myEvent.where, whichWindow);								case myEvent.what of									MouseDown: 										if code = inMenuBar then											begin												mResult := MenuSelect(myEvent.Where);		{Do menu selection				}												theMenu := HiWord(mResult);					{Get the menu list number		}												theItem := LoWord(mResult);					{Get the menu list item number	}												Handle_My_Menu(doneFlag, Pausing, Playing, gliderCraft, soundOn, leftControl, rightControl, theMenu, theItem, theInput);											end;									KeyDown: 										begin											ch := Chr(BitAnd(myEvent.message, CharCodeMask));		{Get character		}											if (Odd(myEvent.modifiers div CmdKey)) then												begin													mResult := MenuKey(ch);						{See if menu selection			}													theMenu := HiWord(mResult);					{Get the menu list number		}													theItem := LoWord(mResult);					{Get the menu item number		}													if (theMenu <> 0) then						{See if a list was selected		}														Handle_My_Menu(doneFlag, Pausing, Playing, gliderCraft, soundOn, leftControl, rightControl, theMenu, theItem, theInput); {Do the menu selection}												end;											if ((ch = leftControl) and (not stalling)) then	{i.e. "If the player is pressing	}												begin									{the key to go left or stall the plane."		}													stalling := TRUE;					{Then boolean variable 'stalling' to TRUE	}													if (gliderCraft) then				{The MacII CopyMask routine scales and	}														ResizeARect(playerDropRect, 1);		{thus "drop" rect needs resizing	}												end;									{Otherwise, it garbages up the graphic.	}											if ((ch = rightControl) and (stalling)) then			{Likewise for right...			}												begin									{Note:  There is no change in the graphic	}													stalling := FALSE;					{when you are in dart mode.  Only the		}													if (gliderCraft) then				{glider tips back graphically.  So, no need	}														ResizeARect(playerDropRect, 0);		{to resize the dart rect.				}												end;										end;									otherwise										begin										end;								end;			{end of case						}							end;				{end of GetNextEvent				}					end;					{end of if not burning or crushed}				ComputeGliderPos;	{This routine checks for objects (vents, cnadles etc...).	}				ComputeStatus;		{Here we check to see if the glider is still on the screen.	}				if (playing) then		{It could be the player has died during this pass, in that	}					begin				{case, we want to skip over these routines.				}						if (not crushed) then	{We offset the glider according to the results of	}							begin			{ComputeGliderPos and ComputeStatus.					}								OffsetRect(playerDropRect, moveHori, moveVert);	{moveHori and	}								OffsetRect(shadowDropRect, moveHori, 0);	{moveVert were modified}								OffsetRect(vitalArea, moveHori, moveVert);	{in the aforementioned	}							end;				{routines.  Note:  the shadow is not offset vertically.		}						if (candleThere) then	{If we have a candle in the room...					}							HandleCandle;		{This routine will handle the flicker of the flame.		}						DrawGlider;		{Here we draw the glider according to it's new posit.		}						oldPlayerRect := playerDropRect;	{Set the old rects equal to the present	}						oldShadowRect := shadowDropRect;	{rects for the UnionRect routine.	}						if (levelOn > 13) then	{The last two rooms deserve special treatment.	}							begin				{Room 14 has only 1 copter because it has the dripping}								if (levelOn = 14) then	{ceiling to deal with (keep it fast).				}									begin										DoDrip;		{Deal with the dripping water in room 14.				}										DoCopter;		{Do the paper helicopter routine.						}									end								else									DoCat;			{Note: No DoCopter for room 15.  The cat is enough!	}							end						else							begin								DoCopter;			{The other rooms (1..13) simply have copters.		}							end;						gameTime := gameTime + 1;	{# of loops through this repeat loop per room		}						totalTime := totalTime + 1;		{# for the whole game ( demo mode needs this)	}						ObscureCursor;						repeat						until TickCount >= timeToLoop;						timeToLoop := TickCount + gameSpeed;					end;						{end - if still playing (we may have died during this pass)	}			end;							{end - while Playing do											}	until doneFlag;					{end of the event loop											}	if (chanPtr <> nil) then		err := SndDisposeChannel(chanPtr, true);	ClosePort(objectsPort);	DisposPtr(Ptr(objectsPort));	ClosePort(loadPort);	DisposPtr(Ptr(loadPort));	ClosePort(virginPort);	DisposPtr(Ptr(virginPort));	Close_GliderMain;				{When you've quit the program, close the main window.		}	if (scoresChanged) then		WriteOutScores;end.									{End of the program}
+
+
+program Glider313;		{Glider+ 3.14}
+
+{Glider+ version 3.14, © 1989, 1990, 1991 March 13 by John Calhoun.	}
+{An "arcade-style" game for the Macintosh computer.		}
+
+	uses
+		LogoWindo, AboutIt, Dialogs, Sound, GameUtilities, GliderMain, InitializeAll, HandleTheMenus;
+
+	const
+		stackSize = 24000;
+		sleep = 1;
+		suspendResumeBit = $0001;
+		resuming = 1;
+		WNETrapNum = $60;
+		unimplTrapNum = $9F;
+
+	var
+		theMenu, theItem, chCode, code, count: integer;
+		ch: char;
+		mResult, dummyLong, timeToLoop: longint;
+		myEvent: EventRecord;
+		whichWindow: WindowPtr;
+		tempRect: Rect;
+		theInput: TEHandle;
+		err: OSErr;
+		prefGet: Str255;
+		thisWorld: SysEnvRec;
+		leaving, eventHappened, hasWNE, inBackground, ignore: Boolean;
+
+{==================================}
+
+	procedure DoErrorSound (soundNumber: Integer);
+		var
+			dummyLong: LongInt;
+			tempVolume, i: Integer;
+	begin
+		GetSoundVol(tempVolume);
+		if (tempVolume <> 0) then
+			for i := 0 to soundNumber do
+				begin
+					FlashMenuBar(0);
+					Delay(8, dummyLong);
+					FlashMenuBar(0);
+				end;
+	end;
+
+{==================================}
+
+{$I-}
+begin
+	SetApplLimit(Ptr(LongInt(GetApplLimit) - StackSize));
+	MaxApplZone;
+	for count := 1 to 12 do
+		MoreMasters;
+	InitGraf(@thePort);
+	InitFonts;
+	FlushEvents(everyEvent, 0);
+	InitWindows;
+	InitMenus;
+	TEInit;
+	InitDialogs(nil);
+
+	ErrorSound(@DoErrorSound);
+
+	for count := 1 to 3 do
+		ignore := EventAvail(EveryEvent, myEvent);
+	inBackground := FALSE;
+
+	timeToLoop := TickCount;
+
+	Init_LogoWindo;											{Set up Soft Dorothy Software Logo window	}
+	Open_LogoWindo;										{Display her (scanned from 1800's engraving)}
+	InitAllRooms;											{Set up object data in levelArray				}
+	ReadInScores(prefGet);								{Call up hi scores and preferences from RSRC	}
+	InitAllVariables(prefGet);								{Set up all those nasty global variables			}
+	Init_My_Menus;										{Bring up the menu bar							}
+	err := SysEnvirons(1, thisWorld);					{Check on the set up of the Mac game is on		}
+	with thisWorld do
+		begin
+			if (machineType <= 0) then						{If less than a Mac Plus (=2) then quit now!	}
+				ExitToShell
+			else
+				begin
+					if (systemVersion >= $0602) then
+						begin											{Now, must be 6.02 or greater for the sound	}
+							soundOn := TRUE;
+							inhibitSound := FALSE;
+							CheckItem(GetMenu(L_Options), C_Sound_On, soundOn);
+						end
+					else
+						begin
+							soundOn := FALSE;							{Otherwise, turn it off, change the menu item,}
+							inhibitSound := TRUE;
+							SetItem(GetMenu(L_Options), C_Sound_On, 'No Sound : need ³ Sys 6.02');
+							DisableItem(GetMenu(L_Options), C_Sound_On);		{and disable it (changing the name is a public	}
+						end;											{service mssg. to tell them WHY no sound).	}
+				end;
+		end;
+	hasWNE := (NGetTrapAddress(WNETrapNum, ToolTrap) <> NGetTrapAddress(unimplTrapNum, toolTrap));
+
+	theInput := nil;
+	leaving := FALSE;				{The following lines of code deal with the sexy}
+	count := 0;						{logo for Soft Dorothy Software.  We have		}
+	repeat							{already brought up the window, now we		}
+		count := count + 1;			{enter a loop that waits either for the count to}
+		Delay(10, dummyLong);		{reach 50 passes, or the player to cause an	}
+		if (count >= 50) then		{event.  I used the playMask because it was 	}
+			leaving := TRUE;			{handy and already defined above.				}
+	until (EventAvail(everyEvent, myEvent) or (leaving));
+	Close_LogoWindo;				{Okay, now we close the window and move on.}
+	InitCursor;						{Get us that arrow cursor						}
+	Init_GliderMain;				{Get the main window ready for calling up		}
+	Open_GliderMain;				{Call it out of the RSRC fork and show it.		}
+	Init_AboutIt;					{Go ahead and initialize the "About" window	}
+	GetDateTime(RandSeed);		{This neat simple line keeps the it random.		}
+	RedrawHiScores;				{Send in the banner gliders with the hiscores	}
+	highScoresOut := TRUE;		{Let the program know the scores are out.		}
+
+	repeat								{Start of main event loop				}
+		if (hasWNE) then
+			eventHappened := WaitNextEvent(everyEvent, myEvent, 0, nil)
+		else
+			begin
+				SystemTask;
+				eventHappened := GetNextEvent(everyEvent, myEvent);
+			end;
+
+		if (eventHappened) then
+			begin
+				code := FindWindow(myEvent.where, whichWindow);
+				case myEvent.what of
+					MouseDown: 
+						case code of
+							inMenuBar: 
+								begin
+									mResult := MenuSelect(myEvent.Where);	{Do menu selection				}
+									theMenu := HiWord(mResult);					{Get the menu list number		}
+									theItem := LoWord(mResult);					{Get the menu list item number	}
+									Handle_My_Menu(doneFlag, Pausing, Playing, gliderCraft, soundOn, leftControl, rightControl, theMenu, theItem, theInput);
+								end;
+							inGoAway: 
+								begin
+									if TrackGoAway(whichWindow, myEvent.where) then
+										begin
+											Close_AboutIt;	{Close this window	}
+											EnableItem(GetMenu(L_Apple), 0);
+											EnableItem(GetMenu(L_Game), 0);
+											EnableItem(GetMenu(L_Options), 0);
+											DrawMenuBar;
+										end;
+								end;
+							inContent: 
+								begin									{Handle hit inside a window	}
+									Do_AboutIt(myEvent, theInput);	{Call up dialog routine.		}
+								end;
+							inSysWindow: 
+								SystemClick(myEvent, whichWindow);	{Let other programs in	}
+							otherwise
+								begin
+								end;
+						end;				{end - case code of		}
+					KeyDown: 
+						begin										{Get the key and handle it		}
+							with myevent do						{Check for menu command keys	}
+								begin
+									chCode := BitAnd(message, CharCodeMask);		{Get character	}
+									ch := CHR(chCode);					{Change to ASCII					}
+									if (Odd(modifiers div CmdKey)) then
+										begin
+											mResult := MenuKey(ch);		{See if menu selection			}
+											theMenu := HiWord(mResult);	{Get the menu list number		}
+											theItem := LoWord(mResult);	{Get the menu item number		}
+											if (theMenu <> 0) then		{See if a list was selected		}
+												Handle_My_Menu(doneFlag, Pausing, Playing, gliderCraft, soundOn, leftControl, rightControl, theMenu, theItem, theInput); {Do the menu selection}
+										end;
+								end;                          {End for with}
+						end;
+					UpDateEvt: 
+						begin
+							whichWindow := WindowPtr(myEvent.message); {Get the window the update is for}
+							BeginUpdate(whichWindow);		{Set the clipping to the update area	}
+							CopyBits(virginMap, mainWindow^.portBits, screenArea, screenArea, srcCopy, mainWindow^.visRgn);
+							Update_AboutIt(whichWindow);	{Update this window					}
+							EndUpdate(whichWindow);			{Return to normal clipping area		}
+						end;
+					ActivateEvt: 
+						begin
+							whichWindow := WindowPtr(myevent.message);	{Get the window to be activated			}
+							if odd(myEvent.modifiers) then						{Make sure it is Activate				}
+								SelectWindow(whichWindow);						{Activate the window by selecting it	}
+						end;
+					App4Evt: 
+						case BSR(myEvent.message, 24) of	{high byte of message}
+							1:  						{suspendResumeMessage}
+								if (BitAnd(myEvent.message, suspendResumeBit) = resuming) then
+									inBackground := FALSE
+								else
+									begin
+										inBackground := TRUE;		{it was a suspend event}
+										if (chanPtr <> nil) then
+											err := SndDisposeChannel(chanPtr, TRUE);
+										chanPtr := nil;
+									end;
+							otherwise
+								;
+						end; {CASE}
+					otherwise
+				end;                              {End of case			}
+			end;                                {end of GetNextEvent	}
+
+		while ((Playing) and (not Pausing) and (not inBackground)) do
+			begin
+				if (burning) or (crushed) then
+					DoDyingDisplay		{Burning or crushed gliders fall and die...no player interaction!	}
+				else
+					begin
+						if (hasWNE) then
+							eventHappened := WaitNextEvent(everyEvent, myEvent, 0, nil)
+						else
+							begin
+								SystemTask;
+								eventHappened := GetNextEvent(everyEvent, myEvent);
+							end;
+
+						if eventHappened then
+							begin
+								code := FindWindow(myEvent.where, whichWindow);
+								case myEvent.what of
+									MouseDown: 
+										if code = inMenuBar then
+											begin
+												mResult := MenuSelect(myEvent.Where);		{Do menu selection				}
+												theMenu := HiWord(mResult);					{Get the menu list number		}
+												theItem := LoWord(mResult);					{Get the menu list item number	}
+												Handle_My_Menu(doneFlag, Pausing, Playing, gliderCraft, soundOn, leftControl, rightControl, theMenu, theItem, theInput);
+											end;
+									KeyDown: 
+										begin
+											ch := Chr(BitAnd(myEvent.message, CharCodeMask));		{Get character		}
+											if (Odd(myEvent.modifiers div CmdKey)) then
+												begin
+													mResult := MenuKey(ch);						{See if menu selection			}
+													theMenu := HiWord(mResult);					{Get the menu list number		}
+													theItem := LoWord(mResult);					{Get the menu item number		}
+													if (theMenu <> 0) then						{See if a list was selected		}
+														Handle_My_Menu(doneFlag, Pausing, Playing, gliderCraft, soundOn, leftControl, rightControl, theMenu, theItem, theInput); {Do the menu selection}
+												end;
+											if ((ch = leftControl) and (not stalling)) then	{i.e. "If the player is pressing	}
+												begin									{the key to go left or stall the plane."		}
+													stalling := TRUE;					{Then boolean variable 'stalling' to TRUE	}
+													if (gliderCraft) then				{The MacII CopyMask routine scales and	}
+														ResizeARect(playerDropRect, 1);		{thus "drop" rect needs resizing	}
+												end;									{Otherwise, it garbages up the graphic.	}
+											if ((ch = rightControl) and (stalling)) then			{Likewise for right...			}
+												begin									{Note:  There is no change in the graphic	}
+													stalling := FALSE;					{when you are in dart mode.  Only the		}
+													if (gliderCraft) then				{glider tips back graphically.  So, no need	}
+														ResizeARect(playerDropRect, 0);		{to resize the dart rect.				}
+												end;
+										end;
+									otherwise
+										begin
+										end;
+								end;			{end of case						}
+							end;				{end of GetNextEvent				}
+					end;					{end of if not burning or crushed}
+				ComputeGliderPos;	{This routine checks for objects (vents, cnadles etc...).	}
+				ComputeStatus;		{Here we check to see if the glider is still on the screen.	}
+				if (playing) then		{It could be the player has died during this pass, in that	}
+					begin				{case, we want to skip over these routines.				}
+						if (not crushed) then	{We offset the glider according to the results of	}
+							begin			{ComputeGliderPos and ComputeStatus.					}
+								OffsetRect(playerDropRect, moveHori, moveVert);	{moveHori and	}
+								OffsetRect(shadowDropRect, moveHori, 0);	{moveVert were modified}
+								OffsetRect(vitalArea, moveHori, moveVert);	{in the aforementioned	}
+							end;				{routines.  Note:  the shadow is not offset vertically.		}
+						if (candleThere) then	{If we have a candle in the room...					}
+							HandleCandle;		{This routine will handle the flicker of the flame.		}
+						DrawGlider;		{Here we draw the glider according to it's new posit.		}
+						oldPlayerRect := playerDropRect;	{Set the old rects equal to the present	}
+						oldShadowRect := shadowDropRect;	{rects for the UnionRect routine.	}
+						if (levelOn > 13) then	{The last two rooms deserve special treatment.	}
+							begin				{Room 14 has only 1 copter because it has the dripping}
+								if (levelOn = 14) then	{ceiling to deal with (keep it fast).				}
+									begin
+										DoDrip;		{Deal with the dripping water in room 14.				}
+										DoCopter;		{Do the paper helicopter routine.						}
+									end
+								else
+									DoCat;			{Note: No DoCopter for room 15.  The cat is enough!	}
+							end
+						else
+							begin
+								DoCopter;			{The other rooms (1..13) simply have copters.		}
+							end;
+						gameTime := gameTime + 1;	{# of loops through this repeat loop per room		}
+						totalTime := totalTime + 1;		{# for the whole game ( demo mode needs this)	}
+						ObscureCursor;
+						repeat
+						until TickCount >= timeToLoop;
+						timeToLoop := TickCount + gameSpeed;
+					end;						{end - if still playing (we may have died during this pass)	}
+			end;							{end - while Playing do											}
+	until doneFlag;					{end of the event loop											}
+
+	if (chanPtr <> nil) then
+		err := SndDisposeChannel(chanPtr, true);
+
+	ClosePort(objectsPort);
+	DisposPtr(Ptr(objectsPort));
+	ClosePort(loadPort);
+	DisposPtr(Ptr(loadPort));
+	ClosePort(virginPort);
+	DisposPtr(Ptr(virginPort));
+
+	Close_GliderMain;				{When you've quit the program, close the main window.		}
+
+	if (scoresChanged) then
+		WriteOutScores;
+
+end.									{End of the program}

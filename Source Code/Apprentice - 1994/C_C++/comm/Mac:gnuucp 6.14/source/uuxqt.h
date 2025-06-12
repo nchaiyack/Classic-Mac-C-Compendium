@@ -1,1 +1,3 @@
-/* defines for uuxqt */#define RMAIL
+/* defines for uuxqt */
+
+#define RMAIL

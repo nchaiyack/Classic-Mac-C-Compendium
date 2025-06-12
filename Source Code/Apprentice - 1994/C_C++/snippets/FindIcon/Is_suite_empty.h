@@ -1,1 +1,1 @@
-Boolean		Is_suite_empty( Handle the_suite );
+Boolean		Is_suite_empty( Handle the_suite );

@@ -1,1 +1,52 @@
-/* The "Hello, world" koan according to David Rosenthal,   recoded for STDWIN.   Requirements: print "Hello, world" centered in a window,   recented after window resizes, redraw after window exposures.   Check error returns. */#include "stdwin.h"char *string= "Hello, world";int text_h, text_v;voidplacetext(win)	WINDOW *win;{	int width, height;	wgetwinsize(win, &width, &height);	text_v= (height - wlineheight()) / 2;	text_h= (width - wtextwidth(string, -1)) / 2;}voiddrawproc(win, left, top, right, bottom)	WINDOW *win;{	wdrawtext(text_h, text_v, string, -1);}main(argc, argv)	int argc;	char **argv;{	WINDOW *win;	winitargs(&argc, &argv);	win= wopen("Hello", drawproc);		if (win != 0) {		placetext(win);		for (;;) {			EVENT e;			wgetevent(&e);			if (e.type == WE_CLOSE)				break;			if (e.type == WE_SIZE)				placetext(win);		}	}		wdone();	exit(0);}
+/* The "Hello, world" koan according to David Rosenthal,
+   recoded for STDWIN.
+   Requirements: print "Hello, world" centered in a window,
+   recented after window resizes, redraw after window exposures.
+   Check error returns. */
+
+#include "stdwin.h"
+
+char *string= "Hello, world";
+
+int text_h, text_v;
+
+void
+placetext(win)
+	WINDOW *win;
+{
+	int width, height;
+	wgetwinsize(win, &width, &height);
+	text_v= (height - wlineheight()) / 2;
+	text_h= (width - wtextwidth(string, -1)) / 2;
+}
+
+void
+drawproc(win, left, top, right, bottom)
+	WINDOW *win;
+{
+	wdrawtext(text_h, text_v, string, -1);
+}
+
+main(argc, argv)
+	int argc;
+	char **argv;
+{
+	WINDOW *win;
+	winitargs(&argc, &argv);
+	win= wopen("Hello", drawproc);
+	
+	if (win != 0) {
+		placetext(win);
+		for (;;) {
+			EVENT e;
+			wgetevent(&e);
+			if (e.type == WE_CLOSE)
+				break;
+			if (e.type == WE_SIZE)
+				placetext(win);
+		}
+	}
+	
+	wdone();
+	exit(0);
+}

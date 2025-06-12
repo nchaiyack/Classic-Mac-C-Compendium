@@ -1,1 +1,428 @@
-{	ircle - Internet Relay Chat client	}{	File: IRCChannels	}{	Copyright © 1992 Olaf Titz (s_titz@ira.uka.de)	}{	This program is free software; you can redistribute it and/or modify	}{	it under the terms of the GNU General Public License as published by	}{	the Free Software Foundation; either version 2 of the License, or	}{	(at your option) any later version.	}{	This program is distributed in the hope that it will be useful,	}{	but WITHOUT ANY WARRANTY; without even the implied warranty of	}{	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	}{	GNU General Public License for more details.	}{	You should have received a copy of the GNU General Public License	}{	along with this program; if not, write to the Free Software	}{	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.	}unit IRCChannels;{ Deals with the window-per-channel interface and all messages to the user. }interfaceuses	TCPTypes, TCPStuff, TCPConnections, ApplBase, MiscGlue, MsgWindows, IRCGlobals, IRCaux;var	windowarg: Rect; { holds size of next window to open }procedure InitIRCChannels;{ Startup }procedure LineMsg (var s: string);{ Display message in main window }procedure StatusMsg (n: integer);{ Display message from STR# 256 }procedure SetMainTitle (var newtitle: string);{ Call this after changing nick }function DoJoin (var ch: string): MWHndl;{ Open channel window for ch -- this may as well be a queried nick }procedure DoPart (var ch: string);{ Close channel window for ch }procedure partWindow (p: WindowPtr);{ user closing window}procedure ChannelMsg (var ch, msg: string);{ Display msg in the window for channel ch, }{ or in the frontmost window if a ch window does not exist }procedure Message (var msg: string);{ Display msg in current window }procedure Inactive (var ch: string);{ mark a window as inactive }procedure GetAllWindows (channels, queries, chats: boolean; sepa: char; var s: string);{ make list of all active target windows }function ChannelWindow (var ch: string): MWHndl;{ find the window with given title }implementationtype	CPtr = ^Clist;	Clist = record			n: CPtr;			w: MWHndl;			mp: integer;		end;var	mwin: MWHndl;	CW: Cptr;	noti: NMRec;	SIcon, Sound: Handle;procedure remove (q: NMPtr);	var		ca5: longint;	begin		ca5 := setA5(q^.nmRefCon);		if notified then			notified := (NMRemove(@noti) <> 0);		ca5 := setA5(ca5);	end;procedure NotifyUser (blink, beep, bkgnd: boolean);	begin		if blink or beep then begin			if blink then				noti.nmSIcon := SIcon			else				noti.nmSIcon := nil;			if beep then				noti.nmSound := Sound			else				noti.nmSound := nil;			if bkgnd then				noti.nmResp := nil			else				noti.nmResp := @remove;			if not notified then				notified := (NMInstall(@noti) = 0);		end;	end;procedure hideit (w: WindowPtr);	begin		HideWindow(w)	end;function DoMSGWindow: boolean;	var		r: rect;	begin		if mwin = nil then begin			SetRect(r, 0, 0, 0, 0);			mwin := NewMWindow(CurrentNick, r, @hideit);			lastWindow := mwin;			DoMsgWindow := false		end		else begin			DoMsgWindow := (mwin^^.w <> FrontWindow);		end;		ShowWindow(mwin^^.w);	end;procedure CommonMsg (var m: string; noti: boolean);	begin		if logging then			writeln(logfile, m);		if noti then			if inBackground then				NotifyUser(default^^.notify[3], default^^.notify[4], true)			else				NotifyUser(default^^.notify[1], default^^.notify[2], false);	end;procedure LineMsg (var s: string);	var		b: boolean;	begin		b := DOMSGWindow;		MWMessage(mwin, s);		b := (lastWindow <> mwin);		lastWindow := mwin;		CommonMsg(s, b);	end;procedure StatusMsg (n: integer);	var		s: str255;		b: boolean;	begin		b := DOMsgWindow;		GetIndString(s, 256, n);		MWMessage(mwin, s);	end;procedure SetMainTitle (var newtitle: string);	begin		if mwin <> nil then			SetWTitle(mwin^^.w, newtitle);		SetItem(GetMHandle(M_WINDOWS), M_WI_MAIN, newtitle);		EnableItem(GetMHandle(M_WINDOWS), M_WI_MAIN);	end;procedure NormTitle (var s: string);	begin		if s[1] = INACTIVE_PREFIX then begin			delete(s, 1, 1);			s[0] := pred(s[0]);		end	end;function ChannelWindow (var ch: string): MWHndl;	var		s: Str255;		l: CPtr;	begin		l := CW;		NormTitle(ch);		while l <> nil do begin			GetWTitle(l^.w^^.w, s);			NormTitle(s);			if EqualString(ch, s, false, true) then begin				ChannelWindow := l^.w;				exit(ChannelWindow)			end;			l := l^.n		end;		ChannelWindow := nil	end;function activate (var e: EventRecord): boolean;	var		p: CPtr;		s: string;	begin		activate := false;		if odd(e.modifiers) then begin			p := CW;			while p <> nil do begin				if p^.w^^.w = WindowPtr(e.message) then begin					GetWTitle(p^.w^^.w, CurrentTarget);					if CurrentTarget[1] = INACTIVE_PREFIX then						CurrentTarget := '';					UpdateStatusLine;					exit(activate)				end;				p := p^.n			end;			currentTarget := '';			UpdateStatusLine;		end	end;function Switcher (var e: EventRecord): boolean;	var		i: integer;	begin		inBackground := (bitand(e.message, 1) = 0);		if not InBackground then			InitCursor;		if notified then			i := NMRemove(@noti);		notified := false;		Switcher := false	end;function wmenu (var e: EventRecord): boolean;	var		l: CPtr;		s: str255;	begin		case e.message of			M_WI_CYCLE: 				begin				SendBehind(FrontWindow, nil);				GetWTitle(FrontWindow, s);				if s = '' then					SendBehind(FrontWindow, nil);			end;			M_WI_MAIN: 				if mwin <> nil then begin					ShowWindow(mwin^^.w);					SelectWindow(mwin^^.w);				end;			otherwise				begin				l := CW;				while l <> nil do begin					if l^.mp = e.message then begin						SelectWindow(l^.w^^.w);						leave					end;					l := l^.n;				end;				wmenu := true			end		end	end;procedure partWindow (p: WindowPtr); {user closing window}	var		p0, p1: CPtr;		s: str255;	begin		GetWTitle(p, s);		if IsChannel(s) then begin			s := concat('PART ', s);			PutLine(s);		end		else { inactive/query window }			begin			NormTitle(s);			DoPart(s);		end;	end;function DoJoin (var ch: string): MWHndl; {callback from server}	var		w: MWHndl;		l: CPtr;		r: rect;		i: integer;	begin		w := ChannelWindow(ch);		if w = nil then begin			w := NewMWindow(ch, windowarg, @partWindow);			InsMenuItem(GetMHandle(M_WINDOWS), ch, 255);			new(l);			l^.n := CW;			CW := l;			l^.w := w;			l^.mp := CountMItems(GetMHandle(M_WINDOWS));			SetRect(windowarg, 0, 0, 0, 0);		end		else begin			SelectWindow(w^^.w);			SetWTitle(w^^.w, ch);		end;		DoJoin := w	end;procedure DoPart (var ch: string); {callback from server}	var		l, l0: CPtr;		n: integer;		s: Str255;	begin		l := CW;		while l <> nil do begin			GetWTitle(l^.w^^.w, s);			NormTitle(s);			if EqualString(ch, s, false, true) then begin				n := l^.mp;				DelMenuItem(GetMHandle(M_WINDOWS), n);				DeleteMWindow(l^.w);				if l = CW then					CW := l^.n				else					l0^.n := l^.n;				leave;			end;			l0 := l;			l := l0^.n		end;		l := CW;		while l <> nil do begin			if l^.mp > n then				l^.mp := pred(l^.mp);			l := l^.n		end;	end;procedure ChannelMsg (var ch, msg: string);	var		m: MWHndl;		b: boolean;	begin		m := ChannelWindow(ch);		if m = nil then begin			m := ChannelWindow(CurrentTarget);			if m = nil then begin				b := DOMSGWindow;				m := mwin			end;		end;		lastWindow := m;		MWMessage(m, msg);		CommonMsg(msg, m^^.w <> FrontWindow);	end;procedure Message (var msg: string);	begin		ChannelMsg(CurrentTarget, msg)	end;procedure InitIRCChannels;	var		i: integer;	begin		mwin := nil;		CW := nil;		i := ApplTask(@activate, activateEvt);		i := ApplTask(@Switcher, app4Evt);		i := ApplTask(@wmenu, menuMsg + M_WINDOWS);		SIcon := GetResource('SICN', 128);		Sound := GetResource('snd ', 128);		with noti do begin			qType := 8;			nmMark := 1;			nmStr := nil;			nmRefCon := SetCurrentA5;		end;		SetRect(windowarg, 0, 0, 0, 0);	end;procedure Inactive (var ch: string);	var		m: MWHndl;		s: string;	begin		m := ChannelWindow(ch);		if m <> nil then begin			s := concat(INACTIVE_PREFIX, ch, INACTIVE_POSTFIX);			SetWTitle(m^^.w, s);			m^^.whenDone := @partWindow; { XX }		end;	end;procedure GetAllWindows (channels, queries, chats: boolean; sepa: char; var s: string);	var		p: CPtr;		s0: str255;		t: (non, chn, que, dcc);	begin		p := CW;		s := '';		while p <> nil do begin			GetWTitle(p^.w^^.w, s0);			if s0[1] = DCC_CHAT_PREFIX then				t := dcc			else if IsChannel(s0) then				t := chn			else if s0[1] = '(' then				t := non			else				t := que;			if (channels and (t = chn)) or (queries and (t = que)) or (chats and (t = dcc)) then				s := concat(s, sepa, s0);			p := p^.n;		end;		if s[1] = sepa then			delete(s, 1, 1);	end;end.
+{	ircle - Internet Relay Chat client	}
+{	File: IRCChannels	}
+{	Copyright © 1992 Olaf Titz (s_titz@ira.uka.de)	}
+
+{	This program is free software; you can redistribute it and/or modify	}
+{	it under the terms of the GNU General Public License as published by	}
+{	the Free Software Foundation; either version 2 of the License, or	}
+{	(at your option) any later version.	}
+
+{	This program is distributed in the hope that it will be useful,	}
+{	but WITHOUT ANY WARRANTY; without even the implied warranty of	}
+{	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	}
+{	GNU General Public License for more details.	}
+
+{	You should have received a copy of the GNU General Public License	}
+{	along with this program; if not, write to the Free Software	}
+{	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.	}
+
+unit IRCChannels;
+{ Deals with the window-per-channel interface and all messages to the user. }
+
+interface
+
+uses
+	TCPTypes, TCPStuff, TCPConnections, ApplBase, MiscGlue, MsgWindows, IRCGlobals, IRCaux;
+
+var
+	windowarg: Rect; { holds size of next window to open }
+
+procedure InitIRCChannels;
+{ Startup }
+
+procedure LineMsg (var s: string);
+{ Display message in main window }
+
+procedure StatusMsg (n: integer);
+{ Display message from STR# 256 }
+
+procedure SetMainTitle (var newtitle: string);
+{ Call this after changing nick }
+
+function DoJoin (var ch: string): MWHndl;
+{ Open channel window for ch -- this may as well be a queried nick }
+
+procedure DoPart (var ch: string);
+{ Close channel window for ch }
+
+procedure partWindow (p: WindowPtr);
+{ user closing window}
+
+procedure ChannelMsg (var ch, msg: string);
+{ Display msg in the window for channel ch, }
+{ or in the frontmost window if a ch window does not exist }
+
+procedure Message (var msg: string);
+{ Display msg in current window }
+
+procedure Inactive (var ch: string);
+{ mark a window as inactive }
+
+procedure GetAllWindows (channels, queries, chats: boolean; sepa: char; var s: string);
+{ make list of all active target windows }
+
+function ChannelWindow (var ch: string): MWHndl;
+{ find the window with given title }
+
+implementation
+
+type
+	CPtr = ^Clist;
+	Clist = record
+			n: CPtr;
+			w: MWHndl;
+			mp: integer;
+		end;
+
+var
+	mwin: MWHndl;
+	CW: Cptr;
+	noti: NMRec;
+	SIcon, Sound: Handle;
+
+procedure remove (q: NMPtr);
+	var
+		ca5: longint;
+	begin
+		ca5 := setA5(q^.nmRefCon);
+		if notified then
+			notified := (NMRemove(@noti) <> 0);
+		ca5 := setA5(ca5);
+	end;
+
+procedure NotifyUser (blink, beep, bkgnd: boolean);
+	begin
+		if blink or beep then begin
+			if blink then
+				noti.nmSIcon := SIcon
+			else
+				noti.nmSIcon := nil;
+			if beep then
+				noti.nmSound := Sound
+			else
+				noti.nmSound := nil;
+			if bkgnd then
+				noti.nmResp := nil
+			else
+				noti.nmResp := @remove;
+			if not notified then
+				notified := (NMInstall(@noti) = 0);
+		end;
+	end;
+
+procedure hideit (w: WindowPtr);
+	begin
+		HideWindow(w)
+	end;
+
+function DoMSGWindow: boolean;
+	var
+		r: rect;
+	begin
+		if mwin = nil then begin
+			SetRect(r, 0, 0, 0, 0);
+			mwin := NewMWindow(CurrentNick, r, @hideit);
+			lastWindow := mwin;
+			DoMsgWindow := false
+		end
+		else begin
+			DoMsgWindow := (mwin^^.w <> FrontWindow);
+		end;
+		ShowWindow(mwin^^.w);
+	end;
+
+procedure CommonMsg (var m: string; noti: boolean);
+	begin
+		if logging then
+			writeln(logfile, m);
+		if noti then
+			if inBackground then
+				NotifyUser(default^^.notify[3], default^^.notify[4], true)
+			else
+				NotifyUser(default^^.notify[1], default^^.notify[2], false);
+	end;
+
+procedure LineMsg (var s: string);
+	var
+		b: boolean;
+	begin
+		b := DOMSGWindow;
+		MWMessage(mwin, s);
+		b := (lastWindow <> mwin);
+		lastWindow := mwin;
+		CommonMsg(s, b);
+	end;
+
+procedure StatusMsg (n: integer);
+	var
+		s: str255;
+		b: boolean;
+	begin
+		b := DOMsgWindow;
+		GetIndString(s, 256, n);
+		MWMessage(mwin, s);
+	end;
+
+procedure SetMainTitle (var newtitle: string);
+	begin
+		if mwin <> nil then
+			SetWTitle(mwin^^.w, newtitle);
+		SetItem(GetMHandle(M_WINDOWS), M_WI_MAIN, newtitle);
+		EnableItem(GetMHandle(M_WINDOWS), M_WI_MAIN);
+	end;
+
+procedure NormTitle (var s: string);
+	begin
+		if s[1] = INACTIVE_PREFIX then begin
+			delete(s, 1, 1);
+			s[0] := pred(s[0]);
+		end
+	end;
+
+
+function ChannelWindow (var ch: string): MWHndl;
+	var
+		s: Str255;
+		l: CPtr;
+	begin
+		l := CW;
+		NormTitle(ch);
+		while l <> nil do begin
+			GetWTitle(l^.w^^.w, s);
+			NormTitle(s);
+			if EqualString(ch, s, false, true) then begin
+				ChannelWindow := l^.w;
+				exit(ChannelWindow)
+			end;
+			l := l^.n
+		end;
+		ChannelWindow := nil
+	end;
+
+
+function activate (var e: EventRecord): boolean;
+	var
+		p: CPtr;
+		s: string;
+	begin
+		activate := false;
+		if odd(e.modifiers) then begin
+			p := CW;
+			while p <> nil do begin
+				if p^.w^^.w = WindowPtr(e.message) then begin
+					GetWTitle(p^.w^^.w, CurrentTarget);
+					if CurrentTarget[1] = INACTIVE_PREFIX then
+						CurrentTarget := '';
+					UpdateStatusLine;
+					exit(activate)
+				end;
+				p := p^.n
+			end;
+			currentTarget := '';
+			UpdateStatusLine;
+		end
+	end;
+
+function Switcher (var e: EventRecord): boolean;
+	var
+		i: integer;
+	begin
+		inBackground := (bitand(e.message, 1) = 0);
+		if not InBackground then
+			InitCursor;
+		if notified then
+			i := NMRemove(@noti);
+		notified := false;
+		Switcher := false
+	end;
+
+function wmenu (var e: EventRecord): boolean;
+	var
+		l: CPtr;
+		s: str255;
+	begin
+		case e.message of
+			M_WI_CYCLE: 
+				begin
+				SendBehind(FrontWindow, nil);
+				GetWTitle(FrontWindow, s);
+				if s = '' then
+					SendBehind(FrontWindow, nil);
+			end;
+			M_WI_MAIN: 
+				if mwin <> nil then begin
+					ShowWindow(mwin^^.w);
+					SelectWindow(mwin^^.w);
+				end;
+			otherwise
+				begin
+				l := CW;
+				while l <> nil do begin
+					if l^.mp = e.message then begin
+						SelectWindow(l^.w^^.w);
+						leave
+					end;
+					l := l^.n;
+				end;
+				wmenu := true
+			end
+		end
+	end;
+
+procedure partWindow (p: WindowPtr); {user closing window}
+	var
+		p0, p1: CPtr;
+		s: str255;
+	begin
+		GetWTitle(p, s);
+		if IsChannel(s) then begin
+			s := concat('PART ', s);
+			PutLine(s);
+		end
+		else { inactive/query window }
+			begin
+			NormTitle(s);
+			DoPart(s);
+		end;
+	end;
+
+function DoJoin (var ch: string): MWHndl; {callback from server}
+	var
+		w: MWHndl;
+		l: CPtr;
+		r: rect;
+		i: integer;
+	begin
+		w := ChannelWindow(ch);
+		if w = nil then begin
+			w := NewMWindow(ch, windowarg, @partWindow);
+			InsMenuItem(GetMHandle(M_WINDOWS), ch, 255);
+			new(l);
+			l^.n := CW;
+			CW := l;
+			l^.w := w;
+			l^.mp := CountMItems(GetMHandle(M_WINDOWS));
+			SetRect(windowarg, 0, 0, 0, 0);
+		end
+		else begin
+			SelectWindow(w^^.w);
+			SetWTitle(w^^.w, ch);
+		end;
+		DoJoin := w
+	end;
+
+procedure DoPart (var ch: string); {callback from server}
+	var
+		l, l0: CPtr;
+		n: integer;
+		s: Str255;
+	begin
+		l := CW;
+		while l <> nil do begin
+			GetWTitle(l^.w^^.w, s);
+			NormTitle(s);
+			if EqualString(ch, s, false, true) then begin
+				n := l^.mp;
+				DelMenuItem(GetMHandle(M_WINDOWS), n);
+				DeleteMWindow(l^.w);
+				if l = CW then
+					CW := l^.n
+				else
+					l0^.n := l^.n;
+				leave;
+			end;
+			l0 := l;
+			l := l0^.n
+		end;
+		l := CW;
+		while l <> nil do begin
+			if l^.mp > n then
+				l^.mp := pred(l^.mp);
+			l := l^.n
+		end;
+	end;
+
+procedure ChannelMsg (var ch, msg: string);
+	var
+		m: MWHndl;
+		b: boolean;
+	begin
+		m := ChannelWindow(ch);
+		if m = nil then begin
+			m := ChannelWindow(CurrentTarget);
+			if m = nil then begin
+				b := DOMSGWindow;
+				m := mwin
+			end;
+		end;
+		lastWindow := m;
+		MWMessage(m, msg);
+		CommonMsg(msg, m^^.w <> FrontWindow);
+	end;
+
+procedure Message (var msg: string);
+	begin
+		ChannelMsg(CurrentTarget, msg)
+	end;
+
+
+procedure InitIRCChannels;
+	var
+		i: integer;
+	begin
+		mwin := nil;
+		CW := nil;
+		i := ApplTask(@activate, activateEvt);
+		i := ApplTask(@Switcher, app4Evt);
+		i := ApplTask(@wmenu, menuMsg + M_WINDOWS);
+		SIcon := GetResource('SICN', 128);
+		Sound := GetResource('snd ', 128);
+		with noti do begin
+			qType := 8;
+			nmMark := 1;
+			nmStr := nil;
+			nmRefCon := SetCurrentA5;
+		end;
+		SetRect(windowarg, 0, 0, 0, 0);
+	end;
+
+procedure Inactive (var ch: string);
+	var
+		m: MWHndl;
+		s: string;
+	begin
+		m := ChannelWindow(ch);
+		if m <> nil then begin
+			s := concat(INACTIVE_PREFIX, ch, INACTIVE_POSTFIX);
+			SetWTitle(m^^.w, s);
+			m^^.whenDone := @partWindow; { XX }
+		end;
+	end;
+
+procedure GetAllWindows (channels, queries, chats: boolean; sepa: char; var s: string);
+	var
+		p: CPtr;
+		s0: str255;
+		t: (non, chn, que, dcc);
+	begin
+		p := CW;
+		s := '';
+		while p <> nil do begin
+			GetWTitle(p^.w^^.w, s0);
+			if s0[1] = DCC_CHAT_PREFIX then
+				t := dcc
+			else if IsChannel(s0) then
+				t := chn
+			else if s0[1] = '(' then
+				t := non
+			else
+				t := que;
+			if (channels and (t = chn)) or (queries and (t = que)) or (chats and (t = dcc)) then
+				s := concat(s, sepa, s0);
+			p := p^.n;
+		end;
+		if s[1] = sepa then
+			delete(s, 1, 1);
+	end;
+
+end.

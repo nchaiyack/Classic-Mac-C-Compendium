@@ -1,1 +1,152 @@
-unit PaletteUtils;interface	uses		Palettes;	function UnSignedMult (A, B: Integer): Integer;	function UnSignedDiv (A, den: Integer): Integer;	function UnSignedAdd (A, B: Integer): Integer;	function UnSignedSub (A, B: Integer): Integer;	procedure SetRGB (var RGB: RGBColor; R, G, B: Integer);	procedure CopyRGB (RGBSrc: RGBColor; var RGBDest: RGBColor);	procedure FadeEntryToBlack (theWindow: WindowPtr; whichEntry: Integer);	procedure FadeEntryToColor (theWindow: WindowPtr; whichEntry: Integer; whatColor: RGBColor);implementation{============================}	function UnSignedMult;		var			num: LongInt;	begin		if (a < 0) then			num := A + 65536		else			num := A;		UnSignedMult := LoWord(num * B);	end;{============================}	function UnSignedDiv;		var			num: LongInt;	begin		if (a < 0) then			num := A + 65536		else			num := A;		UnSignedDiv := LoWord(num div den);	end;{============================}	function UnSignedAdd;		var			sum: LongInt;	begin		if (a < 0) then			sum := A + 65536 + B		else			sum := A + B;		UnSignedAdd := LoWord(sum);	end;{============================}	function UnSignedSub;		var			diff: LongInt;	begin		if (a < 0) then			diff := A + 65536 - B		else			diff := A - B;		UnSignedSub := Integer(LoWord(diff));	end;{============================}	procedure SetRGB;	begin		RGB.Red := R;		RGB.Green := G;		RGB.Blue := B;	end;{============================}	procedure CopyRGB;	begin		RGBDest.Red := RGBSrc.Red;		RGBDest.Green := RGBSrc.Green;		RGBDest.Blue := RGBSrc.Blue;	end;{============================}	procedure FadeEntryToBlack;		const			kFadeStep = 30;		var			step: Integer;			dummyLong: LongInt;			Buffer, Inc: RGBColor;	begin		GetEntryColor(GetPalette(theWindow), whichEntry, Buffer);		Inc.red := UnsignedDiv(Buffer.red, kFadeStep);		Inc.green := UnsignedDiv(Buffer.green, kFadeStep);		Inc.blue := UnsignedDiv(Buffer.blue, kFadeStep);{Fade to Black}		for step := kFadeStep - 1 downto 1 do			begin				Buffer.red := UnsignedSub(Buffer.red, Inc.red);				Buffer.green := UnsignedSub(Buffer.green, Inc.green);				Buffer.blue := UnsignedSub(Buffer.blue, Inc.blue);				AnimateEntry(theWindow, whichEntry, Buffer);			end;	end;{============================}	procedure FadeEntryToColor;		const			kFadeStep = 180;		var			step: Integer;			tempLong: LongInt;			Inc, Buffer: RGBColor;	begin		Inc.red := UnsignedDiv(whatColor.red, kFadeStep);		Inc.green := UnsignedDiv(whatColor.green, kFadeStep);		Inc.blue := UnsignedDiv(whatColor.blue, kFadeStep);		Buffer := whatColor;		for step := 1 to kFadeStep do			begin				Buffer.red := UnsignedSub(Buffer.red, Inc.red);				Buffer.green := UnsignedSub(Buffer.green, Inc.green);				Buffer.blue := UnsignedSub(Buffer.blue, Inc.blue);			end;		AnimateEntry(theWindow, whichEntry, Buffer);{Fade to Color}		for step := 1 to kFadeStep do			begin				Buffer.red := UnsignedAdd(Buffer.red, Inc.red);				Buffer.green := UnsignedAdd(Buffer.green, Inc.green);				Buffer.blue := UnsignedAdd(Buffer.blue, Inc.blue);				AnimateEntry(theWindow, whichEntry, Buffer);			end;	end;{============================}end.
+unit PaletteUtils;
+
+interface
+	uses
+		Palettes;
+
+	function UnSignedMult (A, B: Integer): Integer;
+	function UnSignedDiv (A, den: Integer): Integer;
+	function UnSignedAdd (A, B: Integer): Integer;
+	function UnSignedSub (A, B: Integer): Integer;
+
+	procedure SetRGB (var RGB: RGBColor; R, G, B: Integer);
+	procedure CopyRGB (RGBSrc: RGBColor; var RGBDest: RGBColor);
+
+	procedure FadeEntryToBlack (theWindow: WindowPtr; whichEntry: Integer);
+	procedure FadeEntryToColor (theWindow: WindowPtr; whichEntry: Integer; whatColor: RGBColor);
+
+implementation
+
+{============================}
+
+	function UnSignedMult;
+		var
+			num: LongInt;
+	begin
+		if (a < 0) then
+			num := A + 65536
+		else
+			num := A;
+		UnSignedMult := LoWord(num * B);
+	end;
+
+{============================}
+
+	function UnSignedDiv;
+		var
+			num: LongInt;
+	begin
+		if (a < 0) then
+			num := A + 65536
+		else
+			num := A;
+		UnSignedDiv := LoWord(num div den);
+	end;
+
+{============================}
+
+	function UnSignedAdd;
+		var
+			sum: LongInt;
+	begin
+		if (a < 0) then
+			sum := A + 65536 + B
+		else
+			sum := A + B;
+		UnSignedAdd := LoWord(sum);
+	end;
+
+{============================}
+
+	function UnSignedSub;
+		var
+			diff: LongInt;
+	begin
+		if (a < 0) then
+			diff := A + 65536 - B
+		else
+			diff := A - B;
+		UnSignedSub := Integer(LoWord(diff));
+	end;
+
+{============================}
+
+	procedure SetRGB;
+	begin
+		RGB.Red := R;
+		RGB.Green := G;
+		RGB.Blue := B;
+	end;
+
+{============================}
+
+	procedure CopyRGB;
+	begin
+		RGBDest.Red := RGBSrc.Red;
+		RGBDest.Green := RGBSrc.Green;
+		RGBDest.Blue := RGBSrc.Blue;
+	end;
+
+{============================}
+
+	procedure FadeEntryToBlack;
+		const
+			kFadeStep = 30;
+		var
+			step: Integer;
+			dummyLong: LongInt;
+			Buffer, Inc: RGBColor;
+	begin
+
+		GetEntryColor(GetPalette(theWindow), whichEntry, Buffer);
+		Inc.red := UnsignedDiv(Buffer.red, kFadeStep);
+		Inc.green := UnsignedDiv(Buffer.green, kFadeStep);
+		Inc.blue := UnsignedDiv(Buffer.blue, kFadeStep);
+
+{Fade to Black}
+		for step := kFadeStep - 1 downto 1 do
+			begin
+				Buffer.red := UnsignedSub(Buffer.red, Inc.red);
+				Buffer.green := UnsignedSub(Buffer.green, Inc.green);
+				Buffer.blue := UnsignedSub(Buffer.blue, Inc.blue);
+				AnimateEntry(theWindow, whichEntry, Buffer);
+			end;
+	end;
+
+{============================}
+
+	procedure FadeEntryToColor;
+		const
+			kFadeStep = 180;
+		var
+			step: Integer;
+			tempLong: LongInt;
+			Inc, Buffer: RGBColor;
+	begin
+		Inc.red := UnsignedDiv(whatColor.red, kFadeStep);
+		Inc.green := UnsignedDiv(whatColor.green, kFadeStep);
+		Inc.blue := UnsignedDiv(whatColor.blue, kFadeStep);
+
+		Buffer := whatColor;
+		for step := 1 to kFadeStep do
+			begin
+				Buffer.red := UnsignedSub(Buffer.red, Inc.red);
+				Buffer.green := UnsignedSub(Buffer.green, Inc.green);
+				Buffer.blue := UnsignedSub(Buffer.blue, Inc.blue);
+			end;
+
+		AnimateEntry(theWindow, whichEntry, Buffer);
+
+{Fade to Color}
+		for step := 1 to kFadeStep do
+			begin
+				Buffer.red := UnsignedAdd(Buffer.red, Inc.red);
+				Buffer.green := UnsignedAdd(Buffer.green, Inc.green);
+				Buffer.blue := UnsignedAdd(Buffer.blue, Inc.blue);
+				AnimateEntry(theWindow, whichEntry, Buffer);
+			end;
+	end;
+
+{============================}
+
+end.

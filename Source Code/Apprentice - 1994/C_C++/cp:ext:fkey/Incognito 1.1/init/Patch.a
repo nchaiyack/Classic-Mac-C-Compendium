@@ -1,1 +1,79 @@
-			case obj			include 'traps.a'			MyControl	proc	export			import	DoConfirm:code			import	DoRemove:code			import	DoRegister:code			export	setTrap:code											;	hi word ($fff6) is the appletalk driver refNum			cmpi.w	#$fff6, $18(a0)			;	check 2 see if appletalk driver			bne.s	original				;	nope. exit						cmpi.w	#$00fa, $1a(a0)			;	confirmName			blt.s	original				;	if < confirm then blowout (!nbp call)			beq.s	processConfirm			;	equal->confirm						cmpi.w	#$00fb, $1a(a0)			;	lookupName			beq.s	processConfirm						cmpi.w	#$00fd, $1a(a0)			;	registerName			beq.s	processRegister			cmpi.w	#$00fc, $1a(a0)			;	removeName			beq.s	processRemove			original	move.l	oldControl,-(a7)		;	move original trap onto the stack			rts			doJump		move.l	a1, d0					;	move routine 2 go 2 into d0			move.l	$1e(a0), d1				;	first byte of the objName			beq.s	end			move.l	d1, a1					;	move name 2 a1			lea		$9(a1), a1				;	skip over addrblock and leave the 1st byte of text			bra.s	jumpOff			doJump2		move.l	a1, d0					;	move routine 2 go 2 into d0			move.l	$1e(a0), d1				; 1st byte of the objname			beq.s	end			move.l	d1, a1jumpOff 	;a1 = theText, d0 = routine			moveq	#$0, d1					;	clear out d1			move.b	(a1), d1				;	length byte of objName			addq	#$1, d1					;	+1			add.l	a1, d1					;	add 'em together to get the typeName			move.l	a1, -(a7)				;	push obj			move.l	d1, -(a7)				;	push type			lea		end, a1			move.l	a1, -(a7)				;	push return address			move.l	d0, -(a7)				;	push routine			rtsend			addq	#$8, a7					;	throw out the stack			movem.l	(a7)+, d0-d2/a0-a1			bra.s	originalprocessRemove			movem.l	d0-d2/a0-a1, -(a7)			lea		DoRemove, a1			bra.s	doJump2processConfirm			movem.l	d0-d2/a0-a1, -(a7)			lea		DoConfirm, a1			bra.s	doJump2processRegister			movem.l	d0-d2/a0-a1, -(a7)			lea		DoRegister, a1			bra.s	doJumpsetTrap		lea		oldControl, a1			move.l	a0, (a1)			rts			oldControl	dc.l	1						;	address of the original trap			endp			end
+			case obj
+			include 'traps.a'
+			
+MyControl	proc	export
+			import	DoConfirm:code
+			import	DoRemove:code
+			import	DoRegister:code
+			export	setTrap:code
+											;	hi word ($fff6) is the appletalk driver refNum
+			cmpi.w	#$fff6, $18(a0)			;	check 2 see if appletalk driver
+			bne.s	original				;	nope. exit
+			
+			cmpi.w	#$00fa, $1a(a0)			;	confirmName
+			blt.s	original				;	if < confirm then blowout (!nbp call)
+			beq.s	processConfirm			;	equal->confirm
+			
+			cmpi.w	#$00fb, $1a(a0)			;	lookupName
+			beq.s	processConfirm
+			
+			cmpi.w	#$00fd, $1a(a0)			;	registerName
+			beq.s	processRegister
+
+			cmpi.w	#$00fc, $1a(a0)			;	removeName
+			beq.s	processRemove
+			
+original	move.l	oldControl,-(a7)		;	move original trap onto the stack
+			rts
+			
+doJump		move.l	a1, d0					;	move routine 2 go 2 into d0
+			move.l	$1e(a0), d1				;	first byte of the objName
+			beq.s	end
+			move.l	d1, a1					;	move name 2 a1
+			lea		$9(a1), a1				;	skip over addrblock and leave the 1st byte of text
+			bra.s	jumpOff
+			
+doJump2		move.l	a1, d0					;	move routine 2 go 2 into d0
+			move.l	$1e(a0), d1				; 1st byte of the objname
+			beq.s	end
+			move.l	d1, a1
+
+jumpOff 	;a1 = theText, d0 = routine
+			moveq	#$0, d1					;	clear out d1
+			move.b	(a1), d1				;	length byte of objName
+			addq	#$1, d1					;	+1
+			add.l	a1, d1					;	add 'em together to get the typeName
+			move.l	a1, -(a7)				;	push obj
+			move.l	d1, -(a7)				;	push type
+			lea		end, a1
+			move.l	a1, -(a7)				;	push return address
+			move.l	d0, -(a7)				;	push routine
+			rts
+
+end			addq	#$8, a7					;	throw out the stack
+			movem.l	(a7)+, d0-d2/a0-a1
+			bra.s	original
+
+processRemove
+			movem.l	d0-d2/a0-a1, -(a7)
+			lea		DoRemove, a1
+			bra.s	doJump2
+
+processConfirm
+			movem.l	d0-d2/a0-a1, -(a7)
+			lea		DoConfirm, a1
+			bra.s	doJump2
+
+processRegister
+			movem.l	d0-d2/a0-a1, -(a7)
+			lea		DoRegister, a1
+			bra.s	doJump
+
+setTrap		lea		oldControl, a1
+			move.l	a0, (a1)
+			rts
+			
+oldControl	dc.l	1						;	address of the original trap
+			endp
+
+			end

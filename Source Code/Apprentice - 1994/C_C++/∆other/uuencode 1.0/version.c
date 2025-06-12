@@ -1,1 +1,1 @@
-char version[] = "GNU uuencode/uudecode, version 1.0";
+char version[] = "GNU uuencode/uudecode, version 1.0";

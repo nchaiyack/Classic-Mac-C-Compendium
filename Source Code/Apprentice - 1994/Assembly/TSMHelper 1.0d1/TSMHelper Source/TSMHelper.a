@@ -1,1 +1,233 @@
-;----------------------------------------------------------------;;  TSMHelper.a;    ©1993 CE Software - All Rights Reserved;    Written by Donald Brown;;	A small utility to properly catch clicks over TSM windows.;;-----------------------------------------------------------------			BLANKS		ON			STRING		ASIS			PRINT	OFF			INCLUDE 'QuickEqu.a'			INCLUDE 'ToolEqu.a'			INCLUDE 'SysEqu.a'			INCLUDE 'Traps.a'			PRINT	ONHelperStuff		main	export;; Procedure Install; external;;   installs the patches in system heap;;; MyGetOSEvent - replaces GetOSEvent.  Checks to see if the event is a mousedown over our windows;InitEntry	BRA	InstallStartofInitMyGetOSEvent		movem.l	D1/D4/A0/A1/A2,-(SP)		move.l	A0,A2			;save the pointer to the event				move.L	OldGetOSEvent,A1	;call the real GetOSEvent		jsr	(A1)		move.l	D0,D4			;save the result for later		move.w	evtNum(A2),D0		cmp.w	#mButDwnEvt,D0		bne.s	@DontFiddle		;See if it's a mousedown				lea	TheHandlers,A3		;go through our list of handlers, see if we've got any windows to check		moveq	#9,D7@HandlerLoop		tst.l	(A3)			;is there a pointer to a windowpointer?		beq.s	@NextHandler		move.l	(A3),A0			;is there a window there?		tst.l	(A0)		beq.s	@NextHandler				clr.w	-(SP)			;call FindService Window		move.l	evtMouse(A2),-(SP)	; to see if it's a service window		pea	MyTempWindow		move.w	#$17,D0			;this is how we call FindServiceWindow		dc.w	$AA54		move.w	(SP)+,D0		cmp.w	#3,D0			;did we get something in a service window?		blt.s	@DontFiddle				lea	LastMouse,A0		;yup, save this point but don't let the system know		move.l	evtMouse(A2),(A0)		clr.w	evtNum(A2)		moveq.l	#-1,D4			;and say it's a "null" event		bra.s	@DontFiddle		;and branch out of the loop@NextHandler		adda.l	#8,A3			;try next		dbra	D7,@HandlerLoop	@DontFiddle	move.l	D4,D0		;return to sender		movem.l	(SP)+,D1/D4/A0/A1/A2		tst.b	D0		rts;; GNE Filter.  Calls our routines, also makes mousedowns where appropriate;MyGNEFilter		movem.l	A1-A4/D6-D7,-(SP)		move.l	A1,A4			;temporarily keep pointer to event in A4		move.l	D0,D7				move.w	evtNum(A4),D0		tst.w	D0			;is it a null event?		beq.s	@ChangeMe		cmpi.w	#updatEvt,D0		bne.s	@DontChangeMe@ChangeMe		lea	LastMouse,A0		;do we have a mouse?		tst.l	(A0)		beq.s	@DontChangeMe		;if not, never mind		move.l	(A0),evtMouse(A4)	;yup, turn this into that mousedown		move.w	#mButDwnEvt,evtNum(A4)		clr.l	(A0)			;(and don't do it again!)		@DontChangeMe		lea	TheHandlers,A3		;go through our list of handlers		moveq	#9,D7@HandlerLoop		tst.l	(A3)			;is there a pointer to a windowpointer?		beq.s	@NextHandler		move.l	(A3),A0			;is there a window there?		tst.l	(A0)		beq.s	@NextHandler		clr.w	-(SP)		move.w	D6,-(SP)		move.l	A4,-(SP)		move.l	4(A3),A0		;call this handler		jsr	(A0)			;syntax is Function MyHandler(oldresult:integer; VAR theevent:eventrecord):integer;		move.w	(SP)+,D6@NextHandler		adda.l	#8,A3			;try next		dbra	D7,@HandlerLoop				move.l	D6,D0			;get our "result" back into D0		movem.l	(SP)+,A1-A4/D6-D7		move.w	D0,4(SP)		move.l	OldGNEFilter, A0		jmp	(A0);; Procedure InstallOne(VAR wp:WindowPtr; whereproc:procptr; DoInstall:integer);;	DoInstall=0 for remove, non-zero to add;InstallOne		link	A6,#0		movem.l	A3/D5-D7,-(SP)		tst.w	8(A6)			;are we installing?		bne.s	@DoAdd		lea	TheHandlers,A3		;go through our list of handlers		moveq	#9,D7@RemoveLoop		move.l	(A3),D0			;see if this is our windowpointer		sub.l	14(A6),D0		;(compare the windowpointers)		_StripAddress		tst.l	D0		bne.s	@NextRemove		clr.l	(A3)			;got it, wipe it out, we're done!		clr.l	4(A3)		bra.s	@AllDone@NextRemove		adda.l	#8,A3			;try next		dbra	D7,@RemoveLoop		bra.s	@AllDone@DoAdd		lea	TheHandlers,A3		;go through our list of handlers		moveq	#9,D7@AddLoop		tst.l	(A3)		bne.s	@NextAdd		;is this an empty spot?		move.l	14(A6),(A3)		;yup, copy us in		move.l	10(A6),4(A3)		bra.s	@AllDone@NextAdd		adda.l	#8,A3			;try next		dbra	D7,@AddLoop@AllDone				movem.l	(SP)+,A3/D5-D7		unlk	a6		move.l	(SP)+,A0		adda.l	#10,SP		jmp	(A0);; The routine Gestalt will call to tell where my install routine is is;ReturnRegister		link	A6,#0		move.l	8(A6),A0	;return the proper response		lea	InstallOne,A1		move.l	A1,(A0)		clr.w	16(A6)		unlk	A6		move.l	(SP)+,A0		adda.l	#8,SP		jmp	(A0)OldGetOSEvent	dc.L	0		;address of real GetOSEventOldGNEFilter	dc.l	0		;address of prior GNEFilter;MyTempWindow	dc.l	0		;just used to call FindServiceWindow;storageLastMouse	dc.l	0		;last mouse clicked, waiting for us to handle itTheHandlers	dcb.b	80,0		;The registered TSM handlers					;	array[1..10] of Record wp:WindowHandle; proc:procptr end;;Install		link	A6,#-128		movem.l	D0-D1/A0-A4,-(SP)		btst	#0,KeyMap+7	;see if shift key's down		bne.s	@999		;if so, don't install;; Check on our gestalt being there!;		move.l	#'tsmH',D0	;call gestalt with our connection		_Gestalt		tst.w	D0		beq.s	@999		;if no error, we're already installed somewhere else				move.W	#$31,D0			;First, save old loc of GetOSEvent		_GetTrapAddress	,NEWOS		LEA	OldGetOSEvent,A1		move.L	A0,(A1)				LEA	OldGNEFilter,A1		;Next, save position of GNE filter (to hook us in)		move.L	jGNEFilter,(A1)				move.L	#Install-StartofInit,D0		_NewPtr	,SYS		;get a block in the system heap		move.L	A0,A4		;save the pointer		move.L	A0,A1		;copy stuff over		LEA	StartofInit,A0		move.L	#Install-StartofInit,D0		_BlockMove				LEA	MyGNEFilter-StartofInit(A4),A0	;hook into GNEFilter		move.l	A0,jGNEFilter				move.w	#$31,D0				;and patch GetOSEvent		LEA	MyGetOSEvent-StartofInit(A4),A0		_SetTrapAddress	,NEWOS				move.l	#'tsmH',D0			;register us so others can find us		LEA	ReturnRegister-StartofInit(A4),A0		_NewGestalt@998					@999		movem.l	(SP)+,D0-D1/A0-A4		unlk	A6		RTS		end		
+;----------------------------------------------------------------
+;
+;  TSMHelper.a
+;    ©1993 CE Software - All Rights Reserved
+;    Written by Donald Brown
+;
+;	A small utility to properly catch clicks over TSM windows.
+;
+;-----------------------------------------------------------------
+			BLANKS		ON
+			STRING		ASIS
+			PRINT	OFF
+			INCLUDE 'QuickEqu.a'
+			INCLUDE 'ToolEqu.a'
+			INCLUDE 'SysEqu.a'
+			INCLUDE 'Traps.a'
+			PRINT	ON
+
+HelperStuff		main	export
+;
+; Procedure Install; external;
+;   installs the patches in system heap
+;
+;
+; MyGetOSEvent - replaces GetOSEvent.  Checks to see if the event is a mousedown over our windows
+;
+InitEntry	BRA	Install
+
+StartofInit
+
+MyGetOSEvent
+		movem.l	D1/D4/A0/A1/A2,-(SP)
+		move.l	A0,A2			;save the pointer to the event
+		
+		move.L	OldGetOSEvent,A1	;call the real GetOSEvent
+		jsr	(A1)
+		move.l	D0,D4			;save the result for later
+		move.w	evtNum(A2),D0
+		cmp.w	#mButDwnEvt,D0
+		bne.s	@DontFiddle		;See if it's a mousedown
+		
+		lea	TheHandlers,A3		;go through our list of handlers, see if we've got any windows to check
+		moveq	#9,D7
+@HandlerLoop
+		tst.l	(A3)			;is there a pointer to a windowpointer?
+		beq.s	@NextHandler
+		move.l	(A3),A0			;is there a window there?
+		tst.l	(A0)
+		beq.s	@NextHandler
+		
+		clr.w	-(SP)			;call FindService Window
+		move.l	evtMouse(A2),-(SP)	; to see if it's a service window
+		pea	MyTempWindow
+		move.w	#$17,D0			;this is how we call FindServiceWindow
+		dc.w	$AA54
+		move.w	(SP)+,D0
+		cmp.w	#3,D0			;did we get something in a service window?
+		blt.s	@DontFiddle
+		
+		lea	LastMouse,A0		;yup, save this point but don't let the system know
+		move.l	evtMouse(A2),(A0)
+		clr.w	evtNum(A2)
+		moveq.l	#-1,D4			;and say it's a "null" event
+		bra.s	@DontFiddle		;and branch out of the loop
+
+@NextHandler
+		adda.l	#8,A3			;try next
+		dbra	D7,@HandlerLoop
+	
+@DontFiddle	move.l	D4,D0		;return to sender
+		movem.l	(SP)+,D1/D4/A0/A1/A2
+		tst.b	D0
+		rts
+;
+; GNE Filter.  Calls our routines, also makes mousedowns where appropriate
+;
+MyGNEFilter
+		movem.l	A1-A4/D6-D7,-(SP)
+		move.l	A1,A4			;temporarily keep pointer to event in A4
+		move.l	D0,D7
+		
+		move.w	evtNum(A4),D0
+		tst.w	D0			;is it a null event?
+		beq.s	@ChangeMe
+		cmpi.w	#updatEvt,D0
+		bne.s	@DontChangeMe
+@ChangeMe
+		lea	LastMouse,A0		;do we have a mouse?
+		tst.l	(A0)
+		beq.s	@DontChangeMe		;if not, never mind
+		move.l	(A0),evtMouse(A4)	;yup, turn this into that mousedown
+		move.w	#mButDwnEvt,evtNum(A4)
+		clr.l	(A0)			;(and don't do it again!)
+		
+@DontChangeMe
+		lea	TheHandlers,A3		;go through our list of handlers
+		moveq	#9,D7
+@HandlerLoop
+		tst.l	(A3)			;is there a pointer to a windowpointer?
+		beq.s	@NextHandler
+		move.l	(A3),A0			;is there a window there?
+		tst.l	(A0)
+		beq.s	@NextHandler
+		clr.w	-(SP)
+		move.w	D6,-(SP)
+		move.l	A4,-(SP)
+		move.l	4(A3),A0		;call this handler
+		jsr	(A0)			;syntax is Function MyHandler(oldresult:integer; VAR theevent:eventrecord):integer;
+		move.w	(SP)+,D6
+@NextHandler
+		adda.l	#8,A3			;try next
+		dbra	D7,@HandlerLoop
+		
+		move.l	D6,D0			;get our "result" back into D0
+		movem.l	(SP)+,A1-A4/D6-D7
+		move.w	D0,4(SP)
+		move.l	OldGNEFilter, A0
+		jmp	(A0)
+;
+; Procedure InstallOne(VAR wp:WindowPtr; whereproc:procptr; DoInstall:integer);
+;	DoInstall=0 for remove, non-zero to add
+;
+InstallOne
+		link	A6,#0
+		movem.l	A3/D5-D7,-(SP)
+		tst.w	8(A6)			;are we installing?
+		bne.s	@DoAdd
+		lea	TheHandlers,A3		;go through our list of handlers
+		moveq	#9,D7
+@RemoveLoop
+		move.l	(A3),D0			;see if this is our windowpointer
+		sub.l	14(A6),D0		;(compare the windowpointers)
+		_StripAddress
+		tst.l	D0
+		bne.s	@NextRemove
+		clr.l	(A3)			;got it, wipe it out, we're done!
+		clr.l	4(A3)
+		bra.s	@AllDone
+@NextRemove
+		adda.l	#8,A3			;try next
+		dbra	D7,@RemoveLoop
+		bra.s	@AllDone
+
+@DoAdd
+		lea	TheHandlers,A3		;go through our list of handlers
+		moveq	#9,D7
+@AddLoop
+		tst.l	(A3)
+		bne.s	@NextAdd		;is this an empty spot?
+		move.l	14(A6),(A3)		;yup, copy us in
+		move.l	10(A6),4(A3)
+		bra.s	@AllDone
+@NextAdd
+		adda.l	#8,A3			;try next
+		dbra	D7,@AddLoop
+
+@AllDone		
+		movem.l	(SP)+,A3/D5-D7
+		unlk	a6
+		move.l	(SP)+,A0
+		adda.l	#10,SP
+		jmp	(A0)
+;
+; The routine Gestalt will call to tell where my install routine is is
+;
+ReturnRegister
+		link	A6,#0
+		move.l	8(A6),A0	;return the proper response
+		lea	InstallOne,A1
+		move.l	A1,(A0)
+		clr.w	16(A6)
+		unlk	A6
+		move.l	(SP)+,A0
+		adda.l	#8,SP
+		jmp	(A0)
+
+
+OldGetOSEvent	dc.L	0		;address of real GetOSEvent
+OldGNEFilter	dc.l	0		;address of prior GNEFilter
+;
+MyTempWindow	dc.l	0		;just used to call FindServiceWindow
+;
+storage
+LastMouse	dc.l	0		;last mouse clicked, waiting for us to handle it
+TheHandlers	dcb.b	80,0		;The registered TSM handlers
+					;	array[1..10] of Record wp:WindowHandle; proc:procptr end;
+;
+Install		link	A6,#-128
+		movem.l	D0-D1/A0-A4,-(SP)
+		btst	#0,KeyMap+7	;see if shift key's down
+		bne.s	@999		;if so, don't install
+;
+; Check on our gestalt being there!
+;
+		move.l	#'tsmH',D0	;call gestalt with our connection
+		_Gestalt
+		tst.w	D0
+		beq.s	@999		;if no error, we're already installed somewhere else
+		
+		move.W	#$31,D0			;First, save old loc of GetOSEvent
+		_GetTrapAddress	,NEWOS
+		LEA	OldGetOSEvent,A1
+		move.L	A0,(A1)
+		
+		LEA	OldGNEFilter,A1		;Next, save position of GNE filter (to hook us in)
+		move.L	jGNEFilter,(A1)
+		
+		move.L	#Install-StartofInit,D0
+		_NewPtr	,SYS		;get a block in the system heap
+		move.L	A0,A4		;save the pointer
+		move.L	A0,A1		;copy stuff over
+		LEA	StartofInit,A0
+		move.L	#Install-StartofInit,D0
+		_BlockMove
+		
+		LEA	MyGNEFilter-StartofInit(A4),A0	;hook into GNEFilter
+		move.l	A0,jGNEFilter
+		
+		move.w	#$31,D0				;and patch GetOSEvent
+		LEA	MyGetOSEvent-StartofInit(A4),A0
+		_SetTrapAddress	,NEWOS
+		
+		move.l	#'tsmH',D0			;register us so others can find us
+		LEA	ReturnRegister-StartofInit(A4),A0
+		_NewGestalt
+@998		
+			
+@999		movem.l	(SP)+,D0-D1/A0-A4
+		unlk	A6
+		RTS
+
+		end
+		

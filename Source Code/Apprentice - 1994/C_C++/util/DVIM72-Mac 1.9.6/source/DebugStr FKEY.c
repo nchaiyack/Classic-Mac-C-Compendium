@@ -1,1 +1,6 @@
-void main( void );void main( void ){	DebugStr("\pHello.");}
+void main( void );
+
+void main( void )
+{
+	DebugStr("\pHello.");
+}

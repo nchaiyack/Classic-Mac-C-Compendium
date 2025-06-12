@@ -1,1 +1,7 @@
-/* * kill.h */void	KillArticles(char *groupName, TSubject **subjectArray,						short *numSubjects, Handle subjectStrings);
+/*
+ * kill.h
+ */
+
+void	KillArticles(char *groupName, TSubject **subjectArray,
+						short *numSubjects, Handle subjectStrings);
+

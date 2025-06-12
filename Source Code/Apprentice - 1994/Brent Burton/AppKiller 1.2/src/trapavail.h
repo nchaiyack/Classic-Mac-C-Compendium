@@ -1,1 +1,3 @@
-/* trapavail.c */Boolean TrapAvailable(int theTrap);
+
+/* trapavail.c */
+Boolean TrapAvailable(int theTrap);

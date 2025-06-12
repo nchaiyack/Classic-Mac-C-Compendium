@@ -1,1 +1,2 @@
-pascal Boolean GroupListClickLoop (void);void BeginGroupListClick (void);
+pascal Boolean GroupListClickLoop (void);
+void BeginGroupListClick (void);

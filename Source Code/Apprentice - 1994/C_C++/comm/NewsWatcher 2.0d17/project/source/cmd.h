@@ -1,1 +1,2 @@
-void DoSelectAll (WindowPtr wind);void DoCommand (long mResult);
+void DoSelectAll (WindowPtr wind);
+void DoCommand (long mResult);

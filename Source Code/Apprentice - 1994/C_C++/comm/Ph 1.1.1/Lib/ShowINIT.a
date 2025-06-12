@@ -1,1 +1,540 @@
-; File: ShowINIT.a; Last Modified: Sunday, November 26, 1989 05:07:56 PM;------------------------------------------------------------------------------------------------;;	INIT notification routine;	 by Paul Mercer, Darin Adler, Paul Snively,;		Frédéric Miserey, and Alex Rosenberg from an idea by Steve Capps;;	Created:  6/7/87  PM	- First version.;	Modified: 6/15/87 PM	- Changed to standard (Pascal) calling conventions.;		  6/20/87 PM	- Fixed color & Finder bug on Mac II.;		  6/22/87 DBA	- Improved handling of QuickDraw.;		  6/29/87 DBA	- Used scratch8 to avoid conflict with “Easy Access”.;		  6/30/87 DBA	- Changed to a 4-byte scheme with “checksum”.;		  6/30/87 PFS	- Separated into ShowINIT and InnerShowINIT.;		  7/1/87  DBA	- Fixed stack bug and switched to CurApName+.;		  7/2/87  PM	- Added check for old signature in ApplScratch for;				   backword compatibility (TMON Startup).;		  7/3/87  PM	- Removed _SysBeep in ErrorExit since it causes a crash.;				   Also changed ICN# plotter to srcOr mode for Blinker.;		  7/13/87 PM	- Fixed a3 trashing bug in InnerShowINIT - exit code left;				   word on stack (reported by D. Dunham).;		  7/21/87 PM	- Due to popular demand, InitGraf is no longer being called.;				   This avoids the gamma correction problem with Startupscreens;				   getting  “washed out” by ShowINIT though someone else is still;				   bound to call InitGraf sooner or later (i.e. InitWindows).;		  7/29/87 PM	- Put InitGraf back in; this is required (reported by C. Derossi;				   at Apple Tech Support).  Took out GetPort/SetPort.;		10/06/87  PM	- Set CurrentA5 properly.  Rearranged myVars.;		12/28/87  PM	- Major revision to accomodate future INIT31 based ShowINIT.;		07/14/88  PM	- Major revision to get rid of above 'accomodations'.;				   Added color icon 'cicn' support and fixed beep crash.;				   Removed support for old signature.;		11/25/89 FCM	- Added Y dimension support, icl48 support to get rid of 'obsolete' cicns;		3/27/90  AMR	- 'cicn's were not being drawn in their native size.;;------------------------------------------------------------------------------------------------		INCLUDE	'Traps.a'		INCLUDE	'QuickEqu.a'		INCLUDE	'SysEqu.a'		INCLUDE	'ToolEqu.a'		BLANKS  ON		STRING  ASISTrue		equ	1False		equ	0Debug		equ	True;Debug		equ	FalsemyVCheck	equ	CurApName+32-8		; a GREAT place to store 8 bytes (it was Darin's idea)myV		equ	myVCheck+2myH		equ	myV+2myHCheck	equ	myH+2			; a simple checksum of myH to determine first-timenessfirstX		equ	8			; X coordinate of first icon to be drawnbottomEdge	equ	8+32			; this far from bottom of screeniconWidth	equ	32			; size of icon (square normally)visBuff		equ	8			; a visual buffer between icons of 8 pixelsdefaultMoveX	equ	iconWidth+visBuff	; x default amount to move icons (40 pixels)defaultMoveY	equ	40			; y icon line heightchecksumConst	equ	$1021			; constant used for computing checksumminColorDepth	equ	4			; minimum bits/pixel for drawing color iconschunky		equ	0maskOffset	equ	128			; offset to mask in ICN#iconRowBytes	equ	32/8			; 32/8 bitshasCQDBit	equ	6			; this bit in ROM85 is cleared if Color QuickDraw is availableiconID		equ	6+4			; positive stackframe objectsmoveX		equ	4+4showINITArgs	equ	4iconPtrHdl	equ	6+4initDrawArgs	equ	6iclPtrHdl	equ	12+4iclDepth	equ	10+4initDrawXArgs	equ	initDrawArgs+6myVars		RECORD	0,DECREMENTsaveA5		ds.l	1localA5		ds.l	1thePort		ds.l	1			; my own QuickDraw (required!)		ds.b	grafSize-4		;  other QuickDraw globals (except thePort)destRect	ds.w	4currMoveX	ds.w	1			; holds current moveX valuemyBitMap	ds.b	bitMapRecmyPort		ds.b	portRecvarsSize	equ	*		ENDR;------------------------------------------------------------------------------------------------;;	Displays the ICN# (cicn when in 4 bit mode or higher) specified by iconID and;	 move the pen horizontally by moveX.;	Pass a -1 in moveX to move the standard amount, moveX should be 40 for most ICN#'s;;	PROCEDURE ShowINIT(iconID: Integer; moveX: Integer); EXTERNAL;;	pascal void ShowINIT(iconID, moveX);		short iconID, moveX;;		extern;;;------------------------------------------------------------------------------------------------ShowINIT:	PROC	EXPORT		IMPORT	INITDraw1Bit, INITDrawCQD,INITDrawXBit		link	a6,#0			; create stack frame		movem.l	d3-d7/a2-a4,-(sp)	; save standard registers		btst.b	#hasCQDBit,ROM85	; try to get a color icon if CQD exists		beq.s	ShowINITCQD		; I could use SysEnvirons but I don't want toShowINIT1Bit		subq.w	#4,sp			; try to get the icon resource		move.l	#'ICN#',-(sp)		move.w	iconID(a6),-(sp)		_GetResource		move.l	(sp)+,d0		beq.s	ShowINITError		; can't get it, give up		move.l	d0,-(sp)		; leave handle on the stack for ReleaseResource		move.l	d0,a0		_HLock		move.l	(a0),a0			; dereference		move.l	a0,-(sp)		; icon pointer		move.w	moveX(a6),-(sp)		; moveX		bsr	INITDraw1Bit		; draw		_ReleaseResource		; release the resourceShowINITExit:		movem.l	(sp)+,d3-d7/a2-a4	; restore registers		unlk	a6			; ditch stack frame		move.l	(sp)+,a0		; get return address		addq.l	#showINITArgs,sp	; ditch incoming arguments		jmp	(a0)			; return to callerShowINITError:		IF	Debug THEN		move.w	#1,-(sp)		; just beep		_SysBeep		ENDIF		bra.s	ShowINITExitShowINITCQD:			move.l	#$40008,d2		move.l	#'icl8',d3		move.l	#'icl4',d4		move.l	MainDevice,a0		; get handle to main device		move.l	(a0),a0			; dereference		move.l	gdPMap(a0),a0		; get its pixmap handle		move.l	(a0),a0			; dereference it		cmp.w	#minColorDepth,pmPixelSize(a0)	; is it deep enough for us to draw in color?		blt.s	ShowINIT1Bit			;  no		bne.s	noSwapOrder			; is depth 4 ?		swap	d2				; yes - swap icl_ search order		exg	d3,d4noSwapOrder:		subq.w	#4,sp		move.l	d3,-(sp)		move.w	iconID(a6),-(sp)		_GetResource		move.l	(sp)+,d1		beq.s	SearchNextFoundIc:		subq.w	#4,sp		move.l	#'ICN#',-(sp)		move.w	iconID(a6),-(sp)		_GetResource		move.l	(sp)+,d0		bne.s	FoundCompanion				move.l	d1,-(sp)		_ReleaseResource		bra.s	ShowINITErrorFoundCompanion:				move.l	d1,-(sp)		; leave handle on the stack for ReleaseResource		move.l	d0,-(sp)		; leave handle on the stack for ReleaseResource		move.l	d0,d3				move.l	d1,a0		_HLock		move.l	(a0),a0			; dereference		move.l	a0,-(sp)		; icl_ pointer		move.w	d2,-(sp)		; icl_ depth		move.l	d3,a0		_HLock		move.l	(a0),a0			; dereference		move.l	a0,-(sp)		; icon pointer		move.w	moveX(a6),-(sp)		; moveX		bsr	INITDrawXBit		; draw		_ReleaseResource		; release the resource		_ReleaseResource		; release the resource		bra	ShowINITExitSearchNext:		swap	d2		subq.w	#4,sp		move.l	d4,-(sp)		move.w	iconID(a6),-(sp)		_GetResource		move.l	(sp)+,d1		bne.s	FoundIc		subq.w	#4,sp			; can a color icon be found?		move.w	iconID(a6),-(sp)		_GetCIcon		move.l	(sp)+,d0		beq	ShowINIT1Bit		;  no, so try for regular icon		move.l	d0,-(sp)		; leave handle on the stack for DisposCIcon		move.l	d0,-(sp)		; cicn handle		move.w	moveX(a6),-(sp)		; moveX		bsr	INITDrawCQD		; do the actual drawing		_DisposCIcon		bra	ShowINITExitShowINITCredits:		dc.w	'ShowINIT by Paul Mercer'		dc.w	'Copyright 1987-1990'		dc.w	'Version of 03/27/90'		ENDPROC;------------------------------------------------------------------------------------------------;;	Initializes the world and sets up the drawing rectangle;;------------------------------------------------------------------------------------------------INITInit:	PROC	EXPORT		WITH	myVars		move.l	CurrentA5,saveA5(a6)	; PM 10/6 save host A5		lea	localA5(a6),a5		; PM7/21		move.l	a5,CurrentA5		pea	thePort(a6)		; PM 10/6 use a5 reference instead of a6		_InitGraf			; fixes color bug as per DA@ICOM		pea	myPort(a6)		_OpenPort		move.w	myV,d0			; get my v var		rol.w	#1,d0			; compare against checksum		eor.w	#checksumConst,d0		cmp.w	myVCheck,d0		beq.s	ScratchVOK		; checks, so go on test my h var		move	myPort+portBounds+bottom(a6),d0 ; else initialize as first time		sub.w	#bottomEdge,d0		move	d0,myVScratchVOK:		move.w	myH,d0			; get my h var		rol.w	#1,d0			; compare against checksum		eor.w	#checksumConst,d0		cmp.w	myHCheck,d0		beq.s	ScratchHOK		; checks, so go on		move	#firstX,myH		; else initialize as first timeScratchHOK:		move.l	myV,d0		move.w	d0,d1			; get future position		add.w	#iconWidth,d1		; compute future rect right		cmp.w	myPort+portBounds+right(A6),d1 ; compare to main screen right		blt.s	DontChangeLine		; smaller - do nothing		move.w	myV,d0			; decrement Y value		subi.w	#defaultMoveY,d0		move.w	d0,myV		moveq	#firstX,D0		move	d0,myH			; set X to initial value		move.l	myV,d0DontChangeLine:		move.l	d0,destRect(a6)		move.l	d0,destRect+botRight(a6)		add.w	#iconWidth,destRect+right(a6)		add.w	#iconWidth,destRect+bottom(a6)		move.w	#defaultMoveX,currMoveX(a6)	; establish a default							; INITDrawCQD changes this		rts		ENDWITH		ENDPROC;------------------------------------------------------------------------------------------------;;	Cleans up the work done by INITInit and advances the icon drawing position;;------------------------------------------------------------------------------------------------INITCleanup:	PROC	EXPORT		WITH	myVars		move.w	myH,d0			; get current position		move.w	moveX(a6),d1		; get delta x		bpl.s	NotDefault		; not default (-1)		move.w	currMoveX(a6),d1	; default - set in INITInit and INITDrawCQDNotDefault:		add.w	d1,d0			; increment icon position		move.w	d0,myH			;  and save in ‘global’computeChecksum:		rol.w	#1,d0			; recompute h checksum		eor.w	#checksumConst,d0		move.w	d0,myHCheck		;  and save it		move	myV,d0			; same for v checksum		rol.w	#1,d0		eor.w	#checksumConst,d0		move.w	d0,myVCheckExit:		pea	myPort(a6)		_ClosePort		; *** (DBA) I think that QuickDraw leaves handles around.		; *** (DBA) Too bad we can't get rid of them...		move.l	saveA5(a6),a5		; PM 10/6 restore host A5		move.l	a5,CurrentA5		rts		ENDWITH		ENDPROC;------------------------------------------------------------------------------------------------;;	display the ICN# pointed to by iconPtr and move the pen horizontally by moveX;	 pass a -1 in moveX to move the standard amount, moveX should be 40 for most ICN#'s;;	PROCEDURE INITDraw1Bit(iconPtr: ICONListPtr; moveX: Integer); EXTERNAL;;	pascal void INITDraw1Bit(iconPtr, moveX);		ICONList *iconPtr;;		short moveX;;		extern;;;------------------------------------------------------------------------------------------------INITDraw1Bit:	PROC	EXPORT		IMPORT	INITInit, INITCleanup:CODE		WITH	myVars		link	a6,#varsSize		; create stack frame		movem.l	d3-d7/a2-a4,-(sp)	; save standard registers		bsr	INITInit		; initialize for drawing		move.l	iconPtrHdl(a6),a3	; get ICN# pointer		lea	myBitMap(a6),a4		; point to bitmap structure		move.l	a3,baseAddr(a4)		; fill it out		add.l	#maskOffset,baseAddr(a4) ; skip to mask		move	#iconRowBytes,rowBytes(a4)		moveq	#0,d0		move.l	d0,bounds(a4)		; 0,0 topleft		move.l	#(iconWidth<<16)+iconWidth,bounds+bottom(a4) ; 32,32 botright				move.l	a4,-(sp)		; punch hole with mask		lea	myPort(a6),a2		; get the desk port		pea	portBits(a2)		;  for its portbits		pea	srcRect		pea	destRect(a6)		move	#srcBic,-(sp)		; punch a hole		clr.l	-(sp)			; no clip region		_CopyBits		sub.l	#128,baseAddr(a4)		move.l	a4,-(sp)		; now draw (or) icon		pea	portBits(a2)		pea	srcRect		pea	destRect(a6)		move	#srcOr,-(sp)		clr.l	-(sp)		_CopyBits		bsr	INITCleanup		; cleanup, advance icon location		movem.l	(sp)+,d3-d7/a2-a4	; restore registers		unlk	a6			; ditch stack frame		move.l	(sp)+,a0		; get return address		addq.l	#initDrawArgs,sp	; ditch incoming		jmp	(a0)			; back to callersrcRect:	dc.w	0,0,32,32		; for copybits		ENDWITH		ENDPROC;------------------------------------------------------------------------------------------------;;	display the Icl pointed to by iclPtr and move the pen horizontally by moveX;	 pass a -1 in moveX to move the standard amount, moveX should be 40 for most ICN#'s;;	PROCEDURE INITDrawXBit(iclPtr: icl_Ptr; iclDepth: Integer; ;				iconPtr: ICONListPtr; moveX: Integer); EXTERNAL;;	pascal void INITDrawXBit(iconPtr, moveX);		icl_Ptr *iclPtr;;		short iclDepth;;		ICONList *iconPtr;;		short moveX;;		extern;;;------------------------------------------------------------------------------------------------INITDrawXBit:	PROC	EXPORT		IMPORT	INITInit, INITCleanup:CODE		WITH	myVars				link	a6,#varsSize		; create stack frame		movem.l	d3-d7/a2-a4,-(sp)	; save standard registers				subq.w	#4,sp		_NewPixMap		move.l	(sp)+,d0		bne.s	pixIsGood				move.l	iconPtrHdl(a6),-(sp)		move	moveX(a6),-(sp)		bsr	INITDraw1Bit		bra	quickEndpixIsGood:			move.l	d0,a2				bsr	INITInit		; initialize for drawing		movea.l	a2,a0		_HLock		movea.l	(a2),a0		movea.l	pmTable(a0),a0		_DisposHandle		subq.w	#4,sp		move.l	#'clut',-(sp)		move.w	iclDepth(a6),-(sp)		_RGetResource		movea.l	(a2),a0		move.l	(sp)+,pmTable(a0)				move.l	iclPtrHdl(a6),pmBaseAddr(a0)		moveq	#iconRowBytes,d0		move.w	iclDepth(a6),d1		mulu	d1,d0		bset.l	#15,d0		move.w	d0,pmRowBytes(a0)		moveq	#0,d0		move.l	d0,pmBounds(a0)		; 0,0 topleft		move.l	#(iconWidth<<16)+iconWidth,pmBounds+bottom(a0) ; 32,32 botright		move.w	#chunky,pmPixelType(a0)		move.w	d1,pmPixelSize(a0)		move.w	#1,pmCmpCount(a0)		move.w	d1,pmCmpSize(a0)				lea	myBitMap(a6),a4		; point to bitmap structure		move.l	iconPtrHdl(a6),baseAddr(a4) ; fill it out with ICN# pointer		add.l	#maskOffset,baseAddr(a4) ; skip to mask		move	#iconRowBytes,rowBytes(a4)		moveq	#0,d0		move.l	d0,bounds(a4)		; 0,0 topleft		move.l	#(iconWidth<<16)+iconWidth,bounds+bottom(a4) ; 32,32 botright				move.l	(a2),d0		move.l	d0,-(sp)		move.l	a4,-(sp)		; punch hole with mask		pea	myPort+portBits(a6)	; get the desk port portbits		pea	srcRect		pea	srcRect		pea	destRect(a6)		_CopyMask				moveq	#0,d0		_NewHandle		movea.l	(a2),a1		move.l	a0,pmTable(a1)		move.l	a2,-(sp)		_DisposPixMap		bsr	INITCleanup		; cleanup, advance icon locationquickEnd	movem.l	(sp)+,d3-d7/a2-a4	; restore registers		unlk	a6			; ditch stack frame		move.l	(sp)+,a0		; get return address		adda.w	#initDrawXArgs,sp	; ditch incoming		jmp	(a0)			; back to callersrcRect:	dc.w	0,0,iconWidth,iconWidth	; for copymask		ENDWITH		ENDPROC;------------------------------------------------------------------------------------------------;	same as above except with color icon handle;------------------------------------------------------------------------------------------------INITDrawCQD:	PROC	EXPORT		IMPORT	INITInit, INITCleanup:CODE		WITH	myVars		link	a6,#varsSize		; create stack frame		movem.l	d3-d7/a2-a4,-(sp)	; save standard registers		bsr	INITInit		; initialize for drawing		move.l	iconPtrHdl(a6),a0		move.l	(a0),a0		move.w	pmBounds+right(a0),d0	; (right - left - iconWidth) + destRect.right		move.w	pmBounds+left(a0),d1		sub.w	d1,d0				move.w	#visBuff,d1		move.w	d0,currMoveX(a6)		add.w	d1,currMoveX(a6)	; (right - left) -> currMoveX				move.w	#iconWidth,d1		subx.w	d1,d0		move.w	destRect+right(a6),d1		addx.w	d0,d1		move.w	d1,destRect+right(a6)		move.w	pmBounds+bottom(a0),d0	; (bottom - top - iconWidth) + destRect.bottom		move.w	pmBounds+top(a0),d1		sub.w	d1,d0		move.w	#iconWidth,d1		subx.w	d1,d0		move.w	destRect+bottom(a6),d1		addx.w	d0,d1		move.w	d1,destRect+bottom(a6)		pea	destRect(a6)		; destination rect		move.l	iconPtrHdl(a6),-(sp)	; cicn handle		_PlotCIcon			; draw it		bsr	INITCleanup		; cleanup, advance icon location		movem.l	(sp)+,d3-d7/a2-a4	; restore registers		unlk	a6			; ditch stack frame		move.l	(sp)+,a0		; get return address		addq.l	#initDrawArgs,sp	; ditch incoming		jmp	(a0)			; back to caller		ENDWITH		ENDPROC		END
+; File: ShowINIT.a
+; Last Modified: Sunday, November 26, 1989 05:07:56 PM
+;------------------------------------------------------------------------------------------------
+;
+;	INIT notification routine
+;	 by Paul Mercer, Darin Adler, Paul Snively,
+;		Frédéric Miserey, and Alex Rosenberg from an idea by Steve Capps
+;
+;	Created:  6/7/87  PM	- First version.
+;	Modified: 6/15/87 PM	- Changed to standard (Pascal) calling conventions.
+;		  6/20/87 PM	- Fixed color & Finder bug on Mac II.
+;		  6/22/87 DBA	- Improved handling of QuickDraw.
+;		  6/29/87 DBA	- Used scratch8 to avoid conflict with “Easy Access”.
+;		  6/30/87 DBA	- Changed to a 4-byte scheme with “checksum”.
+;		  6/30/87 PFS	- Separated into ShowINIT and InnerShowINIT.
+;		  7/1/87  DBA	- Fixed stack bug and switched to CurApName+.
+;		  7/2/87  PM	- Added check for old signature in ApplScratch for
+;				   backword compatibility (TMON Startup).
+;		  7/3/87  PM	- Removed _SysBeep in ErrorExit since it causes a crash.
+;				   Also changed ICN# plotter to srcOr mode for Blinker.
+;		  7/13/87 PM	- Fixed a3 trashing bug in InnerShowINIT - exit code left
+;				   word on stack (reported by D. Dunham).
+;		  7/21/87 PM	- Due to popular demand, InitGraf is no longer being called.
+;				   This avoids the gamma correction problem with Startupscreens
+;				   getting  “washed out” by ShowINIT though someone else is still
+;				   bound to call InitGraf sooner or later (i.e. InitWindows).
+;		  7/29/87 PM	- Put InitGraf back in; this is required (reported by C. Derossi
+;				   at Apple Tech Support).  Took out GetPort/SetPort.
+;		10/06/87  PM	- Set CurrentA5 properly.  Rearranged myVars.
+;		12/28/87  PM	- Major revision to accomodate future INIT31 based ShowINIT.
+;		07/14/88  PM	- Major revision to get rid of above 'accomodations'.
+;				   Added color icon 'cicn' support and fixed beep crash.
+;				   Removed support for old signature.
+;		11/25/89 FCM	- Added Y dimension support, icl48 support to get rid of 'obsolete' cicns
+;		3/27/90  AMR	- 'cicn's were not being drawn in their native size.
+;
+;------------------------------------------------------------------------------------------------
+
+		INCLUDE	'Traps.a'
+		INCLUDE	'QuickEqu.a'
+		INCLUDE	'SysEqu.a'
+		INCLUDE	'ToolEqu.a'
+
+		BLANKS  ON
+		STRING  ASIS
+
+True		equ	1
+False		equ	0
+
+Debug		equ	True
+;Debug		equ	False
+
+myVCheck	equ	CurApName+32-8		; a GREAT place to store 8 bytes (it was Darin's idea)
+myV		equ	myVCheck+2
+myH		equ	myV+2
+myHCheck	equ	myH+2			; a simple checksum of myH to determine first-timeness
+firstX		equ	8			; X coordinate of first icon to be drawn
+bottomEdge	equ	8+32			; this far from bottom of screen
+iconWidth	equ	32			; size of icon (square normally)
+visBuff		equ	8			; a visual buffer between icons of 8 pixels
+defaultMoveX	equ	iconWidth+visBuff	; x default amount to move icons (40 pixels)
+defaultMoveY	equ	40			; y icon line height
+checksumConst	equ	$1021			; constant used for computing checksum
+minColorDepth	equ	4			; minimum bits/pixel for drawing color icons
+
+chunky		equ	0
+
+maskOffset	equ	128			; offset to mask in ICN#
+iconRowBytes	equ	32/8			; 32/8 bits
+
+hasCQDBit	equ	6			; this bit in ROM85 is cleared if Color QuickDraw is available
+
+iconID		equ	6+4			; positive stackframe objects
+moveX		equ	4+4
+showINITArgs	equ	4
+
+iconPtrHdl	equ	6+4
+initDrawArgs	equ	6
+
+iclPtrHdl	equ	12+4
+iclDepth	equ	10+4
+initDrawXArgs	equ	initDrawArgs+6
+
+myVars		RECORD	0,DECREMENT
+saveA5		ds.l	1
+localA5		ds.l	1
+thePort		ds.l	1			; my own QuickDraw (required!)
+		ds.b	grafSize-4		;  other QuickDraw globals (except thePort)
+destRect	ds.w	4
+currMoveX	ds.w	1			; holds current moveX value
+myBitMap	ds.b	bitMapRec
+myPort		ds.b	portRec
+varsSize	equ	*
+		ENDR
+
+
+;------------------------------------------------------------------------------------------------
+;
+;	Displays the ICN# (cicn when in 4 bit mode or higher) specified by iconID and
+;	 move the pen horizontally by moveX.
+;	Pass a -1 in moveX to move the standard amount, moveX should be 40 for most ICN#'s
+;
+;	PROCEDURE ShowINIT(iconID: Integer; moveX: Integer); EXTERNAL
+;
+;	pascal void ShowINIT(iconID, moveX)
+;		short iconID, moveX;
+;		extern;
+;
+;------------------------------------------------------------------------------------------------
+ShowINIT:	PROC	EXPORT
+		IMPORT	INITDraw1Bit, INITDrawCQD,INITDrawXBit
+
+		link	a6,#0			; create stack frame
+		movem.l	d3-d7/a2-a4,-(sp)	; save standard registers
+
+		btst.b	#hasCQDBit,ROM85	; try to get a color icon if CQD exists
+		beq.s	ShowINITCQD		; I could use SysEnvirons but I don't want to
+ShowINIT1Bit
+		subq.w	#4,sp			; try to get the icon resource
+		move.l	#'ICN#',-(sp)
+		move.w	iconID(a6),-(sp)
+		_GetResource
+		move.l	(sp)+,d0
+		beq.s	ShowINITError		; can't get it, give up
+
+		move.l	d0,-(sp)		; leave handle on the stack for ReleaseResource
+		move.l	d0,a0
+		_HLock
+		move.l	(a0),a0			; dereference
+		move.l	a0,-(sp)		; icon pointer
+		move.w	moveX(a6),-(sp)		; moveX
+		bsr	INITDraw1Bit		; draw
+		_ReleaseResource		; release the resource
+
+ShowINITExit:
+		movem.l	(sp)+,d3-d7/a2-a4	; restore registers
+		unlk	a6			; ditch stack frame
+		move.l	(sp)+,a0		; get return address
+		addq.l	#showINITArgs,sp	; ditch incoming arguments
+		jmp	(a0)			; return to caller
+
+ShowINITError:
+		IF	Debug THEN
+		move.w	#1,-(sp)		; just beep
+		_SysBeep
+		ENDIF
+		bra.s	ShowINITExit
+
+
+ShowINITCQD:	
+		move.l	#$40008,d2
+		move.l	#'icl8',d3
+		move.l	#'icl4',d4
+		move.l	MainDevice,a0		; get handle to main device
+		move.l	(a0),a0			; dereference
+		move.l	gdPMap(a0),a0		; get its pixmap handle
+		move.l	(a0),a0			; dereference it
+		cmp.w	#minColorDepth,pmPixelSize(a0)	; is it deep enough for us to draw in color?
+		blt.s	ShowINIT1Bit			;  no
+		bne.s	noSwapOrder			; is depth 4 ?
+		swap	d2				; yes - swap icl_ search order
+		exg	d3,d4
+noSwapOrder:
+		subq.w	#4,sp
+		move.l	d3,-(sp)
+		move.w	iconID(a6),-(sp)
+		_GetResource
+		move.l	(sp)+,d1
+		beq.s	SearchNext
+FoundIc:
+		subq.w	#4,sp
+		move.l	#'ICN#',-(sp)
+		move.w	iconID(a6),-(sp)
+		_GetResource
+		move.l	(sp)+,d0
+		bne.s	FoundCompanion
+		
+		move.l	d1,-(sp)
+		_ReleaseResource
+		bra.s	ShowINITError
+FoundCompanion:		
+		move.l	d1,-(sp)		; leave handle on the stack for ReleaseResource
+		move.l	d0,-(sp)		; leave handle on the stack for ReleaseResource
+		move.l	d0,d3
+		
+		move.l	d1,a0
+		_HLock
+		move.l	(a0),a0			; dereference
+		move.l	a0,-(sp)		; icl_ pointer
+		move.w	d2,-(sp)		; icl_ depth
+		move.l	d3,a0
+		_HLock
+		move.l	(a0),a0			; dereference
+		move.l	a0,-(sp)		; icon pointer
+		move.w	moveX(a6),-(sp)		; moveX
+		bsr	INITDrawXBit		; draw
+		_ReleaseResource		; release the resource
+		_ReleaseResource		; release the resource
+		bra	ShowINITExit
+SearchNext:
+		swap	d2
+		subq.w	#4,sp
+		move.l	d4,-(sp)
+		move.w	iconID(a6),-(sp)
+		_GetResource
+		move.l	(sp)+,d1
+		bne.s	FoundIc
+
+		subq.w	#4,sp			; can a color icon be found?
+		move.w	iconID(a6),-(sp)
+		_GetCIcon
+		move.l	(sp)+,d0
+		beq	ShowINIT1Bit		;  no, so try for regular icon
+
+		move.l	d0,-(sp)		; leave handle on the stack for DisposCIcon
+		move.l	d0,-(sp)		; cicn handle
+		move.w	moveX(a6),-(sp)		; moveX
+		bsr	INITDrawCQD		; do the actual drawing
+		_DisposCIcon
+
+		bra	ShowINITExit
+
+ShowINITCredits:
+		dc.w	'ShowINIT by Paul Mercer'
+		dc.w	'Copyright 1987-1990'
+		dc.w	'Version of 03/27/90'
+		ENDPROC
+
+
+;------------------------------------------------------------------------------------------------
+;
+;	Initializes the world and sets up the drawing rectangle
+;
+;------------------------------------------------------------------------------------------------
+INITInit:	PROC	EXPORT
+		WITH	myVars
+
+		move.l	CurrentA5,saveA5(a6)	; PM 10/6 save host A5
+		lea	localA5(a6),a5		; PM7/21
+		move.l	a5,CurrentA5
+		pea	thePort(a6)		; PM 10/6 use a5 reference instead of a6
+		_InitGraf			; fixes color bug as per DA@ICOM
+		pea	myPort(a6)
+		_OpenPort
+
+		move.w	myV,d0			; get my v var
+		rol.w	#1,d0			; compare against checksum
+		eor.w	#checksumConst,d0
+		cmp.w	myVCheck,d0
+		beq.s	ScratchVOK		; checks, so go on test my h var
+
+		move	myPort+portBounds+bottom(a6),d0 ; else initialize as first time
+		sub.w	#bottomEdge,d0
+		move	d0,myV
+ScratchVOK:
+		move.w	myH,d0			; get my h var
+		rol.w	#1,d0			; compare against checksum
+		eor.w	#checksumConst,d0
+		cmp.w	myHCheck,d0
+		beq.s	ScratchHOK		; checks, so go on
+		move	#firstX,myH		; else initialize as first time
+ScratchHOK:
+		move.l	myV,d0
+
+		move.w	d0,d1			; get future position
+		add.w	#iconWidth,d1		; compute future rect right
+		cmp.w	myPort+portBounds+right(A6),d1 ; compare to main screen right
+		blt.s	DontChangeLine		; smaller - do nothing
+
+		move.w	myV,d0			; decrement Y value
+		subi.w	#defaultMoveY,d0
+		move.w	d0,myV
+		moveq	#firstX,D0
+		move	d0,myH			; set X to initial value
+
+		move.l	myV,d0
+DontChangeLine:
+		move.l	d0,destRect(a6)
+		move.l	d0,destRect+botRight(a6)
+		add.w	#iconWidth,destRect+right(a6)
+		add.w	#iconWidth,destRect+bottom(a6)
+
+		move.w	#defaultMoveX,currMoveX(a6)	; establish a default
+							; INITDrawCQD changes this
+		rts
+
+		ENDWITH
+		ENDPROC
+
+
+;------------------------------------------------------------------------------------------------
+;
+;	Cleans up the work done by INITInit and advances the icon drawing position
+;
+;------------------------------------------------------------------------------------------------
+INITCleanup:	PROC	EXPORT
+		WITH	myVars
+
+		move.w	myH,d0			; get current position
+		move.w	moveX(a6),d1		; get delta x
+		bpl.s	NotDefault		; not default (-1)
+		move.w	currMoveX(a6),d1	; default - set in INITInit and INITDrawCQD
+NotDefault:
+		add.w	d1,d0			; increment icon position
+		move.w	d0,myH			;  and save in ‘global’
+computeChecksum:
+		rol.w	#1,d0			; recompute h checksum
+		eor.w	#checksumConst,d0
+		move.w	d0,myHCheck		;  and save it
+
+		move	myV,d0			; same for v checksum
+		rol.w	#1,d0
+		eor.w	#checksumConst,d0
+		move.w	d0,myVCheck
+Exit:
+		pea	myPort(a6)
+		_ClosePort
+		; *** (DBA) I think that QuickDraw leaves handles around.
+		; *** (DBA) Too bad we can't get rid of them...
+		move.l	saveA5(a6),a5		; PM 10/6 restore host A5
+		move.l	a5,CurrentA5
+		rts
+
+		ENDWITH
+		ENDPROC
+
+
+;------------------------------------------------------------------------------------------------
+;
+;	display the ICN# pointed to by iconPtr and move the pen horizontally by moveX
+;	 pass a -1 in moveX to move the standard amount, moveX should be 40 for most ICN#'s
+;
+;	PROCEDURE INITDraw1Bit(iconPtr: ICONListPtr; moveX: Integer); EXTERNAL
+;
+;	pascal void INITDraw1Bit(iconPtr, moveX)
+;		ICONList *iconPtr;
+;		short moveX;
+;		extern;
+;
+;------------------------------------------------------------------------------------------------
+INITDraw1Bit:	PROC	EXPORT
+		IMPORT	INITInit, INITCleanup:CODE
+		WITH	myVars
+
+		link	a6,#varsSize		; create stack frame
+		movem.l	d3-d7/a2-a4,-(sp)	; save standard registers
+		bsr	INITInit		; initialize for drawing
+
+		move.l	iconPtrHdl(a6),a3	; get ICN# pointer
+		lea	myBitMap(a6),a4		; point to bitmap structure
+		move.l	a3,baseAddr(a4)		; fill it out
+		add.l	#maskOffset,baseAddr(a4) ; skip to mask
+		move	#iconRowBytes,rowBytes(a4)
+		moveq	#0,d0
+		move.l	d0,bounds(a4)		; 0,0 topleft
+		move.l	#(iconWidth<<16)+iconWidth,bounds+bottom(a4) ; 32,32 botright
+		
+		move.l	a4,-(sp)		; punch hole with mask
+		lea	myPort(a6),a2		; get the desk port
+		pea	portBits(a2)		;  for its portbits
+		pea	srcRect
+		pea	destRect(a6)
+		move	#srcBic,-(sp)		; punch a hole
+		clr.l	-(sp)			; no clip region
+		_CopyBits
+
+		sub.l	#128,baseAddr(a4)
+		move.l	a4,-(sp)		; now draw (or) icon
+		pea	portBits(a2)
+		pea	srcRect
+		pea	destRect(a6)
+		move	#srcOr,-(sp)
+		clr.l	-(sp)
+		_CopyBits
+
+		bsr	INITCleanup		; cleanup, advance icon location
+		movem.l	(sp)+,d3-d7/a2-a4	; restore registers
+		unlk	a6			; ditch stack frame
+		move.l	(sp)+,a0		; get return address
+		addq.l	#initDrawArgs,sp	; ditch incoming
+		jmp	(a0)			; back to caller
+
+srcRect:	dc.w	0,0,32,32		; for copybits
+
+		ENDWITH
+		ENDPROC
+
+
+;------------------------------------------------------------------------------------------------
+;
+;	display the Icl pointed to by iclPtr and move the pen horizontally by moveX
+;	 pass a -1 in moveX to move the standard amount, moveX should be 40 for most ICN#'s
+;
+;	PROCEDURE INITDrawXBit(iclPtr: icl_Ptr; iclDepth: Integer; 
+;				iconPtr: ICONListPtr; moveX: Integer); EXTERNAL
+;
+;	pascal void INITDrawXBit(iconPtr, moveX)
+;		icl_Ptr *iclPtr;
+;		short iclDepth;
+;		ICONList *iconPtr;
+;		short moveX;
+;		extern;
+;
+;------------------------------------------------------------------------------------------------
+INITDrawXBit:	PROC	EXPORT
+		IMPORT	INITInit, INITCleanup:CODE
+		WITH	myVars
+
+		
+		link	a6,#varsSize		; create stack frame
+		movem.l	d3-d7/a2-a4,-(sp)	; save standard registers
+		
+		subq.w	#4,sp
+		_NewPixMap
+		move.l	(sp)+,d0
+		bne.s	pixIsGood
+		
+		move.l	iconPtrHdl(a6),-(sp)
+		move	moveX(a6),-(sp)
+		bsr	INITDraw1Bit
+		bra	quickEnd
+pixIsGood:	
+		move.l	d0,a2
+		
+		bsr	INITInit		; initialize for drawing
+
+		movea.l	a2,a0
+		_HLock
+		movea.l	(a2),a0
+		movea.l	pmTable(a0),a0
+		_DisposHandle
+		subq.w	#4,sp
+		move.l	#'clut',-(sp)
+		move.w	iclDepth(a6),-(sp)
+		_RGetResource
+		movea.l	(a2),a0
+		move.l	(sp)+,pmTable(a0)
+		
+		move.l	iclPtrHdl(a6),pmBaseAddr(a0)
+		moveq	#iconRowBytes,d0
+		move.w	iclDepth(a6),d1
+		mulu	d1,d0
+		bset.l	#15,d0
+		move.w	d0,pmRowBytes(a0)
+		moveq	#0,d0
+		move.l	d0,pmBounds(a0)		; 0,0 topleft
+		move.l	#(iconWidth<<16)+iconWidth,pmBounds+bottom(a0) ; 32,32 botright
+		move.w	#chunky,pmPixelType(a0)
+		move.w	d1,pmPixelSize(a0)
+		move.w	#1,pmCmpCount(a0)
+		move.w	d1,pmCmpSize(a0)
+		
+		lea	myBitMap(a6),a4		; point to bitmap structure
+		move.l	iconPtrHdl(a6),baseAddr(a4) ; fill it out with ICN# pointer
+		add.l	#maskOffset,baseAddr(a4) ; skip to mask
+		move	#iconRowBytes,rowBytes(a4)
+		moveq	#0,d0
+		move.l	d0,bounds(a4)		; 0,0 topleft
+		move.l	#(iconWidth<<16)+iconWidth,bounds+bottom(a4) ; 32,32 botright
+		
+		move.l	(a2),d0
+		move.l	d0,-(sp)
+		move.l	a4,-(sp)		; punch hole with mask
+		pea	myPort+portBits(a6)	; get the desk port portbits
+		pea	srcRect
+		pea	srcRect
+		pea	destRect(a6)
+		_CopyMask
+		
+		moveq	#0,d0
+		_NewHandle
+		movea.l	(a2),a1
+		move.l	a0,pmTable(a1)
+		move.l	a2,-(sp)
+		_DisposPixMap
+
+		bsr	INITCleanup		; cleanup, advance icon location
+quickEnd	movem.l	(sp)+,d3-d7/a2-a4	; restore registers
+		unlk	a6			; ditch stack frame
+		move.l	(sp)+,a0		; get return address
+		adda.w	#initDrawXArgs,sp	; ditch incoming
+		jmp	(a0)			; back to caller
+
+srcRect:	dc.w	0,0,iconWidth,iconWidth	; for copymask
+
+		ENDWITH
+		ENDPROC
+
+
+;------------------------------------------------------------------------------------------------
+;	same as above except with color icon handle
+;------------------------------------------------------------------------------------------------
+INITDrawCQD:	PROC	EXPORT
+		IMPORT	INITInit, INITCleanup:CODE
+		WITH	myVars
+
+		link	a6,#varsSize		; create stack frame
+		movem.l	d3-d7/a2-a4,-(sp)	; save standard registers
+		bsr	INITInit		; initialize for drawing
+
+		move.l	iconPtrHdl(a6),a0
+		move.l	(a0),a0
+		move.w	pmBounds+right(a0),d0	; (right - left - iconWidth) + destRect.right
+		move.w	pmBounds+left(a0),d1
+		sub.w	d1,d0
+		
+		move.w	#visBuff,d1
+		move.w	d0,currMoveX(a6)
+		add.w	d1,currMoveX(a6)	; (right - left) -> currMoveX
+		
+		move.w	#iconWidth,d1
+		subx.w	d1,d0
+		move.w	destRect+right(a6),d1
+		addx.w	d0,d1
+		move.w	d1,destRect+right(a6)
+		move.w	pmBounds+bottom(a0),d0	; (bottom - top - iconWidth) + destRect.bottom
+		move.w	pmBounds+top(a0),d1
+		sub.w	d1,d0
+		move.w	#iconWidth,d1
+		subx.w	d1,d0
+		move.w	destRect+bottom(a6),d1
+		addx.w	d0,d1
+		move.w	d1,destRect+bottom(a6)
+
+		pea	destRect(a6)		; destination rect
+		move.l	iconPtrHdl(a6),-(sp)	; cicn handle
+		_PlotCIcon			; draw it
+
+		bsr	INITCleanup		; cleanup, advance icon location
+		movem.l	(sp)+,d3-d7/a2-a4	; restore registers
+		unlk	a6			; ditch stack frame
+		move.l	(sp)+,a0		; get return address
+		addq.l	#initDrawArgs,sp	; ditch incoming
+		jmp	(a0)			; back to caller
+
+		ENDWITH
+		ENDPROC
+
+
+		END

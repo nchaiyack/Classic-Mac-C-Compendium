@@ -1,1 +1,44 @@
-/*** trapavail.c**** this is the code supporting Apple's official method** of checking for the existence of a specific trap.** See p. 3-8 of IM-VI for the details.*/#include <OSUtils.h>#include <Traps.h>#include <Types.h>#include "trapavail.h"static int NumToolboxTraps(void);static TrapType GetTrapType(int);/*=================================================== */static int NumToolboxTraps(void){	return ( (NGetTrapAddress(_InitGraf, ToolTrap)==			  NGetTrapAddress(0xAA6e, ToolTrap)) ? 0x0200 : 0x0400);} /* NumToolboxTraps() */static TrapType GetTrapType(int theTrap){	unsigned TrapMask = 0x0800;	return ((theTrap & TrapMask)>0 ? ToolTrap : OSTrap);} /* GetTrapType() */Boolean TrapAvailable(int theTrap){	TrapType tType = GetTrapType( theTrap);	if (tType == ToolTrap) {		theTrap = (int)theTrap & (int)0x07ff;		if (theTrap >= NumToolboxTraps())			theTrap = _Unimplemented;	}	return (Boolean)(NGetTrapAddress(theTrap, tType) !=			NGetTrapAddress(_Unimplemented, ToolTrap));} /* TrapAvailable() */
+/*
+** trapavail.c
+**
+** this is the code supporting Apple's official method
+** of checking for the existence of a specific trap.
+** See p. 3-8 of IM-VI for the details.
+*/
+
+
+#include <OSUtils.h>
+#include <Traps.h>
+#include <Types.h>
+
+#include "trapavail.h"
+
+static int NumToolboxTraps(void);
+static TrapType GetTrapType(int);
+/*=================================================== */
+
+static int NumToolboxTraps(void)
+{
+	return ( (NGetTrapAddress(_InitGraf, ToolTrap)==
+			  NGetTrapAddress(0xAA6e, ToolTrap)) ? 0x0200 : 0x0400);
+} /* NumToolboxTraps() */
+
+
+static TrapType GetTrapType(int theTrap)
+{
+	unsigned TrapMask = 0x0800;
+	return ((theTrap & TrapMask)>0 ? ToolTrap : OSTrap);
+} /* GetTrapType() */
+
+
+Boolean TrapAvailable(int theTrap)
+{
+	TrapType tType = GetTrapType( theTrap);
+	if (tType == ToolTrap) {
+		theTrap = (int)theTrap & (int)0x07ff;
+		if (theTrap >= NumToolboxTraps())
+			theTrap = _Unimplemented;
+	}
+	return (Boolean)(NGetTrapAddress(theTrap, tType) !=
+			NGetTrapAddress(_Unimplemented, ToolTrap));
+} /* TrapAvailable() */

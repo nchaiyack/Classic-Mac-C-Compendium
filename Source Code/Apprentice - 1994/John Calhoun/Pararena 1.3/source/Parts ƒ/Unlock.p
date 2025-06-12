@@ -1,1 +1,506 @@
-unit Unlock;interface	uses		Sound, Globals;	function ShowAboutDialog: Boolean;	procedure DoUnlock;	procedure GetName (var theName: Str255);	procedure DoGreatestScore;	procedure DoDeltaScore;	procedure ShowHiScores;implementation{=============================}	function ShowAboutDialog;		const			okayButton = 1;			moreButton = 2;		var			theDlgPtr: DialogPtr;			tempRect: Rect;			itemT, itemHit: Integer;			itemH: Handle;			exitDialog: Boolean;{----------------}		procedure DrawDefault;		begin			GetDItem(theDlgPtr, okayButton, itemT, itemH, tempRect);			PenSize(3, 3);			InsetRect(tempRect, -4, -4);			FrameRoundRect(tempRect, 16, 16);			PenSize(1, 1);		end;{----------------}	begin		ShowAboutDialog := FALSE;		CenterDialog(aboutDialID);		theDlgPtr := GetNewDialog(aboutDialID, nil, Pointer(-1));		ShowWindow(theDlgPtr);		SetPort(GrafPtr(theDlgPtr));		exitDialog := FALSE;		DrawDefault;		repeat			ModalDialog(nil, itemHit);			if (ItemHit = okayButton) then				exitDialog := TRUE;			if (ItemHit = moreButton) then				begin					exitDialog := TRUE;					ShowAboutDialog := TRUE;				end;		until exitDialog;		DisposDialog(theDlgPtr);	end;{=============================}	procedure DoUnlock;		const			okayButton = 1;			unlockButton = 2;			passWordEdit = 3;			passNumEdit = 4;			userItem = 20;			userItem2 = 21;		var			theDlgPtr: DialogPtr;			tempRect: Rect;			itemT, itemHit, i, tempInt: Integer;			itemH: Handle;			tempChar: Char;			theKey, theirKey: LongInt;			theirPass, thePass, tempStr: Str255;			exitMe: Boolean;{----------------}		procedure DrawDefaultAndFrame;		begin			ForeColor(redColor);			GetDItem(theDlgPtr, userItem, itemT, itemH, tempRect);			FrameRect(tempRect);			GetDItem(theDlgPtr, userItem2, itemT, itemH, tempRect);			FrameRect(tempRect);			ForeColor(blackColor);			GetDItem(theDlgPtr, okayButton, itemT, itemH, tempRect);			PenSize(3, 3);			InsetRect(tempRect, -4, -4);			FrameRoundRect(tempRect, 16, 16);			PenNormal;		end;{----------------}		procedure WordToKey;		begin			tempChar := COPY(theirPass, 1, 1);			theKey := ORD(tempChar);			theKey := theKey * 1000;			tempChar := COPY(theirPass, 2, 1);			theKey := theKey + ORD(tempChar) * 100;			tempChar := COPY(theirPass, 3, 1);			theKey := theKey + ORD(tempChar) * 100;			tempChar := COPY(theirPass, 4, 1);			theKey := theKey + ORD(tempChar) * 10;			tempChar := COPY(theirPass, 5, 1);			theKey := theKey + ORD(tempChar) * 10;			tempChar := COPY(theirPass, 6, 1);			theKey := theKey + ORD(tempChar) * 10;			tempChar := COPY(theirPass, 7, 1);			theKey := theKey + ORD(tempChar);			tempChar := COPY(theirPass, 8, 1);			theKey := theKey + ORD(tempChar);		end;{----------------}		procedure UnlockTheGame;			var				i: Integer;		begin			timeToLock := 30;			tempChar := CHR(25);			tempStr := CONCAT('B', tempChar);			prefsStr := CONCAT(tempStr, COPY(prefsStr, 3, 7));			tempStr := '';			for i := 1 to 8 do				begin					tempChar := COPY(theirPass, i, 1);					tempInt := (ORD(tempChar) div 10) + 65;					tempChar := CHR(tempInt);					tempStr := CONCAT(tempStr, tempChar);					tempChar := COPY(theirPass, i, 1);					tempInt := (ORD(tempChar) mod 10) + 75;					tempChar := CHR(tempInt);					tempStr := CONCAT(tempStr, tempChar);				end;			prefsStr := CONCAT(prefsStr, tempStr);			GetDItem(theDlgPtr, userItem, itemT, itemH, tempRect);			InvertRect(tempRect);			if (locked) then				DeleteMenu(133);			locked := FALSE;			EnableItem(GetMenu(mWhichGame), iFourOfNine);			EnableItem(GetMenu(mWhichGame), iFirstTo13);			EnableItem(GetMenu(mOpponents), iMara);			EnableItem(GetMenu(mOpponents), iClaire);			EnableItem(GetMenu(mOptions), iPhysics);			DrawMenuBar;		end;{----------------}	begin		CenterDialog(unlockDialID);		theDlgPtr := GetNewDialog(unlockDialID, nil, Pointer(-1));		ShowWindow(theDlgPtr);		SetPort(theDlgPtr);		GetDItem(theDlgPtr, passWordEdit, itemT, itemH, tempRect);		SetIText(itemH, 'password');		GetDItem(theDlgPtr, passNumEdit, itemT, itemH, tempRect);		SetIText(itemH, '87654321');		SelIText(theDlgPtr, passWordEdit, 0, 15);		DrawDefaultAndFrame;		exitMe := FALSE;		repeat			ModalDialog(nil, itemHit);			if (itemHit = okayButton) then				exitMe := TRUE;			if (ItemHit = unlockButton) then				begin					GetDItem(theDlgPtr, passWordEdit, itemT, itemH, tempRect);					GetIText(itemH, theirPass);					theirPass := CONCAT(theirPass, '        ');					theirPass := COPY(theirPass, 1, 8);					UprString(theirPass, TRUE);					WordToKey;					thePass := '';					for i := 0 to 7 do						begin							tempChar := COPY(prefsStr, (i * 2) + 10, 1);							tempInt := (ORD(tempChar) - 65) * 10;							tempChar := COPY(prefsStr, (i * 2) + 11, 1);							tempInt := tempInt + (ORD(tempChar) - 75);							thePass := CONCAT(thePass, CHR(tempInt));						end;					GetDItem(theDlgPtr, passNumEdit, itemT, itemH, tempRect);					GetIText(itemH, tempStr);					StringToNum(tempStr, theirKey);					if ((theirKey = theKey) or (thePass = theirPass)) then						UnlockTheGame;				end;		until exitMe;		DisposDialog(theDlgPtr);	end;{=============================}	procedure GetName;		const			okayButton = 1;			nameEdit = 2;		var			theDlgPtr: DialogPtr;			tempRect: Rect;			itemT, itemHit: Integer;			itemH: Handle;			exitMe: Boolean;{----------------}		procedure DrawDefault;		begin			ForeColor(redColor);			GetDItem(theDlgPtr, okayButton, itemT, itemH, tempRect);			PenSize(3, 3);			InsetRect(tempRect, -4, -4);			FrameRoundRect(tempRect, 16, 16);			ForeColor(blackColor);			PenNormal;		end;{----------------}	begin		CenterDialog(hiscoreDialID);		theDlgPtr := GetNewDialog(hiscoreDialID, nil, Pointer(-1));		ShowWindow(theDlgPtr);		SetPort(theDlgPtr);		GetDItem(theDlgPtr, nameEdit, itemT, itemH, tempRect);		SetIText(itemH, '15 characters');		SelIText(theDlgPtr, nameEdit, 0, 25);		DrawDefault;		exitMe := FALSE;		repeat			ModalDialog(nil, itemHit);			if (itemHit = okayButton) then				begin					GetDItem(theDlgPtr, nameEdit, itemT, itemH, tempRect);					GetIText(itemH, theName);					if (LENGTH(theName) > 15) then						begin							SysBeep(1);							theName := COPY(theName, 1, 15);							GetIText(itemH, theName);							SelIText(theDlgPtr, nameEdit, 0, 25);						end					else						begin							theName := CONCAT(theName, '               ');							theName := COPY(theName, 1, 15);							exitMe := TRUE;						end;				end;		until exitMe;		DisposDialog(theDlgPtr);	end;{=============================}	procedure DoGreatestScore;		var			theName: Str255;			winner, loser, index, place: Integer;	begin		if ((earthPoints > taygetePoints) or ((earthPoints = taygetePoints) and (earthFouls < taygeteFouls))) then			begin				theName := playerName;				winner := earthPoints;				loser := taygetePoints;			end		else			begin				case whichOpponent of					mara: 						theName := 'Mad Mara       ';					otto: 						theName := 'Heavy Otto     ';					george: 						theName := 'Simple George  ';					claire: 						theName := 'Clever Claire  ';					otherwise						begin						end;				end;				winner := taygetePoints;				loser := earthPoints;			end;		with hiScores do			begin				place := 11;				for index := 10 downto 0 do					if (winner > greatScores[index, 0]) then						place := index;				for index := 11 downto place + 1 do					begin						greatScores[index, 0] := greatScores[index - 1, 0];						greatScores[index, 1] := greatScores[index - 1, 1];						greatNames[index] := greatNames[index - 1];					end;				greatScores[place, 0] := winner;				greatScores[place, 1] := loser;				greatNames[place] := theName;				smallestGreatest := greatScores[11, 0];			end;		scoresChanged := TRUE;	end;{=============================}	procedure DoDeltaScore;		var			theName: Str255;			winner, loser, index, place, thisDiff: Integer;	begin		if (earthPoints > taygetePoints) then			begin				theName := playerName;				winner := earthPoints;				loser := taygetePoints;			end		else			begin				case whichOpponent of					mara: 						theName := 'Mad Mara       ';					otto: 						theName := 'Heavy Otto     ';					george: 						theName := 'Simple George  ';					claire: 						theName := 'Clever Claire  ';					otherwise						begin						end;				end;				winner := taygetePoints;				loser := earthPoints;			end;		thisDiff := winner - loser;		with hiScores do			begin				place := 11;				for index := 10 downto 0 do					if (thisDiff > (deltaScores[index, 0] - deltaScores[index, 1])) then						place := index;				for index := 11 downto place + 1 do					begin						deltaScores[index, 0] := deltaScores[index - 1, 0];						deltaScores[index, 1] := deltaScores[index - 1, 1];						deltaNames[index] := deltaNames[index - 1];					end;				deltaScores[place, 0] := winner;				deltaScores[place, 1] := loser;				deltaNames[place] := theName;				smallestDelta := deltaScores[11, 0] - deltaScores[11, 1];			end;		scoresChanged := TRUE;	end;{=============================}	procedure ShowHiScores;		var			index: Integer;			dummyLong: LongInt;			scoreStr, first, second: Str255;			mousePt: Point;			thePict: PicHandle;			tempRect: Rect;			clickedIt: Boolean;	begin		CopyBits(mainWndo^.portBits, offLoadMap, screenArea, screenArea, srcCopy, wholeRgn);		SetPort(mainWndo);		thePict := GetPicture(2002);		if (thePict <> nil) then			begin				HLock(Handle(thePict));				tempRect := thePict^^.picFrame;				OffsetRect(tempRect, 8, 44);				DrawPicture(thePict, tempRect);				HUnlock(Handle(thePict));				ReleaseResource(Handle(thePict));			end		else			Exit(ShowHiScores);		PenNormal;		TextMode(srcXOr);		TextFont(Monaco);		TextSize(9);		with hiScores do			for index := 0 to 11 do				begin					MoveTo(68, 101 + index * 11 + (index + 2) div 2);					DrawString(greatNames[index]);					NumToString(greatScores[index, 0], first);					MoveTo(180, 101 + index * 11 + (index + 2) div 2);					DrawString(first);					MoveTo(200, 101 + index * 11 + (index + 2) div 2);					DrawString('to');					NumToString(greatScores[index, 1], second);					MoveTo(220, 101 + index * 11 + (index + 2) div 2);					DrawString(second);					MoveTo(306, 101 + index * 11 + (index + 2) div 2);					DrawString(deltaNames[index]);					NumToString(deltaScores[index, 0], first);					MoveTo(418, 101 + index * 11 + (index + 2) div 2);					DrawString(first);					MoveTo(438, 101 + index * 11 + (index + 2) div 2);					DrawString('to');					NumToString(deltaScores[index, 1], second);					MoveTo(458, 101 + index * 11 + (index + 2) div 2);					DrawString(second);				end;		PenNormal;		clickedIt := FALSE;		repeat		until (not Button);		repeat			ForeColor(yellowColor);			FrameRect(tempRect);			for index := 1 to 10 do				begin					Delay(1, dummyLong);					clickedIt := Button;				end;			ForeColor(blackColor);			FrameRect(tempRect);			for index := 1 to 10 do				begin					Delay(1, dummyLong);					clickedIt := Button;				end;		until clickedIt;		GetMouse(mousePt);		if ((mousePt.h = 0) and (mousePt.v = 0)) then			begin				with hiScores do					for index := 0 to 11 do						begin							greatNames[index] := '===============';							deltaNames[index] := '===============';							greatScores[index, 0] := 0;							greatScores[index, 1] := 0;							deltaScores[index, 0] := 0;							deltaScores[index, 1] := 0;						end;				scoresChanged := TRUE;			end;		PenNormal;		CopyBits(offLoadMap, mainWndo^.portBits, screenArea, screenArea, srcCopy, nil);	end;{=============================}end.                                    {End of unit}
+unit Unlock;
+
+interface
+	uses
+		Sound, Globals;
+
+	function ShowAboutDialog: Boolean;
+	procedure DoUnlock;
+	procedure GetName (var theName: Str255);
+	procedure DoGreatestScore;
+	procedure DoDeltaScore;
+	procedure ShowHiScores;
+
+implementation
+
+{=============================}
+
+	function ShowAboutDialog;
+		const
+			okayButton = 1;
+			moreButton = 2;
+
+		var
+			theDlgPtr: DialogPtr;
+			tempRect: Rect;
+			itemT, itemHit: Integer;
+			itemH: Handle;
+			exitDialog: Boolean;
+
+{----------------}
+
+		procedure DrawDefault;
+		begin
+			GetDItem(theDlgPtr, okayButton, itemT, itemH, tempRect);
+			PenSize(3, 3);
+			InsetRect(tempRect, -4, -4);
+			FrameRoundRect(tempRect, 16, 16);
+			PenSize(1, 1);
+		end;
+
+{----------------}
+
+	begin
+		ShowAboutDialog := FALSE;
+		CenterDialog(aboutDialID);
+		theDlgPtr := GetNewDialog(aboutDialID, nil, Pointer(-1));
+		ShowWindow(theDlgPtr);
+		SetPort(GrafPtr(theDlgPtr));
+
+		exitDialog := FALSE;
+		DrawDefault;
+
+		repeat
+			ModalDialog(nil, itemHit);
+
+			if (ItemHit = okayButton) then
+				exitDialog := TRUE;
+
+			if (ItemHit = moreButton) then
+				begin
+					exitDialog := TRUE;
+					ShowAboutDialog := TRUE;
+				end;
+
+		until exitDialog;
+
+		DisposDialog(theDlgPtr);
+	end;
+
+{=============================}
+
+	procedure DoUnlock;
+		const
+			okayButton = 1;
+			unlockButton = 2;
+			passWordEdit = 3;
+			passNumEdit = 4;
+			userItem = 20;
+			userItem2 = 21;
+
+		var
+			theDlgPtr: DialogPtr;
+			tempRect: Rect;
+			itemT, itemHit, i, tempInt: Integer;
+			itemH: Handle;
+			tempChar: Char;
+			theKey, theirKey: LongInt;
+			theirPass, thePass, tempStr: Str255;
+			exitMe: Boolean;
+
+{----------------}
+
+		procedure DrawDefaultAndFrame;
+		begin
+			ForeColor(redColor);
+			GetDItem(theDlgPtr, userItem, itemT, itemH, tempRect);
+			FrameRect(tempRect);
+			GetDItem(theDlgPtr, userItem2, itemT, itemH, tempRect);
+			FrameRect(tempRect);
+			ForeColor(blackColor);
+			GetDItem(theDlgPtr, okayButton, itemT, itemH, tempRect);
+			PenSize(3, 3);
+			InsetRect(tempRect, -4, -4);
+			FrameRoundRect(tempRect, 16, 16);
+			PenNormal;
+		end;
+
+{----------------}
+
+		procedure WordToKey;
+		begin
+			tempChar := COPY(theirPass, 1, 1);
+			theKey := ORD(tempChar);
+			theKey := theKey * 1000;
+			tempChar := COPY(theirPass, 2, 1);
+			theKey := theKey + ORD(tempChar) * 100;
+			tempChar := COPY(theirPass, 3, 1);
+			theKey := theKey + ORD(tempChar) * 100;
+			tempChar := COPY(theirPass, 4, 1);
+			theKey := theKey + ORD(tempChar) * 10;
+			tempChar := COPY(theirPass, 5, 1);
+			theKey := theKey + ORD(tempChar) * 10;
+			tempChar := COPY(theirPass, 6, 1);
+			theKey := theKey + ORD(tempChar) * 10;
+			tempChar := COPY(theirPass, 7, 1);
+			theKey := theKey + ORD(tempChar);
+			tempChar := COPY(theirPass, 8, 1);
+			theKey := theKey + ORD(tempChar);
+		end;
+
+{----------------}
+
+		procedure UnlockTheGame;
+			var
+				i: Integer;
+		begin
+			timeToLock := 30;
+			tempChar := CHR(25);
+			tempStr := CONCAT('B', tempChar);
+			prefsStr := CONCAT(tempStr, COPY(prefsStr, 3, 7));
+			tempStr := '';
+			for i := 1 to 8 do
+				begin
+					tempChar := COPY(theirPass, i, 1);
+					tempInt := (ORD(tempChar) div 10) + 65;
+					tempChar := CHR(tempInt);
+					tempStr := CONCAT(tempStr, tempChar);
+					tempChar := COPY(theirPass, i, 1);
+					tempInt := (ORD(tempChar) mod 10) + 75;
+					tempChar := CHR(tempInt);
+					tempStr := CONCAT(tempStr, tempChar);
+				end;
+			prefsStr := CONCAT(prefsStr, tempStr);
+
+			GetDItem(theDlgPtr, userItem, itemT, itemH, tempRect);
+			InvertRect(tempRect);
+
+			if (locked) then
+				DeleteMenu(133);
+			locked := FALSE;
+
+			EnableItem(GetMenu(mWhichGame), iFourOfNine);
+			EnableItem(GetMenu(mWhichGame), iFirstTo13);
+			EnableItem(GetMenu(mOpponents), iMara);
+			EnableItem(GetMenu(mOpponents), iClaire);
+			EnableItem(GetMenu(mOptions), iPhysics);
+			DrawMenuBar;
+		end;
+
+{----------------}
+
+	begin
+		CenterDialog(unlockDialID);
+		theDlgPtr := GetNewDialog(unlockDialID, nil, Pointer(-1));
+		ShowWindow(theDlgPtr);
+		SetPort(theDlgPtr);
+
+		GetDItem(theDlgPtr, passWordEdit, itemT, itemH, tempRect);
+		SetIText(itemH, 'password');
+		GetDItem(theDlgPtr, passNumEdit, itemT, itemH, tempRect);
+		SetIText(itemH, '87654321');
+		SelIText(theDlgPtr, passWordEdit, 0, 15);
+
+		DrawDefaultAndFrame;
+		exitMe := FALSE;
+
+		repeat
+			ModalDialog(nil, itemHit);
+
+			if (itemHit = okayButton) then
+				exitMe := TRUE;
+
+			if (ItemHit = unlockButton) then
+				begin
+					GetDItem(theDlgPtr, passWordEdit, itemT, itemH, tempRect);
+					GetIText(itemH, theirPass);
+					theirPass := CONCAT(theirPass, '        ');
+					theirPass := COPY(theirPass, 1, 8);
+					UprString(theirPass, TRUE);
+
+					WordToKey;
+
+					thePass := '';
+					for i := 0 to 7 do
+						begin
+							tempChar := COPY(prefsStr, (i * 2) + 10, 1);
+							tempInt := (ORD(tempChar) - 65) * 10;
+							tempChar := COPY(prefsStr, (i * 2) + 11, 1);
+							tempInt := tempInt + (ORD(tempChar) - 75);
+							thePass := CONCAT(thePass, CHR(tempInt));
+						end;
+
+					GetDItem(theDlgPtr, passNumEdit, itemT, itemH, tempRect);
+					GetIText(itemH, tempStr);
+					StringToNum(tempStr, theirKey);
+
+					if ((theirKey = theKey) or (thePass = theirPass)) then
+						UnlockTheGame;
+				end;
+
+		until exitMe;
+
+		DisposDialog(theDlgPtr);
+	end;
+
+{=============================}
+
+	procedure GetName;
+		const
+			okayButton = 1;
+			nameEdit = 2;
+
+		var
+			theDlgPtr: DialogPtr;
+			tempRect: Rect;
+			itemT, itemHit: Integer;
+			itemH: Handle;
+			exitMe: Boolean;
+
+{----------------}
+
+		procedure DrawDefault;
+		begin
+			ForeColor(redColor);
+			GetDItem(theDlgPtr, okayButton, itemT, itemH, tempRect);
+			PenSize(3, 3);
+			InsetRect(tempRect, -4, -4);
+			FrameRoundRect(tempRect, 16, 16);
+			ForeColor(blackColor);
+			PenNormal;
+		end;
+
+{----------------}
+
+	begin
+		CenterDialog(hiscoreDialID);
+		theDlgPtr := GetNewDialog(hiscoreDialID, nil, Pointer(-1));
+		ShowWindow(theDlgPtr);
+		SetPort(theDlgPtr);
+
+		GetDItem(theDlgPtr, nameEdit, itemT, itemH, tempRect);
+		SetIText(itemH, '15 characters');
+		SelIText(theDlgPtr, nameEdit, 0, 25);
+
+		DrawDefault;
+		exitMe := FALSE;
+
+		repeat
+			ModalDialog(nil, itemHit);
+
+			if (itemHit = okayButton) then
+				begin
+					GetDItem(theDlgPtr, nameEdit, itemT, itemH, tempRect);
+					GetIText(itemH, theName);
+					if (LENGTH(theName) > 15) then
+						begin
+							SysBeep(1);
+							theName := COPY(theName, 1, 15);
+							GetIText(itemH, theName);
+							SelIText(theDlgPtr, nameEdit, 0, 25);
+						end
+					else
+						begin
+							theName := CONCAT(theName, '               ');
+							theName := COPY(theName, 1, 15);
+							exitMe := TRUE;
+						end;
+				end;
+
+		until exitMe;
+
+		DisposDialog(theDlgPtr);
+	end;
+
+{=============================}
+
+	procedure DoGreatestScore;
+		var
+			theName: Str255;
+			winner, loser, index, place: Integer;
+	begin
+		if ((earthPoints > taygetePoints) or ((earthPoints = taygetePoints) and (earthFouls < taygeteFouls))) then
+			begin
+				theName := playerName;
+				winner := earthPoints;
+				loser := taygetePoints;
+			end
+		else
+			begin
+				case whichOpponent of
+					mara: 
+						theName := 'Mad Mara       ';
+					otto: 
+						theName := 'Heavy Otto     ';
+					george: 
+						theName := 'Simple George  ';
+					claire: 
+						theName := 'Clever Claire  ';
+					otherwise
+						begin
+						end;
+				end;
+				winner := taygetePoints;
+				loser := earthPoints;
+			end;
+
+		with hiScores do
+			begin
+				place := 11;
+				for index := 10 downto 0 do
+					if (winner > greatScores[index, 0]) then
+						place := index;
+				for index := 11 downto place + 1 do
+					begin
+						greatScores[index, 0] := greatScores[index - 1, 0];
+						greatScores[index, 1] := greatScores[index - 1, 1];
+						greatNames[index] := greatNames[index - 1];
+					end;
+				greatScores[place, 0] := winner;
+				greatScores[place, 1] := loser;
+				greatNames[place] := theName;
+
+				smallestGreatest := greatScores[11, 0];
+			end;
+
+		scoresChanged := TRUE;
+
+	end;
+
+{=============================}
+
+	procedure DoDeltaScore;
+		var
+			theName: Str255;
+			winner, loser, index, place, thisDiff: Integer;
+	begin
+		if (earthPoints > taygetePoints) then
+			begin
+				theName := playerName;
+				winner := earthPoints;
+				loser := taygetePoints;
+			end
+		else
+			begin
+				case whichOpponent of
+					mara: 
+						theName := 'Mad Mara       ';
+					otto: 
+						theName := 'Heavy Otto     ';
+					george: 
+						theName := 'Simple George  ';
+					claire: 
+						theName := 'Clever Claire  ';
+					otherwise
+						begin
+						end;
+				end;
+				winner := taygetePoints;
+				loser := earthPoints;
+			end;
+
+		thisDiff := winner - loser;
+
+		with hiScores do
+			begin
+				place := 11;
+				for index := 10 downto 0 do
+					if (thisDiff > (deltaScores[index, 0] - deltaScores[index, 1])) then
+						place := index;
+				for index := 11 downto place + 1 do
+					begin
+						deltaScores[index, 0] := deltaScores[index - 1, 0];
+						deltaScores[index, 1] := deltaScores[index - 1, 1];
+						deltaNames[index] := deltaNames[index - 1];
+					end;
+				deltaScores[place, 0] := winner;
+				deltaScores[place, 1] := loser;
+				deltaNames[place] := theName;
+
+				smallestDelta := deltaScores[11, 0] - deltaScores[11, 1];
+			end;
+
+		scoresChanged := TRUE;
+	end;
+
+{=============================}
+
+	procedure ShowHiScores;
+		var
+			index: Integer;
+			dummyLong: LongInt;
+			scoreStr, first, second: Str255;
+			mousePt: Point;
+			thePict: PicHandle;
+			tempRect: Rect;
+			clickedIt: Boolean;
+	begin
+		CopyBits(mainWndo^.portBits, offLoadMap, screenArea, screenArea, srcCopy, wholeRgn);
+		SetPort(mainWndo);
+		thePict := GetPicture(2002);
+		if (thePict <> nil) then
+			begin
+				HLock(Handle(thePict));
+				tempRect := thePict^^.picFrame;
+				OffsetRect(tempRect, 8, 44);
+				DrawPicture(thePict, tempRect);
+				HUnlock(Handle(thePict));
+				ReleaseResource(Handle(thePict));
+			end
+		else
+			Exit(ShowHiScores);
+
+		PenNormal;
+		TextMode(srcXOr);
+		TextFont(Monaco);
+		TextSize(9);
+		with hiScores do
+			for index := 0 to 11 do
+				begin
+					MoveTo(68, 101 + index * 11 + (index + 2) div 2);
+					DrawString(greatNames[index]);
+					NumToString(greatScores[index, 0], first);
+					MoveTo(180, 101 + index * 11 + (index + 2) div 2);
+					DrawString(first);
+					MoveTo(200, 101 + index * 11 + (index + 2) div 2);
+					DrawString('to');
+					NumToString(greatScores[index, 1], second);
+					MoveTo(220, 101 + index * 11 + (index + 2) div 2);
+					DrawString(second);
+
+					MoveTo(306, 101 + index * 11 + (index + 2) div 2);
+					DrawString(deltaNames[index]);
+					NumToString(deltaScores[index, 0], first);
+					MoveTo(418, 101 + index * 11 + (index + 2) div 2);
+					DrawString(first);
+					MoveTo(438, 101 + index * 11 + (index + 2) div 2);
+					DrawString('to');
+					NumToString(deltaScores[index, 1], second);
+					MoveTo(458, 101 + index * 11 + (index + 2) div 2);
+					DrawString(second);
+				end;
+
+		PenNormal;
+		clickedIt := FALSE;
+		repeat
+		until (not Button);
+		repeat
+			ForeColor(yellowColor);
+			FrameRect(tempRect);
+			for index := 1 to 10 do
+				begin
+					Delay(1, dummyLong);
+					clickedIt := Button;
+				end;
+
+			ForeColor(blackColor);
+			FrameRect(tempRect);
+			for index := 1 to 10 do
+				begin
+					Delay(1, dummyLong);
+					clickedIt := Button;
+				end;
+		until clickedIt;
+		GetMouse(mousePt);
+
+		if ((mousePt.h = 0) and (mousePt.v = 0)) then
+			begin
+				with hiScores do
+					for index := 0 to 11 do
+						begin
+							greatNames[index] := '===============';
+							deltaNames[index] := '===============';
+							greatScores[index, 0] := 0;
+							greatScores[index, 1] := 0;
+							deltaScores[index, 0] := 0;
+							deltaScores[index, 1] := 0;
+						end;
+				scoresChanged := TRUE;
+			end;
+		PenNormal;
+		CopyBits(offLoadMap, mainWndo^.portBits, screenArea, screenArea, srcCopy, nil);
+	end;
+
+{=============================}
+
+end.                                    {End of unit}

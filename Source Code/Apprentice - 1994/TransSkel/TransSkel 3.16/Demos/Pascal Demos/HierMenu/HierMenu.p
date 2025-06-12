@@ -1,1 +1,94 @@
-program HierMenu;	uses		TransSkel;	const		aboutAlrtRes = 1000;		fileMenuNum = 1000;		demoMenuNum = 1001;		sub1MenuNum = 231;		sub2MenuNum = 232;		sub3MenuNum = 233;		demo2MenuNum = 1005;		sub21MenuNum = 241;		sub22MenuNum = 242;		sub23MenuNum = 243;		quit = 1;{ Handle selection of "About Hello..." item from Apple menu }	procedure DoAppleMenu (item: Integer);		var			ignore: Integer;	begin		ignore := SkelAlert(aboutAlrtRes, SkelDlogFilter(nil, true), skelPositionOnParentDevice);		SkelRmveDlogFilter;	end;{ Process selection from File menu }	procedure DoFileMenu (item: Integer);	begin		case item of			quit: 				SkelStopEventLoop;		end;	end;	procedure SetupMenus;		var			m: MenuHandle;			str: Str255;			ignore: Boolean;	begin		SkelApple('About HierMenu…', @DoAppleMenu);		m := NewMenu(fileMenuNum, 'File');		AppendMenu(m, 'Quit/Q');		ignore := SkelMenu(m, @DoFileMenu, nil, false, false);		m := NewMenu(demoMenuNum, 'Demo');		str := 'Item 1/X;Item 2/X;Item 3/X';		str[8] := chr($1b);		str[17] := chr($1b);		str[26] := chr($1b);		AppendMenu(m, str);		SetItemMark(m, 1, char(sub1MenuNum));		SetItemMark(m, 2, char(sub2MenuNum));		SetItemMark(m, 3, char(sub3MenuNum));		ignore := SkelMenu(m, nil, nil, false, false);		m := NewMenu(sub1MenuNum, '');		AppendMenu(m, 'Subitem 1.1;Subitem 1.2;SubItem 1.3');		ignore := SkelMenu(m, nil, nil, true, false);		m := NewMenu(sub2MenuNum, '');		AppendMenu(m, 'Subitem 2.1;Subitem 2.2;Subitem 2.3');		ignore := SkelMenu(m, nil, nil, true, false);		m := NewMenu(sub3MenuNum, '');		AppendMenu(m, 'Subitem 3.1;Subitem 3.2;Subitem 3.3');		ignore := SkelMenu(m, nil, nil, true, false);		m := GetMenu(demo2MenuNum);		ignore := SkelMenu(m, nil, nil, false, false);		m := GetMenu(sub21MenuNum);		ignore := SkelMenu(m, nil, nil, true, false);		m := GetMenu(sub22MenuNum);		ignore := SkelMenu(m, nil, nil, true, false);		m := GetMenu(sub23MenuNum);		ignore := SkelMenu(m, nil, nil, true, false);		DrawMenuBar;	end;begin	SkelInit(nil);	SetupMenus;	SkelEventLoop;	SkelCleanup;end.
+program HierMenu;
+
+	uses
+		TransSkel;
+
+	const
+
+		aboutAlrtRes = 1000;
+
+		fileMenuNum = 1000;
+		demoMenuNum = 1001;
+		sub1MenuNum = 231;
+		sub2MenuNum = 232;
+		sub3MenuNum = 233;
+		demo2MenuNum = 1005;
+		sub21MenuNum = 241;
+		sub22MenuNum = 242;
+		sub23MenuNum = 243;
+
+		quit = 1;
+
+
+{ Handle selection of "About Hello..." item from Apple menu }
+
+	procedure DoAppleMenu (item: Integer);
+		var
+			ignore: Integer;
+	begin
+		ignore := SkelAlert(aboutAlrtRes, SkelDlogFilter(nil, true), skelPositionOnParentDevice);
+		SkelRmveDlogFilter;
+	end;
+
+
+{ Process selection from File menu }
+
+	procedure DoFileMenu (item: Integer);
+	begin
+		case item of
+			quit: 
+				SkelStopEventLoop;
+		end;
+	end;
+
+
+	procedure SetupMenus;
+		var
+			m: MenuHandle;
+			str: Str255;
+			ignore: Boolean;
+	begin
+		SkelApple('About HierMenu…', @DoAppleMenu);
+		m := NewMenu(fileMenuNum, 'File');
+		AppendMenu(m, 'Quit/Q');
+		ignore := SkelMenu(m, @DoFileMenu, nil, false, false);
+
+		m := NewMenu(demoMenuNum, 'Demo');
+		str := 'Item 1/X;Item 2/X;Item 3/X';
+		str[8] := chr($1b);
+		str[17] := chr($1b);
+		str[26] := chr($1b);
+		AppendMenu(m, str);
+		SetItemMark(m, 1, char(sub1MenuNum));
+		SetItemMark(m, 2, char(sub2MenuNum));
+		SetItemMark(m, 3, char(sub3MenuNum));
+		ignore := SkelMenu(m, nil, nil, false, false);
+		m := NewMenu(sub1MenuNum, '');
+		AppendMenu(m, 'Subitem 1.1;Subitem 1.2;SubItem 1.3');
+		ignore := SkelMenu(m, nil, nil, true, false);
+		m := NewMenu(sub2MenuNum, '');
+		AppendMenu(m, 'Subitem 2.1;Subitem 2.2;Subitem 2.3');
+		ignore := SkelMenu(m, nil, nil, true, false);
+		m := NewMenu(sub3MenuNum, '');
+		AppendMenu(m, 'Subitem 3.1;Subitem 3.2;Subitem 3.3');
+		ignore := SkelMenu(m, nil, nil, true, false);
+
+		m := GetMenu(demo2MenuNum);
+		ignore := SkelMenu(m, nil, nil, false, false);
+		m := GetMenu(sub21MenuNum);
+		ignore := SkelMenu(m, nil, nil, true, false);
+		m := GetMenu(sub22MenuNum);
+		ignore := SkelMenu(m, nil, nil, true, false);
+		m := GetMenu(sub23MenuNum);
+		ignore := SkelMenu(m, nil, nil, true, false);
+
+		DrawMenuBar;
+	end;
+
+
+begin
+	SkelInit(nil);
+	SetupMenus;
+	SkelEventLoop;
+	SkelCleanup;
+end.

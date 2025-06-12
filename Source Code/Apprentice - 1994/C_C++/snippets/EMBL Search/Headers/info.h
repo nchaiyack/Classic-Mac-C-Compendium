@@ -1,1 +1,4 @@
-/* info.c */void ShowAbout(void);void ShowDBInfo(void);
+
+/* info.c */
+void ShowAbout(void);
+void ShowDBInfo(void);

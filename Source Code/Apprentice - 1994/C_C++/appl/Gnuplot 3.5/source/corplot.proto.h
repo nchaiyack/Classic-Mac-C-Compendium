@@ -1,1 +1,3 @@
-/* corplot.c */int main(void);
+
+/* corplot.c */
+int main(void);

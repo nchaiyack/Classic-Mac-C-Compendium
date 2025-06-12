@@ -1,1 +1,58 @@
-{The sprite unit for SATminimal}unit sMySprite;interface	uses		SAT;	var		theSound: Handle;		faces: array[0..5] of FacePtr;	procedure InitMySprite;	procedure SetupMySprite (me: SpritePtr);	procedure HandleMySprite (me: SpritePtr);implementation{Initialization of variables used by the sprite unit}	procedure InitMySprite;		var			i: integer;	begin{Preload the sound}		theSound := SATGetSound(128);{Preload all icons used by the sprites - 6 of them}		for i := 0 to 5 do			faces[i] := GetFace(128 + i);	end;{Initialize a new sprite}	procedure SetupMySprite (me: SpritePtr);	begin		me^.mode := 0; {Pick a valid face number}		me^.speed.h := 2; {Set the speed}	end;{Define the behaviour of a sprite}	procedure HandleMySprite (me: SpritePtr);	begin{Select a face. We use me^.mode as face counter, rotating through them.}		me^.mode := (me^.mode + 1) mod 6;		me^.face := faces[me^.mode];{Move}		me^.position.h := me^.position.h + me^.speed.h; {Add the speed - horizontal only}		if me^.position.h > gSAT.offSizeH - 16 then {Turn back if at the right border}			begin				me^.speed.h := -2;				SATSoundPlay(theSound, 1, true);			end;		if me^.position.h < -16 then {Turn back if at the left border}			begin				me^.speed.h := 2;				SATSoundPlay(theSound, 1, true);			end;	end;end.
+{The sprite unit for SATminimal}
+
+unit sMySprite;
+
+interface
+	uses
+		SAT;
+	var
+		theSound: Handle;
+		faces: array[0..5] of FacePtr;
+
+	procedure InitMySprite;
+	procedure SetupMySprite (me: SpritePtr);
+	procedure HandleMySprite (me: SpritePtr);
+
+implementation
+
+{Initialization of variables used by the sprite unit}
+	procedure InitMySprite;
+		var
+			i: integer;
+	begin
+{Preload the sound}
+		theSound := SATGetSound(128);
+{Preload all icons used by the sprites - 6 of them}
+		for i := 0 to 5 do
+			faces[i] := GetFace(128 + i);
+	end;
+
+{Initialize a new sprite}
+	procedure SetupMySprite (me: SpritePtr);
+	begin
+		me^.mode := 0; {Pick a valid face number}
+		me^.speed.h := 2; {Set the speed}
+	end;
+
+{Define the behaviour of a sprite}
+	procedure HandleMySprite (me: SpritePtr);
+	begin
+{Select a face. We use me^.mode as face counter, rotating through them.}
+		me^.mode := (me^.mode + 1) mod 6;
+		me^.face := faces[me^.mode];
+
+{Move}
+		me^.position.h := me^.position.h + me^.speed.h; {Add the speed - horizontal only}
+		if me^.position.h > gSAT.offSizeH - 16 then {Turn back if at the right border}
+			begin
+				me^.speed.h := -2;
+				SATSoundPlay(theSound, 1, true);
+			end;
+		if me^.position.h < -16 then {Turn back if at the left border}
+			begin
+				me^.speed.h := 2;
+				SATSoundPlay(theSound, 1, true);
+			end;
+	end;
+
+end.

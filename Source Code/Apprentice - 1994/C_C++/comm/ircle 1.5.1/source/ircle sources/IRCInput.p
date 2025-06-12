@@ -1,1 +1,381 @@
-{	ircle - Internet Relay Chat client	}{	File: IRCInput	}{	Copyright © 1992 Olaf Titz (s_titz@ira.uka.de)	}{	This program is free software; you can redistribute it and/or modify	}{	it under the terms of the GNU General Public License as published by	}{	the Free Software Foundation; either version 2 of the License, or	}{	(at your option) any later version.	}{	This program is distributed in the hope that it will be useful,	}{	but WITHOUT ANY WARRANTY; without even the implied warranty of	}{	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	}{	GNU General Public License for more details.	}{	You should have received a copy of the GNU General Public License	}{	along with this program; if not, write to the Free Software	}{	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.	}unit IRCInput;{ Handles input from the user and sends messages to the server. }{ Handles lines sent from the server. }{ And handles menu commands. }interfaceuses	TCPTypes, TCPStuff, TCPConnections, Coroutines, ApplBase, MiscGlue, MsgWindows,{}	InputLine, IRCGlobals, IRCaux, IRCPreferences, IRCChannels, IRCCommands, {}	IRCNotify, IRCIgnore, DCC, IRCSComm;procedure InitIRCInput;{ Startup }implementationvar	prevcr: boolean;procedure LoadCommandFile;	var		s: string;		f: text;	begin		s := OldFileName('Load commands from:');		if s <> '' then begin			reset(f, s);			while not eof(f) do begin				readln(f, s);				HandleCommand(s)			end;			close(f);		end	end;procedure SaveSet;	var		i, e: integer;		s: str255;		f: text;		w: MWHndl;	procedure writewindows (wl: string; com: str20);		begin			while wl <> '' do begin				NextArg(wl, s);				w := ChannelWindow(s);				if w <> nil then					with w^^.w^.portRect, w^^.w^.portBits do						writeln(f, 'WINDOW', -bounds.left, -bounds.top, right - bounds.left, bottom - bounds.top);				writeln(f, com, s);			end;		end;	begin		s := NewFileName('Save Set as:', currentNick);		if s = '' then			exit(SaveSet);		SetCursor(Watch^^);		e := Create(s, 0, CREATOR_IRCLE, TYPE_PREFS);		if e = dupFnErr then begin			e := FSDelete(s, 0);			if e = 0 then				e := Create(s, 0, CREATOR_IRCLE, TYPE_PREFS);		end;		if e = 0 then begin			open(f, s);			writeln(f, 'NICK ', currentNick);			writeln(f, 'USERNAME ', default^^.userName);			writeln(f, 'USERINFO ', default^^.userLoginName);			writeln(f, 'FONT', MWDefaultFont, MWDefaultSize);			s := '0000';			for i := 1 to 4 do				if default^^.notify[i] then					s[i] := '1';			writeln(f, 'USERNOTIFY ', s);			for i := 1 to 10 do				if shortcuts^^[i] <> '' then begin					if i = 10 then						e := 0					else						e := i;					writeln(f, 'SHORTCUT', e, ' ', shortcuts^^[i]);				end;			writeln(f, 'SERVER ', default^^.Server, default^^.Port);			GetAllWindows(true, false, false, ' ', s);			writewindows(s, 'JOIN ');			GetAllWindows(false, true, false, ' ', s);			writewindows(s, 'QUERY ');			GetNotifyList(s);			if s <> '' then				writeln(f, 'NOTIFY ', s);			GetIgnoreList(s);			if s <> '' then				writeln(f, 'IGNORE ', s);			close(f);			InitCursor;			dirtyPrefs := false		end		else begin			NumToString(e, s);			InitCursor;			ParamText(s, '', '', '');			e := Alert(A_FERR, nil)		end;	end;procedure PasteCommand (s: str20; s2: string);  { Set the input line to a command }	begin		s := concat(cmdchar, s);		SetInputLine(s);		if s2 <> '' then			InsertInputLine(s2, true);	end;function MenuFILE (var e: EventRecord): boolean;	var		i: integer;		s: string;	begin		MenuFILE := true;		case loword(e.message) of			M_F_OPEN: 				if ValidPrefs then begin					OpenConnection;					if serverStatus = S_CONN then						RegUser;				end				else					StatusMsg(E_NOPREFS);			M_F_CLOSE: 				if GetWRefCon(FrontWindow) <> 0 then					partWindow(FrontWindow);			M_F_LOAD: 				begin				LoadCommandFile			end;			M_F_SAVE: 				begin				SaveSet			end;			M_F_PREFS: 				begin				GetPrefs			end;			M_F_LOG: 				begin				if logging then begin					close(logfile);					logging := false				end				else begin					s := NewFileName('Save log to file:');					if s <> '' then begin						rewrite(logfile, s);						logging := true					end				end;			end;			M_F_FLUSH: 				begin				flushing := true;				UpdateStatusLine			end;			M_F_QUIT: 				begin				if serverStatus = S_CONN then begin					if Alert(A_QUIT, nil) <> 1 then						exit(menuFILE);					s := 'QUIT';					HandleCommand(s);	{ try a regular exit }				end;				ApplExit; { Emergency exit - will give 'bad link' as reason }			end;		end;	end;function MenuCOMMANDS (var e: EventRecord): boolean;	begin		case loword(e.message) of			M_CO_JOIN: 				PasteCommand('join ', lastInvite);			M_CO_PART: 				begin				if IsChannel(CurrentTarget) then					PasteCommand('part ', currentTarget)				else					PasteCommand('part ', '');			end;			M_CO_LIST: 				PasteCommand('list ', '');			M_CO_WHO: 				PasteCommand('who ', '');			M_CO_QUERY: 				PasteCommand('query ', lastMsg);			M_CO_WHOIS: 				PasteCommand('whois ', lastMsg);			M_CO_INVITE: 				PasteCommand('invite ', '');			M_CO_KICK: 				PasteCommand('kick ', '');			M_CO_AWAY: 				PasteCommand('away ', '');			M_CO_MSG: 				PasteCommand('msg ', '');		end;		MenuCOMMANDS := true	end;function MenuSHCUTS (var e: EventRecord): boolean;	var		s: string;		i: integer;	begin		if e.message = M_SH_DEFINE then			GetShortcuts		else begin			s := Shortcuts^^[loword(e.message) - M_SH_FIRST];			if s <> '' then begin				repeat					i := pos('\n', s);					if i = 0 then						leave;					delete(s, i, 1);					s[i] := chr(13);				until false;				InsertInputLine(s, false);			end;		end;		MenuSHCUTS := true	end;function MenuFONTS (var e: EventRecord): boolean;	var		s: Str255;		p0: GrafPtr;		m: MenuHandle;		i: integer;	begin		m := GetMHandle(M_FONT);		case loword(e.message) of			M_FO_9: 				MWDefaultSize := 9;			M_FO_10: 				MWDefaultSize := 10;			M_FO_12: 				MWDefaultSize := 12;			M_FO_14: 				MWDefaultSize := 14;			otherwise				begin				GetItem(m, LoWord(e.message), s);				GetFNum(s, MWDefaultFont);			end		end;		AdjustFontMenu;		if MWActive <> nil then begin			GetPort(p0);			SetPort(MWActive^^.w);			SetFontSize(MWActive, MWDefaultFont, MWDefaultSize);			SetPort(p0)		end;		MenuFONTS := true;	end;{ Process a typed line as message. }{ This means: convert it to a PRIVMSG command to the current target, }{ i.e. the channel or query of the active window. }procedure HandleMessage (var s: string);	var		c: string;	begin		if currentTarget = '' then			StatusMsg(E_NOTARGET)		else if CurrentTarget[1] = '(' then			StatusMsg(E_NOTARGET)		else if CurrentTarget[1] = DCC_CHAT_PREFIX then			DCCChatSend(s)		else begin			c := concat('> ', s);			Message(c);			c := concat('PRIVMSG ', CurrentTarget, ' :', s);			HandleCommand(c);			s := '';		end;	end;{ 'srvHandler' handles lines received from server }procedure srvHandler (var s: string);	begin		if s <> '' then			if prevcr then				ServerCommands(s)			else				MWMessage(lastwindow, s);	end;{ 'InputHandler' process handles input from the user }procedure InputHandler (var s: string);	begin		GetDateTime(idleTime);		if s <> '' then			if s[1] = CmdChar then				HandleCommand(s)			else				HandleMessage(s);	end;function watchLine (var e: EventRecord): boolean;	var		c: CEPtr;		s: string;		nn: longint;		i, j: integer;		cr: boolean;	begin		c := CEPtr(e.message);		if c^.connection = sSocket then begin			watchLine := true;			if c^.event = C_CharsAvailable then begin				nn := 1;				i := TCPReceiveUpTo(c^.tcpc, 10, readTimeout, @s[0], 250, nn, cr);				j := nn - 1;				while (j > 0) and ((s[j] = chr(10)) or (s[j] = chr(13))) do					j := pred(j);				if j > 0 then begin					s[0] := chr(j);					for i := 1 to j do						s[i] := ISODecode^^[s[i]];					srvHandler(s);				end;				prevcr := cr;			end			else				serverOk(c^.event)		end		else			watchLine := false;	end;procedure DoSave;	begin		while dirtyPrefs do			if Alert(A_SAVE, nil) = ok then				SaveSet { may loop if canceled here! }			else				dirtyPrefs := false;	end;procedure InitIRCInput;	var		i: integer;	begin		OpenInputLine(@InputHandler);		i := ApplTask(@MenuFILE, menuMsg + fileMenu);		i := ApplTask(@MenuCOMMANDS, menuMsg + M_COMMANDS);		i := ApplTask(@MenuSHCUTS, menuMsg + M_SHCUTS);		i := ApplTask(@MenuFONTS, menuMsg + M_FONT);		i := ApplTask(@watchLine, TCPMsg);		ApplExitproc(@DoSave);	end;end.
+{	ircle - Internet Relay Chat client	}
+{	File: IRCInput	}
+{	Copyright © 1992 Olaf Titz (s_titz@ira.uka.de)	}
+
+{	This program is free software; you can redistribute it and/or modify	}
+{	it under the terms of the GNU General Public License as published by	}
+{	the Free Software Foundation; either version 2 of the License, or	}
+{	(at your option) any later version.	}
+
+{	This program is distributed in the hope that it will be useful,	}
+{	but WITHOUT ANY WARRANTY; without even the implied warranty of	}
+{	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	}
+{	GNU General Public License for more details.	}
+
+{	You should have received a copy of the GNU General Public License	}
+{	along with this program; if not, write to the Free Software	}
+{	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.	}
+
+unit IRCInput;
+{ Handles input from the user and sends messages to the server. }
+{ Handles lines sent from the server. }
+{ And handles menu commands. }
+
+interface
+uses
+	TCPTypes, TCPStuff, TCPConnections, Coroutines, ApplBase, MiscGlue, MsgWindows,{}
+	InputLine, IRCGlobals, IRCaux, IRCPreferences, IRCChannels, IRCCommands, {}
+	IRCNotify, IRCIgnore, DCC, IRCSComm;
+
+procedure InitIRCInput;
+{ Startup }
+
+implementation
+
+var
+	prevcr: boolean;
+
+procedure LoadCommandFile;
+	var
+		s: string;
+		f: text;
+	begin
+		s := OldFileName('Load commands from:');
+		if s <> '' then begin
+			reset(f, s);
+			while not eof(f) do begin
+				readln(f, s);
+				HandleCommand(s)
+			end;
+			close(f);
+		end
+	end;
+
+procedure SaveSet;
+	var
+		i, e: integer;
+		s: str255;
+		f: text;
+		w: MWHndl;
+	procedure writewindows (wl: string; com: str20);
+		begin
+			while wl <> '' do begin
+				NextArg(wl, s);
+				w := ChannelWindow(s);
+				if w <> nil then
+					with w^^.w^.portRect, w^^.w^.portBits do
+						writeln(f, 'WINDOW', -bounds.left, -bounds.top, right - bounds.left, bottom - bounds.top);
+				writeln(f, com, s);
+			end;
+		end;
+	begin
+		s := NewFileName('Save Set as:', currentNick);
+		if s = '' then
+			exit(SaveSet);
+		SetCursor(Watch^^);
+		e := Create(s, 0, CREATOR_IRCLE, TYPE_PREFS);
+		if e = dupFnErr then begin
+			e := FSDelete(s, 0);
+			if e = 0 then
+				e := Create(s, 0, CREATOR_IRCLE, TYPE_PREFS);
+		end;
+		if e = 0 then begin
+			open(f, s);
+			writeln(f, 'NICK ', currentNick);
+			writeln(f, 'USERNAME ', default^^.userName);
+			writeln(f, 'USERINFO ', default^^.userLoginName);
+			writeln(f, 'FONT', MWDefaultFont, MWDefaultSize);
+			s := '0000';
+			for i := 1 to 4 do
+				if default^^.notify[i] then
+					s[i] := '1';
+			writeln(f, 'USERNOTIFY ', s);
+			for i := 1 to 10 do
+				if shortcuts^^[i] <> '' then begin
+					if i = 10 then
+						e := 0
+					else
+						e := i;
+					writeln(f, 'SHORTCUT', e, ' ', shortcuts^^[i]);
+				end;
+			writeln(f, 'SERVER ', default^^.Server, default^^.Port);
+			GetAllWindows(true, false, false, ' ', s);
+			writewindows(s, 'JOIN ');
+			GetAllWindows(false, true, false, ' ', s);
+			writewindows(s, 'QUERY ');
+			GetNotifyList(s);
+			if s <> '' then
+				writeln(f, 'NOTIFY ', s);
+			GetIgnoreList(s);
+			if s <> '' then
+				writeln(f, 'IGNORE ', s);
+			close(f);
+			InitCursor;
+			dirtyPrefs := false
+		end
+		else begin
+			NumToString(e, s);
+			InitCursor;
+			ParamText(s, '', '', '');
+			e := Alert(A_FERR, nil)
+		end;
+	end;
+
+
+procedure PasteCommand (s: str20; s2: string);  { Set the input line to a command }
+	begin
+		s := concat(cmdchar, s);
+		SetInputLine(s);
+		if s2 <> '' then
+			InsertInputLine(s2, true);
+	end;
+
+function MenuFILE (var e: EventRecord): boolean;
+	var
+		i: integer;
+		s: string;
+	begin
+		MenuFILE := true;
+		case loword(e.message) of
+			M_F_OPEN: 
+				if ValidPrefs then begin
+					OpenConnection;
+					if serverStatus = S_CONN then
+						RegUser;
+				end
+				else
+					StatusMsg(E_NOPREFS);
+			M_F_CLOSE: 
+				if GetWRefCon(FrontWindow) <> 0 then
+					partWindow(FrontWindow);
+			M_F_LOAD: 
+				begin
+				LoadCommandFile
+			end;
+			M_F_SAVE: 
+				begin
+				SaveSet
+			end;
+			M_F_PREFS: 
+				begin
+				GetPrefs
+			end;
+			M_F_LOG: 
+				begin
+				if logging then begin
+					close(logfile);
+					logging := false
+				end
+				else begin
+					s := NewFileName('Save log to file:');
+					if s <> '' then begin
+						rewrite(logfile, s);
+						logging := true
+					end
+				end;
+			end;
+			M_F_FLUSH: 
+				begin
+				flushing := true;
+				UpdateStatusLine
+			end;
+			M_F_QUIT: 
+				begin
+				if serverStatus = S_CONN then begin
+					if Alert(A_QUIT, nil) <> 1 then
+						exit(menuFILE);
+					s := 'QUIT';
+					HandleCommand(s);	{ try a regular exit }
+				end;
+				ApplExit; { Emergency exit - will give 'bad link' as reason }
+			end;
+		end;
+	end;
+
+function MenuCOMMANDS (var e: EventRecord): boolean;
+	begin
+		case loword(e.message) of
+			M_CO_JOIN: 
+				PasteCommand('join ', lastInvite);
+			M_CO_PART: 
+				begin
+				if IsChannel(CurrentTarget) then
+					PasteCommand('part ', currentTarget)
+				else
+					PasteCommand('part ', '');
+			end;
+			M_CO_LIST: 
+				PasteCommand('list ', '');
+			M_CO_WHO: 
+				PasteCommand('who ', '');
+			M_CO_QUERY: 
+				PasteCommand('query ', lastMsg);
+			M_CO_WHOIS: 
+				PasteCommand('whois ', lastMsg);
+			M_CO_INVITE: 
+				PasteCommand('invite ', '');
+			M_CO_KICK: 
+				PasteCommand('kick ', '');
+			M_CO_AWAY: 
+				PasteCommand('away ', '');
+			M_CO_MSG: 
+				PasteCommand('msg ', '');
+		end;
+		MenuCOMMANDS := true
+	end;
+
+
+function MenuSHCUTS (var e: EventRecord): boolean;
+	var
+		s: string;
+		i: integer;
+	begin
+		if e.message = M_SH_DEFINE then
+			GetShortcuts
+		else begin
+			s := Shortcuts^^[loword(e.message) - M_SH_FIRST];
+			if s <> '' then begin
+				repeat
+					i := pos('\n', s);
+					if i = 0 then
+						leave;
+					delete(s, i, 1);
+					s[i] := chr(13);
+				until false;
+				InsertInputLine(s, false);
+			end;
+		end;
+		MenuSHCUTS := true
+	end;
+
+function MenuFONTS (var e: EventRecord): boolean;
+	var
+		s: Str255;
+		p0: GrafPtr;
+		m: MenuHandle;
+		i: integer;
+	begin
+		m := GetMHandle(M_FONT);
+		case loword(e.message) of
+			M_FO_9: 
+				MWDefaultSize := 9;
+			M_FO_10: 
+				MWDefaultSize := 10;
+			M_FO_12: 
+				MWDefaultSize := 12;
+			M_FO_14: 
+				MWDefaultSize := 14;
+			otherwise
+				begin
+				GetItem(m, LoWord(e.message), s);
+				GetFNum(s, MWDefaultFont);
+			end
+		end;
+		AdjustFontMenu;
+		if MWActive <> nil then begin
+			GetPort(p0);
+			SetPort(MWActive^^.w);
+			SetFontSize(MWActive, MWDefaultFont, MWDefaultSize);
+			SetPort(p0)
+		end;
+		MenuFONTS := true;
+	end;
+
+{ Process a typed line as message. }
+{ This means: convert it to a PRIVMSG command to the current target, }
+{ i.e. the channel or query of the active window. }
+procedure HandleMessage (var s: string);
+	var
+		c: string;
+	begin
+		if currentTarget = '' then
+			StatusMsg(E_NOTARGET)
+		else if CurrentTarget[1] = '(' then
+			StatusMsg(E_NOTARGET)
+		else if CurrentTarget[1] = DCC_CHAT_PREFIX then
+			DCCChatSend(s)
+		else begin
+			c := concat('> ', s);
+			Message(c);
+			c := concat('PRIVMSG ', CurrentTarget, ' :', s);
+			HandleCommand(c);
+			s := '';
+		end;
+	end;
+
+{ 'srvHandler' handles lines received from server }
+procedure srvHandler (var s: string);
+	begin
+		if s <> '' then
+			if prevcr then
+				ServerCommands(s)
+			else
+				MWMessage(lastwindow, s);
+	end;
+
+{ 'InputHandler' process handles input from the user }
+procedure InputHandler (var s: string);
+	begin
+		GetDateTime(idleTime);
+		if s <> '' then
+			if s[1] = CmdChar then
+				HandleCommand(s)
+			else
+				HandleMessage(s);
+	end;
+
+function watchLine (var e: EventRecord): boolean;
+	var
+		c: CEPtr;
+		s: string;
+		nn: longint;
+		i, j: integer;
+		cr: boolean;
+	begin
+		c := CEPtr(e.message);
+		if c^.connection = sSocket then begin
+			watchLine := true;
+			if c^.event = C_CharsAvailable then begin
+				nn := 1;
+				i := TCPReceiveUpTo(c^.tcpc, 10, readTimeout, @s[0], 250, nn, cr);
+				j := nn - 1;
+				while (j > 0) and ((s[j] = chr(10)) or (s[j] = chr(13))) do
+					j := pred(j);
+				if j > 0 then begin
+					s[0] := chr(j);
+					for i := 1 to j do
+						s[i] := ISODecode^^[s[i]];
+					srvHandler(s);
+				end;
+				prevcr := cr;
+			end
+			else
+				serverOk(c^.event)
+		end
+		else
+			watchLine := false;
+	end;
+
+procedure DoSave;
+	begin
+		while dirtyPrefs do
+			if Alert(A_SAVE, nil) = ok then
+				SaveSet { may loop if canceled here! }
+			else
+				dirtyPrefs := false;
+	end;
+
+procedure InitIRCInput;
+	var
+		i: integer;
+	begin
+		OpenInputLine(@InputHandler);
+		i := ApplTask(@MenuFILE, menuMsg + fileMenu);
+		i := ApplTask(@MenuCOMMANDS, menuMsg + M_COMMANDS);
+		i := ApplTask(@MenuSHCUTS, menuMsg + M_SHCUTS);
+		i := ApplTask(@MenuFONTS, menuMsg + M_FONT);
+		i := ApplTask(@watchLine, TCPMsg);
+		ApplExitproc(@DoSave);
+	end;
+
+end.

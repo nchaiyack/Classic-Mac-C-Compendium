@@ -1,1 +1,1 @@
-Boolean SendSMTP (char *text, unsigned short tLength);
+Boolean SendSMTP (char *text, unsigned short tLength);

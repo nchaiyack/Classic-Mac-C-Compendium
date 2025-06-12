@@ -1,1 +1,5 @@
-/* Public Function */void initnet( void);/* Private Function */void neteventinit(void);
+/* Public Function */
+void initnet( void);
+
+/* Private Function */
+void neteventinit(void);

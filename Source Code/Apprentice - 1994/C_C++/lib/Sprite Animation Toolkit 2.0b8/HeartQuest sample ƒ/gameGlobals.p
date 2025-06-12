@@ -1,1 +1,152 @@
-{=================================================}{========= GameGlobals, globals for HeartQuest ============}{=================================================}{ Example file for Ingemars Sprite Animation Toolkit. }{ © Ingemar Ragnemalm 1992 }{ See doc files for legal terms for using this code. }{ This file defines the resource numbers and global variables for HeartQuest.}unit GameGlobals;interface	uses		SAT;	const{	Resource numbers}		fileMenuRes = 1002;		{ File menu }		editMenuRes = 1003;	{ Edit menu }		GameMenuRes = 1004;	{ Race menu }		highMenuRes = 1005;	{ Highscores menu }		AboutAlrt = 1000;		{ About box }		helpenemiesAlrt = 1001;{ Pictures of the enemies }		theHighRes = 263;		{ highscore window }		highDlog = 259;			{ highscore name dialog box }{ File menu }		helpenemies = 1;		quit = 3;{ Edit menu }		em_undo = 1;		em_cut = 3;		em_copy = 4;		em_paste = 5;{ Game menu }		run = 1;		sound = 3;		macho = 5;		allowBG = 7;		fastAnimation = 8;		pause = 10;		abort = 11;{ highscore menu }		showhs = 1;		clearhs = 3;{ Game area size: }		xsize = 512 - 440; {Use offSizeH-xsize!}{ysize = 320; {Full height - use offSizeV instead}	type{    EventPtr = ^EventRecord;}		str15 = string[15];		featRec = record				sound: boolean;				allowBG: boolean;				plotFast: boolean;				macho: boolean;				player: str15;			end;		featPtr = ^featRec;		featHnd = ^featPtr;{Indexes for strings}	const		aboutStrID = 1;		anonymousStrID = 2;		cantfindsysStrID = 3;		resmissingStrID = 4;		creatingprefStrID = 5;		cantcreateresStrID = 6;		cantopenprefStrID = 7;		cantcreateprefStrID = 8;		normalStrID = 9;		machoStrID = 10;		scoreStrID = 11;		bonusStrID = 12;		levelStrID = 13;		sureStrID = 14;		nobodyStrID = 15;		startgameStrID = 16;		startlevelStrID = 17;		pauseStrID = 18;		resumeStrID = 19;		nopictStrID = 20;		noclutStrID = 21;		nooffscreenStrID = 22;		pleaseuncheckStrID = 23;		endStrID = 24;		okStrID = 25;		yesStrID = 26;		noStrID = 27;		quitStrID = 28;		memerrStrID = 29;		noscreenStrID = 30;		satnopictStrID = 31;		nowindStrID = 32;	var		theHigh: WindowPtr; { Window ptrs. }{	Menu handles.  There isn't any apple menu here, since TransSkel will}{	be told to handle it itself.}		features: featHnd;		{ Settings record. }		fileMenu, editMenu, GameMenu, highMenu: MenuHandle;{  	Dummy Boolean.  This may be used for Memory Management, if desired }		dummy: Boolean;		slask: OSerr;		level: longint;		bonus: longint;		playerPos: point; { Position of player, to make it possible for monsters to aim }		pauseFlag: boolean;		lastMacho: Boolean; {features^^.macho fšrra game over}		lastHigh: Integer; {Platsen fšr fšrra highscore}	function MyGetIndString (index: integer): Str255;implementation{I know, it's ugly to have a routine in the globals file, but this is needed just}{about everywhere, so the alternative was to make a new unit.}{MyGetIndString returns a string that it gets from STR# 128 (hard-coded)}{by GetIndString.}	function MyGetIndString (index: integer): Str255;		var			str: Str255;	begin		GetIndString(str, 128, index);		MyGetIndString := str;	end;end.
+{=================================================}
+{========= GameGlobals, globals for HeartQuest ============}
+{=================================================}
+
+{ Example file for Ingemars Sprite Animation Toolkit. }
+{ © Ingemar Ragnemalm 1992 }
+{ See doc files for legal terms for using this code. }
+
+{ This file defines the resource numbers and global variables for HeartQuest.}
+
+unit GameGlobals;
+
+interface
+
+	uses
+		SAT;
+
+	const
+{	Resource numbers}
+
+		fileMenuRes = 1002;		{ File menu }
+		editMenuRes = 1003;	{ Edit menu }
+		GameMenuRes = 1004;	{ Race menu }
+		highMenuRes = 1005;	{ Highscores menu }
+		AboutAlrt = 1000;		{ About box }
+		helpenemiesAlrt = 1001;{ Pictures of the enemies }
+		theHighRes = 263;		{ highscore window }
+		highDlog = 259;			{ highscore name dialog box }
+
+{ File menu }
+
+		helpenemies = 1;
+		quit = 3;
+
+{ Edit menu }
+		em_undo = 1;
+		em_cut = 3;
+		em_copy = 4;
+		em_paste = 5;
+
+{ Game menu }
+		run = 1;
+		sound = 3;
+		macho = 5;
+		allowBG = 7;
+		fastAnimation = 8;
+		pause = 10;
+		abort = 11;
+
+{ highscore menu }
+		showhs = 1;
+		clearhs = 3;
+
+
+{ Game area size: }
+
+		xsize = 512 - 440; {Use offSizeH-xsize!}
+{ysize = 320; {Full height - use offSizeV instead}
+
+	type
+{    EventPtr = ^EventRecord;}
+
+		str15 = string[15];
+
+		featRec = record
+				sound: boolean;
+				allowBG: boolean;
+				plotFast: boolean;
+				macho: boolean;
+				player: str15;
+			end;
+		featPtr = ^featRec;
+		featHnd = ^featPtr;
+
+{Indexes for strings}
+	const
+		aboutStrID = 1;
+		anonymousStrID = 2;
+		cantfindsysStrID = 3;
+		resmissingStrID = 4;
+		creatingprefStrID = 5;
+		cantcreateresStrID = 6;
+		cantopenprefStrID = 7;
+		cantcreateprefStrID = 8;
+		normalStrID = 9;
+		machoStrID = 10;
+		scoreStrID = 11;
+		bonusStrID = 12;
+		levelStrID = 13;
+		sureStrID = 14;
+		nobodyStrID = 15;
+		startgameStrID = 16;
+		startlevelStrID = 17;
+		pauseStrID = 18;
+		resumeStrID = 19;
+		nopictStrID = 20;
+		noclutStrID = 21;
+		nooffscreenStrID = 22;
+		pleaseuncheckStrID = 23;
+		endStrID = 24;
+		okStrID = 25;
+		yesStrID = 26;
+		noStrID = 27;
+		quitStrID = 28;
+		memerrStrID = 29;
+		noscreenStrID = 30;
+		satnopictStrID = 31;
+		nowindStrID = 32;
+
+	var
+		theHigh: WindowPtr; { Window ptrs. }
+
+{	Menu handles.  There isn't any apple menu here, since TransSkel will}
+{	be told to handle it itself.}
+
+		features: featHnd;		{ Settings record. }
+
+		fileMenu, editMenu, GameMenu, highMenu: MenuHandle;
+
+{  	Dummy Boolean.  This may be used for Memory Management, if desired }
+		dummy: Boolean;
+
+		slask: OSerr;
+
+		level: longint;
+		bonus: longint;
+
+		playerPos: point; { Position of player, to make it possible for monsters to aim }
+
+		pauseFlag: boolean;
+
+		lastMacho: Boolean; {features^^.macho fšrra game over}
+		lastHigh: Integer; {Platsen fšr fšrra highscore}
+
+	function MyGetIndString (index: integer): Str255;
+
+implementation
+
+{I know, it's ugly to have a routine in the globals file, but this is needed just}
+{about everywhere, so the alternative was to make a new unit.}
+
+{MyGetIndString returns a string that it gets from STR# 128 (hard-coded)}
+{by GetIndString.}
+	function MyGetIndString (index: integer): Str255;
+		var
+			str: Str255;
+	begin
+		GetIndString(str, 128, index);
+		MyGetIndString := str;
+	end;
+
+end.

@@ -1,1 +1,198 @@
-unit SAT;interface	type		{BMPtr = ^BitMap;}		FacePtr = ^Face;		Face = record				colorData: Ptr;				resNum: integer;				iconMask: BitMap;				rowBytes: integer;				next: FacePtr;				maskRgn: RgnHandle;			end;		SpritePtr = ^Sprite;		Sprite = record{ Variables that you should change as appropriate }				kind: Integer; { Used for identification. >0: friend. <0 foe }				position: Point;				hotRect, hotRect2: Rect; { Tells how large the sprite is; hotRect is centered around origo }										{hotRect is set by you. hotRect2 is offset to the current position.}				face: FacePtr; { Pointer to the Face (appearance) to be used. }				task: ProcPtr; { Callback-routine, called once per frame. If task=nil, the sprite is removed. }				hitTask: ProcPtr; { Callback in collisions. }{ SAT variables that you shouldn't change: }				oldpos: Point;				{The 'task' routine is not allowed to change this! }				next, prev: SpritePtr;	{You may change them in your own sorting routine, but be careful if you do.}				r, oldr: Rect;				{Rectangle telling where to draw. Avoid messing with it.}{Variables for internal use by the sprites. Use as you please. Edit as necessary - this is merely a default}{set, enough space for most cases - but if you change the size of the record, call SetSpriteSize immediately}{after initializing (before any sprites are created)!}				layer: integer; {For layer-sorting. When not used for that, use freely.}				speed: Point; { Can be used for speed, but not necessarily. }				mode: integer; { Usually used for different modes and/or to determine what image to show next. }				appPtr: Ptr; {Pointer for use by the application - i.e. pointer to extra data}				appLong: Longint; {Longint for free use by the application.}			end;{Type for SATs pattern utilities.}	type		SATPattern = record				patternType: integer; {1 = Pattern, PatHandle, 2 = PixPat, PixPatHandle}				thePat: PixPatHandle; {or PatHandle}			end; {record}		SATPatPtr = ^SATPattern;		SATPatHandle = ^SATPatPtr;{Update list. Used internally}		UpdatePtr = ^UpdateRec;		UpdateRec = record				updateRect: Rect;				next: UpdatePtr;			end;{The globals record. Some fields are important for you. These are marked with *}		SATglobalsRec = record				wind: WindowPtr;							{*The window that SAT draws in. }				offSizeH, offSizeV: integer;					{*Offscreen size, used to limit sprite positions}				offScreen: GrafPtr;							{*Offscreen image }				backScreen: GrafPtr;						{*Background image }				offScreenGD, BackScreenGD: GDHandle;	{GDevices for offScreen and backScreen.}				ox, oy: longint;								{Internal}				pict, bwpict: integer;						{PICT id's}				fitThePICTs: boolean;						{Resize PICTs to fit?}				sorting: integer;								{Chosen sorting}				collision: integer;							{Chosen collision handling}				searchWidth: integer;						{Chosen search width}				device: GDHandle;							{Chosen screen}				screen: PixMapHandle;						{Internal}				bounds: Rect;									{Internal}				initDepth: Integer;							{*Depth at last icon initialization}				synchHook: ProcPtr;							{Synch procedure}				sRoot: SpritePtr;								{Sprite list root}				updateRoot: UpdatePtr;						{Update list root}				anyMonsters: Boolean;						{*False when no sprites with kind < -1 are active }				ditherOff: CGrafPtr;							{Internal}				ditherOffGD: GDHandle;						{Internal}				iconPort: CGrafPtr;							{Internal}				iconPortGD: GDHandle;						{Internal}				iconPort2: CGrafPtr;						{Internal}				iconPort2GD: GDHandle;						{Internal}				bwIconPort: GrafPtr; 						{Internal}			end;{Configuration types: VPositionSort and KindCollision are defaults.}	const{Sorting options}		kVPositionSort = 0;		kLayerSort = 1;		kNoSort = 2;{Collision detection options}		kKindCollision = 0;		kForwardCollision = 1;		kBackwardCollision = 2;		kNoCollision = 3;	var{$J+}		gSAT: SATglobalsRec;				{Most globals in a record. See above.}		faceRoot: FacePtr;					{Root of face list}		colorFlag: Boolean;					{True if color QuickDraw is available.}		gSATSoundErrorProc: ProcPtr;		{Pointer to procedure to call on sound error.}{$J-}{Initializing and customizing}	procedure ConfigureSAT (PICTfit: boolean; newSorting, newCollision, searchWidth: integer);	procedure InitSAT (pictID, bwpictID, Xsize, Ysize: integer);	procedure CustomInitSAT (pictID, bwpictID: integer; SATdrawingArea: Rect; {}									preloadedWind: WindowPtr; chosenScreen: GDHandle; useMenuBar, {}									centerDrawingArea, fillScreen, dither4bit, beSmart: Boolean);{Maintainance, background manipulation etc.}	function SATDepthChangeTest: Boolean;	procedure SATDrawPICTs (pictID, bwpictID: integer);	procedure PeekOffscreen;{Drawing}	procedure SATPlotFace (theFace: FacePtr; theGrafPtr: GrafPtr; theGDevice: GDHandle;{}									where: Point; fast: boolean);	procedure SATPlotFaceToScreen (theFace: FacePtr; where: Point; fast: boolean); {*NEW*}	procedure SATCopyBits (src, dest: GrafPtr; destGD: GDHandle; srcPt, destPt: Point;{}									width, height: integer; fast: Boolean);	procedure SATCopyBitsToScreen (src: GrafPtr; srcPt, destPt: Point;{}									width, height: integer; fast: Boolean); {*NEW*}	procedure SATBackChanged (r: Rect); {Tell SAT about changes in backScreen}	procedure SATSetPortOffScreen; {Use before using QuickDraw on offScreen}	procedure SATSetPortBackScreen; {Use before using QuickDraw on backScreen}	procedure SATSetPortScreen; {Use to set port to gSAT.wind}{Sprite handling}	function GetFace (resNum: integer): FacePtr;	procedure DisposeFace (theFace: FacePtr);	function NewSprite (kind, hpos, vpos: integer; callback, setup, hittask: ProcPtr): SpritePtr;	function NewSpriteAfter (afterthis: SpritePtr; kind, hpos, vpos: integer;{}									callback, setup, hittask: ProcPtr): SpritePtr;	procedure KillSprite (who: Spriteptr);{Animating}	procedure RunSAT (fast: Boolean); {The heart of the whole package!}{Special functions for advanced programmers}	procedure SATInstallSynch (theSynchProc: ProcPtr);	procedure SATInstallEmergency (theEmergencyProc: ProcPtr);	procedure SATSetSpriteRecSize (theSize: longint);	procedure SkipSAT;	procedure KillSAT; {Dispose of offscreen buffers to allow re-init}{New procedures}	procedure SetPortMask (theFace: FacePtr);	procedure SetPortFace (theFace: FacePtr);	function NewFace (faceBounds: Rect): FacePtr;	procedure ChangedFace (theFace: FacePtr);	procedure SATSetStrings (ok, yes, no, quit, memerr, noscreen, nopict, nowind: Str255);	function TrapAvailable (theTrap: Integer): Boolean;	function SATGetCicn (cicnId: integer): CIconHandle;	procedure SATPlotCicn (theCicn: CIconHandle; dest: GrafPtr; destGD: GDHandle; r: Rect); {Borde jag lŠgga till device?}{Offscreen - use only if you need an *extra* offscreen buffer. These calls are likely to change in the future!}	procedure SATMakeOffscreen (var portP: GrafPtr; rectP: Rect; var retGDevice: GDHandle); {Make offscreen buffer in current screen depth and CLUT.}	procedure SATDisposeOffScreen (portP: GrafPtr; theGDevice: GDHandle); {Get rid of offscreen}	function CreateOffScreen (bounds: Rect; depth: Integer; colors: CTabHandle; var retPort: CGrafPtr; var retGDevice: GDHandle): OSErr; {From Principia Offscreen - color only}	procedure DisposeOffScreen (doomedPort: CGrafPtr; doomedGDevice: GDHandle);{From Principia Offscreen - color only}{Utilities}	procedure DrawInt (i: integer);	procedure DrawLong (l: longint);	function Rand (n: integer): integer;	function Rand10: integer;	function Rand100: integer;	procedure ReportStr (str: str255);	function QuestionStr (str: str255): Boolean;	function SATFakeAlert (s1, s2, s3, s4: Str255; nButtons, defButton, cancelButton: integer;{}									t1, t2, t3: Str255): integer;	procedure CheckNoMem (p: Ptr); {If the Ptr is nil, out of memory emergency exit}	procedure SetMouse (where: point);{Pattern utilities}	procedure SATPenPat (SATpat: SATPatHandle);	procedure SATBackPat (SATpat: SATPatHandle);	function SATGetPat (patID: integer): SATPatHandle;	procedure SATDisposePat (SATpat: SATPatHandle);{Menu bar utilities}	procedure ShowMBar;	procedure HideMBar (wind: WindowPtr);{Sound}	procedure SATSoundInit; {Called from InitSAT}	procedure SATSoundPlay (TheSound: Handle; Priority: integer; CanWait: boolean);	procedure SATSoundEvents; {Call this once in a while when not calling RunSAT often}	procedure SATSoundShutup; {Silence, dispose of sound channel}	procedure SATSoundOn;	procedure SATSoundOff;	function SATSoundDone: Boolean; {Any sound going on ?}	function SATGetSound (sndId: integer): handle;		{ To load a sound and get a handle for SATSoundPlay }	function SATGetNamedSound (name: Str255): Handle; { Same but using resource names }	procedure SATDisposeSound (theSnd: handle);{Experimental, likely to be renamed/removed/changed:}	procedure SATSoundPlay2 (theSound: Handle; priority: integer; canWait, skipIfSame: Boolean);	procedure SATSoundPlayEasy (theSound: handle; canWait: boolean);implementationend.
+unit SAT;
+
+interface
+
+	type
+		{BMPtr = ^BitMap;}
+
+		FacePtr = ^Face;
+		Face = record
+				colorData: Ptr;
+				resNum: integer;
+				iconMask: BitMap;
+				rowBytes: integer;
+				next: FacePtr;
+				maskRgn: RgnHandle;
+			end;
+
+		SpritePtr = ^Sprite;
+		Sprite = record
+{ Variables that you should change as appropriate }
+				kind: Integer; { Used for identification. >0: friend. <0 foe }
+				position: Point;
+				hotRect, hotRect2: Rect; { Tells how large the sprite is; hotRect is centered around origo }
+										{hotRect is set by you. hotRect2 is offset to the current position.}
+				face: FacePtr; { Pointer to the Face (appearance) to be used. }
+				task: ProcPtr; { Callback-routine, called once per frame. If task=nil, the sprite is removed. }
+				hitTask: ProcPtr; { Callback in collisions. }
+{ SAT variables that you shouldn't change: }
+				oldpos: Point;				{The 'task' routine is not allowed to change this! }
+				next, prev: SpritePtr;	{You may change them in your own sorting routine, but be careful if you do.}
+				r, oldr: Rect;				{Rectangle telling where to draw. Avoid messing with it.}
+{Variables for internal use by the sprites. Use as you please. Edit as necessary - this is merely a default}
+{set, enough space for most cases - but if you change the size of the record, call SetSpriteSize immediately}
+{after initializing (before any sprites are created)!}
+				layer: integer; {For layer-sorting. When not used for that, use freely.}
+				speed: Point; { Can be used for speed, but not necessarily. }
+				mode: integer; { Usually used for different modes and/or to determine what image to show next. }
+				appPtr: Ptr; {Pointer for use by the application - i.e. pointer to extra data}
+				appLong: Longint; {Longint for free use by the application.}
+			end;
+
+{Type for SATs pattern utilities.}
+	type
+		SATPattern = record
+				patternType: integer; {1 = Pattern, PatHandle, 2 = PixPat, PixPatHandle}
+				thePat: PixPatHandle; {or PatHandle}
+			end; {record}
+		SATPatPtr = ^SATPattern;
+		SATPatHandle = ^SATPatPtr;
+
+{Update list. Used internally}
+		UpdatePtr = ^UpdateRec;
+		UpdateRec = record
+				updateRect: Rect;
+				next: UpdatePtr;
+			end;
+
+{The globals record. Some fields are important for you. These are marked with *}
+		SATglobalsRec = record
+				wind: WindowPtr;							{*The window that SAT draws in. }
+				offSizeH, offSizeV: integer;					{*Offscreen size, used to limit sprite positions}
+				offScreen: GrafPtr;							{*Offscreen image }
+				backScreen: GrafPtr;						{*Background image }
+				offScreenGD, BackScreenGD: GDHandle;	{GDevices for offScreen and backScreen.}
+
+				ox, oy: longint;								{Internal}
+				pict, bwpict: integer;						{PICT id's}
+				fitThePICTs: boolean;						{Resize PICTs to fit?}
+				sorting: integer;								{Chosen sorting}
+				collision: integer;							{Chosen collision handling}
+				searchWidth: integer;						{Chosen search width}
+				device: GDHandle;							{Chosen screen}
+				screen: PixMapHandle;						{Internal}
+				bounds: Rect;									{Internal}
+				initDepth: Integer;							{*Depth at last icon initialization}
+				synchHook: ProcPtr;							{Synch procedure}
+				sRoot: SpritePtr;								{Sprite list root}
+				updateRoot: UpdatePtr;						{Update list root}
+				anyMonsters: Boolean;						{*False when no sprites with kind < -1 are active }
+
+				ditherOff: CGrafPtr;							{Internal}
+				ditherOffGD: GDHandle;						{Internal}
+				iconPort: CGrafPtr;							{Internal}
+				iconPortGD: GDHandle;						{Internal}
+				iconPort2: CGrafPtr;						{Internal}
+				iconPort2GD: GDHandle;						{Internal}
+				bwIconPort: GrafPtr; 						{Internal}
+			end;
+
+{Configuration types: VPositionSort and KindCollision are defaults.}
+	const
+{Sorting options}
+		kVPositionSort = 0;
+		kLayerSort = 1;
+		kNoSort = 2;
+{Collision detection options}
+		kKindCollision = 0;
+		kForwardCollision = 1;
+		kBackwardCollision = 2;
+		kNoCollision = 3;
+
+	var
+{$J+}
+		gSAT: SATglobalsRec;				{Most globals in a record. See above.}
+		faceRoot: FacePtr;					{Root of face list}
+		colorFlag: Boolean;					{True if color QuickDraw is available.}
+		gSATSoundErrorProc: ProcPtr;		{Pointer to procedure to call on sound error.}
+{$J-}
+
+{Initializing and customizing}
+	procedure ConfigureSAT (PICTfit: boolean; newSorting, newCollision, searchWidth: integer);
+	procedure InitSAT (pictID, bwpictID, Xsize, Ysize: integer);
+	procedure CustomInitSAT (pictID, bwpictID: integer; SATdrawingArea: Rect; {}
+									preloadedWind: WindowPtr; chosenScreen: GDHandle; useMenuBar, {}
+									centerDrawingArea, fillScreen, dither4bit, beSmart: Boolean);
+{Maintainance, background manipulation etc.}
+	function SATDepthChangeTest: Boolean;
+	procedure SATDrawPICTs (pictID, bwpictID: integer);
+	procedure PeekOffscreen;
+{Drawing}
+	procedure SATPlotFace (theFace: FacePtr; theGrafPtr: GrafPtr; theGDevice: GDHandle;{}
+									where: Point; fast: boolean);
+	procedure SATPlotFaceToScreen (theFace: FacePtr; where: Point; fast: boolean); {*NEW*}
+	procedure SATCopyBits (src, dest: GrafPtr; destGD: GDHandle; srcPt, destPt: Point;{}
+									width, height: integer; fast: Boolean);
+	procedure SATCopyBitsToScreen (src: GrafPtr; srcPt, destPt: Point;{}
+									width, height: integer; fast: Boolean); {*NEW*}
+	procedure SATBackChanged (r: Rect); {Tell SAT about changes in backScreen}
+	procedure SATSetPortOffScreen; {Use before using QuickDraw on offScreen}
+	procedure SATSetPortBackScreen; {Use before using QuickDraw on backScreen}
+	procedure SATSetPortScreen; {Use to set port to gSAT.wind}
+{Sprite handling}
+	function GetFace (resNum: integer): FacePtr;
+	procedure DisposeFace (theFace: FacePtr);
+	function NewSprite (kind, hpos, vpos: integer; callback, setup, hittask: ProcPtr): SpritePtr;
+	function NewSpriteAfter (afterthis: SpritePtr; kind, hpos, vpos: integer;{}
+									callback, setup, hittask: ProcPtr): SpritePtr;
+	procedure KillSprite (who: Spriteptr);
+{Animating}
+	procedure RunSAT (fast: Boolean); {The heart of the whole package!}
+{Special functions for advanced programmers}
+	procedure SATInstallSynch (theSynchProc: ProcPtr);
+	procedure SATInstallEmergency (theEmergencyProc: ProcPtr);
+	procedure SATSetSpriteRecSize (theSize: longint);
+	procedure SkipSAT;
+	procedure KillSAT; {Dispose of offscreen buffers to allow re-init}
+{New procedures}
+	procedure SetPortMask (theFace: FacePtr);
+	procedure SetPortFace (theFace: FacePtr);
+	function NewFace (faceBounds: Rect): FacePtr;
+	procedure ChangedFace (theFace: FacePtr);
+	procedure SATSetStrings (ok, yes, no, quit, memerr, noscreen, nopict, nowind: Str255);
+	function TrapAvailable (theTrap: Integer): Boolean;
+	function SATGetCicn (cicnId: integer): CIconHandle;
+	procedure SATPlotCicn (theCicn: CIconHandle; dest: GrafPtr; destGD: GDHandle; r: Rect); {Borde jag lŠgga till device?}
+{Offscreen - use only if you need an *extra* offscreen buffer. These calls are likely to change in the future!}
+	procedure SATMakeOffscreen (var portP: GrafPtr; rectP: Rect; var retGDevice: GDHandle); {Make offscreen buffer in current screen depth and CLUT.}
+	procedure SATDisposeOffScreen (portP: GrafPtr; theGDevice: GDHandle); {Get rid of offscreen}
+	function CreateOffScreen (bounds: Rect; depth: Integer; colors: CTabHandle; var retPort: CGrafPtr; var retGDevice: GDHandle): OSErr; {From Principia Offscreen - color only}
+	procedure DisposeOffScreen (doomedPort: CGrafPtr; doomedGDevice: GDHandle);{From Principia Offscreen - color only}
+
+{Utilities}
+	procedure DrawInt (i: integer);
+	procedure DrawLong (l: longint);
+	function Rand (n: integer): integer;
+	function Rand10: integer;
+	function Rand100: integer;
+	procedure ReportStr (str: str255);
+	function QuestionStr (str: str255): Boolean;
+	function SATFakeAlert (s1, s2, s3, s4: Str255; nButtons, defButton, cancelButton: integer;{}
+									t1, t2, t3: Str255): integer;
+	procedure CheckNoMem (p: Ptr); {If the Ptr is nil, out of memory emergency exit}
+	procedure SetMouse (where: point);
+{Pattern utilities}
+	procedure SATPenPat (SATpat: SATPatHandle);
+	procedure SATBackPat (SATpat: SATPatHandle);
+	function SATGetPat (patID: integer): SATPatHandle;
+	procedure SATDisposePat (SATpat: SATPatHandle);
+{Menu bar utilities}
+	procedure ShowMBar;
+	procedure HideMBar (wind: WindowPtr);
+{Sound}
+	procedure SATSoundInit; {Called from InitSAT}
+	procedure SATSoundPlay (TheSound: Handle; Priority: integer; CanWait: boolean);
+	procedure SATSoundEvents; {Call this once in a while when not calling RunSAT often}
+	procedure SATSoundShutup; {Silence, dispose of sound channel}
+	procedure SATSoundOn;
+	procedure SATSoundOff;
+	function SATSoundDone: Boolean; {Any sound going on ?}
+	function SATGetSound (sndId: integer): handle;		{ To load a sound and get a handle for SATSoundPlay }
+	function SATGetNamedSound (name: Str255): Handle; { Same but using resource names }
+	procedure SATDisposeSound (theSnd: handle);
+{Experimental, likely to be renamed/removed/changed:}
+	procedure SATSoundPlay2 (theSound: Handle; priority: integer; canWait, skipIfSame: Boolean);
+	procedure SATSoundPlayEasy (theSound: handle; canWait: boolean);
+
+implementation
+end.

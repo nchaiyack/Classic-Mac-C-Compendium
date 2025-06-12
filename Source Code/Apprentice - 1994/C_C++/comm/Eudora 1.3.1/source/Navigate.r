@@ -1,1 +1,3 @@
-resource 'STR#' (2400,purgeable) { {"\n\n\n\n", "\n\n"} };
+resource 'STR#' (2400,purgeable) { {"\n\n\n\n", "\n\n"} };
+
+

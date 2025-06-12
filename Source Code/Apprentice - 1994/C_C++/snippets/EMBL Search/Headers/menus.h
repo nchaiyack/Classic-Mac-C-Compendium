@@ -1,1 +1,4 @@
-/* menus.c */void UpdateOtherCreator(void);void MaintainMenus(void);
+
+/* menus.c */
+void UpdateOtherCreator(void);
+void MaintainMenus(void);

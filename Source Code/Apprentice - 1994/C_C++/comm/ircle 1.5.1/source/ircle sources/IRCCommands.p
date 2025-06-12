@@ -1,1 +1,540 @@
-{	ircle - Internet Relay Chat client	}{	File: IRCCommands	}{	Copyright © 1992 Olaf Titz (s_titz@ira.uka.de)	}{	This program is free software; you can redistribute it and/or modify	}{	it under the terms of the GNU General Public License as published by	}{	the Free Software Foundation; either version 2 of the License, or	}{	(at your option) any later version.	}{	This program is distributed in the hope that it will be useful,	}{	but WITHOUT ANY WARRANTY; without even the implied warranty of	}{	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	}{	GNU General Public License for more details.	}{	You should have received a copy of the GNU General Public License	}{	along with this program; if not, write to the Free Software	}{	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.	}unit IRCCommands;{ Handles commands typed in by the user }interfaceuses	TCPTypes, TCPStuff, TCPConnections, ApplBase, MiscGlue, MsgWindows, {}	IRCGlobals, IRCaux, IRCPreferences, IRCChannels, IRCHelp, {}	IRCNotify, IRCIgnore, DCC;var	listmin, listmax: integer;	listpub, listpriv, listloc, listglob, listtop: boolean; 	{ Flags for /list display }procedure HandleCommand (var s: string);{ Process s as command line }procedure sendCTCP (var t, s: string);{ send CTCP message }procedure RegUser;{ Send the server the first commands to register the user }implementation{ This procedure is to be run in the background, to type }{ a file to the current channel. }procedure TypeCmd;	var		s, t: Str255;		f: text;	begin		t := CurrentTarget;		if t <> '' then begin			s := OldFileName(concat('Type to ', t, ':'));			if s <> '' then begin				reset(f, s);				s := concat('*** Typing ', s, '...');				ChannelMsg(t, s);				while not eof(f) do begin					if flushing then begin						flushing := false;						leave;					end;					readln(f, s);					if s <> '' then begin						s := concat('PRIVMSG ', t, ' :', s);						PutLine(s);					end				end;				close(f);				s := '*** Finished  TYPE';				ChannelMsg(t, s);			end;		end	end;procedure ParseComLine (var l: string; var com: str255; var rest: string);	var		i: integer;		c: char;	begin		if l[1] = cmdChar then			delete(l, 1, 1);		i := pos(' ', l);		if i = 0 then begin			com := copy(l, 1, 255);			rest := ''		end		else begin			com := copy(l, 1, i - 1);			while (i <= length(l)) and (l[i] = ' ') do				i := succ(i);			rest := copy(l, i, 255)		end;		UprString(com, false);	end;procedure DoServer (var rest: string);	var		i: longint;		s1, s2: string;	begin		NextArg(rest, s1);		NextArg(rest, s2);		if s1 <> '' then begin			case serverStatus of				S_LOOKUP, S_OPENING, S_CLOSING: 					begin					StatusMsg(E_OPEN);					exit(DoServer)				end;				S_CONN: 					begin					dirtyPrefs := true; { assuming change of servers }					CloseConnection(sSocket);					serverStatus := S_CLOSING;					UpdateStatusLine;					repeat						ApplRun					until serverStatus = S_OFFLINE;					UpdateStatusLine;				end;				otherwise					serverStatus := S_OFFLINE;			end;			default^^.server := s1;			if s2 <> '' then begin				StringToNum(s2, i);				default^^.port := integer(i);			end			else				default^^.port := 6667;			OpenConnection;			if serverStatus = S_CONN then				RegUser;		end;	end;function match (var s1: string; s2: str20): boolean;	var		i, n: integer;	begin		i := length(s1);		if i = 0 then begin			match := false;			exit(match)		end;		n := length(s2);		if n > i then			n := i;		i := 1;		while i <= n do begin			if s1[i] <> s2[i] then begin				match := false;				exit(match)			end;			i := i + 1;		end;		match := true;	end;procedure TranslateCommand (var s: string);{ Translates aliases & processes internal commands }{ Will return an empty string if command already processed }{ Note: valid commands not mentioned here get sent to the server unprocessed anyway. }{ That means that an error message for wrong commands comes always from the server. }	type		str8 = string[8];	var		com, rest, s1: str255;		i: integer;		l: longint;		dd: MWHndl;		b: boolean;	procedure twoargs (com: str8);		begin			NextArg(rest, s1);			s := concat(com, ' ', s1, ' :', rest)		end;	function nextnum: integer;		var			l: longint;		begin			NextArg(rest, s1);			stringtonum(s1, l);			nextnum := l		end;	procedure join;		begin			if rest = '' then				rest := lastInvite;			MakeChannel(rest);			s := concat('JOIN :', rest);		end;	procedure part;		begin			MakeChannel(rest);			s := concat('PART :', rest)		end;	procedure signoff;		begin			if rest = '' then				rest := 'Leaving';			s := concat('QUIT :', rest);			QuitRequest := true		end;	begin		ParseComLine(s, com, rest);		if match(com, 'AWAY') then begin			IsAway := (rest <> '');			UpdateStatusLine;			s := concat('AWAY :', rest);		end		else if match(com, 'BROADCAST') then begin			GetAllWindows(true, true, false, ',', com);			if com = '' then				StatusMsg(E_NOTARGET)			else begin				s := concat('>* ', rest);				Message(s);				s := concat('PRIVMSG ', com, ' :', rest)			end		end		else if match(com, 'BYE') then			signoff		else if match(com, 'CHANNEL') then			join		else if match(com, 'CMDCHAR') then begin			if rest <> '' then				cmdChar := rest[1];			s := ''		end		else if match(com, 'CPING') then begin			GetDateTime(l);			NumToString(l, s1);			s := concat('PING ', s1);			sendCTCP(rest, s);			s := ''		end		else if match(com, 'CTCP') then begin			i := pos(' ', rest);			if i = 0 then begin				com := rest;				rest := ''			end			else begin				com := copy(rest, 1, i - 1);				delete(rest, 1, i)			end;			sendCTCP(com, rest);			s := ''		end		else if match(com, 'DATE') then			s := concat('TIME ', rest)		else if match(com, 'DCC') then begin			DCCcommand(rest);			s := ''		end		else if match(com, 'EXIT') then			signoff		else if match(com, 'FONT') then begin			NextArg(rest, s1);			StringToNum(s1, l);			MWDefaultFont := l;			StringToNum(rest, l);			MWDefaultSize := l;			AdjustFontMenu;			s := '';		end		else if match(com, 'HELP') then begin			ShowHelp;			s := ''		end		else if match(com, 'IGNORE') then begin			DoIgnore(rest);			s := ''		end		else if match(com, 'KICK') then			twoargs('KICK')		else if match(com, 'KILL') then			twoargs('KILL')		else if match(com, 'JOIN') then			join		else if match(com, 'LIST') then begin			listpub := true;			listpriv := true;			listloc := true;			listglob := true;			listtop := true;			listmin := 0;			listmax := maxint;			repeat				if rest = '' then					leave;				if rest[1] = '-' then begin					NextArg(rest, s1);					UprString(s1, false);					if s1 = '-MIN' then						listmin := nextnum					else if s1 = '-MAX' then						listmax := nextnum					else if match(s1, '-PUBLIC') then						listpriv := false					else if match(s1, '-PRIVATE') then						listpub := false					else if match(s1, '-LOCAL') then						listglob := false					else if match(s1, '-GLOBAL') then						listloc := false					else if match(s1, '-TOPIC') then						listtop := false				end				else					leave;			until false;			s := concat('LIST ', rest);		end		else if match(com, 'LEAVE') then			part		else if com = 'ME' then begin			s := concat(CurrentNick, ' ', rest);			Message(s);			s := concat('ACTION ', rest);			sendCTCP(currentTarget, s);			s := ''		end		else if match(com, 'MSG') then begin			NextArg(rest, s1);			if IsChannel(s1) then				s := concat('> ', s1, ' ', rest)			else				s := concat('> *', s1, '* ', rest);			ChannelMsg(s1, s);			s := concat('PRIVMSG ', s1, ' :', rest);		end		else if com = 'NICK' then begin			if default^^.nick = '' then begin				default^^.nick := rest; { register default from prefs file }				s := ''			end			else if CurrentNick = '' then				CurrentNick := rest { register user }		end		else if com = 'NOTICE' then begin			NextArg(rest, s1);			s := concat('> -', s1, '- ', rest);			ChannelMsg(s1, s);			s := concat('NOTICE ', s1, ' :', rest)		end		else if match(com, 'NOTIFY') then begin			DoNotify(rest);			s := ''		end		else if match(com, 'QUERY') then begin			if rest = '' then begin				if lastMSG <> '' then					dd := DoJoin(lastMSG)			end			else				dd := DoJoin(rest);			s := ''		end		else if match(com, 'QUIT') then			signoff		else if com = 'QUOTE' then			s := rest		else if match(com, 'SERVER') then begin			s := '';			DoServer(rest);		end		else if com = 'SHORTCUT' then begin			NextArg(rest, s1);			i := ord(s1[1]) - 48;			if i = 0 then				i := 10;			if (i >= 1) and (i <= 10) then				shortcuts^^[i] := rest;			s := ''		end		else if match(com, 'SHOW') then begin			UprString(rest, false);			NextArg(rest, s1);			b := (rest = 'ON') or (rest = '1');			if s1 = 'ALL' then begin				showJOIN := b;				showPART := b;				showQUIT := b;				showWALLOPS := b;				showTOPIC := b;				showINVITE := b;				showNICK := b;				showMODE := b;				showKICK := b;				showNAMES := b;			end			else if match(s1, 'JOIN') then				showJOIN := b			else if match(s1, 'PART') then				showPART := b			else if match(s1, 'QUIT') then				showQUIT := b			else if match(s1, 'WALLOPS') then				showWALLOPS := b			else if match(s1, 'TOPIC') then				showTOPIC := b			else if match(s1, 'INVITE') then				showINVITE := b			else if match(s1, 'MODE') then				showMODE := b			else if match(s1, 'KICK') then				showKICK := b			else if match(s1, 'NAMES') then				showNAMES := b			else begin				s := stringof('*** Display of status messages: JOIN:', showJOIN, ' PART:', showPART, ' QUIT:', showQUIT, ' WALLOPS:', showWALLOPS, ' TOPIC:', showTOPIC, ' INVITE:', showINVITE, ' MODE:', showMODE, ' KICK:', showKICK, ' NAMES:', showNAMES);				Message(s);			end;			s := ''		end		else if match(com, 'SIGNOFF') then			signoff		else if match(com, 'SQUIT') then			twoargs('SQUIT')		else if match(com, 'TOPIC') then			twoargs('TOPIC')		else if match(com, 'TYPE') then begin			i := ApplCoroutine(@TypeCmd, COSPACE);			s := ''		end		else if com = 'USERNAME' then begin			default^^.username := rest;			s := ''		end		else if com = 'USERINFO' then begin			default^^.userLoginname := rest;			s := ''		end		else if com = 'USERNOTIFY' then begin			for i := 1 to 4 do				default^^.notify[i] := (rest[i] = '1');			s := '';		end		else if com = 'VERSION' then begin			if rest = '' then begin				s := concat('Client is ircle ', CL_VERSION);				Message(s);			end;			s := concat('VERSION ', rest);		end		else if com = 'WINDOW' then begin			SetRect(windowarg, nextnum, nextnum, nextnum, nextnum);			s := ''		end		else if (com = 'WHO') or (com = 'NAMES') then begin			if rest = '' then				if CurrentTarget <> '' then					s := concat(com, ' ', CurrentTarget);		end		else if match(com, 'WHOIS') then begin			if rest = '' then				s := concat('WHOIS ', lastMSG)			else				s := concat('WHOIS ', rest);		end	end;procedure sendCTCP (var t, s: string);	var		i: integer;		com: str255;	begin		if serverStatus = S_CONN then begin			i := pos(' ', s);			if i = 0 then begin				com := s;				s := ''			end			else begin				com := copy(s, 1, i - 1);				delete(s, 1, i);			end;			UprString(com, false);			s := concat('PRIVMSG ', t, ' :', chr(1), com, ' ', s, chr(1));			PutLine(s);		end		else			StatusMsg(E_NOSERVER);	end;procedure HandleCommand (var s: string);	begin		flushing := false;		UpdateStatusLine;		TranslateCommand(s);		if s <> '' then begin			if serverStatus = S_CONN then begin				PutLine(s);				s := ''			end			else				StatusMsg(E_NOSERVER);		end	end;procedure RegUser;	var		s0, s: string;		i: integer;	begin		if not UserRegistered then begin			SetMainTitle(CurrentNick);			CurrentServer := ''; { server will respond with NOTICE }			serverVersion := SV_27; { others will generate specific responses }			s := concat('NICK ', currentNick);			HandleCommand(s);			s0 := default^^.userLoginName;			i := pos('@', s0);			if i > 0 then				s := concat('USER ', copy(s0, 1, i - 1), ' ', copy(s0, i + 1, 255), ' . :', default^^.username)			else				s := concat('USER ', s0, ' . . :', default^^.username);			HandleCommand(s);			s0 := default^^.autoExec;			while s0 <> '' do begin				i := pos(';', s0);				if i = 0 then					i := 255;				s := copy(s0, 1, i - 1);				HandleCommand(s);				delete(s0, 1, i)			end;			GetAllWindows(true, false, false, ',', s0);			if s0 <> '' then begin				s := concat('JOIN :', s0);				HandleCommand(s)			end;			UserRegistered := true		end	end;end.
+{	ircle - Internet Relay Chat client	}
+{	File: IRCCommands	}
+{	Copyright © 1992 Olaf Titz (s_titz@ira.uka.de)	}
+
+{	This program is free software; you can redistribute it and/or modify	}
+{	it under the terms of the GNU General Public License as published by	}
+{	the Free Software Foundation; either version 2 of the License, or	}
+{	(at your option) any later version.	}
+
+{	This program is distributed in the hope that it will be useful,	}
+{	but WITHOUT ANY WARRANTY; without even the implied warranty of	}
+{	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	}
+{	GNU General Public License for more details.	}
+
+{	You should have received a copy of the GNU General Public License	}
+{	along with this program; if not, write to the Free Software	}
+{	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.	}
+
+unit IRCCommands;
+{ Handles commands typed in by the user }
+
+interface
+uses
+	TCPTypes, TCPStuff, TCPConnections, ApplBase, MiscGlue, MsgWindows, {}
+	IRCGlobals, IRCaux, IRCPreferences, IRCChannels, IRCHelp, {}
+	IRCNotify, IRCIgnore, DCC;
+
+var
+	listmin, listmax: integer;
+	listpub, listpriv, listloc, listglob, listtop: boolean; 	{ Flags for /list display }
+
+procedure HandleCommand (var s: string);
+{ Process s as command line }
+
+procedure sendCTCP (var t, s: string);
+{ send CTCP message }
+
+procedure RegUser;
+{ Send the server the first commands to register the user }
+
+implementation
+
+{ This procedure is to be run in the background, to type }
+{ a file to the current channel. }
+procedure TypeCmd;
+	var
+		s, t: Str255;
+		f: text;
+	begin
+		t := CurrentTarget;
+		if t <> '' then begin
+			s := OldFileName(concat('Type to ', t, ':'));
+			if s <> '' then begin
+				reset(f, s);
+				s := concat('*** Typing ', s, '...');
+				ChannelMsg(t, s);
+				while not eof(f) do begin
+					if flushing then begin
+						flushing := false;
+						leave;
+					end;
+					readln(f, s);
+					if s <> '' then begin
+						s := concat('PRIVMSG ', t, ' :', s);
+						PutLine(s);
+					end
+				end;
+				close(f);
+				s := '*** Finished  TYPE';
+				ChannelMsg(t, s);
+			end;
+		end
+	end;
+
+procedure ParseComLine (var l: string; var com: str255; var rest: string);
+	var
+		i: integer;
+		c: char;
+	begin
+		if l[1] = cmdChar then
+			delete(l, 1, 1);
+		i := pos(' ', l);
+		if i = 0 then begin
+			com := copy(l, 1, 255);
+			rest := ''
+		end
+		else begin
+			com := copy(l, 1, i - 1);
+			while (i <= length(l)) and (l[i] = ' ') do
+				i := succ(i);
+			rest := copy(l, i, 255)
+		end;
+		UprString(com, false);
+	end;
+
+procedure DoServer (var rest: string);
+	var
+		i: longint;
+		s1, s2: string;
+	begin
+		NextArg(rest, s1);
+		NextArg(rest, s2);
+		if s1 <> '' then begin
+			case serverStatus of
+				S_LOOKUP, S_OPENING, S_CLOSING: 
+					begin
+					StatusMsg(E_OPEN);
+					exit(DoServer)
+				end;
+				S_CONN: 
+					begin
+					dirtyPrefs := true; { assuming change of servers }
+					CloseConnection(sSocket);
+					serverStatus := S_CLOSING;
+					UpdateStatusLine;
+					repeat
+						ApplRun
+					until serverStatus = S_OFFLINE;
+					UpdateStatusLine;
+				end;
+				otherwise
+					serverStatus := S_OFFLINE;
+			end;
+			default^^.server := s1;
+			if s2 <> '' then begin
+				StringToNum(s2, i);
+				default^^.port := integer(i);
+			end
+			else
+				default^^.port := 6667;
+			OpenConnection;
+			if serverStatus = S_CONN then
+				RegUser;
+		end;
+	end;
+
+function match (var s1: string; s2: str20): boolean;
+	var
+		i, n: integer;
+	begin
+		i := length(s1);
+		if i = 0 then begin
+			match := false;
+			exit(match)
+		end;
+		n := length(s2);
+		if n > i then
+			n := i;
+		i := 1;
+		while i <= n do begin
+			if s1[i] <> s2[i] then begin
+				match := false;
+				exit(match)
+			end;
+			i := i + 1;
+		end;
+		match := true;
+	end;
+
+procedure TranslateCommand (var s: string);
+{ Translates aliases & processes internal commands }
+{ Will return an empty string if command already processed }
+{ Note: valid commands not mentioned here get sent to the server unprocessed anyway. }
+{ That means that an error message for wrong commands comes always from the server. }
+	type
+		str8 = string[8];
+	var
+		com, rest, s1: str255;
+		i: integer;
+		l: longint;
+		dd: MWHndl;
+		b: boolean;
+	procedure twoargs (com: str8);
+		begin
+			NextArg(rest, s1);
+			s := concat(com, ' ', s1, ' :', rest)
+		end;
+	function nextnum: integer;
+		var
+			l: longint;
+		begin
+			NextArg(rest, s1);
+			stringtonum(s1, l);
+			nextnum := l
+		end;
+	procedure join;
+		begin
+			if rest = '' then
+				rest := lastInvite;
+			MakeChannel(rest);
+			s := concat('JOIN :', rest);
+		end;
+	procedure part;
+		begin
+			MakeChannel(rest);
+			s := concat('PART :', rest)
+		end;
+	procedure signoff;
+		begin
+			if rest = '' then
+				rest := 'Leaving';
+			s := concat('QUIT :', rest);
+			QuitRequest := true
+		end;
+	begin
+		ParseComLine(s, com, rest);
+		if match(com, 'AWAY') then begin
+			IsAway := (rest <> '');
+			UpdateStatusLine;
+			s := concat('AWAY :', rest);
+		end
+		else if match(com, 'BROADCAST') then begin
+			GetAllWindows(true, true, false, ',', com);
+			if com = '' then
+				StatusMsg(E_NOTARGET)
+			else begin
+				s := concat('>* ', rest);
+				Message(s);
+				s := concat('PRIVMSG ', com, ' :', rest)
+			end
+		end
+		else if match(com, 'BYE') then
+			signoff
+		else if match(com, 'CHANNEL') then
+			join
+		else if match(com, 'CMDCHAR') then begin
+			if rest <> '' then
+				cmdChar := rest[1];
+			s := ''
+		end
+		else if match(com, 'CPING') then begin
+			GetDateTime(l);
+			NumToString(l, s1);
+			s := concat('PING ', s1);
+			sendCTCP(rest, s);
+			s := ''
+		end
+		else if match(com, 'CTCP') then begin
+			i := pos(' ', rest);
+			if i = 0 then begin
+				com := rest;
+				rest := ''
+			end
+			else begin
+				com := copy(rest, 1, i - 1);
+				delete(rest, 1, i)
+			end;
+			sendCTCP(com, rest);
+			s := ''
+		end
+		else if match(com, 'DATE') then
+			s := concat('TIME ', rest)
+		else if match(com, 'DCC') then begin
+			DCCcommand(rest);
+			s := ''
+		end
+		else if match(com, 'EXIT') then
+			signoff
+		else if match(com, 'FONT') then begin
+			NextArg(rest, s1);
+			StringToNum(s1, l);
+			MWDefaultFont := l;
+			StringToNum(rest, l);
+			MWDefaultSize := l;
+			AdjustFontMenu;
+			s := '';
+		end
+		else if match(com, 'HELP') then begin
+			ShowHelp;
+			s := ''
+		end
+		else if match(com, 'IGNORE') then begin
+			DoIgnore(rest);
+			s := ''
+		end
+		else if match(com, 'KICK') then
+			twoargs('KICK')
+		else if match(com, 'KILL') then
+			twoargs('KILL')
+		else if match(com, 'JOIN') then
+			join
+		else if match(com, 'LIST') then begin
+			listpub := true;
+			listpriv := true;
+			listloc := true;
+			listglob := true;
+			listtop := true;
+			listmin := 0;
+			listmax := maxint;
+			repeat
+				if rest = '' then
+					leave;
+				if rest[1] = '-' then begin
+					NextArg(rest, s1);
+					UprString(s1, false);
+					if s1 = '-MIN' then
+						listmin := nextnum
+					else if s1 = '-MAX' then
+						listmax := nextnum
+					else if match(s1, '-PUBLIC') then
+						listpriv := false
+					else if match(s1, '-PRIVATE') then
+						listpub := false
+					else if match(s1, '-LOCAL') then
+						listglob := false
+					else if match(s1, '-GLOBAL') then
+						listloc := false
+					else if match(s1, '-TOPIC') then
+						listtop := false
+				end
+				else
+					leave;
+			until false;
+			s := concat('LIST ', rest);
+		end
+		else if match(com, 'LEAVE') then
+			part
+		else if com = 'ME' then begin
+			s := concat(CurrentNick, ' ', rest);
+			Message(s);
+			s := concat('ACTION ', rest);
+			sendCTCP(currentTarget, s);
+			s := ''
+		end
+		else if match(com, 'MSG') then begin
+			NextArg(rest, s1);
+			if IsChannel(s1) then
+				s := concat('> ', s1, ' ', rest)
+			else
+				s := concat('> *', s1, '* ', rest);
+			ChannelMsg(s1, s);
+			s := concat('PRIVMSG ', s1, ' :', rest);
+		end
+		else if com = 'NICK' then begin
+			if default^^.nick = '' then begin
+				default^^.nick := rest; { register default from prefs file }
+				s := ''
+			end
+			else if CurrentNick = '' then
+				CurrentNick := rest { register user }
+		end
+		else if com = 'NOTICE' then begin
+			NextArg(rest, s1);
+			s := concat('> -', s1, '- ', rest);
+			ChannelMsg(s1, s);
+			s := concat('NOTICE ', s1, ' :', rest)
+		end
+		else if match(com, 'NOTIFY') then begin
+			DoNotify(rest);
+			s := ''
+		end
+		else if match(com, 'QUERY') then begin
+			if rest = '' then begin
+				if lastMSG <> '' then
+					dd := DoJoin(lastMSG)
+			end
+			else
+				dd := DoJoin(rest);
+			s := ''
+		end
+		else if match(com, 'QUIT') then
+			signoff
+		else if com = 'QUOTE' then
+			s := rest
+		else if match(com, 'SERVER') then begin
+			s := '';
+			DoServer(rest);
+		end
+		else if com = 'SHORTCUT' then begin
+			NextArg(rest, s1);
+			i := ord(s1[1]) - 48;
+			if i = 0 then
+				i := 10;
+			if (i >= 1) and (i <= 10) then
+				shortcuts^^[i] := rest;
+			s := ''
+		end
+		else if match(com, 'SHOW') then begin
+			UprString(rest, false);
+			NextArg(rest, s1);
+			b := (rest = 'ON') or (rest = '1');
+			if s1 = 'ALL' then begin
+				showJOIN := b;
+				showPART := b;
+				showQUIT := b;
+				showWALLOPS := b;
+				showTOPIC := b;
+				showINVITE := b;
+				showNICK := b;
+				showMODE := b;
+				showKICK := b;
+				showNAMES := b;
+			end
+			else if match(s1, 'JOIN') then
+				showJOIN := b
+			else if match(s1, 'PART') then
+				showPART := b
+			else if match(s1, 'QUIT') then
+				showQUIT := b
+			else if match(s1, 'WALLOPS') then
+				showWALLOPS := b
+			else if match(s1, 'TOPIC') then
+				showTOPIC := b
+			else if match(s1, 'INVITE') then
+				showINVITE := b
+			else if match(s1, 'MODE') then
+				showMODE := b
+			else if match(s1, 'KICK') then
+				showKICK := b
+			else if match(s1, 'NAMES') then
+				showNAMES := b
+			else begin
+				s := stringof('*** Display of status messages: JOIN:', showJOIN, ' PART:', showPART, ' QUIT:', showQUIT, ' WALLOPS:', showWALLOPS, ' TOPIC:', showTOPIC, ' INVITE:', showINVITE, ' MODE:', showMODE, ' KICK:', showKICK, ' NAMES:', showNAMES);
+				Message(s);
+			end;
+			s := ''
+		end
+		else if match(com, 'SIGNOFF') then
+			signoff
+		else if match(com, 'SQUIT') then
+			twoargs('SQUIT')
+		else if match(com, 'TOPIC') then
+			twoargs('TOPIC')
+		else if match(com, 'TYPE') then begin
+			i := ApplCoroutine(@TypeCmd, COSPACE);
+			s := ''
+		end
+		else if com = 'USERNAME' then begin
+			default^^.username := rest;
+			s := ''
+		end
+		else if com = 'USERINFO' then begin
+			default^^.userLoginname := rest;
+			s := ''
+		end
+		else if com = 'USERNOTIFY' then begin
+			for i := 1 to 4 do
+				default^^.notify[i] := (rest[i] = '1');
+			s := '';
+		end
+		else if com = 'VERSION' then begin
+			if rest = '' then begin
+				s := concat('Client is ircle ', CL_VERSION);
+				Message(s);
+			end;
+			s := concat('VERSION ', rest);
+		end
+		else if com = 'WINDOW' then begin
+			SetRect(windowarg, nextnum, nextnum, nextnum, nextnum);
+			s := ''
+		end
+		else if (com = 'WHO') or (com = 'NAMES') then begin
+			if rest = '' then
+				if CurrentTarget <> '' then
+					s := concat(com, ' ', CurrentTarget);
+		end
+		else if match(com, 'WHOIS') then begin
+			if rest = '' then
+				s := concat('WHOIS ', lastMSG)
+			else
+				s := concat('WHOIS ', rest);
+		end
+	end;
+
+
+procedure sendCTCP (var t, s: string);
+	var
+		i: integer;
+		com: str255;
+	begin
+		if serverStatus = S_CONN then begin
+			i := pos(' ', s);
+			if i = 0 then begin
+				com := s;
+				s := ''
+			end
+			else begin
+				com := copy(s, 1, i - 1);
+				delete(s, 1, i);
+			end;
+			UprString(com, false);
+			s := concat('PRIVMSG ', t, ' :', chr(1), com, ' ', s, chr(1));
+			PutLine(s);
+		end
+		else
+			StatusMsg(E_NOSERVER);
+	end;
+
+procedure HandleCommand (var s: string);
+	begin
+		flushing := false;
+		UpdateStatusLine;
+		TranslateCommand(s);
+		if s <> '' then begin
+			if serverStatus = S_CONN then begin
+				PutLine(s);
+				s := ''
+			end
+			else
+				StatusMsg(E_NOSERVER);
+		end
+	end;
+
+procedure RegUser;
+	var
+		s0, s: string;
+		i: integer;
+	begin
+		if not UserRegistered then begin
+			SetMainTitle(CurrentNick);
+			CurrentServer := ''; { server will respond with NOTICE }
+			serverVersion := SV_27; { others will generate specific responses }
+			s := concat('NICK ', currentNick);
+			HandleCommand(s);
+			s0 := default^^.userLoginName;
+			i := pos('@', s0);
+			if i > 0 then
+				s := concat('USER ', copy(s0, 1, i - 1), ' ', copy(s0, i + 1, 255), ' . :', default^^.username)
+			else
+				s := concat('USER ', s0, ' . . :', default^^.username);
+			HandleCommand(s);
+			s0 := default^^.autoExec;
+			while s0 <> '' do begin
+				i := pos(';', s0);
+				if i = 0 then
+					i := 255;
+				s := copy(s0, 1, i - 1);
+				HandleCommand(s);
+				delete(s0, 1, i)
+			end;
+			GetAllWindows(true, false, false, ',', s0);
+			if s0 <> '' then begin
+				s := concat('JOIN :', s0);
+				HandleCommand(s)
+			end;
+			UserRegistered := true
+		end
+	end;
+
+end.

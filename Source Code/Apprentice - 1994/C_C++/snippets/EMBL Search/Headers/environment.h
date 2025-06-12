@@ -1,1 +1,3 @@
-/* environment.c */void CheckEnvironment(void);
+
+/* environment.c */
+void CheckEnvironment(void);

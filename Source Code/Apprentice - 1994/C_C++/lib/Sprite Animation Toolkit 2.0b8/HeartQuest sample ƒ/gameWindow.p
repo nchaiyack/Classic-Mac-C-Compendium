@@ -1,1 +1,698 @@
-{================================================}{=============== Game window handler ================}{================================================}{ Example file for Ingemars Sprite Animation Toolkit. }{ © Ingemar Ragnemalm 1992 }{ See doc files for legal terms for using this code. }{ This file holds the game window and game menu handlers for HeartQuest.}{ This is where most game-specific code goes, except for the code describing}{ each object. }{ GameWindInit is called to initialize, which initializes the window and installs}{handler procedures (note that menus are installed in main.p). It calls the routines}{to initialize offscreen GrafPorts and all the animated objects. }{ When the user selects New Game, StartGame is called to set up a new}{ game, and then MoveIt, the game driver routine is called. }unit GameWind;interface	uses		transskel, SAT,{Globals, Other, Emergency, OffScreen, Animator, SATSound}		GameGlobals, sPlayer, sFlypaper, sHeart, sBonus, sPoints, scores, SoundConst, Sound;	procedure DoGameMenu (item: integer);	procedure GameWindInit;	procedure DoGameOver;implementation{var}{mp: MonsterPtr; { Bra att ha en global tillgänglig. Dvs praktiskt... }{    SlemtorksHandlerPtr: ProcPtr;}	procedure InitSprites;	begin{ Set up the two offscreen GrafPorts "gSAT.offScreen" and "gSAT.backScreen". SAT has a standard}{ way to do this. Let SAT draw the background PICT for us, too. }{SetupOffAndBack(132, 129);}{ Call the init routines for each the sprite unit! Don't forget this! }		InitFlypaper;		InitHeart;		InitPlayer;		InitBonus;		InitPoints;	end;	procedure DrawBackground;	forward;{ Setup a new level. This is called when the game starts ans at each new level.}	procedure SetupLevel (level: integer);		var			p: point;			i: integer;			mp, oldmp: SpritePtr;			r: rect;			s: Str255;			er: EventRecord; {For EventAvail}			strwidth: integer;{ A routine to create a bunch of hearts }		procedure MakeHearts (howmany: integer);			var				i: integer;				mp: SpritePtr;		begin			for i := 1 to howmany do				case rand(4) of					0: 						mp := NewSprite(-2, Rand(gSAT.offSizeH - 112) + 17, 0, @HandleHeart, @SetupHeart, nil);					1: 						mp := NewSprite(-2, Rand(gSAT.offSizeH - 112) + 17, gSAT.offSizeV - 32, @HandleHeart, @SetupHeart, nil);					2: 						mp := NewSprite(-2, 0, Rand(gSAT.offSizeV - 32) + 17, @HandleHeart, @SetupHeart, nil);					3: 						mp := NewSprite(-2, gSAT.offSizeH - xsize, Rand(gSAT.offSizeV - 32) + 17, @HandleHeart, @SetupHeart, nil);				end;		end;	begin { SetupLevel }{ Clear the sprite list }		while gSAT.sRoot <> nil do			KillSprite(gSAT.sRoot);{ Create all the sprites for the level, depending on the level number. }		case level of			1: 				begin					batchcount := 6;					bonus := 250;					MakeHearts(6);					mp := NewSprite(-3, 10, 10, @HandleFlypaper, @SetupFlypaper, nil);					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);				end;			2: 				begin					batchcount := 10;					bonus := 300;					MakeHearts(10);					mp := NewSprite(-3, 10, 10, @HandleFlypaper, @SetupFlypaper, nil);					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, 20, @HandleFlypaper, @SetupFlypaper, nil);					mp := NewSprite(-3, 20, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);				end;			3: 				begin					batchcount := 12;					MakeHearts(12);					bonus := 350;					mp := NewSprite(-3, 5, 5, @HandleFlypaper, @SetupFlypaper, nil);					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, 5, @HandleFlypaper, @SetupFlypaper, nil);					mp := NewSprite(-3, 5, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);				end;			4: 				begin					batchcount := 12;					MakeHearts(12);					bonus := 350;					mp := NewSprite(-3, 5, 5, @HandleFlypaper, @SetupFlypaper, nil);					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, 5, @HandleFlypaper, @SetupFlypaper, nil);					mp := NewSprite(-3, 5, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);					mp := NewSprite(-3, 5, (gSAT.offSizeV - 32) mod 2, @HandleFlypaper, @SetupFlypaper, nil);					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, (gSAT.offSizeV - 32) mod 2, @HandleFlypaper, @SetupFlypaper, nil);				end;			5: 				begin					batchcount := 10;					MakeHearts(10);					bonus := 380;					mp := NewSprite(-3, 5, 5, @HandleFlypaper, @SetupFlypaper, nil);					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, 5, @HandleFlypaper, @SetupFlypaper, nil);					mp := NewSprite(-3, 5, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);				end;			6: 				begin					batchcount := 12;					MakeHearts(12);					bonus := 420;					mp := NewSprite(-3, 5, 5, @HandleFlypaper, @SetupFlypaper, nil);					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, 5, @HandleFlypaper, @SetupFlypaper, nil);					mp := NewSprite(-3, 5, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, (gSAT.offSizeV - 32) mod 2, @HandleFlypaper, @SetupFlypaper, nil);				end;			otherwise				begin					batchcount := level * 2;					MakeHearts(level * 2);					bonus := 300 + 20 * level;					for i := 0 to level - 1 do						begin							case rand(6) of								0: 									mp := NewSprite(-3, 5, 5, @HandleFlypaper, @SetupFlypaper, nil);								1: 									mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, 5, @HandleFlypaper, @SetupFlypaper, nil);								2: 									mp := NewSprite(-3, 5, 300, @HandleFlypaper, @SetupFlypaper, nil);								3: 									mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);								4: 									mp := NewSprite(-3, (gSAT.offSizeH - xsize - 32) div 2, 5, @HandleFlypaper, @SetupFlypaper, nil);								5: 									mp := NewSprite(-3, (gSAT.offSizeH - xsize - 32), gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);							end; { case }						end;				end;		end;{ Reposition mouse to the center of the game area. }		p.h := 256;		p.v := 171;		SetMouse(p);{ Make the player sprite. }		mp := NewSprite(2, (gSAT.offSizeH - xsize) div 2, gSAT.offSizeV div 2, @HandlePlayer, @SetupPlayer, @HitPlayer);{ Copy gSAT.backScreen to gSAT.offScreen to erase old sprites. }		CopyBits(gSAT.backScreen^.portBits, gSAT.offScreen^.portBits, gSAT.offScreen^.portRect, gSAT.offScreen^.portRect, srcCopy, nil);		PeekOffScreen; {replaces the following out-commented lines:}		AddScore(0);{ Do one frame of animation just to draw all the objects. }		RunSAT(false); {false or features^^.PlotFast; slow is ok - no hurry!}		if level = 1 then			strwidth := StringWidth(MyGetIndString(startgameStrID))		else			strwidth := StringWidth(MyGetIndString(startlevelStrID));{ Draw a message and wait for click- this is a bit ugly. Consider other ways. }		SetPort(gSAT.wind);		SetRect(r, gSAT.offSizeH div 2 - strwidth div 2 - 5 + 2, gSAT.offSizeV div 2 + 35 + 2, gSAT.offSizeH div 2 + strwidth div 2 + 5 + 2, gSAT.offSizeV div 2 + 60 + 2); {offset by 2 pixels}		PaintRect(r);		SetRect(r, gSAT.offSizeH div 2 - strwidth div 2 - 5, gSAT.offSizeV div 2 + 35, gSAT.offSizeH div 2 + strwidth div 2 + 5, gSAT.offSizeV div 2 + 60);		EraseRect(r);		MoveTo(gSAT.offSizeH div 2 - strwidth div 2, gSAT.offSizeV div 2 + 50);		if level = 1 then			DrawString(MyGetIndString(startgameStrID)) {str 16: Click the mouse to start the game.}		else			begin				DrawString(MyGetIndString(startlevelStrID)); {str 17: Click the mouse to start level }				NumToString(level, s);				DrawString(s);				DrawChar('.');			end;{Wait until something happens}		FlushEvents(EveryEvent, 0); { To forget events, like mouse clicks etc. }		repeat		until EventAvail(mDownMask + keyDownMask, er);{ Redraw to get rid of the message we just made. }		PeekOffScreen;	end; { SetupLevel }{ Start a new game. Initialize level, score, number of lives, and call setuplevel to make the first level. }	procedure StartGame;	begin		ZeroScore;		Level := 1;		setuplevel(level);	end;{ Game Over procedure. Draw "Game Over" text, check high scores. }	procedure DoGameOver;		var{ Variables for the Game Over-box }			theRect, theRect2: rect;			thePict: Handle;			bredd, i: integer;			dx, dy: integer;			time: longint;	begin		SetItem(GameMenu, Pause, MyGetIndString(pauseStrID)); {str 18: Pause}{ Game Over display! }		SetPort(gSAT.wind);		if colorFlag and (gSAT.initDepth <> 1) then			thePICT := GetResource('PICT', 129)		else			thePICT := GetResource('PICT', 128);		theRect := PicHandle(thePICT)^^.picFrame;		theRect.right := theRect.right - theRect.left;		theRect.bottom := theRect.bottom - theRect.top;		theRect.top := 0;		theRect.left := 0;		dx := (gSAT.offSizeH - (theRect.right - theRect.left)) div 2 - theRect.left;		dy := (gSAT.offSizeV - (theRect.bottom - theRect.top)) div 2 - theRect.top;		OffsetRect(theRect, dx, dy);		bredd := theRect.right - theRect.left;		theRect2 := theRect;		i := 1;		repeat			time := TickCount;			theRect.right := theRect2.right - bredd * (80 - i) div 160;			theRect.left := theRect2.left + bredd * (80 - i) div 160;			DrawPicture(PicHandle(thePICT), TheRect);			i := i + TickCount - time;		until i >= 80;		SetPort(gSAT.offScreen);		DrawPicture(PicHandle(thePICT), TheRect);		SetPort(gSAT.wind);		InvalRect(theRect);		SATSoundShutUp; { Dispose of sound channel }		FlushEvents(everyEvent, 0); { To forget events, like mouse clicks etc. }		ShowCursor;		UpdateHigh; { Game over, was it high score? }	end;{ This routine is the game driver. It calls the "Animator" package until the game ends or is paused. }{ I also read the keyboard here. This could optionally be moved to the "player object" module. }	procedure MoveIt;		var			fr, tr, r: Rect;			pt: Point;			h: Integer;			truepos: Longint;{n, x: Integer;	{ Are these used? }			t, l: longint;			truepos32, bredd32: integer; { Some old bugfix that I no longer remember... }			truepos19, bredd19: integer;			theEvent: EventRecord; { för att testa musklick }{ To check for key clicks with GetKeys:  - no longer used. km: KeyMap;}			hasEvent: Boolean;			ignore: OSerr;	begin		stillrunning := true; { A flag that tells whether or not to quit this routine. }		HideCursor; { NOTE: No matter how we leave the MoveIt procedure, we should ShowCursor. }		pt.h := 256;		pt.v := 171;		SetMouse(pt);{ Main loop! Keep running until the game is paused or ends. }		while stillrunning = true do			begin				t := TickCount;				SetPort(gSAT.wind);				SetPort(gSAT.offScreen);{ Here is the real heart of the loop: call Animator once per loop. It will call all the objects. }				RunSAT(features^^.plotFast);{SATSoundEvents; No longer needed - included in RunSAT!}{ All the rest of the main loop is game specific, next level, bonus handling, etc. }				if (batchcount < 1) then					begin						SATSoundShutUp;						if false then							if features^^.sound then								ignore := SndPlay(nil, GetResource('snd ', SadarSnd), false);						SATSoundPlay(SadarSndH, 0, true);						repeat							SATSoundEvents						until SATSoundDone;						if bonus > 0 then							while bonus > 0 do								begin									Bonus := Bonus - 10;{ SndPlay would have been ok here, since we want to play this synchronously.}									SATSoundPlay(KlounkSndH, 0, true);									repeat										SATSoundEvents									until SATSoundDone;									if false then										if features^^.sound then											ignore := SndPlay(nil, GetResource('snd ', KlounkSnd), false);									if bonus < 0 then										begin											l := bonus;											bonus := 0;											AddScoreS(10 + l); {A special synchronous version of AddScore}										end									else										AddScoreS(10); { Bonus! }								end { if bonus > 0 }						else if features^^.macho then							stillrunning := false; { If no bonus, game over }						if (stillrunning and features^^.macho) or (level < 3) then {level < 4}							begin								level := level + 1;								SetupLevel(level);								AddScoreS(0); {To update the level number}							end						else							stillrunning := false;					end; {if (batchcount < 1)}{ Check for keys being pressed }				if features^^.allowBG then { if we are allowed to use the normal method }					begin						SystemTask;{ Replaced the following call by WaitNextEvent if you want to be modern (but less backwards compatible). :-) }						hasEvent := GetNextEvent(keyDownMask, theEvent)					end				else {Otherwise, use the faster GetOSEvent}					begin						hasEvent := GetOSEvent(keyDownMask, theEvent)					end;{If there was a keydown, see if it was one of the menu options that we support when running.}				if hasEvent then { there was a keydown }					if BitAnd(theEvent.modifiers, cmdKey) <> 0 then						begin							case char(BitAnd(theEvent.message, charCodeMask)) of								'p': 									begin										PauseFlag := true;										SATSoundShutUp; { Dispose of sound channel }										ShowCursor;										flushevents(6 + 8, 0); { In order to forget the cmd-p }										SetItem(GameMenu, Pause, MyGetIndString(resumeStrID)); {str 19: Resume}										exit(MoveIt);									end;								'.': 									StillRunning := false;								'q': 									begin										StillRunning := false;										SkelWhoa;									end;								's': 									begin										DoGameMenu(sound);									end;								otherwise									;							end; {case}						end;{ Delay, using TickCount so it doesn't matter how fast our Mac is. }				while ((TickCount - t) < 3) do					;			end; { while stillrunning (main loop) }		DoGameOver;		FlushEvents(mouseDown + keyDown, 0); { In order to forget the cmd-p }	end;{We draw the background ourselves rather than using a simple backdrop PICT, to save space and to get the}{dithered background.}	procedure DrawBackground;		var			ph: PicHandle;			ignore: OSErr;			ramp: CTabHandle;			extraOff: CGrafPtr;			extraOffGD: GDHandle;			col: RGBColor;			thinr, r: Rect;			i, j: integer;			posH, posV, scale, height, width: longint; {For scaling the trees}	begin		SATSetPortBackScreen;		SetRect(r, 0, 0, gSAT.offSizeH, gSAT.offSizeV);		if colorFlag then			begin{Draw our PICT under it.}				if gSAT.initDepth = 1 then					ph := GetPicture(133)				else					ph := GetPicture(132); {color PICT}				if ph = nil then					ReportStr(MyGetIndString(nopictStrID)); {STR 20: Can''t get PICT.}				if ph <> nil then					begin						DrawPicture(ph, r);						ReleaseResource(handle(ph));					end;{Set up an 8 bit offscreen with a special color table, and ditherCopy to gSAT.backScreen.}				ramp := GetCTable(128);				if ramp = nil then					ReportStr(MyGetIndString(noclutStrID)); {str 21. Can''t get CLUT 128.}				if ramp <> nil then					begin						SetRect(thinr, 0, 0, 5, gSAT.offSizeV);						ignore := CreateOffScreen(thinr, 8, ramp, extraOff, extraOffGD);						if ignore <> noErr then							ReportStr(MyGetIndString(nooffscreenStrID)); {str 22: Can''t make offscreen.}						SetPort(GrafPtr(extraOff));						SetGDevice(extraOffGD);						PaintRect(extraOff^.portRect);{Make a scale of shades}						for i := 0 to gSAT.offSizeV do							begin{$PUSH}{$V-}								col.green := BSL(i, 16) div gSAT.offSizeV;{$POP}								col.red := col.green;								col.blue := col.green;								RGBForeColor(col);								MoveTo(0, i);								LineTo(5, i); {gSAT.offSizeH}							end;						col.red := 0;						col.green := 0;						col.blue := 0;						RGBForeColor(col);						r.top := gSAT.offSizeV div 4;						thinr.top := gSAT.offSizeV div 4;						SATSetPortBackScreen;						CopyBits(GrafPtr(extraOff)^.portBits, gSAT.backScreen^.portBits, thinr, r, srcCopy + ditherCopy, nil);						DisposeOffscreen(extraOff, extraOffGD);					end;			end		else			begin {This could just as well have been done by SAT}				ph := GetPicture(133); {bw PICT}				SATSetPortBackScreen;				if ph <> nil then					begin						DrawPicture(ph, r);						ReleaseResource(handle(ph));					end;			end;{Draw trees using PICTs!}{First get the right PICT}		if gSAT.initDepth = 1 then			begin				ph := GetPicture(135); {bw tree PICT}			end		else			begin				ph := GetPicture(134); {color tree PICT}			end;{Scale by ph^^.picframe}		for i := 0 to 10 do{For more trees: for j := i to 4 do}			begin				posH := Rand(gSAT.offSizeH);				posV := gSAT.offSizeV div 2 + longint(i) * i * gSAT.offSizeV div 300;				scale := (posV - gSAT.offSizeV div 4) div 17;				height := scale * (ph^^.picframe.bottom - ph^^.picframe.top) div 40;				width := scale * (ph^^.picframe.right - ph^^.picframe.left) div 40;				r.top := posV - height;				r.bottom := posV;				r.right := posH + width;				r.left := posH;				DrawPicture(ph, r);			end;		ReleaseResource(handle(ph));		CopyBits(gSAT.backScreen^.portBits, gSAT.offScreen^.portBits, gSAT.backScreen^.portRect, gSAT.backScreen^.PortRect, srcCopy + ditherCopy, nil);		SATSetPortScreen;	end;	procedure GameWindUpdate;		var			s: str255;			r: Rect;			crsr: CursHandle;	begin{When the depth has changed, the game wind will get an update event,}{so let's give SAT a chance to update itself before updating!}		crsr := GetCursor(WatchCursor);		SetCursor(crsr^^);		if SATDepthChangeTest then			begin				DrawBackground;			end;		ReleaseResource(handle(crsr));		InitCursor;		PeekOffScreen;		AddScore(0);	end;	procedure DoGameMenu (item: integer);	begin		case (item) of			run: 				begin{ Test if we have Color QD, and if so, test bit depth! Alert if features^^.PlotFast.}					if SATDepthChangeTest then {Update if necessary}						DrawBackground;					if not ((gSAT.initDepth = 1) or (gSAT.initDepth = 4) or (gSAT.initDepth = 8)) and features^^.PlotFast then						begin							reportstr(MyGetIndString(pleaseuncheckStrID));{str 23: Please uncheck ''Fast animation'' or set the monitor to 1-, 4- or 8-bit mode in the Control Panel.}							exit(DoGameMenu);						end;					if pauseFlag then						if QuestionStr(MyGetIndString(endStrID)) then {str 24: End the Current game?}							DoGameMenu(abort)						else							exit(DoGameMenu);					DisableItem(gameMenu, macho);					ShowWindow(gSAT.wind);					SelectWindow(gSAT.wind);					StartGame;					GameWindUpdate;					MoveIt;					if not pauseFlag then						EnableItem(GameMenu, macho);				end;			sound: 				begin					features^^.sound := not features^^.sound;					CheckItem(GameMenu, sound, features^^.sound);					if features^^.sound then { Tell the sound package our settings, so we don't have to bother. }						SATSoundOn					else						SATSoundOff;					ChangedResource(handle(features));				end;			macho: 				begin					features^^.macho := not features^^.macho;					CheckItem(GameMenu, macho, features^^.macho);					ChangedResource(handle(features));				end;			AllowBG: 				begin					features^^.AllowBG := not features^^.AllowBG;					CheckItem(GameMenu, AllowBG, features^^.AllowBG);					ChangedResource(handle(features));				end;			FastAnimation: 				begin					features^^.PlotFast := not features^^.PlotFast;					CheckItem(GameMenu, FastAnimation, features^^.PlotFast);					ChangedResource(handle(features));				end;			pause: 				begin{ Pause is only interesting here as "resume". }					if pauseFlag then						begin{ Test if we have Color QD, and if so, test bit depth! Alert if features^^.PlotFast.}							if SATDepthChangeTest then {Update if necessary}								DrawBackground;							if not ((gSAT.initDepth = 1) or (gSAT.initDepth = 4) or (gSAT.initDepth = 8)) and features^^.PlotFast then								begin									ReportStr(MyGetIndString(pleaseuncheckStrID)); {str 23}									exit(DoGameMenu);								end;							SetItem(GameMenu, pause, MyGetIndString(pauseStrID)); {str 18}							pauseFlag := false;							ShowWindow(gSAT.wind);							SelectWindow(gSAT.wind);							GameWindUpdate;							MoveIt;							if not pauseFlag then								EnableItem(GameMenu, macho);						end;				end;			abort: 				begin					if pauseFlag then						begin							SetItem(GameMenu, Pause, MyGetIndString(pauseStrID)); {str 18}							DoGameOver;							pauseFlag := false;							EnableItem(GameMenu, macho);						end				end;		end;	end;	procedure GameWindMouse (thePoint: Point; theTime: longint; theMods: integer; myProc: ProcPtr);	begin		if pauseFlag then			DoGameMenu(pause)		else			DoGameMenu(run);	end;	procedure GameWindIdle;	begin	end;	procedure GameWindClose;	begin	end;	procedure GameWindInit;	begin{ Tell TransSkel to handle all the tedious things with gSAT.wind. }		dummy := SkelWindow(gSAT.wind, @GameWindMouse, nil, @GameWindUpdate, nil, @GameWindClose, nil, @GameWindIdle, false);{ Initialize the sprites }		InitSprites;{We draw the background ourselves in this game.}		DrawBackground;{ Draw the contents of the window (to give the user something to look at during the rest of startup). }		ShowWindow(gSAT.wind);		SelectWindow(gSAT.wind);		PeekOffScreen;	end;end.
+{================================================}
+{=============== Game window handler ================}
+{================================================}
+
+{ Example file for Ingemars Sprite Animation Toolkit. }
+{ © Ingemar Ragnemalm 1992 }
+{ See doc files for legal terms for using this code. }
+
+{ This file holds the game window and game menu handlers for HeartQuest.}
+{ This is where most game-specific code goes, except for the code describing}
+{ each object. }
+
+{ GameWindInit is called to initialize, which initializes the window and installs}
+{handler procedures (note that menus are installed in main.p). It calls the routines}
+{to initialize offscreen GrafPorts and all the animated objects. }
+
+{ When the user selects New Game, StartGame is called to set up a new}
+{ game, and then MoveIt, the game driver routine is called. }
+
+unit GameWind;
+
+interface
+
+	uses
+		transskel, SAT,{Globals, Other, Emergency, OffScreen, Animator, SATSound}
+		GameGlobals, sPlayer, sFlypaper, sHeart, sBonus, sPoints, scores, SoundConst, Sound;
+
+	procedure DoGameMenu (item: integer);
+	procedure GameWindInit;
+	procedure DoGameOver;
+
+
+implementation
+
+{var}
+{mp: MonsterPtr; { Bra att ha en global tillgänglig. Dvs praktiskt... }
+{    SlemtorksHandlerPtr: ProcPtr;}
+
+	procedure InitSprites;
+	begin
+{ Set up the two offscreen GrafPorts "gSAT.offScreen" and "gSAT.backScreen". SAT has a standard}
+{ way to do this. Let SAT draw the background PICT for us, too. }
+{SetupOffAndBack(132, 129);}
+
+{ Call the init routines for each the sprite unit! Don't forget this! }
+		InitFlypaper;
+		InitHeart;
+		InitPlayer;
+		InitBonus;
+		InitPoints;
+	end;
+
+	procedure DrawBackground;
+	forward;
+
+{ Setup a new level. This is called when the game starts ans at each new level.}
+	procedure SetupLevel (level: integer);
+		var
+			p: point;
+			i: integer;
+			mp, oldmp: SpritePtr;
+			r: rect;
+			s: Str255;
+			er: EventRecord; {For EventAvail}
+			strwidth: integer;
+
+{ A routine to create a bunch of hearts }
+		procedure MakeHearts (howmany: integer);
+			var
+				i: integer;
+				mp: SpritePtr;
+		begin
+			for i := 1 to howmany do
+				case rand(4) of
+					0: 
+						mp := NewSprite(-2, Rand(gSAT.offSizeH - 112) + 17, 0, @HandleHeart, @SetupHeart, nil);
+					1: 
+						mp := NewSprite(-2, Rand(gSAT.offSizeH - 112) + 17, gSAT.offSizeV - 32, @HandleHeart, @SetupHeart, nil);
+					2: 
+						mp := NewSprite(-2, 0, Rand(gSAT.offSizeV - 32) + 17, @HandleHeart, @SetupHeart, nil);
+					3: 
+						mp := NewSprite(-2, gSAT.offSizeH - xsize, Rand(gSAT.offSizeV - 32) + 17, @HandleHeart, @SetupHeart, nil);
+				end;
+		end;
+
+	begin { SetupLevel }
+
+{ Clear the sprite list }
+		while gSAT.sRoot <> nil do
+			KillSprite(gSAT.sRoot);
+
+{ Create all the sprites for the level, depending on the level number. }
+		case level of
+			1: 
+				begin
+					batchcount := 6;
+					bonus := 250;
+					MakeHearts(6);
+					mp := NewSprite(-3, 10, 10, @HandleFlypaper, @SetupFlypaper, nil);
+					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);
+				end;
+			2: 
+				begin
+					batchcount := 10;
+					bonus := 300;
+					MakeHearts(10);
+					mp := NewSprite(-3, 10, 10, @HandleFlypaper, @SetupFlypaper, nil);
+					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, 20, @HandleFlypaper, @SetupFlypaper, nil);
+					mp := NewSprite(-3, 20, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);
+				end;
+			3: 
+				begin
+					batchcount := 12;
+					MakeHearts(12);
+					bonus := 350;
+					mp := NewSprite(-3, 5, 5, @HandleFlypaper, @SetupFlypaper, nil);
+					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, 5, @HandleFlypaper, @SetupFlypaper, nil);
+					mp := NewSprite(-3, 5, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);
+					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);
+				end;
+			4: 
+				begin
+					batchcount := 12;
+					MakeHearts(12);
+					bonus := 350;
+					mp := NewSprite(-3, 5, 5, @HandleFlypaper, @SetupFlypaper, nil);
+					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, 5, @HandleFlypaper, @SetupFlypaper, nil);
+					mp := NewSprite(-3, 5, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);
+					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);
+					mp := NewSprite(-3, 5, (gSAT.offSizeV - 32) mod 2, @HandleFlypaper, @SetupFlypaper, nil);
+					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, (gSAT.offSizeV - 32) mod 2, @HandleFlypaper, @SetupFlypaper, nil);
+				end;
+			5: 
+				begin
+					batchcount := 10;
+					MakeHearts(10);
+					bonus := 380;
+					mp := NewSprite(-3, 5, 5, @HandleFlypaper, @SetupFlypaper, nil);
+					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, 5, @HandleFlypaper, @SetupFlypaper, nil);
+					mp := NewSprite(-3, 5, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);
+					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);
+				end;
+			6: 
+				begin
+					batchcount := 12;
+					MakeHearts(12);
+					bonus := 420;
+					mp := NewSprite(-3, 5, 5, @HandleFlypaper, @SetupFlypaper, nil);
+					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, 5, @HandleFlypaper, @SetupFlypaper, nil);
+					mp := NewSprite(-3, 5, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);
+					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);
+					mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, (gSAT.offSizeV - 32) mod 2, @HandleFlypaper, @SetupFlypaper, nil);
+				end;
+			otherwise
+				begin
+					batchcount := level * 2;
+					MakeHearts(level * 2);
+					bonus := 300 + 20 * level;
+					for i := 0 to level - 1 do
+						begin
+							case rand(6) of
+								0: 
+									mp := NewSprite(-3, 5, 5, @HandleFlypaper, @SetupFlypaper, nil);
+								1: 
+									mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, 5, @HandleFlypaper, @SetupFlypaper, nil);
+								2: 
+									mp := NewSprite(-3, 5, 300, @HandleFlypaper, @SetupFlypaper, nil);
+								3: 
+									mp := NewSprite(-3, gSAT.offSizeH - xsize - 32, gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);
+								4: 
+									mp := NewSprite(-3, (gSAT.offSizeH - xsize - 32) div 2, 5, @HandleFlypaper, @SetupFlypaper, nil);
+								5: 
+									mp := NewSprite(-3, (gSAT.offSizeH - xsize - 32), gSAT.offSizeV - 32, @HandleFlypaper, @SetupFlypaper, nil);
+							end; { case }
+						end;
+				end;
+		end;
+{ Reposition mouse to the center of the game area. }
+		p.h := 256;
+		p.v := 171;
+		SetMouse(p);
+{ Make the player sprite. }
+		mp := NewSprite(2, (gSAT.offSizeH - xsize) div 2, gSAT.offSizeV div 2, @HandlePlayer, @SetupPlayer, @HitPlayer);
+{ Copy gSAT.backScreen to gSAT.offScreen to erase old sprites. }
+		CopyBits(gSAT.backScreen^.portBits, gSAT.offScreen^.portBits, gSAT.offScreen^.portRect, gSAT.offScreen^.portRect, srcCopy, nil);
+		PeekOffScreen; {replaces the following out-commented lines:}
+
+		AddScore(0);
+{ Do one frame of animation just to draw all the objects. }
+		RunSAT(false); {false or features^^.PlotFast; slow is ok - no hurry!}
+
+		if level = 1 then
+			strwidth := StringWidth(MyGetIndString(startgameStrID))
+		else
+			strwidth := StringWidth(MyGetIndString(startlevelStrID));
+
+{ Draw a message and wait for click- this is a bit ugly. Consider other ways. }
+		SetPort(gSAT.wind);
+		SetRect(r, gSAT.offSizeH div 2 - strwidth div 2 - 5 + 2, gSAT.offSizeV div 2 + 35 + 2, gSAT.offSizeH div 2 + strwidth div 2 + 5 + 2, gSAT.offSizeV div 2 + 60 + 2); {offset by 2 pixels}
+		PaintRect(r);
+		SetRect(r, gSAT.offSizeH div 2 - strwidth div 2 - 5, gSAT.offSizeV div 2 + 35, gSAT.offSizeH div 2 + strwidth div 2 + 5, gSAT.offSizeV div 2 + 60);
+		EraseRect(r);
+
+		MoveTo(gSAT.offSizeH div 2 - strwidth div 2, gSAT.offSizeV div 2 + 50);
+		if level = 1 then
+			DrawString(MyGetIndString(startgameStrID)) {str 16: Click the mouse to start the game.}
+		else
+			begin
+				DrawString(MyGetIndString(startlevelStrID)); {str 17: Click the mouse to start level }
+				NumToString(level, s);
+				DrawString(s);
+				DrawChar('.');
+			end;
+
+{Wait until something happens}
+		FlushEvents(EveryEvent, 0); { To forget events, like mouse clicks etc. }
+		repeat
+		until EventAvail(mDownMask + keyDownMask, er);
+
+{ Redraw to get rid of the message we just made. }
+		PeekOffScreen;
+	end; { SetupLevel }
+
+{ Start a new game. Initialize level, score, number of lives, and call setuplevel to make the first level. }
+	procedure StartGame;
+	begin
+		ZeroScore;
+		Level := 1;
+
+		setuplevel(level);
+	end;
+
+{ Game Over procedure. Draw "Game Over" text, check high scores. }
+
+	procedure DoGameOver;
+		var
+{ Variables for the Game Over-box }
+			theRect, theRect2: rect;
+			thePict: Handle;
+			bredd, i: integer;
+			dx, dy: integer;
+			time: longint;
+	begin
+		SetItem(GameMenu, Pause, MyGetIndString(pauseStrID)); {str 18: Pause}
+{ Game Over display! }
+		SetPort(gSAT.wind);
+		if colorFlag and (gSAT.initDepth <> 1) then
+			thePICT := GetResource('PICT', 129)
+		else
+			thePICT := GetResource('PICT', 128);
+		theRect := PicHandle(thePICT)^^.picFrame;
+		theRect.right := theRect.right - theRect.left;
+		theRect.bottom := theRect.bottom - theRect.top;
+		theRect.top := 0;
+		theRect.left := 0;
+
+		dx := (gSAT.offSizeH - (theRect.right - theRect.left)) div 2 - theRect.left;
+		dy := (gSAT.offSizeV - (theRect.bottom - theRect.top)) div 2 - theRect.top;
+		OffsetRect(theRect, dx, dy);
+
+		bredd := theRect.right - theRect.left;
+		theRect2 := theRect;
+
+		i := 1;
+		repeat
+			time := TickCount;
+			theRect.right := theRect2.right - bredd * (80 - i) div 160;
+			theRect.left := theRect2.left + bredd * (80 - i) div 160;
+			DrawPicture(PicHandle(thePICT), TheRect);
+			i := i + TickCount - time;
+		until i >= 80;
+
+		SetPort(gSAT.offScreen);
+		DrawPicture(PicHandle(thePICT), TheRect);
+		SetPort(gSAT.wind);
+
+		InvalRect(theRect);
+
+		SATSoundShutUp; { Dispose of sound channel }
+
+		FlushEvents(everyEvent, 0); { To forget events, like mouse clicks etc. }
+		ShowCursor;
+
+		UpdateHigh; { Game over, was it high score? }
+	end;
+
+
+{ This routine is the game driver. It calls the "Animator" package until the game ends or is paused. }
+{ I also read the keyboard here. This could optionally be moved to the "player object" module. }
+
+	procedure MoveIt;
+		var
+			fr, tr, r: Rect;
+			pt: Point;
+			h: Integer;
+			truepos: Longint;
+{n, x: Integer;	{ Are these used? }
+			t, l: longint;
+			truepos32, bredd32: integer; { Some old bugfix that I no longer remember... }
+			truepos19, bredd19: integer;
+			theEvent: EventRecord; { för att testa musklick }
+{ To check for key clicks with GetKeys:  - no longer used. km: KeyMap;}
+			hasEvent: Boolean;
+			ignore: OSerr;
+	begin
+		stillrunning := true; { A flag that tells whether or not to quit this routine. }
+
+		HideCursor; { NOTE: No matter how we leave the MoveIt procedure, we should ShowCursor. }
+
+		pt.h := 256;
+		pt.v := 171;
+		SetMouse(pt);
+
+{ Main loop! Keep running until the game is paused or ends. }
+		while stillrunning = true do
+			begin
+				t := TickCount;
+				SetPort(gSAT.wind);
+				SetPort(gSAT.offScreen);
+
+{ Here is the real heart of the loop: call Animator once per loop. It will call all the objects. }
+				RunSAT(features^^.plotFast);
+{SATSoundEvents; No longer needed - included in RunSAT!}
+
+{ All the rest of the main loop is game specific, next level, bonus handling, etc. }
+				if (batchcount < 1) then
+					begin
+						SATSoundShutUp;
+						if false then
+							if features^^.sound then
+								ignore := SndPlay(nil, GetResource('snd ', SadarSnd), false);
+
+						SATSoundPlay(SadarSndH, 0, true);
+						repeat
+							SATSoundEvents
+						until SATSoundDone;
+
+						if bonus > 0 then
+							while bonus > 0 do
+								begin
+									Bonus := Bonus - 10;
+{ SndPlay would have been ok here, since we want to play this synchronously.}
+
+									SATSoundPlay(KlounkSndH, 0, true);
+									repeat
+										SATSoundEvents
+									until SATSoundDone;
+
+									if false then
+										if features^^.sound then
+											ignore := SndPlay(nil, GetResource('snd ', KlounkSnd), false);
+
+									if bonus < 0 then
+										begin
+											l := bonus;
+											bonus := 0;
+											AddScoreS(10 + l); {A special synchronous version of AddScore}
+										end
+									else
+										AddScoreS(10); { Bonus! }
+								end { if bonus > 0 }
+						else if features^^.macho then
+							stillrunning := false; { If no bonus, game over }
+
+						if (stillrunning and features^^.macho) or (level < 3) then {level < 4}
+							begin
+								level := level + 1;
+								SetupLevel(level);
+								AddScoreS(0); {To update the level number}
+							end
+						else
+							stillrunning := false;
+					end; {if (batchcount < 1)}
+
+{ Check for keys being pressed }
+				if features^^.allowBG then { if we are allowed to use the normal method }
+					begin
+						SystemTask;
+{ Replaced the following call by WaitNextEvent if you want to be modern (but less backwards compatible). :-) }
+						hasEvent := GetNextEvent(keyDownMask, theEvent)
+					end
+				else {Otherwise, use the faster GetOSEvent}
+					begin
+						hasEvent := GetOSEvent(keyDownMask, theEvent)
+					end;
+
+{If there was a keydown, see if it was one of the menu options that we support when running.}
+				if hasEvent then { there was a keydown }
+					if BitAnd(theEvent.modifiers, cmdKey) <> 0 then
+						begin
+							case char(BitAnd(theEvent.message, charCodeMask)) of
+								'p': 
+									begin
+										PauseFlag := true;
+										SATSoundShutUp; { Dispose of sound channel }
+										ShowCursor;
+										flushevents(6 + 8, 0); { In order to forget the cmd-p }
+										SetItem(GameMenu, Pause, MyGetIndString(resumeStrID)); {str 19: Resume}
+										exit(MoveIt);
+									end;
+								'.': 
+									StillRunning := false;
+								'q': 
+									begin
+										StillRunning := false;
+										SkelWhoa;
+									end;
+								's': 
+									begin
+										DoGameMenu(sound);
+									end;
+								otherwise
+									;
+							end; {case}
+						end;
+
+{ Delay, using TickCount so it doesn't matter how fast our Mac is. }
+				while ((TickCount - t) < 3) do
+					;
+
+			end; { while stillrunning (main loop) }
+
+		DoGameOver;
+
+		FlushEvents(mouseDown + keyDown, 0); { In order to forget the cmd-p }
+	end;
+
+
+{We draw the background ourselves rather than using a simple backdrop PICT, to save space and to get the}
+{dithered background.}
+	procedure DrawBackground;
+		var
+			ph: PicHandle;
+			ignore: OSErr;
+			ramp: CTabHandle;
+			extraOff: CGrafPtr;
+			extraOffGD: GDHandle;
+			col: RGBColor;
+			thinr, r: Rect;
+			i, j: integer;
+
+			posH, posV, scale, height, width: longint; {For scaling the trees}
+	begin
+		SATSetPortBackScreen;
+		SetRect(r, 0, 0, gSAT.offSizeH, gSAT.offSizeV);
+		if colorFlag then
+			begin
+{Draw our PICT under it.}
+				if gSAT.initDepth = 1 then
+					ph := GetPicture(133)
+				else
+					ph := GetPicture(132); {color PICT}
+				if ph = nil then
+					ReportStr(MyGetIndString(nopictStrID)); {STR 20: Can''t get PICT.}
+				if ph <> nil then
+					begin
+						DrawPicture(ph, r);
+						ReleaseResource(handle(ph));
+					end;
+{Set up an 8 bit offscreen with a special color table, and ditherCopy to gSAT.backScreen.}
+				ramp := GetCTable(128);
+				if ramp = nil then
+					ReportStr(MyGetIndString(noclutStrID)); {str 21. Can''t get CLUT 128.}
+				if ramp <> nil then
+					begin
+						SetRect(thinr, 0, 0, 5, gSAT.offSizeV);
+						ignore := CreateOffScreen(thinr, 8, ramp, extraOff, extraOffGD);
+						if ignore <> noErr then
+							ReportStr(MyGetIndString(nooffscreenStrID)); {str 22: Can''t make offscreen.}
+						SetPort(GrafPtr(extraOff));
+						SetGDevice(extraOffGD);
+						PaintRect(extraOff^.portRect);
+{Make a scale of shades}
+						for i := 0 to gSAT.offSizeV do
+							begin
+{$PUSH}
+{$V-}
+								col.green := BSL(i, 16) div gSAT.offSizeV;
+{$POP}
+								col.red := col.green;
+								col.blue := col.green;
+								RGBForeColor(col);
+								MoveTo(0, i);
+								LineTo(5, i); {gSAT.offSizeH}
+							end;
+
+						col.red := 0;
+						col.green := 0;
+						col.blue := 0;
+						RGBForeColor(col);
+
+						r.top := gSAT.offSizeV div 4;
+						thinr.top := gSAT.offSizeV div 4;
+
+						SATSetPortBackScreen;
+						CopyBits(GrafPtr(extraOff)^.portBits, gSAT.backScreen^.portBits, thinr, r, srcCopy + ditherCopy, nil);
+						DisposeOffscreen(extraOff, extraOffGD);
+
+					end;
+
+			end
+		else
+			begin {This could just as well have been done by SAT}
+				ph := GetPicture(133); {bw PICT}
+				SATSetPortBackScreen;
+				if ph <> nil then
+					begin
+						DrawPicture(ph, r);
+						ReleaseResource(handle(ph));
+					end;
+			end;
+
+{Draw trees using PICTs!}
+
+{First get the right PICT}
+		if gSAT.initDepth = 1 then
+			begin
+				ph := GetPicture(135); {bw tree PICT}
+			end
+		else
+			begin
+				ph := GetPicture(134); {color tree PICT}
+			end;
+
+{Scale by ph^^.picframe}
+		for i := 0 to 10 do
+{For more trees: for j := i to 4 do}
+			begin
+				posH := Rand(gSAT.offSizeH);
+				posV := gSAT.offSizeV div 2 + longint(i) * i * gSAT.offSizeV div 300;
+
+				scale := (posV - gSAT.offSizeV div 4) div 17;
+				height := scale * (ph^^.picframe.bottom - ph^^.picframe.top) div 40;
+				width := scale * (ph^^.picframe.right - ph^^.picframe.left) div 40;
+
+				r.top := posV - height;
+				r.bottom := posV;
+				r.right := posH + width;
+				r.left := posH;
+
+				DrawPicture(ph, r);
+			end;
+
+		ReleaseResource(handle(ph));
+
+		CopyBits(gSAT.backScreen^.portBits, gSAT.offScreen^.portBits, gSAT.backScreen^.portRect, gSAT.backScreen^.PortRect, srcCopy + ditherCopy, nil);
+		SATSetPortScreen;
+	end;
+
+
+	procedure GameWindUpdate;
+		var
+			s: str255;
+			r: Rect;
+			crsr: CursHandle;
+	begin
+{When the depth has changed, the game wind will get an update event,}
+{so let's give SAT a chance to update itself before updating!}
+
+		crsr := GetCursor(WatchCursor);
+		SetCursor(crsr^^);
+		if SATDepthChangeTest then
+			begin
+				DrawBackground;
+			end;
+		ReleaseResource(handle(crsr));
+		InitCursor;
+
+		PeekOffScreen;
+		AddScore(0);
+	end;
+
+	procedure DoGameMenu (item: integer);
+	begin
+		case (item) of
+			run: 
+				begin
+{ Test if we have Color QD, and if so, test bit depth! Alert if features^^.PlotFast.}
+					if SATDepthChangeTest then {Update if necessary}
+						DrawBackground;
+					if not ((gSAT.initDepth = 1) or (gSAT.initDepth = 4) or (gSAT.initDepth = 8)) and features^^.PlotFast then
+						begin
+							reportstr(MyGetIndString(pleaseuncheckStrID));
+{str 23: Please uncheck ''Fast animation'' or set the monitor to 1-, 4- or 8-bit mode in the Control Panel.}
+							exit(DoGameMenu);
+						end;
+					if pauseFlag then
+						if QuestionStr(MyGetIndString(endStrID)) then {str 24: End the Current game?}
+							DoGameMenu(abort)
+						else
+							exit(DoGameMenu);
+					DisableItem(gameMenu, macho);
+					ShowWindow(gSAT.wind);
+					SelectWindow(gSAT.wind);
+					StartGame;
+					GameWindUpdate;
+					MoveIt;
+					if not pauseFlag then
+						EnableItem(GameMenu, macho);
+				end;
+			sound: 
+				begin
+					features^^.sound := not features^^.sound;
+					CheckItem(GameMenu, sound, features^^.sound);
+					if features^^.sound then { Tell the sound package our settings, so we don't have to bother. }
+						SATSoundOn
+					else
+						SATSoundOff;
+					ChangedResource(handle(features));
+				end;
+			macho: 
+				begin
+					features^^.macho := not features^^.macho;
+					CheckItem(GameMenu, macho, features^^.macho);
+					ChangedResource(handle(features));
+				end;
+			AllowBG: 
+				begin
+					features^^.AllowBG := not features^^.AllowBG;
+					CheckItem(GameMenu, AllowBG, features^^.AllowBG);
+					ChangedResource(handle(features));
+				end;
+			FastAnimation: 
+				begin
+					features^^.PlotFast := not features^^.PlotFast;
+					CheckItem(GameMenu, FastAnimation, features^^.PlotFast);
+					ChangedResource(handle(features));
+				end;
+			pause: 
+				begin
+{ Pause is only interesting here as "resume". }
+					if pauseFlag then
+						begin
+{ Test if we have Color QD, and if so, test bit depth! Alert if features^^.PlotFast.}
+							if SATDepthChangeTest then {Update if necessary}
+								DrawBackground;
+							if not ((gSAT.initDepth = 1) or (gSAT.initDepth = 4) or (gSAT.initDepth = 8)) and features^^.PlotFast then
+								begin
+									ReportStr(MyGetIndString(pleaseuncheckStrID)); {str 23}
+									exit(DoGameMenu);
+								end;
+							SetItem(GameMenu, pause, MyGetIndString(pauseStrID)); {str 18}
+							pauseFlag := false;
+							ShowWindow(gSAT.wind);
+							SelectWindow(gSAT.wind);
+							GameWindUpdate;
+							MoveIt;
+							if not pauseFlag then
+								EnableItem(GameMenu, macho);
+						end;
+				end;
+			abort: 
+				begin
+					if pauseFlag then
+						begin
+							SetItem(GameMenu, Pause, MyGetIndString(pauseStrID)); {str 18}
+							DoGameOver;
+							pauseFlag := false;
+							EnableItem(GameMenu, macho);
+						end
+				end;
+		end;
+	end;
+
+	procedure GameWindMouse (thePoint: Point; theTime: longint; theMods: integer; myProc: ProcPtr);
+	begin
+		if pauseFlag then
+			DoGameMenu(pause)
+		else
+			DoGameMenu(run);
+	end;
+
+	procedure GameWindIdle;
+	begin
+	end;
+
+	procedure GameWindClose;
+	begin
+	end;
+
+	procedure GameWindInit;
+	begin
+{ Tell TransSkel to handle all the tedious things with gSAT.wind. }
+		dummy := SkelWindow(gSAT.wind, @GameWindMouse, nil, @GameWindUpdate, nil, @GameWindClose, nil, @GameWindIdle, false);
+
+{ Initialize the sprites }
+		InitSprites;
+
+{We draw the background ourselves in this game.}
+		DrawBackground;
+
+{ Draw the contents of the window (to give the user something to look at during the rest of startup). }
+		ShowWindow(gSAT.wind);
+		SelectWindow(gSAT.wind);
+		PeekOffScreen;
+	end;
+
+end.

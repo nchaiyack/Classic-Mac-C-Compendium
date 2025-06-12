@@ -1,1 +1,3 @@
-/* main.c */void main(void);
+
+/* main.c */
+void main(void);
