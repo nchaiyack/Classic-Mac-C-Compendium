@@ -1,1 +1,134 @@
-Please read the UUPC distribution notes in the (Support) folder. Theseare very brief notes aimed at expert users.InstallationYou probably won't make much sense of what follows unless you have installeduucp on a Unix system before. Both pcmail and uupc read the resource file"Profile" to get its configuration information. There are sample config filesin the (Support) folder. Edit the sample "Profile" in this package to reflectyour environment. It just contains a set of STR resources that provide a quickand dirty simulation of Unix environment variables. Examine the file usingResEdit: I think you will find it self-explanatory. In essence, uupc needs toknow where to find spool files, and so on. I suggest you use full pathnames(unix style with slashes) all the time. There are a set of defaults compiledinto the programs. They are	MAILBOX		"Postmaster"        current user's "id"	NAME		"System admin"      current user's full name	HOME		"guest"             current user's home dir	DOMAIN		"mac.uucp"          domain name of this machine	MAILDIR		"spool/mail"        where mail is kept	CONFDIR		"lib/uucp"          where config data is kept	SPOOLDIR	"spool/uucp"        where spooled files are kept	PUBDIR		"spool/uucppublic"  public spool directory	MAILSERVICE	"host"              who do we send remote mail	NODENAME	"mac"               what is our local nodename	DEVICE		"modem"             what is the default device	SPEED		"1200"              what is the default speed	TEMPDIR		"spool/tmp"         what is temp directory    MAILCOPY    "mail.sent"         file to record outgoing mail                                    (null string disables)    SIGNATURE   ".signature"        file containing signature lines    TIMEDIFF    "GMT"               time difference from GMT (a string)One of the config items, "CONFDIR", tells uupc where to find the "Systems"file. This is the equivalent of uucico's L.sys file, and you should edit theenclosed sample file and put it in your CONFDIR. Use "printer" or "modem"(or .a or .b) to specify which port to use. I have not tested the Hayesdialling code, preferring to use the send-expect strings to control themodem (see the enclosed sample Systems file).Uupc/pcmail will create the file SEQF in the CONFDIR; this is a simple textfile that maintains the sequence number. The SPOOLDIR is used for obviouspurposes, and logfiles are also created there. There are various folders fortemporary files. You can also specify the mail host, your mail domain name,the signature file (a text file that is appended to all your messages), and amail dir in which your mail boxes are kept.For usersThere are two applications included in this package: pcmail, used to generatemail, and uupc used to transfer it. Pcmail has not been extensively tested; inparticular, the mail reading interface does not work. Composing mail is ok ifbrain-damaged. It just uses the Think stdio libaries, so you have to type inthe message. Fortunately, you can use any Mac text editor to compose your mailand either (a) redirect stdin or (b) copy and paste it in. I read my mailusing a text editor, and generate my replies using same. I have not spent muchtime on pcmail as I would rather spend the time writing a Mac-like mailfront-end.Mail that you send is put in a spool directory, and "Mac uupc" is used to sendthe mail to your mailfeed, and to poll your mailfeed for incoming mail. Atpresent, you have to kick off uupc manually although I suppose something likeQuickeys 1.2 could be used for automatic overnight polls.Some details:a) To send mail: dbl-click pcmail. Then type in the address to which you   want to send mail followed by the mail message. A mail message consists   of header line, then a blank line, then the body of the message.   Pcmail adds the To:, From: and Date: lines to your message header,   but not the Subject: line. You can add any header lines you want to   your message. The mail message can be pasted in from the clipboard or   you can redirect standard input. Eg.      info-mac@sumex.aim.edu < my_message      where my_message is a text file contain the message. Alternatively,   you can type or paste your message from the clipboard:      info-mac@sumex.aim.edu   Subject: A message      Here is a message.....   b) To transfer mail: dbl-click "Mac uupc" and type in the command line you   would have typed to uucico on Unix. E.g.      -smailhost -r1 -x4      to poll host "mailhost" in master mode and debugging level 4. Information   about how to call "mailhost" is stored in the file "Systems" (see above).   Uupc will transfer any files spooled on your machine to your host and pick   up any mail waiting for you there.For hackersI tried to use the scheme in the UUPC distribution in which the common sourcefiles were kept in a folder one level above Mac-specific ones, and were"#included" by the system-specific files. Unfortunately, Think C wouldn't letme #include a full pathname (I think this is fixed in Think C 4.0), so thatwent out the door. Instead I keep the project files, and any common sourcefiles in the top-level folder and source files in their respective folders.I've also changed some of the mail headers to bring them into line with whatsendmail on Unix generates. The original author has not approved this and Ihope he doesn't mind.Wherever possible, I tried to use stdio functions, and kept Mac-specificchanges to files in the Mac-specific folder. If you are recompiling thesources, you should enable the "paste from clipboard" option in the stdiolibraries (look in the stdio sources). Also there's a problem with "freopen".Look in the file "stdopen fix" i the (Support) folder for details. I've alsochanged some of the logging files to make them close to Unix uucp LOGFILEs,and also added code for the SYSLOG logfile. I also added two functions topcmail to turn addresses into either uucp "!" form or "%@" form. My mail hostis somewhat fussy about what addresses you give it, and yours may be as well;#define PERCENT_ADDRS as needed (in lmail.c). This is only done on outgongmail, by the way.To doLots; e.g. a decent mail front-end, MF friendly background xfers, conversion toa full-blown Mac application ...Good luck!Sak WathanasinNetwork Analysis Limiteduucp:   ...!ukc!nan!swother:  sw%nan.uucp@ukc.ac.ukphone:  (+44) 242 520861telex:  9312130355 (SW G)snail:  Flat 4, Albany House, Lansdown Rd, Cheltenham, Glos GL50 2HY, UK
+
+Please read the UUPC distribution notes in the (Support) folder. These
+are very brief notes aimed at expert users.
+
+Installation
+
+You probably won't make much sense of what follows unless you have installed
+uucp on a Unix system before. Both pcmail and uupc read the resource file
+"Profile" to get its configuration information. There are sample config files
+in the (Support) folder. Edit the sample "Profile" in this package to reflect
+your environment. It just contains a set of STR resources that provide a quick
+and dirty simulation of Unix environment variables. Examine the file using
+ResEdit: I think you will find it self-explanatory. In essence, uupc needs to
+know where to find spool files, and so on. I suggest you use full pathnames
+(unix style with slashes) all the time. There are a set of defaults compiled
+into the programs. They are
+
+	MAILBOX		"Postmaster"        current user's "id"
+	NAME		"System admin"      current user's full name
+	HOME		"guest"             current user's home dir
+	DOMAIN		"mac.uucp"          domain name of this machine
+	MAILDIR		"spool/mail"        where mail is kept
+	CONFDIR		"lib/uucp"          where config data is kept
+	SPOOLDIR	"spool/uucp"        where spooled files are kept
+	PUBDIR		"spool/uucppublic"  public spool directory
+	MAILSERVICE	"host"              who do we send remote mail
+	NODENAME	"mac"               what is our local nodename
+	DEVICE		"modem"             what is the default device
+	SPEED		"1200"              what is the default speed
+	TEMPDIR		"spool/tmp"         what is temp directory
+    MAILCOPY    "mail.sent"         file to record outgoing mail
+                                    (null string disables)
+    SIGNATURE   ".signature"        file containing signature lines
+    TIMEDIFF    "GMT"               time difference from GMT (a string)
+
+One of the config items, "CONFDIR", tells uupc where to find the "Systems"
+file. This is the equivalent of uucico's L.sys file, and you should edit the
+enclosed sample file and put it in your CONFDIR. Use "printer" or "modem"
+(or .a or .b) to specify which port to use. I have not tested the Hayes
+dialling code, preferring to use the send-expect strings to control the
+modem (see the enclosed sample Systems file).
+
+Uupc/pcmail will create the file SEQF in the CONFDIR; this is a simple text
+file that maintains the sequence number. The SPOOLDIR is used for obvious
+purposes, and logfiles are also created there. There are various folders for
+temporary files. You can also specify the mail host, your mail domain name,
+the signature file (a text file that is appended to all your messages), and a
+mail dir in which your mail boxes are kept.
+
+For users
+
+There are two applications included in this package: pcmail, used to generate
+mail, and uupc used to transfer it. Pcmail has not been extensively tested; in
+particular, the mail reading interface does not work. Composing mail is ok if
+brain-damaged. It just uses the Think stdio libaries, so you have to type in
+the message. Fortunately, you can use any Mac text editor to compose your mail
+and either (a) redirect stdin or (b) copy and paste it in. I read my mail
+using a text editor, and generate my replies using same. I have not spent much
+time on pcmail as I would rather spend the time writing a Mac-like mail
+front-end.
+
+Mail that you send is put in a spool directory, and "Mac uupc" is used to send
+the mail to your mailfeed, and to poll your mailfeed for incoming mail. At
+present, you have to kick off uupc manually although I suppose something like
+Quickeys 1.2 could be used for automatic overnight polls.
+
+Some details:
+a) To send mail: dbl-click pcmail. Then type in the address to which you
+   want to send mail followed by the mail message. A mail message consists
+   of header line, then a blank line, then the body of the message.
+   Pcmail adds the To:, From: and Date: lines to your message header,
+   but not the Subject: line. You can add any header lines you want to
+   your message. The mail message can be pasted in from the clipboard or
+   you can redirect standard input. Eg.
+   
+   info-mac@sumex.aim.edu < my_message
+   
+   where my_message is a text file contain the message. Alternatively,
+   you can type or paste your message from the clipboard:
+   
+   info-mac@sumex.aim.edu
+   Subject: A message
+   
+   Here is a message.....
+   
+b) To transfer mail: dbl-click "Mac uupc" and type in the command line you
+   would have typed to uucico on Unix. E.g.
+   
+   -smailhost -r1 -x4
+   
+   to poll host "mailhost" in master mode and debugging level 4. Information
+   about how to call "mailhost" is stored in the file "Systems" (see above).
+   Uupc will transfer any files spooled on your machine to your host and pick
+   up any mail waiting for you there.
+
+For hackers
+
+I tried to use the scheme in the UUPC distribution in which the common source
+files were kept in a folder one level above Mac-specific ones, and were
+"#included" by the system-specific files. Unfortunately, Think C wouldn't let
+me #include a full pathname (I think this is fixed in Think C 4.0), so that
+went out the door. Instead I keep the project files, and any common source
+files in the top-level folder and source files in their respective folders.
+I've also changed some of the mail headers to bring them into line with what
+sendmail on Unix generates. The original author has not approved this and I
+hope he doesn't mind.
+
+Wherever possible, I tried to use stdio functions, and kept Mac-specific
+changes to files in the Mac-specific folder. If you are recompiling the
+sources, you should enable the "paste from clipboard" option in the stdio
+libraries (look in the stdio sources). Also there's a problem with "freopen".
+Look in the file "stdopen fix" i the (Support) folder for details. I've also
+changed some of the logging files to make them close to Unix uucp LOGFILEs,
+and also added code for the SYSLOG logfile. I also added two functions to
+pcmail to turn addresses into either uucp "!" form or "%@" form. My mail host
+is somewhat fussy about what addresses you give it, and yours may be as well;
+#define PERCENT_ADDRS as needed (in lmail.c). This is only done on outgong
+mail, by the way.
+
+To do
+
+Lots; e.g. a decent mail front-end, MF friendly background xfers, conversion to
+a full-blown Mac application ...
+
+Good luck!
+Sak Wathanasin
+Network Analysis Limited
+
+uucp:   ...!ukc!nan!sw
+other:  sw%nan.uucp@ukc.ac.uk
+phone:  (+44) 242 520861
+telex:  9312130355 (SW G)
+snail:  Flat 4, Albany House, Lansdown Rd, Cheltenham, Glos GL50 2HY, UK
+

@@ -1,1 +1,68 @@
-#*****************************************************************#	Play v1.0.0#	and Sound Package for MPW#*****************************************************************#	v1.0.0 -- 31 Mar 94; Initial release#*****************************************************************#	©1994, Gregory E. Allen <gallen@arlut.utexas.edu>#	These files may be distributed freely for non-profit use,#	as long as this file accompanies them.#*****************************************************************mpw-play-tool-100.sit.hqxPlay v1.0.0 Tool for MPW, and Sound Package for MPW.Gregory E. Allen <gallen@arlut.utexas.edu>The "Play" Tool plays System 7 Finder Sounds from MPW.This package also includes scripts for MPW Startup and Quit sounds,and gives instructions on how to modify your BuildProgram script tohave Build Error and Build Complete sounds.This software is free.Please direct questions or comments to <gallen@arlut.utexas.edu>.If you want the source for the Play tool, just ask.¥Installation  -Drag the file in "->Tools" into your "MPW:Tools" folder    This is the actual Play tool, and will give MPW     the ability to play System 7 Finder Sounds.  -Drag the files in "->MPW" into your "MPW" folder    This adds the capability of Startup and Quit sounds.    These sounds are in the "MPW:Sounds" folder, and     you can put any sound you desire....  -Modify the BuildProgram script as directed below    This adds the BuildError sound.  -Simply add the BuildComplete sound to your makefiles     as you wish, like the example below.¥Modification of the BuildProgram scriptOpen the BuildProgram script in "MPW:Scripts".Find the line that looks like:"{program}".makeoutAnd replace it with the following two lines"{program}".makeout ¶|| ( Play "{Sounds}BuildError"; Exit )	# this line added for failure soundNow the sound BuildError will play whenever Build encounters an error.¥Using BuildComplete in makefiles	Simply add the line to play BuildComplete to your makefile	 as the last step in the build process.	foo ÄÄ {OBJS}		Link {OBJS}		Play "{Sounds}BuildComplete"NOTE: The Play tool has known problems with PB170.  I haven't tried it onother PowerBooks.Enjoy!,-Greg
+#*****************************************************************
+#	Play v1.0.0
+#	and Sound Package for MPW
+#*****************************************************************
+#	v1.0.0 -- 31 Mar 94; Initial release
+#*****************************************************************
+#	©1994, Gregory E. Allen <gallen@arlut.utexas.edu>
+#	These files may be distributed freely for non-profit use,
+#	as long as this file accompanies them.
+#*****************************************************************
+
+mpw-play-tool-100.sit.hqx
+
+Play v1.0.0 Tool for MPW, and Sound Package for MPW.
+Gregory E. Allen <gallen@arlut.utexas.edu>
+
+The "Play" Tool plays System 7 Finder Sounds from MPW.
+
+This package also includes scripts for MPW Startup and Quit sounds,
+and gives instructions on how to modify your BuildProgram script to
+have Build Error and Build Complete sounds.
+
+This software is free.
+
+Please direct questions or comments to <gallen@arlut.utexas.edu>.
+If you want the source for the Play tool, just ask.
+
+
+¥Installation
+  -Drag the file in "->Tools" into your "MPW:Tools" folder
+    This is the actual Play tool, and will give MPW
+     the ability to play System 7 Finder Sounds.
+  -Drag the files in "->MPW" into your "MPW" folder
+    This adds the capability of Startup and Quit sounds.
+    These sounds are in the "MPW:Sounds" folder, and
+     you can put any sound you desire....
+  -Modify the BuildProgram script as directed below
+    This adds the BuildError sound.
+  -Simply add the BuildComplete sound to your makefiles
+     as you wish, like the example below.
+
+
+¥Modification of the BuildProgram script
+Open the BuildProgram script in "MPW:Scripts".
+Find the line that looks like:
+"{program}".makeout
+
+And replace it with the following two lines
+"{program}".makeout ¶
+|| ( Play "{Sounds}BuildError"; Exit )	# this line added for failure sound
+
+Now the sound BuildError will play whenever Build encounters an error.
+
+
+¥Using BuildComplete in makefiles
+	Simply add the line to play BuildComplete to your makefile
+	 as the last step in the build process.
+
+	foo ÄÄ {OBJS}
+		Link {OBJS}
+		Play "{Sounds}BuildComplete"
+
+
+NOTE: The Play tool has known problems with PB170.  I haven't tried it on
+other PowerBooks.
+
+Enjoy!,
+-Greg

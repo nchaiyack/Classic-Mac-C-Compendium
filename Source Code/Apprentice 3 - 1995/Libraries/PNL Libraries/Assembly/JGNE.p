@@ -1,1 +1,13 @@
-unit JGNE;interface	uses Types;	procedure InitJGNE (HandleJGNE: ProcPtr; globals: univ ptr);{ procedure HandleJGNE(var er:EventRecord; var retval:integer; globals:ptr); }	procedure FinishJGNE;implementationend.
+unit JGNE;
+
+interface
+
+	uses Types;
+
+	procedure InitJGNE (HandleJGNE: ProcPtr; globals: univ ptr);
+{ procedure HandleJGNE(var er:EventRecord; var retval:integer; globals:ptr); }
+	procedure FinishJGNE;
+
+implementation
+
+end.

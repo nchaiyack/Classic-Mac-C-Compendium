@@ -1,1 +1,29 @@
-augmentbtreescheckccheckfpc -nacollateconcordfncs -nafncs1gc1gc2generhellocmem01cmem02mindfanumericothersprefixrecent1recent2recognscanstringstruct -naendetab -fenerrors -fenevalx -fs -naproto -fdevar -fde
+augment
+btrees
+checkc
+checkfpc -na
+collate
+concord
+fncs -na
+fncs1
+gc1
+gc2
+gener
+helloc
+mem01c
+mem02
+mindfa
+numeric
+others
+prefix
+recent1
+recent2
+recogn
+scan
+string
+struct -na
+endetab -fen
+errors -fen
+evalx -fs -na
+proto -fde
+var -fde

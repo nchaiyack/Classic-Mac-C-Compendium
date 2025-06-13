@@ -1,1 +1,11 @@
-PPPop 1.2.1 NotesThis version has some minor code changes from the release version 1.2. 1. PPPop Sounds is gone. Now has separate sound file for Going Up and Going Down. The click sound that plays with the button is now in PPPop resource fork.2. Added to File menu commands for opening and closing the PPP connection. These are added in anticipation of adding scripting to the next version.Rob FriefeldJune 21, 1995
+PPPop 1.2.1 Notes
+
+This version has some minor code changes from the release version 1.2. 
+
+1. PPPop Sounds is gone. Now has separate sound file for Going Up and Going Down. The click sound that plays with the button is now in PPPop resource fork.
+
+2. Added to File menu commands for opening and closing the PPP connection. These are added in anticipation of adding scripting to the next version.
+
+
+Rob Friefeld
+June 21, 1995

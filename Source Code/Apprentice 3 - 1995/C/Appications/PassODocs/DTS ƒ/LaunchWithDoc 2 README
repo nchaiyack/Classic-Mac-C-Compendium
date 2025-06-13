@@ -1,1 +1,40 @@
-/* *   LaunchWithDoc v 2 * *   Greg Robbins  August 1993,  *   modified by Nitin Ganatra, July 1994 * *   Document-launching sample program *   Loosely based on C.K. Haun's LaunchWithDoc * *   This snippet includes these useful routines: * *      OpenSpecifiedDocument *        finds the creator application for a document, whether or not *        the app is running, launches the app if necessary, and sends *        the Apple Event necessary to get the app to open the document * *      FindApplicationFromDocument *        searches the mounted volumes for the application which *        created a document * *      LaunchApplicationWithDocument *        launches an application which is not running and passes it *        the OpenDocuments event as part of the launch parameters * *      SendOpenDocumentEventToProcess *        sends an OpenDocuments Apple event to a running program * *      BuildOpenDocumentsEvent *        utility function to build an 'odoc' event from a list of  *        FSSpecs. * *  Remember that a target application need not be Apple event aware *  in order for the OpenDocuments event to succeed (the System will *  pull "puppet strings", simulating the events necessary to make the *  target app open the document) * *  However, LaunchWithDoc must be high level event aware (as set in the *  SIZE resource) in order to send Apple events using AESend * */
+/*
+ *   LaunchWithDoc v 2
+ *
+ *   Greg Robbins  August 1993, 
+ *   modified by Nitin Ganatra, July 1994
+ *
+ *   Document-launching sample program
+ *   Loosely based on C.K. Haun's LaunchWithDoc
+ *
+ *   This snippet includes these useful routines:
+ *
+ *      OpenSpecifiedDocument
+ *        finds the creator application for a document, whether or not
+ *        the app is running, launches the app if necessary, and sends
+ *        the Apple Event necessary to get the app to open the document
+ *
+ *      FindApplicationFromDocument
+ *        searches the mounted volumes for the application which
+ *        created a document
+ *
+ *      LaunchApplicationWithDocument
+ *        launches an application which is not running and passes it
+ *        the OpenDocuments event as part of the launch parameters
+ *
+ *      SendOpenDocumentEventToProcess
+ *        sends an OpenDocuments Apple event to a running program
+ *
+ *      BuildOpenDocumentsEvent
+ *        utility function to build an 'odoc' event from a list of 
+ *        FSSpecs.
+ *
+ *  Remember that a target application need not be Apple event aware
+ *  in order for the OpenDocuments event to succeed (the System will
+ *  pull "puppet strings", simulating the events necessary to make the
+ *  target app open the document)
+ *
+ *  However, LaunchWithDoc must be high level event aware (as set in the
+ *  SIZE resource) in order to send Apple events using AESend
+ *
+ */

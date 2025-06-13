@@ -1,1 +1,392 @@
-unit Import;{ BBIMPORT PROJECT: }{ Foreign file import routines, based on XTND technology }{ ANTI© 1993-1994 Merzwaren }interface	uses		BBEdit;	function ImportFile (var spec: FSSpec;									translator: Ptr;									hText: Handle;									var callbacks: BBEditExternalCallbackBlock): OSErr;implementation	uses		Utilities, XTNDInterface, XTNDTextTranslator;	const		kStringsProgress = 1021;		kStringsSpecialTags = 1022;		kIndProgressString = 1;		kIndPICTTag = 1;		kImportBufferSize = 300;			{ byte size of text buffer used by translator }		kXTNDProcID = 'XTND';				{ procID of working directories used by XTND }{ ReplaceParam is a utility routine that replaces all occurrences of the form ^index }{ with param in the target string }	procedure ReplaceParam (var target: Str255;									param: StringPtr;									index: Integer);		var			hCopy: StringHandle;			pCopy: StringPtr;			offset: LongInt;			len: Integer;	begin		index := index + $5E30;			{ $5E30 = ^0 }		hCopy := NewString(target);		offset := 1;		while (offset >= 0) do			begin				offset := Munger(Handle(hCopy), offset, @index, SizeOf(index), @param^[1], Length(param^));				len := GetHandleSize(Handle(hCopy)) - 1;				if (len > 255) then					Leave;				pCopy := hCopy^;				pCopy^[0] := CHR(len);				target := pCopy^;			end;  { while }		DisposeHandle(Handle(hCopy));	end;  { ReplaceParam }	procedure ParseBuffer (pBuffer: CharsPtr;									var count: LongInt;									var miscData: LongInt);		var			c: Char;			k, len: LongInt;			temp: LongIntPtr;			dateTime: LongInt;			form: DateForm;			s: Str255;	begin{ loop through the buffer looking for special XTND control characters }		for k := count - 1 downto 0 do			begin{ get next character }				c := pBuffer^[k];{ do nothing if it is not a special character }				if (c >= CHR(32)) then					Cycle;{ control character: assume it maps to a null string }				s := '';				case ORD(c) of					floatingPict: 						begin{ replace the PICT placeholder with a human-readable tag (like "<PICT>") }							GetIndString(s, kStringsSpecialTags, kIndPICTTag);{ throw away the picture and the associated descriptor, as we don't use them }							if (miscData <> 0) then								with PictMiscHdl(miscData)^^ do									begin										if (thePicture <> nil) then											KillPicture(thePicture);										ForgetHandle(miscData);									end;						end;					tabChar: 						s := CHR(9);						{ leave alone tabs }					mergeBreak, hardReturn, returnChar: 						s := CHR(13);						{ all these map to a carriage return }					newColumn, newPage: 						begin							temp := LongIntPtr(@s);							temp^ := $030D0D0D;		{ map to three carriage returns }						end;					shortDateChar..timeChar: { date/time markers }						begin{ translate a date/time marker into an actual date/time string }{ miscData contains the date and time in the usual Macintosh format }{ if it is zero, we should use the current date and time }							if (miscData <> 0) then								dateTime := miscData							else								GetDateTime(dateTime);							if (ORD(c) = timeChar) then								IUTimeString(dateTime, false, s)							else								begin{ the dateChar was a date marker }{ determine which date form is desired (short, long, etc.) }									case ORD(c) of										shortDateChar: 											form := shortDate;										longDateChar, dayLongDateChar: 											form := longDate;										abbrDateChar, dayAbbrDateChar: 											form := abbrevDate;									end;  { case c }									IUDateString(dateTime, form, s);								end;						end;  { date/time characters }					otherwise						;				end;  { case }{ insert the string in the buffer in place of the control character }				len := Length(s);				count := count - 1;				if (count + len > kImportBufferSize) then					len := kImportBufferSize - count;		{ make sure buffer capacity isn't exceeded }				BlockMove(@pBuffer^[k + 1], @pBuffer^[k + len], count - k);				BlockMove(@s[1], @pBuffer^[k], len);				count := count + len;			end;  { for }	end;  { ParseBuffer }	function ImportFile (var spec: FSSpec;									translator: Ptr;									hText: Handle;									var callbacks: BBEditExternalCallbackBlock): OSErr;		var			dataForkRefNum: Integer;			resForkRefNum: Integer;			finderInfo: FInfo;			entryPoint: TransProcPtr;			buffer: Handle;			pBuffer: Ptr;			pb: ImportParmBlock;			paragraphs: ParaFormats;			tabulators: TabSpecArray;			tempWDRefNum: Integer;			isTranslatorInited: Boolean;			isMainStoryInited: Boolean;			prec: THPrint;			estimatedTextLength: LongInt;			bytesReadSoFar, count: LongInt;			err: OSErr;		procedure StartProgress;			var				str: Str255;		begin			GetIndString(str, kStringsProgress, kIndProgressString);			ReplaceParam(str, @pb.thisTranslator.name, 0);			BBStartProgress(str, estimatedTextLength, true, callbacks.startProgressProc);		end;  { StartProgress }		function CallTranslator (directive: Integer): OSErr;		begin			pb.directive := directive;			XTNDCallTranslator(@pb, entryPoint);			CallTranslator := pb.result;		end;  { CallTranslator }		procedure CleanUp;		begin{ clean up all the mess we've created }{ shut down the translator, so it will trash its own temporary storage, if any }			if (isMainStoryInited) then				begin					if (CallTranslator(importCloseMain) <> noErr) then						;					isMainStoryInited := false;				end;			if (isTranslatorInited) then				begin					if (CallTranslator(importCloseAll) <> noErr) then						;					isTranslatorInited := false;				end;{ tell the XTND System to release all translator resources }			if (entryPoint <> nil) then				begin					if (XTNDReleaseTranslator(TransDescrPtr(translator)) <> noErr) then						;					entryPoint := nil;				end;{ close the temporary working directory }			if (tempWDRefNum <> 0) then				begin					if (CloseWD(tempWDRefNum) <> noErr) then						;					tempWDRefNum := 0;				end;{ close the data fork }			if (dataForkRefNum <> 0) then				begin					if (FSClose(dataForkRefNum) <> noErr) then						;					dataForkRefNum := 0;				end;{ get rid of temporary data structures }			ForgetHandle(prec);			ForgetHandle(buffer);{ bring down the progress dialog }			BBDoneProgress(callbacks.doneProgressProc);		end;  { CleanUp }		procedure CheckErr (err: OSErr);		begin			if (err <> noErr) then				begin					ImportFile := err;					CleanUp;					Exit(ImportFile);				end;		end;  { CheckErr }	begin		ImportFile := noErr;		dataForkRefNum := 0;		resForkRefNum := 0;		entryPoint := nil;		buffer := nil;		prec := nil;		tempWDRefNum := 0;		isTranslatorInited := false;		isMainStoryInited := false;{ load the translator }		CheckErr(XTNDLoadTranslator(TransDescrPtr(translator), entryPoint));{ allocate the text buffer }		CheckErr(%_NewHandleClear(kImportBufferSize, buffer));{ lock down the buffer }		HLockHi(buffer);		pBuffer := buffer^;{ initialize the import parameter block & related info }		BlockClear(@pb, SizeOf(pb));		BlockClear(@paragraphs, SizeOf(paragraphs));		BlockClear(@tabulators, SizeOf(tabulators));		pb.textBuffer := pBuffer;		pb.paraFmts := @paragraphs;		pb.tabs := @tabulators;		pb.numCols := 1;		pb.decimalChar := ORD('.');		pb.startPageNum := 1;		pb.startFootnoteNum := 1;		pb.thisTranslator := TransDescrPtr(translator)^;{ the import PB refers to the file to be translated via an old-style SFReply }{ record, instead of a more natural FSSpec record, so we have to create }{ a fake SFReply, and open a working directory for compatibility :-( }		pb.theReply.fName := spec.name;		CheckErr(OpenWD(spec.vRefNum, spec.parID, LongInt(kXTNDProcID), tempWDRefNum));		pb.theReply.vRefNum := tempWDRefNum;		CheckErr(FSpGetFInfo(spec, finderInfo));		pb.theReply.fType := finderInfo.fdType;		pb.theReply.good := true;{ try to open the resource fork of the specified file }		resForkRefNum := FSpOpenResFile(spec, fsRdPerm);		err := ResError;		if (err = eofErr) then{ if err is eofErr, we shouldn't worry: this file just doesn't have a resource fork }			UseResFile(TransDescrPtr(translator)^.resRefNum)		else			begin				CheckErr(err);{ if the specified file has a resource fork, let the translator read any resources }				pb.refNum := resForkRefNum;				CheckErr(CallTranslator(importGetResources));				CloseResFile(resForkRefNum);				CheckErr(ResError);			end;{ now open the data fork of the file }		CheckErr(FSpOpenDF(spec, fsRdPerm, dataForkRefNum));{ compute estimated text length time based on file size }		CheckErr(GetEOF(dataForkRefNum, estimatedTextLength));		estimatedTextLength := (5 * estimatedTextLength) div 6;{ put up the progress dialog }		StartProgress;{ initialize the translator data structures }		pb.refNum := dataForkRefNum;		CheckErr(CallTranslator(importInitAll));		isTranslatorInited := true;{ if the translator placed something in the printRecord field of the PB, we assume }{ that is a valid handle to a print record and we also assume "ownership" of the handle }{ (i.e., it's up to us to dispose of this handle in the end, or we'll have a memory leak) }		prec := pb.printRecord;{ tell the translator to prepare for reading the main body of text }		pb.currentStory := mainStory;		CheckErr(CallTranslator(importInitMain));		isMainStoryInited := true;{ MAIN IMPORT LOOP }		bytesReadSoFar := 0;		while (true) do			begin{ get some text }				CheckErr(CallTranslator(importGetText));				count := pb.textLength;{ check if the translator's finished }				if ((pb.directive = importAcknowledge) and (count <= 0)) then					Leave;  { enclosing while }{ translate special characters }				ParseBuffer(CharsPtr(pBuffer), count, pb.miscData);{ feed the buffer into the text handle }				CheckErr(PtrAndHand(pBuffer, hText, count));{ update counter }				bytesReadSoFar := bytesReadSoFar + count;{ show progress }				if (BBDoProgress(bytesReadSoFar, callbacks.doProgressProc)) then					CheckErr(userCanceledErr);			end;  { while }		if BBDoProgress(estimatedTextLength, callbacks.doProgressProc) then			;{ clean up everything }		CleanUp;	end;  { ImportFile }end.
+unit Import;
+
+{ BBIMPORT PROJECT: }
+{ Foreign file import routines, based on XTND technology }
+
+{ ANTI© 1993-1994 Merzwaren }
+
+interface
+	uses
+		BBEdit;
+
+	function ImportFile (var spec: FSSpec;
+									translator: Ptr;
+									hText: Handle;
+									var callbacks: BBEditExternalCallbackBlock): OSErr;
+
+implementation
+	uses
+		Utilities, XTNDInterface, XTNDTextTranslator;
+
+	const
+
+		kStringsProgress = 1021;
+		kStringsSpecialTags = 1022;
+		kIndProgressString = 1;
+		kIndPICTTag = 1;
+		kImportBufferSize = 300;			{ byte size of text buffer used by translator }
+		kXTNDProcID = 'XTND';				{ procID of working directories used by XTND }
+
+
+{ ReplaceParam is a utility routine that replaces all occurrences of the form ^index }
+{ with param in the target string }
+
+	procedure ReplaceParam (var target: Str255;
+									param: StringPtr;
+									index: Integer);
+		var
+			hCopy: StringHandle;
+			pCopy: StringPtr;
+			offset: LongInt;
+			len: Integer;
+	begin
+		index := index + $5E30;			{ $5E30 = ^0 }
+		hCopy := NewString(target);
+		offset := 1;
+		while (offset >= 0) do
+			begin
+				offset := Munger(Handle(hCopy), offset, @index, SizeOf(index), @param^[1], Length(param^));
+				len := GetHandleSize(Handle(hCopy)) - 1;
+				if (len > 255) then
+					Leave;
+				pCopy := hCopy^;
+				pCopy^[0] := CHR(len);
+				target := pCopy^;
+			end;  { while }
+		DisposeHandle(Handle(hCopy));
+	end;  { ReplaceParam }
+
+	procedure ParseBuffer (pBuffer: CharsPtr;
+									var count: LongInt;
+									var miscData: LongInt);
+		var
+			c: Char;
+			k, len: LongInt;
+			temp: LongIntPtr;
+			dateTime: LongInt;
+			form: DateForm;
+			s: Str255;
+	begin
+
+{ loop through the buffer looking for special XTND control characters }
+		for k := count - 1 downto 0 do
+			begin
+
+{ get next character }
+				c := pBuffer^[k];
+
+{ do nothing if it is not a special character }
+				if (c >= CHR(32)) then
+					Cycle;
+
+{ control character: assume it maps to a null string }
+				s := '';
+
+				case ORD(c) of
+
+					floatingPict: 
+						begin
+
+{ replace the PICT placeholder with a human-readable tag (like "<PICT>") }
+							GetIndString(s, kStringsSpecialTags, kIndPICTTag);
+
+{ throw away the picture and the associated descriptor, as we don't use them }
+							if (miscData <> 0) then
+								with PictMiscHdl(miscData)^^ do
+									begin
+										if (thePicture <> nil) then
+											KillPicture(thePicture);
+										ForgetHandle(miscData);
+									end;
+						end;
+
+					tabChar: 
+						s := CHR(9);						{ leave alone tabs }
+
+					mergeBreak, hardReturn, returnChar: 
+						s := CHR(13);						{ all these map to a carriage return }
+
+					newColumn, newPage: 
+						begin
+							temp := LongIntPtr(@s);
+							temp^ := $030D0D0D;		{ map to three carriage returns }
+						end;
+
+					shortDateChar..timeChar: { date/time markers }
+						begin
+
+{ translate a date/time marker into an actual date/time string }
+{ miscData contains the date and time in the usual Macintosh format }
+{ if it is zero, we should use the current date and time }
+							if (miscData <> 0) then
+								dateTime := miscData
+							else
+								GetDateTime(dateTime);
+
+							if (ORD(c) = timeChar) then
+								IUTimeString(dateTime, false, s)
+							else
+								begin
+
+{ the dateChar was a date marker }
+{ determine which date form is desired (short, long, etc.) }
+									case ORD(c) of
+
+										shortDateChar: 
+											form := shortDate;
+
+										longDateChar, dayLongDateChar: 
+											form := longDate;
+
+										abbrDateChar, dayAbbrDateChar: 
+											form := abbrevDate;
+
+									end;  { case c }
+
+									IUDateString(dateTime, form, s);
+								end;
+						end;  { date/time characters }
+
+					otherwise
+						;
+				end;  { case }
+
+{ insert the string in the buffer in place of the control character }
+				len := Length(s);
+				count := count - 1;
+				if (count + len > kImportBufferSize) then
+					len := kImportBufferSize - count;		{ make sure buffer capacity isn't exceeded }
+				BlockMove(@pBuffer^[k + 1], @pBuffer^[k + len], count - k);
+				BlockMove(@s[1], @pBuffer^[k], len);
+				count := count + len;
+			end;  { for }
+	end;  { ParseBuffer }
+
+	function ImportFile (var spec: FSSpec;
+									translator: Ptr;
+									hText: Handle;
+									var callbacks: BBEditExternalCallbackBlock): OSErr;
+
+		var
+			dataForkRefNum: Integer;
+			resForkRefNum: Integer;
+			finderInfo: FInfo;
+			entryPoint: TransProcPtr;
+			buffer: Handle;
+			pBuffer: Ptr;
+			pb: ImportParmBlock;
+			paragraphs: ParaFormats;
+			tabulators: TabSpecArray;
+			tempWDRefNum: Integer;
+			isTranslatorInited: Boolean;
+			isMainStoryInited: Boolean;
+			prec: THPrint;
+			estimatedTextLength: LongInt;
+			bytesReadSoFar, count: LongInt;
+			err: OSErr;
+
+		procedure StartProgress;
+			var
+				str: Str255;
+		begin
+			GetIndString(str, kStringsProgress, kIndProgressString);
+			ReplaceParam(str, @pb.thisTranslator.name, 0);
+			BBStartProgress(str, estimatedTextLength, true, callbacks.startProgressProc);
+		end;  { StartProgress }
+
+		function CallTranslator (directive: Integer): OSErr;
+		begin
+			pb.directive := directive;
+			XTNDCallTranslator(@pb, entryPoint);
+			CallTranslator := pb.result;
+		end;  { CallTranslator }
+
+		procedure CleanUp;
+		begin
+
+{ clean up all the mess we've created }
+{ shut down the translator, so it will trash its own temporary storage, if any }
+			if (isMainStoryInited) then
+				begin
+					if (CallTranslator(importCloseMain) <> noErr) then
+						;
+					isMainStoryInited := false;
+				end;
+
+			if (isTranslatorInited) then
+				begin
+					if (CallTranslator(importCloseAll) <> noErr) then
+						;
+					isTranslatorInited := false;
+				end;
+
+{ tell the XTND System to release all translator resources }
+			if (entryPoint <> nil) then
+				begin
+					if (XTNDReleaseTranslator(TransDescrPtr(translator)) <> noErr) then
+						;
+					entryPoint := nil;
+				end;
+
+{ close the temporary working directory }
+			if (tempWDRefNum <> 0) then
+				begin
+					if (CloseWD(tempWDRefNum) <> noErr) then
+						;
+					tempWDRefNum := 0;
+				end;
+
+{ close the data fork }
+			if (dataForkRefNum <> 0) then
+				begin
+					if (FSClose(dataForkRefNum) <> noErr) then
+						;
+					dataForkRefNum := 0;
+				end;
+
+{ get rid of temporary data structures }
+			ForgetHandle(prec);
+			ForgetHandle(buffer);
+
+{ bring down the progress dialog }
+			BBDoneProgress(callbacks.doneProgressProc);
+
+		end;  { CleanUp }
+
+		procedure CheckErr (err: OSErr);
+		begin
+			if (err <> noErr) then
+				begin
+					ImportFile := err;
+					CleanUp;
+					Exit(ImportFile);
+				end;
+		end;  { CheckErr }
+
+	begin
+		ImportFile := noErr;
+		dataForkRefNum := 0;
+		resForkRefNum := 0;
+		entryPoint := nil;
+		buffer := nil;
+		prec := nil;
+		tempWDRefNum := 0;
+		isTranslatorInited := false;
+		isMainStoryInited := false;
+
+{ load the translator }
+		CheckErr(XTNDLoadTranslator(TransDescrPtr(translator), entryPoint));
+
+{ allocate the text buffer }
+		CheckErr(%_NewHandleClear(kImportBufferSize, buffer));
+
+{ lock down the buffer }
+		HLockHi(buffer);
+		pBuffer := buffer^;
+
+{ initialize the import parameter block & related info }
+		BlockClear(@pb, SizeOf(pb));
+		BlockClear(@paragraphs, SizeOf(paragraphs));
+		BlockClear(@tabulators, SizeOf(tabulators));
+		pb.textBuffer := pBuffer;
+		pb.paraFmts := @paragraphs;
+		pb.tabs := @tabulators;
+		pb.numCols := 1;
+		pb.decimalChar := ORD('.');
+		pb.startPageNum := 1;
+		pb.startFootnoteNum := 1;
+		pb.thisTranslator := TransDescrPtr(translator)^;
+
+{ the import PB refers to the file to be translated via an old-style SFReply }
+{ record, instead of a more natural FSSpec record, so we have to create }
+{ a fake SFReply, and open a working directory for compatibility :-( }
+		pb.theReply.fName := spec.name;
+		CheckErr(OpenWD(spec.vRefNum, spec.parID, LongInt(kXTNDProcID), tempWDRefNum));
+		pb.theReply.vRefNum := tempWDRefNum;
+		CheckErr(FSpGetFInfo(spec, finderInfo));
+		pb.theReply.fType := finderInfo.fdType;
+		pb.theReply.good := true;
+
+{ try to open the resource fork of the specified file }
+		resForkRefNum := FSpOpenResFile(spec, fsRdPerm);
+		err := ResError;
+
+		if (err = eofErr) then
+
+{ if err is eofErr, we shouldn't worry: this file just doesn't have a resource fork }
+			UseResFile(TransDescrPtr(translator)^.resRefNum)
+
+		else
+			begin
+				CheckErr(err);
+
+{ if the specified file has a resource fork, let the translator read any resources }
+				pb.refNum := resForkRefNum;
+				CheckErr(CallTranslator(importGetResources));
+				CloseResFile(resForkRefNum);
+				CheckErr(ResError);
+
+			end;
+
+{ now open the data fork of the file }
+		CheckErr(FSpOpenDF(spec, fsRdPerm, dataForkRefNum));
+
+{ compute estimated text length time based on file size }
+		CheckErr(GetEOF(dataForkRefNum, estimatedTextLength));
+		estimatedTextLength := (5 * estimatedTextLength) div 6;
+
+{ put up the progress dialog }
+		StartProgress;
+
+{ initialize the translator data structures }
+		pb.refNum := dataForkRefNum;
+		CheckErr(CallTranslator(importInitAll));
+		isTranslatorInited := true;
+
+{ if the translator placed something in the printRecord field of the PB, we assume }
+{ that is a valid handle to a print record and we also assume "ownership" of the handle }
+{ (i.e., it's up to us to dispose of this handle in the end, or we'll have a memory leak) }
+		prec := pb.printRecord;
+
+{ tell the translator to prepare for reading the main body of text }
+		pb.currentStory := mainStory;
+		CheckErr(CallTranslator(importInitMain));
+		isMainStoryInited := true;
+
+{ MAIN IMPORT LOOP }
+		bytesReadSoFar := 0;
+		while (true) do
+			begin
+
+{ get some text }
+				CheckErr(CallTranslator(importGetText));
+				count := pb.textLength;
+
+{ check if the translator's finished }
+				if ((pb.directive = importAcknowledge) and (count <= 0)) then
+					Leave;  { enclosing while }
+
+{ translate special characters }
+				ParseBuffer(CharsPtr(pBuffer), count, pb.miscData);
+
+{ feed the buffer into the text handle }
+				CheckErr(PtrAndHand(pBuffer, hText, count));
+
+{ update counter }
+				bytesReadSoFar := bytesReadSoFar + count;
+
+{ show progress }
+				if (BBDoProgress(bytesReadSoFar, callbacks.doProgressProc)) then
+					CheckErr(userCanceledErr);
+
+			end;  { while }
+
+		if BBDoProgress(estimatedTextLength, callbacks.doProgressProc) then
+			;
+
+{ clean up everything }
+		CleanUp;
+
+	end;  { ImportFile }
+
+end.

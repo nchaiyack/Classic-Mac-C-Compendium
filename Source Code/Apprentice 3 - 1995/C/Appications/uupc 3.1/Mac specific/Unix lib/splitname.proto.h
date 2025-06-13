@@ -1,1 +1,4 @@
-/* splitname.c */int splitname(char *path, char *dir, char *name);int main(void);
+
+/* splitname.c */
+int splitname(char *path, char *dir, char *name);
+int main(void);

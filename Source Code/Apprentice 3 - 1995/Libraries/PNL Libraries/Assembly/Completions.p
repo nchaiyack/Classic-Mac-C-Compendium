@@ -1,1 +1,10 @@
-unit Completions;interfaceprocedure FSCompletion;procedure TCPCompletion;implementationend.
+unit Completions;
+
+interface
+
+procedure FSCompletion;
+procedure TCPCompletion;
+
+implementation
+
+end.

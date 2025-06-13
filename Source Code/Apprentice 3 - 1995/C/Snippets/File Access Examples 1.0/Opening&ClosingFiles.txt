@@ -1,1 +1,236 @@
-/* An introduction to opening/closing Macintosh files and the * Standard File Package. * * Hi. I'm Ken Worley of Apt Ideas Software. I can be reached * on America Online or eWorld at KNEworley or via the internet at * KNEworley@eworld.com. * * FORKS * * One thing you should know is that each Macintosh file has two * forks: the data fork and the resource fork. These forks are accessed * just like different files for the most part except for the fact * that a file cannot have ONLY a resource fork. Files have either * a data fork only (you can still add a resource fork), or both forks. * When you create a new file, it has a data fork only. You have to * use the FSpCreateResFile function to add a resource fork (Actually * this creates a resource map which allows resource access). Once a * file has a resource map, you access it like a separate file * using the FSpOpenResFile function to open the file and other * Resource Manager calls to read in and save resources. * * Of course, you can access resources in the same file your * application code is stored in without explicitly opening the * file. The system has already made that file the current * open resource file because it reads your code resources from it. * * MACINTOSH FILE OPENING/CLOSING/SPECIFYING * * The functions in this file don't deal with opening/closing files, * so here's a brief explanation of the toolbox routines used to * accomplish those tasks: * *		OPENING AN EXISTING FILE * *		pascal void StandardGetFile( FileFilterProcPtr fileFilter, *									short numTypes, SFTypeList typeList, *									StandardFileReply *reply ); * *		StandardGetFile is used to present the user with a standard *		dialog box asking the user to select a file to use/open. *		The parameters are used as follows: * *			fileFilter		Usually just set to NULL, you can specify *							the address of a filter procedure for *							more complex filtering of which files *							appear in the list the user chooses from. *			numTypes		The number of types specified in the *							typeList. If you send -1 for this parameter, *							all files are shown. *			typeList		An array of 4 values of type OSType that *							specify which types of files can be opened *							by the application and thus, which files *							should appear in the list presented to the *							user. Elements are usually set manually *							like this: myTypes[0] = 'Ttxt'; If you *							specified 2 in numTypes, your types should *							be stored in elements 0 and 1. *			*reply			A pointer to a standard file reply record *							which specifies the file selected by the *							user (if any). * *		StandardGetFile is usually used like this: * *			SFTypeList			myTypes; *			short				noOfTypes; *			StandardFileReply	myReply; * *			myTypes[0] = 'myTp'; *			noOfTypes = 1; *			StandardGetFile( NULL, noOfTypes, myTypes, &myReply ); * *		The record myReply contains the following useful fields which *		are filled in after a call to StandardGetFile: * *			Boolean		sfGood		This field contains true if the user *									actually selected a file (not CANCEL). *			OSType		sfType		The type of the file selected by *									the user. *			FSSpec		sfFile		The file specification record of the *									file selected by the user. *			and other fields useful in specific other situations...See *			Inside Macintosh:Files for more info. * *		To open the file specified, you use the FSpOpenDF procedure. * *		pascal OSErr FSpOpenDF( FSSpec* spec, *								SignedByte permission, short *refNum ); * *		The DF stands for data fork (there is also an FSpOpenRF function). *		FSpOpenDF opens the existing Macintosh file specified by the *		parameters.  If you'd just called StandardGetFile as in the above *		example, you would call FSpOpenDF as follows: * *			OSErr		myErr; *			short		myFileRef; * *			if ( myReply.sfGood )		/* if user didn't cancel */ *				myErr = FSpOpenDF( &myReply.sfFile, *									fsRdWrPerm, &myFileRef ); * *		If there is a problem opening the specified file, an error value *		will be returned in myErr. Otherwise, noErr is returned. After *		the call to HOpen, the parameter myFileRef contains the open file's *		reference number. This number is used to refer to the file as long *		as it's open to read and write data. * *		Some of the possible errors are: * *			nsvErr				no such volume *			ioErr				input/output error *			bdNamErr			bad filename error *			fnfErr				file not found error *			opWrErr				file already open for writing error *			permErr				attempt to open locked file for writing *			dirNFErr			directory not found error *			see Inside Macintosh:Files for other errors * *		The permission parameter can hold any one of these constants which *		determine whether the file is opened for reading only, writing only, *		or for both reading and writing: * *			fsCurPerm		whatever is allowed *			fsRdPerm		read only permission *			fsWrPerm		write only permission *			fsRdWrPerm		read/write permission *			fsRdWrShPerm	shared read/write permission * *		CREATING A NEW FILE * *		Of course, if you want to create a new file, not open an existing *		one, you can use StandardPutFile: * *		pascal void StandardPutFile( const Str255 prompt, *									const Str255 defaultName, *									StandardFileReply *reply ); * *		StandardPutFile is used to present the user with a standard *		dialog box asking the user to specify a location and a filename *		for a file to be saved/created. *		The parameters are used as follows: * *			prompt			A string which appears just over the filename *							field in the dialog. Usually something like: *							"Save as:". *			defaultName		The string that initially appears in the *							filename field of the dialog. This may be an *							empty string specified as "\p". *			*reply			A pointer to a standard file reply record *							which contains info about the file specified *							by the user (if any). * *		StandardPutFile is usually used like this: * *			StandardFileReply	myReply; * *			StandardPutFile( "\pSave as:", "\p", &myReply ); * *		The record myReply contains the following useful fields which *		are filled in after a call to StandardPutFile: * *			Boolean		sfGood		This field contains true if the user *									actually specified a file (not CANCEL). *			Boolean		sfReplacing	This field contains true if the file *									name and location specified by the *									user is already in use and the user *									wishes to overwrite the existing file. *									StandardPutFile has already presented *									the user with a dialog asking if s/he *									really wants to replace the file. *			ScriptCode	sfScript	The script of the file specified *									(This has to do with languages and *									the Text Services Manager.) *			FSSpec		sfFile		The file specification record of the *									file specified by the user. *			and other fields useful in specific other situations...See *			Inside Macintosh:Files for more info. * *		The record contains no information about file type because, *		since you're creating a new file, you'll specify whatever type you *		want when you actually create the file. * *		pascal OSErr FSpCreate( FSSpec *spec, OSType creator, *								OSType fileType, ScriptCode scriptTag ); * *		FSpCreate actually creates a new file based on the information *		in the spec parameter. The file has the file creator and types *		specified in the parameters. The scriptTag parameter relates to *		languages other than English and the Text Services Manager. *		Most apps will use either the constant smSystemScript or the *		value returned in the sfScript field of a reply record from *		StandardPutFile for this parameter. * *		If you'd called StandardPutFile as in the above example, you *		might call FSpCreate like this: * *			OSErr		myErr; * *			if ( myReply.sfReplacing ) *				myErr = FSpDelete( &myReply.sfFile ); * *			myErr = FSpCreate( &myReply.sfFile, 'TTxt', 'TEXT', *								myReply.sfScript ); * *		Note that in the example, if we are replacing an existing file, *		we manually delete that file first using the FSpDelete function. *		In an actual program, you'd want to check the error value *		returned by FSpDelete to make sure it's noErr. * *		Of course, after we create the file, we then need to open it *		with FSpOpenDF just as in the example above for already existing *		files. Calling FSpCreate does NOT open the file. * *		Some of the possible errors FSpCreate might return are: * *			dirFulErr			file directory full error *			dskFulErr			disk full error *			nsvErr				no such volume *			ioErr				input/output error *			bdNamErr			bad filename error *			fnfErr				directory not found error *			dirNFErr			directory not found error *			wPrErr				volume is write protected by hardware *			vLckdErr			volume is locked by software *			see Inside Macintosh:Files for other errors * *		CLOSING A FILE * *		Closing a file is simple. You just call FSClose with the reference *		number of an open file. If you'd opened a file with FSpOpenDF as *		in the above example, you'd close it like this: * *			myErr = FSClose( myFileRef ); * *	It's as simple as that! */
+/* An introduction to opening/closing Macintosh files and the
+ * Standard File Package.
+ *
+ * Hi. I'm Ken Worley of Apt Ideas Software. I can be reached
+ * on America Online or eWorld at KNEworley or via the internet at
+ * KNEworley@eworld.com.
+ *
+ * FORKS
+ *
+ * One thing you should know is that each Macintosh file has two
+ * forks: the data fork and the resource fork. These forks are accessed
+ * just like different files for the most part except for the fact
+ * that a file cannot have ONLY a resource fork. Files have either
+ * a data fork only (you can still add a resource fork), or both forks.
+ * When you create a new file, it has a data fork only. You have to
+ * use the FSpCreateResFile function to add a resource fork (Actually
+ * this creates a resource map which allows resource access). Once a
+ * file has a resource map, you access it like a separate file
+ * using the FSpOpenResFile function to open the file and other
+ * Resource Manager calls to read in and save resources.
+ *
+ * Of course, you can access resources in the same file your
+ * application code is stored in without explicitly opening the
+ * file. The system has already made that file the current
+ * open resource file because it reads your code resources from it.
+ *
+ * MACINTOSH FILE OPENING/CLOSING/SPECIFYING
+ *
+ * The functions in this file don't deal with opening/closing files,
+ * so here's a brief explanation of the toolbox routines used to
+ * accomplish those tasks:
+ *
+ *		OPENING AN EXISTING FILE
+ *
+ *		pascal void StandardGetFile( FileFilterProcPtr fileFilter,
+ *									short numTypes, SFTypeList typeList,
+ *									StandardFileReply *reply );
+ *
+ *		StandardGetFile is used to present the user with a standard
+ *		dialog box asking the user to select a file to use/open.
+ *		The parameters are used as follows:
+ *
+ *			fileFilter		Usually just set to NULL, you can specify
+ *							the address of a filter procedure for
+ *							more complex filtering of which files
+ *							appear in the list the user chooses from.
+ *			numTypes		The number of types specified in the
+ *							typeList. If you send -1 for this parameter,
+ *							all files are shown.
+ *			typeList		An array of 4 values of type OSType that
+ *							specify which types of files can be opened
+ *							by the application and thus, which files
+ *							should appear in the list presented to the
+ *							user. Elements are usually set manually
+ *							like this: myTypes[0] = 'Ttxt'; If you
+ *							specified 2 in numTypes, your types should
+ *							be stored in elements 0 and 1.
+ *			*reply			A pointer to a standard file reply record
+ *							which specifies the file selected by the
+ *							user (if any).
+ *
+ *		StandardGetFile is usually used like this:
+ *
+ *			SFTypeList			myTypes;
+ *			short				noOfTypes;
+ *			StandardFileReply	myReply;
+ *
+ *			myTypes[0] = 'myTp';
+ *			noOfTypes = 1;
+ *			StandardGetFile( NULL, noOfTypes, myTypes, &myReply );
+ *
+ *		The record myReply contains the following useful fields which
+ *		are filled in after a call to StandardGetFile:
+ *
+ *			Boolean		sfGood		This field contains true if the user
+ *									actually selected a file (not CANCEL).
+ *			OSType		sfType		The type of the file selected by
+ *									the user.
+ *			FSSpec		sfFile		The file specification record of the
+ *									file selected by the user.
+ *			and other fields useful in specific other situations...See
+ *			Inside Macintosh:Files for more info.
+ *
+ *		To open the file specified, you use the FSpOpenDF procedure.
+ *
+ *		pascal OSErr FSpOpenDF( FSSpec* spec,
+ *								SignedByte permission, short *refNum );
+ *
+ *		The DF stands for data fork (there is also an FSpOpenRF function).
+ *		FSpOpenDF opens the existing Macintosh file specified by the
+ *		parameters.  If you'd just called StandardGetFile as in the above
+ *		example, you would call FSpOpenDF as follows:
+ *
+ *			OSErr		myErr;
+ *			short		myFileRef;
+ *
+ *			if ( myReply.sfGood )		/* if user didn't cancel */
+ *				myErr = FSpOpenDF( &myReply.sfFile,
+ *									fsRdWrPerm, &myFileRef );
+ *
+ *		If there is a problem opening the specified file, an error value
+ *		will be returned in myErr. Otherwise, noErr is returned. After
+ *		the call to HOpen, the parameter myFileRef contains the open file's
+ *		reference number. This number is used to refer to the file as long
+ *		as it's open to read and write data.
+ *
+ *		Some of the possible errors are:
+ *
+ *			nsvErr				no such volume
+ *			ioErr				input/output error
+ *			bdNamErr			bad filename error
+ *			fnfErr				file not found error
+ *			opWrErr				file already open for writing error
+ *			permErr				attempt to open locked file for writing
+ *			dirNFErr			directory not found error
+ *			see Inside Macintosh:Files for other errors
+ *
+ *		The permission parameter can hold any one of these constants which
+ *		determine whether the file is opened for reading only, writing only,
+ *		or for both reading and writing:
+ *
+ *			fsCurPerm		whatever is allowed
+ *			fsRdPerm		read only permission
+ *			fsWrPerm		write only permission
+ *			fsRdWrPerm		read/write permission
+ *			fsRdWrShPerm	shared read/write permission
+ *
+ *		CREATING A NEW FILE
+ *
+ *		Of course, if you want to create a new file, not open an existing
+ *		one, you can use StandardPutFile:
+ *
+ *		pascal void StandardPutFile( const Str255 prompt,
+ *									const Str255 defaultName,
+ *									StandardFileReply *reply );
+ *
+ *		StandardPutFile is used to present the user with a standard
+ *		dialog box asking the user to specify a location and a filename
+ *		for a file to be saved/created.
+ *		The parameters are used as follows:
+ *
+ *			prompt			A string which appears just over the filename
+ *							field in the dialog. Usually something like:
+ *							"Save as:".
+ *			defaultName		The string that initially appears in the
+ *							filename field of the dialog. This may be an
+ *							empty string specified as "\p".
+ *			*reply			A pointer to a standard file reply record
+ *							which contains info about the file specified
+ *							by the user (if any).
+ *
+ *		StandardPutFile is usually used like this:
+ *
+ *			StandardFileReply	myReply;
+ *
+ *			StandardPutFile( "\pSave as:", "\p", &myReply );
+ *
+ *		The record myReply contains the following useful fields which
+ *		are filled in after a call to StandardPutFile:
+ *
+ *			Boolean		sfGood		This field contains true if the user
+ *									actually specified a file (not CANCEL).
+ *			Boolean		sfReplacing	This field contains true if the file
+ *									name and location specified by the
+ *									user is already in use and the user
+ *									wishes to overwrite the existing file.
+ *									StandardPutFile has already presented
+ *									the user with a dialog asking if s/he
+ *									really wants to replace the file.
+ *			ScriptCode	sfScript	The script of the file specified
+ *									(This has to do with languages and
+ *									the Text Services Manager.)
+ *			FSSpec		sfFile		The file specification record of the
+ *									file specified by the user.
+ *			and other fields useful in specific other situations...See
+ *			Inside Macintosh:Files for more info.
+ *
+ *		The record contains no information about file type because,
+ *		since you're creating a new file, you'll specify whatever type you
+ *		want when you actually create the file.
+ *
+ *		pascal OSErr FSpCreate( FSSpec *spec, OSType creator,
+ *								OSType fileType, ScriptCode scriptTag );
+ *
+ *		FSpCreate actually creates a new file based on the information
+ *		in the spec parameter. The file has the file creator and types
+ *		specified in the parameters. The scriptTag parameter relates to
+ *		languages other than English and the Text Services Manager.
+ *		Most apps will use either the constant smSystemScript or the
+ *		value returned in the sfScript field of a reply record from
+ *		StandardPutFile for this parameter.
+ *
+ *		If you'd called StandardPutFile as in the above example, you
+ *		might call FSpCreate like this:
+ *
+ *			OSErr		myErr;
+ *
+ *			if ( myReply.sfReplacing )
+ *				myErr = FSpDelete( &myReply.sfFile );
+ *
+ *			myErr = FSpCreate( &myReply.sfFile, 'TTxt', 'TEXT',
+ *								myReply.sfScript );
+ *
+ *		Note that in the example, if we are replacing an existing file,
+ *		we manually delete that file first using the FSpDelete function.
+ *		In an actual program, you'd want to check the error value
+ *		returned by FSpDelete to make sure it's noErr.
+ *
+ *		Of course, after we create the file, we then need to open it
+ *		with FSpOpenDF just as in the example above for already existing
+ *		files. Calling FSpCreate does NOT open the file.
+ *
+ *		Some of the possible errors FSpCreate might return are:
+ *
+ *			dirFulErr			file directory full error
+ *			dskFulErr			disk full error
+ *			nsvErr				no such volume
+ *			ioErr				input/output error
+ *			bdNamErr			bad filename error
+ *			fnfErr				directory not found error
+ *			dirNFErr			directory not found error
+ *			wPrErr				volume is write protected by hardware
+ *			vLckdErr			volume is locked by software
+ *			see Inside Macintosh:Files for other errors
+ *
+ *		CLOSING A FILE
+ *
+ *		Closing a file is simple. You just call FSClose with the reference
+ *		number of an open file. If you'd opened a file with FSpOpenDF as
+ *		in the above example, you'd close it like this:
+ *
+ *			myErr = FSClose( myFileRef );
+ *
+ *	It's as simple as that!
+ */
+

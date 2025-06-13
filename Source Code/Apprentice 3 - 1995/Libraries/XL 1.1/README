@@ -1,1 +1,62 @@
-                 XL -- X{CMD,FCN} LibraryINTRODUCTIONXL is a library that makes it easier for you to call XCMD or XFCN resources written for HyperCard from your programs. XL emulates the application independentcallbacks, which is sufficient already for many XCMDs to run. Additionally, your application can provide its own routines to implement application dependentcallbacks.REQUIREMENTSTo use XL, you need MPW C 3.2 or later. COPYINGCopyright © 1993 Matthias NeeracherPermission is granted to anyone to use this software for any purpose on anycomputer system, and to redistribute it freely, subject to the followingrestrictions:- The author is not responsible for the consequences of use of this software,  no matter how awful, even if they arise from defects in it.- The origin of this software must not be misrepresented, either by explicit  claim or by omission.- Altered versions must be plainly marked as such, and must not be misrepresented  as being the original software.WHERE TO BEGINYou should probably start with looking at XLTest.c. An example of a big applicationthat uses XL is MacPerl. The code that calls XL is in macperl.c in the MacPerl sourcedistribution.BUGS, QUESTIONS, SUGGESTIONSPlease report any problems you experience with the code or the documentation tome. I'd also be interested in hearing about your success stories, if you haveany.FUTURE PLANSI have no idea how popular the idea of XL will be and how useful XL is in implementing it. I would appreciate feedback by email. A future version mightsupport better documentation and the HyperCard 2 routines (including someinterface to the external windows features).Matthias Neeracher					Office:	+41 1 632 51 46Hohenklingenstrasse 19				Home: 	+41 1 341 85 068049 Zuerich							Email:	<neeri@iis.ee.ethz.ch>SWITZERLANDRELEASE NOTESVersion 1.1 07Nov94	Adds a PowerPC version and XLCopyGlue().	Version 1.0	28Dec93	This is version 1.0. It has been incorporated into MacPerl, was tested with	many of the Rinaldi XCMDs, and doesn't contain any known bugs. Documentation	is virtually nonexistent.
+                 XL -- X{CMD,FCN} Library
+
+INTRODUCTION
+
+XL is a library that makes it easier for you to call XCMD or XFCN resources 
+written for HyperCard from your programs. XL emulates the application independent
+callbacks, which is sufficient already for many XCMDs to run. Additionally, 
+your application can provide its own routines to implement application dependent
+callbacks.
+
+REQUIREMENTS
+
+To use XL, you need MPW C 3.2 or later. 
+
+COPYING
+
+Copyright © 1993 Matthias Neeracher
+
+Permission is granted to anyone to use this software for any purpose on any
+computer system, and to redistribute it freely, subject to the following
+restrictions:
+
+- The author is not responsible for the consequences of use of this software,
+  no matter how awful, even if they arise from defects in it.
+- The origin of this software must not be misrepresented, either by explicit
+  claim or by omission.
+- Altered versions must be plainly marked as such, and must not be misrepresented
+  as being the original software.
+
+WHERE TO BEGIN
+
+You should probably start with looking at XLTest.c. An example of a big application
+that uses XL is MacPerl. The code that calls XL is in macperl.c in the MacPerl source
+distribution.
+
+BUGS, QUESTIONS, SUGGESTIONS
+
+Please report any problems you experience with the code or the documentation to
+me. I'd also be interested in hearing about your success stories, if you have
+any.
+
+FUTURE PLANS
+
+I have no idea how popular the idea of XL will be and how useful XL is in 
+implementing it. I would appreciate feedback by email. A future version might
+support better documentation and the HyperCard 2 routines (including some
+interface to the external windows features).
+
+Matthias Neeracher					Office:	+41 1 632 51 46
+Hohenklingenstrasse 19				Home: 	+41 1 341 85 06
+8049 Zuerich							Email:	<neeri@iis.ee.ethz.ch>
+SWITZERLAND
+
+RELEASE NOTES
+
+Version 1.1 07Nov94
+	Adds a PowerPC version and XLCopyGlue().
+	
+Version 1.0	28Dec93
+	This is version 1.0. It has been incorporated into MacPerl, was tested with
+	many of the Rinaldi XCMDs, and doesn't contain any known bugs. Documentation
+	is virtually nonexistent.

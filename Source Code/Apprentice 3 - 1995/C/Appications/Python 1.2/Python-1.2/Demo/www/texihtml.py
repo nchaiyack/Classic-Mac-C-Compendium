@@ -1,1 +1,2 @@
-#! /usr/local/bin/pythonimport texi2html
+#! /usr/local/bin/python
+import texi2html

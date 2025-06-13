@@ -1,1 +1,37 @@
-/***	MiniTelnet application**	Version history****	Copyright © 1993, FrostByte Design / Eric Scouten***/Current version: 1.0b6Version history:--------------1.0b1 (11 October 93)  *	initial release1.0b2 (19 October 93)  *	changed IMiniTelnetApp to initialize gSignature  *	changed CTelnetSettingsDLOG::DoSaveFile to rely on gSignature1.0b3 (25 October 93)  *	used macro CLASS for forward definitions of TCL objects in header files  *	used TurboTCP 1.0b51.0b4 (21 November 93)  *	used TurboTCP 1.0b6 (major structural changes)  *	added minimal about box1.0b5 (17 December 93)  *	used TurboTCP 1.0b7  *	improved documentation of class definitions1.0b6 (19 January 93)  *	used TurboTCP 1.0.1  *	recompiled MiniTelnet without a certain silly line in Failure() which gauranteed a  	MacsBug crash anytime a minor error occurred
+/*
+**	MiniTelnet application
+**	Version history
+**
+**	Copyright © 1993, FrostByte Design / Eric Scouten
+**
+*/
+
+Current version: 1.0b6
+
+
+Version history:
+--------------
+
+1.0b1 (11 October 93)
+  *	initial release
+
+1.0b2 (19 October 93)
+  *	changed IMiniTelnetApp to initialize gSignature
+  *	changed CTelnetSettingsDLOG::DoSaveFile to rely on gSignature
+
+1.0b3 (25 October 93)
+  *	used macro CLASS for forward definitions of TCL objects in header files
+  *	used TurboTCP 1.0b5
+
+1.0b4 (21 November 93)
+  *	used TurboTCP 1.0b6 (major structural changes)
+  *	added minimal about box
+
+1.0b5 (17 December 93)
+  *	used TurboTCP 1.0b7
+  *	improved documentation of class definitions
+
+1.0b6 (19 January 93)
+  *	used TurboTCP 1.0.1
+  *	recompiled MiniTelnet without a certain silly line in Failure() which gauranteed a
+  	MacsBug crash anytime a minor error occurred

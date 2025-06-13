@@ -1,1 +1,76 @@
-%%% mball - multiple colored balls over a plain%% author: Barry T. Drake, Occidental College Computer Center% e-mail: bdrake@oxy.edu% date: 7/23/91% thanks-to: C. Regis Wilson, t_pascal@oxy.edu%% modified: ajones, 072391, fixed the mirrored surface appearance% BTD, 072491, added colors and made it *big*%% notes: 1) This ray file takes ~30,000 cpu seconds to trace on% a Sun 4/280 (a 10 Mips machine).% 2) The idea for this came from a Sun .background that we ftp% from someplace whose name we lost (sorry!).% 3) Changing screen to 100 100 and depth to 2 decreases% trace time to 2000 cpu seconds on a 68030 (NeXT cube).% 4) If you want better shadows of the pyramid, try decreasing% the reflectivity of surface.% 5) I think this is a lot of fun. Thanks, Craig!%eye -8 -20 6look 0 0 6up 0 0 1fov 30light extended -8 -10 20 mono 2.5 2.5 8%%surfaces%% planequadranglemarble scale 4 4 4transform scale 1000surface 0.6 0.6 0.4 0.8 0.8 0.8 0.2 0.2 0.2 18 0.1data 1 1 0 -1 1 0 -1 -1 0 1 -1 0%% ballssurface 0.00 0.00 0.8 0.00 0.00 0.15 0.9 0.9 0.9 60 0.8sphere 0 0.1 6 1sphere 1 -5 8 1sphere 2 0.1 4 1sphere 3 -5 6 1sphere 5 -1.6 4 1sphere 5 -5 4 1sphere 5 -8.4 4 1sphere 7 -5 8 1surface 0.00 0.8 0.00 0.00 0.15 0.00 0.9 0.9 0.9 60 0.8sphere 0 -3.3 6 1sphere 2 -6.7 4 1sphere 3 -8.4 6 1sphere 4 -3.3 8 1sphere 5 -5 10 1sphere 9 -5 6 1surface 0.4 0.4 0.4 0.05 0.05 0.05 0.9 0.9 0.9 60 0.8sphere -1 -11.8 4 1sphere -1 -5 4 1sphere -1 -8.4 4 1sphere -1 1.8 4 1sphere 0 -10.1 6 1sphere 0 -6.7 6 1sphere 0 15 11 10sphere 1 -1.6 8 1sphere 2 -10.1 4 1sphere 2 -3.3 4 1sphere 2 -6.7 10 1sphere 3 -1.6 6 1sphere 3 -5 12 1sphere 4 -6.7 8 1sphere 6 -3.3 6 1sphere 6 -6.7 6 1sphere 8 -3.3 4 1sphere 8 -6.7 4 1surface 0.8 0.00 0.00 0.15 0.00 0.00 0.9 0.9 0.9 60 0.8sphere -7.5 -1 1.001 1 % this is the fallen ballsphere 1 -8.4 8 1sphere 11 -5 4 1sphere 2 -3.3 10 1
+
+%
+%
+% mball - multiple colored balls over a plain
+%
+% author: Barry T. Drake, Occidental College Computer Center
+% e-mail: bdrake@oxy.edu
+% date: 7/23/91
+% thanks-to: C. Regis Wilson, t_pascal@oxy.edu
+%
+% modified: ajones, 072391, fixed the mirrored surface appearance
+% BTD, 072491, added colors and made it *big*
+%
+% notes: 1) This ray file takes ~30,000 cpu seconds to trace on
+% a Sun 4/280 (a 10 Mips machine).
+% 2) The idea for this came from a Sun .background that we ftp
+% from someplace whose name we lost (sorry!).
+% 3) Changing screen to 100 100 and depth to 2 decreases
+% trace time to 2000 cpu seconds on a 68030 (NeXT cube).
+% 4) If you want better shadows of the pyramid, try decreasing
+% the reflectivity of surface.
+% 5) I think this is a lot of fun. Thanks, Craig!
+%
+eye -8 -20 6
+look 0 0 6
+up 0 0 1
+fov 30
+light extended -8 -10 20 mono 2.5 2.5 8
+%%surfaces
+%% plane
+quadrangle
+marble scale 4 4 4
+transform scale 1000
+surface 0.6 0.6 0.4 0.8 0.8 0.8 0.2 0.2 0.2 18 0.1
+data 1 1 0 -1 1 0 -1 -1 0 1 -1 0
+%% balls
+surface 0.00 0.00 0.8 0.00 0.00 0.15 0.9 0.9 0.9 60 0.8
+sphere 0 0.1 6 1
+sphere 1 -5 8 1
+sphere 2 0.1 4 1
+sphere 3 -5 6 1
+sphere 5 -1.6 4 1
+sphere 5 -5 4 1
+sphere 5 -8.4 4 1
+sphere 7 -5 8 1
+surface 0.00 0.8 0.00 0.00 0.15 0.00 0.9 0.9 0.9 60 0.8
+sphere 0 -3.3 6 1
+sphere 2 -6.7 4 1
+sphere 3 -8.4 6 1
+sphere 4 -3.3 8 1
+sphere 5 -5 10 1
+sphere 9 -5 6 1
+surface 0.4 0.4 0.4 0.05 0.05 0.05 0.9 0.9 0.9 60 0.8
+sphere -1 -11.8 4 1
+sphere -1 -5 4 1
+sphere -1 -8.4 4 1
+sphere -1 1.8 4 1
+sphere 0 -10.1 6 1
+sphere 0 -6.7 6 1
+sphere 0 15 11 10
+sphere 1 -1.6 8 1
+sphere 2 -10.1 4 1
+sphere 2 -3.3 4 1
+sphere 2 -6.7 10 1
+sphere 3 -1.6 6 1
+sphere 3 -5 12 1
+sphere 4 -6.7 8 1
+sphere 6 -3.3 6 1
+sphere 6 -6.7 6 1
+sphere 8 -3.3 4 1
+sphere 8 -6.7 4 1
+surface 0.8 0.00 0.00 0.15 0.00 0.00 0.9 0.9 0.9 60 0.8
+sphere -7.5 -1 1.001 1 % this is the fallen ball
+sphere 1 -8.4 8 1
+sphere 11 -5 4 1
+sphere 2 -3.3 10 1

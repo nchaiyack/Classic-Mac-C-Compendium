@@ -1,1 +1,54 @@
-@c                                                  -*-Texinfo-*-@c Contents of Curses Xconq guide or chapter.  For use as a chapter,@c surround inclusion of this file with `@lowersections' and `@raisesections'.@menu* Introduction::	Introduction to Curses Xconq* Playing::			Playing Curses Xconq* Designing::		Designing with Curses Xconq@end menu@node Introduction@chapter Introduction to Curses XconqCurses @i{Xconq} is a version that requires only an ASCII terminaland a @i{curses} library for cursor movement and screen management.As a result, it will run almost anywhere.[including DOS - should try to build it under go32 or some such]However, in exchange for this higher degree of portability,you lose a lot in display power, and games may become much moredifficult to play.  For instance, roads and rivers cannot berepresented directly, and you will have to rely on the textualdisplays to see which directions have them.(Incidentally, this curses interface is the oldest one in Xconq,predating even the X10 interface that was part of version 1'srelease in 1987.)@section InstallingThe name of the executable is @file{cconq}.[pathname to library info]@node Playing@chapter Playing Curses XconqWhen @file{cconq} starts up, it takes over the whole screen,in the traditional fashion of curses programs.[include 60-char-wide term snap shot][verbal description of subwindows][move and survey modes]@node Designing@chapter Designing with Curses XconqAlthough @file{cconq} does not have the richness of display thatis best for designing games, it does have a basic set of commandsfor that purpose.@c should add a troubleshooting chapter
+@c                                                  -*-Texinfo-*-
+@c Contents of Curses Xconq guide or chapter.  For use as a chapter,
+@c surround inclusion of this file with `@lowersections' and `@raisesections'.
+
+@menu
+* Introduction::	Introduction to Curses Xconq
+* Playing::			Playing Curses Xconq
+* Designing::		Designing with Curses Xconq
+@end menu
+
+@node Introduction
+@chapter Introduction to Curses Xconq
+
+Curses @i{Xconq} is a version that requires only an ASCII terminal
+and a @i{curses} library for cursor movement and screen management.
+As a result, it will run almost anywhere.
+[including DOS - should try to build it under go32 or some such]
+
+However, in exchange for this higher degree of portability,
+you lose a lot in display power, and games may become much more
+difficult to play.  For instance, roads and rivers cannot be
+represented directly, and you will have to rely on the textual
+displays to see which directions have them.
+
+(Incidentally, this curses interface is the oldest one in Xconq,
+predating even the X10 interface that was part of version 1's
+release in 1987.)
+
+@section Installing
+
+The name of the executable is @file{cconq}.
+
+[pathname to library info]
+
+@node Playing
+@chapter Playing Curses Xconq
+
+When @file{cconq} starts up, it takes over the whole screen,
+in the traditional fashion of curses programs.
+
+[include 60-char-wide term snap shot]
+
+[verbal description of subwindows]
+
+[move and survey modes]
+
+@node Designing
+@chapter Designing with Curses Xconq
+
+Although @file{cconq} does not have the richness of display that
+is best for designing games, it does have a basic set of commands
+for that purpose.
+
+@c should add a troubleshooting chapter

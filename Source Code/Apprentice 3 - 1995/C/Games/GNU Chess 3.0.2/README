@@ -1,1 +1,48 @@
-Hi there!I took the 3.0.2 version of GNU chess for the Mac as distributedby Airy ANDRE, and ported it to CodeWarrior and the PowerMac, fixing a couple of small bugs which could have caused problemsunder low memory conditions.My contribution to this was an afternoon of work cleaning up thingswhich weren’t CodeWarrior-friendly and chasing down ProcPtrs tochange to UPPs.  It’s spectacular some of the crashes you get when yourPowerMac 6100 starts executing 68000 code without emulation...Anyway, don’t give me the credit or the blame for this release.  Andif you figure out how to use the program as a benchmark, let me know.-- Mark Wilkinswilkins@muddcs.cs.hmc.eduMWilkins@aol.com------------------------------------------------------(Original README file continues below)This is the first version of GNU Chess for the Mac.It is based on version 3.00 of GNU Chess.It is NOT an official release brought to you by contributors in theGNU community, since GNU boycott Apple. The official distribution (for other computers)can be obtained on Internet from:	prep.ai.mit.edu:/u2/emacs/gnuchess-3.00.tar.Z	(please be patient as the file will appear at this location.)Read the file “Copying” in the directory ”DOCUMENTATION” for more details.——————————————————————————————————————————————————————————————————————————The source files are not very clean : very Mac and compiler dependent,no comments, variables and functions names do not follow any convention...Some more readable sources will be available with future versions of GNUChess for the Mac.——————————————————————————————————————————————————————————————————————————Airy ANDREairy@cernvax.cern.ch or AA10 on CalvaCom
+
+Hi there!
+
+I took the 3.0.2 version of GNU chess for the Mac as distributed
+by Airy ANDRE, and ported it to CodeWarrior and the PowerMac, 
+fixing a couple of small bugs which could have caused problems
+under low memory conditions.
+
+My contribution to this was an afternoon of work cleaning up things
+which weren’t CodeWarrior-friendly and chasing down ProcPtrs to
+change to UPPs.  It’s spectacular some of the crashes you get when your
+PowerMac 6100 starts executing 68000 code without emulation...
+
+Anyway, don’t give me the credit or the blame for this release.  And
+if you figure out how to use the program as a benchmark, let me know.
+
+-- Mark Wilkins
+wilkins@muddcs.cs.hmc.edu
+MWilkins@aol.com
+------------------------------------------------------
+(Original README file continues below)
+
+This is the first version of GNU Chess for the Mac.
+
+It is based on version 3.00 of GNU Chess.
+It is NOT an official release brought to you by contributors in the
+GNU community, since GNU boycott Apple. 
+
+The official distribution (for other computers)
+can be obtained on Internet from:
+
+	prep.ai.mit.edu:/u2/emacs/gnuchess-3.00.tar.Z
+	
+(please be patient as the file will appear at this location.)
+
+
+Read the file “Copying” in the directory ”DOCUMENTATION” for more details.
+
+——————————————————————————————————————————————————————————————————————————
+The source files are not very clean : very Mac and compiler dependent,
+no comments, variables and functions names do not follow any convention...
+
+Some more readable sources will be available with future versions of GNU
+Chess for the Mac.
+——————————————————————————————————————————————————————————————————————————
+
+Airy ANDRE
+airy@cernvax.cern.ch or AA10 on CalvaCom

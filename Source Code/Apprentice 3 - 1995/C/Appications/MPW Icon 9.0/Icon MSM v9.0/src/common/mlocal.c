@@ -1,1 +1,3 @@
-#include "::h:gsupport.h"char junkclocal; /* avoid empty module */
+#include "::h:gsupport.h"
+
+char junkclocal; /* avoid empty module */

@@ -1,1 +1,36 @@
-/*What is stub_CDEV?------------------If you are building a C++ multi-segment cdev using CodeWarrior, you will haveproblems with the fact that the system unlocks your 'cdev' code resource whileit's not being executed. If things move on you (which they can!), then you cdev'sA4 global references to globals and vtable references are shot!  The problemcomes from a C++ code resource that uses virtual methods.  CodeWarrior generatescode that performs pc relative references to find globals and that method assumesthat a particular code block isn't going to move.  Unfortunately, because a'cdev' code resource is unlocked by the system when your cdev isn't executing, itcan move resulting in the pc relative references to now be invalid.  Any globalsreferences like vtable jumps are now going to crash.Change the code resource type of the cdev you are building to 'cDEV'.  After youhave built your cdev, then copy in this stub resource, whose type/id is'cdev'/-4064.This stubCDEV follows the example of Metrowerks' XCMD C++ sample, with a twist. The system calls this project's 'cdev' stub, which in turn does the following:	1. Reads in your 'cDEV' resource -4064, locks it down, and calls it.	2. During each successive call to the cdev, things are simply passed through		the stub.	3. If you cdev shuts down (normally or w/an error), the stub then does a		ReleaseResource on the 'cDEV' code.If you have any questions, suggestions, complaints, etc. about this code, pleaselet me know.dEVoN HubbardOnyx Technologytdevon@aol.com || onyxtech@aol.com*/
+/*
+What is stub_CDEV?
+------------------
+
+If you are building a C++ multi-segment cdev using CodeWarrior, you will have
+problems with the fact that the system unlocks your 'cdev' code resource while
+it's not being executed. If things move on you (which they can!), then you cdev's
+A4 global references to globals and vtable references are shot!  The problem
+comes from a C++ code resource that uses virtual methods.  CodeWarrior generates
+code that performs pc relative references to find globals and that method assumes
+that a particular code block isn't going to move.  Unfortunately, because a
+'cdev' code resource is unlocked by the system when your cdev isn't executing, it
+can move resulting in the pc relative references to now be invalid.  Any globals
+references like vtable jumps are now going to crash.
+
+Change the code resource type of the cdev you are building to 'cDEV'.  After you
+have built your cdev, then copy in this stub resource, whose type/id is
+'cdev'/-4064.
+
+This stubCDEV follows the example of Metrowerks' XCMD C++ sample, with a twist. 
+The system calls this project's 'cdev' stub, which in turn does the following:
+
+	1. Reads in your 'cDEV' resource -4064, locks it down, and calls it.
+	2. During each successive call to the cdev, things are simply passed through
+		the stub.
+	3. If you cdev shuts down (normally or w/an error), the stub then does a
+		ReleaseResource on the 'cDEV' code.
+
+If you have any questions, suggestions, complaints, etc. about this code, please
+let me know.
+
+dEVoN Hubbard
+Onyx Technology
+tdevon@aol.com || onyxtech@aol.com
+
+*/

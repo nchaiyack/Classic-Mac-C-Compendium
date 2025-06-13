@@ -1,1 +1,30 @@
-Name: CPrefFileVersion: 1.0Category: classesContributor: Jamie McCarthy <k044477@kzoo.edu>Date: 92-04TCL-Version: 1.1.xTCL-Language: CCopyright: Copyright (C) 1992 by Jamie R. McCarthy. All rights reserved.This Think C 5 object, which must be subclassed, makes storing data inthe Preferences folder almost painless.  It requires the TCL.CPrefsFile supports preferences stored in one (1) resource.  CPrefsFiletakes care of the mundane stuff:  finding the Preferences folder anddoing the opening, closing, reading, and writing from the file.  Yoursubclass has to help by overriding three methods, and you may want towrite access methods to get at the resource.Everything is extremely customizable.  I spent quite some time makingthe class as general as possible, and as override-able as possible.There are two sample subclasses distributed with CPrefsFile, COOPrefsand CGlobalPrefs.  There is a sample preferences resource and 'STR#'resource that could be used with either of them.This code is (c) Copyright 1992 by James R. McCarthy.  All rightsreserved.  It can be both distributed and used freely.Internet: k044477@kzoo.edu		AppleLink: j.mccarthy(This file must be converted with BinHex 4.0)
+Name: CPrefFile
+Version: 1.0
+Category: classes
+Contributor: Jamie McCarthy <k044477@kzoo.edu>
+Date: 92-04
+TCL-Version: 1.1.x
+TCL-Language: C
+Copyright: Copyright (C) 1992 by Jamie R. McCarthy. All rights reserved.
+
+This Think C 5 object, which must be subclassed, makes storing data in
+the Preferences folder almost painless.  It requires the TCL.
+
+CPrefsFile supports preferences stored in one (1) resource.  CPrefsFile
+takes care of the mundane stuff:  finding the Preferences folder and
+doing the opening, closing, reading, and writing from the file.  Your
+subclass has to help by overriding three methods, and you may want to
+write access methods to get at the resource.
+
+Everything is extremely customizable.  I spent quite some time making
+the class as general as possible, and as override-able as possible.
+There are two sample subclasses distributed with CPrefsFile, COOPrefs
+and CGlobalPrefs.  There is a sample preferences resource and 'STR#'
+resource that could be used with either of them.
+
+This code is (c) Copyright 1992 by James R. McCarthy.  All rights
+reserved.  It can be both distributed and used freely.
+
+Internet: k044477@kzoo.edu		AppleLink: j.mccarthy
+
+(This file must be converted with BinHex 4.0)

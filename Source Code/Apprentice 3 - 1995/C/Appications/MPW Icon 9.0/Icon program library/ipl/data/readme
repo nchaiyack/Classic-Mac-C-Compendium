@@ -1,1 +1,51 @@
-	a2n.csg		data for csg.icn	abc.csg		data for csg.icn	abcd.csg	data for csg.icn	add.lbl		sample address labels	an2.csg		data for csg.icn	bb3.tur		data for turing.icn	cc.tur		data for turing.icn	chart.gmr	data for ichartp.icn	cm.tur		data for turing.icn	colors.rsg	data for rsg.icn	conman.sav	data base for conman.icn	darwin.txt	plain text	dickens.txt	plain text	dylan.txt	plain text	egg.krs		data for kross.icn	exp.rsg		data for rsg.icn	farber.sen	Farberisms	gilbert.txt	plain text	gmr1.lin	data for linden.icn	gmr2.lin	data for linden.icn	gmr3.lin	data for linden.icn	gmr4.lin	data for linden.icn	header		program library header skeleton	hebcalen.dat	data for hebcalen.icn	icon.wrd	words containing the substring ``icon''	iconproj.lbl	address labels for the Icon Project	ihelp.dat	data for ihelp.icn	joyce1.txt	plain text	joyce2.txt	plain text	joyce3.txt	plain text	noci.wrd	words containing the substring ``noci''	ones.tur	data for turing.icn	palin.sen	palindromic sentences	poe.txt		plain text	poem.rsg	data for rsg.icn	pt1.gmr		data for pt.icn	pt2.gmr		data for pt.icn	pt3.gmr		data for pt.icn	pt4.gmr		data for pt.icn	pt5.gmr		data for pt.icn	pt6.gmr		data for pt.icn	red.lin		data for linden.icn	sen.rsg		data for rsg.icn	spencer.txt	plain text	termcap.dos	MS-DOS termcap data	termcap2.dos	alternative MS-DOS termcap data	verse.dat	vocabulary file for verse.icn	z1.lin		data for linden.icn	z2.lin		data for linden.icn	z3.lin		data for linden.icn	z4.lin		data for linden.icn
+	a2n.csg		data for csg.icn
+	abc.csg		data for csg.icn
+	abcd.csg	data for csg.icn
+	add.lbl		sample address labels
+	an2.csg		data for csg.icn
+	bb3.tur		data for turing.icn
+	cc.tur		data for turing.icn
+	chart.gmr	data for ichartp.icn
+	cm.tur		data for turing.icn
+	colors.rsg	data for rsg.icn
+	conman.sav	data base for conman.icn
+	darwin.txt	plain text
+	dickens.txt	plain text
+	dylan.txt	plain text
+	egg.krs		data for kross.icn
+	exp.rsg		data for rsg.icn
+	farber.sen	Farberisms
+	gilbert.txt	plain text
+	gmr1.lin	data for linden.icn
+	gmr2.lin	data for linden.icn
+	gmr3.lin	data for linden.icn
+	gmr4.lin	data for linden.icn
+	header		program library header skeleton
+	hebcalen.dat	data for hebcalen.icn
+	icon.wrd	words containing the substring ``icon''
+	iconproj.lbl	address labels for the Icon Project
+	ihelp.dat	data for ihelp.icn
+	joyce1.txt	plain text
+	joyce2.txt	plain text
+	joyce3.txt	plain text
+	noci.wrd	words containing the substring ``noci''
+	ones.tur	data for turing.icn
+	palin.sen	palindromic sentences
+	poe.txt		plain text
+	poem.rsg	data for rsg.icn
+	pt1.gmr		data for pt.icn
+	pt2.gmr		data for pt.icn
+	pt3.gmr		data for pt.icn
+	pt4.gmr		data for pt.icn
+	pt5.gmr		data for pt.icn
+	pt6.gmr		data for pt.icn
+	red.lin		data for linden.icn
+	sen.rsg		data for rsg.icn
+	spencer.txt	plain text
+	termcap.dos	MS-DOS termcap data
+	termcap2.dos	alternative MS-DOS termcap data
+	verse.dat	vocabulary file for verse.icn
+	z1.lin		data for linden.icn
+	z2.lin		data for linden.icn
+	z3.lin		data for linden.icn
+	z4.lin		data for linden.icn

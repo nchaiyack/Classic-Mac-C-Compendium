@@ -1,1 +1,36 @@
-ZList & Friends(C) 1994-1995 Chris K. Thomas.  All Rights Reserved.I'm at ckt@best.comZList & Friends is a framework-independent C++ 32-bit List Manager •replacement• class library which I've been working on sporadically since November 1994.It's not really ready for release yet, but I can't stand having all this source sitting around on my disk useless, especially when everything from Metrowerks C++ to Anarchie is using the List Manager and suffering because of it!  Have you noticed how slow many apps redraw their respective lists on PowerMacs?  This is because, while they're native apps, enormous mode switch penalities are incurred because they're using the List Manager, which isn't native!  Native LDEFs don't help much, either.  The list manager will be native in Copland, but that doesn't do us much good now, does it?Anyway.To quote the first readme:"ZList supports dragging, threads, >32k items, >32k item data, “live thumb”, and much other neat stuff.  It doesn't map straight (or crooked, for that matter) from the List Manager, because I don't want to copy the brain damage installed there by interim Toolbox people.  It is heavily oriented upon objects."The various ReadMes give you some of a sense of the history of ZList.  Not mentioned by the ReadMes is the new LZListBox wrapper class for PowerPlant. Yes, you can have your 32-bit List Manager and eat PowerPlant, too.The source has been modified since the last Readme, so we get the Unixity of saying "the source is the documentation".Questions, comments, praise, suggestions welcome @ ckt@best.com.
+ZList & Friends
+(C) 1994-1995 Chris K. Thomas.  All Rights Reserved.
+I'm at ckt@best.com
+
+ZList & Friends is a framework-independent C++ 32-bit List Manager 
+•replacement• class library which I've been working on sporadically 
+since November 1994.
+
+It's not really ready for release yet, but I can't stand having all 
+this source sitting around on my disk useless, especially when 
+everything from Metrowerks C++ to Anarchie is using the List Manager 
+and suffering because of it!  Have you noticed how slow many apps redraw 
+their respective lists on PowerMacs?  This is because, while they're 
+native apps, enormous mode switch penalities are incurred because 
+they're using the List Manager, which isn't native!  Native LDEFs 
+don't help much, either.  The list manager will be native in Copland, 
+but that doesn't do us much good now, does it?
+
+Anyway.
+
+To quote the first readme:
+"ZList supports dragging, threads, >32k items, >32k item data, “live 
+thumb”, and much other neat stuff.  It doesn't map straight (or crooked, 
+for that matter) from the List Manager, because I don't want to copy the 
+brain damage installed there by interim Toolbox people.  It is heavily 
+oriented upon objects."
+
+The various ReadMes give you some of a sense of the history of ZList.  
+Not mentioned by the ReadMes is the new LZListBox wrapper class for 
+PowerPlant. Yes, you can have your 32-bit List Manager and eat 
+PowerPlant, too.
+
+The source has been modified since the last Readme, so we get the 
+Unixity of saying "the source is the documentation".
+
+Questions, comments, praise, suggestions welcome @ ckt@best.com.

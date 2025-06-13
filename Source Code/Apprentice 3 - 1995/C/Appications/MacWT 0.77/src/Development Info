@@ -1,1 +1,67 @@
-For MacWT DevelopersFar too often, code projects such as this one are distributed without the necessary pertinent information needed to know where the code stands and what it needs.  This is the purpose of this document.Important:  please forward all improvements and fixes to me so that they may be incorporated into the latest build.16-bit Color Support16-bit support is very nearly complete, but it is still not working right.  To activate the 16-bit support, make the following changes:¥ In framebuf.h, define TRUECOLOR¥ In Main.c, initialize gTrueColor to trueThis configuration will run (i.e. not crash), but you will notice the problems immediately upon running.  This looks like it may be an easy one to fix.PICT and PICT Resource Texture LoadingThe PICT and PICT resource loading code is complete, but still has UI problems. It is a little ungraceful at the moment (it momentarily pops up a window, plots the PICT, and uses a GetCPixel loop to read the values).  You can find the code in pictrload.c.  A world file using a PICT is included, called "pictr.world".Sprite ObjectsThe wt source used to compile this verison of MacWT is comprised almost entirely of the latest wt version (0.05c1).  However, certain 0.05b files (render.c and slice.c) were retained to avoid the breaking of the floor rending code that c1 has.  The c1 version of these files are included in the (wt 0.05c1) folder, if you would like to try to incorporate them.DitheringPersonally, I don't think dithering is necessary if you use good textures carefully, especially now that MacWT is using all 256 colors instead of 192 (and soon 2^15).  As such, I haven't even tried to incorporate this into MacWT.  However, if you want to experiment with dithering, I have included the dither.c and dither.h files from wt.  This will undoubtably slow the renderer down some.There is a memory leak which is most noticeable when using the large view sizes and makes its presence known more often on the PowerPC side (probably only because the PPC is fast enough to actually use the larger view sizes).  I haven't even begun to look into this one.If you are doing a PowerPC build, don't forget to make a .PPC alias to the MacWT resource file - or make an alias to the 68k built app, thus creating a fat app.If you make any succesful additions to the MacWT source, please forward them to:bmoc1@aol.comorBill Hayden1325 NE 9th StreetGainesville, FL  32601-3720Credit Where Credit is DueI will be producing updated versions over the next few weeks, and would like to incorporate any improvements that you have into the official build.  People who have aided tremendously on wt and MacWT in the past are:Stig S{ther Bakken (Stig.Bakken@pvv.unit.no)Justin Beech (justinb@lehman.com)Dan Egnor (egnor@ugcs.caltech.edu)David Engberg (snarklrd@leland.stanford.edu)Castor Fu (castor@drizzle.stanford.edu)Thomas Hamren (d0hampe@dtek.chalmers.se)Harm Hanemaayer (hhanemaa@cs.ruu.nl)Gerardo Horvilleur (mago@sunmexico.sun.com)Samo Kangaslampi (pekanga@freeport.uwasa.fi)Thomas Malik (malik@rhrk.uni-kl.de)Patrick L. McGillan (pmcgilla@magoo.uwsuper.edu)Russ Nelson (nelson@crynwr.com)Turly O'Connor (Turly.OConnor@isltd.insignia.com)Pekka Pietik{inen (pp@lyseo.otol.fi)Joseph Provine (provine@enel.ucalgary.ca)Ling Thio (H.L.Thio@et.tudelft.nl)Dave Thomas (dave@thomases.demon.co.uk)Monroe Williams (monroe@cs.pdx.edu)Marinos Yannikos (nino@vmars.tuwien.ac.at)Henner Zeller (zeller@linux2.rz.fh-heilbronn.de)If you want to get involved more seriously with development in this genre (not just wt & MacWT), you may want to join the wt mailing list.  Here is information from the original ReadMe file:¥ A wt mailing list has been started recently.  Topics will include improving the engine design and adding features, porting the engine to different architectures, and game design using the wt graphics engine.  The addresses are:¥ to subscribe:  wtm-request@magoo.uwsuper.edu¥ to post a message: wtm@magoo.uwsuper.edu¥ The wt ftp site is magoo.uwsuper.edu.  wt related files will be located in the /pub/wt directory.  (Note: MacWT is not on this site)
+For MacWT Developers
+
+Far too often, code projects such as this one are distributed without the necessary pertinent information needed to know where the code stands and what it needs.  This is the purpose of this document.
+
+Important:  please forward all improvements and fixes to me so that they may be incorporated into the latest build.
+
+16-bit Color Support
+16-bit support is very nearly complete, but it is still not working right.  To activate the 16-bit support, make the following changes:
+¥ In framebuf.h, define TRUECOLOR
+¥ In Main.c, initialize gTrueColor to true
+This configuration will run (i.e. not crash), but you will notice the problems immediately upon running.  This looks like it may be an easy one to fix.
+
+PICT and PICT Resource Texture Loading
+The PICT and PICT resource loading code is complete, but still has UI problems. It is a little ungraceful at the moment (it momentarily pops up a window, plots the PICT, and uses a GetCPixel loop to read the values).  You can find the code in pictrload.c.  A world file using a PICT is included, called "pictr.world".
+
+Sprite Objects
+The wt source used to compile this verison of MacWT is comprised almost entirely of the latest wt version (0.05c1).  However, certain 0.05b files (render.c and slice.c) were retained to avoid the breaking of the floor rending code that c1 has.  The c1 version of these files are included in the (wt 0.05c1) folder, if you would like to try to incorporate them.
+
+Dithering
+Personally, I don't think dithering is necessary if you use good textures carefully, especially now that MacWT is using all 256 colors instead of 192 (and soon 2^15).  As such, I haven't even tried to incorporate this into MacWT.  However, if you want to experiment with dithering, I have included the dither.c and dither.h files from wt.  This will undoubtably slow the renderer down some.
+
+There is a memory leak which is most noticeable when using the large view sizes and makes its presence known more often on the PowerPC side (probably only because the PPC is fast enough to actually use the larger view sizes).  I haven't even begun to look into this one.
+
+If you are doing a PowerPC build, don't forget to make a .PPC alias to the MacWT resource file - or make an alias to the 68k built app, thus creating a fat app.
+
+
+If you make any succesful additions to the MacWT source, please forward them to:
+
+bmoc1@aol.com
+
+or
+
+Bill Hayden
+1325 NE 9th Street
+Gainesville, FL  32601-3720
+
+Credit Where Credit is Due
+I will be producing updated versions over the next few weeks, and would like to incorporate any improvements that you have into the official build.  People who have aided tremendously on wt and MacWT in the past are:
+Stig S{ther Bakken (Stig.Bakken@pvv.unit.no)
+Justin Beech (justinb@lehman.com)
+Dan Egnor (egnor@ugcs.caltech.edu)
+David Engberg (snarklrd@leland.stanford.edu)
+Castor Fu (castor@drizzle.stanford.edu)
+Thomas Hamren (d0hampe@dtek.chalmers.se)
+Harm Hanemaayer (hhanemaa@cs.ruu.nl)
+Gerardo Horvilleur (mago@sunmexico.sun.com)
+Samo Kangaslampi (pekanga@freeport.uwasa.fi)
+Thomas Malik (malik@rhrk.uni-kl.de)
+Patrick L. McGillan (pmcgilla@magoo.uwsuper.edu)
+Russ Nelson (nelson@crynwr.com)
+Turly O'Connor (Turly.OConnor@isltd.insignia.com)
+Pekka Pietik{inen (pp@lyseo.otol.fi)
+Joseph Provine (provine@enel.ucalgary.ca)
+Ling Thio (H.L.Thio@et.tudelft.nl)
+Dave Thomas (dave@thomases.demon.co.uk)
+Monroe Williams (monroe@cs.pdx.edu)
+Marinos Yannikos (nino@vmars.tuwien.ac.at)
+Henner Zeller (zeller@linux2.rz.fh-heilbronn.de)
+
+
+If you want to get involved more seriously with development in this genre (not just wt & MacWT), you may want to join the wt mailing list.  Here is information from the original ReadMe file:
+
+¥ A wt mailing list has been started recently.  Topics will include improving the engine design and adding features, porting the engine to different architectures, and game design using the wt graphics engine.  The addresses are:
+¥ to subscribe:  wtm-request@magoo.uwsuper.edu
+¥ to post a message: wtm@magoo.uwsuper.edu
+
+¥ The wt ftp site is magoo.uwsuper.edu.  wt related files will be located in the /pub/wt directory.  (Note: MacWT is not on this site)

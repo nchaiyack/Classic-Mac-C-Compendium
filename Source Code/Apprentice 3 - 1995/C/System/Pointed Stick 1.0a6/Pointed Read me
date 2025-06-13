@@ -1,1 +1,656 @@
-                               Pointed  Stick                                 --- or ---                      How I Learned To Spurn BoomerangWelcome to Pointed Stick. This INIT (no, it’s not a System Extension, dammit)is a replacement for Boomerang that makes more modest requests of your systemheap and hard disk. Back in the Good Old Days™, I used to wonder whyBoomerang took up 130K. Now that Boomerang 3.0 is out, I wonder why it takesup 266K.So I wrote Pointed Stick.(Worthless digression: Why “Pointed Stick?” Why not something a little moreobvious, like “Super Boomerang Sucks, so use this”? Well, first of all, thatname is 4 characters too long. But mostly, I viewed this INIT as a more basicversion of Super Boomerang, and a stick is certainly more basic than aboomerang. Also, Pointed Stick recalls to my pointy little mind the MontyPython skit where a sergeant who got a little too much action in the last warwas teaching men how to defend themselves. The trainees wanted to know how todefend themselves against nasty things like pointed sticks, while thesergeant thought it would be better to learn how to defend against freshfruit, such as bananas. And an icon of a banana certainly looks somethinglike a boomerang. ‘Nuff sed.)Still, what is it (for you social types who have a life and don’t know whatBoomerang is)? Pointed Stick hooks into various places and remembers whatfiles you have opened and what folders they live in. These files and foldersare then incorporated into some menus that are added to the Standard Filedialog box. That way, files that you most recently accessed can be quicklyopened again without having to drive all over you hard disk trying to findthem. Similarly, you can jump to folders that you access all the time with amere Flick o’ the Mouse (like I do with my PinkIncludes and Apple #Includesfolders). For added comfort, the menu of files installed in the Standard Filedialog are attached to your “Open…” menu item as a hierarchical menu.Because I wrote this INIT for myself, and I don’t plan on ever running System6.0.x again, this INIT runs only under System 7. If you don’t like it, talkto the FredWare guy (Fred sez: “If you don’t like it, write your own”).What does Pointed Stick do?(or: What Does Keith Think Works Right Now?)--------------------------------------------•	Implements handy menus in Standard File boxes. Menus include a “Recently	Accessed Folders” menu, a “Recently Accessed Files” menu, and a	“Miscellaneous” menu that allows you to create new folders, find files,	mark certain files and folders so that they don’t get removed from the	menus when they get too old, and, of course, the ubiquitous About Box.•	Does that Boomerang DirectOpen thang, attaching a hierarchical menu to the	“Open…” menu item.•	Files and folders are written to disk in the “Pointed Preferences” file.•	Implements a Universal Open if you are using the CEToolBox.•	Remembers the item that was selected the last time you were in each	directory, and “rebounds” you to that item when you return to that	directory.What will Pointed Stick never do?(or: I Don’t Give A Damn, I’m Not Doing It)-------------------------------------------•	Groups (whatever those are).•	Rename files.•	System 6.0.x support.What will Pointed Stick do that it doesn’t do now?(or: Don’t Bug Me, I’m Working On It)--------------------------------------------------(These are in “as I thought of them” order...)•	When doing a Find, show a dialog saying what volume we’re currently	searching, along with a notice that Cmd-. will work. At the same time,	make it so that Cmd-. will work.•	Pete Helme: Command keys that walk down list of files and folders in	whatever order they happen to be in.•	Change what is attached to the Open menu item. Right now, I attach a	hierarchical with the list of files that normally appears in my Files	menu. Instead, I’m thinking of attaching a hierarchical with the list of	folders in the Folders menu, and attaching a hierarchical off of each of	_them_ with the files from the Files menu that are in each folder.	Selecting a file will open that file. Selecting a folder will bring up	StdFile on that folder. Selecting Open… will open StdFile normally. 	(User survey: Luke and Radcliffe are not so hot on this).•	Patch SetTrapAddress so that we can keep a Pack3 patch in front of	MultiFinder. This is so we can catch any files that the application is	puppet-stringed into opening.•	Smooth things out when I force a selection in the list of files (for	instance, when I rebound to the most recently chosen item in a folder).	Right now, things are jerky as the list of new items shows up with the	first item selected, and then I change the selection.•	Add “Find Folder…” (handy when saving files).•	Check items that are selected from the hierarchical against the	parameters in the subsequent StdFile call to make sure the application	can indeed open that file. If it can’t, bring up StdFile anyway.•	Add menu item that adds the directory you are currently in to the	directory menu.•	Figure out how Boomerang opens folders in the Finder, and copy it.•	Compile without symbols to save 3 or 4K.•	Remove code that hooks into file filter, since it looks like I won’t need	it.•	Rework workaround to LSearch bug. Current workaround will break if Blue	ever fixes the bug. Final solution is to implement LSearch myself.•	Start using some object technology.Known Bugs:-----------•	Sometimes there’s a blank line at the bottom of the files list.•	Seems to be a problem with search AppleShare volumes. If you start	searching on a local volume, you skip the AppleShare volumes. If you	start searching on an AppleShare volume, you get error -123.•	When using the Folders menu to change to a folder on a different volume,	the volume button in the upper right corner doesn’t update.•	Test under 24-bit mode.•	Find out what the messiness is with MS-Word and hierarchicals. Sometimes	its menu items get inverted the wrong way. (I may not fix this, since it	doesn’t happen in 5.0).•	Dave Radcliffe: “Open” hierarchical menu kills Balloon help on the parent	item.•	Problems with unmounted volumes: Open StdFile when a floppy is in the	drive, eject the floppy by clicking on the Eject button, select a file	from the Files menu that’s on the floppy. We should get the Disk Switched	dialog, but we don’t.•	Some sort of problem when sorting items that start out the same way (e.g.	“Pointed Stick” and “Pointed Stick (MyVolume...MyFolder)”.•	Look into problems with aliases (I may have to resolve them by hand in	cases).•	Hierarchical menu selection don’t seem to work with ResEdit and MacInTax.Questions for the Masses(or: How Do I Do This?)-----------------------¿?	If anyone knows of a good way to get to the list of files in the StdFile	dialog that doesn’t require two trap patches and a user item draw proc	replacement, I’d love to hear about it.¿?	I don’t want to attach the hierarchical to “Open…” if it’s disabled.	However, I can’t seem to determine that it’s disabled when the user	clicks on the menubar with a modal dialog up. I’ve checked the	appropriate enable bits (I think), but the hierarchical still gets	attached. Is there a way to see if the menus are disabled while a modal	dialog is up?Release Mystery---------------v1.0a6  --  ??/??/??√	Fixed incompatibility with System 7.1.1. The PowerTalk Manager installs	itself in front of the System Folder, setting that “I should be treated	as an extension of the resource file after me” bit (this is bit 1 of the	resource file attributes byte). Since I was installing myself in front of	the System file, I was becoming an extension of the PowerTalk Manager	file. My solution to this was to shuffle myself to the end of the	resource chain.√	Sped up the routines that validate entries in the menus. Previously,	validating items when there were AppleShare volumes mounted would take a	long time as the AppleShare volume was hit many, many times. Now, instead	of calling PBGetVCBInfo, I walk the VCB queue directly. By doing this, I	can access just the fields I need without PBGetVCBInfo hitting the disk.√	The control that determines the number of files and folders appearing in	the menus now allows you to increment by just a single number. Before, it	changed the starting number by at least two.√	Fixed bug in FixDITLHandleSize. I wasn’t treating the length of a dialog	item as an unsigned value, which meant that I went negative on long items	whose length was greater than 128.v1.0a5  --  8/10/93√	Fixed incompatibility with Macintosh Easy Open. The nasty people changed	the internal data structure used by Standard File. This killed my routines	that looked at that data (like the “rebound” stuff).v1.0a4  --  3/4/93√	Reworked rebound. There was a problem where I would remember the item for	rebound BEFORE selecting the rebound item. This meant that when we moved	to a new directory and Standard File selected the first item, my	algorithm would remember that item as the rebound item, and THEN perform	the rebound operation. Of course, it would end up selecting the first	item.√	Dynamically allocate some memory for the larger items. This means that	the INIT itself is smaller, since global variable size is reduced. It	also means that memory isn’t taken up for operations you don’t perform	(Find… is a biggie here).√	Fixed bug where Cmd-G (Find Again) wouldn’t work the first time you tried	accessing it.√	Internal re-arrangements to help reduce memory footprint. Includes:	changing SetUpA4 (doesn’t need to call __GetA4() anymore), putting	PStringCopy back as a subroutine instead of inline.√	Fixed bug where Find Again wouldn’t restart after finding all occurrences	of a file.√	If Find Again finds a file that is in the same directory as the last	found file, don’t rebuild the file list. This goes for any situation	where Pointed Stick takes control and selects a file.√	Converted this document to BBEdit because TeachText couldn’t hold it all	anymore.v1.0a3  --  4/14/92√	Fixed resource chain problems. There were incompatibilities with	ClarisWorks 1.0 and Suitcase 2.0. In the former case, ClarisWorks	actually has a DITL(27000) resource, the same as the one I use to define	the additional items I add to the StdFile dialogs. I would fetch that	resource instead of my own. In the latter case, Suitcase cut my resource	map from the top of the chain. In both cases, the fix was to make sure my	resource map was at the top of the chain.√	Fixed AppleLink and StuffIt -35 errors when specifying a directory. Those	applications would set reply.sfGood to TRUE, but leave garbage in the	vRefNum/dirID/name fields.√	Fixed crasher with BBEdit 2.1. BBEdit was using code from Technote #95	for appending dialog items. Unfortunately, there is a bug in the Note	that causes the resulting dialog item handle to be two bytes too long.	When I tack on my items, the extra two bytes are now wedged between my	items and the host’s items. This would later choke the Dialog manager.	Fix was to walk the list and make sure the DITL handle size is right	before adding my items.√	Fixed another problem with BBEdit. It was setting the clipRgn to exclude	my menubar control. The control was usable (you could click on it), but	it just wouldn’t draw. Fix was to munge the clipRgn in my ModalFilterProc	on update events.v1.0a2  --  4/8/92√	Fixed bug that caused crash with QuickMail and enclosures.√	Selecting a directory from the directory menu when using the new Std File	dialogs would move you to that directory and then attempt to open the	default item (usually the first item). Now I just move you to that	directory.√	Doing a “Find” will no longer find items that the application cannot	open. Neither will it attempt to open the file once it’s found it and you	are using the new Std File calls.v1.0a1  --  4/6/92√	Fixed bug: If you used “Open…” in a program that used the new Standard	File routines, and then went to the Finder and double clicked on a file	belonging to an already-running application that used the old Standard	File routines, you’d get a -120 error.√	Sometimes I’d get a -43 error from PS. This usually happened when	selecting a directory to decompress AppleLink packages into. I think I	know what’s going on, and hope I’ve fixed it.√	Stop swallowing all idle events. Some StdFile hooks rely on them. For	instance, THINK C uses idle events to set the states of the Done and	Remove buttons.√	Several people reported that checkboxes in Standard file turned into	buttons. I never saw this myself, but I think it involved controls that I	wrapped in my ZeroCDEF. I was leaving my CDEFHandle in the contrlDefProc	field, which would convey the wrong control variant to the wrapped-up	CDEF. I now restore this field when chaining to the wrapped-up CDEF. If	the problem persists, let me know.√	Wrap up the File menu with my own MDEF that tracks the items being	selected. Normally, when the user selects Open, I have to call MenuChoice	to see if Open was selected, because MenuSelect will return zero if the	parent of a hierarchical is chosen. However, some custom MDEFs, such as	MS Word’s (naturally...), don’t support MenuChoice, so I have to install	a wrapper that will.√	Changed the way in which I filter the files in the Files menu.	Previously, I made my determination based solely on the information in	the FREF resource. That’s about all I can do for the hierarchical that	hangs off of the Open menu, but when I’m in the StdFile dialog, it’s	better for me to filter the files in the same way StdFile does (i.e.,	through the type list and filterProc).√	In Universal Open (MiniFinder), items in the Files menu used to be	enabled according to the application that was currently frontmost. Now,	since this is _Universal_ Open, I enable all of the items and hope the CE	Toolbox can understand them.√	Holding down the Control key before Standard File comes up will prevent	Pointed Stick from installing itself.√	Added a bunch of cool code that would allow you to select folders in	MiniFinder and tell Finder to open those folders up. Then I remembered	that INITs can’t send Apple events…v1.0d11  --  2/18/92√	Made dialog item for version number larger (gotta hold those two digit	versions…)√	Added Rebound.√	Fixed bug that occassionally replaced the file type with the dir ID in my	“saved file” lists.√	Use special MDEF that speeds up the creation and setup of menus	(decreases delay when clicking on the menubar as I create and add the	hierarchical off of the Open… menu item). (Oops … no it doesn’t. I guess	the delay is for other reasons, like calling PBGetCatInfo on 30 items).√	Added CheckBox in configuration dialog that lets you sift permanent items	to the top of the menus.√	Fix bug when setting permanent items when the list in the dialog wasn’t	sorted the same way the menu was.√	PLstrcat now also uses an inline block move routine so that we don’t have	to call BlockMove, invalidating the cache.√	Hierarchical menu now created with NewMenu, rather than GetMenu. Using	GetMenu meant that I had to open my resource fork at MenuSelect time. Not	only did this slow me down, but my resources kept getting confused with	the applications (sometimes my icon would appear in the place of an	application’s in the Process menu).√	Check files when they are selected from my menus to see if they still	exist.√	Fixed really Stupid Bug. My hierarchical wasn’t being attached to some	Open menu items. The problem was when I was walking the 'mst#' resources,	looking for the menu item with the right name. When walking the 'mst#'	resource, I incremented my pointer by Length(string), instead of	Length(string)+1. Gotta take into account that length byte!√	Totally reworked some of the lower level data manipulation stuff. Now	have a complete set of routines for converting between FSSpecs, reply	records, internal storage handles, and the Standard File record that is	stored in the ListHandle. Attempt to use these common routines all over	the place.√	Use FSMakeFSSpec whereever I used to slam the fields directly. Dave	Feldman was pretty adamant that FSSpecs should _NOT_ be filled out by	hand, except in the case of assigning one FSSpec to another.√	In MenubarCDEF, check to see if an item is enabled in MenuKey routine.√	Worked around bug in List Manager that prevents LSearch from matching the	last item in the list. LSearch goes through a loop, comparing an index	against ListRec.maxIndex. Unfortunately, it does a BLT rather than a BLE.	Workaround by adding 2 to maxIndex when calling LSearch and restoring it	afterwards.√	Fixed bug with returning from Set Permanent. The menus would be sorted by	solely by name, not by what you’d specified.√	Severely reworked the routines that moved you to a file or directory. The	old algorithms were in a “don’t blow on these or they’ll fall apart”	state. Hopefully, the new ones are a little cleaner.√	Remove any files or folders that are supposed to be on mounted volumes,	but that I can’t find. Keep (but disable) and files or folders on	unmounted volumes.v1.0d10  --  1/16/92√	Used Reekes’s PStringCopy routine. It’s an inline Pascal string copy	routine. It is just 2 bytes longer than a call to PLstrcpy (a subroutine	that called BlockMove), and since it doesn’t call BlockMove, it doesn’t	flush the cache.√	Filter directories so that they appear gray if they exist on unmounted	volumes.√	Fixed crasher that could occur when bringing up “Set Permanent Whatever”	dialogs.√	Intercept odoc events. (Incredible! This actually worked the first time I	tried it! As Reekes would say, “I crack myself up!”)v1.0d9  --  1/15/92 (Happy Iraq Day)√	Programmed according to the Eric Soldan School of Programming: “In one	sitting, write more source code that you can possibly debug. Then run it	and see how you did.”√	Added checkbox to turn off MiniFinder HotKey (I showed Rick Holzgrafe	what the MiniFinder was, and he said “Great! How do I turn it off?” Put	that in your pipe and smoke it, Pete).√	Made the configuration box recognize when CEToolbox is not installed.√	Implemented the “Set Permanent…” stuff.√	Added C.K.’s way cool icons. Modified ShowINIT to call PlotIconID so that	I can show the color versions√	Use custom LDEF showing checked items in “Set Permanent…”√	Added option in Configure… to set the number of files and folders	remembered.√	Fixed problem where you could invoke MiniFinder while in Standard File.√	Keith suddenly discovers that THINK C doesn’t even know the meaning of	“dead code strip.” He saves 426 bytes by removing routines that he never	uses.√	Saved 340 bytes by inlining some loops. I used to have a procedure	(ForEachRecordDo) that iterated over all the items in a list, calling a	procedure for each one. This was a good idea back when my records could	be any length. However, now that they are all handles, it turns out to be	better to do the loops by hand whereever I need them rather than call	ForEachRecordDo. (Similar comments about GetNthRecord().)√	Fixed bug where if you zoom the mouse across the menubar CDEF back and	forth really fast, including zooming off either end, you will eventually	crash.√	Added routines to do volume matching stuff. This means that things should	be better with regard to mounting and unmouting volumes.√	C.K. suggestion: add something to the configure box that allows him to	determine whether or not the volume and parent directory names are	appended to the file name in the menus.√	Fixed bug that would crash you crazy if the Preferences file wasn’t	found.√	Intercept odoc events (currently disabled - not yet debugged).v1.0d8  --  12/17/91√	Fixed little bug where folder list does not cut off at 30 entries.√	Back to using a QuickSort, which is smaller and faster than a HeapSort,	especially for the situation I’m in, where I only need to sort the new	element I’m adding.√	I now sort the list only when I add or remove an entry. Previously, I	sorted the list every time I prepared the menu.√	List handling routines are now less generic. Previously, I had routines	that could keep any-sized records in a dynamic array. Now, I assume that	I’m only dealing with records that are handles. This makes the routines	smaller and faster, since they can index by doing an LSL #2, rather than	multiplying by the arbitray size of the record.√	Added a “Flush All Data…” menu option, something that will wipe the slate	clean.√	Cleaned up a questionable programming practice. In an effort to speed	things up (there’s that Apple ][ background again...), I was passing	around pointers to names rather than the names themselves. However, I was	occassionally passing the pointers to names in unlocked handles. This	eventually would have caught up to me.√	Fixed bug with MicroSoft (of course) Excel. I have a CDEF that I use to	wrap up other CDEFs which allows me to use controls in windows with	non-{0, 0} origins. In that CDEF, I assumed that the control’s	contrlDefProc field held the handle to my CDEF. However, MicroSoft _also_	wraps up CDEFs, which means that it needs to put its own CDEF handle in	that field. However, when Excel’s CDEF calls my CDEF, it neglects to put	my CDEF handle in contrlDefProc. I now no longer assume that my CDEF’s	handle is in contrlDefProc, and get the handle by calling RecoverHandle,	instead.√	Added configuration dialog box. Implied by this is the ability to sort by	name or entry age, and the ability to change the hot-key that brings up	Universal Open.√	Fixed a couple of bugs that Reekes reported. He was having some random	crashes, so I sent him a preliminary copy of 1.0d8. Then he tells me that	he gets the infamous “Adding file with empty name” dialog whenever he	uses MPW to select a folder. Fortunately, this was a benign problem: I	was reporting a soft error that I shouldn’t have (I was reporting the	fact that the file name being entered was empty, which is true, since it	was a folder that was selected).v1.0d7  --  12/13/91√	Added MiniFinder via CEToolbox (aka: Universal Open)√	Intense code reduction. This included:		-	Recoding the DITL routines as inline assembly. The means that I			don’t have to link with the CommToolbox library anymore. (Take a			look at the glue for AppendDITL sometime. That is the goofiest			thing I’ve ever seen! It’s a Pascal interface to a register-based			function that takes a function selector.)		-	Use low-level counterparts of HGetVol, OpenWD, DirCreate,			GetWDInfo, Open, and Control.		-	Use PBxxxSync instead of PBxxx(…, FALSE).		-	Where I was using both RelString and EqualString, I now use only			my custom version of RelString(…, …, FALSE, FALSE).		-	In ShowINIT, allocate QD globals on stack instead of globals.			This means that not only am I not carrying around 206 bytes of			zeros, but I don’t need the SetUpA4() junk.		-	Similarly with the error notification code. I used to use a			global Str255; now it’s allocated on the heap. This eliminates			252 bytes that I don’t need to carry around.√	Changed internal data format. In addition to other things, I now cache	the extended format of the menu items “<File> (<Volume>…<Directory>)”.	This should make menu setup time faster.√	Attempt to use built-in New Folder if available.√	Attempted to make PS react better to crashes. Let me know if you have any	problems in this area. Specifically, if you crashed while in StdFile, I	used to think that the resource file was still open. I’d then crash later	when I tried to get a resource without first opening the (now closed)	file.√	Fixed a bug (I hope) in the menubar CDEF that caused the control’s	menubar to sometimes appear in the main menubar.v1.0d6  --  12/9/91√	First release developed under CMaster. Let’s see if it helps.√	Fixed infinite loop bug in Find. Thanks to Dave Radcliffe for ciphering	this one out.√	Call StripAddress on the PROC resources I load, and do that FixPC thang	in TN #245.√	Fixed enabling of “Find Again” menu item.√	ioOptBuffer in PBCatSearch used to be a 16K non-relocatable block that	was allocated every time I needed it. Now it’s a purgeable handle.√	Show spinning cursor (at VBL time, of course) when doing a Find.√	New Folder now actually does something other than bring up a dialog box.√	Rebuilt with that “systemSevenOrLater” flag turned on.√	Added notification that explains why we don’t install.√	Moved all error messages into Alerts rather than reporting them through	DebugStr.√	Massive rewrite of the MenuBar CDEF. First, I had accidentally	overwritten my current copy with an old one, so I had to bring things	back up to date. Then, based on a suggestion by Mensch, I totally redid	the data structures and algorithms so that I could use more of the Menu	Manager. Unfortunately, there’s precious little of the Menu Manager I can	use (for example, I can’t use MenuKey, since the Menu Manager thinks that	all menu items are disabled when a modal dialog is up). Anyway, I should	now have a CDEF that supports all Menu Manager functions on menuBars (you	call the CDEF directly to do things like InsertMenu, etc. I provide a set	of macros to make this easy).√	Fixed aging bug that caused the first file or folder to be discarded,	rather than the oldest.√	Modifed qsort() so that it works with short’s rather than size_t’s. When	using size_t’s, THINK C throws in a bunch of runtime stuff (about 414	bytes) that includes a LongMul and LongDiv routine. By using shorts, we	don’t need these runtime routines, and save about 414 bytes.√	Never mind. Had problems with the modified qsort, so I bagged the whole	thing and implemented the HeapSort from Programming Pearls (boy, that	algorithm is weird!).√	Did this from Rick Holzgrafe: I spend a lot of time in MPW, stealing code	from myself. PS is great for hopping between folders, but doesn’t let me	distinguish between identically-named files. I’d like either an option	for longer filenames in your File menu (perhaps just show the parent	folder’s name, as in “Foo:Fum”) or else a way to *remove* names from the	File menu, so I don’t get confused.√	Also show volume name along with file/folder name.√	Added an MDEF that makes popups show up where I tell them to. Otherwise,	popups try to put as much of themselves on the screen as possible, even	if it means moving the menu up or down. Since I’m using popups in my fake	menubar, I really need to make sure they show up just below the menu	title. Now that I’ve done this, I’ve upped the number of files and	folders remembered from 22 to 30.v1.0d5  --  11/25/91√	Add application’s directory to folder list.√	Added Find… and Find Again.√	Add menus to PutFile.√	Change all dialogs to the custom version no matter what. This is because	I now have to hook into the ModalDialogFilter proc in order to handle	command-keys (the dlgHook doesn’t get to see them). I also hook into the	fileFilter proc now, too, because I think I’ll need to in the future. At	the very least, I have to do some fancy dancing because I’m changing	StandardGetFile into CustomGetFile: the former takes a FileFilterProc,	while the latter takes a FileFilterYDProc (Why!!! Nick, everything else	you did was so great!). Because StdFile now thinks the program called	CustomGetFile, it treats the file filter like a FileFilterYDProc.	However, the application really provided a FileFilterProc, which uses a	different set of parameters. Anyway, all this means a totally revamped	front end to my Pack 3 patch.√	Added new dialog handling calls from C.K.’s Technote (but the	SetDialogTracksCursor call doesn’t seem to have any effect in the “Find…”	dialog).√	Reworked the way I jump to a directory and select a file. Is now faster	and cleaner. Should also allow me to more easily implement clipping to	eliminate slightly annoying flashing when I deselect the first name in	the list and select the name that I really want.√	Added New Folder dialog.√	Put ShowINIT and as much initialization as I could into external	resources (these are in PROC 0 and PROC 1 respectively).√	Revised the way I was calling the “original” trap in my patches.	Previously, I had been using the following boiler-plate where I could:		oldTrapAddress = gOriginalTrapAddress;		RestoreA4();		asm {				move.l oldTrapAddress,A0				unlk A6				jmp (A0)		};	I had thought that this was a pretty cool way to (a) not tail-patch (even	though that shouldn’t matter under 7.0) and (b) re-use the parameters on	the stack without having to re-push them on. However, the problem with	this approach is that any non-scratch registers saved on the stack would	be lost. In other words, if my trap patch needed to use D7 for something	and saved the original D7 on the stack at the beginning of the routine,	D7 would be lost when I jumped to the original trap. I now use the more	high-level:		((TypeDefForOriginalTrap) gOriginalTrapAddress)(parameters);	This actually saves me some code in a few places. The only place where I	couldn’t easily do this where I would have liked was in my List Manager	patch because it takes a variable number of parameters; this had to be	written entirely in assembly.v1.0d4  --  11/22/91√	Added the CDEF that implements the menubar. This required a lot of	changes to the rest of the code to ween it from the silly, hardcoded	popups I had before. But everything is really cool now, and the INIT is	actually smaller because it doesn’t have to deal with three seperate user	items any more.√	Added a hack that keeps my INIT’s resource fork between the application	and system resource file.√	Renumbered all of my resources into the application range where possible	(for instance, there’s nothing I can do about the 'vers' resources).	Since I’m always behind the application, this should be OK.√	Added 'hfdr' resource (BFD).√	Added new (but disabled) menu items.√	May have fixed Dave’s Cancel bug, but I don’t know. I reproduced the	problem at work, but after I came home and implemented all the stuff	above, the problem didn’t show up. I HATE that!!!√	Gray out menu titles in my menubar if there’s nothing attached.√	Alphabetize items in the menus.v1.0d3  --  11/20/91√	Found and fixed bug that may have been crashing people (when checking to	see if a StdFile call was of the Erich Ringworm variety or the Nick	Kledzick variety, I was comparing the selector against sfStandardGetFile	when I should have been comparing against sfStandardPutFile).√	Always dynamically assign menu IDs to my popups and hierarchicals. I was	conflicting with some application IDs with my preassigned 128, 129, and	130.√	Totally redid the way I call the real StdFile. Before, I had 8 seperate	routines to handle each of the 8 selectors. Now, most of it is table	driven. Saved about 500 bytes!√	May have fixed one of those “I dont’t know how it ever worked” bugs,	where I wasn’t removing enough bytes from the stack when returning from a	procedure written in assembly.√	Changed the way my dialog items were added. I used to add them at	GetNewDialog time. However, that caused problems with programs that	played around with the dialog after GetNewDialog returned (THINK C, MS	Word). I now add my stuff at the last possible moment in ShowWindow.v1.0d2  --  11/18/91√	Made selecting “Open…” work. Added 'vers' resource and display it in	About box. √	Added way gross hack (but not as gross as Boomerang’s) to put my popup	menus above all of the items in the Std File dialog (hint: The trick is	_not_ to merely move all the dialog items’ bounding boxes down, since	that doesn’t account for stuff drawn directly, as in the “Open Document”	string in MacWrite II. Neither can you simply change the window’s origin	to something like (0, -25), since the Control Manager Chapter of IM says	that controls should be drawn with a (0, 0) origin, a limitation that	7.0’s popup menu CDEF enforces).√	Added ShowINIT and icon. Do not install if Option key is held down at	boot time.√	Protect against unknown (future) StdFile selectors.√	Save list of files and directories at shutdown time. These lists will NOT	be written if you hold down the Option key while shutting down. Instead,	the preferences file will be deleted. This is handy if you need to get	rid of some corrupted lists or I changed the format of the resources.√	Read saved files and directories at startup time.√	Redo the way I snag the selected file. I used to read it out of the reply	record when StdFile returned. However (...get this...), THINK C has this	SFPPutFile hook that replaces the first character of the entered file	with $7F, saving the real first character off in some global somewhere.	WHY!!!!!√	Totally reorganized data structures and routines in a more general	fashion (saved about 800 bytes of code).√	Filter the files that are displayed, limiting them to the kind the	application can open as indicated by its FREF resources.√	Install InitGraf patch that checks to see if it looks like it’s being	called from an application at startup time. If so, it scarfs up the files	in AppParms, and installs a Pack 3 patch over MultiFinder’s (so it can	save off any files returned by MF’s puppet strings).√	Add hierarchical to “Open…” only if menu item is enabled.√	Number of folders and files that are remembered is limited to 22 each.v1.0d1  --  11/11/91√	GetFile menus (folders, file, other), including the all-important About	box.√	Open… menu hack.- Keith Rollin- Phantom Programmer- Taligent, Inc.
+                               Pointed  Stick
+                                 --- or ---
+                      How I Learned To Spurn Boomerang
+
+Welcome to Pointed Stick. This INIT (no, it’s not a System Extension, dammit)
+is a replacement for Boomerang that makes more modest requests of your system
+heap and hard disk. Back in the Good Old Days™, I used to wonder why
+Boomerang took up 130K. Now that Boomerang 3.0 is out, I wonder why it takes
+up 266K.
+
+So I wrote Pointed Stick.
+
+(Worthless digression: Why “Pointed Stick?” Why not something a little more
+obvious, like “Super Boomerang Sucks, so use this”? Well, first of all, that
+name is 4 characters too long. But mostly, I viewed this INIT as a more basic
+version of Super Boomerang, and a stick is certainly more basic than a
+boomerang. Also, Pointed Stick recalls to my pointy little mind the Monty
+Python skit where a sergeant who got a little too much action in the last war
+was teaching men how to defend themselves. The trainees wanted to know how to
+defend themselves against nasty things like pointed sticks, while the
+sergeant thought it would be better to learn how to defend against fresh
+fruit, such as bananas. And an icon of a banana certainly looks something
+like a boomerang. ‘Nuff sed.)
+
+Still, what is it (for you social types who have a life and don’t know what
+Boomerang is)? Pointed Stick hooks into various places and remembers what
+files you have opened and what folders they live in. These files and folders
+are then incorporated into some menus that are added to the Standard File
+dialog box. That way, files that you most recently accessed can be quickly
+opened again without having to drive all over you hard disk trying to find
+them. Similarly, you can jump to folders that you access all the time with a
+mere Flick o’ the Mouse (like I do with my PinkIncludes and Apple #Includes
+folders). For added comfort, the menu of files installed in the Standard File
+dialog are attached to your “Open…” menu item as a hierarchical menu.
+
+Because I wrote this INIT for myself, and I don’t plan on ever running System
+6.0.x again, this INIT runs only under System 7. If you don’t like it, talk
+to the FredWare guy (Fred sez: “If you don’t like it, write your own”).
+
+
+What does Pointed Stick do?
+(or: What Does Keith Think Works Right Now?)
+--------------------------------------------
+•	Implements handy menus in Standard File boxes. Menus include a “Recently
+	Accessed Folders” menu, a “Recently Accessed Files” menu, and a
+	“Miscellaneous” menu that allows you to create new folders, find files,
+	mark certain files and folders so that they don’t get removed from the
+	menus when they get too old, and, of course, the ubiquitous About Box.
+•	Does that Boomerang DirectOpen thang, attaching a hierarchical menu to the
+	“Open…” menu item.
+•	Files and folders are written to disk in the “Pointed Preferences” file.
+•	Implements a Universal Open if you are using the CEToolBox.
+•	Remembers the item that was selected the last time you were in each
+	directory, and “rebounds” you to that item when you return to that
+	directory.
+
+
+What will Pointed Stick never do?
+(or: I Don’t Give A Damn, I’m Not Doing It)
+-------------------------------------------
+•	Groups (whatever those are).
+•	Rename files.
+•	System 6.0.x support.
+
+
+What will Pointed Stick do that it doesn’t do now?
+(or: Don’t Bug Me, I’m Working On It)
+--------------------------------------------------
+(These are in “as I thought of them” order...)
+
+•	When doing a Find, show a dialog saying what volume we’re currently
+	searching, along with a notice that Cmd-. will work. At the same time,
+	make it so that Cmd-. will work.
+•	Pete Helme: Command keys that walk down list of files and folders in
+	whatever order they happen to be in.
+•	Change what is attached to the Open menu item. Right now, I attach a
+	hierarchical with the list of files that normally appears in my Files
+	menu. Instead, I’m thinking of attaching a hierarchical with the list of
+	folders in the Folders menu, and attaching a hierarchical off of each of
+	_them_ with the files from the Files menu that are in each folder.
+	Selecting a file will open that file. Selecting a folder will bring up
+	StdFile on that folder. Selecting Open… will open StdFile normally. 
+	(User survey: Luke and Radcliffe are not so hot on this).
+•	Patch SetTrapAddress so that we can keep a Pack3 patch in front of
+	MultiFinder. This is so we can catch any files that the application is
+	puppet-stringed into opening.
+•	Smooth things out when I force a selection in the list of files (for
+	instance, when I rebound to the most recently chosen item in a folder).
+	Right now, things are jerky as the list of new items shows up with the
+	first item selected, and then I change the selection.
+•	Add “Find Folder…” (handy when saving files).
+•	Check items that are selected from the hierarchical against the
+	parameters in the subsequent StdFile call to make sure the application
+	can indeed open that file. If it can’t, bring up StdFile anyway.
+•	Add menu item that adds the directory you are currently in to the
+	directory menu.
+•	Figure out how Boomerang opens folders in the Finder, and copy it.
+•	Compile without symbols to save 3 or 4K.
+•	Remove code that hooks into file filter, since it looks like I won’t need
+	it.
+•	Rework workaround to LSearch bug. Current workaround will break if Blue
+	ever fixes the bug. Final solution is to implement LSearch myself.
+•	Start using some object technology.
+
+
+Known Bugs:
+-----------
+•	Sometimes there’s a blank line at the bottom of the files list.
+•	Seems to be a problem with search AppleShare volumes. If you start
+	searching on a local volume, you skip the AppleShare volumes. If you
+	start searching on an AppleShare volume, you get error -123.
+•	When using the Folders menu to change to a folder on a different volume,
+	the volume button in the upper right corner doesn’t update.
+•	Test under 24-bit mode.
+•	Find out what the messiness is with MS-Word and hierarchicals. Sometimes
+	its menu items get inverted the wrong way. (I may not fix this, since it
+	doesn’t happen in 5.0).
+•	Dave Radcliffe: “Open” hierarchical menu kills Balloon help on the parent
+	item.
+•	Problems with unmounted volumes: Open StdFile when a floppy is in the
+	drive, eject the floppy by clicking on the Eject button, select a file
+	from the Files menu that’s on the floppy. We should get the Disk Switched
+	dialog, but we don’t.
+•	Some sort of problem when sorting items that start out the same way (e.g.
+	“Pointed Stick” and “Pointed Stick (MyVolume...MyFolder)”.
+•	Look into problems with aliases (I may have to resolve them by hand in
+	cases).
+•	Hierarchical menu selection don’t seem to work with ResEdit and MacInTax.
+
+
+Questions for the Masses
+(or: How Do I Do This?)
+-----------------------
+
+¿?	If anyone knows of a good way to get to the list of files in the StdFile
+	dialog that doesn’t require two trap patches and a user item draw proc
+	replacement, I’d love to hear about it.
+
+¿?	I don’t want to attach the hierarchical to “Open…” if it’s disabled.
+	However, I can’t seem to determine that it’s disabled when the user
+	clicks on the menubar with a modal dialog up. I’ve checked the
+	appropriate enable bits (I think), but the hierarchical still gets
+	attached. Is there a way to see if the menus are disabled while a modal
+	dialog is up?
+
+
+Release Mystery
+---------------
+
+v1.0a6  --  ??/??/??
+
+√	Fixed incompatibility with System 7.1.1. The PowerTalk Manager installs
+	itself in front of the System Folder, setting that “I should be treated
+	as an extension of the resource file after me” bit (this is bit 1 of the
+	resource file attributes byte). Since I was installing myself in front of
+	the System file, I was becoming an extension of the PowerTalk Manager
+	file. My solution to this was to shuffle myself to the end of the
+	resource chain.
+√	Sped up the routines that validate entries in the menus. Previously,
+	validating items when there were AppleShare volumes mounted would take a
+	long time as the AppleShare volume was hit many, many times. Now, instead
+	of calling PBGetVCBInfo, I walk the VCB queue directly. By doing this, I
+	can access just the fields I need without PBGetVCBInfo hitting the disk.
+√	The control that determines the number of files and folders appearing in
+	the menus now allows you to increment by just a single number. Before, it
+	changed the starting number by at least two.
+√	Fixed bug in FixDITLHandleSize. I wasn’t treating the length of a dialog
+	item as an unsigned value, which meant that I went negative on long items
+	whose length was greater than 128.
+
+
+v1.0a5  --  8/10/93
+
+√	Fixed incompatibility with Macintosh Easy Open. The nasty people changed
+	the internal data structure used by Standard File. This killed my routines
+	that looked at that data (like the “rebound” stuff).
+
+
+v1.0a4  --  3/4/93
+
+√	Reworked rebound. There was a problem where I would remember the item for
+	rebound BEFORE selecting the rebound item. This meant that when we moved
+	to a new directory and Standard File selected the first item, my
+	algorithm would remember that item as the rebound item, and THEN perform
+	the rebound operation. Of course, it would end up selecting the first
+	item.
+√	Dynamically allocate some memory for the larger items. This means that
+	the INIT itself is smaller, since global variable size is reduced. It
+	also means that memory isn’t taken up for operations you don’t perform
+	(Find… is a biggie here).
+√	Fixed bug where Cmd-G (Find Again) wouldn’t work the first time you tried
+	accessing it.
+√	Internal re-arrangements to help reduce memory footprint. Includes:
+	changing SetUpA4 (doesn’t need to call __GetA4() anymore), putting
+	PStringCopy back as a subroutine instead of inline.
+√	Fixed bug where Find Again wouldn’t restart after finding all occurrences
+	of a file.
+√	If Find Again finds a file that is in the same directory as the last
+	found file, don’t rebuild the file list. This goes for any situation
+	where Pointed Stick takes control and selects a file.
+√	Converted this document to BBEdit because TeachText couldn’t hold it all
+	anymore.
+
+
+v1.0a3  --  4/14/92
+
+√	Fixed resource chain problems. There were incompatibilities with
+	ClarisWorks 1.0 and Suitcase 2.0. In the former case, ClarisWorks
+	actually has a DITL(27000) resource, the same as the one I use to define
+	the additional items I add to the StdFile dialogs. I would fetch that
+	resource instead of my own. In the latter case, Suitcase cut my resource
+	map from the top of the chain. In both cases, the fix was to make sure my
+	resource map was at the top of the chain.
+√	Fixed AppleLink and StuffIt -35 errors when specifying a directory. Those
+	applications would set reply.sfGood to TRUE, but leave garbage in the
+	vRefNum/dirID/name fields.
+√	Fixed crasher with BBEdit 2.1. BBEdit was using code from Technote #95
+	for appending dialog items. Unfortunately, there is a bug in the Note
+	that causes the resulting dialog item handle to be two bytes too long.
+	When I tack on my items, the extra two bytes are now wedged between my
+	items and the host’s items. This would later choke the Dialog manager.
+	Fix was to walk the list and make sure the DITL handle size is right
+	before adding my items.
+√	Fixed another problem with BBEdit. It was setting the clipRgn to exclude
+	my menubar control. The control was usable (you could click on it), but
+	it just wouldn’t draw. Fix was to munge the clipRgn in my ModalFilterProc
+	on update events.
+
+
+v1.0a2  --  4/8/92
+
+√	Fixed bug that caused crash with QuickMail and enclosures.
+√	Selecting a directory from the directory menu when using the new Std File
+	dialogs would move you to that directory and then attempt to open the
+	default item (usually the first item). Now I just move you to that
+	directory.
+√	Doing a “Find” will no longer find items that the application cannot
+	open. Neither will it attempt to open the file once it’s found it and you
+	are using the new Std File calls.
+
+
+v1.0a1  --  4/6/92
+
+√	Fixed bug: If you used “Open…” in a program that used the new Standard
+	File routines, and then went to the Finder and double clicked on a file
+	belonging to an already-running application that used the old Standard
+	File routines, you’d get a -120 error.
+√	Sometimes I’d get a -43 error from PS. This usually happened when
+	selecting a directory to decompress AppleLink packages into. I think I
+	know what’s going on, and hope I’ve fixed it.
+√	Stop swallowing all idle events. Some StdFile hooks rely on them. For
+	instance, THINK C uses idle events to set the states of the Done and
+	Remove buttons.
+√	Several people reported that checkboxes in Standard file turned into
+	buttons. I never saw this myself, but I think it involved controls that I
+	wrapped in my ZeroCDEF. I was leaving my CDEFHandle in the contrlDefProc
+	field, which would convey the wrong control variant to the wrapped-up
+	CDEF. I now restore this field when chaining to the wrapped-up CDEF. If
+	the problem persists, let me know.
+√	Wrap up the File menu with my own MDEF that tracks the items being
+	selected. Normally, when the user selects Open, I have to call MenuChoice
+	to see if Open was selected, because MenuSelect will return zero if the
+	parent of a hierarchical is chosen. However, some custom MDEFs, such as
+	MS Word’s (naturally...), don’t support MenuChoice, so I have to install
+	a wrapper that will.
+√	Changed the way in which I filter the files in the Files menu.
+	Previously, I made my determination based solely on the information in
+	the FREF resource. That’s about all I can do for the hierarchical that
+	hangs off of the Open menu, but when I’m in the StdFile dialog, it’s
+	better for me to filter the files in the same way StdFile does (i.e.,
+	through the type list and filterProc).
+√	In Universal Open (MiniFinder), items in the Files menu used to be
+	enabled according to the application that was currently frontmost. Now,
+	since this is _Universal_ Open, I enable all of the items and hope the CE
+	Toolbox can understand them.
+√	Holding down the Control key before Standard File comes up will prevent
+	Pointed Stick from installing itself.
+√	Added a bunch of cool code that would allow you to select folders in
+	MiniFinder and tell Finder to open those folders up. Then I remembered
+	that INITs can’t send Apple events…
+
+
+v1.0d11  --  2/18/92
+
+√	Made dialog item for version number larger (gotta hold those two digit
+	versions…)
+√	Added Rebound.
+√	Fixed bug that occassionally replaced the file type with the dir ID in my
+	“saved file” lists.
+√	Use special MDEF that speeds up the creation and setup of menus
+	(decreases delay when clicking on the menubar as I create and add the
+	hierarchical off of the Open… menu item). (Oops … no it doesn’t. I guess
+	the delay is for other reasons, like calling PBGetCatInfo on 30 items).
+√	Added CheckBox in configuration dialog that lets you sift permanent items
+	to the top of the menus.
+√	Fix bug when setting permanent items when the list in the dialog wasn’t
+	sorted the same way the menu was.
+√	PLstrcat now also uses an inline block move routine so that we don’t have
+	to call BlockMove, invalidating the cache.
+√	Hierarchical menu now created with NewMenu, rather than GetMenu. Using
+	GetMenu meant that I had to open my resource fork at MenuSelect time. Not
+	only did this slow me down, but my resources kept getting confused with
+	the applications (sometimes my icon would appear in the place of an
+	application’s in the Process menu).
+√	Check files when they are selected from my menus to see if they still
+	exist.
+√	Fixed really Stupid Bug. My hierarchical wasn’t being attached to some
+	Open menu items. The problem was when I was walking the 'mst#' resources,
+	looking for the menu item with the right name. When walking the 'mst#'
+	resource, I incremented my pointer by Length(string), instead of
+	Length(string)+1. Gotta take into account that length byte!
+√	Totally reworked some of the lower level data manipulation stuff. Now
+	have a complete set of routines for converting between FSSpecs, reply
+	records, internal storage handles, and the Standard File record that is
+	stored in the ListHandle. Attempt to use these common routines all over
+	the place.
+√	Use FSMakeFSSpec whereever I used to slam the fields directly. Dave
+	Feldman was pretty adamant that FSSpecs should _NOT_ be filled out by
+	hand, except in the case of assigning one FSSpec to another.
+√	In MenubarCDEF, check to see if an item is enabled in MenuKey routine.
+√	Worked around bug in List Manager that prevents LSearch from matching the
+	last item in the list. LSearch goes through a loop, comparing an index
+	against ListRec.maxIndex. Unfortunately, it does a BLT rather than a BLE.
+	Workaround by adding 2 to maxIndex when calling LSearch and restoring it
+	afterwards.
+√	Fixed bug with returning from Set Permanent. The menus would be sorted by
+	solely by name, not by what you’d specified.
+√	Severely reworked the routines that moved you to a file or directory. The
+	old algorithms were in a “don’t blow on these or they’ll fall apart”
+	state. Hopefully, the new ones are a little cleaner.
+√	Remove any files or folders that are supposed to be on mounted volumes,
+	but that I can’t find. Keep (but disable) and files or folders on
+	unmounted volumes.
+
+
+v1.0d10  --  1/16/92
+
+√	Used Reekes’s PStringCopy routine. It’s an inline Pascal string copy
+	routine. It is just 2 bytes longer than a call to PLstrcpy (a subroutine
+	that called BlockMove), and since it doesn’t call BlockMove, it doesn’t
+	flush the cache.
+√	Filter directories so that they appear gray if they exist on unmounted
+	volumes.
+√	Fixed crasher that could occur when bringing up “Set Permanent Whatever”
+	dialogs.
+√	Intercept odoc events. (Incredible! This actually worked the first time I
+	tried it! As Reekes would say, “I crack myself up!”)
+
+
+v1.0d9  --  1/15/92 (Happy Iraq Day)
+
+√	Programmed according to the Eric Soldan School of Programming: “In one
+	sitting, write more source code that you can possibly debug. Then run it
+	and see how you did.”
+√	Added checkbox to turn off MiniFinder HotKey (I showed Rick Holzgrafe
+	what the MiniFinder was, and he said “Great! How do I turn it off?” Put
+	that in your pipe and smoke it, Pete).
+√	Made the configuration box recognize when CEToolbox is not installed.
+√	Implemented the “Set Permanent…” stuff.
+√	Added C.K.’s way cool icons. Modified ShowINIT to call PlotIconID so that
+	I can show the color versions
+√	Use custom LDEF showing checked items in “Set Permanent…”
+√	Added option in Configure… to set the number of files and folders
+	remembered.
+√	Fixed problem where you could invoke MiniFinder while in Standard File.
+√	Keith suddenly discovers that THINK C doesn’t even know the meaning of
+	“dead code strip.” He saves 426 bytes by removing routines that he never
+	uses.
+√	Saved 340 bytes by inlining some loops. I used to have a procedure
+	(ForEachRecordDo) that iterated over all the items in a list, calling a
+	procedure for each one. This was a good idea back when my records could
+	be any length. However, now that they are all handles, it turns out to be
+	better to do the loops by hand whereever I need them rather than call
+	ForEachRecordDo. (Similar comments about GetNthRecord().)
+√	Fixed bug where if you zoom the mouse across the menubar CDEF back and
+	forth really fast, including zooming off either end, you will eventually
+	crash.
+√	Added routines to do volume matching stuff. This means that things should
+	be better with regard to mounting and unmouting volumes.
+√	C.K. suggestion: add something to the configure box that allows him to
+	determine whether or not the volume and parent directory names are
+	appended to the file name in the menus.
+√	Fixed bug that would crash you crazy if the Preferences file wasn’t
+	found.
+√	Intercept odoc events (currently disabled - not yet debugged).
+
+
+v1.0d8  --  12/17/91
+
+√	Fixed little bug where folder list does not cut off at 30 entries.
+√	Back to using a QuickSort, which is smaller and faster than a HeapSort,
+	especially for the situation I’m in, where I only need to sort the new
+	element I’m adding.
+√	I now sort the list only when I add or remove an entry. Previously, I
+	sorted the list every time I prepared the menu.
+√	List handling routines are now less generic. Previously, I had routines
+	that could keep any-sized records in a dynamic array. Now, I assume that
+	I’m only dealing with records that are handles. This makes the routines
+	smaller and faster, since they can index by doing an LSL #2, rather than
+	multiplying by the arbitray size of the record.
+√	Added a “Flush All Data…” menu option, something that will wipe the slate
+	clean.
+√	Cleaned up a questionable programming practice. In an effort to speed
+	things up (there’s that Apple ][ background again...), I was passing
+	around pointers to names rather than the names themselves. However, I was
+	occassionally passing the pointers to names in unlocked handles. This
+	eventually would have caught up to me.
+√	Fixed bug with MicroSoft (of course) Excel. I have a CDEF that I use to
+	wrap up other CDEFs which allows me to use controls in windows with
+	non-{0, 0} origins. In that CDEF, I assumed that the control’s
+	contrlDefProc field held the handle to my CDEF. However, MicroSoft _also_
+	wraps up CDEFs, which means that it needs to put its own CDEF handle in
+	that field. However, when Excel’s CDEF calls my CDEF, it neglects to put
+	my CDEF handle in contrlDefProc. I now no longer assume that my CDEF’s
+	handle is in contrlDefProc, and get the handle by calling RecoverHandle,
+	instead.
+√	Added configuration dialog box. Implied by this is the ability to sort by
+	name or entry age, and the ability to change the hot-key that brings up
+	Universal Open.
+√	Fixed a couple of bugs that Reekes reported. He was having some random
+	crashes, so I sent him a preliminary copy of 1.0d8. Then he tells me that
+	he gets the infamous “Adding file with empty name” dialog whenever he
+	uses MPW to select a folder. Fortunately, this was a benign problem: I
+	was reporting a soft error that I shouldn’t have (I was reporting the
+	fact that the file name being entered was empty, which is true, since it
+	was a folder that was selected).
+
+
+v1.0d7  --  12/13/91
+
+√	Added MiniFinder via CEToolbox (aka: Universal Open)
+√	Intense code reduction. This included:
+		-	Recoding the DITL routines as inline assembly. The means that I
+			don’t have to link with the CommToolbox library anymore. (Take a
+			look at the glue for AppendDITL sometime. That is the goofiest
+			thing I’ve ever seen! It’s a Pascal interface to a register-based
+			function that takes a function selector.)
+		-	Use low-level counterparts of HGetVol, OpenWD, DirCreate,
+			GetWDInfo, Open, and Control.
+		-	Use PBxxxSync instead of PBxxx(…, FALSE).
+		-	Where I was using both RelString and EqualString, I now use only
+			my custom version of RelString(…, …, FALSE, FALSE).
+		-	In ShowINIT, allocate QD globals on stack instead of globals.
+			This means that not only am I not carrying around 206 bytes of
+			zeros, but I don’t need the SetUpA4() junk.
+		-	Similarly with the error notification code. I used to use a
+			global Str255; now it’s allocated on the heap. This eliminates
+			252 bytes that I don’t need to carry around.
+√	Changed internal data format. In addition to other things, I now cache
+	the extended format of the menu items “<File> (<Volume>…<Directory>)”.
+	This should make menu setup time faster.
+√	Attempt to use built-in New Folder if available.
+√	Attempted to make PS react better to crashes. Let me know if you have any
+	problems in this area. Specifically, if you crashed while in StdFile, I
+	used to think that the resource file was still open. I’d then crash later
+	when I tried to get a resource without first opening the (now closed)
+	file.
+√	Fixed a bug (I hope) in the menubar CDEF that caused the control’s
+	menubar to sometimes appear in the main menubar.
+
+
+v1.0d6  --  12/9/91
+
+√	First release developed under CMaster. Let’s see if it helps.
+√	Fixed infinite loop bug in Find. Thanks to Dave Radcliffe for ciphering
+	this one out.
+√	Call StripAddress on the PROC resources I load, and do that FixPC thang
+	in TN #245.
+√	Fixed enabling of “Find Again” menu item.
+√	ioOptBuffer in PBCatSearch used to be a 16K non-relocatable block that
+	was allocated every time I needed it. Now it’s a purgeable handle.
+√	Show spinning cursor (at VBL time, of course) when doing a Find.
+√	New Folder now actually does something other than bring up a dialog box.
+√	Rebuilt with that “systemSevenOrLater” flag turned on.
+√	Added notification that explains why we don’t install.
+√	Moved all error messages into Alerts rather than reporting them through
+	DebugStr.
+√	Massive rewrite of the MenuBar CDEF. First, I had accidentally
+	overwritten my current copy with an old one, so I had to bring things
+	back up to date. Then, based on a suggestion by Mensch, I totally redid
+	the data structures and algorithms so that I could use more of the Menu
+	Manager. Unfortunately, there’s precious little of the Menu Manager I can
+	use (for example, I can’t use MenuKey, since the Menu Manager thinks that
+	all menu items are disabled when a modal dialog is up). Anyway, I should
+	now have a CDEF that supports all Menu Manager functions on menuBars (you
+	call the CDEF directly to do things like InsertMenu, etc. I provide a set
+	of macros to make this easy).
+√	Fixed aging bug that caused the first file or folder to be discarded,
+	rather than the oldest.
+√	Modifed qsort() so that it works with short’s rather than size_t’s. When
+	using size_t’s, THINK C throws in a bunch of runtime stuff (about 414
+	bytes) that includes a LongMul and LongDiv routine. By using shorts, we
+	don’t need these runtime routines, and save about 414 bytes.
+√	Never mind. Had problems with the modified qsort, so I bagged the whole
+	thing and implemented the HeapSort from Programming Pearls (boy, that
+	algorithm is weird!).
+√	Did this from Rick Holzgrafe: I spend a lot of time in MPW, stealing code
+	from myself. PS is great for hopping between folders, but doesn’t let me
+	distinguish between identically-named files. I’d like either an option
+	for longer filenames in your File menu (perhaps just show the parent
+	folder’s name, as in “Foo:Fum”) or else a way to *remove* names from the
+	File menu, so I don’t get confused.
+√	Also show volume name along with file/folder name.
+√	Added an MDEF that makes popups show up where I tell them to. Otherwise,
+	popups try to put as much of themselves on the screen as possible, even
+	if it means moving the menu up or down. Since I’m using popups in my fake
+	menubar, I really need to make sure they show up just below the menu
+	title. Now that I’ve done this, I’ve upped the number of files and
+	folders remembered from 22 to 30.
+
+
+v1.0d5  --  11/25/91
+
+√	Add application’s directory to folder list.
+√	Added Find… and Find Again.
+√	Add menus to PutFile.
+√	Change all dialogs to the custom version no matter what. This is because
+	I now have to hook into the ModalDialogFilter proc in order to handle
+	command-keys (the dlgHook doesn’t get to see them). I also hook into the
+	fileFilter proc now, too, because I think I’ll need to in the future. At
+	the very least, I have to do some fancy dancing because I’m changing
+	StandardGetFile into CustomGetFile: the former takes a FileFilterProc,
+	while the latter takes a FileFilterYDProc (Why!!! Nick, everything else
+	you did was so great!). Because StdFile now thinks the program called
+	CustomGetFile, it treats the file filter like a FileFilterYDProc.
+	However, the application really provided a FileFilterProc, which uses a
+	different set of parameters. Anyway, all this means a totally revamped
+	front end to my Pack 3 patch.
+√	Added new dialog handling calls from C.K.’s Technote (but the
+	SetDialogTracksCursor call doesn’t seem to have any effect in the “Find…”
+	dialog).
+√	Reworked the way I jump to a directory and select a file. Is now faster
+	and cleaner. Should also allow me to more easily implement clipping to
+	eliminate slightly annoying flashing when I deselect the first name in
+	the list and select the name that I really want.
+√	Added New Folder dialog.
+√	Put ShowINIT and as much initialization as I could into external
+	resources (these are in PROC 0 and PROC 1 respectively).
+√	Revised the way I was calling the “original” trap in my patches.
+	Previously, I had been using the following boiler-plate where I could:
+
+		oldTrapAddress = gOriginalTrapAddress;
+		RestoreA4();
+		asm {
+				move.l oldTrapAddress,A0
+				unlk A6
+				jmp (A0)
+		};
+
+	I had thought that this was a pretty cool way to (a) not tail-patch (even
+	though that shouldn’t matter under 7.0) and (b) re-use the parameters on
+	the stack without having to re-push them on. However, the problem with
+	this approach is that any non-scratch registers saved on the stack would
+	be lost. In other words, if my trap patch needed to use D7 for something
+	and saved the original D7 on the stack at the beginning of the routine,
+	D7 would be lost when I jumped to the original trap. I now use the more
+	high-level:
+
+		((TypeDefForOriginalTrap) gOriginalTrapAddress)(parameters);
+
+	This actually saves me some code in a few places. The only place where I
+	couldn’t easily do this where I would have liked was in my List Manager
+	patch because it takes a variable number of parameters; this had to be
+	written entirely in assembly.
+
+
+v1.0d4  --  11/22/91
+
+√	Added the CDEF that implements the menubar. This required a lot of
+	changes to the rest of the code to ween it from the silly, hardcoded
+	popups I had before. But everything is really cool now, and the INIT is
+	actually smaller because it doesn’t have to deal with three seperate user
+	items any more.
+√	Added a hack that keeps my INIT’s resource fork between the application
+	and system resource file.
+√	Renumbered all of my resources into the application range where possible
+	(for instance, there’s nothing I can do about the 'vers' resources).
+	Since I’m always behind the application, this should be OK.
+√	Added 'hfdr' resource (BFD).
+√	Added new (but disabled) menu items.
+√	May have fixed Dave’s Cancel bug, but I don’t know. I reproduced the
+	problem at work, but after I came home and implemented all the stuff
+	above, the problem didn’t show up. I HATE that!!!
+√	Gray out menu titles in my menubar if there’s nothing attached.
+√	Alphabetize items in the menus.
+
+
+v1.0d3  --  11/20/91
+
+√	Found and fixed bug that may have been crashing people (when checking to
+	see if a StdFile call was of the Erich Ringworm variety or the Nick
+	Kledzick variety, I was comparing the selector against sfStandardGetFile
+	when I should have been comparing against sfStandardPutFile).
+√	Always dynamically assign menu IDs to my popups and hierarchicals. I was
+	conflicting with some application IDs with my preassigned 128, 129, and
+	130.
+√	Totally redid the way I call the real StdFile. Before, I had 8 seperate
+	routines to handle each of the 8 selectors. Now, most of it is table
+	driven. Saved about 500 bytes!
+√	May have fixed one of those “I dont’t know how it ever worked” bugs,
+	where I wasn’t removing enough bytes from the stack when returning from a
+	procedure written in assembly.
+√	Changed the way my dialog items were added. I used to add them at
+	GetNewDialog time. However, that caused problems with programs that
+	played around with the dialog after GetNewDialog returned (THINK C, MS
+	Word). I now add my stuff at the last possible moment in ShowWindow.
+
+
+v1.0d2  --  11/18/91
+
+√	Made selecting “Open…” work. Added 'vers' resource and display it in
+	About box. 
+√	Added way gross hack (but not as gross as Boomerang’s) to put my popup
+	menus above all of the items in the Std File dialog (hint: The trick is
+	_not_ to merely move all the dialog items’ bounding boxes down, since
+	that doesn’t account for stuff drawn directly, as in the “Open Document”
+	string in MacWrite II. Neither can you simply change the window’s origin
+	to something like (0, -25), since the Control Manager Chapter of IM says
+	that controls should be drawn with a (0, 0) origin, a limitation that
+	7.0’s popup menu CDEF enforces).
+√	Added ShowINIT and icon. Do not install if Option key is held down at
+	boot time.
+√	Protect against unknown (future) StdFile selectors.
+√	Save list of files and directories at shutdown time. These lists will NOT
+	be written if you hold down the Option key while shutting down. Instead,
+	the preferences file will be deleted. This is handy if you need to get
+	rid of some corrupted lists or I changed the format of the resources.
+√	Read saved files and directories at startup time.
+√	Redo the way I snag the selected file. I used to read it out of the reply
+	record when StdFile returned. However (...get this...), THINK C has this
+	SFPPutFile hook that replaces the first character of the entered file
+	with $7F, saving the real first character off in some global somewhere.
+	WHY!!!!!
+√	Totally reorganized data structures and routines in a more general
+	fashion (saved about 800 bytes of code).
+√	Filter the files that are displayed, limiting them to the kind the
+	application can open as indicated by its FREF resources.
+√	Install InitGraf patch that checks to see if it looks like it’s being
+	called from an application at startup time. If so, it scarfs up the files
+	in AppParms, and installs a Pack 3 patch over MultiFinder’s (so it can
+	save off any files returned by MF’s puppet strings).
+√	Add hierarchical to “Open…” only if menu item is enabled.
+√	Number of folders and files that are remembered is limited to 22 each.
+
+
+v1.0d1  --  11/11/91
+
+√	GetFile menus (folders, file, other), including the all-important About
+	box.
+√	Open… menu hack.
+
+
+- Keith Rollin
+- Phantom Programmer
+- Taligent, Inc.
+

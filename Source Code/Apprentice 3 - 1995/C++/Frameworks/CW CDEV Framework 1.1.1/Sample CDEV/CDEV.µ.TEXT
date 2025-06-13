@@ -1,1 +1,13 @@
-Project Name: "Phester:Desktop Folder:CW CDEV Framework 1.1.1:Sample CDEV w/Stub:CDEV.µ"Main	(protected, locked)	CPlusPlusA4.lib	MacOS.lib	CDEVMain.c	stub CDEV	CDEV.rsrcStuff	(protected, purgeable)	TControlPanel.cp	CDEV.cp
+Project Name: "Phester:Desktop Folder:CW CDEV Framework 1.1.1:Sample CDEV w/Stub:CDEV.µ"
+
+
+Main	(protected, locked)
+	CPlusPlusA4.lib
+	MacOS.lib
+	CDEVMain.c
+	stub CDEV
+	CDEV.rsrc
+
+Stuff	(protected, purgeable)
+	TControlPanel.cp
+	CDEV.cp

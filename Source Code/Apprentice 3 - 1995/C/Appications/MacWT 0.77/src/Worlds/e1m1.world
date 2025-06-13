@@ -1,1 +1,1021 @@
-start 63.6 -212.8; texturetexture TEKWALL1 escher_horsemen.gif	; t0texture EXITSIGN hans.gif	; t1texture BIGDOOR4 hans.gif	; t2texture BROWN96 overlap.gif	; t3texture STEP1 dirt.gif			; t4texture NUKE24 bluefrac.gif		; t5texture COMPSPAN ether.gif	; t6texture TLITE6_1 stone1.gif	; t7texture FLAT18 overlap.gif		; t8texture STARTAN3 graybrick.gif	; t9texture FLAT20 graystone.gif		; t10texture LITE3 coolwater.gif			; t11texture BROWN1 overlap.gif		; t12texture CEIL5_1 hans.gif		; t13texture DOORSTOP dirt.gif		; t14texture FLOOR1_1 overlap.gif	; t15texture CEIL5_2 misty.gif		; t16texture TLITE6_4 redbrick.gif	; t17texture FLAT23 firering.gif		; t18texture TLITE6_5 overlap.gif	; t19texture CEIL3_5 stone7.gif		; t20texture STARGR1 jeweled_tiles.gif		; t21texture TLITE6_6 overlap.gif	; t22texture Black overlap.gif			; t23texture NUKAGE3 overlap.gif		; t24texture SW1STRTN overlap.gif	; t25texture EXITDOOR ether.gif	; t26texture DOORTRAK dirt.gif	; t27texture FLOOR5_1 stone7.gif	; t28texture BROWNGRN escher_horsemen.gif	; t29texture FLOOR5_2 tile0.gif	; t30texture FLAT5_5 dirt.gif	; t31texture BRNBIGL dirt.gif	; t32texture FLOOR6_2 stone7.gif	; t33texture FLOOR7_1 stone4.gif	; t34texture BROWN144 mars.gif	; t35texture FLOOR7_2 stone2.gif	; t36texture FLAT14 dirt.gif	; t37texture STARG3 bluefrac.gif	; t38texture F_SKY1 bluefrac.gif	; t39texture FLOOR4_8 stone1.gif	; t40texture COMPTILE tile0.gif	; t41texture STEP2 dirt.gif	; t42texture STARTAN1 overlap.gif	; t43texture BRNBIGR dirt.gif	; t44texture COMPUTE2 overlap.gif	; t45texture BRNBIGC dirt.gif	; t46texture DOOR3 dirt.gif	; t47texture SUPPORT2 dirt.gif	; t48texture TEKWALL4 overlap.gif	; t49texture STEP6 dirt.gif	; t50texture SLADWALL overlap.gif	; t51texture BIGDOOR2 hans.gif	; t52texture Sky horizon.gif	; t53; vertexvertex  65.28 -220.8	; v0vertex  61.44 -220.8	; v1vertex  61.44 -218.88	; v2vertex  65.28 -218.88	; v3vertex  69.12 -218.88	; v4vertex  57.6 -218.88	; v5vertex  76.8 -213.12	; v6vertex  49.92 -213.12	; v7vertex  80.64 -213.12	; v8vertex  42.24 -213.12	; v9vertex  53.76 -203.52	; v10vertex  55.68 -203.52	; v11vertex  55.68 -201.6	; v12vertex  53.76 -201.6	; v13vertex  71.04 -203.52	; v14vertex  72.96 -203.52	; v15vertex  72.96 -201.6	; v16vertex  71.04 -201.6	; v17vertex  53.76 -184.32	; v18vertex  53.76 -186.24	; v19vertex  55.68 -186.24	; v20vertex  55.68 -184.32	; v21vertex  72.96 -184.32	; v22vertex  71.04 -184.32	; v23vertex  71.04 -186.24	; v24vertex  72.96 -186.24	; v25vertex  80.64 -201.6	; v26vertex  80.64 -195.84	; v27vertex  80.64 -192	; v28vertex  80.64 -172.8	; v29vertex  80.64 -186.24	; v30vertex  82.56 -192	; v31vertex  82.56 -186.24	; v32vertex  82.56 -201.6	; v33vertex  82.56 -195.84	; v34vertex  82.56 -218.88	; v35vertex  82.56 -176.64	; v36vertex  42.24 -176.64	; v37vertex  49.92 -176.64	; v38vertex  58.08 -172.8	; v39vertex  72.96 -172.8	; v40vertex  88.32 -172.8	; v41vertex  111.36 -172.8	; v42vertex  91.68 -220.8	; v43vertex  100.32 -224.64	; v44vertex  42.24 -201.6	; v45vertex  42.24 -186.24	; v46vertex  30.72 -199.68	; v47vertex  30.72 -198.24	; v48vertex  30.72 -189.6	; v49vertex  30.72 -188.16	; v50vertex  40.8 -186.24	; v51vertex  40.8 -201.6	; v52vertex  29.76 -189.6	; v53vertex  29.76 -198.24	; v54vertex  29.76 -199.68	; v55vertex  26.88 -207.36	; v56vertex  7.68 -207.36	; v57vertex  7.68 -180.48	; v58vertex  26.88 -180.48	; v59vertex  29.76 -188.16	; v60vertex  7.68 -195.84	; v61vertex  9.6 -195.84	; v62vertex  11.52 -195.84	; v63vertex  13.44 -195.84	; v64vertex  15.36 -195.84	; v65vertex  17.28 -195.84	; v66vertex  19.2 -195.84	; v67vertex  19.2 -192	; v68vertex  17.28 -192	; v69vertex  15.36 -192	; v70vertex  13.44 -192	; v71vertex  11.52 -192	; v72vertex  9.6 -192	; v73vertex  7.68 -192	; v74vertex  3.84 -184.32	; v75vertex  3.84 -203.52	; v76vertex  2.88 -203.52	; v77vertex  -3.84 -199.68	; v78vertex  -3.84 -188.16	; v79vertex  2.88 -184.32	; v80vertex  -15.36 -199.68	; v81vertex  -19.2 -197.76	; v82vertex  -19.2 -190.08	; v83vertex  -15.36 -188.16	; v84vertex  -7.68 -187.2	; v85vertex  -7.68 -188.16	; v86vertex  -15.36 -187.2	; v87vertex  -15.36 -200.64	; v88vertex  -7.68 -199.68	; v89vertex  -7.68 -200.64	; v90vertex  -20.16 -197.76	; v91vertex  -20.16 -190.08	; v92vertex  -20.16 -187.2	; v93vertex  -20.16 -200.64	; v94vertex  -5.76 -200.64	; v95vertex  3.84 -211.2	; v96vertex  -5.76 -187.2	; v97vertex  3.84 -176.64	; v98vertex  3.84 -168.96	; v99vertex  3.84 -218.88	; v100vertex  -38.4 -218.88	; v101vertex  -46.08 -211.2	; v102vertex  -46.08 -176.64	; v103vertex  -38.4 -168.96	; v104vertex  -38.4 -211.2	; v105vertex  -38.4 -176.64	; v106vertex  -5.28 -188.16	; v107vertex  -5.28 -199.68	; v108vertex  15.36 -188.16	; v109vertex  19.2 -188.16	; v110vertex  19.2 -184.32	; v111vertex  15.36 -184.32	; v112vertex  15.36 -203.52	; v113vertex  19.2 -203.52	; v114vertex  19.2 -199.68	; v115vertex  15.36 -199.68	; v116vertex  74.88 -151.68	; v117vertex  83.04 -155.52	; v118vertex  88.32 -153.6	; v119vertex  88.32 -145.92	; v120vertex  92.16 -145.92	; v121vertex  92.16 -153.6	; v122vertex  93.12 -153.6	; v123vertex  93.12 -145.92	; v124vertex  99.84 -153.6	; v125vertex  99.84 -145.92	; v126vertex  164.16 -218.88	; v127vertex  149.28 -224.64	; v128vertex  134.4 -226.56	; v129vertex  119.04 -226.56	; v130vertex  115.2 -175.2	; v131vertex  134.4 -175.2	; v132vertex  91.2 -190.08	; v133vertex  100.32 -186.24	; v134vertex  113.76 -186.24	; v135vertex  122.4 -188.64	; v136vertex  127.68 -196.32	; v137vertex  123.84 -204.48	; v138vertex  107.04 -206.88	; v139vertex  92.64 -203.04	; v140vertex  165.12 -167.04	; v141vertex  157.44 -167.04	; v142vertex  151.2 -153.6	; v143vertex  165.12 -153.6	; v144vertex  176.64 -159.36	; v145vertex  172.8 -174.72	; v146vertex  172.8 -172.8	; v147vertex  182.88 -172.8	; v148vertex  182.88 -176.64	; v149vertex  165.12 -182.88	; v150vertex  165.12 -174.72	; v151vertex  165.12 -215.04	; v152vertex  165.12 -201.6	; v153vertex  164.16 -201.6	; v154vertex  198.24 -182.4	; v155vertex  188.16 -184.32	; v156vertex  186.72 -201.6	; v157vertex  176.64 -212.16	; v158vertex  168.96 -193.92	; v159vertex  196.8 -199.2	; v160vertex  179.04 -192	; v161vertex  178.56 -184.32	; v162vertex  195.84 -216.96	; v163vertex  184.32 -218.88	; v164vertex  176.64 -218.88	; v165vertex  184.32 -240	; v166vertex  176.64 -226.56	; v167vertex  186.24 -213.12	; v168vertex  201.12 -214.08	; v169vertex  208.32 -205.92	; v170vertex  204.48 -205.92	; v171vertex  198.72 -209.76	; v172vertex  132.48 -220.8	; v173vertex  130.56 -220.8	; v174vertex  120.96 -220.8	; v175vertex  122.88 -220.8	; v176vertex  130.56 -226.56	; v177vertex  130.56 -228.48	; v178vertex  130.56 -230.4	; v179vertex  122.88 -228.48	; v180vertex  122.88 -226.56	; v181vertex  122.88 -230.4	; v182vertex  122.88 -232.32	; v183vertex  122.88 -234.24	; v184vertex  130.56 -232.32	; v185vertex  130.56 -234.24	; v186vertex  134.4 -245.76	; v187vertex  126.72 -241.92	; v188vertex  134.4 -238.08	; v189vertex  142.08 -238.08	; v190vertex  142.08 -245.76	; v191vertex  172.8 -226.56	; v192vertex  172.8 -234.24	; v193vertex  170.88 -226.56	; v194vertex  170.88 -234.24	; v195vertex  168.96 -226.56	; v196vertex  168.96 -234.24	; v197vertex  167.04 -226.56	; v198vertex  167.04 -234.24	; v199vertex  165.12 -226.56	; v200vertex  165.12 -234.24	; v201vertex  161.28 -226.56	; v202vertex  163.2 -234.24	; v203vertex  157.92 -227.52	; v204vertex  161.28 -235.2	; v205vertex  174.72 -226.56	; v206vertex  174.72 -234.24	; v207vertex  176.64 -234.24	; v208vertex  176.64 -240	; v209vertex  134.4 -218.88	; v210vertex  119.04 -218.88	; v211vertex  160.32 -235.2	; v212vertex  156.96 -227.52	; v213vertex  130.56 -235.2	; v214vertex  122.88 -235.2	; v215vertex  165.12 -168	; v216vertex  177.6 -159.36	; v217vertex  204 -189.12	; v218vertex  206.88 -211.2	; v219vertex  136.32 -180.48	; v220vertex  145.92 -186.72	; v221vertex  164.16 -186.72	; v222vertex  165.12 -186.72	; v223vertex  192 -247.68	; v224vertex  199.68 -247.68	; v225vertex  161.28 -247.68	; v226vertex  168.96 -247.68	; v227vertex  171.36 -249.6	; v228vertex  174.72 -249.6	; v229vertex  174.72 -247.68	; v230vertex  186.24 -247.68	; v231vertex  186.24 -249.6	; v232vertex  189.6 -249.6	; v233vertex  186.24 -261.12	; v234vertex  186.24 -263.04	; v235vertex  189.6 -263.04	; v236vertex  189.6 -261.12	; v237vertex  171.36 -261.12	; v238vertex  171.36 -263.04	; v239vertex  174.72 -263.04	; v240vertex  174.72 -261.12	; v241vertex  173.28 -249.6	; v242vertex  187.68 -261.12	; v243vertex  187.68 -249.6	; v244vertex  173.28 -261.12	; v245vertex  173.28 -259.2	; v246vertex  173.28 -251.52	; v247vertex  187.68 -259.2	; v248vertex  187.68 -251.52	; v249vertex  199.68 -272.64	; v250vertex  184.32 -272.64	; v251vertex  176.64 -272.64	; v252vertex  161.28 -272.64	; v253vertex  184.32 -276.48	; v254vertex  176.64 -276.48	; v255vertex  182.4 -276.48	; v256vertex  178.56 -276.48	; v257vertex  178.56 -277.92	; v258vertex  182.4 -277.92	; v259vertex  182.4 -278.88	; v260vertex  182.4 -280.32	; v261vertex  178.56 -280.32	; v262vertex  178.56 -278.88	; v263vertex  186.24 -280.32	; v264vertex  174.72 -280.32	; v265vertex  186.24 -291.84	; v266vertex  174.72 -291.84	; v267vertex  174.72 -288	; v268vertex  174.72 -284.16	; v269vertex  176.64 -240.96	; v270vertex  184.32 -240.96	; v271vertex  176.64 -241.92	; v272vertex  184.32 -241.92	; v273vertex  181.44 -275.52	; v274vertex  179.52 -275.52	; v275vertex  179.52 -276	; v276vertex  181.44 -276	; v277vertex  181.44 -290.4	; v278vertex  179.52 -290.4	; v279vertex  179.52 -290.88	; v280vertex  181.44 -290.88	; v281vertex  -14.4 -195.84	; v282vertex  -12.48 -195.84	; v283vertex  -11.52 -194.88	; v284vertex  -11.52 -192.96	; v285vertex  -12.48 -192	; v286vertex  -14.4 -192	; v287vertex  -15.36 -192.96	; v288vertex  -15.36 -194.88	; v289vertex  99.84 -142.08	; v290vertex  96 -142.08	; v291vertex  96 -126.72	; v292vertex  96 -157.44	; v293vertex  99.84 -157.44	; v294vertex  153.6 -126.72	; v295vertex  153.6 -149.76	; v296vertex  149.76 -149.76	; v297vertex  130.56 -165.12	; v298vertex  130.56 -168.96	; v299vertex  96 -122.88	; v300vertex  99.84 -122.88	; v301vertex  149.76 -122.88	; v302vertex  153.6 -122.88	; v303vertex  99.84 -126.72	; v304vertex  149.76 -126.72	; v305vertex  99.84 -168.96	; v306vertex  96 -168.96	; v307vertex  96 -165.12	; v308vertex  99.84 -165.12	; v309vertex  149.76 -161.28	; v310vertex  149.76 -165.12	; v311vertex  151.2 -161.28	; v312vertex  149.76 -153.6	; v313vertex  119.04 -138.24	; v314vertex  119.04 -134.4	; v315vertex  107.52 -134.4	; v316vertex  107.52 -138.24	; v317vertex  99.84 -156	; v318vertex  99.84 -143.52	; v319vertex  149.76 -151.2	; v320vertex  132 -165.12	; v321vertex  126.72 -155.52	; v322vertex  140.16 -155.52	; v323vertex  140.16 -136.32	; v324vertex  126.72 -136.32	; v325vertex  126.72 -138.24	; v326vertex  128.64 -138.24	; v327vertex  130.56 -138.24	; v328vertex  132.48 -138.24	; v329vertex  138.24 -138.24	; v330vertex  138.24 -153.6	; v331vertex  132.48 -153.6	; v332vertex  130.56 -153.6	; v333vertex  128.64 -153.6	; v334vertex  126.72 -153.6	; v335vertex  119.04 -157.44	; v336vertex  119.04 -153.6	; v337vertex  107.52 -153.6	; v338vertex  107.52 -157.44	; v339vertex  119.52 -153.12	; v340vertex  107.04 -153.12	; v341vertex  107.04 -157.92	; v342vertex  119.52 -157.92	; v343vertex  107.04 -138.72	; v344vertex  119.52 -138.72	; v345vertex  119.52 -133.92	; v346vertex  107.04 -133.92	; v347vertex  211.2 -234.24	; v348vertex  199.68 -238.08	; v349vertex  192 -238.08	; v350vertex  192 -224.64	; v351vertex  199.68 -224.64	; v352vertex  201.6 -218.88	; v353vertex  208.32 -211.2	; v354vertex  211.2 -215.04	; v355vertex  201.12 -215.52	; v356vertex  198.24 -238.08	; v357vertex  198.24 -224.64	; v358vertex  140.64 -245.76	; v359vertex  135.84 -245.76	; v360vertex  135.84 -238.08	; v361vertex  140.64 -238.08	; v362vertex  130.56 -222.24	; v363vertex  122.88 -222.24	; v364vertex  211.2 -230.4	; v365vertex  220.8 -234.24	; v366vertex  215.04 -234.24	; v367vertex  224.64 -228.48	; v368vertex  215.04 -230.4	; v369vertex  216.96 -226.56	; v370vertex  213.12 -213.12	; v371vertex  213.12 -203.52	; v372vertex  218.88 -195.84	; v373vertex  220.8 -213.12	; v374vertex  220.8 -203.52	; v375vertex  228.48 -195.84	; v376vertex  209.76 -181.92	; v377vertex  215.04 -172.8	; v378vertex  207.36 -181.92	; v379vertex  201.6 -172.8	; v380vertex  199.2 -182.4	; v381vertex  204.96 -189.12	; v382vertex  212.16 -230.4	; v383vertex  212.16 -234.24	; v384vertex  232.9 -44.3	; v385vertex  -49.3 -44.4	; v386vertex  232.8 -296.1	; v387vertex  -49.8 -296.2	; v388; regionregion 40 40  FLOOR4_8 CEIL3_5	; r0region 1.44 3.96  FLAT18 CEIL5_1	; r1region 0 6.48  FLOOR4_8 CEIL3_5	; r2region 0 3.96  FLOOR4_8 TLITE6_4	; r3region 0 0  FLOOR4_8 FLAT20	; r4region -2.52 9.72  FLOOR7_1 F_SKY1	; r5region 1.44 3.96  FLAT18 CEIL5_1	; r6region 0 10.08  FLOOR4_8 CEIL3_5	; r7region 0.36 6.84  FLAT14 TLITE6_5	; r8region 0 10.08  FLOOR4_8 CEIL3_5	; r9region 0 4.32  FLOOR4_8 TLITE6_5	; r10region 0 10.08  FLOOR4_8 CEIL3_5	; r11region 0 4.32  FLOOR4_8 TLITE6_5	; r12region -3.6 9.72  NUKAGE3 F_SKY1	; r13region 0.36 8.64  FLAT5_5 FLAT5_5	; r14region 0.36 8.64  FLAT5_5 FLAT5_5	; r15region -6.12 -1.8  FLOOR5_1 CEIL5_2	; r16region -5.4 0.72  FLOOR5_1 CEIL5_2	; r17region -4.68 0.72  FLOOR5_1 CEIL5_2	; r18region -3.96 0.72  FLOOR5_1 CEIL5_2	; r19region -2.52 1.08  FLOOR7_1 F_SKY1	; r20region -3.24 0.72  FLOOR5_1 CEIL5_2	; r21region -2.52 2.88  FLOOR7_1 F_SKY1	; r22region -2.52 0.72  FLOOR7_1 CEIL5_2	; r23region -0.36 10.08  FLOOR4_8 FLOOR7_2	; r24region 1.8 10.08  FLOOR4_8 FLOOR7_2	; r25region 2.52 10.08  FLOOR4_8 FLOOR7_2	; r26region 3.24 10.08  FLOOR4_8 FLOOR7_2	; r27region 0 5.76  FLOOR7_1 F_SKY1	; r28region 4.68 11.88  FLOOR4_8 FLOOR7_2	; r29region 0 11.88  FLOOR7_1 F_SKY1	; r30region 6.12 10.8  FLAT20 FLAT20	; r31region 5.76 11.88  FLOOR1_1 FLOOR7_2	; r32region 6.12 10.8  FLAT20 FLAT20	; r33region 6.12 10.8  FLAT20 FLAT20	; r34region 4.68 8.64  FLOOR4_8 FLOOR7_2	; r35region 3.96 10.08  FLOOR4_8 FLOOR7_2	; r36region -0.36 5.4  FLAT14 CEIL3_5	; r37region 0 3.24  FLOOR4_8 CEIL3_5	; r38region -0.72 9  FLAT14 CEIL3_5	; r39region 0 3.24  FLOOR4_8 CEIL3_5	; r40region -0.36 5.4  FLOOR4_8 CEIL3_5	; r41region 0.36 10.08  FLOOR4_8 FLOOR7_2	; r42region 1.08 10.08  FLOOR4_8 FLOOR7_2	; r43region 1.8 8.28  STEP2 TLITE6_1	; r44region 1.8 8.28  STEP2 TLITE6_1	; r45region 0 6.12  FLAT20 FLAT20	; r46region -2.52 1.08  FLOOR7_1 F_SKY1	; r47region -6.12 -1.8  FLOOR5_1 CEIL5_2	; r48region -5.4 2.16  FLOOR5_1 CEIL5_2	; r49region -4.68 2.16  FLOOR5_1 CEIL5_2	; r50region 0.72 6.84  FLAT14 TLITE6_5	; r51region 1.08 6.84  FLAT14 TLITE6_5	; r52region -0.72 3.24  FLOOR4_8 CEIL3_5	; r53region -0.36 3.24  FLOOR4_8 CEIL3_5	; r54region -2.16 7.92  NUKAGE3 CEIL3_5	; r55region -1.08 7.92  FLOOR5_2 CEIL3_5	; r56region -2.16 7.92  NUKAGE3 CEIL3_5	; r57region -2.16 4.68  FLOOR4_8 FLOOR6_2	; r58region 4.32 7.92  FLOOR4_8 CEIL3_5	; r59region -1.08 7.92  FLOOR5_2 CEIL3_5	; r60region -2.16 7.92  NUKAGE3 CEIL3_5	; r61region 4.68 8.28  FLOOR4_8 FLOOR6_2	; r62region -3.96 2.16  FLOOR5_1 CEIL5_2	; r63region -3.24 2.16  FLOOR5_1 CEIL5_2	; r64region -2.52 2.16  FLOOR5_1 CEIL5_2	; r65region -1.8 2.16  FLOOR5_1 CEIL5_2	; r66region -1.08 2.16  FLOOR5_2 CEIL5_2	; r67region -1.08 -1.08  FLOOR5_2 FLAT5_5	; r68region -2.16 1.44  FLOOR4_8 TLITE6_6	; r69region 4.68 8.28  FLOOR4_8 FLOOR6_2	; r70region -1.08 7.92  FLOOR5_2 CEIL3_5	; r71region -1.08 4.68  FLOOR5_2 TLITE6_5	; r72region -1.08 2.16  FLOOR5_2 CEIL3_5	; r73region -1.08 2.16  FLOOR5_2 CEIL3_5	; r74region -1.08 2.16  FLOOR5_2 CEIL3_5	; r75region -1.08 -1.08  FLOOR5_2 FLAT20	; r76region -6.12 -1.08  FLOOR5_1 TLITE6_6	; r77region -1.08 3.24  FLOOR5_2 CEIL3_5	; r78region -1.08 2.52  FLOOR5_2 FLAT23	; r79region -1.08 2.16  FLOOR5_2 CEIL3_5	; r80region -1.08 -1.08  FLOOR5_2 FLAT20	; r81region -1.08 3.96  FLOOR5_2 TLITE6_5	; r82region -1.08 3.24  FLOOR5_2 FLAT23	; r83region -1.08 2.16  FLOOR5_2 CEIL3_5	; r84region 40 40  Black Black	; r85; wallwall 1 0 DOOR3  40 0  0.261 0.309 0 0	; w0wall 2 1 LITE3  40 0  0.1 0.308642 0 0	; w1wall 0 3 LITE3  40 0  0.1 0.308642 0 0	; w2wall 3 4 STARTAN3  38 0  0.1 0.1 0 0	; w3wall 5 2 STARTAN3  38 0  0.1 0.1 0 0	; w4wall 4 6 STARTAN3  38 0  0.1 0.1 0 0	; w5wall 7 5 STARTAN3  38 0  0.1 0.1 0 0	; w6wall 6 8 STARTAN3  38 0  0.1 0.1 0 0	; w7wall 9 7 STARTAN3  38 0  0.1 0.1 0 0	; w8wall 11 10 BROWN1  38 0  0.1 0.1 0 48	; w9wall 12 11 BROWN1  37 0  0.1 0.1 0 0	; w10wall 13 12 BROWN1  37 0  0.1 0.1 0 0	; w11wall 10 13 BROWN1  38 0  0.1 0.1 0 48	; w12wall 15 14 BROWN1  38 0  0.1 0.1 0 0	; w13wall 16 15 BROWN1  39 0  0.1 0.1 0 0	; w14wall 17 16 BROWN1  39 0  0.1 0.1 0 0	; w15wall 14 17 BROWN1  37 0  0.1 0.1 0 80	; w16wall 19 18 BROWN1  38 0  0.1 0.1 0 48	; w17wall 20 19 BROWN1  37 0  0.1 0.1 0 0	; w18wall 21 20 BROWN1  37 0  0.1 0.1 0 0	; w19wall 18 21 BROWN1  38 0  0.1 0.1 0 48	; w20wall 23 22 BROWN1  38 0  0.1 0.1 0 0	; w21wall 24 23 BROWN1  37 0  0.1 0.1 0 80	; w22wall 25 24 BROWN1  39 0  0.1 0.1 0 0	; w23wall 22 25 BROWN1  39 0  0.1 0.1 0 0	; w24wall 8 26 STARTAN3  38 0  0.1 0.1 0 0	; w25wall 26 27 STARTAN3  39 14  0.1 0.1 0 0	; w26wall 27 28 STARTAN3  39 0  0.1 0.1 0 0	; w27wall 30 29 STARTAN3  38 0  0.1 0.1 0 0	; w28wall 28 30 STARTAN3  39 15  0.1 0.1 0 0	; w29wall 32 31 STARTAN3  5 15  0.1 0.1 0 0	; w30wall 34 33 STARTAN3  5 14  0.1 0.1 0 0	; w31wall 34 27 DOORSTOP  14 0  0.1 0.1 0 0	; w32wall 26 33 DOORSTOP  14 0  0.1 0.1 0 0	; w33wall 28 31 DOORSTOP  15 0  0.1 0.1 0 0	; w34wall 32 30 DOORSTOP  15 0  0.1 0.1 0 0	; w35wall 31 34 STARTAN3  5 0  0.1 0.1 0 0	; w36wall 33 35 STARTAN3  5 0  0.1 0.1 0 0	; w37wall 36 32 STARTAN3  5 0  0.1 0.1 0 0	; w38wall 11 14 STEP6  37 38  0.1 0.1 0 0	; w39wall 15 26 STEP6  39 38  0.1 0.1 0 0	; w40wall 30 22 STEP6  39 38  0.1 0.1 0 0	; w41wall 38 37 STARTAN3  38 0  0.1 0.1 0 0	; w42wall 39 38 STARTAN3  38 0  0.1 0.1 0 0	; w43wall 40 39 STARTAN3  38 0  0.1 0.1 0 0	; w44wall 41 36 STARTAN3  5 0  0.1 0.1 0 0	; w45wall 42 41 STARTAN3  5 0  0.1 0.1 0 0	; w46wall 35 43 BROWN144  20 0  0.1 0.1 0 0	; w47wall 43 44 BROWN144  20 0  0.1 0.1 0 0	; w48wall 2 3 STARTAN3  38 40  0.1 0.1 0 0	; w49wall 24 20 STEP6  39 37  0.1 0.1 0 0	; w50wall 12 17 STEP6  39 37  0.1 0.1 0 0	; w51wall 20 12 STEP6  39 37  0.1 0.1 0 0	; w52wall 19 13 STEP6  37 38  0.1 0.1 0 0	; w53wall 23 21 STEP6  37 38  0.1 0.1 0 0	; w54wall 45 9 STARTAN3  38 0  0.1 0.1 0 0	; w55wall 37 46 STARTAN3  38 0  0.1 0.1 0 0	; w56wall 45 46 STEP6  41 38  0.1 0.1 0 0	; w57wall 48 47 STARTAN3  41 0  0.1 0.1 0 0	; w58wall 50 49 STARTAN3  41 0  0.1 0.1 0 0	; w59wall 51 50 STARTAN3  41 0  0.1 0.1 0 0	; w60wall 46 51 SUPPORT2  41 0  0.1 0.1 0 0	; w61wall 52 45 SUPPORT2  41 0  0.1 0.1 0 0	; w62wall 47 52 STARTAN3  41 0  0.1 0.1 0 0	; w63wall 54 53 STARG3  24 41  0.1 0.1 0 104	; w64wall 54 48 DOORTRAK  41 0  0.1 0.1 0 0	; w65wall 49 53 DOORTRAK  41 0  0.1 0.1 0 0	; w66wall 55 54 STARG3  24 0  0.1 0.1 0 0	; w67wall 56 55 STARG3  24 0  0.1 0.1 0 0	; w68wall 57 56 STARG3  24 0  0.1 0.1 0 0	; w69wall 59 58 STARG3  24 0  0.1 0.1 0 0	; w70wall 53 60 STARG3  24 0  0.1 0.1 0 0	; w71wall 60 59 STARG3  24 0  0.1 0.1 0 0	; w72wall 62 61 SLADWALL  24 36  0.1 0.1 0 0	; w73wall 63 62 SLADWALL  24 27  0.1 0.1 0 0	; w74wall 64 63 SLADWALL  24 26  0.1 0.1 0 0	; w75wall 65 64 SLADWALL  24 25  0.1 0.1 0 0	; w76wall 66 65 SLADWALL  24 43  0.1 0.1 0 0	; w77wall 67 66 SLADWALL  24 42  0.1 0.1 0 0	; w78wall 68 67 STEP6  24 42  0.1 1.38889 0 0	; w79wall 69 68 SLADWALL  24 42  0.1 0.1 0 0	; w80wall 70 69 SLADWALL  24 43  0.1 0.1 0 0	; w81wall 71 70 SLADWALL  24 25  0.1 0.1 0 0	; w82wall 72 71 SLADWALL  24 26  0.1 0.1 0 0	; w83wall 73 72 SLADWALL  24 27  0.1 0.1 0 0	; w84wall 74 73 SLADWALL  24 36  0.1 0.1 0 0	; w85wall 73 62 STEP6  27 36  0.1 1.38889 0 0	; w86wall 72 63 STEP6  26 27  0.1 1.38889 0 0	; w87wall 71 64 STEP6  25 26  0.1 1.38889 0 0	; w88wall 70 65 STEP6  43 25  0.1 1.38889 0 0	; w89wall 69 66 STEP6  42 43  0.1 1.38889 0 0	; w90wall 74 61 STARG3  36 35  0.1 0.462963 0 0	; w91wall 75 74 STARG3  24 35  0.1 0.1 0 0	; w92wall 58 75 STARG3  24 0  0.1 0.1 0 0	; w93wall 76 57 STARG3  24 0  0.1 0.1 0 0	; w94wall 61 76 STARG3  24 35  0.1 0.1 0 0	; w95wall 77 76 SUPPORT2  35 0  0.1 0.1 4 0	; w96wall 78 77 STARG3  35 0  0.1 0.1 0 0	; w97wall 80 79 STARG3  35 0  0.1 0.1 0 0	; w98wall 75 80 SUPPORT2  35 0  0.1 0.1 4 0	; w99wall 82 81 STARTAN3  29 0  0.1 0.1 0 0	; w100wall 84 83 STARTAN3  29 0  0.1 0.1 0 0	; w101wall 86 85 DOORSTOP  31 0  0.1 0.1 0 0	; w102wall 87 84 DOORSTOP  31 0  0.1 0.1 0 0	; w103wall 81 88 DOORSTOP  34 0  0.1 0.1 0 0	; w104wall 90 89 DOORSTOP  34 0  0.1 0.1 0 0	; w105wall 91 82 DOORSTOP  33 0  0.1 0.1 0 0	; w106wall 83 92 DOORSTOP  33 0  0.1 0.1 0 0	; w107wall 93 87 STARTAN3  30 0  0.1 0.1 0 0	; w108wall 92 93 STARTAN3  30 0  0.1 0.1 0 0	; w109wall 94 91 STARTAN3  30 0  0.1 0.1 0 0	; w110wall 88 94 STARTAN3  30 0  0.1 0.1 0 0	; w111wall 95 90 STARTAN3  30 0  0.1 0.1 0 0	; w112wall 96 95 STARTAN3  30 0  0.1 0.1 0 0	; w113wall 85 97 STARTAN3  30 0  0.1 0.1 0 0	; w114wall 97 98 STARTAN3  30 0  0.1 0.1 0 0	; w115wall 78 79 STARG3  29 35  0.1 0.1 0 0	; w116wall 81 89 STARTAN3  29 34  0.1 0.1 0 0	; w117wall 90 88 STARTAN3  30 34  0.1 0.1 0 0	; w118wall 86 84 STARTAN3  29 31  0.1 0.1 0 0	; w119wall 87 85 STARTAN3  30 31  0.1 0.1 0 0	; w120wall 83 82 STARTAN3  29 33  0.1 0.1 0 0	; w121wall 91 92 STARTAN3  30 33  0.1 0.1 0 0	; w122wall 98 99 STARTAN3  30 0  0.1 0.1 0 0	; w123wall 100 96 STARTAN3  30 0  0.1 0.1 0 0	; w124wall 101 100 BROWN144  28 0  0.1 0.1 0 0	; w125wall 102 101 BROWN144  28 0  0.1 0.1 0 0	; w126wall 103 102 BROWN144  28 0  0.1 0.1 0 0	; w127wall 104 103 BROWN144  28 0  0.1 0.1 0 0	; w128wall 99 104 BROWN144  28 0  0.1 0.1 0 0	; w129wall 105 100 STARG3  30 28  0.1 0.1 0 0	; w130wall 106 105 STARG3  30 28  0.1 0.1 0 0	; w131wall 99 106 STARG3  30 28  0.1 0.1 0 0	; w132wall 107 86 STARTAN3  29 0  0.1 0.1 0 0	; w133wall 79 107 SUPPORT2  29 0  0.0695 0.138889 0 0	; w134wall 108 78 SUPPORT2  29 0  0.0695 0.138889 0 0	; w135wall 89 108 STARTAN3  29 0  0.1 0.1 0 0	; w136wall 110 109 TEKWALL4  24 45  0.1 0.252525 0 0	; w137wall 111 110 TEKWALL4  24 45  0.1 0.252525 0 0	; w138wall 112 111 TEKWALL4  24 45  0.1 0.252525 0 0	; w139wall 109 112 TEKWALL4  24 45  0.1 0.252525 0 0	; w140wall 114 113 TEKWALL4  24 44  0.1 0.252525 0 0	; w141wall 115 114 TEKWALL4  24 44  0.1 0.252525 0 0	; w142wall 116 115 TEKWALL4  24 44  0.1 0.252525 0 0	; w143wall 113 116 TEKWALL4  24 44  0.1 0.252525 0 0	; w144wall 117 40 STARTAN3  2 0  0.1 0.154321 0 0	; w145wall 29 118 STARTAN3  2 0  0.1 0.154321 0 0	; w146wall 118 119 STARTAN3  2 0  0.1 0.154321 0 0	; w147wall 120 117 STARTAN3  2 0  0.1 0.154321 0 0	; w148wall 40 29 STEP6  2 38  0.1 0.1 0 0	; w149wall 119 120 STEP6  2 3  0.1 0.1 0 0	; w150wall 122 121 BIGDOOR2  3 4  0.131 0.253 0 0	; w151wall 124 123 BIGDOOR2  3 4  0.131 0.253 0 0	; w152wall 119 122 STARTAN3  3 0  0.1 0.252525 0 56	; w153wall 121 120 STARTAN3  3 0  0.1 0.252525 0 56	; w154wall 124 121 DOORTRAK  4 0  0.1 0.1 0 0	; w155wall 122 123 DOORTRAK  4 0  0.1 0.1 0 0	; w156wall 123 125 STARGR1  3 0  0.1 0.252525 0 56	; w157wall 126 124 STARGR1  3 0  0.1 0.252525 0 56	; w158wall 128 127 BROWN144  47 0  0.1 0.1 0 0	; w159wall 129 128 BROWN144  47 0  0.1 0.1 0 0	; w160wall 44 130 BROWN144  20 0  0.1 0.1 0 0	; w161wall 131 42 STARTAN3  5 0  0.1 0.1 0 0	; w162wall 132 131 STARTAN3  5 0  0.1 0.1 0 0	; w163wall 134 133 BROWN144  13 5  0.1 0.1 0 0	; w164wall 135 134 BROWN144  13 5  0.1 0.1 0 0	; w165wall 136 135 BROWN144  13 5  0.1 0.1 0 0	; w166wall 137 136 BROWN144  13 5  0.1 0.1 0 0	; w167wall 138 137 BROWN144  13 5  0.1 0.1 0 0	; w168wall 139 138 BROWN144  13 5  0.1 0.1 0 0	; w169wall 140 139 BROWN144  13 5  0.1 0.1 0 0	; w170wall 133 140 BROWN144  13 5  0.1 0.1 0 0	; w171wall 142 141 BROWN1  53 0  0.1 0.1 0 0	; w172wall 144 143 BROWN1  54 0  0.1 0.1 0 0	; w173wall 145 144 BROWN1  53 0  0.1 0.1 0 0	; w174wall 147 146 BROWNGRN  71 0  0.1 0.1 0 0	; w175wall 149 148 BROWNGRN  60 0  0.1 0.1 0 0	; w176wall 151 150 BROWNGRN  71 0  0.1 0.1 0 0	; w177wall 153 152 BROWNGRN  55 0  0.1 0.1 0 0	; w178wall 127 154 STARTAN3  5 0  0.1 0.1 0 0	; w179wall 154 153 DOORSTOP  46 0  0.1 0.1 0 0	; w180wall 155 149 BROWNGRN  60 0  0.1 0.1 0 0	; w181wall 155 156 NUKE24  57 60  0.1 0.1 0 0	; w182wall 158 157 NUKE24  61 60  0.1 0.1 0 0	; w183wall 157 159 NUKE24  61 60  0.1 0.1 0 0	; w184wall 161 160 NUKE24  57 60  0.1 0.1 0 0	; w185wall 159 162 NUKE24  61 60  0.1 0.1 0 0	; w186wall 156 161 NUKE24  57 60  0.1 0.1 0 0	; w187wall 164 163 BROWNGRN  60 0  0.1 0.1 0 0	; w188wall 152 165 BROWNGRN  56 0  0.1 0.1 0 0	; w189wall 166 164 BROWNGRN  56 0  0.1 0.1 0 0	; w190wall 165 167 BROWNGRN  56 0  0.1 0.1 0 0	; w191wall 145 141 BROWN1  71 53  0.1 0.1 0 0	; w192wall 158 153 NUKE24  55 61  0.1 0.1 0 0	; w193wall 164 158 NUKE24  56 60  0.1 0.1 0 0	; w194wall 148 150 NUKE24  60 71  0.1 0.1 0 0	; w195wall 152 158 NUKE24  55 56  0.1 0.1 0 0	; w196wall 160 168 NUKE24  57 60  0.1 0.1 0 0	; w197wall 168 163 NUKE24  57 60  0.1 0.1 0 0	; w198wall 163 169 BROWNGRN  57 0  0.1 0.1 0 0	; w199wall 171 170 BROWNGRN  57 59  0.1 0.1 0 32	; w200wall 172 171 BROWNGRN  57 59  0.1 0.1 0 32	; w201wall 169 172 BROWNGRN  57 59  0.1 0.1 0 32	; w202wall 173 129 BROWN1  22 0  0.1 0.1 0 0	; w203wall 174 173 BROWN1  22 0  0.1 0.1 0 0	; w204wall 130 175 BROWN1  22 0  0.1 0.1 0 0	; w205wall 175 176 BROWN1  22 0  0.1 0.1 0 0	; w206wall 178 177 BROWN1  21 0  0.1 0.1 0 0	; w207wall 179 178 BROWN1  19 0  0.1 0.1 0 0	; w208wall 181 180 BROWN1  21 0  0.1 0.1 0 0	; w209wall 180 182 BROWN1  19 0  0.1 0.1 0 0	; w210wall 182 183 BROWN1  18 0  0.1 0.1 0 0	; w211wall 183 184 BROWN1  17 0  0.1 0.1 0 0	; w212wall 185 179 BROWN1  18 0  0.1 0.1 0 0	; w213wall 186 185 BROWN1  17 0  0.1 0.1 0 0	; w214wall 188 187 BROWN1  16 0  0.1 0.1 0 0	; w215wall 176 174 BROWN1  22 23  0.1 0.1 0 0	; w216wall 177 181 BROWN1  21 23  0.1 0.1 0 0	; w217wall 178 180 BROWN1  19 21  0.1 0.1 0 0	; w218wall 179 182 BROWN1  18 19  0.1 0.1 0 0	; w219wall 185 183 BROWN1  17 18  0.1 0.1 0 0	; w220wall 186 184 BROWN1  16 17  0.1 0.1 0 0	; w221wall 189 187 BROWN1  77 16  0.1 0.1 0 0	; w222wall 191 190 BROWN1  77 48  0.1 0.1 0 0	; w223wall 193 192 BROWN1  66 67  0.1 0.1 0 0	; w224wall 195 194 BROWN1  65 66  0.1 0.1 0 0	; w225wall 197 196 BROWN1  64 65  0.1 0.1 0 0	; w226wall 199 198 BROWN1  63 64  0.1 0.1 0 0	; w227wall 201 200 BROWN1  50 63  0.1 0.1 0 0	; w228wall 203 202 BROWN1  49 50  0.1 0.1 0 0	; w229wall 205 204 BROWN1  48 49  0.1 0.1 0 0	; w230wall 202 204 BROWN1  49 0  0.1 0.1 0 0	; w231wall 205 203 BROWN1  49 0  0.1 0.1 0 0	; w232wall 200 202 BROWN1  50 0  0.1 0.1 0 0	; w233wall 198 200 BROWN1  63 0  0.1 0.1 0 0	; w234wall 196 198 BROWN1  64 0  0.1 0.1 0 0	; w235wall 194 196 BROWN1  65 0  0.1 0.1 0 0	; w236wall 192 194 BROWN1  66 0  0.1 0.1 0 0	; w237wall 195 193 BROWN1  66 0  0.1 0.1 0 0	; w238wall 197 195 BROWN1  65 0  0.1 0.1 0 0	; w239wall 199 197 BROWN1  64 0  0.1 0.1 0 0	; w240wall 201 199 BROWN1  63 0  0.1 0.1 0 0	; w241wall 203 201 BROWN1  50 0  0.1 0.1 0 0	; w242wall 206 192 BROWN1  67 0  0.1 0.1 0 0	; w243wall 193 207 BROWN1  67 0  0.1 0.1 0 0	; w244wall 207 208 DOORSTOP  68 0  0.1 0.1 0 0	; w245wall 167 206 DOORSTOP  68 0  0.1 0.1 0 0	; w246wall 167 208 BROWN96  56 68  0.1 0.1 0 72	; w247wall 207 206 BROWN96  67 68  0.1 0.1 0 0	; w248wall 208 209 BROWNGRN  56 0  0.1 0.1 0 0	; w249wall 210 127 STARTAN3  5 47  0.1 0.1 0 0	; w250wall 211 210 STARTAN3  5 22  0.1 0.1 0 0	; w251wall 35 211 STARTAN3  5 20  0.1 0.1 0 0	; w252wall 130 211 STARTAN3  20 22  0.1 0.1 0 0	; w253wall 210 129 STARTAN3  47 22  0.1 0.1 0 0	; w254wall 212 205 SUPPORT2  48 0  0.1 0.1 4 0	; w255wall 191 212 BROWN1  48 0  0.1 0.1 0 0	; w256wall 213 190 BROWN1  48 0  0.1 0.1 0 0	; w257wall 204 213 SUPPORT2  48 0  0.1 0.1 4 0	; w258wall 214 186 SUPPORT2  16 0  0.1 0.1 4 0	; w259wall 189 214 BROWN1  16 0  0.1 0.1 0 0	; w260wall 215 188 BROWN1  16 0  0.1 0.1 0 0	; w261wall 184 215 SUPPORT2  16 0  0.1 0.1 4 0	; w262wall 162 150 NUKE24  61 60  0.1 0.1 0 0	; w263wall 216 147 BROWNGRN  71 0  0.1 0.1 0 0	; w264wall 141 216 SUPPORT2  71 0  0.1 0.1 4 0	; w265wall 217 145 SUPPORT2  71 0  0.1 0.1 4 0	; w266wall 148 217 BROWNGRN  71 0  0.1 0.1 0 0	; w267wall 170 218 BROWNGRN  57 0  0.1 0.1 0 0	; w268wall 219 170 BROWNGRN  59 0  0.1 0.1 0 0	; w269wall 169 219 BROWNGRN  59 58  0.1 0.1 0 0	; w270wall 220 132 STARTAN3  5 0  0.1 0.1 0 0	; w271wall 221 220 STARTAN3  5 0  0.1 0.1 0 0	; w272wall 222 221 STARTAN3  5 0  0.1 0.1 0 0	; w273wall 223 222 DOORSTOP  46 0  0.1 0.1 0 0	; w274wall 223 153 BROWNGRN  61 46  0.1 0.1 0 0	; w275wall 154 222 STARTAN3  5 46  0.1 0.1 0 0	; w276wall 150 223 BROWNGRN  61 0  0.1 0.1 0 0	; w277wall 225 224 BROWNGRN  74 0  0.1 0.1 0 0	; w278wall 227 226 BROWNGRN  74 0  0.1 0.1 0 0	; w279wall 228 227 BROWNGRN  74 0  0.1 0.1 0 0	; w280wall 230 229 BROWNGRN  73 0  0.1 0.1 0 0	; w281wall 232 231 BROWNGRN  73 0  0.1 0.1 0 0	; w282wall 224 233 BROWNGRN  74 0  0.1 0.1 0 0	; w283wall 235 234 BROWNGRN  74 0  0.1 0.1 0 0	; w284wall 236 235 BROWNGRN  74 0  0.1 0.1 0 0	; w285wall 237 236 BROWNGRN  74 0  0.1 0.1 0 0	; w286wall 239 238 BROWNGRN  74 0  0.1 0.1 0 0	; w287wall 240 239 BROWNGRN  74 0  0.1 0.1 0 0	; w288wall 241 240 BROWNGRN  74 0  0.1 0.1 0 0	; w289wall 242 228 BROWNGRN  72 0  0.1 0.1 0 0	; w290wall 229 242 BROWNGRN  72 0  0.1 0.1 0 0	; w291wall 243 237 BROWNGRN  72 0  0.1 0.1 0 0	; w292wall 234 243 BROWNGRN  72 0  0.1 0.1 0 0	; w293wall 244 232 BROWNGRN  72 0  0.1 0.1 0 0	; w294wall 233 244 BROWNGRN  72 0  0.1 0.1 0 0	; w295wall 245 241 BROWNGRN  72 0  0.1 0.1 0 0	; w296wall 238 245 BROWNGRN  72 0  0.1 0.1 0 0	; w297wall 246 245 BRNBIGL  72 72  0.1 0.1 0 0	; w298wall 247 246 BRNBIGC  72 72  0.1 0.1 0 0	; w299wall 242 247 BRNBIGR  72 72  0.1 0.1 0 0	; w300wall 243 248 BRNBIGR  72 72  0.1 0.1 0 0	; w301wall 249 244 BRNBIGL  72 72  0.1 0.1 0 0	; w302wall 248 249 BRNBIGC  72 72  0.1 0.1 0 0	; w303wall 251 250 BROWNGRN  74 0  0.1 0.1 0 0	; w304wall 253 252 BROWNGRN  74 0  0.1 0.1 0 0	; w305wall 254 251 LITE3  78 0  0.260416 0.231481 0 0	; w306wall 252 255 LITE3  78 0  0.260416 0.231481 0 0	; w307wall 232 229 BROWNGRN  72 73  0.1 0.1 0 0	; w308wall 241 234 BROWNGRN  72 74  0.1 0.1 0 0	; w309wall 209 166 BROWNGRN  56 75  0.1 0.1 0 0	; w310wall 226 253 BROWNGRN  74 0  0.1 0.1 0 0	; w311wall 250 225 BROWNGRN  74 0  0.1 0.1 0 0	; w312wall 228 238 BROWNGRN  72 74  0.1 0.1 0 0	; w313wall 237 233 BROWNGRN  72 74  0.1 0.1 0 0	; w314wall 251 252 BROWNGRN  78 74  0.1 0.1 0 0	; w315wall 256 254 STARTAN1  78 0  0.1 0.1 0 0	; w316wall 255 257 STARTAN1  78 0  0.1 0.1 0 0	; w317wall 257 258 EXITDOOR  80 0  0.1 0.308642 88 0	; w318wall 259 256 EXITDOOR  80 0  0.1 0.308642 64 0	; w319wall 260 259 DOORTRAK  81 0  0.1 0.1 0 0	; w320wall 261 260 EXITDOOR  84 0  0.1 0.308642 88 0	; w321wall 263 262 EXITDOOR  84 0  0.1 0.308642 64 0	; w322wall 258 263 DOORTRAK  81 0  0.1 0.1 0 0	; w323wall 260 263 EXITDOOR  84 81  0.260417 0.308642 0 0	; w324wall 258 259 EXITDOOR  80 81  0.260417 0.308642 0 0	; w325wall 264 261 STARTAN1  82 0  0.1 0.1 0 0	; w326wall 262 265 STARTAN1  82 0  0.1 0.1 0 0	; w327wall 266 264 STARTAN1  82 0  0.1 0.1 0 0	; w328wall 268 267 STARTAN1  82 0  0.1 0.1 0 0	; w329wall 269 268 SW1STRTN  82 0  0.260417 0.198413 0 0.214286	; w330wall 265 269 STARTAN1  82 0  0.1 0.1 0 0	; w331wall 267 266 STARTAN1  82 0  0.1 0.1 0 0	; w332wall 261 262 STARTAN1  82 84  0.1 0.1 0 16	; w333wall 209 270 BROWNGRN  75 0  0.1 0.1 0 0	; w334wall 271 166 BROWNGRN  75 0  0.1 0.1 0 0	; w335wall 272 230 BROWNGRN  73 0  0.1 0.1 0 0	; w336wall 270 272 DOORTRAK  76 0  0.1 0.1 0 0	; w337wall 273 271 DOORTRAK  76 0  0.1 0.1 0 0	; w338wall 231 273 BROWNGRN  73 0  0.1 0.1 0 0	; w339wall 270 271 BIGDOOR4  75 76  0.130208 0.308642 0 0.333333	; w340wall 273 272 BIGDOOR4  73 76  0.130208 0.308642 0 0.333333	; w341wall 275 274 EXITSIGN  78 79  0.520834 1.38889 0 1.5	; w342wall 277 276 EXITSIGN  78 79  0.520834 1.38889 0 1.5	; w343wall 274 277 EXITSIGN  78 79  0.1 0.1 32 0	; w344wall 276 275 EXITSIGN  78 79  0.1 0.1 32 0	; w345wall 257 256 STARTAN1  78 80  0.1 0.1 0 0	; w346wall 279 278 EXITSIGN  82 83  0.520834 1.38889 0 1.5	; w347wall 281 280 EXITSIGN  82 83  0.520834 1.38889 0 1.5	; w348wall 278 281 EXITSIGN  82 83  0.1 0.1 32 0	; w349wall 280 279 EXITSIGN  82 83  0.1 0.1 32 0	; w350wall 146 151 BROWNGRN  71 0  0.1 0.1 0 0	; w351wall 283 282 TEKWALL1  29 32  0.1 0.925926 8 0	; w352wall 284 283 TEKWALL1  29 32  0.1 0.925926 8 0	; w353wall 285 284 TEKWALL1  29 32  0.1 0.925926 8 0	; w354wall 286 285 TEKWALL1  29 32  0.1 0.925926 8 0	; w355wall 287 286 TEKWALL1  29 32  0.1 0.925926 8 0	; w356wall 288 287 TEKWALL1  29 32  0.1 0.925926 8 0	; w357wall 289 288 TEKWALL1  29 32  0.1 0.925926 8 0	; w358wall 282 289 TEKWALL1  29 32  0.1 0.925926 8 0	; w359wall 291 290 LITE3  1 0  0.1 0.396825 0 -0.571428	; w360wall 292 291 COMPUTE2  1 0  0.1 0.396825 0 -0.571428	; w361wall 294 293 LITE3  6 0  0.1 0.396825 0 -0.571428	; w362wall 296 295 COMPUTE2  1 0  0.1 0.396825 0 -0.571428	; w363wall 297 296 LITE3  1 0  0.1 0.1 0 32	; w364wall 299 298 LITE3  6 0  0.1 0.396825 0 -0.571428	; w365wall 301 300 LITE3  1 0  0.1 0.396825 0 -0.571428	; w366wall 302 301 COMPUTE2  1 0  0.1 0.396825 0 -0.571428	; w367wall 303 302 LITE3  1 0  0.1 0.396825 0 -0.571428	; w368wall 295 303 LITE3  1 0  0.1 0.396825 0 -0.571428	; w369wall 300 292 LITE3  1 0  0.1 0.396825 0 -0.571428	; w370wall 304 290 COMPSPAN  7 1  0.1 0.1 0 0	; w371wall 305 304 COMPSPAN  7 1  0.1 0.1 0 0	; w372wall 297 305 COMPSPAN  7 1  0.1 0.1 0 0	; w373wall 306 299 COMPUTE2  6 0  0.1 0.396825 0 -0.571428	; w374wall 307 306 LITE3  6 0  0.1 0.396825 0 -0.571428	; w375wall 308 307 LITE3  6 0  0.1 0.396825 0 -0.571428	; w376wall 293 308 COMPUTE2  6 0  0.1 0.396825 0 -0.571428	; w377wall 309 298 COMPSPAN  7 6  0.1 0.1 0 0	; w378wall 294 309 COMPSPAN  7 6  0.1 0.1 0 0	; w379wall 311 310 STARGR1  7 0  0.1 0.1 0 32	; w380wall 312 142 BROWN1  54 0  0.1 0.1 0 0	; w381wall 143 313 SUPPORT2  54 0  0.14 0.28 0 32	; w382wall 310 312 SUPPORT2  54 0  0.14 0.28 0 32	; w383wall 126 125 STARGR1  7 3  0.1 0.1 0 32	; w384wall 310 313 STARGR1  7 54  0.1 0.1 0 32	; w385wall 315 314 STARGR1  9 10  0.1 0.1 0 0	; w386wall 316 315 STARGR1  9 10  0.1 0.1 0 0	; w387wall 317 316 STARGR1  9 10  0.1 0.1 0 0	; w388wall 314 317 STARGR1  9 10  0.1 0.1 0 0	; w389wall 318 294 SUPPORT2  7 0  0.1 0.1 0 0	; w390wall 125 318 STARGR1  7 0  0.1 0.1 0 32	; w391wall 319 126 STARGR1  7 0  0.1 0.1 0 32	; w392wall 290 319 SUPPORT2  7 0  0.1 0.1 0 0	; w393wall 320 297 SUPPORT2  7 0  0.1 0.1 0 0	; w394wall 313 320 STARGR1  7 0  0.1 0.1 0 32	; w395wall 321 311 STARGR1  7 0  0.1 0.1 0 32	; w396wall 298 321 SUPPORT2  7 0  0.1 0.1 0 0	; w397wall 323 322 COMPTILE  7 0  0.1 0.1 0 0	; w398wall 324 323 COMPTILE  7 0  0.1 0.1 0 0	; w399wall 325 324 COMPTILE  7 0  0.1 0.1 0 0	; w400wall 326 325 COMPTILE  7 0  0.1 0.1 0 0	; w401wall 327 326 SUPPORT2  7 0  0.1 0.1 6 0	; w402wall 328 327 COMPTILE  8 0  0.1 0.1 0 0	; w403wall 329 328 COMPTILE  51 0  0.1 0.1 96 0	; w404wall 330 329 COMPTILE  52 0  0.1 0.1 0 0	; w405wall 331 330 COMPTILE  52 0  0.1 0.1 0 0	; w406wall 332 331 COMPTILE  52 0  0.1 0.1 0 0	; w407wall 333 332 COMPTILE  51 0  0.1 0.1 0 0	; w408wall 334 333 COMPTILE  8 0  0.1 0.1 96 0	; w409wall 335 334 SUPPORT2  7 0  0.1 0.1 6 0	; w410wall 322 335 COMPTILE  7 0  0.1 0.1 0 0	; w411wall 334 327 STEP1  7 8  0.1 0.1 0 0	; w412wall 333 328 STEP1  8 51  0.1 0.1 0 0	; w413wall 332 329 STEP1  51 52  0.1 0.1 0 0	; w414wall 337 336 STARGR1  11 12  0.1 0.1 0 0	; w415wall 338 337 STARGR1  11 12  0.1 0.1 0 0	; w416wall 339 338 STARGR1  11 12  0.1 0.1 0 0	; w417wall 336 339 STARGR1  11 12  0.1 0.1 0 0	; w418wall 341 340 STARGR1  7 11  0.1 0.1 0 0	; w419wall 342 341 STARGR1  7 11  0.1 0.1 0 0	; w420wall 343 342 STARGR1  7 11  0.1 0.1 0 0	; w421wall 340 343 STARGR1  7 11  0.1 0.1 0 0	; w422wall 345 344 STARGR1  7 9  0.1 0.1 0 0	; w423wall 346 345 STARGR1  7 9  0.1 0.1 0 0	; w424wall 347 346 STARGR1  7 9  0.1 0.1 0 0	; w425wall 344 347 STARGR1  7 9  0.1 0.1 0 0	; w426wall 144 142 BROWN1  53 54  0.1 0.1 0 0	; w427wall 349 348 BROWNGRN  58 0  0.1 0.1 0 0	; w428wall 351 350 BROWNGRN  69 0  0.1 0.1 0 0	; w429wall 353 352 BROWNGRN  58 0  0.1 0.1 0 0	; w430wall 352 349 BROWNGRN  58 69  0.1 0.1 0 0	; w431wall 354 219 SUPPORT2  58 0  0.1 0.1 0 0	; w432wall 355 354 BROWNGRN  58 0  0.1 0.1 0 0	; w433wall 356 353 BROWNGRN  58 0  0.1 0.1 0 0	; w434wall 169 356 SUPPORT2  58 0  0.1 0.1 0 0	; w435wall 357 349 SUPPORT2  69 0  0.1 0.1 0 0	; w436wall 350 357 BROWNGRN  69 0  0.1 0.1 0 0	; w437wall 358 351 BROWNGRN  69 0  0.1 0.1 0 0	; w438wall 352 358 SUPPORT2  69 0  0.1 0.1 0 0	; w439wall 359 191 SUPPORT2  77 0  0.1 0.1 0 16	; w440wall 360 359 BROWN1  77 0  0.1 0.1 0 16	; w441wall 187 360 SUPPORT2  77 0  0.1 0.1 0 16	; w442wall 361 189 SUPPORT2  77 0  0.1 0.1 0 16	; w443wall 362 361 BROWN1  77 0  0.1 0.1 0 16	; w444wall 190 362 SUPPORT2  77 0  0.1 0.1 0 16	; w445wall 363 174 SUPPORT2  23 0  0.1 0.1 0 0	; w446wall 177 363 BROWN1  23 0  0.1 0.1 0 0	; w447wall 364 181 BROWN1  23 0  0.1 0.1 0 0	; w448wall 176 364 SUPPORT2  23 0  0.1 0.1 0 0	; w449wall 365 355 BROWNGRN  58 0  0.1 0.1 0 0	; w450wall 367 366 BROWNGRN  62 0  0.1 0.1 0 0	; w451wall 366 368 BROWNGRN  62 0  0.1 0.1 0 0	; w452wall 370 369 BROWNGRN  62 0  0.1 0.1 0 0	; w453wall 371 370 BROWNGRN  62 0  0.1 0.1 0 0	; w454wall 372 371 BROWNGRN  62 0  0.1 0.1 0 0	; w455wall 373 372 BROWNGRN  62 0  0.1 0.1 0 0	; w456wall 368 374 BROWNGRN  62 0  0.1 0.1 0 0	; w457wall 374 375 BROWNGRN  62 0  0.1 0.1 0 0	; w458wall 375 376 BROWNGRN  62 0  0.1 0.1 0 0	; w459wall 377 373 BROWNGRN  62 0  0.1 0.1 0 0	; w460wall 376 378 BROWNGRN  62 0  0.1 0.1 0 0	; w461wall 379 377 BROWNGRN  62 0  0.1 0.1 0 0	; w462wall 378 380 BROWNGRN  62 0  0.1 0.1 0 0	; w463wall 218 155 BROWNGRN  57 62  0.1 0.1 0 0	; w464wall 348 365 BROWNGRN  58 70  0.1 0.1 0 0	; w465wall 367 369 BROWNGRN  70 62  0.1 0.1 0 0	; w466wall 381 155 SUPPORT2  62 0  0.1 0.1 4 0	; w467wall 380 381 BROWNGRN  62 0  0.1 0.1 0 0	; w468wall 382 379 BROWNGRN  62 0  0.1 0.1 0 0	; w469wall 218 382 SUPPORT2  62 0  0.1 0.1 4 0	; w470wall 383 365 SUPPORT2  70 0  0.1 0.1 4 0	; w471wall 369 383 BROWNGRN  70 0  0.1 0.1 0 0	; w472wall 384 367 BROWNGRN  70 0  0.1 0.1 0 0	; w473wall 348 384 SUPPORT2  70 0  0.1 0.1 4 0	; w474wall 387 385 Sky  1 85  0.1 0.1 0 0	; w475wall 388 387 Sky  1 85  0.1 0.1 0 0	; w476wall 386 388 Sky  1 85  0.1 0.1 0 0	; w477wall 385 386 Sky  1 85  0.1 0.1 0 0	; w478
+start 63.6 -212.8
+
+; texture
+
+texture TEKWALL1 escher_horsemen.gif	; t0
+texture EXITSIGN hans.gif	; t1
+texture BIGDOOR4 hans.gif	; t2
+texture BROWN96 overlap.gif	; t3
+texture STEP1 dirt.gif			; t4
+texture NUKE24 bluefrac.gif		; t5
+texture COMPSPAN ether.gif	; t6
+texture TLITE6_1 stone1.gif	; t7
+texture FLAT18 overlap.gif		; t8
+texture STARTAN3 graybrick.gif	; t9
+texture FLAT20 graystone.gif		; t10
+texture LITE3 coolwater.gif			; t11
+texture BROWN1 overlap.gif		; t12
+texture CEIL5_1 hans.gif		; t13
+texture DOORSTOP dirt.gif		; t14
+texture FLOOR1_1 overlap.gif	; t15
+texture CEIL5_2 misty.gif		; t16
+texture TLITE6_4 redbrick.gif	; t17
+texture FLAT23 firering.gif		; t18
+texture TLITE6_5 overlap.gif	; t19
+texture CEIL3_5 stone7.gif		; t20
+texture STARGR1 jeweled_tiles.gif		; t21
+texture TLITE6_6 overlap.gif	; t22
+texture Black overlap.gif			; t23
+texture NUKAGE3 overlap.gif		; t24
+texture SW1STRTN overlap.gif	; t25
+texture EXITDOOR ether.gif	; t26
+texture DOORTRAK dirt.gif	; t27
+texture FLOOR5_1 stone7.gif	; t28
+texture BROWNGRN escher_horsemen.gif	; t29
+texture FLOOR5_2 tile0.gif	; t30
+texture FLAT5_5 dirt.gif	; t31
+texture BRNBIGL dirt.gif	; t32
+texture FLOOR6_2 stone7.gif	; t33
+texture FLOOR7_1 stone4.gif	; t34
+texture BROWN144 mars.gif	; t35
+texture FLOOR7_2 stone2.gif	; t36
+texture FLAT14 dirt.gif	; t37
+texture STARG3 bluefrac.gif	; t38
+texture F_SKY1 bluefrac.gif	; t39
+texture FLOOR4_8 stone1.gif	; t40
+texture COMPTILE tile0.gif	; t41
+texture STEP2 dirt.gif	; t42
+texture STARTAN1 overlap.gif	; t43
+texture BRNBIGR dirt.gif	; t44
+texture COMPUTE2 overlap.gif	; t45
+texture BRNBIGC dirt.gif	; t46
+texture DOOR3 dirt.gif	; t47
+texture SUPPORT2 dirt.gif	; t48
+texture TEKWALL4 overlap.gif	; t49
+texture STEP6 dirt.gif	; t50
+texture SLADWALL overlap.gif	; t51
+texture BIGDOOR2 hans.gif	; t52
+texture Sky horizon.gif	; t53
+
+; vertex
+
+vertex  65.28 -220.8	; v0
+vertex  61.44 -220.8	; v1
+vertex  61.44 -218.88	; v2
+vertex  65.28 -218.88	; v3
+vertex  69.12 -218.88	; v4
+vertex  57.6 -218.88	; v5
+vertex  76.8 -213.12	; v6
+vertex  49.92 -213.12	; v7
+vertex  80.64 -213.12	; v8
+vertex  42.24 -213.12	; v9
+vertex  53.76 -203.52	; v10
+vertex  55.68 -203.52	; v11
+vertex  55.68 -201.6	; v12
+vertex  53.76 -201.6	; v13
+vertex  71.04 -203.52	; v14
+vertex  72.96 -203.52	; v15
+vertex  72.96 -201.6	; v16
+vertex  71.04 -201.6	; v17
+vertex  53.76 -184.32	; v18
+vertex  53.76 -186.24	; v19
+vertex  55.68 -186.24	; v20
+vertex  55.68 -184.32	; v21
+vertex  72.96 -184.32	; v22
+vertex  71.04 -184.32	; v23
+vertex  71.04 -186.24	; v24
+vertex  72.96 -186.24	; v25
+vertex  80.64 -201.6	; v26
+vertex  80.64 -195.84	; v27
+vertex  80.64 -192	; v28
+vertex  80.64 -172.8	; v29
+vertex  80.64 -186.24	; v30
+vertex  82.56 -192	; v31
+vertex  82.56 -186.24	; v32
+vertex  82.56 -201.6	; v33
+vertex  82.56 -195.84	; v34
+vertex  82.56 -218.88	; v35
+vertex  82.56 -176.64	; v36
+vertex  42.24 -176.64	; v37
+vertex  49.92 -176.64	; v38
+vertex  58.08 -172.8	; v39
+vertex  72.96 -172.8	; v40
+vertex  88.32 -172.8	; v41
+vertex  111.36 -172.8	; v42
+vertex  91.68 -220.8	; v43
+vertex  100.32 -224.64	; v44
+vertex  42.24 -201.6	; v45
+vertex  42.24 -186.24	; v46
+vertex  30.72 -199.68	; v47
+vertex  30.72 -198.24	; v48
+vertex  30.72 -189.6	; v49
+vertex  30.72 -188.16	; v50
+vertex  40.8 -186.24	; v51
+vertex  40.8 -201.6	; v52
+vertex  29.76 -189.6	; v53
+vertex  29.76 -198.24	; v54
+vertex  29.76 -199.68	; v55
+vertex  26.88 -207.36	; v56
+vertex  7.68 -207.36	; v57
+vertex  7.68 -180.48	; v58
+vertex  26.88 -180.48	; v59
+vertex  29.76 -188.16	; v60
+vertex  7.68 -195.84	; v61
+vertex  9.6 -195.84	; v62
+vertex  11.52 -195.84	; v63
+vertex  13.44 -195.84	; v64
+vertex  15.36 -195.84	; v65
+vertex  17.28 -195.84	; v66
+vertex  19.2 -195.84	; v67
+vertex  19.2 -192	; v68
+vertex  17.28 -192	; v69
+vertex  15.36 -192	; v70
+vertex  13.44 -192	; v71
+vertex  11.52 -192	; v72
+vertex  9.6 -192	; v73
+vertex  7.68 -192	; v74
+vertex  3.84 -184.32	; v75
+vertex  3.84 -203.52	; v76
+vertex  2.88 -203.52	; v77
+vertex  -3.84 -199.68	; v78
+vertex  -3.84 -188.16	; v79
+vertex  2.88 -184.32	; v80
+vertex  -15.36 -199.68	; v81
+vertex  -19.2 -197.76	; v82
+vertex  -19.2 -190.08	; v83
+vertex  -15.36 -188.16	; v84
+vertex  -7.68 -187.2	; v85
+vertex  -7.68 -188.16	; v86
+vertex  -15.36 -187.2	; v87
+vertex  -15.36 -200.64	; v88
+vertex  -7.68 -199.68	; v89
+vertex  -7.68 -200.64	; v90
+vertex  -20.16 -197.76	; v91
+vertex  -20.16 -190.08	; v92
+vertex  -20.16 -187.2	; v93
+vertex  -20.16 -200.64	; v94
+vertex  -5.76 -200.64	; v95
+vertex  3.84 -211.2	; v96
+vertex  -5.76 -187.2	; v97
+vertex  3.84 -176.64	; v98
+vertex  3.84 -168.96	; v99
+vertex  3.84 -218.88	; v100
+vertex  -38.4 -218.88	; v101
+vertex  -46.08 -211.2	; v102
+vertex  -46.08 -176.64	; v103
+vertex  -38.4 -168.96	; v104
+vertex  -38.4 -211.2	; v105
+vertex  -38.4 -176.64	; v106
+vertex  -5.28 -188.16	; v107
+vertex  -5.28 -199.68	; v108
+vertex  15.36 -188.16	; v109
+vertex  19.2 -188.16	; v110
+vertex  19.2 -184.32	; v111
+vertex  15.36 -184.32	; v112
+vertex  15.36 -203.52	; v113
+vertex  19.2 -203.52	; v114
+vertex  19.2 -199.68	; v115
+vertex  15.36 -199.68	; v116
+vertex  74.88 -151.68	; v117
+vertex  83.04 -155.52	; v118
+vertex  88.32 -153.6	; v119
+vertex  88.32 -145.92	; v120
+vertex  92.16 -145.92	; v121
+vertex  92.16 -153.6	; v122
+vertex  93.12 -153.6	; v123
+vertex  93.12 -145.92	; v124
+vertex  99.84 -153.6	; v125
+vertex  99.84 -145.92	; v126
+vertex  164.16 -218.88	; v127
+vertex  149.28 -224.64	; v128
+vertex  134.4 -226.56	; v129
+vertex  119.04 -226.56	; v130
+vertex  115.2 -175.2	; v131
+vertex  134.4 -175.2	; v132
+vertex  91.2 -190.08	; v133
+vertex  100.32 -186.24	; v134
+vertex  113.76 -186.24	; v135
+vertex  122.4 -188.64	; v136
+vertex  127.68 -196.32	; v137
+vertex  123.84 -204.48	; v138
+vertex  107.04 -206.88	; v139
+vertex  92.64 -203.04	; v140
+vertex  165.12 -167.04	; v141
+vertex  157.44 -167.04	; v142
+vertex  151.2 -153.6	; v143
+vertex  165.12 -153.6	; v144
+vertex  176.64 -159.36	; v145
+vertex  172.8 -174.72	; v146
+vertex  172.8 -172.8	; v147
+vertex  182.88 -172.8	; v148
+vertex  182.88 -176.64	; v149
+vertex  165.12 -182.88	; v150
+vertex  165.12 -174.72	; v151
+vertex  165.12 -215.04	; v152
+vertex  165.12 -201.6	; v153
+vertex  164.16 -201.6	; v154
+vertex  198.24 -182.4	; v155
+vertex  188.16 -184.32	; v156
+vertex  186.72 -201.6	; v157
+vertex  176.64 -212.16	; v158
+vertex  168.96 -193.92	; v159
+vertex  196.8 -199.2	; v160
+vertex  179.04 -192	; v161
+vertex  178.56 -184.32	; v162
+vertex  195.84 -216.96	; v163
+vertex  184.32 -218.88	; v164
+vertex  176.64 -218.88	; v165
+vertex  184.32 -240	; v166
+vertex  176.64 -226.56	; v167
+vertex  186.24 -213.12	; v168
+vertex  201.12 -214.08	; v169
+vertex  208.32 -205.92	; v170
+vertex  204.48 -205.92	; v171
+vertex  198.72 -209.76	; v172
+vertex  132.48 -220.8	; v173
+vertex  130.56 -220.8	; v174
+vertex  120.96 -220.8	; v175
+vertex  122.88 -220.8	; v176
+vertex  130.56 -226.56	; v177
+vertex  130.56 -228.48	; v178
+vertex  130.56 -230.4	; v179
+vertex  122.88 -228.48	; v180
+vertex  122.88 -226.56	; v181
+vertex  122.88 -230.4	; v182
+vertex  122.88 -232.32	; v183
+vertex  122.88 -234.24	; v184
+vertex  130.56 -232.32	; v185
+vertex  130.56 -234.24	; v186
+vertex  134.4 -245.76	; v187
+vertex  126.72 -241.92	; v188
+vertex  134.4 -238.08	; v189
+vertex  142.08 -238.08	; v190
+vertex  142.08 -245.76	; v191
+vertex  172.8 -226.56	; v192
+vertex  172.8 -234.24	; v193
+vertex  170.88 -226.56	; v194
+vertex  170.88 -234.24	; v195
+vertex  168.96 -226.56	; v196
+vertex  168.96 -234.24	; v197
+vertex  167.04 -226.56	; v198
+vertex  167.04 -234.24	; v199
+vertex  165.12 -226.56	; v200
+vertex  165.12 -234.24	; v201
+vertex  161.28 -226.56	; v202
+vertex  163.2 -234.24	; v203
+vertex  157.92 -227.52	; v204
+vertex  161.28 -235.2	; v205
+vertex  174.72 -226.56	; v206
+vertex  174.72 -234.24	; v207
+vertex  176.64 -234.24	; v208
+vertex  176.64 -240	; v209
+vertex  134.4 -218.88	; v210
+vertex  119.04 -218.88	; v211
+vertex  160.32 -235.2	; v212
+vertex  156.96 -227.52	; v213
+vertex  130.56 -235.2	; v214
+vertex  122.88 -235.2	; v215
+vertex  165.12 -168	; v216
+vertex  177.6 -159.36	; v217
+vertex  204 -189.12	; v218
+vertex  206.88 -211.2	; v219
+vertex  136.32 -180.48	; v220
+vertex  145.92 -186.72	; v221
+vertex  164.16 -186.72	; v222
+vertex  165.12 -186.72	; v223
+vertex  192 -247.68	; v224
+vertex  199.68 -247.68	; v225
+vertex  161.28 -247.68	; v226
+vertex  168.96 -247.68	; v227
+vertex  171.36 -249.6	; v228
+vertex  174.72 -249.6	; v229
+vertex  174.72 -247.68	; v230
+vertex  186.24 -247.68	; v231
+vertex  186.24 -249.6	; v232
+vertex  189.6 -249.6	; v233
+vertex  186.24 -261.12	; v234
+vertex  186.24 -263.04	; v235
+vertex  189.6 -263.04	; v236
+vertex  189.6 -261.12	; v237
+vertex  171.36 -261.12	; v238
+vertex  171.36 -263.04	; v239
+vertex  174.72 -263.04	; v240
+vertex  174.72 -261.12	; v241
+vertex  173.28 -249.6	; v242
+vertex  187.68 -261.12	; v243
+vertex  187.68 -249.6	; v244
+vertex  173.28 -261.12	; v245
+vertex  173.28 -259.2	; v246
+vertex  173.28 -251.52	; v247
+vertex  187.68 -259.2	; v248
+vertex  187.68 -251.52	; v249
+vertex  199.68 -272.64	; v250
+vertex  184.32 -272.64	; v251
+vertex  176.64 -272.64	; v252
+vertex  161.28 -272.64	; v253
+vertex  184.32 -276.48	; v254
+vertex  176.64 -276.48	; v255
+vertex  182.4 -276.48	; v256
+vertex  178.56 -276.48	; v257
+vertex  178.56 -277.92	; v258
+vertex  182.4 -277.92	; v259
+vertex  182.4 -278.88	; v260
+vertex  182.4 -280.32	; v261
+vertex  178.56 -280.32	; v262
+vertex  178.56 -278.88	; v263
+vertex  186.24 -280.32	; v264
+vertex  174.72 -280.32	; v265
+vertex  186.24 -291.84	; v266
+vertex  174.72 -291.84	; v267
+vertex  174.72 -288	; v268
+vertex  174.72 -284.16	; v269
+vertex  176.64 -240.96	; v270
+vertex  184.32 -240.96	; v271
+vertex  176.64 -241.92	; v272
+vertex  184.32 -241.92	; v273
+vertex  181.44 -275.52	; v274
+vertex  179.52 -275.52	; v275
+vertex  179.52 -276	; v276
+vertex  181.44 -276	; v277
+vertex  181.44 -290.4	; v278
+vertex  179.52 -290.4	; v279
+vertex  179.52 -290.88	; v280
+vertex  181.44 -290.88	; v281
+vertex  -14.4 -195.84	; v282
+vertex  -12.48 -195.84	; v283
+vertex  -11.52 -194.88	; v284
+vertex  -11.52 -192.96	; v285
+vertex  -12.48 -192	; v286
+vertex  -14.4 -192	; v287
+vertex  -15.36 -192.96	; v288
+vertex  -15.36 -194.88	; v289
+vertex  99.84 -142.08	; v290
+vertex  96 -142.08	; v291
+vertex  96 -126.72	; v292
+vertex  96 -157.44	; v293
+vertex  99.84 -157.44	; v294
+vertex  153.6 -126.72	; v295
+vertex  153.6 -149.76	; v296
+vertex  149.76 -149.76	; v297
+vertex  130.56 -165.12	; v298
+vertex  130.56 -168.96	; v299
+vertex  96 -122.88	; v300
+vertex  99.84 -122.88	; v301
+vertex  149.76 -122.88	; v302
+vertex  153.6 -122.88	; v303
+vertex  99.84 -126.72	; v304
+vertex  149.76 -126.72	; v305
+vertex  99.84 -168.96	; v306
+vertex  96 -168.96	; v307
+vertex  96 -165.12	; v308
+vertex  99.84 -165.12	; v309
+vertex  149.76 -161.28	; v310
+vertex  149.76 -165.12	; v311
+vertex  151.2 -161.28	; v312
+vertex  149.76 -153.6	; v313
+vertex  119.04 -138.24	; v314
+vertex  119.04 -134.4	; v315
+vertex  107.52 -134.4	; v316
+vertex  107.52 -138.24	; v317
+vertex  99.84 -156	; v318
+vertex  99.84 -143.52	; v319
+vertex  149.76 -151.2	; v320
+vertex  132 -165.12	; v321
+vertex  126.72 -155.52	; v322
+vertex  140.16 -155.52	; v323
+vertex  140.16 -136.32	; v324
+vertex  126.72 -136.32	; v325
+vertex  126.72 -138.24	; v326
+vertex  128.64 -138.24	; v327
+vertex  130.56 -138.24	; v328
+vertex  132.48 -138.24	; v329
+vertex  138.24 -138.24	; v330
+vertex  138.24 -153.6	; v331
+vertex  132.48 -153.6	; v332
+vertex  130.56 -153.6	; v333
+vertex  128.64 -153.6	; v334
+vertex  126.72 -153.6	; v335
+vertex  119.04 -157.44	; v336
+vertex  119.04 -153.6	; v337
+vertex  107.52 -153.6	; v338
+vertex  107.52 -157.44	; v339
+vertex  119.52 -153.12	; v340
+vertex  107.04 -153.12	; v341
+vertex  107.04 -157.92	; v342
+vertex  119.52 -157.92	; v343
+vertex  107.04 -138.72	; v344
+vertex  119.52 -138.72	; v345
+vertex  119.52 -133.92	; v346
+vertex  107.04 -133.92	; v347
+vertex  211.2 -234.24	; v348
+vertex  199.68 -238.08	; v349
+vertex  192 -238.08	; v350
+vertex  192 -224.64	; v351
+vertex  199.68 -224.64	; v352
+vertex  201.6 -218.88	; v353
+vertex  208.32 -211.2	; v354
+vertex  211.2 -215.04	; v355
+vertex  201.12 -215.52	; v356
+vertex  198.24 -238.08	; v357
+vertex  198.24 -224.64	; v358
+vertex  140.64 -245.76	; v359
+vertex  135.84 -245.76	; v360
+vertex  135.84 -238.08	; v361
+vertex  140.64 -238.08	; v362
+vertex  130.56 -222.24	; v363
+vertex  122.88 -222.24	; v364
+vertex  211.2 -230.4	; v365
+vertex  220.8 -234.24	; v366
+vertex  215.04 -234.24	; v367
+vertex  224.64 -228.48	; v368
+vertex  215.04 -230.4	; v369
+vertex  216.96 -226.56	; v370
+vertex  213.12 -213.12	; v371
+vertex  213.12 -203.52	; v372
+vertex  218.88 -195.84	; v373
+vertex  220.8 -213.12	; v374
+vertex  220.8 -203.52	; v375
+vertex  228.48 -195.84	; v376
+vertex  209.76 -181.92	; v377
+vertex  215.04 -172.8	; v378
+vertex  207.36 -181.92	; v379
+vertex  201.6 -172.8	; v380
+vertex  199.2 -182.4	; v381
+vertex  204.96 -189.12	; v382
+vertex  212.16 -230.4	; v383
+vertex  212.16 -234.24	; v384
+vertex  232.9 -44.3	; v385
+vertex  -49.3 -44.4	; v386
+vertex  232.8 -296.1	; v387
+vertex  -49.8 -296.2	; v388
+
+; region
+
+region 40 40  FLOOR4_8 CEIL3_5	; r0
+region 1.44 3.96  FLAT18 CEIL5_1	; r1
+region 0 6.48  FLOOR4_8 CEIL3_5	; r2
+region 0 3.96  FLOOR4_8 TLITE6_4	; r3
+region 0 0  FLOOR4_8 FLAT20	; r4
+region -2.52 9.72  FLOOR7_1 F_SKY1	; r5
+region 1.44 3.96  FLAT18 CEIL5_1	; r6
+region 0 10.08  FLOOR4_8 CEIL3_5	; r7
+region 0.36 6.84  FLAT14 TLITE6_5	; r8
+region 0 10.08  FLOOR4_8 CEIL3_5	; r9
+region 0 4.32  FLOOR4_8 TLITE6_5	; r10
+region 0 10.08  FLOOR4_8 CEIL3_5	; r11
+region 0 4.32  FLOOR4_8 TLITE6_5	; r12
+region -3.6 9.72  NUKAGE3 F_SKY1	; r13
+region 0.36 8.64  FLAT5_5 FLAT5_5	; r14
+region 0.36 8.64  FLAT5_5 FLAT5_5	; r15
+region -6.12 -1.8  FLOOR5_1 CEIL5_2	; r16
+region -5.4 0.72  FLOOR5_1 CEIL5_2	; r17
+region -4.68 0.72  FLOOR5_1 CEIL5_2	; r18
+region -3.96 0.72  FLOOR5_1 CEIL5_2	; r19
+region -2.52 1.08  FLOOR7_1 F_SKY1	; r20
+region -3.24 0.72  FLOOR5_1 CEIL5_2	; r21
+region -2.52 2.88  FLOOR7_1 F_SKY1	; r22
+region -2.52 0.72  FLOOR7_1 CEIL5_2	; r23
+region -0.36 10.08  FLOOR4_8 FLOOR7_2	; r24
+region 1.8 10.08  FLOOR4_8 FLOOR7_2	; r25
+region 2.52 10.08  FLOOR4_8 FLOOR7_2	; r26
+region 3.24 10.08  FLOOR4_8 FLOOR7_2	; r27
+region 0 5.76  FLOOR7_1 F_SKY1	; r28
+region 4.68 11.88  FLOOR4_8 FLOOR7_2	; r29
+region 0 11.88  FLOOR7_1 F_SKY1	; r30
+region 6.12 10.8  FLAT20 FLAT20	; r31
+region 5.76 11.88  FLOOR1_1 FLOOR7_2	; r32
+region 6.12 10.8  FLAT20 FLAT20	; r33
+region 6.12 10.8  FLAT20 FLAT20	; r34
+region 4.68 8.64  FLOOR4_8 FLOOR7_2	; r35
+region 3.96 10.08  FLOOR4_8 FLOOR7_2	; r36
+region -0.36 5.4  FLAT14 CEIL3_5	; r37
+region 0 3.24  FLOOR4_8 CEIL3_5	; r38
+region -0.72 9  FLAT14 CEIL3_5	; r39
+region 0 3.24  FLOOR4_8 CEIL3_5	; r40
+region -0.36 5.4  FLOOR4_8 CEIL3_5	; r41
+region 0.36 10.08  FLOOR4_8 FLOOR7_2	; r42
+region 1.08 10.08  FLOOR4_8 FLOOR7_2	; r43
+region 1.8 8.28  STEP2 TLITE6_1	; r44
+region 1.8 8.28  STEP2 TLITE6_1	; r45
+region 0 6.12  FLAT20 FLAT20	; r46
+region -2.52 1.08  FLOOR7_1 F_SKY1	; r47
+region -6.12 -1.8  FLOOR5_1 CEIL5_2	; r48
+region -5.4 2.16  FLOOR5_1 CEIL5_2	; r49
+region -4.68 2.16  FLOOR5_1 CEIL5_2	; r50
+region 0.72 6.84  FLAT14 TLITE6_5	; r51
+region 1.08 6.84  FLAT14 TLITE6_5	; r52
+region -0.72 3.24  FLOOR4_8 CEIL3_5	; r53
+region -0.36 3.24  FLOOR4_8 CEIL3_5	; r54
+region -2.16 7.92  NUKAGE3 CEIL3_5	; r55
+region -1.08 7.92  FLOOR5_2 CEIL3_5	; r56
+region -2.16 7.92  NUKAGE3 CEIL3_5	; r57
+region -2.16 4.68  FLOOR4_8 FLOOR6_2	; r58
+region 4.32 7.92  FLOOR4_8 CEIL3_5	; r59
+region -1.08 7.92  FLOOR5_2 CEIL3_5	; r60
+region -2.16 7.92  NUKAGE3 CEIL3_5	; r61
+region 4.68 8.28  FLOOR4_8 FLOOR6_2	; r62
+region -3.96 2.16  FLOOR5_1 CEIL5_2	; r63
+region -3.24 2.16  FLOOR5_1 CEIL5_2	; r64
+region -2.52 2.16  FLOOR5_1 CEIL5_2	; r65
+region -1.8 2.16  FLOOR5_1 CEIL5_2	; r66
+region -1.08 2.16  FLOOR5_2 CEIL5_2	; r67
+region -1.08 -1.08  FLOOR5_2 FLAT5_5	; r68
+region -2.16 1.44  FLOOR4_8 TLITE6_6	; r69
+region 4.68 8.28  FLOOR4_8 FLOOR6_2	; r70
+region -1.08 7.92  FLOOR5_2 CEIL3_5	; r71
+region -1.08 4.68  FLOOR5_2 TLITE6_5	; r72
+region -1.08 2.16  FLOOR5_2 CEIL3_5	; r73
+region -1.08 2.16  FLOOR5_2 CEIL3_5	; r74
+region -1.08 2.16  FLOOR5_2 CEIL3_5	; r75
+region -1.08 -1.08  FLOOR5_2 FLAT20	; r76
+region -6.12 -1.08  FLOOR5_1 TLITE6_6	; r77
+region -1.08 3.24  FLOOR5_2 CEIL3_5	; r78
+region -1.08 2.52  FLOOR5_2 FLAT23	; r79
+region -1.08 2.16  FLOOR5_2 CEIL3_5	; r80
+region -1.08 -1.08  FLOOR5_2 FLAT20	; r81
+region -1.08 3.96  FLOOR5_2 TLITE6_5	; r82
+region -1.08 3.24  FLOOR5_2 FLAT23	; r83
+region -1.08 2.16  FLOOR5_2 CEIL3_5	; r84
+region 40 40  Black Black	; r85
+
+; wall
+
+wall 1 0 DOOR3  40 0  0.261 0.309 0 0	; w0
+wall 2 1 LITE3  40 0  0.1 0.308642 0 0	; w1
+wall 0 3 LITE3  40 0  0.1 0.308642 0 0	; w2
+wall 3 4 STARTAN3  38 0  0.1 0.1 0 0	; w3
+wall 5 2 STARTAN3  38 0  0.1 0.1 0 0	; w4
+wall 4 6 STARTAN3  38 0  0.1 0.1 0 0	; w5
+wall 7 5 STARTAN3  38 0  0.1 0.1 0 0	; w6
+wall 6 8 STARTAN3  38 0  0.1 0.1 0 0	; w7
+wall 9 7 STARTAN3  38 0  0.1 0.1 0 0	; w8
+wall 11 10 BROWN1  38 0  0.1 0.1 0 48	; w9
+wall 12 11 BROWN1  37 0  0.1 0.1 0 0	; w10
+wall 13 12 BROWN1  37 0  0.1 0.1 0 0	; w11
+wall 10 13 BROWN1  38 0  0.1 0.1 0 48	; w12
+wall 15 14 BROWN1  38 0  0.1 0.1 0 0	; w13
+wall 16 15 BROWN1  39 0  0.1 0.1 0 0	; w14
+wall 17 16 BROWN1  39 0  0.1 0.1 0 0	; w15
+wall 14 17 BROWN1  37 0  0.1 0.1 0 80	; w16
+wall 19 18 BROWN1  38 0  0.1 0.1 0 48	; w17
+wall 20 19 BROWN1  37 0  0.1 0.1 0 0	; w18
+wall 21 20 BROWN1  37 0  0.1 0.1 0 0	; w19
+wall 18 21 BROWN1  38 0  0.1 0.1 0 48	; w20
+wall 23 22 BROWN1  38 0  0.1 0.1 0 0	; w21
+wall 24 23 BROWN1  37 0  0.1 0.1 0 80	; w22
+wall 25 24 BROWN1  39 0  0.1 0.1 0 0	; w23
+wall 22 25 BROWN1  39 0  0.1 0.1 0 0	; w24
+wall 8 26 STARTAN3  38 0  0.1 0.1 0 0	; w25
+wall 26 27 STARTAN3  39 14  0.1 0.1 0 0	; w26
+wall 27 28 STARTAN3  39 0  0.1 0.1 0 0	; w27
+wall 30 29 STARTAN3  38 0  0.1 0.1 0 0	; w28
+wall 28 30 STARTAN3  39 15  0.1 0.1 0 0	; w29
+wall 32 31 STARTAN3  5 15  0.1 0.1 0 0	; w30
+wall 34 33 STARTAN3  5 14  0.1 0.1 0 0	; w31
+wall 34 27 DOORSTOP  14 0  0.1 0.1 0 0	; w32
+wall 26 33 DOORSTOP  14 0  0.1 0.1 0 0	; w33
+wall 28 31 DOORSTOP  15 0  0.1 0.1 0 0	; w34
+wall 32 30 DOORSTOP  15 0  0.1 0.1 0 0	; w35
+wall 31 34 STARTAN3  5 0  0.1 0.1 0 0	; w36
+wall 33 35 STARTAN3  5 0  0.1 0.1 0 0	; w37
+wall 36 32 STARTAN3  5 0  0.1 0.1 0 0	; w38
+wall 11 14 STEP6  37 38  0.1 0.1 0 0	; w39
+wall 15 26 STEP6  39 38  0.1 0.1 0 0	; w40
+wall 30 22 STEP6  39 38  0.1 0.1 0 0	; w41
+wall 38 37 STARTAN3  38 0  0.1 0.1 0 0	; w42
+wall 39 38 STARTAN3  38 0  0.1 0.1 0 0	; w43
+wall 40 39 STARTAN3  38 0  0.1 0.1 0 0	; w44
+wall 41 36 STARTAN3  5 0  0.1 0.1 0 0	; w45
+wall 42 41 STARTAN3  5 0  0.1 0.1 0 0	; w46
+wall 35 43 BROWN144  20 0  0.1 0.1 0 0	; w47
+wall 43 44 BROWN144  20 0  0.1 0.1 0 0	; w48
+wall 2 3 STARTAN3  38 40  0.1 0.1 0 0	; w49
+wall 24 20 STEP6  39 37  0.1 0.1 0 0	; w50
+wall 12 17 STEP6  39 37  0.1 0.1 0 0	; w51
+wall 20 12 STEP6  39 37  0.1 0.1 0 0	; w52
+wall 19 13 STEP6  37 38  0.1 0.1 0 0	; w53
+wall 23 21 STEP6  37 38  0.1 0.1 0 0	; w54
+wall 45 9 STARTAN3  38 0  0.1 0.1 0 0	; w55
+wall 37 46 STARTAN3  38 0  0.1 0.1 0 0	; w56
+wall 45 46 STEP6  41 38  0.1 0.1 0 0	; w57
+wall 48 47 STARTAN3  41 0  0.1 0.1 0 0	; w58
+wall 50 49 STARTAN3  41 0  0.1 0.1 0 0	; w59
+wall 51 50 STARTAN3  41 0  0.1 0.1 0 0	; w60
+wall 46 51 SUPPORT2  41 0  0.1 0.1 0 0	; w61
+wall 52 45 SUPPORT2  41 0  0.1 0.1 0 0	; w62
+wall 47 52 STARTAN3  41 0  0.1 0.1 0 0	; w63
+wall 54 53 STARG3  24 41  0.1 0.1 0 104	; w64
+wall 54 48 DOORTRAK  41 0  0.1 0.1 0 0	; w65
+wall 49 53 DOORTRAK  41 0  0.1 0.1 0 0	; w66
+wall 55 54 STARG3  24 0  0.1 0.1 0 0	; w67
+wall 56 55 STARG3  24 0  0.1 0.1 0 0	; w68
+wall 57 56 STARG3  24 0  0.1 0.1 0 0	; w69
+wall 59 58 STARG3  24 0  0.1 0.1 0 0	; w70
+wall 53 60 STARG3  24 0  0.1 0.1 0 0	; w71
+wall 60 59 STARG3  24 0  0.1 0.1 0 0	; w72
+wall 62 61 SLADWALL  24 36  0.1 0.1 0 0	; w73
+wall 63 62 SLADWALL  24 27  0.1 0.1 0 0	; w74
+wall 64 63 SLADWALL  24 26  0.1 0.1 0 0	; w75
+wall 65 64 SLADWALL  24 25  0.1 0.1 0 0	; w76
+wall 66 65 SLADWALL  24 43  0.1 0.1 0 0	; w77
+wall 67 66 SLADWALL  24 42  0.1 0.1 0 0	; w78
+wall 68 67 STEP6  24 42  0.1 1.38889 0 0	; w79
+wall 69 68 SLADWALL  24 42  0.1 0.1 0 0	; w80
+wall 70 69 SLADWALL  24 43  0.1 0.1 0 0	; w81
+wall 71 70 SLADWALL  24 25  0.1 0.1 0 0	; w82
+wall 72 71 SLADWALL  24 26  0.1 0.1 0 0	; w83
+wall 73 72 SLADWALL  24 27  0.1 0.1 0 0	; w84
+wall 74 73 SLADWALL  24 36  0.1 0.1 0 0	; w85
+wall 73 62 STEP6  27 36  0.1 1.38889 0 0	; w86
+wall 72 63 STEP6  26 27  0.1 1.38889 0 0	; w87
+wall 71 64 STEP6  25 26  0.1 1.38889 0 0	; w88
+wall 70 65 STEP6  43 25  0.1 1.38889 0 0	; w89
+wall 69 66 STEP6  42 43  0.1 1.38889 0 0	; w90
+wall 74 61 STARG3  36 35  0.1 0.462963 0 0	; w91
+wall 75 74 STARG3  24 35  0.1 0.1 0 0	; w92
+wall 58 75 STARG3  24 0  0.1 0.1 0 0	; w93
+wall 76 57 STARG3  24 0  0.1 0.1 0 0	; w94
+wall 61 76 STARG3  24 35  0.1 0.1 0 0	; w95
+wall 77 76 SUPPORT2  35 0  0.1 0.1 4 0	; w96
+wall 78 77 STARG3  35 0  0.1 0.1 0 0	; w97
+wall 80 79 STARG3  35 0  0.1 0.1 0 0	; w98
+wall 75 80 SUPPORT2  35 0  0.1 0.1 4 0	; w99
+wall 82 81 STARTAN3  29 0  0.1 0.1 0 0	; w100
+wall 84 83 STARTAN3  29 0  0.1 0.1 0 0	; w101
+wall 86 85 DOORSTOP  31 0  0.1 0.1 0 0	; w102
+wall 87 84 DOORSTOP  31 0  0.1 0.1 0 0	; w103
+wall 81 88 DOORSTOP  34 0  0.1 0.1 0 0	; w104
+wall 90 89 DOORSTOP  34 0  0.1 0.1 0 0	; w105
+wall 91 82 DOORSTOP  33 0  0.1 0.1 0 0	; w106
+wall 83 92 DOORSTOP  33 0  0.1 0.1 0 0	; w107
+wall 93 87 STARTAN3  30 0  0.1 0.1 0 0	; w108
+wall 92 93 STARTAN3  30 0  0.1 0.1 0 0	; w109
+wall 94 91 STARTAN3  30 0  0.1 0.1 0 0	; w110
+wall 88 94 STARTAN3  30 0  0.1 0.1 0 0	; w111
+wall 95 90 STARTAN3  30 0  0.1 0.1 0 0	; w112
+wall 96 95 STARTAN3  30 0  0.1 0.1 0 0	; w113
+wall 85 97 STARTAN3  30 0  0.1 0.1 0 0	; w114
+wall 97 98 STARTAN3  30 0  0.1 0.1 0 0	; w115
+wall 78 79 STARG3  29 35  0.1 0.1 0 0	; w116
+wall 81 89 STARTAN3  29 34  0.1 0.1 0 0	; w117
+wall 90 88 STARTAN3  30 34  0.1 0.1 0 0	; w118
+wall 86 84 STARTAN3  29 31  0.1 0.1 0 0	; w119
+wall 87 85 STARTAN3  30 31  0.1 0.1 0 0	; w120
+wall 83 82 STARTAN3  29 33  0.1 0.1 0 0	; w121
+wall 91 92 STARTAN3  30 33  0.1 0.1 0 0	; w122
+wall 98 99 STARTAN3  30 0  0.1 0.1 0 0	; w123
+wall 100 96 STARTAN3  30 0  0.1 0.1 0 0	; w124
+wall 101 100 BROWN144  28 0  0.1 0.1 0 0	; w125
+wall 102 101 BROWN144  28 0  0.1 0.1 0 0	; w126
+wall 103 102 BROWN144  28 0  0.1 0.1 0 0	; w127
+wall 104 103 BROWN144  28 0  0.1 0.1 0 0	; w128
+wall 99 104 BROWN144  28 0  0.1 0.1 0 0	; w129
+wall 105 100 STARG3  30 28  0.1 0.1 0 0	; w130
+wall 106 105 STARG3  30 28  0.1 0.1 0 0	; w131
+wall 99 106 STARG3  30 28  0.1 0.1 0 0	; w132
+wall 107 86 STARTAN3  29 0  0.1 0.1 0 0	; w133
+wall 79 107 SUPPORT2  29 0  0.0695 0.138889 0 0	; w134
+wall 108 78 SUPPORT2  29 0  0.0695 0.138889 0 0	; w135
+wall 89 108 STARTAN3  29 0  0.1 0.1 0 0	; w136
+wall 110 109 TEKWALL4  24 45  0.1 0.252525 0 0	; w137
+wall 111 110 TEKWALL4  24 45  0.1 0.252525 0 0	; w138
+wall 112 111 TEKWALL4  24 45  0.1 0.252525 0 0	; w139
+wall 109 112 TEKWALL4  24 45  0.1 0.252525 0 0	; w140
+wall 114 113 TEKWALL4  24 44  0.1 0.252525 0 0	; w141
+wall 115 114 TEKWALL4  24 44  0.1 0.252525 0 0	; w142
+wall 116 115 TEKWALL4  24 44  0.1 0.252525 0 0	; w143
+wall 113 116 TEKWALL4  24 44  0.1 0.252525 0 0	; w144
+wall 117 40 STARTAN3  2 0  0.1 0.154321 0 0	; w145
+wall 29 118 STARTAN3  2 0  0.1 0.154321 0 0	; w146
+wall 118 119 STARTAN3  2 0  0.1 0.154321 0 0	; w147
+wall 120 117 STARTAN3  2 0  0.1 0.154321 0 0	; w148
+wall 40 29 STEP6  2 38  0.1 0.1 0 0	; w149
+wall 119 120 STEP6  2 3  0.1 0.1 0 0	; w150
+wall 122 121 BIGDOOR2  3 4  0.131 0.253 0 0	; w151
+wall 124 123 BIGDOOR2  3 4  0.131 0.253 0 0	; w152
+wall 119 122 STARTAN3  3 0  0.1 0.252525 0 56	; w153
+wall 121 120 STARTAN3  3 0  0.1 0.252525 0 56	; w154
+wall 124 121 DOORTRAK  4 0  0.1 0.1 0 0	; w155
+wall 122 123 DOORTRAK  4 0  0.1 0.1 0 0	; w156
+wall 123 125 STARGR1  3 0  0.1 0.252525 0 56	; w157
+wall 126 124 STARGR1  3 0  0.1 0.252525 0 56	; w158
+wall 128 127 BROWN144  47 0  0.1 0.1 0 0	; w159
+wall 129 128 BROWN144  47 0  0.1 0.1 0 0	; w160
+wall 44 130 BROWN144  20 0  0.1 0.1 0 0	; w161
+wall 131 42 STARTAN3  5 0  0.1 0.1 0 0	; w162
+wall 132 131 STARTAN3  5 0  0.1 0.1 0 0	; w163
+wall 134 133 BROWN144  13 5  0.1 0.1 0 0	; w164
+wall 135 134 BROWN144  13 5  0.1 0.1 0 0	; w165
+wall 136 135 BROWN144  13 5  0.1 0.1 0 0	; w166
+wall 137 136 BROWN144  13 5  0.1 0.1 0 0	; w167
+wall 138 137 BROWN144  13 5  0.1 0.1 0 0	; w168
+wall 139 138 BROWN144  13 5  0.1 0.1 0 0	; w169
+wall 140 139 BROWN144  13 5  0.1 0.1 0 0	; w170
+wall 133 140 BROWN144  13 5  0.1 0.1 0 0	; w171
+wall 142 141 BROWN1  53 0  0.1 0.1 0 0	; w172
+wall 144 143 BROWN1  54 0  0.1 0.1 0 0	; w173
+wall 145 144 BROWN1  53 0  0.1 0.1 0 0	; w174
+wall 147 146 BROWNGRN  71 0  0.1 0.1 0 0	; w175
+wall 149 148 BROWNGRN  60 0  0.1 0.1 0 0	; w176
+wall 151 150 BROWNGRN  71 0  0.1 0.1 0 0	; w177
+wall 153 152 BROWNGRN  55 0  0.1 0.1 0 0	; w178
+wall 127 154 STARTAN3  5 0  0.1 0.1 0 0	; w179
+wall 154 153 DOORSTOP  46 0  0.1 0.1 0 0	; w180
+wall 155 149 BROWNGRN  60 0  0.1 0.1 0 0	; w181
+wall 155 156 NUKE24  57 60  0.1 0.1 0 0	; w182
+wall 158 157 NUKE24  61 60  0.1 0.1 0 0	; w183
+wall 157 159 NUKE24  61 60  0.1 0.1 0 0	; w184
+wall 161 160 NUKE24  57 60  0.1 0.1 0 0	; w185
+wall 159 162 NUKE24  61 60  0.1 0.1 0 0	; w186
+wall 156 161 NUKE24  57 60  0.1 0.1 0 0	; w187
+wall 164 163 BROWNGRN  60 0  0.1 0.1 0 0	; w188
+wall 152 165 BROWNGRN  56 0  0.1 0.1 0 0	; w189
+wall 166 164 BROWNGRN  56 0  0.1 0.1 0 0	; w190
+wall 165 167 BROWNGRN  56 0  0.1 0.1 0 0	; w191
+wall 145 141 BROWN1  71 53  0.1 0.1 0 0	; w192
+wall 158 153 NUKE24  55 61  0.1 0.1 0 0	; w193
+wall 164 158 NUKE24  56 60  0.1 0.1 0 0	; w194
+wall 148 150 NUKE24  60 71  0.1 0.1 0 0	; w195
+wall 152 158 NUKE24  55 56  0.1 0.1 0 0	; w196
+wall 160 168 NUKE24  57 60  0.1 0.1 0 0	; w197
+wall 168 163 NUKE24  57 60  0.1 0.1 0 0	; w198
+wall 163 169 BROWNGRN  57 0  0.1 0.1 0 0	; w199
+wall 171 170 BROWNGRN  57 59  0.1 0.1 0 32	; w200
+wall 172 171 BROWNGRN  57 59  0.1 0.1 0 32	; w201
+wall 169 172 BROWNGRN  57 59  0.1 0.1 0 32	; w202
+wall 173 129 BROWN1  22 0  0.1 0.1 0 0	; w203
+wall 174 173 BROWN1  22 0  0.1 0.1 0 0	; w204
+wall 130 175 BROWN1  22 0  0.1 0.1 0 0	; w205
+wall 175 176 BROWN1  22 0  0.1 0.1 0 0	; w206
+wall 178 177 BROWN1  21 0  0.1 0.1 0 0	; w207
+wall 179 178 BROWN1  19 0  0.1 0.1 0 0	; w208
+wall 181 180 BROWN1  21 0  0.1 0.1 0 0	; w209
+wall 180 182 BROWN1  19 0  0.1 0.1 0 0	; w210
+wall 182 183 BROWN1  18 0  0.1 0.1 0 0	; w211
+wall 183 184 BROWN1  17 0  0.1 0.1 0 0	; w212
+wall 185 179 BROWN1  18 0  0.1 0.1 0 0	; w213
+wall 186 185 BROWN1  17 0  0.1 0.1 0 0	; w214
+wall 188 187 BROWN1  16 0  0.1 0.1 0 0	; w215
+wall 176 174 BROWN1  22 23  0.1 0.1 0 0	; w216
+wall 177 181 BROWN1  21 23  0.1 0.1 0 0	; w217
+wall 178 180 BROWN1  19 21  0.1 0.1 0 0	; w218
+wall 179 182 BROWN1  18 19  0.1 0.1 0 0	; w219
+wall 185 183 BROWN1  17 18  0.1 0.1 0 0	; w220
+wall 186 184 BROWN1  16 17  0.1 0.1 0 0	; w221
+wall 189 187 BROWN1  77 16  0.1 0.1 0 0	; w222
+wall 191 190 BROWN1  77 48  0.1 0.1 0 0	; w223
+wall 193 192 BROWN1  66 67  0.1 0.1 0 0	; w224
+wall 195 194 BROWN1  65 66  0.1 0.1 0 0	; w225
+wall 197 196 BROWN1  64 65  0.1 0.1 0 0	; w226
+wall 199 198 BROWN1  63 64  0.1 0.1 0 0	; w227
+wall 201 200 BROWN1  50 63  0.1 0.1 0 0	; w228
+wall 203 202 BROWN1  49 50  0.1 0.1 0 0	; w229
+wall 205 204 BROWN1  48 49  0.1 0.1 0 0	; w230
+wall 202 204 BROWN1  49 0  0.1 0.1 0 0	; w231
+wall 205 203 BROWN1  49 0  0.1 0.1 0 0	; w232
+wall 200 202 BROWN1  50 0  0.1 0.1 0 0	; w233
+wall 198 200 BROWN1  63 0  0.1 0.1 0 0	; w234
+wall 196 198 BROWN1  64 0  0.1 0.1 0 0	; w235
+wall 194 196 BROWN1  65 0  0.1 0.1 0 0	; w236
+wall 192 194 BROWN1  66 0  0.1 0.1 0 0	; w237
+wall 195 193 BROWN1  66 0  0.1 0.1 0 0	; w238
+wall 197 195 BROWN1  65 0  0.1 0.1 0 0	; w239
+wall 199 197 BROWN1  64 0  0.1 0.1 0 0	; w240
+wall 201 199 BROWN1  63 0  0.1 0.1 0 0	; w241
+wall 203 201 BROWN1  50 0  0.1 0.1 0 0	; w242
+wall 206 192 BROWN1  67 0  0.1 0.1 0 0	; w243
+wall 193 207 BROWN1  67 0  0.1 0.1 0 0	; w244
+wall 207 208 DOORSTOP  68 0  0.1 0.1 0 0	; w245
+wall 167 206 DOORSTOP  68 0  0.1 0.1 0 0	; w246
+wall 167 208 BROWN96  56 68  0.1 0.1 0 72	; w247
+wall 207 206 BROWN96  67 68  0.1 0.1 0 0	; w248
+wall 208 209 BROWNGRN  56 0  0.1 0.1 0 0	; w249
+wall 210 127 STARTAN3  5 47  0.1 0.1 0 0	; w250
+wall 211 210 STARTAN3  5 22  0.1 0.1 0 0	; w251
+wall 35 211 STARTAN3  5 20  0.1 0.1 0 0	; w252
+wall 130 211 STARTAN3  20 22  0.1 0.1 0 0	; w253
+wall 210 129 STARTAN3  47 22  0.1 0.1 0 0	; w254
+wall 212 205 SUPPORT2  48 0  0.1 0.1 4 0	; w255
+wall 191 212 BROWN1  48 0  0.1 0.1 0 0	; w256
+wall 213 190 BROWN1  48 0  0.1 0.1 0 0	; w257
+wall 204 213 SUPPORT2  48 0  0.1 0.1 4 0	; w258
+wall 214 186 SUPPORT2  16 0  0.1 0.1 4 0	; w259
+wall 189 214 BROWN1  16 0  0.1 0.1 0 0	; w260
+wall 215 188 BROWN1  16 0  0.1 0.1 0 0	; w261
+wall 184 215 SUPPORT2  16 0  0.1 0.1 4 0	; w262
+wall 162 150 NUKE24  61 60  0.1 0.1 0 0	; w263
+wall 216 147 BROWNGRN  71 0  0.1 0.1 0 0	; w264
+wall 141 216 SUPPORT2  71 0  0.1 0.1 4 0	; w265
+wall 217 145 SUPPORT2  71 0  0.1 0.1 4 0	; w266
+wall 148 217 BROWNGRN  71 0  0.1 0.1 0 0	; w267
+wall 170 218 BROWNGRN  57 0  0.1 0.1 0 0	; w268
+wall 219 170 BROWNGRN  59 0  0.1 0.1 0 0	; w269
+wall 169 219 BROWNGRN  59 58  0.1 0.1 0 0	; w270
+wall 220 132 STARTAN3  5 0  0.1 0.1 0 0	; w271
+wall 221 220 STARTAN3  5 0  0.1 0.1 0 0	; w272
+wall 222 221 STARTAN3  5 0  0.1 0.1 0 0	; w273
+wall 223 222 DOORSTOP  46 0  0.1 0.1 0 0	; w274
+wall 223 153 BROWNGRN  61 46  0.1 0.1 0 0	; w275
+wall 154 222 STARTAN3  5 46  0.1 0.1 0 0	; w276
+wall 150 223 BROWNGRN  61 0  0.1 0.1 0 0	; w277
+wall 225 224 BROWNGRN  74 0  0.1 0.1 0 0	; w278
+wall 227 226 BROWNGRN  74 0  0.1 0.1 0 0	; w279
+wall 228 227 BROWNGRN  74 0  0.1 0.1 0 0	; w280
+wall 230 229 BROWNGRN  73 0  0.1 0.1 0 0	; w281
+wall 232 231 BROWNGRN  73 0  0.1 0.1 0 0	; w282
+wall 224 233 BROWNGRN  74 0  0.1 0.1 0 0	; w283
+wall 235 234 BROWNGRN  74 0  0.1 0.1 0 0	; w284
+wall 236 235 BROWNGRN  74 0  0.1 0.1 0 0	; w285
+wall 237 236 BROWNGRN  74 0  0.1 0.1 0 0	; w286
+wall 239 238 BROWNGRN  74 0  0.1 0.1 0 0	; w287
+wall 240 239 BROWNGRN  74 0  0.1 0.1 0 0	; w288
+wall 241 240 BROWNGRN  74 0  0.1 0.1 0 0	; w289
+wall 242 228 BROWNGRN  72 0  0.1 0.1 0 0	; w290
+wall 229 242 BROWNGRN  72 0  0.1 0.1 0 0	; w291
+wall 243 237 BROWNGRN  72 0  0.1 0.1 0 0	; w292
+wall 234 243 BROWNGRN  72 0  0.1 0.1 0 0	; w293
+wall 244 232 BROWNGRN  72 0  0.1 0.1 0 0	; w294
+wall 233 244 BROWNGRN  72 0  0.1 0.1 0 0	; w295
+wall 245 241 BROWNGRN  72 0  0.1 0.1 0 0	; w296
+wall 238 245 BROWNGRN  72 0  0.1 0.1 0 0	; w297
+wall 246 245 BRNBIGL  72 72  0.1 0.1 0 0	; w298
+wall 247 246 BRNBIGC  72 72  0.1 0.1 0 0	; w299
+wall 242 247 BRNBIGR  72 72  0.1 0.1 0 0	; w300
+wall 243 248 BRNBIGR  72 72  0.1 0.1 0 0	; w301
+wall 249 244 BRNBIGL  72 72  0.1 0.1 0 0	; w302
+wall 248 249 BRNBIGC  72 72  0.1 0.1 0 0	; w303
+wall 251 250 BROWNGRN  74 0  0.1 0.1 0 0	; w304
+wall 253 252 BROWNGRN  74 0  0.1 0.1 0 0	; w305
+wall 254 251 LITE3  78 0  0.260416 0.231481 0 0	; w306
+wall 252 255 LITE3  78 0  0.260416 0.231481 0 0	; w307
+wall 232 229 BROWNGRN  72 73  0.1 0.1 0 0	; w308
+wall 241 234 BROWNGRN  72 74  0.1 0.1 0 0	; w309
+wall 209 166 BROWNGRN  56 75  0.1 0.1 0 0	; w310
+wall 226 253 BROWNGRN  74 0  0.1 0.1 0 0	; w311
+wall 250 225 BROWNGRN  74 0  0.1 0.1 0 0	; w312
+wall 228 238 BROWNGRN  72 74  0.1 0.1 0 0	; w313
+wall 237 233 BROWNGRN  72 74  0.1 0.1 0 0	; w314
+wall 251 252 BROWNGRN  78 74  0.1 0.1 0 0	; w315
+wall 256 254 STARTAN1  78 0  0.1 0.1 0 0	; w316
+wall 255 257 STARTAN1  78 0  0.1 0.1 0 0	; w317
+wall 257 258 EXITDOOR  80 0  0.1 0.308642 88 0	; w318
+wall 259 256 EXITDOOR  80 0  0.1 0.308642 64 0	; w319
+wall 260 259 DOORTRAK  81 0  0.1 0.1 0 0	; w320
+wall 261 260 EXITDOOR  84 0  0.1 0.308642 88 0	; w321
+wall 263 262 EXITDOOR  84 0  0.1 0.308642 64 0	; w322
+wall 258 263 DOORTRAK  81 0  0.1 0.1 0 0	; w323
+wall 260 263 EXITDOOR  84 81  0.260417 0.308642 0 0	; w324
+wall 258 259 EXITDOOR  80 81  0.260417 0.308642 0 0	; w325
+wall 264 261 STARTAN1  82 0  0.1 0.1 0 0	; w326
+wall 262 265 STARTAN1  82 0  0.1 0.1 0 0	; w327
+wall 266 264 STARTAN1  82 0  0.1 0.1 0 0	; w328
+wall 268 267 STARTAN1  82 0  0.1 0.1 0 0	; w329
+wall 269 268 SW1STRTN  82 0  0.260417 0.198413 0 0.214286	; w330
+wall 265 269 STARTAN1  82 0  0.1 0.1 0 0	; w331
+wall 267 266 STARTAN1  82 0  0.1 0.1 0 0	; w332
+wall 261 262 STARTAN1  82 84  0.1 0.1 0 16	; w333
+wall 209 270 BROWNGRN  75 0  0.1 0.1 0 0	; w334
+wall 271 166 BROWNGRN  75 0  0.1 0.1 0 0	; w335
+wall 272 230 BROWNGRN  73 0  0.1 0.1 0 0	; w336
+wall 270 272 DOORTRAK  76 0  0.1 0.1 0 0	; w337
+wall 273 271 DOORTRAK  76 0  0.1 0.1 0 0	; w338
+wall 231 273 BROWNGRN  73 0  0.1 0.1 0 0	; w339
+wall 270 271 BIGDOOR4  75 76  0.130208 0.308642 0 0.333333	; w340
+wall 273 272 BIGDOOR4  73 76  0.130208 0.308642 0 0.333333	; w341
+wall 275 274 EXITSIGN  78 79  0.520834 1.38889 0 1.5	; w342
+wall 277 276 EXITSIGN  78 79  0.520834 1.38889 0 1.5	; w343
+wall 274 277 EXITSIGN  78 79  0.1 0.1 32 0	; w344
+wall 276 275 EXITSIGN  78 79  0.1 0.1 32 0	; w345
+wall 257 256 STARTAN1  78 80  0.1 0.1 0 0	; w346
+wall 279 278 EXITSIGN  82 83  0.520834 1.38889 0 1.5	; w347
+wall 281 280 EXITSIGN  82 83  0.520834 1.38889 0 1.5	; w348
+wall 278 281 EXITSIGN  82 83  0.1 0.1 32 0	; w349
+wall 280 279 EXITSIGN  82 83  0.1 0.1 32 0	; w350
+wall 146 151 BROWNGRN  71 0  0.1 0.1 0 0	; w351
+wall 283 282 TEKWALL1  29 32  0.1 0.925926 8 0	; w352
+wall 284 283 TEKWALL1  29 32  0.1 0.925926 8 0	; w353
+wall 285 284 TEKWALL1  29 32  0.1 0.925926 8 0	; w354
+wall 286 285 TEKWALL1  29 32  0.1 0.925926 8 0	; w355
+wall 287 286 TEKWALL1  29 32  0.1 0.925926 8 0	; w356
+wall 288 287 TEKWALL1  29 32  0.1 0.925926 8 0	; w357
+wall 289 288 TEKWALL1  29 32  0.1 0.925926 8 0	; w358
+wall 282 289 TEKWALL1  29 32  0.1 0.925926 8 0	; w359
+wall 291 290 LITE3  1 0  0.1 0.396825 0 -0.571428	; w360
+wall 292 291 COMPUTE2  1 0  0.1 0.396825 0 -0.571428	; w361
+wall 294 293 LITE3  6 0  0.1 0.396825 0 -0.571428	; w362
+wall 296 295 COMPUTE2  1 0  0.1 0.396825 0 -0.571428	; w363
+wall 297 296 LITE3  1 0  0.1 0.1 0 32	; w364
+wall 299 298 LITE3  6 0  0.1 0.396825 0 -0.571428	; w365
+wall 301 300 LITE3  1 0  0.1 0.396825 0 -0.571428	; w366
+wall 302 301 COMPUTE2  1 0  0.1 0.396825 0 -0.571428	; w367
+wall 303 302 LITE3  1 0  0.1 0.396825 0 -0.571428	; w368
+wall 295 303 LITE3  1 0  0.1 0.396825 0 -0.571428	; w369
+wall 300 292 LITE3  1 0  0.1 0.396825 0 -0.571428	; w370
+wall 304 290 COMPSPAN  7 1  0.1 0.1 0 0	; w371
+wall 305 304 COMPSPAN  7 1  0.1 0.1 0 0	; w372
+wall 297 305 COMPSPAN  7 1  0.1 0.1 0 0	; w373
+wall 306 299 COMPUTE2  6 0  0.1 0.396825 0 -0.571428	; w374
+wall 307 306 LITE3  6 0  0.1 0.396825 0 -0.571428	; w375
+wall 308 307 LITE3  6 0  0.1 0.396825 0 -0.571428	; w376
+wall 293 308 COMPUTE2  6 0  0.1 0.396825 0 -0.571428	; w377
+wall 309 298 COMPSPAN  7 6  0.1 0.1 0 0	; w378
+wall 294 309 COMPSPAN  7 6  0.1 0.1 0 0	; w379
+wall 311 310 STARGR1  7 0  0.1 0.1 0 32	; w380
+wall 312 142 BROWN1  54 0  0.1 0.1 0 0	; w381
+wall 143 313 SUPPORT2  54 0  0.14 0.28 0 32	; w382
+wall 310 312 SUPPORT2  54 0  0.14 0.28 0 32	; w383
+wall 126 125 STARGR1  7 3  0.1 0.1 0 32	; w384
+wall 310 313 STARGR1  7 54  0.1 0.1 0 32	; w385
+wall 315 314 STARGR1  9 10  0.1 0.1 0 0	; w386
+wall 316 315 STARGR1  9 10  0.1 0.1 0 0	; w387
+wall 317 316 STARGR1  9 10  0.1 0.1 0 0	; w388
+wall 314 317 STARGR1  9 10  0.1 0.1 0 0	; w389
+wall 318 294 SUPPORT2  7 0  0.1 0.1 0 0	; w390
+wall 125 318 STARGR1  7 0  0.1 0.1 0 32	; w391
+wall 319 126 STARGR1  7 0  0.1 0.1 0 32	; w392
+wall 290 319 SUPPORT2  7 0  0.1 0.1 0 0	; w393
+wall 320 297 SUPPORT2  7 0  0.1 0.1 0 0	; w394
+wall 313 320 STARGR1  7 0  0.1 0.1 0 32	; w395
+wall 321 311 STARGR1  7 0  0.1 0.1 0 32	; w396
+wall 298 321 SUPPORT2  7 0  0.1 0.1 0 0	; w397
+wall 323 322 COMPTILE  7 0  0.1 0.1 0 0	; w398
+wall 324 323 COMPTILE  7 0  0.1 0.1 0 0	; w399
+wall 325 324 COMPTILE  7 0  0.1 0.1 0 0	; w400
+wall 326 325 COMPTILE  7 0  0.1 0.1 0 0	; w401
+wall 327 326 SUPPORT2  7 0  0.1 0.1 6 0	; w402
+wall 328 327 COMPTILE  8 0  0.1 0.1 0 0	; w403
+wall 329 328 COMPTILE  51 0  0.1 0.1 96 0	; w404
+wall 330 329 COMPTILE  52 0  0.1 0.1 0 0	; w405
+wall 331 330 COMPTILE  52 0  0.1 0.1 0 0	; w406
+wall 332 331 COMPTILE  52 0  0.1 0.1 0 0	; w407
+wall 333 332 COMPTILE  51 0  0.1 0.1 0 0	; w408
+wall 334 333 COMPTILE  8 0  0.1 0.1 96 0	; w409
+wall 335 334 SUPPORT2  7 0  0.1 0.1 6 0	; w410
+wall 322 335 COMPTILE  7 0  0.1 0.1 0 0	; w411
+wall 334 327 STEP1  7 8  0.1 0.1 0 0	; w412
+wall 333 328 STEP1  8 51  0.1 0.1 0 0	; w413
+wall 332 329 STEP1  51 52  0.1 0.1 0 0	; w414
+wall 337 336 STARGR1  11 12  0.1 0.1 0 0	; w415
+wall 338 337 STARGR1  11 12  0.1 0.1 0 0	; w416
+wall 339 338 STARGR1  11 12  0.1 0.1 0 0	; w417
+wall 336 339 STARGR1  11 12  0.1 0.1 0 0	; w418
+wall 341 340 STARGR1  7 11  0.1 0.1 0 0	; w419
+wall 342 341 STARGR1  7 11  0.1 0.1 0 0	; w420
+wall 343 342 STARGR1  7 11  0.1 0.1 0 0	; w421
+wall 340 343 STARGR1  7 11  0.1 0.1 0 0	; w422
+wall 345 344 STARGR1  7 9  0.1 0.1 0 0	; w423
+wall 346 345 STARGR1  7 9  0.1 0.1 0 0	; w424
+wall 347 346 STARGR1  7 9  0.1 0.1 0 0	; w425
+wall 344 347 STARGR1  7 9  0.1 0.1 0 0	; w426
+wall 144 142 BROWN1  53 54  0.1 0.1 0 0	; w427
+wall 349 348 BROWNGRN  58 0  0.1 0.1 0 0	; w428
+wall 351 350 BROWNGRN  69 0  0.1 0.1 0 0	; w429
+wall 353 352 BROWNGRN  58 0  0.1 0.1 0 0	; w430
+wall 352 349 BROWNGRN  58 69  0.1 0.1 0 0	; w431
+wall 354 219 SUPPORT2  58 0  0.1 0.1 0 0	; w432
+wall 355 354 BROWNGRN  58 0  0.1 0.1 0 0	; w433
+wall 356 353 BROWNGRN  58 0  0.1 0.1 0 0	; w434
+wall 169 356 SUPPORT2  58 0  0.1 0.1 0 0	; w435
+wall 357 349 SUPPORT2  69 0  0.1 0.1 0 0	; w436
+wall 350 357 BROWNGRN  69 0  0.1 0.1 0 0	; w437
+wall 358 351 BROWNGRN  69 0  0.1 0.1 0 0	; w438
+wall 352 358 SUPPORT2  69 0  0.1 0.1 0 0	; w439
+wall 359 191 SUPPORT2  77 0  0.1 0.1 0 16	; w440
+wall 360 359 BROWN1  77 0  0.1 0.1 0 16	; w441
+wall 187 360 SUPPORT2  77 0  0.1 0.1 0 16	; w442
+wall 361 189 SUPPORT2  77 0  0.1 0.1 0 16	; w443
+wall 362 361 BROWN1  77 0  0.1 0.1 0 16	; w444
+wall 190 362 SUPPORT2  77 0  0.1 0.1 0 16	; w445
+wall 363 174 SUPPORT2  23 0  0.1 0.1 0 0	; w446
+wall 177 363 BROWN1  23 0  0.1 0.1 0 0	; w447
+wall 364 181 BROWN1  23 0  0.1 0.1 0 0	; w448
+wall 176 364 SUPPORT2  23 0  0.1 0.1 0 0	; w449
+wall 365 355 BROWNGRN  58 0  0.1 0.1 0 0	; w450
+wall 367 366 BROWNGRN  62 0  0.1 0.1 0 0	; w451
+wall 366 368 BROWNGRN  62 0  0.1 0.1 0 0	; w452
+wall 370 369 BROWNGRN  62 0  0.1 0.1 0 0	; w453
+wall 371 370 BROWNGRN  62 0  0.1 0.1 0 0	; w454
+wall 372 371 BROWNGRN  62 0  0.1 0.1 0 0	; w455
+wall 373 372 BROWNGRN  62 0  0.1 0.1 0 0	; w456
+wall 368 374 BROWNGRN  62 0  0.1 0.1 0 0	; w457
+wall 374 375 BROWNGRN  62 0  0.1 0.1 0 0	; w458
+wall 375 376 BROWNGRN  62 0  0.1 0.1 0 0	; w459
+wall 377 373 BROWNGRN  62 0  0.1 0.1 0 0	; w460
+wall 376 378 BROWNGRN  62 0  0.1 0.1 0 0	; w461
+wall 379 377 BROWNGRN  62 0  0.1 0.1 0 0	; w462
+wall 378 380 BROWNGRN  62 0  0.1 0.1 0 0	; w463
+wall 218 155 BROWNGRN  57 62  0.1 0.1 0 0	; w464
+wall 348 365 BROWNGRN  58 70  0.1 0.1 0 0	; w465
+wall 367 369 BROWNGRN  70 62  0.1 0.1 0 0	; w466
+wall 381 155 SUPPORT2  62 0  0.1 0.1 4 0	; w467
+wall 380 381 BROWNGRN  62 0  0.1 0.1 0 0	; w468
+wall 382 379 BROWNGRN  62 0  0.1 0.1 0 0	; w469
+wall 218 382 SUPPORT2  62 0  0.1 0.1 4 0	; w470
+wall 383 365 SUPPORT2  70 0  0.1 0.1 4 0	; w471
+wall 369 383 BROWNGRN  70 0  0.1 0.1 0 0	; w472
+wall 384 367 BROWNGRN  70 0  0.1 0.1 0 0	; w473
+wall 348 384 SUPPORT2  70 0  0.1 0.1 4 0	; w474
+wall 387 385 Sky  1 85  0.1 0.1 0 0	; w475
+wall 388 387 Sky  1 85  0.1 0.1 0 0	; w476
+wall 386 388 Sky  1 85  0.1 0.1 0 0	; w477
+wall 385 386 Sky  1 85  0.1 0.1 0 0	; w478

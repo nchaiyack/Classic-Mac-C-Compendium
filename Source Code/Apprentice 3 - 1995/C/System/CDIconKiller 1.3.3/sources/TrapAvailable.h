@@ -1,1 +1,1 @@
-pascal Boolean TrapAvailable(short theTrap);
+pascal Boolean TrapAvailable(short theTrap);

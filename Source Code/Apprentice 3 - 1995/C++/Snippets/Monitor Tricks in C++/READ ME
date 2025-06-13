@@ -1,1 +1,25 @@
-Monitor Tricks in C++ v1.0 by Kenneth WorleyHi! This archive contains a C++ class designed to represent a graphics device (monitor). The idea is to create one object of this class for each monitor connected to the Mac. The object then allows you to easily change the monitor's bit depth or color/gray mode. It also allows you to fade the monitor to black or any other color using a "clut fade" and to restore it afterward. If there is more than one monitor, they can be faded independently and more or less asynchronously. In other words, once you start the fade, you are not restricted from fading another monitor beginning at the same time or sometime during the fade of the first monitor.The archive also includes a Metrowerks CodeWarrior project which builds a "dashboard" application to demonstrate the class. The application resembles a regular C application except that it creates objects of type MONITOR to represent monitors connected to the Mac.Code for fading in the MONITOR class is derived from the public domain clut_fade code originally put together by Jonas Englund with modifications by Mark Womack, Macneil Shonle, and I think Ken Long.I don't have Englund's address, but the others are:AOL MarkWomack, MacneilS, and KenLong, orinternet  MarkWomack@aol.com, MacneilS@aol.com and KenLong@aol.comYou can contact me at AOL KNEworley or KNEworley@aol.com. I welcome any questions, comments, or observations. Also, I work as a freelance programmer. Send some work my way and I'll be forever grateful!Also, feel free to upload this archive to other systems. Please keep the project, source, and readme files together.The code and project are public domain.Enjoy!Smile!Ken------------------------------------------------------Kenneth WorleyKNEworley@aol.com          Development with a smile :)------------------------------------------------------
+Monitor Tricks in C++ v1.0 by Kenneth Worley
+
+Hi! This archive contains a C++ class designed to represent a graphics device (monitor). The idea is to create one object of this class for each monitor connected to the Mac. The object then allows you to easily change the monitor's bit depth or color/gray mode. It also allows you to fade the monitor to black or any other color using a "clut fade" and to restore it afterward. If there is more than one monitor, they can be faded independently and more or less asynchronously. In other words, once you start the fade, you are not restricted from fading another monitor beginning at the same time or sometime during the fade of the first monitor.
+
+The archive also includes a Metrowerks CodeWarrior project which builds a "dashboard" application to demonstrate the class. The application resembles a regular C application except that it creates objects of type MONITOR to represent monitors connected to the Mac.
+
+Code for fading in the MONITOR class is derived from the public domain clut_fade code originally put together by Jonas Englund with modifications by Mark Womack, Macneil Shonle, and I think Ken Long.
+
+I don't have Englund's address, but the others are:
+AOL MarkWomack, MacneilS, and KenLong, or
+internet  MarkWomack@aol.com, MacneilS@aol.com and KenLong@aol.com
+
+You can contact me at AOL KNEworley or KNEworley@aol.com. I welcome any questions, comments, or observations. Also, I work as a freelance programmer. Send some work my way and I'll be forever grateful!
+
+Also, feel free to upload this archive to other systems. Please keep the project, source, and readme files together.
+
+The code and project are public domain.
+
+Enjoy!
+Smile!
+Ken
+------------------------------------------------------
+Kenneth Worley
+KNEworley@aol.com          Development with a smile :)
+------------------------------------------------------

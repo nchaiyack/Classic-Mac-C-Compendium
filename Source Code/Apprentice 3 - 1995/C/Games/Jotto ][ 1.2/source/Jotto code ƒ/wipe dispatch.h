@@ -1,1 +1,1 @@
-void DoTheWipe(GrafPtr sourceGrafPtr, GrafPtr destGrafPtr);
+void DoTheWipe(GrafPtr sourceGrafPtr, GrafPtr destGrafPtr);

@@ -1,1 +1,67 @@
-===========================================================================Number 3 - Transcript File FormatRevisions:	Sept. 6, 1994nShell(tm) Technical Note===========================================================================Shell transcripts may be saved to disk using the "Save" or "Save As..." options of the "File" menu.  This Technical Note documents the format of such transcript files.Type and Creator================The Type for a transcript file is "NSHS" and its Creator is "NSHA".General Format==============All information is stored within the data fork of the file. The general structure for a transcript file is: position  data --------  ----    0      four byte FILE_VERSION    4      file header record (format determined by file version)    .      data (as specified by header record)    .      data (as specified by header record)File Version============The FILE_VERSION is used to identify a specific version of the shell transcript file.  An ascii-long is used to make a better signature.  The current revision level is:#define FILE_VERSION '0000'File Header Record==================The file header record is written into the transcript file following the file version.  The format of this record will change with FILE_VERSION.  For version '0000', the file header is defined as: typedef struct {  long  text_start;    // file position of historical text  long  text_count;    // size of historical text (in chars)  long  vars_start;    // file position of first variable record  long  vars_count;    // number of variable records } t_file_header;Text Data=========The text portion of the transcript is stored as an unformatted string of characters.  Starting at "text_start", "text_count" of these characters are written into the transcript file.Variable Data=============The structure used to hold variables is shown below.  Starting at "vars_start", "vars_count" of these records are written into the transcript file. typedef struct {  Str32  name;  Str255 value; } t_file_variable;
+===========================================================================
+
+Number 3 - Transcript File Format
+
+Revisions:	Sept. 6, 1994
+
+nShell(tm) Technical Note
+
+===========================================================================
+
+Shell transcripts may be saved to disk using the "Save" or "Save As..." options of the "File" menu.  This Technical Note documents the format of such transcript files.
+
+Type and Creator
+================
+
+The Type for a transcript file is "NSHS" and its Creator is "NSHA".
+
+General Format
+==============
+
+All information is stored within the data fork of the file. The general structure for a transcript file is:
+
+ position  data
+ --------  ----
+    0      four byte FILE_VERSION
+    4      file header record (format determined by file version)
+    .      data (as specified by header record)
+    .      data (as specified by header record)
+
+File Version
+============
+
+The FILE_VERSION is used to identify a specific version of the shell transcript file.  An ascii-long is used to make a better signature.  The current revision level is:
+
+#define FILE_VERSION '0000'
+
+File Header Record
+==================
+
+The file header record is written into the transcript file following the file version.  The format of this record will change with FILE_VERSION.  For version '0000', the file header is defined as:
+
+ typedef struct {
+
+  long  text_start;    // file position of historical text
+  long  text_count;    // size of historical text (in chars)
+  long  vars_start;    // file position of first variable record
+  long  vars_count;    // number of variable records
+
+ } t_file_header;
+
+Text Data
+=========
+
+The text portion of the transcript is stored as an unformatted string of characters.  Starting at "text_start", "text_count" of these characters are written into the transcript file.
+
+Variable Data
+=============
+
+The structure used to hold variables is shown below.  Starting at "vars_start", "vars_count" of these records are written into the transcript file.
+
+ typedef struct {
+
+  Str32  name;
+  Str255 value;
+
+ } t_file_variable;
+

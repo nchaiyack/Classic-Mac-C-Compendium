@@ -1,1 +1,54 @@
-=head1 PAP socketsPAP, the AppleTalk Printer Access Protocol is a protocol which is almost exclusively used to access networked printers. The current implementation of PAP in C<GUSI> is quite narrow in that it only implements the workstation side ofPAP and only in communication to the currently selected LaserWriter. It is also doomed, as it depends on Apple system resources that probably are not supportedanymore in Apple's Quickdraw GX printing architecture, but if there is enoughinterest, the current implementation might be replaced some time.=head2 Routines specific to PAP socketsWhile PAP sockets behave in most respects likeother sockets, they can currently not be created with the C<socket()> call, but areopened with C<open()>.C<int open("Dev:Printer", int flags)> opens a connection to the last selected LaserWriter. C<flags> is currently ignored. Communication with LaserWriters is somewhat strange. The three main uses of PAPsockets are probably interactive sessions, queries, and downloads, which will be discussed in the following sections. As in all other socket families, C<GUSI> doesno filtering of the transmitted data, which means that lines sent by the LaserWriter will be separated by linefeeds (ASCII 10) rather than carriage returns (ASCII 13), which are used for this purpose in most other Mac contexts. For data you I<send>, it doesn't matter which one you use.You start an I<interactive session> by sending a line C<"executive"> after opening the socket. This will put lots of LaserWriters (certainly all manufactured by Apple, but probably not a Linotronic) into interactive mode. If you want to, youcan now play terminal emulator and use your LaserWriter as an expensive desk calculator.A I<query> is some PostScript code you send to a LaserWriter that you expect to be answered. This is quite straightforward, except that LaserWriters don't seemto answer until you have indicated to them that no more data from you will be coming.Therefore, you have to call C<shutdown(s,1)> to shut the socket down for writing afteryou have written your query and before you try to read the answer. The followingcode demonstrates how to send a query to the printer:    int s = open("Dev:Printer", O_RDWR);    write(s, "FontDirectory /Gorilla-SemiBold exch known...", len);    /* We won't write any more */    shutdown(s, 1);       while(read(s, buf, len) > 0)       do_something();    close(s);If you want to simply I<download> a file, you can also ignore the LaserWriter's response and simply close the socket after downloading.
+=head1 PAP sockets
+
+PAP, the AppleTalk Printer Access Protocol is a protocol which is 
+almost exclusively used to access networked printers. The current implementation of 
+PAP in C<GUSI> is quite narrow in that it only implements the workstation side of
+PAP and only in communication to the currently selected LaserWriter. It is also 
+doomed, as it depends on Apple system resources that probably are not supported
+anymore in Apple's Quickdraw GX printing architecture, but if there is enough
+interest, the current implementation might be replaced some time.
+
+=head2 Routines specific to PAP sockets
+
+While PAP sockets behave in most respects like
+other sockets, they can currently not be created with the C<socket()> call, but are
+opened with C<open()>.
+
+C<int open("Dev:Printer", int flags)> opens a connection to the last selected 
+LaserWriter. C<flags> is currently ignored. 
+
+Communication with LaserWriters is somewhat strange. The three main uses of PAP
+sockets are probably interactive sessions, queries, and downloads, which will be 
+discussed in the following sections. As in all other socket families, C<GUSI> does
+no filtering of the transmitted data, which means that lines sent by the LaserWriter 
+will be separated by linefeeds (ASCII 10) rather than carriage returns (ASCII 13), 
+which are used for this purpose in most other Mac contexts. For data you I<send>, it 
+doesn't matter which one you use.
+
+You start an I<interactive session> by sending a line C<"executive"> after 
+opening the socket. This will put lots of LaserWriters (certainly all manufactured 
+by Apple, but probably not a Linotronic) into interactive mode. If you want to, you
+can now play terminal emulator and use your LaserWriter as an expensive desk calculator.
+
+A I<query> is some PostScript code you send to a LaserWriter that you expect 
+to be answered. This is quite straightforward, except that LaserWriters don't seem
+to answer until you have indicated to them that no more data from you will be coming.
+Therefore, you have to call C<shutdown(s,1)> to shut the socket down for writing after
+you have written your query and before you try to read the answer. The following
+code demonstrates how to send a query to the printer:
+
+
+    int s = open("Dev:Printer", O_RDWR);
+
+    write(s, "FontDirectory /Gorilla-SemiBold exch known...", len);
+
+    /* We won't write any more */
+    shutdown(s, 1);   
+
+    while(read(s, buf, len) > 0)
+       do_something();
+
+    close(s);
+
+If you want to simply I<download> a file, you can also ignore the LaserWriter's 
+response and simply close the socket after downloading.

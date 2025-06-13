@@ -1,1 +1,8 @@
-#!/bin/csh#	GNU C++ compilation/usr/local/bin/gcc -c -O -pipe -W -Wall -Wpointer-arith -Wenum-clash -Woverloaded-virtual \-Wstrict-prototypes -Wmissing-prototypes # -Wredundant-decls \-finline-functions  -fforce-mem # -funsigned-char # -fshort-enums \-fforce-addr -fstrict-prototype -felide-constructors # -fexternal-templates \-fsave-memoized -fomit-frame-pointer -freg-struct-return \-I. -I{$HOME}/croot/c++-include/ -I- $*
+#!/bin/csh
+#	GNU C++ compilation
+/usr/local/bin/gcc -c -O -pipe -W -Wall -Wpointer-arith -Wenum-clash -Woverloaded-virtual \
+-Wstrict-prototypes -Wmissing-prototypes # -Wredundant-decls \
+-finline-functions  -fforce-mem # -funsigned-char # -fshort-enums \
+-fforce-addr -fstrict-prototype -felide-constructors # -fexternal-templates \
+-fsave-memoized -fomit-frame-pointer -freg-struct-return \
+-I. -I{$HOME}/croot/c++-include/ -I- $*

@@ -1,1 +1,7 @@
-In order to print your Braille documents on some printers, you will need to move the Braille font file into your fonts folder (under system 7) or install it in your System file with Font/DA Mover (under system 6).  If you don't wish to print, you don't have to do this.  The Brailler application itself contains the Braille font it needs; it never uses the Braille font file.Cheers.Mark Pilgrimf8dy@netaxs.comOctober 28, 1994
+In order to print your Braille documents on some printers, you will need to move the Braille font file into your fonts folder (under system 7) or install it in your System file with Font/DA Mover (under system 6).  If you don't wish to print, you don't have to do this.  The Brailler application itself contains the Braille font it needs; it never uses the Braille font file.
+
+Cheers.
+
+Mark Pilgrim
+f8dy@netaxs.com
+October 28, 1994

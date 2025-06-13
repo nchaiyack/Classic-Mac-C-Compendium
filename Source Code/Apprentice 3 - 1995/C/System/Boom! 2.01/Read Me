@@ -1,1 +1,29 @@
-Extension:															03July94	 Boom! (4th of July)About:	You know that little 'star' that gets drawn in the corner of a Mac Window when a window is closed, in the GoAway Box ??  	Now that we have PowerPC's, wouldn't it be cool to have a little more definitive feedback than that little blink ?	This Hack was written start-to-finish  at MacHack 94 using the MetroWerks compilers. (well, I couldn't resist a few touch-ups afterwards, but you get the idea...)	You can see the animation by holding the shift key down, otherwise, nothing is touched (one test overhead, incentive to actually _install_ this thing!)	bh, noEsis sfwr construction	bhamlin@netcom.com	ALink: D0781  #--------------------------------v2.01  - fixed moving snd handle
+
+Extension:															03July94
+	 Boom! (4th of July)
+
+
+About:
+
+	You know that little 'star' that gets drawn in the corner 
+of a Mac Window when a window is closed, in the GoAway Box ??  
+
+	Now that we have PowerPC's, wouldn't it be cool to have a 
+little more definitive feedback than that little blink ?
+
+	This Hack was written start-to-finish  at MacHack 94 using 
+the MetroWerks compilers. (well, I couldn't resist a few touch-
+ups afterwards, but you get the idea...)
+
+	You can see the animation by holding the shift key down, 
+otherwise, nothing is touched (one test overhead, incentive to 
+actually _install_ this thing!)
+
+
+	bh, noEsis sfwr construction
+
+	bhamlin@netcom.com
+	ALink: D0781  
+
+#--------------------------------
+v2.01  - fixed moving snd handle

@@ -1,1 +1,114 @@
-eye 13 (2 * 13) (1.5 * 13)at 0 0 0up 0 1 0fov 25ambient mono 0.15background light_sky_bluelight spot 13 13 (13 / 4) -13 -13 -(13 /4) mono 0.8 60 1.5light spot (13 / 4) 13 13 -(13 / 4) -13 -13 0.6 0.6 0.8 60 1.5% add more if needed...quadranglesurface plastic 0.1 0.4 0.1 mono 0.5 0.5transform scale 100transform translate -13 -13 -13data 1 0 1 1 0 -1 -1 0 -1 -1 0 1quadranglesurface plastic 0.1 0.1 0.6 mono 0.6 0.6transform scale 100transform translate -13 -13 -13data 0 1 1 0 -1 1 0 -1 -1 0 1 -1quadranglesurface plastic 0.6 0.1 0.1 mono 0.7 0.7transform scale 100transform translate -13 -13 -13data 1 1 0 -1 1 0 -1 -1 0 1 -1 0cylinder open surface matte white data -0.158462 0.534615 1.33769 -0.656154 0.534615 0.0284615 0.3cylinder open surface matte white data -0.158462 0.534615 1.33769 0.579231 1.29077 1.53462 0.3cylinder open surface matte white data -0.158462 0.534615 1.33769 0.796923 -0.443846 1.59231 0.3cylinder open surface matte white data -1.19615 -0.45 3.20923 -1.14692 0.3 3.97769 0.3cylinder open surface matte white data -1.25 0.534615 2.21538 -0.158462 0.534615 1.33769 0.3cylinder open surface matte white data -1.25 0.534615 2.21538 -1.19615 -0.45 3.20923 0.3cylinder open surface matte white data -1.25 0.534615 2.21538 -1.20846 1.29077 2.97769 0.3cylinder open surface matte white data -1.34077 0.534615 -3.95615 -0.339231 0.534615 -4.32077 0.3cylinder open surface matte white data -1.34077 0.534615 -3.95615 -1.58231 0.534615 -2.58615 0.3cylinder open surface matte white data -2.05538 0.534615 0.0976923 -0.656154 0.534615 0.0284615 0.3cylinder open surface matte white data -2.05538 0.534615 0.0976923 -1.74769 -0.420769 -0.286923 0.3cylinder open surface matte white data -2.05538 0.534615 0.0976923 -2.42154 0.534615 1.44923 0.3cylinder open surface matte white data -2.40692 0.534615 -4.85 -1.34077 0.534615 -3.95615 0.3cylinder open surface matte white data -2.42154 0.534615 1.44923 -1.25 0.534615 2.21538 0.3cylinder open surface matte white data -2.42154 0.534615 1.44923 -3.13462 1.29077 1.72385 0.3cylinder open surface matte white data -2.42154 0.534615 1.44923 -3.35077 -0.45 1.80692 0.3cylinder open surface matte white data -2.89462 0.534615 -2.12462 -1.58231 0.534615 -2.58615 0.3cylinder open surface matte white data -2.89462 0.534615 -2.12462 -3.12769 0.534615 -0.802308 0.3cylinder open surface matte white data -2.89462 0.534615 -2.12462 -3.95308 0.534615 -3.01308 0.3cylinder open surface matte white data -2.89462 0.534615 -2.12462 -3.95308 0.534615 -3.01308 0.3cylinder open surface matte white data -3.12769 0.534615 -0.802308 -2.05538 0.534615 0.0976923 0.3cylinder open surface matte white data -3.12769 0.534615 -0.802308 -4.53923 0.534615 -0.616154 0.3cylinder open surface matte white data -3.35077 -0.45 1.80692 -4.05462 0.313846 2.08385 0.3cylinder open surface matte white data -3.71385 0.534615 -4.37462 -2.40692 0.534615 -4.85 0.3cylinder open surface matte white data -3.71385 0.534615 -4.37462 -4.77923 0.534615 -5.26846 0.3cylinder open surface matte white data -3.95308 0.534615 -3.01308 -3.71385 0.534615 -4.37462 0.3cylinder open surface matte white data -3.95308 0.534615 -3.01308 -4.98692 0.534615 -2.06231 0.3cylinder open surface matte white data -4.53923 0.534615 -0.616154 -4.98692 0.534615 -2.06231 0.3cylinder open surface matte white data -4.53923 0.534615 -0.616154 -5.11846 0.534615 0.249231 0.3cylinder open surface matte white data -4.77923 0.534615 -5.26846 -4.59231 0.534615 -6.32692 0.3cylinder open surface matte white data -4.77923 0.534615 -5.26846 -5.78846 0.534615 -4.90077 0.3cylinder open surface matte white data 0.796923 -0.443846 1.59231 0.4 -1.42923 1.50692 0.3cylinder open surface matte white data 0.796923 -0.443846 1.59231 1.16538 -0.293077 2.58077 0.3cylinder open surface matte white data 0.796923 -0.443846 1.59231 1.74615 -0.301538 0.759231 0.3cylinder open surface matte white data 1.74615 -0.301538 0.759231 3.03231 -0.11 -0.334615 0.3cylinder open surface matte white data 3.03231 -0.11 -0.334615 2.44385 -0.921538 -1.85385 0.3cylinder open surface matte white data 3.03231 -0.11 -0.334615 3.30846 1.65923 -0.660769 0.3cylinder open surface matte white data 3.03231 -0.11 -0.334615 4.49154 -0.827692 0.162308 0.3cylinder open surface matte white data 4.49154 -0.827692 0.162308 5.96923 -1.58077 0.534615 0.3cylinder open surface matte white data 5.96923 -1.58077 0.534615 5.78385 -3.37538 0.294615 0.3cylinder open surface matte white data 5.96923 -1.58077 0.534615 6.43923 -1.26923 2.13846 0.3cylinder open surface matte white data 5.96923 -1.58077 0.534615 7.24 -0.943846 -0.602308 0.3cylinder open surface matte white data 6.43923 -1.26923 2.13846 6.90923 -0.956923 3.74231 0.3cylinder open surface matte white data 6.90923 -0.956923 3.74231 5.56923 -0.0730769 4.59923 0.3cylinder open surface matte white data 6.90923 -0.956923 3.74231 7.24 -2.53077 4.59308 0.3cylinder open surface matte white data 6.90923 -0.956923 3.74231 8.41385 0.0676923 3.75308 0.3sphere surface matte blue data -0.339231 0.534615 -4.32077 0.375sphere surface matte blue data -1.14692 0.3 3.97769 0.375sphere surface matte blue data -1.20846 1.29077 2.97769 0.375sphere surface matte blue data -1.74769 -0.420769 -0.286923 0.375sphere surface matte blue data -3.13462 1.29077 1.72385 0.375sphere surface matte blue data -4.05462 0.313846 2.08385 0.375sphere surface matte blue data -4.59231 0.534615 -6.32692 0.375sphere surface matte blue data -5.11846 0.534615 0.249231 0.375sphere surface matte blue data -5.78846 0.534615 -4.90077 0.375sphere surface matte blue data 0.4 -1.42923 1.50692 0.375sphere surface matte blue data 0.579231 1.29077 1.53462 0.375sphere surface matte blue data 1.16538 -0.293077 2.58077 0.375sphere surface matte red data -0.158462 0.534615 1.33769 0.7sphere surface matte red data -1.25 0.534615 2.21538 0.7sphere surface matte red data -1.34077 0.534615 -3.95615 0.691sphere surface matte red data -2.05538 0.534615 0.0976923 0.7sphere surface matte red data -2.42154 0.534615 1.44923 0.7sphere surface matte red data -2.89462 0.534615 -2.12462 0.691sphere surface matte red data -3.71385 0.534615 -4.37462 0.691sphere surface matte red data -3.95308 0.534615 -3.01308 0.691sphere surface matte red data -4.53923 0.534615 -0.616154 0.691sphere surface matte red data 0.796923 -0.443846 1.59231 0.691sphere surface matte magenta data -1.58231 0.534615 -2.58615 0.7sphere surface matte magenta data -2.40692 0.534615 -4.85 0.7sphere surface matte magenta data -3.12769 0.534615 -0.802308 0.7sphere surface matte magenta data -4.77923 0.534615 -5.26846 0.7sphere surface matte magenta data -4.98692 0.534615 -2.06231 0.7sphere surface matte magenta data 3.03231 -0.11 -0.334615 1.12sphere surface matte magenta data 5.96923 -1.58077 0.534615 1.12sphere surface matte magenta data 6.90923 -0.956923 3.74231 1.12sphere surface matte yellow data -0.656154 0.534615 0.0284615 0.7sphere surface matte yellow data -1.19615 -0.45 3.20923 0.7sphere surface matte yellow data -3.35077 -0.45 1.80692 0.7sphere surface matte yellow data 1.74615 -0.301538 0.759231 0.58sphere surface matte yellow data 2.44385 -0.921538 -1.85385 0.7sphere surface matte yellow data 3.30846 1.65923 -0.660769 0.7sphere surface matte yellow data 4.49154 -0.827692 0.162308 0.58sphere surface matte yellow data 5.56923 -0.0730769 4.59923 0.7sphere surface matte yellow data 5.78385 -3.37538 0.294615 0.7sphere surface matte yellow data 6.43923 -1.26923 2.13846 0.58sphere surface matte yellow data 7.24 -0.943846 -0.602308 0.7sphere surface matte yellow data 7.24 -2.53077 4.59308 0.7sphere surface matte yellow data 8.41385 0.0676923 3.75308 0.7
+
+eye 13 (2 * 13) (1.5 * 13)
+at 0 0 0
+up 0 1 0
+fov 25
+ambient mono 0.15
+background light_sky_blue
+light spot 13 13 (13 / 4) -13 -13 -(13 /4) mono 0.8 60 1.5
+light spot (13 / 4) 13 13 -(13 / 4) -13 -13 0.6 0.6 0.8 60 1.5
+% add more if needed...
+quadrangle
+surface plastic 0.1 0.4 0.1 mono 0.5 0.5
+transform scale 100
+transform translate -13 -13 -13
+data 1 0 1 1 0 -1 -1 0 -1 -1 0 1
+quadrangle
+surface plastic 0.1 0.1 0.6 mono 0.6 0.6
+transform scale 100
+transform translate -13 -13 -13
+data 0 1 1 0 -1 1 0 -1 -1 0 1 -1
+quadrangle
+surface plastic 0.6 0.1 0.1 mono 0.7 0.7
+transform scale 100
+transform translate -13 -13 -13
+data 1 1 0 -1 1 0 -1 -1 0 1 -1 0
+cylinder open surface matte white data -0.158462 0.534615 1.33769 -0.656154 0.534615 0.0284615 0.3
+cylinder open surface matte white data -0.158462 0.534615 1.33769 0.579231 1.29077 1.53462 0.3
+cylinder open surface matte white data -0.158462 0.534615 1.33769 0.796923 -0.443846 1.59231 0.3
+cylinder open surface matte white data -1.19615 -0.45 3.20923 -1.14692 0.3 3.97769 0.3
+cylinder open surface matte white data -1.25 0.534615 2.21538 -0.158462 0.534615 1.33769 0.3
+cylinder open surface matte white data -1.25 0.534615 2.21538 -1.19615 -0.45 3.20923 0.3
+cylinder open surface matte white data -1.25 0.534615 2.21538 -1.20846 1.29077 2.97769 0.3
+cylinder open surface matte white data -1.34077 0.534615 -3.95615 -0.339231 0.534615 -4.32077 0.3
+cylinder open surface matte white data -1.34077 0.534615 -3.95615 -1.58231 0.534615 -2.58615 0.3
+cylinder open surface matte white data -2.05538 0.534615 0.0976923 -0.656154 0.534615 0.0284615 0.3
+cylinder open surface matte white data -2.05538 0.534615 0.0976923 -1.74769 -0.420769 -0.286923 0.3
+cylinder open surface matte white data -2.05538 0.534615 0.0976923 -2.42154 0.534615 1.44923 0.3
+cylinder open surface matte white data -2.40692 0.534615 -4.85 -1.34077 0.534615 -3.95615 0.3
+cylinder open surface matte white data -2.42154 0.534615 1.44923 -1.25 0.534615 2.21538 0.3
+cylinder open surface matte white data -2.42154 0.534615 1.44923 -3.13462 1.29077 1.72385 0.3
+cylinder open surface matte white data -2.42154 0.534615 1.44923 -3.35077 -0.45 1.80692 0.3
+cylinder open surface matte white data -2.89462 0.534615 -2.12462 -1.58231 0.534615 -2.58615 0.3
+cylinder open surface matte white data -2.89462 0.534615 -2.12462 -3.12769 0.534615 -0.802308 0.3
+cylinder open surface matte white data -2.89462 0.534615 -2.12462 -3.95308 0.534615 -3.01308 0.3
+cylinder open surface matte white data -2.89462 0.534615 -2.12462 -3.95308 0.534615 -3.01308 0.3
+cylinder open surface matte white data -3.12769 0.534615 -0.802308 -2.05538 0.534615 0.0976923 0.3
+cylinder open surface matte white data -3.12769 0.534615 -0.802308 -4.53923 0.534615 -0.616154 0.3
+cylinder open surface matte white data -3.35077 -0.45 1.80692 -4.05462 0.313846 2.08385 0.3
+cylinder open surface matte white data -3.71385 0.534615 -4.37462 -2.40692 0.534615 -4.85 0.3
+cylinder open surface matte white data -3.71385 0.534615 -4.37462 -4.77923 0.534615 -5.26846 0.3
+cylinder open surface matte white data -3.95308 0.534615 -3.01308 -3.71385 0.534615 -4.37462 0.3
+cylinder open surface matte white data -3.95308 0.534615 -3.01308 -4.98692 0.534615 -2.06231 0.3
+cylinder open surface matte white data -4.53923 0.534615 -0.616154 -4.98692 0.534615 -2.06231 0.3
+cylinder open surface matte white data -4.53923 0.534615 -0.616154 -5.11846 0.534615 0.249231 0.3
+cylinder open surface matte white data -4.77923 0.534615 -5.26846 -4.59231 0.534615 -6.32692 0.3
+cylinder open surface matte white data -4.77923 0.534615 -5.26846 -5.78846 0.534615 -4.90077 0.3
+cylinder open surface matte white data 0.796923 -0.443846 1.59231 0.4 -1.42923 1.50692 0.3
+cylinder open surface matte white data 0.796923 -0.443846 1.59231 1.16538 -0.293077 2.58077 0.3
+cylinder open surface matte white data 0.796923 -0.443846 1.59231 1.74615 -0.301538 0.759231 0.3
+cylinder open surface matte white data 1.74615 -0.301538 0.759231 3.03231 -0.11 -0.334615 0.3
+cylinder open surface matte white data 3.03231 -0.11 -0.334615 2.44385 -0.921538 -1.85385 0.3
+cylinder open surface matte white data 3.03231 -0.11 -0.334615 3.30846 1.65923 -0.660769 0.3
+cylinder open surface matte white data 3.03231 -0.11 -0.334615 4.49154 -0.827692 0.162308 0.3
+cylinder open surface matte white data 4.49154 -0.827692 0.162308 5.96923 -1.58077 0.534615 0.3
+cylinder open surface matte white data 5.96923 -1.58077 0.534615 5.78385 -3.37538 0.294615 0.3
+cylinder open surface matte white data 5.96923 -1.58077 0.534615 6.43923 -1.26923 2.13846 0.3
+cylinder open surface matte white data 5.96923 -1.58077 0.534615 7.24 -0.943846 -0.602308 0.3
+cylinder open surface matte white data 6.43923 -1.26923 2.13846 6.90923 -0.956923 3.74231 0.3
+cylinder open surface matte white data 6.90923 -0.956923 3.74231 5.56923 -0.0730769 4.59923 0.3
+cylinder open surface matte white data 6.90923 -0.956923 3.74231 7.24 -2.53077 4.59308 0.3
+cylinder open surface matte white data 6.90923 -0.956923 3.74231 8.41385 0.0676923 3.75308 0.3
+sphere surface matte blue data -0.339231 0.534615 -4.32077 0.375
+sphere surface matte blue data -1.14692 0.3 3.97769 0.375
+sphere surface matte blue data -1.20846 1.29077 2.97769 0.375
+sphere surface matte blue data -1.74769 -0.420769 -0.286923 0.375
+sphere surface matte blue data -3.13462 1.29077 1.72385 0.375
+sphere surface matte blue data -4.05462 0.313846 2.08385 0.375
+sphere surface matte blue data -4.59231 0.534615 -6.32692 0.375
+sphere surface matte blue data -5.11846 0.534615 0.249231 0.375
+sphere surface matte blue data -5.78846 0.534615 -4.90077 0.375
+sphere surface matte blue data 0.4 -1.42923 1.50692 0.375
+sphere surface matte blue data 0.579231 1.29077 1.53462 0.375
+sphere surface matte blue data 1.16538 -0.293077 2.58077 0.375
+sphere surface matte red data -0.158462 0.534615 1.33769 0.7
+sphere surface matte red data -1.25 0.534615 2.21538 0.7
+sphere surface matte red data -1.34077 0.534615 -3.95615 0.691
+sphere surface matte red data -2.05538 0.534615 0.0976923 0.7
+sphere surface matte red data -2.42154 0.534615 1.44923 0.7
+sphere surface matte red data -2.89462 0.534615 -2.12462 0.691
+sphere surface matte red data -3.71385 0.534615 -4.37462 0.691
+sphere surface matte red data -3.95308 0.534615 -3.01308 0.691
+sphere surface matte red data -4.53923 0.534615 -0.616154 0.691
+sphere surface matte red data 0.796923 -0.443846 1.59231 0.691
+sphere surface matte magenta data -1.58231 0.534615 -2.58615 0.7
+sphere surface matte magenta data -2.40692 0.534615 -4.85 0.7
+sphere surface matte magenta data -3.12769 0.534615 -0.802308 0.7
+sphere surface matte magenta data -4.77923 0.534615 -5.26846 0.7
+sphere surface matte magenta data -4.98692 0.534615 -2.06231 0.7
+sphere surface matte magenta data 3.03231 -0.11 -0.334615 1.12
+sphere surface matte magenta data 5.96923 -1.58077 0.534615 1.12
+sphere surface matte magenta data 6.90923 -0.956923 3.74231 1.12
+sphere surface matte yellow data -0.656154 0.534615 0.0284615 0.7
+sphere surface matte yellow data -1.19615 -0.45 3.20923 0.7
+sphere surface matte yellow data -3.35077 -0.45 1.80692 0.7
+sphere surface matte yellow data 1.74615 -0.301538 0.759231 0.58
+sphere surface matte yellow data 2.44385 -0.921538 -1.85385 0.7
+sphere surface matte yellow data 3.30846 1.65923 -0.660769 0.7
+sphere surface matte yellow data 4.49154 -0.827692 0.162308 0.58
+sphere surface matte yellow data 5.56923 -0.0730769 4.59923 0.7
+sphere surface matte yellow data 5.78385 -3.37538 0.294615 0.7
+sphere surface matte yellow data 6.43923 -1.26923 2.13846 0.58
+sphere surface matte yellow data 7.24 -0.943846 -0.602308 0.7
+sphere surface matte yellow data 7.24 -2.53077 4.59308 0.7
+sphere surface matte yellow data 8.41385 0.0676923 3.75308 0.7

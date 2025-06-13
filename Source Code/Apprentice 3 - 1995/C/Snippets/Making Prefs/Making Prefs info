@@ -1,1 +1,4 @@
-Making PrefsBernard256@aol.comIf you have ever wondered how to make preference files or just how to save resources in general, this snippet contains two functions that will help you. ReadPref will read information from a preferences file, while SavePref will write information out to a preferences file.
+Making Prefs
+Bernard256@aol.com
+
+If you have ever wondered how to make preference files or just how to save resources in general, this snippet contains two functions that will help you. ReadPref will read information from a preferences file, while SavePref will write information out to a preferences file.

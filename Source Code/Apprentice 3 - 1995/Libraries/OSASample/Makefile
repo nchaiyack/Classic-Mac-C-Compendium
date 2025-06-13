@@ -1,1 +1,5 @@
-all Ä OSASampleComponent.rsrcOSASampleComponent.rsrc Ä  OSASampleComponent.r	Rez -t rsrc -c RSED OSASampleComponent.r -o OSASampleComponent.rsrc
+all Ä OSASampleComponent.rsrc
+
+OSASampleComponent.rsrc Ä  OSASampleComponent.r
+	Rez -t rsrc -c RSED OSASampleComponent.r -o OSASampleComponent.rsrc
+

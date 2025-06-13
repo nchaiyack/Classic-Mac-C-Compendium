@@ -1,1 +1,4 @@
-a->ab->abc->abbcac:8
+a->a
+b->ab
+c->abbc
+ac:8

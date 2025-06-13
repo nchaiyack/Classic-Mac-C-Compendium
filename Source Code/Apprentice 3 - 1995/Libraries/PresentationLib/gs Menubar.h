@@ -1,1 +1,2 @@
-void ShowMenuBar (void);void HideMenuBar (void);
+void ShowMenuBar (void);
+void HideMenuBar (void);

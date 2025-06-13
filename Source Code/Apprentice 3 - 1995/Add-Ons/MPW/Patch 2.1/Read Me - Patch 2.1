@@ -1,1 +1,58 @@
-           GNU Patch 2.1 for MPW Release 1                                                     30 June, 1995Ported by:   Christopher E. HydeEmail:       drjekyll@hylight.demon.co.ukAddress:     HyLight Limited          25 Carson Road          London  E16 4BD          England (UK)Patch is an MPW tool utility that will apply a Diff file to an original i.e. it will read a file created by UNIX or Mac versions of the Diff utility and attempt to apply the file differences stored within to a folder hierarchy of text files.  The original source code is copyright (c) 1989, 1991 Free Software Foundation, Inc.  This package is distributed under the GNU General public license (see the file ‘COPYING’) it may be distributed freely.THIS SOFTWARE IS PROVIDED “AS IS” AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.Please send all comments, queries, suggestions, offers of work and contributions (monetary or otherwise) to me at either of the above addresses.  Cash or work from any commercial users would be especially appreciated, as I have to make a living from writing software as I am self employed.This release contains only the source files necessary to build Patch for the Mac and MPW.  The complete original source is available from all good GNU ftp sites.The binary version of Patch was created using MPW 3.4b4 and Symantec C 8.0.1c11 and the 2.0a3 universal headers, all from ETO #17. (It does not use the new runtime libraries).  Although it will work with earlier version of any of these it may well require additional changes to the source code.UsageThe basic usage is to integrate a set of diffs contained in a single file into a folder tree of many text files.  This requires five simple steps.  For example if you were updating the source files for ‘project 1.0’ contained in the folder ‘Disc:X:proj-1.0’ (and any of its sub-folders) to ‘project 1.1’ to be placed in the folder ‘Disc:X:proj-1.1’ using the Diff file ‘proj-1.0-1.1.diff’ you would:      1. Duplicate the original file hierarchy or make a backup (if you are going to overwrite it)      2. Rename the hierarchy’s root folder as specified in the Diff file e.g. from ‘proj-1.0’ to ‘proj-1.1’      3. Set the MPW variable ‘TempFolder’ to a folder on the same volume as the target root folder        e.g. Set TempFolder 'Disc:'      4. Set the current directory to that containing the target root folder e.g. Directory 'Disc:X:'      5. Run patch e.g. Patch < 'proj-1.0-1.1.diff'RecompilingTo recompile the source code enter the following lines into an MPW worksheet:      Set CDebugOpts '-opt off -mbg on -d DEBUGGING'if you want the ‘debug’ version, or      Set CDebugOpts '-opt all -mbg off'if you want the ‘no debug’ version.  Then, assuming the source files are in the folder ‘patch-2.1’ on a disc called ‘Ram’, enter:      Directory 'Ram:patch-2.1:'      BuildProgram Patch -d Prog='Ram:Patch' -d S=`Directory` ∂                         -d O='Ram:Obj:' -d CDebugOpts="{CDebugOpts}"The ‘Prog=’ specifies the target binary file,   ‘S=’ specifies the source directory (which should be the current directory),   ‘O=’ specifies the object files’ directory, and   ‘CDebugOpts=’ specifies any extra options for the C compiler.Known Problems:1. The MPW variable ‘TempFolder’ must be set to a folder on the same volume as the target folder.2. Patch will NOT create any missing/new directories in the target folder tree.  They must be created manually.To Do:      • Fix known problems      • Build a PowerPC version (unfortunately I only have a Powerless™ Macintosh ;-()      • Provide a commando interface      • Produce a manual in a more ‘politically correct’ format
+           GNU Patch 2.1 for MPW Release 1
+                                                     30 June, 1995
+
+Ported by:   Christopher E. Hyde
+Email:       drjekyll@hylight.demon.co.uk
+Address:     HyLight Limited
+          25 Carson Road
+          London  E16 4BD
+          England (UK)
+
+Patch is an MPW tool utility that will apply a Diff file to an original i.e. it will read a file created by UNIX or Mac versions of the Diff utility and attempt to apply the file differences stored within to a folder hierarchy of text files.  The original source code is copyright (c) 1989, 1991 Free Software Foundation, Inc.  This package is distributed under the GNU General public license (see the file ‘COPYING’) it may be distributed freely.
+
+THIS SOFTWARE IS PROVIDED “AS IS” AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+Please send all comments, queries, suggestions, offers of work and contributions (monetary or otherwise) to me at either of the above addresses.  Cash or work from any commercial users would be especially appreciated, as I have to make a living from writing software as I am self employed.
+
+This release contains only the source files necessary to build Patch for the Mac and MPW.  The complete original source is available from all good GNU ftp sites.
+
+The binary version of Patch was created using MPW 3.4b4 and Symantec C 8.0.1c11 and the 2.0a3 universal headers, all from ETO #17. (It does not use the new runtime libraries).  Although it will work with earlier version of any of these it may well require additional changes to the source code.
+
+Usage
+The basic usage is to integrate a set of diffs contained in a single file into a folder tree of many text files.  This requires five simple steps.  For example if you were updating the source files for ‘project 1.0’ contained in the folder ‘Disc:X:proj-1.0’ (and any of its sub-folders) to ‘project 1.1’ to be placed in the folder ‘Disc:X:proj-1.1’ using the Diff file ‘proj-1.0-1.1.diff’ you would:
+      1. Duplicate the original file hierarchy or make a backup (if you are going to overwrite it)
+      2. Rename the hierarchy’s root folder as specified in the Diff file e.g. from ‘proj-1.0’ to ‘proj-1.1’
+      3. Set the MPW variable ‘TempFolder’ to a folder on the same volume as the target root folder
+        e.g. Set TempFolder 'Disc:'
+      4. Set the current directory to that containing the target root folder e.g. Directory 'Disc:X:'
+      5. Run patch e.g. Patch < 'proj-1.0-1.1.diff'
+
+Recompiling
+To recompile the source code enter the following lines into an MPW worksheet:
+
+      Set CDebugOpts '-opt off -mbg on -d DEBUGGING'
+
+if you want the ‘debug’ version, or
+
+      Set CDebugOpts '-opt all -mbg off'
+
+if you want the ‘no debug’ version.  Then, assuming the source files are in the folder ‘patch-2.1’ on a disc called ‘Ram’, enter:
+
+      Directory 'Ram:patch-2.1:'
+      BuildProgram Patch -d Prog='Ram:Patch' -d S=`Directory` ∂
+                         -d O='Ram:Obj:' -d CDebugOpts="{CDebugOpts}"
+
+The ‘Prog=’ specifies the target binary file,
+   ‘S=’ specifies the source directory (which should be the current directory),
+   ‘O=’ specifies the object files’ directory, and
+   ‘CDebugOpts=’ specifies any extra options for the C compiler.
+
+Known Problems:
+1. The MPW variable ‘TempFolder’ must be set to a folder on the same volume as the target folder.
+2. Patch will NOT create any missing/new directories in the target folder tree.  They must be created manually.
+
+To Do:
+      • Fix known problems
+      • Build a PowerPC version (unfortunately I only have a Powerless™ Macintosh ;-()
+      • Provide a commando interface
+      • Produce a manual in a more ‘politically correct’ format

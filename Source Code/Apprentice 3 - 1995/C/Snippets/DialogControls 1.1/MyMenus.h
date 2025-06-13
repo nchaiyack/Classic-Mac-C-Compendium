@@ -1,1 +1,2 @@
-void	TwiddleMenus( void );void	MovableModalMenus( void );
+void	TwiddleMenus( void );
+void	MovableModalMenus( void );

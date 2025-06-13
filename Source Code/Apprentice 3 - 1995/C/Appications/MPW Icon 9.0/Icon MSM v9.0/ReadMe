@@ -1,1 +1,36 @@
-		MPW Icon  Version 9.0 Source Disks		==================================This is a small general information file for the Icon ProgrammingLanguage, Macintosh Programmer's Workshop version, source disks.Most of the files are a compressed archive format.  Each of the ".sit"archive files contain several compressed files.  The files werecompressed using the archiving utility program StuffIt.  Adecompress-only component of the Stuffit system, called UnStuffIt, isincluded on this disk.You will probably want to "unstuff" the documentation first, found inthe docs.sit archive.  The documentation contains further information onextracting files and organizing the Icon hierarchy.To run UnStuffIt:1.  Double click the UnStuffIt icon.2.  From the "File" menu, choose "Open Archive…".  Open the archive you    wish to expand (for example, docs.sit).  UnStuffIt will open a window    displaying the file names in the archive you opened.3.  From the "Edit" menu, choose "Select All" to select all files for    extraction (or click on individual files if you perfer to be    selective).4.  Click on the extract button near the bottom of the UnStuffIt window.5.  UnStuffIt will present a "Save"-type dialog box so that you can    specify the folder into which to place the extracted files, and even    rename the file if you wish.  Normal operation at this point is to    simply navigate to the folder where you want the files and click the    "Save All" button, causing all files to be stored in the specified    folder without further intervention.
+		MPW Icon  Version 9.0 Source Disks
+		==================================
+
+This is a small general information file for the Icon Programming
+Language, Macintosh Programmer's Workshop version, source disks.
+
+Most of the files are a compressed archive format.  Each of the ".sit"
+archive files contain several compressed files.  The files were
+compressed using the archiving utility program StuffIt.  A
+decompress-only component of the Stuffit system, called UnStuffIt, is
+included on this disk.
+
+You will probably want to "unstuff" the documentation first, found in
+the docs.sit archive.  The documentation contains further information on
+extracting files and organizing the Icon hierarchy.
+
+To run UnStuffIt:
+
+1.  Double click the UnStuffIt icon.
+
+2.  From the "File" menu, choose "Open Archive…".  Open the archive you
+    wish to expand (for example, docs.sit).  UnStuffIt will open a window
+    displaying the file names in the archive you opened.
+
+3.  From the "Edit" menu, choose "Select All" to select all files for
+    extraction (or click on individual files if you perfer to be
+    selective).
+
+4.  Click on the extract button near the bottom of the UnStuffIt window.
+
+5.  UnStuffIt will present a "Save"-type dialog box so that you can
+    specify the folder into which to place the extracted files, and even
+    rename the file if you wish.  Normal operation at this point is to
+    simply navigate to the folder where you want the files and click the
+    "Save All" button, causing all files to be stored in the specified
+    folder without further intervention.

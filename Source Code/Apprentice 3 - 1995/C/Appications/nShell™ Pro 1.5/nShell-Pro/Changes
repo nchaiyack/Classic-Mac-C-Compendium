@@ -1,1 +1,48 @@
-nShell(tm) Change List for Version 1.5.0If you have any questions about these changes, or have noticed any other problems, please send eMail to jjensen@kaiwan.comNOTE: As of this release, we are dropping support of OS releases previous to V7.0.===== Changes in v1.5.0C.R. #214		Write “find” and “du” commandsMultitasking versions of the "find" and "du" commands are now available.  See the man pages for the commands for more information.C.R. #213	Write a buffered output library to speed commandsA new library ( buf_lib.c ) was written to provide buffered output from commands.  This library significantly speeds text intensive commands.C.R. #212	Write a general purpose “walk structure” libraryA new library (walk_lib.c) supports multitasking decent of directory trees.  This is a general purpose library and may be used outside the nShell(tm) environment.C.R. #211	Replace the “arg_to_int” routine with a more general “arg_to_num”The arg_to_int routine has been removed, and a more general arg_to_num has been added to arg_util.c.  This may force a change in user commands using arg_util.c.C.R. #210	Cache frequently used commandsThe nShell now caches the most recently used commands.  This should speed the execution of command loops.C.R. #209	Write “head” and “tail” commandsNew "head" and "tail" commands are now available.  Please see the man pages for these commands for more information.C.R. #204	Add “insert path” to edit menuA new menu option allows the user to use the standard file dialog to pick up a pathname and insert it in the command line.C.R. #203	Add command name to error message in “ps”An error message was missing.C.R. #202	Speed up “wc” and “cat”Inner loops within these commands speed operation.C.R. #63	Add “match” or “grep” as external commandTwo versions of string matching commands are now available.  "match" locates files using shell-style wildcards, while "grep" uses egrep-style regular expressions.
+
+nShell(tm) Change List for Version 1.5.0
+
+If you have any questions about these changes, or have noticed any other problems, please send eMail to jjensen@kaiwan.com
+
+NOTE: As of this release, we are dropping support of OS releases previous to V7.0.
+
+===== Changes in v1.5.0
+
+C.R. #214		Write “find” and “du” commands
+
+Multitasking versions of the "find" and "du" commands are now available.  See the man pages for the commands for more information.
+
+C.R. #213	Write a buffered output library to speed commands
+
+A new library ( buf_lib.c ) was written to provide buffered output from commands.  This library significantly speeds text intensive commands.
+
+C.R. #212	Write a general purpose “walk structure” library
+
+A new library (walk_lib.c) supports multitasking decent of directory trees.  This is a general purpose library and may be used outside the nShell(tm) environment.
+
+C.R. #211	Replace the “arg_to_int” routine with a more general “arg_to_num”
+
+The arg_to_int routine has been removed, and a more general arg_to_num has been added to arg_util.c.  This may force a change in user commands using arg_util.c.
+
+C.R. #210	Cache frequently used commands
+
+The nShell now caches the most recently used commands.  This should speed the execution of command loops.
+
+C.R. #209	Write “head” and “tail” commands
+
+New "head" and "tail" commands are now available.  Please see the man pages for these commands for more information.
+
+C.R. #204	Add “insert path” to edit menu
+
+A new menu option allows the user to use the standard file dialog to pick up a pathname and insert it in the command line.
+
+C.R. #203	Add command name to error message in “ps”
+
+An error message was missing.
+
+C.R. #202	Speed up “wc” and “cat”
+
+Inner loops within these commands speed operation.
+
+C.R. #63	Add “match” or “grep” as external command
+
+Two versions of string matching commands are now available.  "match" locates files using shell-style wildcards, while "grep" uses egrep-style regular expressions.

@@ -1,1 +1,757 @@
-unit ICMiscSubs;interface	const		nulChar = 0;		homeChar = $01;		enterChar = $03;		endChar = $04;		helpChar = $05;		backSpaceChar = $08;		tabChar = $09;		lfChar = $0A;		pageUpChar = $0b;		pageDownChar = $0c;		crChar = $0D;		escChar = $1b;		escKey = $35;		clearChar = $1b;		clearKey = $47;		leftArrowChar = $1c;		rightArrowChar = $1d;		upArrowChar = $1e;		downArrowChar = $1f;		spaceChar = $20;		delChar = $7f;		bulletChar = $a5;		undoKey = $7a;		cutKey = $78;		copyKey = $63;		pasteKey = $76;	const		kReturnKeyCode = 36;		kTabKeyCode = 48;		kSpaceKeyCode = 49;		KDeleteKeyCode = 51;		kEnterKeyCode = 52;		kCommandKeyCode = 55;		kShiftKeyCode = 56;		kCapsLockKeyCode = 57;		kOptionKeyCode = 58;		kClearKeyCode = 71;	const		owner_id = -16096;		machine_id = -16413;	procedure InitMiscSubs;	function GetVolInfo (var name: str63; var vrn: integer; index: integer; var CrDate: longInt): OSErr;	function MyGetAPPL (sig: OSType; var fs: FSSpec): OSErr;	function FSpGetCatInfo (var fs: FSSpec; index: integer; var pb: CInfoPBRec): OSErr;	function GetWindowContentRegion (theWindow: WindowPtr): RgnHandle;	function GetWindowStructureRegion (theWindow: WindowPtr): RgnHandle;	function TitleBarOnScreen (wp: WindowPtr): boolean;	procedure GetWindowPortRect (theWindow: WindowPtr; var portRect: rect);	procedure GetWindowRect (theWindow: WindowPtr; var r: rect);	procedure CentreRect (inside_rect: Rect; var res_rect: Rect);	procedure CentreAlert (id: integer);	function GetAString (id, index: integer): Str255;	procedure Assert (b: boolean);	procedure SetItemEnable (mh: menuHandle; item: integer; enable: boolean);	function DirtyKey (ch: char): boolean;	procedure DoArrowKey (lh: ListHandle; uparrow: boolean);	function IsKeyDown (keycode: integer): boolean;	function SelectedLine (lh: ListHandle): integer;	function FSWriteQ (refnum: integer; count: longint; buf: Ptr): OSErr;	function FSReadQ (refnum: integer; count: longint; buf: Ptr): OSErr;	procedure DrawIcon (id: integer; r: Rect; highlighted: boolean);	function FileLocked (fss: FSSpec): boolean;	procedure DoListKey (list: ListHandle; modifiers: integer; ch: char; getentryname: ProcPtr);{  function GetEntryName (list: ListHandle; c: cell): str255;}	function DecStr (l: longint): Str255;	function CopyFile (source, dest: FSSpec): OSErr;	function GetOwnerName: str255;	function GetMachineName: str255;implementation	uses		IconFamilies, Errors, IconFamilies, 		ICGlobals;	var		typed_chars: str31;		typed_time: longInt;		typed_lh: ListHandle;	procedure InitMiscSubs;	begin		typed_chars := '';		typed_time := 0;		typed_lh := nil;	end;	procedure DrawIcon (id: integer; r: Rect; highlighted: boolean);		var			suite: Handle;			iconh: Handle;			junk: OSErr;			transform: integer;	begin		if system7 & (GetIconSuite(suite, id, svAllLargeData) = noErr) then begin			if highlighted then begin				transform := ttSelected;			end			else begin				transform := ttNone;			end; (* if *)			junk := PlotIconSuite(r, 0, transform, suite);			junk := DisposeIconSuite(suite, false);		end		else begin			iconh := Get1Resource('ICN#', id);			if iconh <> nil then begin				PlotIcon(r, iconh);			end; (* if *)		end; (* if *)	end; (* if *)	function FSWriteQ (refnum: integer; count: longint; buf: Ptr): OSErr;	begin		FSWriteQ := FSWrite(refnum, count, buf);	end; (* FSWriteQ *)	function FSReadQ (refnum: integer; count: longint; buf: Ptr): OSErr;	begin		FSReadQ := FSRead(refnum, count, buf);	end; (* FSReadQ *)	function SelectedLine (lh: ListHandle): integer;		var			acell: Cell;	begin		SetPt(acell, 0, 0);		if LGetSelect(true, acell, lh) then begin			SelectedLine := acell.v;		end		else begin			SelectedLine := -1;		end; (* if *)	end; (* SelectedLine *)	function IsKeyDown (keycode: integer): boolean;		var			mykeys: KeyMap;	begin		GetKeys(mykeys);		IsKeyDown := mykeys[keycode];	end; (* IsKeyDown *)	function GetVolInfo (var name: str63; var vrn: integer; index: integer; var CrDate: longInt): OSErr;		var			pb: paramBlockRec;			oe: OSErr;	begin		if (name <> '') & (name[length(name)] <> ':') then			name := concat(name, ':');		pb.ioNamePtr := @name;		pb.ioVRefNum := vrn;		pb.ioVolIndex := index;		oe := PBGetVInfo(@pb, false);		if oe = noErr then begin			vrn := pb.ioVRefNum;			CrDate := pb.ioVCrDate;		end;		GetVolInfo := oe;	end;	function MyGetAPPL (sig: OSType; var fs: FSSpec): OSErr;		var			i: integer;			pbdt: DTPBRec;			crdate: longInt;			oe: OSErr;			found: boolean;	begin		found := false;		if system7 then begin			i := 1;			repeat				fs.vRefNum := 0;				fs.name := '';				oe := GetVolInfo(fs.name, fs.vRefNum, i, crdate);				i := i + 1;				if oe = noErr then begin					with pbdt do begin						fs.name := '';						ioNamePtr := @fs.name;						ioVRefNum := fs.vRefNum;						oe := PBDTGetPath(@pbdt);						if oe = noErr then begin							ioIndex := 0;							ioFileCreator := sig;							oe := PBDTGetAPPLSync(@pbdt);							if oe = noErr then								found := true;						end;					end;					oe := noErr;				end;			until found or (oe <> noErr);		end;		if found then begin			oe := noErr;			fs.parID := pbdt.ioAPPLParID;		end		else begin			oe := afpItemNotFound;			fs.vRefNum := 0;			fs.parID := 2;			fs.name := '';		end;		MyGetAPPL := oe;	end;	function FSpGetCatInfo (var fs: FSSpec; index: integer; var pb: CInfoPBRec): OSErr;	begin		pb.ioVRefNum := fs.vRefNum;		pb.ioDirID := fs.parID;		pb.ioNamePtr := @fs.name;		pb.ioFDirIndex := index;		FSpGetCatInfo := PBGetCatInfoSync(@pb);	end;	function GetWindowContentRegion (theWindow: WindowPtr): RgnHandle;	begin		GetWindowContentRegion := WindowPeek(theWindow)^.contRgn;	end;	function GetWindowStructureRegion (theWindow: WindowPtr): RgnHandle;	begin		GetWindowStructureRegion := WindowPeek(theWindow)^.strucRgn;	end;	function TitleBarOnScreen (wp: WindowPtr): boolean;		var			rgn: RgnHandle;	begin		rgn := NewRgn;		CopyRgn(GetWindowStructureRegion(wp), rgn);		DiffRgn(rgn, GetWindowContentRegion(wp), rgn);		SectRgn(rgn, GetGrayRgn, rgn);		TitleBarOnScreen := not EmptyRgn(rgn);		DisposeRgn(rgn);	end;	procedure GetWindowPortRect (theWindow: WindowPtr; var portRect: rect);	begin		portRect := WindowPeek(theWindow)^.port.portRect;	end;	procedure GetWindowRect (theWindow: WindowPtr; var r: rect);	begin		SetPort(theWindow);		GetWindowPortRect(theWindow, r);		LocalToGlobal(r.topleft);		LocalToGlobal(r.botright);	end;	procedure CentreRect (inside_rect: Rect; var res_rect: Rect);		var			stat_siz: Point;	begin		stat_siz := inside_rect.botright;		SubPt(inside_rect.topleft, stat_siz);		OffsetRect(res_rect, -res_rect.left, -res_rect.top);		SubPt(res_rect.botright, stat_siz);		stat_siz.h := stat_siz.h div 2;		stat_siz.v := stat_siz.v div 2;		AddPt(inside_rect.topleft, stat_siz);		OffsetRect(res_rect, stat_siz.h, stat_siz.v);	end; (* CentreRect *)	procedure CentreAlert (id: integer);		var			alerth: AlertTHndl;			bounds: Rect;	begin		alerth := AlertTHndl(GetResource('ALRT', id));		if alerth <> nil then begin			bounds := screenBits.bounds;			bounds.bottom := (bounds.bottom - bounds.top) * 2 div 3 + bounds.top;			HLock(Handle(alerth));			CentreRect(bounds, alerth^^.boundsRect);			HUnlock(Handle(alerth));		end; (* if *)	end; (* CentreAlert *)	function GetAString (id, index: integer): Str255;		var			res: Str255;	begin		GetIndString(res, id, index);		GetAString := res;	end; (* GetAString *)	procedure Assert (b: boolean);	begin		if not b then begin			DebugStr('Assertion failure ; sc');		end; (* if *)	end;	procedure SetItemEnable (mh: menuHandle; item: integer; enable: boolean);	begin		if enable then begin			EnableItem(mh, item);		end		else begin			DisableItem(mh, item);		end;	end;	function DirtyKey (ch: char): boolean;	begin		case ord(ch) of			homeChar, endChar, helpChar, pageUpChar, pageDownChar, leftArrowChar, rightArrowChar, upArrowChar, downArrowChar: 				DirtyKey := false;			otherwise				DirtyKey := true;		end;	end;	function IsVolumeWriteable (vRefNum: integer): OSErr;		var			pb: HParamBlockRec;			err: OSErr;	begin		pb.ioVRefNum := vRefNum;		pb.ioNamePtr := nil;		pb.ioVolIndex := 0;		err := PBHGetVInfoSync(@pb);		if err = noErr then begin			if BAND(pb.ioVAtrb, $0080) <> 0 then begin				err := wPrErr;		{ volume locked by hardware }			end			else if BAND(pb.ioVAtrb, $8000) <> 0 then begin				err := vLckdErr;	{ volume locked by software }			end;		end;		IsVolumeWriteable := err;	end;	function IsFileWriteable (fs: FSSpec): OSErr;		var			pb: CInfoPBRec;			err: OSErr;	begin		pb.ioNamePtr := @fs.name;		pb.ioVRefNum := fs.vRefNum;		pb.ioDirID := fs.parID;		pb.ioFDirIndex := 0;	{ use ioNamePtr and ioDirID }		err := PBGetCatInfoSync(@pb);		if err = noErr then begin			if BAND(pb.ioFlAttrib, $01) <> 0 then begin				err := fLckdErr;			end;		end;		IsFileWriteable := err;	end;	function HGetDirAccess (vRefNum: integer; dirID: longInt; name: StringPtr; var ownerID, groupID, accessRights: longInt): OSErr;		var			pb: HParamBlockRec;			err: OSErr;	begin		pb.ioNamePtr := name;		pb.ioVRefNum := vRefNum;		pb.ioDirID := dirID;		err := PBHGetDirAccessSync(@pb);		ownerID := pb.ioACOwnerID;		groupID := pb.ioACGroupID;		accessRights := pb.ioACAccess;		HGetDirAccess := err;	end;	function FileLocked (fss: FSSpec): boolean;		var			locked: boolean;			junk: longint;			access: longint;	begin		locked := (IsVolumeWriteable(fss.vRefNum) <> noErr);		if not locked then begin			locked := (IsFileWriteable(fss) <> noErr);		end; (* if *)		if not locked then begin			if HGetDirAccess(fss.vRefNum, fss.parID, nil, junk, junk, access) = noErr then begin				locked := not btst(access, 26);			end; (* if *)		end; (* if *)		FileLocked := locked;	end; (* FileLocked *)	procedure LSetSingleSelection (list: ListHandle; v: integer);		var			c: Cell;	begin		c.h := 0;		c.v := v;		LSetSelect(true, c, list);		c.v := 0;		c.h := 0;		while LGetSelect(true, c, list) do begin			if c.v <> v then begin				LSetSelect(false, c, list);			end;			c.v := c.v + 1;			c.h := 0;		end;		LAutoScroll(list);	end;	function LGetEntryNameProc (list: ListHandle; c: cell; getentryname: ProcPtr): str255;	inline		$205F, $4E90;	function LGetUniqueEntryName (list: ListHandle; c: cell; getentryname: ProcPtr): str255;		var			s: str255;	begin		s := '';		if getentryname <> nil then begin			s := LGetEntryNameProc(list, c, getentryname);		end;		LGetUniqueEntryName := concat(s, chr(0), chr(c.v div 256), chr(c.v mod 256));	end;	function LGetFirstSelection (list: ListHandle; var c: Cell; getentryname: ProcPtr): boolean;		var			best, n: str255;			index: integer;	begin		LGetFirstSelection := false;		c.h := 0;		c.v := 0;		best := concat(chr(255), chr(255));		while LGetSelect(true, c, list) do begin			LGetFirstSelection := true;			n := LGetUniqueEntryName(list, c, getentryname);			if IUCompString(n, best) < 0 then begin				index := c.v;			end;			c.v := c.v + 1;		end;		c.h := 0;		c.v := index;	end;	function LSelectFirstBefore (list: ListHandle; s: str255; getentryname: ProcPtr): boolean;		var			i, index: integer;			c: Cell;			best, n: str255;			good: boolean;	begin		good := false;		index := 0;		best := '';		for i := 0 to list^^.databounds.bottom - 1 do begin			c.h := 0;			c.v := i;			n := LGetUniqueEntryName(list, c, getentryname);			if (IUCompString(s, n) > 0) & (IUCompString(n, best) > 0) then begin				best := n;				index := c.v;				good := true;			end;		end;		if good then begin			LSetSingleSelection(list, index);		end;		LSelectFirstBefore := good;	end;	function LGetLastSelection (list: ListHandle; var c: Cell; getentryname: ProcPtr): boolean;		var			best, n: str255;			index: integer;	begin		LGetLastSelection := false;		c.h := 0;		c.v := 0;		best := '';		while LGetSelect(true, c, list) do begin			LGetLastSelection := true;			n := LGetUniqueEntryName(list, c, getentryname);			if IUCompString(n, best) > 0 then begin				index := c.v;				best := n;			end;			c.v := c.v + 1;		end;		c.h := 0;		c.v := index;	end;	function LSelectFirstAfter (list: ListHandle; s: str255; getentryname: ProcPtr): boolean;		var			i, index: integer;			c: Cell;			best, n: str255;			good: boolean;	begin		good := false;		best := concat(chr(255), chr(255));		for i := 0 to list^^.databounds.bottom - 1 do begin			c.h := 0;			c.v := i;			n := LGetUniqueEntryName(list, c, getentryname);			if (IUCompString(s, n) < 0) & (IUCompString(n, best) < 0) then begin				best := n;				index := c.v;				good := true;			end;		end;		if good then begin			LSetSingleSelection(list, index);		end;		LSelectFirstAfter := good;	end;	procedure DoListKey (list: ListHandle; modifiers: integer; ch: char; getentryname: ProcPtr);		var			c: Cell;			index: integer;			dummy: boolean;			curticks: longInt;	begin		curticks := TickCount;		if (typed_lh <> list) or (ch < ' ') then begin			typed_time := 0;			typed_lh := list;		end;		case ord(ch) of			downArrowChar:  begin				c.h := 0;				c.v := 0;				index := 0;				while LGetSelect(true, c, list) do begin					c.v := c.v + 1;					index := c.v;				end;				if index >= list^^.dataBounds.bottom then begin					index := list^^.dataBounds.bottom - 1;				end;				LSetSingleSelection(list, index);				LAutoScroll(list);			end;			upArrowChar:  begin				c.h := 0;				c.v := 0;				if not LGetSelect(true, c, list) then begin					c.v := list^^.dataBounds.bottom;				end;				if c.v > 0 then begin					c.v := c.v - 1;				end;				LSetSingleSelection(list, c.v);				LAutoScroll(list);			end;			homeChar:  begin				LScroll(0, -list^^.dataBounds.bottom, list);			end;			endChar:  begin				LScroll(0, list^^.dataBounds.bottom, list);			end;			pageUpChar:  begin				LScroll(0, -(list^^.visible.bottom - list^^.visible.top - 2), list);			end;			pageDownChar:  begin				LScroll(0, (list^^.visible.bottom - list^^.visible.top - 2), list);			end;			tabChar:  begin				if BAND(modifiers, shiftKey) <> 0 then begin					if not LGetFirstSelection(list, c, getentryname) | not LSelectFirstBefore(list, LGetUniqueEntryName(list, c, getentryname), getentryname) then begin						dummy := LSelectFirstBefore(list, chr(255), getentryname);					end;				end				else begin					if not LGetLastSelection(list, c, getentryname) | not LSelectFirstAfter(list, LGetUniqueEntryName(list, c, getentryname), getentryname) then begin						dummy := LSelectFirstAfter(list, '', getentryname);					end;				end;			end;			otherwise begin				if ch >= ' ' then begin					if curticks - typed_time > 60 then begin						typed_chars := '';					end;					typed_time := curticks;					typed_chars := concat(typed_chars, ch);					if not LSelectFirstAfter(list, typed_chars, getentryname) then begin						dummy := LSelectFirstBefore(list, chr(255), getentryname);					end;				end;			end;		end;	end;	function DecStr (l: longint): Str255;	begin		DecStr := StringOf(l : 1);	end; (* DecStr *)	function GetDirName (fs: FSSpec): OSErr;		var			pb: CInfoPBRec;	begin		pb.ioNamePtr := @fs.name;		pb.ioVRefNum := fs.vRefNum;		pb.ioDirID := fs.parID;		pb.ioFDirIndex := -1;	{* get information about ioDirID *}		GetDirName := PBGetCatInfoSync(@pb);	end;	function CopyFork (srn, drn: integer; len: longInt): OSErr;		var			err: OSErr;			p: ptr;			size: longInt;			count: longInt;	begin		err := noErr;		size := 65536;		p := nil;		repeat			p := NewPtr(size);			if p <> nil then begin				size := size div 2;			end;		until (p <> nil) or (size < 512);		if p = nil then begin			err := memFullErr;		end;		while (err = noErr) & (len > 0) do begin			count := size;			if count > len then begin				count := len;			end;			err := FSRead(srn, count, p);			if (err = noErr) & (count = 0) then begin				err := eofErr;			end;			if err = noErr then begin				len := len - count;				err := FSWrite(drn, count, p);			end;		end;		if p <> nil then begin			DisposePtr(p);		end;		CopyFork := err;	end;	function CopyFile (source, dest: FSSpec): OSErr;		var			err, oerr, junk: OSErr;			pb: CInfoPBRec;			srrn, sdrn, drrn, ddrn: integer;	begin		junk := HDelete(dest.vRefNum, dest.parID, dest.name);		err := FSpGetCatInfo(source, 0, pb);		if err = noErr then begin			err := HCreate(dest.vRefNum, dest.parID, dest.name, pb.ioFlFndrInfo.fdCreator, pb.ioFlFndrInfo.fdType);			if err = noErr then begin				err := HOpen(dest.vRefNum, dest.parID, dest.name, fsWrPerm, ddrn);				if err = noErr then begin					err := HOpenRF(dest.vRefNum, dest.parID, dest.name, fsWrPerm, drrn);					if err = noErr then begin						err := HOpen(source.vRefNum, source.parID, source.name, fsRdPerm, sdrn);						if err = noErr then begin							err := HOpenRF(source.vRefNum, source.parID, source.name, fsRdPerm, srrn);							if err = noErr then begin								err := CopyFork(sdrn, ddrn, pb.ioFlLgLen);								if err = noErr then begin									err := CopyFork(srrn, drrn, pb.ioFlRLgLen);								end;								junk := FSClose(srrn);							end;							junk := FSClose(sdrn);						end;						oerr := FSClose(drrn);						if err = noErr then begin							err := oerr;						end;					end;					oerr := FSClose(ddrn);					if err = noErr then begin						err := oerr;					end;				end;			end;		end;		if err <> noErr then begin			junk := HDelete(dest.vRefNum, dest.parID, dest.name);		end;		CopyFile := err;	end; (* CopyFile *)	function GetName (id1, id2: integer): str255;		var			sh: stringHandle;	begin		sh := GetString(id1);		if sh = nil then			sh := GetString(id2);		if sh <> nil then			GetName := sh^^ { Don't release it, someone else may be using it }		else			GetName := 'unnamed';	end;	function GetOwnerName: str255;	begin		GetOwnerName := GetName(owner_id, machine_id);	end;	function GetMachineName: str255;	begin		GetMachineName := GetName(machine_id, owner_id);	end;end.function CopyFile (source, dest: FSSpec): OSErr;	var		err: OSErr;		destdir: FSSpec;		pb: CInfoPBRec;		tmpfss: FSSpec;begin	err := HDelete(dest.vRefNum, dest.parID, dest.name);	destdir.vRefNum := dest.vRefNum;	tmpfss := dest;	err := FSpGetCatInfo(tmpfss, -1, pb);	if err = noErr then begin		destdir.parID := pb.ioDrParID;		err := GetDirName(dest);	end; (* if *)	if err = noErr then begin		err := FileCopy(source.vRefNum, source.parID, source.name, destdir.vRefNum, destdir.parID, @destdir.name, @dest.name, nil, 0, true);	end; (* if *)	CopyFile := err;end; (* CopyFile *)
+unit ICMiscSubs;
+
+interface
+
+	const
+		nulChar = 0;
+		homeChar = $01;
+		enterChar = $03;
+		endChar = $04;
+		helpChar = $05;
+		backSpaceChar = $08;
+		tabChar = $09;
+		lfChar = $0A;
+		pageUpChar = $0b;
+		pageDownChar = $0c;
+		crChar = $0D;
+		escChar = $1b;
+		escKey = $35;
+		clearChar = $1b;
+		clearKey = $47;
+		leftArrowChar = $1c;
+		rightArrowChar = $1d;
+		upArrowChar = $1e;
+		downArrowChar = $1f;
+		spaceChar = $20;
+		delChar = $7f;
+		bulletChar = $a5;
+		undoKey = $7a;
+		cutKey = $78;
+		copyKey = $63;
+		pasteKey = $76;
+
+	const
+		kReturnKeyCode = 36;
+		kTabKeyCode = 48;
+		kSpaceKeyCode = 49;
+		KDeleteKeyCode = 51;
+		kEnterKeyCode = 52;
+		kCommandKeyCode = 55;
+		kShiftKeyCode = 56;
+		kCapsLockKeyCode = 57;
+		kOptionKeyCode = 58;
+		kClearKeyCode = 71;
+
+	const
+		owner_id = -16096;
+		machine_id = -16413;
+
+	procedure InitMiscSubs;
+
+	function GetVolInfo (var name: str63; var vrn: integer; index: integer; var CrDate: longInt): OSErr;
+	function MyGetAPPL (sig: OSType; var fs: FSSpec): OSErr;
+	function FSpGetCatInfo (var fs: FSSpec; index: integer; var pb: CInfoPBRec): OSErr;
+	function GetWindowContentRegion (theWindow: WindowPtr): RgnHandle;
+	function GetWindowStructureRegion (theWindow: WindowPtr): RgnHandle;
+	function TitleBarOnScreen (wp: WindowPtr): boolean;
+	procedure GetWindowPortRect (theWindow: WindowPtr; var portRect: rect);
+	procedure GetWindowRect (theWindow: WindowPtr; var r: rect);
+	procedure CentreRect (inside_rect: Rect; var res_rect: Rect);
+	procedure CentreAlert (id: integer);
+	function GetAString (id, index: integer): Str255;
+	procedure Assert (b: boolean);
+	procedure SetItemEnable (mh: menuHandle; item: integer; enable: boolean);
+	function DirtyKey (ch: char): boolean;
+	procedure DoArrowKey (lh: ListHandle; uparrow: boolean);
+
+	function IsKeyDown (keycode: integer): boolean;
+	function SelectedLine (lh: ListHandle): integer;
+
+	function FSWriteQ (refnum: integer; count: longint; buf: Ptr): OSErr;
+	function FSReadQ (refnum: integer; count: longint; buf: Ptr): OSErr;
+
+	procedure DrawIcon (id: integer; r: Rect; highlighted: boolean);
+
+	function FileLocked (fss: FSSpec): boolean;
+
+	procedure DoListKey (list: ListHandle; modifiers: integer; ch: char; getentryname: ProcPtr);
+{  function GetEntryName (list: ListHandle; c: cell): str255;}
+
+	function DecStr (l: longint): Str255;
+	function CopyFile (source, dest: FSSpec): OSErr;
+
+	function GetOwnerName: str255;
+	function GetMachineName: str255;
+
+implementation
+
+	uses
+		IconFamilies, Errors, IconFamilies, 
+
+		ICGlobals;
+
+	var
+		typed_chars: str31;
+		typed_time: longInt;
+		typed_lh: ListHandle;
+
+	procedure InitMiscSubs;
+	begin
+		typed_chars := '';
+		typed_time := 0;
+		typed_lh := nil;
+	end;
+
+	procedure DrawIcon (id: integer; r: Rect; highlighted: boolean);
+		var
+			suite: Handle;
+			iconh: Handle;
+			junk: OSErr;
+			transform: integer;
+	begin
+		if system7 & (GetIconSuite(suite, id, svAllLargeData) = noErr) then begin
+			if highlighted then begin
+				transform := ttSelected;
+			end
+			else begin
+				transform := ttNone;
+			end; (* if *)
+			junk := PlotIconSuite(r, 0, transform, suite);
+			junk := DisposeIconSuite(suite, false);
+		end
+		else begin
+			iconh := Get1Resource('ICN#', id);
+			if iconh <> nil then begin
+				PlotIcon(r, iconh);
+			end; (* if *)
+		end; (* if *)
+	end; (* if *)
+
+	function FSWriteQ (refnum: integer; count: longint; buf: Ptr): OSErr;
+	begin
+		FSWriteQ := FSWrite(refnum, count, buf);
+	end; (* FSWriteQ *)
+
+	function FSReadQ (refnum: integer; count: longint; buf: Ptr): OSErr;
+	begin
+		FSReadQ := FSRead(refnum, count, buf);
+	end; (* FSReadQ *)
+
+	function SelectedLine (lh: ListHandle): integer;
+		var
+			acell: Cell;
+	begin
+		SetPt(acell, 0, 0);
+		if LGetSelect(true, acell, lh) then begin
+			SelectedLine := acell.v;
+		end
+		else begin
+			SelectedLine := -1;
+		end; (* if *)
+	end; (* SelectedLine *)
+
+	function IsKeyDown (keycode: integer): boolean;
+		var
+			mykeys: KeyMap;
+	begin
+		GetKeys(mykeys);
+		IsKeyDown := mykeys[keycode];
+	end; (* IsKeyDown *)
+
+	function GetVolInfo (var name: str63; var vrn: integer; index: integer; var CrDate: longInt): OSErr;
+		var
+			pb: paramBlockRec;
+			oe: OSErr;
+	begin
+		if (name <> '') & (name[length(name)] <> ':') then
+			name := concat(name, ':');
+		pb.ioNamePtr := @name;
+		pb.ioVRefNum := vrn;
+		pb.ioVolIndex := index;
+		oe := PBGetVInfo(@pb, false);
+		if oe = noErr then begin
+			vrn := pb.ioVRefNum;
+			CrDate := pb.ioVCrDate;
+		end;
+		GetVolInfo := oe;
+	end;
+
+	function MyGetAPPL (sig: OSType; var fs: FSSpec): OSErr;
+		var
+			i: integer;
+			pbdt: DTPBRec;
+			crdate: longInt;
+			oe: OSErr;
+			found: boolean;
+	begin
+		found := false;
+		if system7 then begin
+			i := 1;
+			repeat
+				fs.vRefNum := 0;
+				fs.name := '';
+				oe := GetVolInfo(fs.name, fs.vRefNum, i, crdate);
+				i := i + 1;
+				if oe = noErr then begin
+					with pbdt do begin
+						fs.name := '';
+						ioNamePtr := @fs.name;
+						ioVRefNum := fs.vRefNum;
+						oe := PBDTGetPath(@pbdt);
+						if oe = noErr then begin
+							ioIndex := 0;
+							ioFileCreator := sig;
+							oe := PBDTGetAPPLSync(@pbdt);
+							if oe = noErr then
+								found := true;
+						end;
+					end;
+					oe := noErr;
+				end;
+			until found or (oe <> noErr);
+		end;
+		if found then begin
+			oe := noErr;
+			fs.parID := pbdt.ioAPPLParID;
+		end
+		else begin
+			oe := afpItemNotFound;
+			fs.vRefNum := 0;
+			fs.parID := 2;
+			fs.name := '';
+		end;
+		MyGetAPPL := oe;
+	end;
+
+	function FSpGetCatInfo (var fs: FSSpec; index: integer; var pb: CInfoPBRec): OSErr;
+	begin
+		pb.ioVRefNum := fs.vRefNum;
+		pb.ioDirID := fs.parID;
+		pb.ioNamePtr := @fs.name;
+		pb.ioFDirIndex := index;
+		FSpGetCatInfo := PBGetCatInfoSync(@pb);
+	end;
+
+	function GetWindowContentRegion (theWindow: WindowPtr): RgnHandle;
+	begin
+		GetWindowContentRegion := WindowPeek(theWindow)^.contRgn;
+	end;
+
+	function GetWindowStructureRegion (theWindow: WindowPtr): RgnHandle;
+	begin
+		GetWindowStructureRegion := WindowPeek(theWindow)^.strucRgn;
+	end;
+
+	function TitleBarOnScreen (wp: WindowPtr): boolean;
+		var
+			rgn: RgnHandle;
+	begin
+		rgn := NewRgn;
+		CopyRgn(GetWindowStructureRegion(wp), rgn);
+		DiffRgn(rgn, GetWindowContentRegion(wp), rgn);
+		SectRgn(rgn, GetGrayRgn, rgn);
+		TitleBarOnScreen := not EmptyRgn(rgn);
+		DisposeRgn(rgn);
+	end;
+
+	procedure GetWindowPortRect (theWindow: WindowPtr; var portRect: rect);
+	begin
+		portRect := WindowPeek(theWindow)^.port.portRect;
+	end;
+
+	procedure GetWindowRect (theWindow: WindowPtr; var r: rect);
+	begin
+		SetPort(theWindow);
+		GetWindowPortRect(theWindow, r);
+		LocalToGlobal(r.topleft);
+		LocalToGlobal(r.botright);
+	end;
+
+	procedure CentreRect (inside_rect: Rect; var res_rect: Rect);
+		var
+			stat_siz: Point;
+	begin
+		stat_siz := inside_rect.botright;
+		SubPt(inside_rect.topleft, stat_siz);
+		OffsetRect(res_rect, -res_rect.left, -res_rect.top);
+		SubPt(res_rect.botright, stat_siz);
+		stat_siz.h := stat_siz.h div 2;
+		stat_siz.v := stat_siz.v div 2;
+		AddPt(inside_rect.topleft, stat_siz);
+		OffsetRect(res_rect, stat_siz.h, stat_siz.v);
+	end; (* CentreRect *)
+
+	procedure CentreAlert (id: integer);
+		var
+			alerth: AlertTHndl;
+			bounds: Rect;
+	begin
+		alerth := AlertTHndl(GetResource('ALRT', id));
+		if alerth <> nil then begin
+			bounds := screenBits.bounds;
+			bounds.bottom := (bounds.bottom - bounds.top) * 2 div 3 + bounds.top;
+			HLock(Handle(alerth));
+			CentreRect(bounds, alerth^^.boundsRect);
+			HUnlock(Handle(alerth));
+		end; (* if *)
+	end; (* CentreAlert *)
+
+	function GetAString (id, index: integer): Str255;
+		var
+			res: Str255;
+	begin
+		GetIndString(res, id, index);
+		GetAString := res;
+	end; (* GetAString *)
+
+	procedure Assert (b: boolean);
+	begin
+		if not b then begin
+			DebugStr('Assertion failure ; sc');
+		end; (* if *)
+	end;
+
+	procedure SetItemEnable (mh: menuHandle; item: integer; enable: boolean);
+	begin
+		if enable then begin
+			EnableItem(mh, item);
+		end
+		else begin
+			DisableItem(mh, item);
+		end;
+	end;
+
+	function DirtyKey (ch: char): boolean;
+	begin
+		case ord(ch) of
+			homeChar, endChar, helpChar, pageUpChar, pageDownChar, leftArrowChar, rightArrowChar, upArrowChar, downArrowChar: 
+				DirtyKey := false;
+			otherwise
+				DirtyKey := true;
+		end;
+	end;
+
+	function IsVolumeWriteable (vRefNum: integer): OSErr;
+		var
+			pb: HParamBlockRec;
+			err: OSErr;
+	begin
+		pb.ioVRefNum := vRefNum;
+		pb.ioNamePtr := nil;
+		pb.ioVolIndex := 0;
+		err := PBHGetVInfoSync(@pb);
+
+		if err = noErr then begin
+			if BAND(pb.ioVAtrb, $0080) <> 0 then begin
+				err := wPrErr;		{ volume locked by hardware }
+			end
+			else if BAND(pb.ioVAtrb, $8000) <> 0 then begin
+				err := vLckdErr;	{ volume locked by software }
+			end;
+		end;
+
+		IsVolumeWriteable := err;
+	end;
+
+	function IsFileWriteable (fs: FSSpec): OSErr;
+		var
+			pb: CInfoPBRec;
+			err: OSErr;
+	begin
+		pb.ioNamePtr := @fs.name;
+		pb.ioVRefNum := fs.vRefNum;
+		pb.ioDirID := fs.parID;
+		pb.ioFDirIndex := 0;	{ use ioNamePtr and ioDirID }
+		err := PBGetCatInfoSync(@pb);
+
+		if err = noErr then begin
+			if BAND(pb.ioFlAttrib, $01) <> 0 then begin
+				err := fLckdErr;
+			end;
+		end;
+		IsFileWriteable := err;
+	end;
+
+	function HGetDirAccess (vRefNum: integer; dirID: longInt; name: StringPtr; var ownerID, groupID, accessRights: longInt): OSErr;
+		var
+			pb: HParamBlockRec;
+			err: OSErr;
+	begin
+		pb.ioNamePtr := name;
+		pb.ioVRefNum := vRefNum;
+		pb.ioDirID := dirID;
+		err := PBHGetDirAccessSync(@pb);
+		ownerID := pb.ioACOwnerID;
+		groupID := pb.ioACGroupID;
+		accessRights := pb.ioACAccess;
+		HGetDirAccess := err;
+	end;
+
+	function FileLocked (fss: FSSpec): boolean;
+		var
+			locked: boolean;
+			junk: longint;
+			access: longint;
+	begin
+		locked := (IsVolumeWriteable(fss.vRefNum) <> noErr);
+		if not locked then begin
+			locked := (IsFileWriteable(fss) <> noErr);
+		end; (* if *)
+		if not locked then begin
+			if HGetDirAccess(fss.vRefNum, fss.parID, nil, junk, junk, access) = noErr then begin
+				locked := not btst(access, 26);
+			end; (* if *)
+		end; (* if *)
+		FileLocked := locked;
+	end; (* FileLocked *)
+
+	procedure LSetSingleSelection (list: ListHandle; v: integer);
+		var
+			c: Cell;
+	begin
+		c.h := 0;
+		c.v := v;
+		LSetSelect(true, c, list);
+		c.v := 0;
+		c.h := 0;
+		while LGetSelect(true, c, list) do begin
+			if c.v <> v then begin
+				LSetSelect(false, c, list);
+			end;
+			c.v := c.v + 1;
+			c.h := 0;
+		end;
+		LAutoScroll(list);
+	end;
+
+	function LGetEntryNameProc (list: ListHandle; c: cell; getentryname: ProcPtr): str255;
+	inline
+		$205F, $4E90;
+
+	function LGetUniqueEntryName (list: ListHandle; c: cell; getentryname: ProcPtr): str255;
+		var
+			s: str255;
+	begin
+		s := '';
+		if getentryname <> nil then begin
+			s := LGetEntryNameProc(list, c, getentryname);
+		end;
+		LGetUniqueEntryName := concat(s, chr(0), chr(c.v div 256), chr(c.v mod 256));
+	end;
+
+	function LGetFirstSelection (list: ListHandle; var c: Cell; getentryname: ProcPtr): boolean;
+		var
+			best, n: str255;
+			index: integer;
+	begin
+		LGetFirstSelection := false;
+		c.h := 0;
+		c.v := 0;
+		best := concat(chr(255), chr(255));
+		while LGetSelect(true, c, list) do begin
+			LGetFirstSelection := true;
+			n := LGetUniqueEntryName(list, c, getentryname);
+			if IUCompString(n, best) < 0 then begin
+				index := c.v;
+			end;
+			c.v := c.v + 1;
+		end;
+		c.h := 0;
+		c.v := index;
+	end;
+
+	function LSelectFirstBefore (list: ListHandle; s: str255; getentryname: ProcPtr): boolean;
+		var
+			i, index: integer;
+			c: Cell;
+			best, n: str255;
+			good: boolean;
+	begin
+		good := false;
+		index := 0;
+		best := '';
+		for i := 0 to list^^.databounds.bottom - 1 do begin
+			c.h := 0;
+			c.v := i;
+			n := LGetUniqueEntryName(list, c, getentryname);
+			if (IUCompString(s, n) > 0) & (IUCompString(n, best) > 0) then begin
+				best := n;
+				index := c.v;
+				good := true;
+			end;
+		end;
+		if good then begin
+			LSetSingleSelection(list, index);
+		end;
+		LSelectFirstBefore := good;
+	end;
+
+	function LGetLastSelection (list: ListHandle; var c: Cell; getentryname: ProcPtr): boolean;
+		var
+			best, n: str255;
+			index: integer;
+	begin
+		LGetLastSelection := false;
+		c.h := 0;
+		c.v := 0;
+		best := '';
+		while LGetSelect(true, c, list) do begin
+			LGetLastSelection := true;
+			n := LGetUniqueEntryName(list, c, getentryname);
+			if IUCompString(n, best) > 0 then begin
+				index := c.v;
+				best := n;
+			end;
+			c.v := c.v + 1;
+		end;
+		c.h := 0;
+		c.v := index;
+	end;
+
+	function LSelectFirstAfter (list: ListHandle; s: str255; getentryname: ProcPtr): boolean;
+		var
+			i, index: integer;
+			c: Cell;
+			best, n: str255;
+			good: boolean;
+	begin
+		good := false;
+		best := concat(chr(255), chr(255));
+		for i := 0 to list^^.databounds.bottom - 1 do begin
+			c.h := 0;
+			c.v := i;
+			n := LGetUniqueEntryName(list, c, getentryname);
+			if (IUCompString(s, n) < 0) & (IUCompString(n, best) < 0) then begin
+				best := n;
+				index := c.v;
+				good := true;
+			end;
+		end;
+		if good then begin
+			LSetSingleSelection(list, index);
+		end;
+		LSelectFirstAfter := good;
+	end;
+
+	procedure DoListKey (list: ListHandle; modifiers: integer; ch: char; getentryname: ProcPtr);
+		var
+			c: Cell;
+			index: integer;
+			dummy: boolean;
+			curticks: longInt;
+	begin
+		curticks := TickCount;
+		if (typed_lh <> list) or (ch < ' ') then begin
+			typed_time := 0;
+			typed_lh := list;
+		end;
+		case ord(ch) of
+			downArrowChar:  begin
+				c.h := 0;
+				c.v := 0;
+				index := 0;
+				while LGetSelect(true, c, list) do begin
+					c.v := c.v + 1;
+					index := c.v;
+				end;
+				if index >= list^^.dataBounds.bottom then begin
+					index := list^^.dataBounds.bottom - 1;
+				end;
+				LSetSingleSelection(list, index);
+				LAutoScroll(list);
+			end;
+			upArrowChar:  begin
+				c.h := 0;
+				c.v := 0;
+				if not LGetSelect(true, c, list) then begin
+					c.v := list^^.dataBounds.bottom;
+				end;
+				if c.v > 0 then begin
+					c.v := c.v - 1;
+				end;
+				LSetSingleSelection(list, c.v);
+				LAutoScroll(list);
+			end;
+			homeChar:  begin
+				LScroll(0, -list^^.dataBounds.bottom, list);
+			end;
+			endChar:  begin
+				LScroll(0, list^^.dataBounds.bottom, list);
+			end;
+			pageUpChar:  begin
+				LScroll(0, -(list^^.visible.bottom - list^^.visible.top - 2), list);
+			end;
+			pageDownChar:  begin
+				LScroll(0, (list^^.visible.bottom - list^^.visible.top - 2), list);
+			end;
+			tabChar:  begin
+				if BAND(modifiers, shiftKey) <> 0 then begin
+					if not LGetFirstSelection(list, c, getentryname) | not LSelectFirstBefore(list, LGetUniqueEntryName(list, c, getentryname), getentryname) then begin
+						dummy := LSelectFirstBefore(list, chr(255), getentryname);
+					end;
+				end
+				else begin
+					if not LGetLastSelection(list, c, getentryname) | not LSelectFirstAfter(list, LGetUniqueEntryName(list, c, getentryname), getentryname) then begin
+						dummy := LSelectFirstAfter(list, '', getentryname);
+					end;
+				end;
+			end;
+			otherwise begin
+				if ch >= ' ' then begin
+					if curticks - typed_time > 60 then begin
+						typed_chars := '';
+					end;
+					typed_time := curticks;
+					typed_chars := concat(typed_chars, ch);
+					if not LSelectFirstAfter(list, typed_chars, getentryname) then begin
+						dummy := LSelectFirstBefore(list, chr(255), getentryname);
+					end;
+				end;
+			end;
+		end;
+	end;
+
+	function DecStr (l: longint): Str255;
+	begin
+		DecStr := StringOf(l : 1);
+	end; (* DecStr *)
+
+	function GetDirName (fs: FSSpec): OSErr;
+		var
+			pb: CInfoPBRec;
+	begin
+		pb.ioNamePtr := @fs.name;
+		pb.ioVRefNum := fs.vRefNum;
+		pb.ioDirID := fs.parID;
+		pb.ioFDirIndex := -1;	{* get information about ioDirID *}
+		GetDirName := PBGetCatInfoSync(@pb);
+	end;
+
+	function CopyFork (srn, drn: integer; len: longInt): OSErr;
+		var
+			err: OSErr;
+			p: ptr;
+			size: longInt;
+			count: longInt;
+	begin
+		err := noErr;
+		size := 65536;
+		p := nil;
+		repeat
+			p := NewPtr(size);
+			if p <> nil then begin
+				size := size div 2;
+			end;
+		until (p <> nil) or (size < 512);
+		if p = nil then begin
+			err := memFullErr;
+		end;
+		while (err = noErr) & (len > 0) do begin
+			count := size;
+			if count > len then begin
+				count := len;
+			end;
+			err := FSRead(srn, count, p);
+			if (err = noErr) & (count = 0) then begin
+				err := eofErr;
+			end;
+			if err = noErr then begin
+				len := len - count;
+				err := FSWrite(drn, count, p);
+			end;
+		end;
+		if p <> nil then begin
+			DisposePtr(p);
+		end;
+		CopyFork := err;
+	end;
+
+	function CopyFile (source, dest: FSSpec): OSErr;
+		var
+			err, oerr, junk: OSErr;
+			pb: CInfoPBRec;
+			srrn, sdrn, drrn, ddrn: integer;
+	begin
+		junk := HDelete(dest.vRefNum, dest.parID, dest.name);
+		err := FSpGetCatInfo(source, 0, pb);
+		if err = noErr then begin
+			err := HCreate(dest.vRefNum, dest.parID, dest.name, pb.ioFlFndrInfo.fdCreator, pb.ioFlFndrInfo.fdType);
+			if err = noErr then begin
+				err := HOpen(dest.vRefNum, dest.parID, dest.name, fsWrPerm, ddrn);
+				if err = noErr then begin
+					err := HOpenRF(dest.vRefNum, dest.parID, dest.name, fsWrPerm, drrn);
+					if err = noErr then begin
+						err := HOpen(source.vRefNum, source.parID, source.name, fsRdPerm, sdrn);
+						if err = noErr then begin
+							err := HOpenRF(source.vRefNum, source.parID, source.name, fsRdPerm, srrn);
+							if err = noErr then begin
+								err := CopyFork(sdrn, ddrn, pb.ioFlLgLen);
+								if err = noErr then begin
+									err := CopyFork(srrn, drrn, pb.ioFlRLgLen);
+								end;
+								junk := FSClose(srrn);
+							end;
+							junk := FSClose(sdrn);
+						end;
+						oerr := FSClose(drrn);
+						if err = noErr then begin
+							err := oerr;
+						end;
+					end;
+					oerr := FSClose(ddrn);
+					if err = noErr then begin
+						err := oerr;
+					end;
+				end;
+			end;
+		end;
+		if err <> noErr then begin
+			junk := HDelete(dest.vRefNum, dest.parID, dest.name);
+		end;
+		CopyFile := err;
+	end; (* CopyFile *)
+
+	function GetName (id1, id2: integer): str255;
+		var
+			sh: stringHandle;
+	begin
+		sh := GetString(id1);
+		if sh = nil then
+			sh := GetString(id2);
+		if sh <> nil then
+			GetName := sh^^ { Don't release it, someone else may be using it }
+		else
+			GetName := 'unnamed';
+	end;
+
+	function GetOwnerName: str255;
+	begin
+		GetOwnerName := GetName(owner_id, machine_id);
+	end;
+
+	function GetMachineName: str255;
+	begin
+		GetMachineName := GetName(machine_id, owner_id);
+	end;
+
+end.
+function CopyFile (source, dest: FSSpec): OSErr;
+	var
+		err: OSErr;
+		destdir: FSSpec;
+		pb: CInfoPBRec;
+		tmpfss: FSSpec;
+begin
+	err := HDelete(dest.vRefNum, dest.parID, dest.name);
+	destdir.vRefNum := dest.vRefNum;
+	tmpfss := dest;
+	err := FSpGetCatInfo(tmpfss, -1, pb);
+	if err = noErr then begin
+		destdir.parID := pb.ioDrParID;
+		err := GetDirName(dest);
+	end; (* if *)
+	if err = noErr then begin
+		err := FileCopy(source.vRefNum, source.parID, source.name, destdir.vRefNum, destdir.parID, @destdir.name, @dest.name, nil, 0, true);
+	end; (* if *)
+	CopyFile := err;
+end; (* CopyFile *)

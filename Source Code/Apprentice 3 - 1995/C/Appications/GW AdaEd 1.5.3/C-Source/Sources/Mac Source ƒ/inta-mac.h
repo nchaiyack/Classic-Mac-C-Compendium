@@ -1,1 +1,2 @@
-extern int get_word(void);
+extern int get_word(void);
+

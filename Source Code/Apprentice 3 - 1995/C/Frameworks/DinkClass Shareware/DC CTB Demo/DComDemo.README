@@ -1,1 +1,22 @@
-DComDemo represents yet another demo applicationbuilt out of the DinkClass library.  This Communications tool box application is Demo Ware.You may do with it as you like, just keep the about boxintact and distribute this README with the executable.  To use the DComDemo you need to have the Communications ToolBox and tools installed in your system extensions folder.  I'm sorry, I haven't gotten the licensing agreement from apple to distribute communications tool box tools, so you'll haveto get your own communication tools.DComDemo supports as many synchronous channels of communication asyou have memory for (DinkClass doesn't yet handle low memory situationsvery well yet so you may have to up the partition).  Each channelhas its own window.KNOWN PROBLEMS:¥ There is no idle loop implemented with the CMListen call used in responce to one of the menu choices.  This results in not being able to break out of the lestenuntill the 5 minets are up.  (This IS a demo application)
+DComDemo represents yet another demo application
+built out of the DinkClass library.  
+This Communications tool box application is Demo Ware.
+You may do with it as you like, just keep the about box
+intact and distribute this README with the executable.  
+
+To use the DComDemo you need to have the Communications 
+ToolBox and tools installed in your system extensions folder.  
+I'm sorry, I haven't gotten the licensing agreement from apple 
+to distribute communications tool box tools, so you'll have
+to get your own communication tools.
+
+DComDemo supports as many synchronous channels of communication as
+you have memory for (DinkClass doesn't yet handle low memory situations
+very well yet so you may have to up the partition).  Each channel
+has its own window.
+
+KNOWN PROBLEMS:
+¥ There is no idle loop implemented with the CMListen call used in responce to 
+one of the menu choices.  This results in not being able to break out of the lesten
+untill the 5 minets are up.  (This IS a demo application)
+

@@ -1,1 +1,3 @@
-#define	WORLD_MARGIN		13L#define	NUM_TERRAINS		12
+#define	WORLD_MARGIN		13L
+
+#define	NUM_TERRAINS		12

@@ -1,1 +1,99 @@
-Versions history1.0 (6 April 1991) the first release1.01 (26 May 91) added support for drives which are not drive 1 and introduced the "uuencoded dump" distribution format1.1 (14 Oct. 91) the program was largely rewritten: more commands supporting more formats,  a fully rewritten interface, and it's now MultiFinder aware and System 7.0 friendly.1.2 (15 Feb. 1992) Preferences settings are now saved, we've added an options box, and more. Unfortunately, this version was extremely bugged1.2.1 (8 March 92)1.2.2 (5 April 92)1.3 (20 June 92) added support for POSIX tar multivolume archives. And it is much, much faster.1.3.1 (18 July 92)1.3.2 (31 Oct. 92) Fixed a number of bugs.1.3.3 (6 March 1993)2.0 beta 12 (7 Jan. 1994) see below2.0.1 (10 July 94) a number of bug fixes and a few new features, including a "file truncate" option for the "clear sector" command and better handling of drag&drop2.0.2 (4 Sept. 94) more bug fixes, and since we could spend a few days in the company of an Exabyte, now the support for tape units is much better2.0.3 (1 Nov. 94) more bug fixes in tape handling, added a uuencoder2.0.4 (12 March 1995) minor bug fixes (and a major one in tape handling), may keep its preferences in a separate file (useful for sharing a single copy over a net) and may convert character codes >1272.0.5 (24 June 1995) a couple of bug fixes (not in the tape moduleÉ) and a few improvements, including a "time zone" optionNew features of 2.0a) it can open any volume (including non-mounted ones) and any SCSI   device, hence if you can connect a device to both a UNIX workstation   and a Mac there are chances that you may use it to transfer data.b) can create tar archives as files on a regular Macintosh volumec) can create MacBinary and BinHex 4.0 files (and uuencode in 2.0.3)d) can extract uuencoded filese) correctly converts MS-DOS text files (even "MS-DOS to UNIX" in 2.0.2)f) an "extension -> type&creator" table allows a better control of   the file typesg) you may select files to be archived from a scrollable list which   allows multiple selections and UNIX-like pattern matchingh) it knows about how MS-DOS marks defective sectors in floppy disksi) it can place an empty MS-DOS filesystem on a floppy diskj) "Extract from sector" is another way to select part of an archivek) View sector may optionally use a pure hexadecimal representationl) it supports pathnames longer than 99 characters (unfortunately   there are two different ways to extend tar, both are supported)m) ejecting the disk is less dangerous since suntar exiting from a   pause now checks that the disk in the drive is the correct onen) it may create a log fileo) sometimes it's slightly fasterp) no more need to use ResEdit to set buffer sizes and other optionsKnown bugs  SuperBoomerang 3.0/4.0 has a bug that creates incompatibilities with suntar and many other applications (the 2.0 version is OK, but it's incompatible with System 7). In other similar cases we modified suntar to become compatible with buggy programs, but in this case that would disable a useful feature and violate Apple rules. Anyway, an option removes the incompatibility (it's not in the options box, but among "rarely used options", only in expert mode).  It does not handle correctly multi-volume archives on devices opened by the "Open device" command.  It may have some incompatibilities with System 7.5 or previous incarnations of features made "official" with 7.5. E.g. it causes its hierachical Apple menu (Apple menu options) to recheck the list of recent files, and that takes a lot of time. We're working to fix that.Compatibility  Our experience and/or letters from previous users have reported successful use of suntar in exchanging data with the following UNIX machines:Sun SPARCstation 1, 1+, 2, IPC, IPX, 10Sun 386iIBM RISC/6000NeXTstationSolbourne S4000  (a SPARCstation clone)HP 9000 model 370 with HP9122A or HP9153B drive unitDECstation 5000 running ULTRIX 4.3 rev. 43Siemens-Nixdorf MX500a Sony News workstationSilicon Graphics Workstations 4D, IndigoBull DPX/ProStation (486DX) running SCO UNIX Sys V/386Zeos Notebook (386SX) running MWC Coherent 4.0a Taiwanese clone (AMD 386DX) running QNX 4.1a Macintosh IIfx running A/UX 3.0 (suntar can read/write its tar archives, I don't know whether it has problems running under it: suntar 1.3 could not find the floppy disk since its name is different under A/UX, suntar 2.0 may open a disk having any name but it was never launched under A/UX )Only a couple of users reported problems (an HP 9000 and a 386 with SCO UNIX) but I couldn't identify the cause (defective hardware?).Copyright notice  Suntar (Speranza's un-tar) is freeware, so you may freely distribute it and send it to other public domain archives, provided that the documentation and this file are kept with it. You may also include it in any shareware collection on floppy disk, CD-ROM or other means. If you send it to an archive which is more easily accessible from UNIX machines than from the Mac, maybe you should send it in both forms, the Mac files (or file, if compressed into an archive) for who can download it and the uuencoded file (which includes instructions to use it) for those who need to "bootstrap" their communication link between UNIX and the Mac, by creating a Mac disk containing suntar using only UNIX utilities and a 3.5" disk drive connected to an UNIX machine. Some archives might wish to store also the file which allows to perform the bootstrap from an MS-DOS machine, but since nobody wrote me that it was useful we're no more including it in the suntar package. Really, also the uuencoded file seems to meet scarce interest today.  All the routines for creating and extracting files in tar format, plus the MacBinary conversions are from the programs muntar 1.0 and mtar 1.0 © Gail Zacharias 1988, whose source code is available in public domain. We did a lot of little improvements (for example, muntar recognized only the main variant of MacBinary), added support for bar and multivolume tar archives, and transformed them from file format converters with a pure UNIX-like interface (under the MPW shell) to a communication program with a Mac-like interface.   The PackIt extractions routines are from unpit 2 ©1986 Allan Weber (it's a UNIX program).The routines for MS-DOS disks (IBM-ize and the test for sectors marked bad) are from mtools, a UNIX package by Emmet Gray.  The color icons were sent us by Mark Duffield who edited and colored the icons we had designed.  Suntar was written in Think-C 4.0.5 and 5.0; the 1.0 version used Symantec's ANSI standard library, but starting from the 1.1 version suntar has a user interface library of its own, built from demo programs by Symantec (MiniEdit.c) and Apple Computer (TESample.c), with a lot of original additions.  Furthermore, we must thank all the users of suntar for their suggestions and their help in identifying problems: in particular, the tape support would have never worked without the help of beta testers and their patience in performing tests; Dominique Petitpierre was certainly the most helpful of them all.  The source code of 1.3.3 is already available in public domain, probably the same will be for 2.0 when the worst bugs will have been discovered and fixed.  You may help us to make suntar better by sending your bug reports, suggestions and questions to:mail address:								Sauro & Gabriele Speranza								via Cappuccini 18								40026 Imola								Italy(yes, it's the town where a Formula 1 grand Prix takes place and, sigh, where Ayrton Senna died)E-mail in INTERNET								Sauro Speranza								speranza@cirfid.unibo.it							12 March 1995
+Versions history
+
+1.0 (6 April 1991) the first release
+1.01 (26 May 91) added support for drives which are not drive 1 and introduced the "uuencoded dump" distribution format
+1.1 (14 Oct. 91) the program was largely rewritten: more commands supporting more formats,  a fully rewritten interface, and it's now MultiFinder aware and System 7.0 friendly.
+1.2 (15 Feb. 1992) Preferences settings are now saved, we've added an options box, and more. Unfortunately, this version was extremely bugged
+1.2.1 (8 March 92)
+1.2.2 (5 April 92)
+1.3 (20 June 92) added support for POSIX tar multivolume archives. And it is much, much faster.
+1.3.1 (18 July 92)
+1.3.2 (31 Oct. 92) Fixed a number of bugs.
+1.3.3 (6 March 1993)
+2.0 beta 12 (7 Jan. 1994) see below
+2.0.1 (10 July 94) a number of bug fixes and a few new features, including a "file truncate" option for the "clear sector" command and better handling of drag&drop
+2.0.2 (4 Sept. 94) more bug fixes, and since we could spend a few days in the company of an Exabyte, now the support for tape units is much better
+2.0.3 (1 Nov. 94) more bug fixes in tape handling, added a uuencoder
+2.0.4 (12 March 1995) minor bug fixes (and a major one in tape handling), may keep its preferences in a separate file (useful for sharing a single copy over a net) and may convert character codes >127
+2.0.5 (24 June 1995) a couple of bug fixes (not in the tape moduleÉ) and a few improvements, including a "time zone" option
+
+New features of 2.0
+
+a) it can open any volume (including non-mounted ones) and any SCSI
+   device, hence if you can connect a device to both a UNIX workstation
+   and a Mac there are chances that you may use it to transfer data.
+b) can create tar archives as files on a regular Macintosh volume
+c) can create MacBinary and BinHex 4.0 files (and uuencode in 2.0.3)
+d) can extract uuencoded files
+e) correctly converts MS-DOS text files (even "MS-DOS to UNIX" in 2.0.2)
+f) an "extension -> type&creator" table allows a better control of
+   the file types
+g) you may select files to be archived from a scrollable list which
+   allows multiple selections and UNIX-like pattern matching
+h) it knows about how MS-DOS marks defective sectors in floppy disks
+i) it can place an empty MS-DOS filesystem on a floppy disk
+j) "Extract from sector" is another way to select part of an archive
+k) View sector may optionally use a pure hexadecimal representation
+l) it supports pathnames longer than 99 characters (unfortunately
+   there are two different ways to extend tar, both are supported)
+m) ejecting the disk is less dangerous since suntar exiting from a
+   pause now checks that the disk in the drive is the correct one
+n) it may create a log file
+o) sometimes it's slightly faster
+p) no more need to use ResEdit to set buffer sizes and other options
+
+
+Known bugs
+
+  SuperBoomerang 3.0/4.0 has a bug that creates incompatibilities with suntar and many other applications (the 2.0 version is OK, but it's incompatible with System 7). In other similar cases we modified suntar to become compatible with buggy programs, but in this case that would disable a useful feature and violate Apple rules. Anyway, an option removes the incompatibility (it's not in the options box, but among "rarely used options", only in expert mode).
+  It does not handle correctly multi-volume archives on devices opened by the "Open device" command.
+  It may have some incompatibilities with System 7.5 or previous incarnations of features made "official" with 7.5. E.g. it causes its hierachical Apple menu (Apple menu options) to recheck the list of recent files, and that takes a lot of time. We're working to fix that.
+
+Compatibility
+
+  Our experience and/or letters from previous users have reported successful use of suntar in exchanging data with the following UNIX machines:
+
+Sun SPARCstation 1, 1+, 2, IPC, IPX, 10
+Sun 386i
+IBM RISC/6000
+NeXTstation
+Solbourne S4000  (a SPARCstation clone)
+HP 9000 model 370 with HP9122A or HP9153B drive unit
+DECstation 5000 running ULTRIX 4.3 rev. 43
+Siemens-Nixdorf MX500
+a Sony News workstation
+Silicon Graphics Workstations 4D, Indigo
+Bull DPX/ProStation (486DX) running SCO UNIX Sys V/386
+Zeos Notebook (386SX) running MWC Coherent 4.0
+a Taiwanese clone (AMD 386DX) running QNX 4.1
+a Macintosh IIfx running A/UX 3.0 (suntar can read/write its tar archives, I don't know whether it has problems running under it: suntar 1.3 could not find the floppy disk since its name is different under A/UX, suntar 2.0 may open a disk having any name but it was never launched under A/UX )
+
+Only a couple of users reported problems (an HP 9000 and a 386 with SCO UNIX) but I couldn't identify the cause (defective hardware?).
+
+
+Copyright notice
+
+  Suntar (Speranza's un-tar) is freeware, so you may freely distribute it and send it to other public domain archives, provided that the documentation and this file are kept with it. You may also include it in any shareware collection on floppy disk, CD-ROM or other means. If you send it to an archive which is more easily accessible from UNIX machines than from the Mac, maybe you should send it in both forms, the Mac files (or file, if compressed into an archive) for who can download it and the uuencoded file (which includes instructions to use it) for those who need to "bootstrap" their communication link between UNIX and the Mac, by creating a Mac disk containing suntar using only UNIX utilities and a 3.5" disk drive connected to an UNIX machine. Some archives might wish to store also the file which allows to perform the bootstrap from an MS-DOS machine, but since nobody wrote me that it was useful we're no more including it in the suntar package. Really, also the uuencoded file seems to meet scarce interest today.
+  All the routines for creating and extracting files in tar format, plus the MacBinary conversions are from the programs muntar 1.0 and mtar 1.0 © Gail Zacharias 1988, whose source code is available in public domain. We did a lot of little improvements (for example, muntar recognized only the main variant of MacBinary), added support for bar and multivolume tar archives, and transformed them from file format converters with a pure UNIX-like interface (under the MPW shell) to a communication program with a Mac-like interface. 
+  The PackIt extractions routines are from unpit 2 ©1986 Allan Weber (it's a UNIX program).
+The routines for MS-DOS disks (IBM-ize and the test for sectors marked bad) are from mtools, a UNIX package by Emmet Gray.
+  The color icons were sent us by Mark Duffield who edited and colored the icons we had designed.
+  Suntar was written in Think-C 4.0.5 and 5.0; the 1.0 version used Symantec's ANSI standard library, but starting from the 1.1 version suntar has a user interface library of its own, built from demo programs by Symantec (MiniEdit.c) and Apple Computer (TESample.c), with a lot of original additions.
+  Furthermore, we must thank all the users of suntar for their suggestions and their help in identifying problems: in particular, the tape support would have never worked without the help of beta testers and their patience in performing tests; Dominique Petitpierre was certainly the most helpful of them all.
+  The source code of 1.3.3 is already available in public domain, probably the same will be for 2.0 when the worst bugs will have been discovered and fixed.
+
+  You may help us to make suntar better by sending your bug reports, suggestions and questions to:
+
+mail address:
+								Sauro & Gabriele Speranza
+
+								via Cappuccini 18
+								40026 Imola
+								Italy
+(yes, it's the town where a Formula 1 grand Prix takes place and, sigh, where Ayrton Senna died)
+
+E-mail in INTERNET
+								Sauro Speranza
+								speranza@cirfid.unibo.it
+
+							12 March 1995

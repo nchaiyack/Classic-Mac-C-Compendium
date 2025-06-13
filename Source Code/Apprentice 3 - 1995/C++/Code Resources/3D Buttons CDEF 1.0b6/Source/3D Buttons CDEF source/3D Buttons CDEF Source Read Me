@@ -1,1 +1,94 @@
-3D Buttons CDEF, by Zig Zichterman1.0b6 29 December 19943D Buttons is a control definition (CDEF) that implements the 3D interface as suggested in develop issue 15. When drawing on a 8-bit (or breater) color device (in a color GrafPort), 3D Buttons draws in grey. 3D Buttons drops to normal 2D drawing for black and white (or less than 8 bits of color).Environment3D Buttons is a Metrowerks CodeWarrior/CW5 project. The project does not compile under CW/4 or earlier due to some single-segment code resource link problems. I do not have Symantec C/C++ 7, so I have no idea if the CDEF can compile in Symantec environments.The project includes the following files:CPlusPlusA4.libMacOS.libCDEF++.cpIsColorQDPresent.cpLCDEFCheckbox.cpLCDEFCheckboxOrRadioButton.cpLCDEFControl.cpLCDEFIconButton.cpLCDEFPushButton.cpLCDEFPushOrIconButton.cpLCDEFRadioButton.cpLColorTable.cpLDeviceLoop.cpRectT.cpRgnHandleT.cpStOffscreen.cpStSaveClip.cpStSaveColor.cpStSaveEm.cpStSaveFont.cpStSavePen.cpOverviewThe source for the 3D Buttons CDEF is broken into•  the main entry function:      CDEF++.cp•  classes for 4 button variants:      LCDEFControl      LCDEFPushOrIconButton      LCDEFCheckboxOrRadioButton      LCDEFPushButton      LCDEFCheckbox      LCDEFRadioButton      LCDEFIconButton•  utility classes:      IsColorQDPresent      LColorTable      LDeviceLoop      StOffscreen•  state saver/restorers      StSaveClip      StSaveColor      StSaveEm      StSaveFont      StSavePen•  C++ encapsulation of toolbox structures      RectT      RgnHandleTEvery function call into the CDEF comes through the main entry point in CDEF++.cp. The main() function in CDEF++.cp just sets up A4 and relays the call to LCDEFControl::Main() (a static function).LCDEFControl::Main() locks the control handle and makes sure it is valid before going any further. Main() then creates (on the stack) an object of the appropriate control kind (push button, checkbox, radio button, or icon button), and relays the call to the object's Dispatch() function.Most of the shared work for all 4 control kinds is in LCDEFControl. Where the work required different code for different control kinds, I made a virtual function to handle the work, and implemented the function in the appropriate class.  The class hierarchy:    LCDEFControl        LCDEFPushOrIconButton            LCDEFPushButton            LCDEFIconButton        LCDEFCheckboxOrRadioButton            LCDEFCheckbox            LCDEFRadioButtonAllows even more shared code, since push buttons and icon buttons are similar in their highlighting and rounded rect work, and checkboxes and radio buttons are similar in their script-direction sensitive placement of the radio/checkbox next to the title, and their ability to tristate.The C++ encapsulation of RgnHandle lets me create and destroy regions without worrying about leaking a region handle, or not getting an allocation due to extraordinarily low memory. RectT is mostly a convenience wrapper, initializing the Rect to consistent values so I can avoid uninitialized variable bugs. I use higher-power versions of these and other C++ wrappers in my work and hobby code, and my code has gotten a lot more readable and a lot less buggy since.Change History1.0b6--28 December 1994Complete rewrite for CW/5. Now CDEF uses more features of C++, making the code cleaner and easier to support.1.0b5--06 December 1994Lots of bug fixes!Fix useWFont bug—now actually uses window's font.Save and restore font, pen color, pen state, and clip region across draw.Clip to intersection of original clip region and device when walking device list.Honor control and window auxilliary color tables ('cctb', 'wctb' and so on) when drawing inactive/flat controls, background of checkboxes and radio buttons.Don't force 4 corners of pushbuttons to 0xDDDD.Also, use classes to save/restore the pen, color, clip region.1.0b4--31 July 1994Bug Fix—save and restore the pen color across drawsDraw 3D buttons on 4-bit devices if those devices are also greyscale, not color.1.0b3--29 July 1994Added offscreen GWorld support so the button titles would stop that annoying flashing. Many thanks to one of my users for pointing it out.1.0b2--20 July 1994 (never released)Call PenNormal() before starting any draw. Alerts would leave the pensize at (2,2) for the default button, which tended to make OK buttons look awful in color.
+3D Buttons CDEF, by Zig Zichterman
+1.0b6 29 December 1994
+
+3D Buttons is a control definition (CDEF) that implements the 3D interface as suggested in develop issue 15. When drawing on a 8-bit (or breater) color device (in a color GrafPort), 3D Buttons draws in grey. 3D Buttons drops to normal 2D drawing for black and white (or less than 8 bits of color).
+
+Environment
+3D Buttons is a Metrowerks CodeWarrior/CW5 project. The project does not compile under CW/4 or earlier due to some single-segment code resource link problems. I do not have Symantec C/C++ 7, so I have no idea if the CDEF can compile in Symantec environments.
+
+The project includes the following files:
+CPlusPlusA4.lib
+MacOS.lib
+CDEF++.cp
+IsColorQDPresent.cp
+LCDEFCheckbox.cp
+LCDEFCheckboxOrRadioButton.cp
+LCDEFControl.cp
+LCDEFIconButton.cp
+LCDEFPushButton.cp
+LCDEFPushOrIconButton.cp
+LCDEFRadioButton.cp
+LColorTable.cp
+LDeviceLoop.cp
+RectT.cp
+RgnHandleT.cp
+StOffscreen.cp
+StSaveClip.cp
+StSaveColor.cp
+StSaveEm.cp
+StSaveFont.cp
+StSavePen.cp
+
+Overview
+The source for the 3D Buttons CDEF is broken into
+•  the main entry function:
+      CDEF++.cp
+•  classes for 4 button variants:
+      LCDEFControl
+      LCDEFPushOrIconButton
+      LCDEFCheckboxOrRadioButton
+      LCDEFPushButton
+      LCDEFCheckbox
+      LCDEFRadioButton
+      LCDEFIconButton
+•  utility classes:
+      IsColorQDPresent
+      LColorTable
+      LDeviceLoop
+      StOffscreen
+•  state saver/restorers
+      StSaveClip
+      StSaveColor
+      StSaveEm
+      StSaveFont
+      StSavePen
+•  C++ encapsulation of toolbox structures
+      RectT
+      RgnHandleT
+
+Every function call into the CDEF comes through the main entry point in CDEF++.cp. The main() function in CDEF++.cp just sets up A4 and relays the call to LCDEFControl::Main() (a static function).
+
+LCDEFControl::Main() locks the control handle and makes sure it is valid before going any further. Main() then creates (on the stack) an object of the appropriate control kind (push button, checkbox, radio button, or icon button), and relays the call to the object's Dispatch() function.
+
+Most of the shared work for all 4 control kinds is in LCDEFControl. Where the work required different code for different control kinds, I made a virtual function to handle the work, and implemented the function in the appropriate class.  The class hierarchy:
+
+    LCDEFControl
+        LCDEFPushOrIconButton
+            LCDEFPushButton
+            LCDEFIconButton
+        LCDEFCheckboxOrRadioButton
+            LCDEFCheckbox
+            LCDEFRadioButton
+
+Allows even more shared code, since push buttons and icon buttons are similar in their highlighting and rounded rect work, and checkboxes and radio buttons are similar in their script-direction sensitive placement of the radio/checkbox next to the title, and their ability to tristate.
+
+The C++ encapsulation of RgnHandle lets me create and destroy regions without worrying about leaking a region handle, or not getting an allocation due to extraordinarily low memory. RectT is mostly a convenience wrapper, initializing the Rect to consistent values so I can avoid uninitialized variable bugs. I use higher-power versions of these and other C++ wrappers in my work and hobby code, and my code has gotten a lot more readable and a lot less buggy since.
+
+Change History
+1.0b6--28 December 1994
+Complete rewrite for CW/5. Now CDEF uses more features of C++, making the code cleaner and easier to support.
+1.0b5--06 December 1994
+Lots of bug fixes!
+Fix useWFont bug—now actually uses window's font.
+Save and restore font, pen color, pen state, and clip region across draw.
+Clip to intersection of original clip region and device when walking device list.
+Honor control and window auxilliary color tables ('cctb', 'wctb' and so on) when drawing inactive/flat controls, background of checkboxes and radio buttons.
+Don't force 4 corners of pushbuttons to 0xDDDD.
+Also, use classes to save/restore the pen, color, clip region.
+1.0b4--31 July 1994
+Bug Fix—save and restore the pen color across draws
+Draw 3D buttons on 4-bit devices if those devices are also greyscale, not color.
+1.0b3--29 July 1994
+Added offscreen GWorld support so the button titles would stop that annoying flashing. Many thanks to one of my users for pointing it out.
+1.0b2--20 July 1994 (never released)
+Call PenNormal() before starting any draw. Alerts would leave the pensize at (2,2) for the default button, which tended to make OK buttons look awful in color.

@@ -1,1 +1,3 @@
-/* chdir.c */int chdir(char *path);
+
+/* chdir.c */
+int chdir(char *path);

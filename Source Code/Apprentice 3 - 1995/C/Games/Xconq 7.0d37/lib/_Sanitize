@@ -1,1 +1,155 @@
-# .Sanitize for xconq/lib.# Each directory to survive its way into a release will need a file# like this one called "./.Sanitize".  All keyword lines must exist,# and must exist in the order specified by this file.  Each directory# in the tree will be processed, top down, in the following order.# Hash started lines like this one are comments and will be deleted# before anything else is done.  Blank lines will also be squashed# out.# The lines between the "Do-first:" line and the "Things-to-keep:"# line are executed as a /bin/sh shell script before anything else is# done in this directory.Do-first:# All files listed between the "Things-to-keep:" line and the# "Do-last:" line will be kept.  All other files will be removed.# Directories listed in this section will have their own Sanitize# called.  Directories not listed will be removed in their entirety# with rm -rf.Things-to-keep:Makefile.in1756.g1757.g1805.gaircraft.imfancient.imfarms.imfcave.gcherbourg.gchess.gclassic.gconfigure.incobra.gcolors.imfcoral-sea.gcrater-lake.gduel.gdwellings.imfearth-1deg.gearth-50km.gemblems.imfempire.geur-100km.geur-50km.gfantasy.imffeb-1917.gflags.imfflattop.gfriedrich.ggalaxy.ggame.dirgettysburg.ggreek.ghill.gimf.dirinsects.imfintro.gmagellan.gmagnusvew.gmakedir.plmakedir.shmars.gmidearth.gmidway.gmilsym.imfmisc.imfmod-usa.gmod-world.gmodern.gmonster.gmormon.gnapoleon.gnat-names.gneurope.gnews.txtng-american.gng-chinese.gng-english.gng-german.gng-italian.gng-japanese.gng-nickname.gng-ships.gng-weird.gnormandy.gnw-europe.gob-nor-alld.gob-nor-axis.gold-empire.gp-e1-1938.gpanzer.gpearl.gpelops.gquest.gred-october.gring-quest.grising-sun.grom-civ-war.groman.grussian-rev.gsf.imfships.imfsimple.gstandard.gstandard.imfstdterr.gstdunit.gsteppes.gt-cent-eur.gt-eastmed.gt-midearth.gt-normandy.gt-nw-eur.gt-pacific.gt-roman.gt-russia.gtank.gtanks.imfterrain.imftokyo.gtown-names.gu-e1-1938.gu-e1-1987.gu-eur-1942.gu-greek.gu-midearth.gu-normandy.gu-rus-1910.gvoyages.gww2-38.gww2-39.gww2-42.gww2-adv.gww2-bn.gww2-div-eur.gww2-div-pac.gww2-eur-42.gww2s-42.gww2s-eur-42.gww2-stdunit.gThings-to-lose:# The lines between the "Do-last:" line and the end of the file# are executed as a /bin/sh shell script after everything else is# done.Do-last:# eof
+# .Sanitize for xconq/lib.
+
+# Each directory to survive its way into a release will need a file
+# like this one called "./.Sanitize".  All keyword lines must exist,
+# and must exist in the order specified by this file.  Each directory
+# in the tree will be processed, top down, in the following order.
+
+# Hash started lines like this one are comments and will be deleted
+# before anything else is done.  Blank lines will also be squashed
+# out.
+
+# The lines between the "Do-first:" line and the "Things-to-keep:"
+# line are executed as a /bin/sh shell script before anything else is
+# done in this directory.
+
+Do-first:
+
+# All files listed between the "Things-to-keep:" line and the
+# "Do-last:" line will be kept.  All other files will be removed.
+# Directories listed in this section will have their own Sanitize
+# called.  Directories not listed will be removed in their entirety
+# with rm -rf.
+
+Things-to-keep:
+
+Makefile.in
+1756.g
+1757.g
+1805.g
+aircraft.imf
+ancient.imf
+arms.imf
+cave.g
+cherbourg.g
+chess.g
+classic.g
+configure.in
+cobra.g
+colors.imf
+coral-sea.g
+crater-lake.g
+duel.g
+dwellings.imf
+earth-1deg.g
+earth-50km.g
+emblems.imf
+empire.g
+eur-100km.g
+eur-50km.g
+fantasy.imf
+feb-1917.g
+flags.imf
+flattop.g
+friedrich.g
+galaxy.g
+game.dir
+gettysburg.g
+greek.g
+hill.g
+imf.dir
+insects.imf
+intro.g
+magellan.g
+magnusvew.g
+makedir.pl
+makedir.sh
+mars.g
+midearth.g
+midway.g
+milsym.imf
+misc.imf
+mod-usa.g
+mod-world.g
+modern.g
+monster.g
+mormon.g
+napoleon.g
+nat-names.g
+neurope.g
+news.txt
+ng-american.g
+ng-chinese.g
+ng-english.g
+ng-german.g
+ng-italian.g
+ng-japanese.g
+ng-nickname.g
+ng-ships.g
+ng-weird.g
+normandy.g
+nw-europe.g
+ob-nor-alld.g
+ob-nor-axis.g
+old-empire.g
+p-e1-1938.g
+panzer.g
+pearl.g
+pelops.g
+quest.g
+red-october.g
+ring-quest.g
+rising-sun.g
+rom-civ-war.g
+roman.g
+russian-rev.g
+sf.imf
+ships.imf
+simple.g
+standard.g
+standard.imf
+stdterr.g
+stdunit.g
+steppes.g
+t-cent-eur.g
+t-eastmed.g
+t-midearth.g
+t-normandy.g
+t-nw-eur.g
+t-pacific.g
+t-roman.g
+t-russia.g
+tank.g
+tanks.imf
+terrain.imf
+tokyo.g
+town-names.g
+u-e1-1938.g
+u-e1-1987.g
+u-eur-1942.g
+u-greek.g
+u-midearth.g
+u-normandy.g
+u-rus-1910.g
+voyages.g
+ww2-38.g
+ww2-39.g
+ww2-42.g
+ww2-adv.g
+ww2-bn.g
+ww2-div-eur.g
+ww2-div-pac.g
+ww2-eur-42.g
+ww2s-42.g
+ww2s-eur-42.g
+ww2-stdunit.g
+
+Things-to-lose:
+
+# The lines between the "Do-last:" line and the end of the file
+# are executed as a /bin/sh shell script after everything else is
+# done.
+
+Do-last:
+
+# eof

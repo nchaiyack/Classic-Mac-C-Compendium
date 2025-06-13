@@ -1,1 +1,5 @@
-# LynxOS running on the rs6000 doesn't have ranlibRANLIB = true# /bin/cc is less than useful for our purposes.  Always use GCCCC = /bin/gcc
+# LynxOS running on the rs6000 doesn't have ranlib
+RANLIB = true
+
+# /bin/cc is less than useful for our purposes.  Always use GCC
+CC = /bin/gcc

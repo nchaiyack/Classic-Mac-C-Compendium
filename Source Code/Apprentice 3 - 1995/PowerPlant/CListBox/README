@@ -1,1 +1,54 @@
-ABOUT CLISTBOX==============CListBox provides a framework for using an LDEF from withinyour PowerPlant application. A fat LDEF code resource is includedthat calls back the LDEF in the application through the listhandle's refCon field (thanks, Scott Knaster). The LDEF in theapplication will dispatch messages to the proper object, so allyou have to do is provide a draw method and a hilite method in aderived class (CListBox is an abstract class). Everything elseis taken care of.COMPILING THE DEMO==================The demo projects are set up to produce a fat binary. To makea fat binary: (1) compile the 68k project to produce the rsrcfile for the PPC project, and (2) compile the PPC project toproduce the fat app. To make a 68k app: (1) change the compilerpreferences to make an app instead of a resource file, and(2) make it. To make a PPC app: (1) make a copy of the 68kresource file and rename it to the same name as the PPC projectplus '.rsrc', and (2) make it.COMPILING THE FAT LDEF STUB===========================(1) Compile the PPC project first.(2) Copy the the data fork of the file created into a new	resource of type pCod with id 128.(3) Compile the 68k project. The resource file should now contain	a pCod with id 128 and an oCod with id 128.(4) Open the file LDEF.r and follow the instructions for filling	in the value of the first two hexadecimal fields in the template.(5) Rez the file LDEF.r to produce the fat code resource.ADDITIONAL INFO===============A little warning: I haven't tested this stuff much so use at yourown risk. And a little legal notice: Permission to use, copy, modifyand distibute this software and its documentation for any purposeand without fee is hereby granted, provided that the copyrightnotice appears in all copies. This software is provided "as is"without express or implied warranty.Please contact me with problems/questions/bugs/enhancements at:Harold Ekstrom       ekstrom@aggroup.comThe AG Group, Inc.   2540 Camino Diablo     Walnut Creek, CA 94596
+ABOUT CLISTBOX
+==============
+CListBox provides a framework for using an LDEF from within
+your PowerPlant application. A fat LDEF code resource is included
+that calls back the LDEF in the application through the list
+handle's refCon field (thanks, Scott Knaster). The LDEF in the
+application will dispatch messages to the proper object, so all
+you have to do is provide a draw method and a hilite method in a
+derived class (CListBox is an abstract class). Everything else
+is taken care of.
+
+COMPILING THE DEMO
+==================
+The demo projects are set up to produce a fat binary. To make
+a fat binary: (1) compile the 68k project to produce the rsrc
+file for the PPC project, and (2) compile the PPC project to
+produce the fat app. To make a 68k app: (1) change the compiler
+preferences to make an app instead of a resource file, and
+(2) make it. To make a PPC app: (1) make a copy of the 68k
+resource file and rename it to the same name as the PPC project
+plus '.rsrc', and (2) make it.
+
+COMPILING THE FAT LDEF STUB
+===========================
+(1) Compile the PPC project first.
+(2) Copy the the data fork of the file created into a new
+	resource of type pCod with id 128.
+(3) Compile the 68k project. The resource file should now contain
+	a pCod with id 128 and an oCod with id 128.
+(4) Open the file LDEF.r and follow the instructions for filling
+	in the value of the first two hexadecimal fields in the template.
+(5) Rez the file LDEF.r to produce the fat code resource.
+
+ADDITIONAL INFO
+===============
+A little warning: I haven't tested this stuff much so use at your
+own risk. And a little legal notice: Permission to use, copy, modify
+and distibute this software and its documentation for any purpose
+and without fee is hereby granted, provided that the copyright
+notice appears in all copies. This software is provided "as is"
+without express or implied warranty.
+
+Please contact me with problems/questions/bugs/enhancements at:
+
+Harold Ekstrom       ekstrom@aggroup.com
+The AG Group, Inc.   2540 Camino Diablo     Walnut Creek, CA 94596
+
+
+
+
+
+
+
+

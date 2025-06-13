@@ -1,1 +1,1 @@
-void VScrollRect(RectPtr r, short dh);
+void VScrollRect(RectPtr r, short dh);

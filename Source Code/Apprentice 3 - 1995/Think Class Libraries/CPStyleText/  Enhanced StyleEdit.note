@@ -1,1 +1,109 @@
-/****************************************************************************** Enhanced StyleEdit.note 	 						  The PStyleText Class							 		   by:								John A. Love, III															NO Copyright Ñ it's free!			   (mentioning my name would be VERY MUCH appreciated) 	 								 SUPERCLASS = CPEditText							 		   by:							  Christopher R. Wysocki					  Copyright © 1992, All Rights Reserved	                         ---- DESCRIPTION ---- 	CPStyleText is a class for version 1.1.x of Symantec's THINK Class	Library that implements a styled text editing pane.  It can be used	as a direct replacement for the standard TCL CStyleText class without	TextEdit's limitation to a maximum 32k of text.			                       ---- VERSION HISTORY ----			¥ 1.3b1 (25 September 1993)			- Started working and working and working and ...			¥ 1.3b2 (28 December 1993)			- Introduced left and right margins			- Reinserted center and right text alignment			  ( Chris dropped these in his version 1.2 of CPEditText )			- Introduced word-wrap:			  (a) to window width			  (b) to line width			  (c) to left and right margins			¥ 1.3b3 ( 6 January 1994)			- Introduced full justify text alignment.  Created			  a CStylePStyleTask class to help effect this.			¥ 1.3b4 (13 January 1994)			- Modified Chris' ScrollToSelection and ScrollToOffset methods			- Changed my WrapLineStarts method to			  accomodate breaking SUPER long words			¥ 1.3b5 (28 January 1994)			- Added an autoscroll capability when the user presses the			  <Option> key while clicking the mouse in the text pane.			  Idea came from my use of Symantec's "THINK Reference" app.			  This autoscrolling scrolls just one line at a time.			¥ 1.3b6 ( 6 February 1994)			- Added another autoscroll capability effected when the			  user presses the <Option> key while dragging the thumb			  in either scroll bar.  Created the CPStyleScrollPane and			  CPStyleScrollBar classes to make this happen.  Idea came			  from my use of Jersey Scientific's "CMaster".  The user			  would implement this type of autoscrolling when s/he			  wishes to scroll VERY fast since the scrolling speed is			  limited only by the speed of the mouse movement.			¥ 1.3b7 (10 February 1994)			- Modified Chris' DrawCaret method for drawing the caret			  at the end of a "sub-line" of a word-wrapped line.			  Chris' DrawCaret method is declared NON-virtual within			  his "CPEditText.h" interface file.  So the most simple!			  way I can override it for both THINK C and Symantec C++			  is to declare Chris' DrawCaret a virtual method within			  that interface file.			¥ 1.3	(26 February 1994)			- Started the 'mother' of all additions ... style info ...			  Before this addition is finished, it'll change many, many			  times.  For the moment, I have presented just a shell for			  us to chew on.			¥ 1.4b1	(?????)			- Another BIG challenge is to significantly speed things			  up for super large files (> 100k), for example, reading			  them in, displaying them, word-wrap, scrolling, etc.				                      ---- LICENSE AGREEMENT ----		The source code unique to CPStyleText was written by and is the property	of John A. Love, III.  Any users of CPStyleText are legally bound by the	LICENSE AGREEMENT authored by Christopher R. Wysocki.  No other Copyright	is stated or implied.		                  ---- ELECTRONIC MAIL ADDRESSES ----			America Online:		John Love	                  		 ---- OTHER INFO ----			Telephone:			(703) 569-2294		<your nickel>				Letter:				6413 Wyngate Drive							Springfield, Virginia   22152 ******************************************************************************//* end: "  Enhanced StyleEdit.note" */
+/******************************************************************************
+ Enhanced StyleEdit.note
+ 
+	 						  The PStyleText Class
+							 		   by:
+								John A. Love, III
+								
+							NO Copyright Ñ it's free!
+			   (mentioning my name would be VERY MUCH appreciated)
+ 	
+ 	
+							 SUPERCLASS = CPEditText
+							 		   by:
+							  Christopher R. Wysocki
+					  Copyright © 1992, All Rights Reserved
+
+
+
+	                         ---- DESCRIPTION ----
+ 
+	CPStyleText is a class for version 1.1.x of Symantec's THINK Class
+	Library that implements a styled text editing pane.  It can be used
+	as a direct replacement for the standard TCL CStyleText class without
+	TextEdit's limitation to a maximum 32k of text.
+	
+	
+	                       ---- VERSION HISTORY ----
+	
+		¥ 1.3b1 (25 September 1993)
+			- Started working and working and working and ...
+	
+		¥ 1.3b2 (28 December 1993)
+			- Introduced left and right margins
+			- Reinserted center and right text alignment
+			  ( Chris dropped these in his version 1.2 of CPEditText )
+			- Introduced word-wrap:
+			  (a) to window width
+			  (b) to line width
+			  (c) to left and right margins
+	
+		¥ 1.3b3 ( 6 January 1994)
+			- Introduced full justify text alignment.  Created
+			  a CStylePStyleTask class to help effect this.
+	
+		¥ 1.3b4 (13 January 1994)
+			- Modified Chris' ScrollToSelection and ScrollToOffset methods
+			- Changed my WrapLineStarts method to
+			  accomodate breaking SUPER long words
+	
+		¥ 1.3b5 (28 January 1994)
+			- Added an autoscroll capability when the user presses the
+			  <Option> key while clicking the mouse in the text pane.
+			  Idea came from my use of Symantec's "THINK Reference" app.
+			  This autoscrolling scrolls just one line at a time.
+	
+		¥ 1.3b6 ( 6 February 1994)
+			- Added another autoscroll capability effected when the
+			  user presses the <Option> key while dragging the thumb
+			  in either scroll bar.  Created the CPStyleScrollPane and
+			  CPStyleScrollBar classes to make this happen.  Idea came
+			  from my use of Jersey Scientific's "CMaster".  The user
+			  would implement this type of autoscrolling when s/he
+			  wishes to scroll VERY fast since the scrolling speed is
+			  limited only by the speed of the mouse movement.
+	
+		¥ 1.3b7 (10 February 1994)
+			- Modified Chris' DrawCaret method for drawing the caret
+			  at the end of a "sub-line" of a word-wrapped line.
+			  Chris' DrawCaret method is declared NON-virtual within
+			  his "CPEditText.h" interface file.  So the most simple!
+			  way I can override it for both THINK C and Symantec C++
+			  is to declare Chris' DrawCaret a virtual method within
+			  that interface file.
+	
+		¥ 1.3	(26 February 1994)
+			- Started the 'mother' of all additions ... style info ...
+			  Before this addition is finished, it'll change many, many
+			  times.  For the moment, I have presented just a shell for
+			  us to chew on.
+	
+		¥ 1.4b1	(?????)
+			- Another BIG challenge is to significantly speed things
+			  up for super large files (> 100k), for example, reading
+			  them in, displaying them, word-wrap, scrolling, etc.
+			
+
+	                      ---- LICENSE AGREEMENT ----
+	
+	The source code unique to CPStyleText was written by and is the property
+	of John A. Love, III.  Any users of CPStyleText are legally bound by the
+	LICENSE AGREEMENT authored by Christopher R. Wysocki.  No other Copyright
+	is stated or implied.
+	
+	                  ---- ELECTRONIC MAIL ADDRESSES ----
+	
+		America Online:		John Love
+
+	                  		 ---- OTHER INFO ----
+	
+		Telephone:			(703) 569-2294		<your nickel>
+		
+		Letter:				6413 Wyngate Drive
+							Springfield, Virginia   22152
+ ******************************************************************************/
+
+
+
+
+/* end: "  Enhanced StyleEdit.note" */

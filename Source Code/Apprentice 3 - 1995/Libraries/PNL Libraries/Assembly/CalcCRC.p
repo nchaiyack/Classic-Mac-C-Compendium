@@ -1,1 +1,36 @@
-unit CalcCRC;interface	type		magicArray = array[0..255] of integer;		magicPtr = ^magicArray;	procedure CalcCRC (var crc: integer; v: integer);	procedure CalcCRCBlock (p: univ ptr; len: longInt; var crc: integer);	procedure CalcMBCRC (var crc: integer; v: integer);	procedure CalcMBCRCBlock (p: univ ptr; len: longInt; var crc: integer);	function GetMagic: magicPtr;implementationend.procedure CalcCRC (v: integer);	var		temp: boolean;		i: integer;begin{$PUSH}{$V-}	for i := 1 to 8 do begin		temp := BAND(crc, $8000) <> 0;		crc := BOR(BSL(crc, 1), BSR(v, 7));		if temp then			crc := BXOR(crc, $1021);		v := BAND(BSL(v, 1), $FF);	end;{$POP}end;end.
+unit CalcCRC;
+
+interface
+
+	type
+		magicArray = array[0..255] of integer;
+		magicPtr = ^magicArray;
+
+	procedure CalcCRC (var crc: integer; v: integer);
+	procedure CalcCRCBlock (p: univ ptr; len: longInt; var crc: integer);
+	procedure CalcMBCRC (var crc: integer; v: integer);
+	procedure CalcMBCRCBlock (p: univ ptr; len: longInt; var crc: integer);
+	function GetMagic: magicPtr;
+
+implementation
+
+end.
+
+procedure CalcCRC (v: integer);
+	var
+		temp: boolean;
+		i: integer;
+begin
+{$PUSH}
+{$V-}
+	for i := 1 to 8 do begin
+		temp := BAND(crc, $8000) <> 0;
+		crc := BOR(BSL(crc, 1), BSR(v, 7));
+		if temp then
+			crc := BXOR(crc, $1021);
+		v := BAND(BSL(v, 1), $FF);
+	end;
+{$POP}
+end;
+
+end.

@@ -1,1 +1,2 @@
-Boolean MouseInModelessPopUp(MenuHandle theMenu, short *theChoice, Rect *theRect,	short menuResID);
+Boolean MouseInModelessPopUp(MenuHandle theMenu, short *theChoice, Rect *theRect,
+	short menuResID);

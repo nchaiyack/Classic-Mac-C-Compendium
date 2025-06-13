@@ -1,1 +1,3 @@
-/* macinit.c */int macinit(void);
+
+/* macinit.c */
+int macinit(void);

@@ -1,1 +1,126 @@
-UScreenFader - gamma screen fader PowerPlant class.By Ramin - (c) 1995, rp&A Inc.---This is a README for release 1.1 of the UScreenFader class. This class is designedto be used on Macintoshes with programs written in C++ under MetroWerks CodeWarrior PowerPlant application framework. Since it uses low-level Mac services extensively,the only cross-platform portion is this text file.It may work under other environments, but I haven't tried it.I was sitting around minding my own business when it occurred to me that when starting a program, it would be cool instead of just popping a window open, to actually fade to black, then come up with the screen ready to go. Sort of likethe movies you might say... It also comes handy for multimedia, homebrew screen-savers, etc. A thousand uses, right? (:-)The program uses a technique called Gamma fading. It doesn't actually alter thecontents of the screen, but modifies the color tables in the display so progressively all colors start getting darker and darker until you have a solid black screen. The reverse is used to restore the screen back to its originalstate.This is a two day hack. The first day was version 1.0. It used a clut (ColorLookup Table) fading. However, the problem with that was that it needed excessive amounts of care and feeding when you were in anything but 8-bit color. The second day was the total rewrite to use Gamma fading. This version works in all bit-depths. However, it only works with systems that have screen devices and support gamma tables.This includes most color systems. On systems that don't support this, we just don'tdo anything, so you should be able to safely use it (on non-compliant systems, you sort of skip through the whole fade stage).The class is relatively simple to use. There are only three public methods:UScreenFader:	void FadeToBlack(short increment, short screen)	void FadeFromBlack(short increment, short screen)	void FadeValue(short percent, short screen)FadeToBlack is used to go to all black. FadeFromBlack is used to return to theoriginal state. You can pass an increment value which is the difference in percentagelevel between each step. Set this to 1 to get a very smooth (but slower) effect.Set it to 10 for a jumpy but faster one. It defaults to 4. The speed, of course,depends on your machine.If you want to manually do it, FadeValue takes a percentage level between 0 and 100where 0 is total darkness, and 100 is back to normal.For all of these, you can pass a screen index. This is a 1-based value, correspondingto the numbers you see in your "Monitors" control panel. If you have a multi-headedmachine, you can pick any of the valid monitors. To do a fade on ALL available screenspass the constant UScreenFader::kAllScreens for the screen parameter. To only fade on the "Main" screen (i.e. the one with the Menu bar) use the constant UScreenFader::kMainScreen. These are all defined in UScreenFader.h.To actually use it, just create an object of this type then invoke the methods.Since memory is allocated internally in the constructor of this class, you shouldgive the destructor an opportunity to do its thing, otherwise you'll have memoryleakage. If the object is created on stack, it will automatically call the dtorwhen it goes out of scope and the function returns so you're OK there. But if you create it on the heap using the "new" operator, remember to call "delete" at somepoint in time.I haven't provided a "test" application because the test application and all theprojects would have made this distribution too large. Besides, it's so simple touse I figured if you can't use it, you probably shouldn't. I just added it toseveral of the PowerPlant demo apps provided with the standard distribution in orderto test it. One that worked great was the Document Demo example. All I did waschange MakeNewDocument so it faded to black, created the window, then went backto normal:#include "UScreenFader.h"...LModelObject*CDocDemoApp::MakeNewDocument(){UScreenFader screen; // allocate it on the stack.	screen.FadeToBlack(); // go to black.	CTextDoc	*theDoc = new CTextDoc(this, nil);	screen.FadeFromBlack(); // then come back up. That's it!	return theDoc;}That's about all. Just remember to include UScreenFader.cp in your MW PPlant project.And rebuild. See... not much else to it... The above example fades with the defaultincrement of "4" (i.e. in 25 separate steps) on ALL screens. See above for otherparameters you can use.Some notes: this has not been totally robo-tested across a large range of machines.I'm providing the source code so others can test it against stranger configurations.I don't have a PowerPC (still waiting for the PCI version to come out--as of June '95)So I've only tested this against the 68K. There shouldn't be any strange stuffthough. If you find bugs and make fixes, please send them back to me so I canincorporate them back into the source.LEGAL STUFF:This code is provided as is. There are no express or implied warranties on thiscode from myself or rp&A Inc. If it breaks your program, it's your own damn foolfault for using freebie code off the Internet rather than writing your own carefullyhand-crafted code.This is not public domain software. However, you are free to use this in any commercial or non-commercial software without having to make any payments to me or rp&A as long as:a) An acknowledgement to myself or rp&A Inc. is included in the software.b) You do not try to sell the source code (without prior arrangement with rp&A).c) You redistribute the source together with this README file.d) You buy me a pint of stout beer next time you see me.Inclusion of this code in online or CD-ROM source archives is permitted as longas this notice is included with the source material.'nuff said.Enjoy.Ramin Firoozye'rp&A Inc. - San Francisco, CA.Internet: rpa@netcom.com - CIS: 70751, 252
+
+UScreenFader - gamma screen fader PowerPlant class.
+By Ramin - (c) 1995, rp&A Inc.
+
+---
+
+This is a README for release 1.1 of the UScreenFader class. This class is designed
+to be used on Macintoshes with programs written in C++ under MetroWerks CodeWarrior 
+PowerPlant application framework. Since it uses low-level Mac services extensively,
+the only cross-platform portion is this text file.
+
+It may work under other environments, but I haven't tried it.
+
+I was sitting around minding my own business when it occurred to me that when 
+starting a program, it would be cool instead of just popping a window open, 
+to actually fade to black, then come up with the screen ready to go. Sort of like
+the movies you might say... It also comes handy for multimedia, homebrew 
+screen-savers, etc. A thousand uses, right? (:-)
+
+The program uses a technique called Gamma fading. It doesn't actually alter the
+contents of the screen, but modifies the color tables in the display so 
+progressively all colors start getting darker and darker until you have a solid 
+black screen. The reverse is used to restore the screen back to its original
+state.
+
+This is a two day hack. The first day was version 1.0. It used a clut (Color
+Lookup Table) fading. However, the problem with that was that it needed excessive 
+amounts of care and feeding when you were in anything but 8-bit color. The second 
+day was the total rewrite to use Gamma fading. This version works in all bit-depths. 
+However, it only works with systems that have screen devices and support gamma tables.
+This includes most color systems. On systems that don't support this, we just don't
+do anything, so you should be able to safely use it (on non-compliant systems, you 
+sort of skip through the whole fade stage).
+
+The class is relatively simple to use. There are only three public methods:
+
+UScreenFader:
+	void FadeToBlack(short increment, short screen)
+	void FadeFromBlack(short increment, short screen)
+	void FadeValue(short percent, short screen)
+
+FadeToBlack is used to go to all black. FadeFromBlack is used to return to the
+original state. You can pass an increment value which is the difference in percentage
+level between each step. Set this to 1 to get a very smooth (but slower) effect.
+Set it to 10 for a jumpy but faster one. It defaults to 4. The speed, of course,
+depends on your machine.
+
+If you want to manually do it, FadeValue takes a percentage level between 0 and 100
+where 0 is total darkness, and 100 is back to normal.
+
+For all of these, you can pass a screen index. This is a 1-based value, corresponding
+to the numbers you see in your "Monitors" control panel. If you have a multi-headed
+machine, you can pick any of the valid monitors. To do a fade on ALL available screens
+pass the constant UScreenFader::kAllScreens for the screen parameter. To only fade on 
+the "Main" screen (i.e. the one with the Menu bar) use the constant 
+UScreenFader::kMainScreen. These are all defined in UScreenFader.h.
+
+To actually use it, just create an object of this type then invoke the methods.
+Since memory is allocated internally in the constructor of this class, you should
+give the destructor an opportunity to do its thing, otherwise you'll have memory
+leakage. If the object is created on stack, it will automatically call the dtor
+when it goes out of scope and the function returns so you're OK there. But if you 
+create it on the heap using the "new" operator, remember to call "delete" at some
+point in time.
+
+I haven't provided a "test" application because the test application and all the
+projects would have made this distribution too large. Besides, it's so simple to
+use I figured if you can't use it, you probably shouldn't. I just added it to
+several of the PowerPlant demo apps provided with the standard distribution in order
+to test it. One that worked great was the Document Demo example. All I did was
+change MakeNewDocument so it faded to black, created the window, then went back
+to normal:
+
+#include "UScreenFader.h"
+...
+
+LModelObject*
+CDocDemoApp::MakeNewDocument()
+{
+UScreenFader screen; // allocate it on the stack.
+
+	screen.FadeToBlack(); // go to black.
+	CTextDoc	*theDoc = new CTextDoc(this, nil);
+	screen.FadeFromBlack(); // then come back up. That's it!
+	return theDoc;
+}
+
+
+
+That's about all. Just remember to include UScreenFader.cp in your MW PPlant project.
+And rebuild. See... not much else to it... The above example fades with the default
+increment of "4" (i.e. in 25 separate steps) on ALL screens. See above for other
+parameters you can use.
+
+Some notes: this has not been totally robo-tested across a large range of machines.
+I'm providing the source code so others can test it against stranger configurations.
+I don't have a PowerPC (still waiting for the PCI version to come out--as of June '95)
+So I've only tested this against the 68K. There shouldn't be any strange stuff
+though. If you find bugs and make fixes, please send them back to me so I can
+incorporate them back into the source.
+
+LEGAL STUFF:
+
+This code is provided as is. There are no express or implied warranties on this
+code from myself or rp&A Inc. If it breaks your program, it's your own damn fool
+fault for using freebie code off the Internet rather than writing your own carefully
+hand-crafted code.
+
+This is not public domain software. However, you are free to use this in any 
+commercial or non-commercial software without having to make any payments to me or 
+rp&A as long as:
+
+a) An acknowledgement to myself or rp&A Inc. is included in the software.
+b) You do not try to sell the source code (without prior arrangement with rp&A).
+c) You redistribute the source together with this README file.
+d) You buy me a pint of stout beer next time you see me.
+
+Inclusion of this code in online or CD-ROM source archives is permitted as long
+as this notice is included with the source material.
+
+'nuff said.
+Enjoy.
+
+Ramin Firoozye'
+rp&A Inc. - San Francisco, CA.
+Internet: rpa@netcom.com - CIS: 70751, 252

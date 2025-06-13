@@ -1,1 +1,1 @@
-Rez ":::::Projects:Random Dot Src Ä:_r:RandomDot.r" -o ":::::Projects:Random Dot Src Ä:RandomDot.µ.rsrc" -c RSED -t rsrc  -i "Rez #includes"
+Rez ":::::Projects:Random Dot Src Ä:_r:RandomDot.r" -o ":::::Projects:Random Dot Src Ä:RandomDot.µ.rsrc" -c RSED -t rsrc  -i "Rez #includes"

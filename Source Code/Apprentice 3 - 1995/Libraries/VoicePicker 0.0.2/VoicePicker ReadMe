@@ -1,1 +1,109 @@
-Voice Picker v. 0.0.2©1995 Luigi BelveratoVoice Picker is a tool that lets the user choose a Speech Manager voice, set its rate and pitch and try it. PurposeVoicePicker is aimed at those applications (such as SimpleText) that  offer the option of reading aloud some text but force the user to choose a voice from a menu and apply it on a selection in order to find the preferred or most adeguate one. Usually there is no support for changes in pitch and rate over the default values and this can get annoying on long texts where a faster reading could be more useful.From the programmer's point of view Voice Picker is a simple call to a C function. The source can be compiled into a library or included in a project as is. It has been succesfully compiled with CodeWarrior 6 both on 68K and PPC, although it wasn't tested on a PowerMacintosh. It uses Apple's Universal Headers version 2.0.1f and is compatible with the new Copland-savy settings, with the exclusion of STRICT_CONTROLS that is required to be false in order to access the private data of a popup.Dialog DescriptionThe dialog (shown above) displays a default prompt or the string passed as first parameter to the function. The user chooses a voice from a popup menu. The Gender, Age, Language and Region information are fixed characteristics of each voice and cannot be changed. The Rate and Pitch can be increased or decreased with the dials on the right and their effect is applied even during speech, although only pitch changes seem to affect the voice being generated. The Try and Stop buttons act starting and stopping speech synthesis. The speech is interrupted also when the user chooses another voice from the popup menu. In the edit box it is first displayed the hard coded description of the voice but the user can edit it and type other text. The OK and Cancel buttons dismiss the dialog with the first one passing back the voice information to the caller.Balloon help is available for every item of the dialog.Programmer's InterfaceThe following snippets are excerpts from VoicePicker.h.About the function…//-----------------------------------------------------------------------extern Boolean VoicePicker(ConstStr255Param passedStr,                           VoiceData        *passedVoiceData);//-----------------------------------------------------------------------//	VoicePicker brings up a modal dialog where the user may choose among//	currently installed speech manager voices, view their characteristics//	such as gender, age, language and region, change the rate and speed and//	try them on some editable sample text (that defaults to the built in voice//	description).////	Returns a Boolean indicating whether the user dismissed the dialog with//	OK or Cancel//		//	Parameters:////	ConstStr255Param	passedStr//	 the prompt to be displayed or nil////	VoiceData			*passedVoiceData//	 the address of a VoiceData structure containg in VoiceSpec the//	 initial voice to be selected in the popup menu and its pitch and rate//	 settings. On return will contain updated values.//-----------------------------------------------------------------------and about the data structure…struct VoiceData{	VoiceSpec	voice;	Fixed	pitch;	Fixed	rate;};DefaultsSome default values are contained in a resource of type 'VPpr' and ID=5000 in VoicePicker.rsrc; a ResEdit template is included for easier editing. They represent the valid ranges for the pitch and rate parameters and the delay (in ticks) to be used when the user keeps pressing the mouse button on a dial.VoicePickerDemoVoicePickerDemo is a simple application that uses the VoicePicker library. Just choose Voice Picker from the Test menu. It might be useful to see what's included in the projects (68K and PPC) for a quick start.Copyright VoicePicker is copyright 1995 by Luigi Belverato. You may freely include it in your projects providing there is a reference to me in the about box/credits.If you really feel munificent please note that any kind of Star Trek merchandise would be greatly appreciated.Bug ReportPlease send bug reports, questions and suggestions to:• internet (subject to change: if I don't reply within a few days try snail mail):lbelvera@micronet.it• snail mail:Luigi BelveratoP.O.Box 1920080 Basiglio, MilanoItalyChanges History• 06/26/95 0.0.2	Added DisposeRoutineDescriptor for UniversalProcPtrs both in library and in demo application. Affects PowerPC versions.• 06/23/95	0.0.1	First public release
+Voice Picker v. 0.0.2
+©1995 Luigi Belverato
+
+Voice Picker is a tool that lets the user choose a Speech Manager voice, set its rate and pitch and try it.
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Purpose
+
+VoicePicker is aimed at those applications (such as SimpleText) that  offer the option of reading aloud some text but force the user to choose a voice from a menu and apply it on a selection in order to find the preferred or most adeguate one. Usually there is no support for changes in pitch and rate over the default values and this can get annoying on long texts where a faster reading could be more useful.
+
+From the programmer's point of view Voice Picker is a simple call to a C function. The source can be compiled into a library or included in a project as is. It has been succesfully compiled with CodeWarrior 6 both on 68K and PPC, although it wasn't tested on a PowerMacintosh. It uses Apple's Universal Headers version 2.0.1f and is compatible with the new Copland-savy settings, with the exclusion of STRICT_CONTROLS that is required to be false in order to access the private data of a popup.
+
+Dialog Description
+
+The dialog (shown above) displays a default prompt or the string passed as first parameter to the function. The user chooses a voice from a popup menu. The Gender, Age, Language and Region information are fixed characteristics of each voice and cannot be changed. The Rate and Pitch can be increased or decreased with the dials on the right and their effect is applied even during speech, although only pitch changes seem to affect the voice being generated. The Try and Stop buttons act starting and stopping speech synthesis. The speech is interrupted also when the user chooses another voice from the popup menu. In the edit box it is first displayed the hard coded description of the voice but the user can edit it and type other text. The OK and Cancel buttons dismiss the dialog with the first one passing back the voice information to the caller.
+Balloon help is available for every item of the dialog.
+
+Programmer's Interface
+
+The following snippets are excerpts from VoicePicker.h.
+
+About the function…
+
+//-----------------------------------------------------------------------
+extern Boolean VoicePicker(ConstStr255Param passedStr,
+                           VoiceData        *passedVoiceData);
+//-----------------------------------------------------------------------
+//	VoicePicker brings up a modal dialog where the user may choose among
+//	currently installed speech manager voices, view their characteristics
+//	such as gender, age, language and region, change the rate and speed and
+//	try them on some editable sample text (that defaults to the built in voice
+//	description).
+//
+//	Returns a Boolean indicating whether the user dismissed the dialog with
+//	OK or Cancel
+//		
+//	Parameters:
+//
+//	ConstStr255Param	passedStr
+//	 the prompt to be displayed or nil
+//
+//	VoiceData			*passedVoiceData
+//	 the address of a VoiceData structure containg in VoiceSpec the
+//	 initial voice to be selected in the popup menu and its pitch and rate
+//	 settings. On return will contain updated values.
+//-----------------------------------------------------------------------
+
+and about the data structure…
+
+struct VoiceData
+{
+	VoiceSpec	voice;
+	Fixed	pitch;
+	Fixed	rate;
+};
+
+Defaults
+
+Some default values are contained in a resource of type 'VPpr' and ID=5000 in VoicePicker.rsrc; a ResEdit template is included for easier editing. They represent the valid ranges for the pitch and rate parameters and the delay (in ticks) to be used when the user keeps pressing the mouse button on a dial.
+
+VoicePickerDemo
+
+VoicePickerDemo is a simple application that uses the VoicePicker library. Just choose Voice Picker from the Test menu. It might be useful to see what's included in the projects (68K and PPC) for a quick start.
+
+Copyright
+
+ 
+
+
+
+
+
+VoicePicker is copyright 1995 by Luigi Belverato. You may freely include it in your projects providing there is a reference to me in the about box/credits.
+If you really feel munificent please note that any kind of Star Trek merchandise would be greatly appreciated.
+
+Bug Report
+
+Please send bug reports, questions and suggestions to:
+
+• internet (subject to change: if I don't reply within a few days try snail mail):
+lbelvera@micronet.it
+
+• snail mail:
+Luigi Belverato
+P.O.Box 19
+20080 Basiglio, Milano
+Italy
+
+Changes History
+
+• 06/26/95 0.0.2	Added DisposeRoutineDescriptor for UniversalProcPtrs both in library and in demo application. Affects PowerPC versions.
+
+• 06/23/95	0.0.1	First public release

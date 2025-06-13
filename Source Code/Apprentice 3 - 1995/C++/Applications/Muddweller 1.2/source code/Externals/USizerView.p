@@ -1,1 +1,479 @@
-UNIT USizerView;{	This unit implements views which can be divided into several resizable panes.	It also contains commands for resizing and splitting, as well as a splitter Control.}	INTERFACE		USES			UMacApp,			UArray,			Types, QuickDraw, ToolUtils, Packages,			FixMath;		CONST			{ Command Numbers }			cSizeViews			= 2300; 				{ For resizing panes in TSizerView }			{ Miscellaneous }			kSplitVertically	= v;					{ use with "whichWay" parameter of }			kSplitHorizontally	= h;					{ ISizerCommand }			kSizerThickness 	= 3;					{ default thickness of splitter bar }			kMinSizerPane		= 60;					{ default minimum pane size }			kVertSizingCursor	= 1300; 				{ CURSor IDs }			kHorzSizingCursor	= 1301;			kGetMinCoord		= TRUE;					{ values for min parameter of GetSizerCoord }			kGetMaxCoord		= FALSE;			kLocationVaries		= TRUE;					{ values for fLocDeterminer fields }			kLocationFixed		= FALSE;				{ …of TSplitter }			kStdSplitter		= 'splt';				{ resource signature for a TSplitter }			kNoId				= '    ';				{ empty view id }		TYPE			VRectPtr	= ^VRect;			Coordinate	= (kLeftCoord, kRightCoord, kTopCoord, kBottomCoord);			TVRectList			= OBJECT (TDynamicArray)			{ This class represents an indexed list of VRects }				PROCEDURE TVRectList.IVRectList(initialSize: INTEGER);				{ Initialize the list, making it big enough to contain initialSize VRects. }				FUNCTION  TVRectList.At(index: ArrayIndex): VRect;				{ Return the VRect at the given list index. }				PROCEDURE TVRectList.AtPut(index: ArrayIndex; newItem: VRect);				{ Set the VRect at the specified index to the given VRect. If index is greater				  than the number of elements in the list, expand the list accordingly. }				PROCEDURE TVrectList.AtCoordPut(index: ArrayIndex; whichCoord: Coordinate;												newCoord: VCoordinate);				{ Change a single coordinate of the specified VRect to the given value. }				PROCEDURE TVrectList.AtSetVRect(index: ArrayIndex; left, top, right, bottom: VCoordinate);				{ Change the specified VRect’s coordinates to the given values. }				PROCEDURE TVRectList.InsertBefore(index: ArrayIndex; item: VRect);				PROCEDURE TVRectList.Fields(PROCEDURE DoToField(fieldName: Str255;											fieldAddr: Ptr; fieldType: INTEGER)); OVERRIDE;				PROCEDURE TVRectList.DynamicFields(PROCEDURE DoToField(fieldName: Str255;											fieldAddr: Ptr; fieldType: integer)); OVERRIDE;				END;	{ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - }			TSizerView			= OBJECT (TView)			{ This class maintains multiple panes (subviews of itself) with movable			  sizer rectangles between them. }				fPanes:				TList;			{ the subviews themselves }				fSetbacks:			TVRectList;		{ the setbacks for the subpanes }				fSizerRects: 		TVRectList;		{ the sizer rectangles }				fMinPaneSize:		VCoordinate;	{ minimum width/height of a pane }				fSizerThickness:	INTEGER;		{ thickness of splitter }				fSplitter:			TSplitter;		{ NIL if no splitter }				{ Initialization methods }				PROCEDURE TSizerView.Initialize; OVERRIDE;				{ Initialize fields to NIL. Called by IObject. }				PROCEDURE TSizerView.IRes(itsDocument: TDocument; itsSuperView: TView;												VAR itsParams: Ptr); OVERRIDE;				{ Initialize a view created from templates. }				PROCEDURE TSizerView.ISizerView(itsDocument: TDocument;												itsSuperview: TView;												itsLocation: VPoint;												itsSize: VPoint;												itsHSizeDet, itsVSizeDet: SizeDeterminer);				{ Initialize a view created procedurally. }				PROCEDURE TSizerView.InitLists;				{ Create and initialize the various lists of subviews and VRects }				PROCEDURE TSizerView.FixupPanes(equalSpacing: BOOLEAN);				{ a/k/a “PostRes”: Call after IRes (NewTemplateWindow).				  Now that the subviews have been added, use them to initialize the				  setbacks and sizer rectangles to their default values.				  If equalSpacing is TRUE, make the panes of equal size;				  otherwise, try to locate the panes using their fLocations. }				PROCEDURE TSizerView.Free; OVERRIDE;				{ Free the setbacks and sizer list objects }				{ Adding, drawing, resizing panes }				PROCEDURE TSizerView.AddPane(newPane: TView; itsLocation: VCoordinate;											 itsSetbacks: VRect);				{ Install thePane at the specified location, shrinking any existing pane				  accordingly. }				PROCEDURE TSizerView.AddEqualPane(newPane: TView; itsPosition: INTEGER;												  itsSetbacks: VRect);				{ Install thePane at the specified position, resizing all panes equally. }				FUNCTION  TSizerView.DeletePane(whichPane, whichSizer: INTEGER): TView;				{ Delete the specified pane and sizer; expand the remaining pane and				  return it. }				PROCEDURE TSizerView.Draw(area: Rect); OVERRIDE;				{ General draw method: call DrawSizerRect for each sizer rectangle. }				PROCEDURE TSizerView.DrawSizerRect(aRect: Rect);				{ Do the direction-dependent drawing: must be overridden. }				PROCEDURE TSizerView.InstallSetbacks(whichPane: INTEGER; itsSetbacks: VRect);				{ Use this method to set different setbacks than the default ones. }				{ This unit defines three global rects for use in setbacks:					gVertSBarSetback - Use when installing scroller subviews which						have only a vertical scrollbar.					gHorzSBarSetback - Use when installing scroller subviews which						have only a horizontal scrollbar.					gBothSBarSetback - Use when installing scroller subviews which						have horiz AND vert scrollbars.				  You may also use MacApp's gZeroVRect to indicate that there is to be				  no setback at all. }						FUNCTION  TSizerView.MergedSize(oldPane, changedPane: TView): VPoint;				{ Return the combined size of oldPane and changedPane. Must be overridden. }				PROCEDURE TSizerView.SetPane(whichSizer: INTEGER; itsSizerRect: VRect);				{ The specified sizer has moved, so adjust the panes on either side of it }				PROCEDURE TSizerView.SetPanes(newSizerRects: TVRectList;											  invalidate: BOOLEAN);				{ All the sizers have moved, so adjust all the panes in the view }				PROCEDURE TSizerView.SuperViewChangedSize(delta: VPoint; invalidate: BOOLEAN); OVERRIDE;				{ Forces commit of any pending pane resize command. Generally this				  matters only on a window resize which normally would not commit a				  command; such a resize will force an additional pane resize so				  "Undo Pane Resize" (or Redo) ceases to make sense.}				{ Cursors and mice, etc. }				FUNCTION  TSizerView.DoMouseCommand(VAR theMouse: Point; VAR info: EventInfo;													VAR hysteresis: Point): TCommand; OVERRIDE;				{ If the mouse is in a sizer rectangle, create and return a TSizerCommand. }				FUNCTION  TSizerView.DoSetCursor(localPoint: Point; cursorRgn: RgnHandle): BOOLEAN; OVERRIDE;				{ Draw the appropriate sizer cursor if necessary.  If the cursor resource				  is missing, default to the arrow. }				PROCEDURE TSizerView.InvalidateFocus; OVERRIDE;				{ Avoid traversing subviews; just set gFocusedView to NIL }				PROCEDURE TSizerView.TrackConstrain(anchorPoint, previousPoint: VPoint;													VAR nextPoint: VPoint); OVERRIDE;				{ Constrain mouse tracking to my interior, allowing for the minimum pane size.				  Must be overridden: direction dependent. }				{ Gettors and settors }				FUNCTION  TSizerView.CompareViewLocations(view1, view2: TView): CompareResult;				{ Return the order of the two views by their location. This calculation				  is direction dependent, so it must be overridden. }				FUNCTION  TSizerView.FindPane(aView: TView): INTEGER;				{ Return the position (index) of aView in the fPanes list }				FUNCTION  TSizerView.FindPaneAt(theCoords: VPoint): TView;				{ Return the pane at the given coordinates }				FUNCTION  TSizerView.FindSizerPosition(VAR itsLocation: VCoordinate): INTEGER;				{ Given the desired coordinate for a new sizer rectangle, return its position				  (index) in the list of sizers, modifying itsLocation if necessary. }				FUNCTION  TSizerView.GetDefaultSizerRect(whichSizer: INTEGER): VRect;				{ Return the VRect for the given sizer, assuming evenly spaced sizers. }				FUNCTION  TSizerView.GetMinPaneLength: VCoordinate;				{ Return the minimum width/height of a pane of this view. }				FUNCTION  TSizerView.GetNextSizerRect(aPane: TView): VRect;				{ Must be overridden }				FUNCTION  TSizerView.GetNumberOfPanes: INTEGER;				{ How many subviews do I have? }				FUNCTION  TSizerView.GetNumberOfSizers: INTEGER;				{ How many sets of sizer bars do I have? (Hint: number of panes - 1) }				FUNCTION  TSizerView.GetSizerCoord(whichSizer: INTEGER; min: BOOLEAN): VCoordinate;				{ Return the left/top (min=T) or right/bottom (min=F) coordinate of the					specified sizer rect.				  If whichSizer is larger than the number of sizers, return the width/height					of the view.				  If whichSizer is 0, return 0. }				FUNCTION  TSizerView.GetSizerRect(whichSizer: INTEGER): VRect;				{ Return the specified sizer rectangle. The count starts from the				  top/left at 1. }				FUNCTION  TSizerView.GetSizerThickness: INTEGER;				{ Return the thickness of the pane splitter rectangle. }				FUNCTION  TSizerView.GetSizingCursor: INTEGER;				{ Return the resource id of the cursor to use when sizing.				  Must be overridden. }				FUNCTION  TSizerView.GetSplitDirection: VHSelect;				{ Return the direction of the split: v or h. Defaults to h. }				FUNCTION  TSizerView.IsPointInSizer(localPoint: Point): INTEGER;				{ Return the number of the sizer rect the localPoint is in, or 0 if none. }				FUNCTION  TSizerView.IsValidSplitPt(aPoint: VPoint): BOOLEAN;				{ Return TRUE if the pane can be split at the given location. }				FUNCTION  TSizerView.MakeSizerRect(itsLocation: VCoordinate): VRect;				{ Direction-dependent: must be overridden }				PROCEDURE TSizerView.SetMinPaneLength(minLength: VCoordinate);				{ Set the minimum width/height of a pane of this view. }				PROCEDURE TSizerView.SetSizerThickness(thickness: INTEGER);				{ Set the thickness of the pane splitter rectangle. }				PROCEDURE TSizerView.SetSizerRect(whichSizer: INTEGER; itsSizerRect: VRect);				{ Change the specified sizerRect and invalidate both the old and new rectangles. }				PROCEDURE TSizerView.Fields(PROCEDURE											DoToField(fieldName: Str255; fieldAddr: Ptr;													  fieldType: INTEGER)); OVERRIDE;				END;			THorizontalSizer	= OBJECT (TSizerView)			{ This view contains subviews which are stacked one on top of the other. }				FUNCTION  THorizontalSizer.CompareViewLocations(view1, view2: TView): CompareResult; OVERRIDE;				{ Tell whether view1 is above or below view2, by location. }				PROCEDURE THorizontalSizer.DrawSizerRect(aRect: Rect); OVERRIDE;				{ Draw two parallel horizontal lines to represent the sizer rectangle. }				FUNCTION  THorizontalSizer.GetNextSizerRect(aPane: TView): VRect; OVERRIDE;				FUNCTION  THorizontalSizer.GetSizerCoord(whichSizer: INTEGER;														 min: BOOLEAN): VCoordinate; OVERRIDE;				FUNCTION  THorizontalSizer.GetSizerRect(whichSizer: INTEGER): VRect; OVERRIDE;				FUNCTION  THorizontalSizer.GetSizingCursor: INTEGER; OVERRIDE;				{ Return the resource id of the cursor to display when it's over horizontal				  sizer bars. }				FUNCTION  THorizontalSizer.IsValidSplitPt(aPoint: VPoint): BOOLEAN; OVERRIDE;				FUNCTION  THorizontalSizer.MakeSizerRect(itsLocation: VCoordinate): VRect; OVERRIDE;				{ Return the sizer VRect with the specified top coordinate. }				PROCEDURE THorizontalSizer.Resize(width, height: VCoordinate; invalidate: BOOLEAN); OVERRIDE;				{ Resize the panes proportionally. }				PROCEDURE THorizontalSizer.SetPane(whichSizer: INTEGER; itsSizerRect: VRect); OVERRIDE;				PROCEDURE THorizontalSizer.SetPanes(newSizerRects: TVRectList; invalidate: BOOLEAN); OVERRIDE;				{ Direction-dependent resizing. See description in the parent class. }				PROCEDURE THorizontalSizer.TrackConstrain(anchorPoint, previousPoint: VPoint;														  VAR nextPoint: VPoint); OVERRIDE;				{ Constrain mouse tracking to my interior, allowing for the minimum pane size }				END;	{ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - }			TSizerCommand		= OBJECT (TCommand)			{ This command is for moving existing sizer bars, resizing the panes they separate. }				fSizerView: 		TSizerView;			{ view in which to track sizers }				fNewEdge:			LONGINT;			{ the new sizer rectangle location }				fOldSizerRect:		VRect;				{ the old sizer rectangle }				fSplitDir:			VHSelect;			{ direction of the split: h or v }				fWhichSizer:		INTEGER;			{ which sizer we’re tracking, }														{ …counting from the left or top }				PROCEDURE TSizerCommand.ISizerCommand(itsSizerView: TSizerView;													  whichSizer: INTEGER; whichWay: VHSelect);				{ Add whichWay parameter so command doesn’t have to do a Member test on the				  sizer view }				FUNCTION  TSizerCommand.TrackMouse(aTrackPhase: TrackPhase; VAR anchorPoint,												  previousPoint, nextPoint: VPoint;												  mouseDidMove: BOOLEAN): TCommand; OVERRIDE;				PROCEDURE TSizerCommand.TrackFeedback(anchorPoint, nextPoint: VPoint; turnItOn,													  mouseDidMove: BOOLEAN); OVERRIDE;				PROCEDURE TSizerCommand.TrackConstrain(anchorPoint, previousPoint: VPoint;													   VAR nextPoint: VPoint); OVERRIDE;				PROCEDURE TSizerCommand.DoIt; OVERRIDE;				{ Compute the new sizer rectangle and resize the appropriate panes }				PROCEDURE TSizerCommand.UndoIt; OVERRIDE;				{ Set sizer rectangle back to its previous location, and resize panes }				PROCEDURE TSizerCommand.RedoIt; OVERRIDE;				{ DoIt again }				PROCEDURE TSizerCommand.SetPenForFeedback(aPoint: VPoint);				{ Set the pen pattern and size for showing feedback when tracking at the				  given point }				PROCEDURE TSizerCommand.Fields(PROCEDURE											   DoToField(fieldName: Str255; fieldAddr: Ptr;														 fieldType: INTEGER)); OVERRIDE;				END;									{ TSizerCommand }	{ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - }			TSplitterCommand	= OBJECT (TSizerCommand)			{ This command is for creating new sizer bars using a splitter control. The pane			  split by the new sizer is cloned, creating a new subview of the SizerView. }				PROCEDURE TSplitterCommand.ISplitterCommand(itsSizerView: TSizerView);				{ Set fWhichSizer to 0, so that it tracks over the entire SizerView. }				PROCEDURE TSplitterCommand.TrackConstrain(anchorPoint, previousPoint: VPoint;														  VAR nextPoint: VPoint); OVERRIDE;				{ Override to do nothing, so that tracking will be constrained to the SizerView }				PROCEDURE TSplitterCommand.DoIt; OVERRIDE;				{ Create the new pane via cloning and add it to the SizerView. }				PROCEDURE TSplitterCommand.SetPenForFeedback(aPoint: VPoint); OVERRIDE;				{ Show a gray line when tracking outside areas where splitting is allowed. }				FUNCTION  TSplitterCommand.TrackMouse(aTrackPhase: TrackPhase;													  VAR anchorPoint, previousPoint, nextPoint: VPoint;													  mouseDidMove: BOOLEAN): TCommand; OVERRIDE;				{ If the pane is not splittable at the mouse-up location, return NIL. }				PROCEDURE TSplitterCommand.Fields(PROCEDURE DoToField(fieldName: Str255; fieldAddr: Ptr;											fieldType: INTEGER)); OVERRIDE;				END;				{ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - }			SizerTracking = (kResizeOK, kResizeNotOK, kDeleteSizer);			TDeSizerCommand		= OBJECT (TSizerCommand)			{ This command is for moving or deleting existing sizer bars.			  The SizerView must contain a splitter control. }				fResizeRect:		VRect;			{ valid area for resizing }				fResizeOK:			BOOLEAN;		{ characterize area of fSizerView… }													{ …we're tracking in }				PROCEDURE TDeSizerCommand.IDeSizerCommand(itsSizerView: TSizerView; whichSizer: INTEGER;														  whichWay: VHSelect);				PROCEDURE TDeSizerCommand.DoIt; OVERRIDE;				{ If final mouse position was at either end of the SizerView,				  delete the sizer bars; otherwise, just resize. }				PROCEDURE TDeSizerCommand.SetPenForFeedback(aPoint: VPoint); OVERRIDE;				{ Set the pen to black, gray, or white, depending on where aPoint is. }				PROCEDURE TDeSizerCommand.TrackConstrain(anchorPoint, previousPoint: VPoint;											VAR nextPoint: VPoint); OVERRIDE;				{ Track over the entire SizerView, but keep track of whether nextPoint				  is a valid spot for the sizer bars to move to. }				FUNCTION  TDeSizerCommand.TrackMouse(aTrackPhase: TrackPhase; VAR anchorPoint,													 previousPoint, nextPoint: VPoint;													 mouseDidMove: BOOLEAN): TCommand; OVERRIDE;				{ Return NIL if trackRelease is in original sizer rect, or if trackRelease				  is outside the valid resizing area (but not in the sizer deletion area). }				PROCEDURE TDeSizerCommand.Fields(PROCEDURE DoToField(fieldName: Str255;																	 fieldAddr: Ptr;																	 fieldType: INTEGER)); OVERRIDE;				END;	{ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - }			TSplitter	= OBJECT (TControl)				fSizerView:			TSizerView;		{ the view that handles multiple panes }				fLocDeterminer:		ARRAY[VHSelect] OF BOOLEAN;	{ T: adjust location coordinate }													{ …in SuperViewChangedSize }				PROCEDURE TSplitter.IRes(itsDocument: TDocument; itsSuperView: TView;										 VAR itsParams: Ptr); OVERRIDE;				PROCEDURE TSplitter.ISplitter(itsDocument: TDocument; itsSuperview: TView;											  itsLocation: VPoint; itsSize: VPoint);				PROCEDURE TSplitter.IFinish(itsSuperView: TView);				{ Finish up initialization by setting the fSizerView and fLocDeterminer fields.				  The latter are determined by the SizerView’s split direction. }				PROCEDURE TSplitter.Draw(area: Rect); OVERRIDE;				{ Default is just a black rectangle, like a splitter well }				FUNCTION  TSplitter.DoMouseCommand(VAR theMouse: Point; VAR info: EventInfo;												   VAR hysteresis: Point): TCommand; OVERRIDE;				{ Override to return a TSplitterCommand. }				FUNCTION  TSplitter.GetThickness: LONGINT;				{ Return the thickness of the splitter control. }				PROCEDURE TSplitter.SuperViewChangedSize(delta: VPoint; invalidate: BOOLEAN); OVERRIDE;				{ Adjust the coordinates for which fLocDeterminer = T }				PROCEDURE TSplitter.Fields(PROCEDURE DoToField(fieldName: Str255; fieldAddr: Ptr;											   fieldType: INTEGER)); OVERRIDE;				END;	{ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - }		VAR			gVertSBarSetback:	VRect;					{ Use when installing scroller subviews which														  have only a vertical scrollbar }			gHorzSBarSetback:	VRect;					{ Use when installing scroller subviews which														  have only a horizontal scrollbar }			gBothSBarSetback:	VRect;					{ Use when installing scroller subviews which														  have horiz AND vert scrollbars }			gNonPanes:			TIntegerArray;			{ list of ids of classes that may not be panes }		PROCEDURE InitUSizerView;		{ Initializes utility VRects and registers TSizerView }		FUNCTION  CloneAView(aView: TView): TView;		{ Clone aView and all its subviews }		PROCEDURE ExcludeAsPane(obj: TObject);		{ Make the class of obj ineligible for pane-dom (i.e., add the class id of obj		  to the gNonPanes list). }	IMPLEMENTATION		{$I USizerView.impl.p}END.
+UNIT USizerView;
+
+{	This unit implements views which can be divided into several resizable panes.
+	It also contains commands for resizing and splitting, as well as a splitter Control.
+}
+
+	INTERFACE
+
+		USES
+			UMacApp,
+			UArray,
+			Types, QuickDraw, ToolUtils, Packages,
+			FixMath;
+
+		CONST
+
+			{ Command Numbers }
+
+			cSizeViews			= 2300; 				{ For resizing panes in TSizerView }
+
+			{ Miscellaneous }
+
+			kSplitVertically	= v;					{ use with "whichWay" parameter of }
+			kSplitHorizontally	= h;					{ ISizerCommand }
+
+			kSizerThickness 	= 3;					{ default thickness of splitter bar }
+			kMinSizerPane		= 60;					{ default minimum pane size }
+
+			kVertSizingCursor	= 1300; 				{ CURSor IDs }
+			kHorzSizingCursor	= 1301;
+
+			kGetMinCoord		= TRUE;					{ values for min parameter of GetSizerCoord }
+			kGetMaxCoord		= FALSE;
+
+			kLocationVaries		= TRUE;					{ values for fLocDeterminer fields }
+			kLocationFixed		= FALSE;				{ …of TSplitter }
+
+			kStdSplitter		= 'splt';				{ resource signature for a TSplitter }
+			kNoId				= '    ';				{ empty view id }
+
+
+		TYPE
+
+			VRectPtr	= ^VRect;
+			Coordinate	= (kLeftCoord, kRightCoord, kTopCoord, kBottomCoord);
+
+			TVRectList			= OBJECT (TDynamicArray)
+			{ This class represents an indexed list of VRects }
+
+				PROCEDURE TVRectList.IVRectList(initialSize: INTEGER);
+				{ Initialize the list, making it big enough to contain initialSize VRects. }
+
+				FUNCTION  TVRectList.At(index: ArrayIndex): VRect;
+				{ Return the VRect at the given list index. }
+
+				PROCEDURE TVRectList.AtPut(index: ArrayIndex; newItem: VRect);
+				{ Set the VRect at the specified index to the given VRect. If index is greater
+				  than the number of elements in the list, expand the list accordingly. }
+
+				PROCEDURE TVrectList.AtCoordPut(index: ArrayIndex; whichCoord: Coordinate;
+												newCoord: VCoordinate);
+				{ Change a single coordinate of the specified VRect to the given value. }
+
+				PROCEDURE TVrectList.AtSetVRect(index: ArrayIndex; left, top, right, bottom: VCoordinate);
+				{ Change the specified VRect’s coordinates to the given values. }
+
+				PROCEDURE TVRectList.InsertBefore(index: ArrayIndex; item: VRect);
+
+				PROCEDURE TVRectList.Fields(PROCEDURE DoToField(fieldName: Str255;
+											fieldAddr: Ptr; fieldType: INTEGER)); OVERRIDE;
+
+				PROCEDURE TVRectList.DynamicFields(PROCEDURE DoToField(fieldName: Str255;
+											fieldAddr: Ptr; fieldType: integer)); OVERRIDE;
+
+				END;
+
+	{ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - }
+
+			TSizerView			= OBJECT (TView)
+			{ This class maintains multiple panes (subviews of itself) with movable
+			  sizer rectangles between them. }
+
+				fPanes:				TList;			{ the subviews themselves }
+				fSetbacks:			TVRectList;		{ the setbacks for the subpanes }
+				fSizerRects: 		TVRectList;		{ the sizer rectangles }
+				fMinPaneSize:		VCoordinate;	{ minimum width/height of a pane }
+				fSizerThickness:	INTEGER;		{ thickness of splitter }
+				fSplitter:			TSplitter;		{ NIL if no splitter }
+
+				{ Initialization methods }
+
+				PROCEDURE TSizerView.Initialize; OVERRIDE;
+				{ Initialize fields to NIL. Called by IObject. }
+
+				PROCEDURE TSizerView.IRes(itsDocument: TDocument; itsSuperView: TView;
+												VAR itsParams: Ptr); OVERRIDE;
+				{ Initialize a view created from templates. }
+
+				PROCEDURE TSizerView.ISizerView(itsDocument: TDocument;
+												itsSuperview: TView;
+												itsLocation: VPoint;
+												itsSize: VPoint;
+												itsHSizeDet, itsVSizeDet: SizeDeterminer);
+				{ Initialize a view created procedurally. }
+
+				PROCEDURE TSizerView.InitLists;
+				{ Create and initialize the various lists of subviews and VRects }
+
+				PROCEDURE TSizerView.FixupPanes(equalSpacing: BOOLEAN);
+				{ a/k/a “PostRes”: Call after IRes (NewTemplateWindow).
+				  Now that the subviews have been added, use them to initialize the
+				  setbacks and sizer rectangles to their default values.
+				  If equalSpacing is TRUE, make the panes of equal size;
+				  otherwise, try to locate the panes using their fLocations. }
+
+				PROCEDURE TSizerView.Free; OVERRIDE;
+				{ Free the setbacks and sizer list objects }
+
+
+				{ Adding, drawing, resizing panes }
+
+				PROCEDURE TSizerView.AddPane(newPane: TView; itsLocation: VCoordinate;
+											 itsSetbacks: VRect);
+				{ Install thePane at the specified location, shrinking any existing pane
+				  accordingly. }
+
+				PROCEDURE TSizerView.AddEqualPane(newPane: TView; itsPosition: INTEGER;
+												  itsSetbacks: VRect);
+				{ Install thePane at the specified position, resizing all panes equally. }
+
+				FUNCTION  TSizerView.DeletePane(whichPane, whichSizer: INTEGER): TView;
+				{ Delete the specified pane and sizer; expand the remaining pane and
+				  return it. }
+
+				PROCEDURE TSizerView.Draw(area: Rect); OVERRIDE;
+				{ General draw method: call DrawSizerRect for each sizer rectangle. }
+
+				PROCEDURE TSizerView.DrawSizerRect(aRect: Rect);
+				{ Do the direction-dependent drawing: must be overridden. }
+
+				PROCEDURE TSizerView.InstallSetbacks(whichPane: INTEGER; itsSetbacks: VRect);
+				{ Use this method to set different setbacks than the default ones. }
+				{ This unit defines three global rects for use in setbacks:
+					gVertSBarSetback - Use when installing scroller subviews which
+						have only a vertical scrollbar.
+					gHorzSBarSetback - Use when installing scroller subviews which
+						have only a horizontal scrollbar.
+					gBothSBarSetback - Use when installing scroller subviews which
+						have horiz AND vert scrollbars.
+				  You may also use MacApp's gZeroVRect to indicate that there is to be
+				  no setback at all. }
+		
+				FUNCTION  TSizerView.MergedSize(oldPane, changedPane: TView): VPoint;
+				{ Return the combined size of oldPane and changedPane. Must be overridden. }
+
+				PROCEDURE TSizerView.SetPane(whichSizer: INTEGER; itsSizerRect: VRect);
+				{ The specified sizer has moved, so adjust the panes on either side of it }
+
+				PROCEDURE TSizerView.SetPanes(newSizerRects: TVRectList;
+											  invalidate: BOOLEAN);
+				{ All the sizers have moved, so adjust all the panes in the view }
+
+				PROCEDURE TSizerView.SuperViewChangedSize(delta: VPoint; invalidate: BOOLEAN); OVERRIDE;
+				{ Forces commit of any pending pane resize command. Generally this
+				  matters only on a window resize which normally would not commit a
+				  command; such a resize will force an additional pane resize so
+				  "Undo Pane Resize" (or Redo) ceases to make sense.}
+
+
+				{ Cursors and mice, etc. }
+
+				FUNCTION  TSizerView.DoMouseCommand(VAR theMouse: Point; VAR info: EventInfo;
+													VAR hysteresis: Point): TCommand; OVERRIDE;
+				{ If the mouse is in a sizer rectangle, create and return a TSizerCommand. }
+
+				FUNCTION  TSizerView.DoSetCursor(localPoint: Point; cursorRgn: RgnHandle): BOOLEAN; OVERRIDE;
+				{ Draw the appropriate sizer cursor if necessary.  If the cursor resource
+				  is missing, default to the arrow. }
+
+				PROCEDURE TSizerView.InvalidateFocus; OVERRIDE;
+				{ Avoid traversing subviews; just set gFocusedView to NIL }
+
+				PROCEDURE TSizerView.TrackConstrain(anchorPoint, previousPoint: VPoint;
+													VAR nextPoint: VPoint); OVERRIDE;
+				{ Constrain mouse tracking to my interior, allowing for the minimum pane size.
+				  Must be overridden: direction dependent. }
+
+
+				{ Gettors and settors }
+
+				FUNCTION  TSizerView.CompareViewLocations(view1, view2: TView): CompareResult;
+				{ Return the order of the two views by their location. This calculation
+				  is direction dependent, so it must be overridden. }
+
+				FUNCTION  TSizerView.FindPane(aView: TView): INTEGER;
+				{ Return the position (index) of aView in the fPanes list }
+
+				FUNCTION  TSizerView.FindPaneAt(theCoords: VPoint): TView;
+				{ Return the pane at the given coordinates }
+
+				FUNCTION  TSizerView.FindSizerPosition(VAR itsLocation: VCoordinate): INTEGER;
+				{ Given the desired coordinate for a new sizer rectangle, return its position
+				  (index) in the list of sizers, modifying itsLocation if necessary. }
+
+				FUNCTION  TSizerView.GetDefaultSizerRect(whichSizer: INTEGER): VRect;
+				{ Return the VRect for the given sizer, assuming evenly spaced sizers. }
+
+				FUNCTION  TSizerView.GetMinPaneLength: VCoordinate;
+				{ Return the minimum width/height of a pane of this view. }
+
+				FUNCTION  TSizerView.GetNextSizerRect(aPane: TView): VRect;
+				{ Must be overridden }
+
+				FUNCTION  TSizerView.GetNumberOfPanes: INTEGER;
+				{ How many subviews do I have? }
+
+				FUNCTION  TSizerView.GetNumberOfSizers: INTEGER;
+				{ How many sets of sizer bars do I have? (Hint: number of panes - 1) }
+
+				FUNCTION  TSizerView.GetSizerCoord(whichSizer: INTEGER; min: BOOLEAN): VCoordinate;
+				{ Return the left/top (min=T) or right/bottom (min=F) coordinate of the
+					specified sizer rect.
+				  If whichSizer is larger than the number of sizers, return the width/height
+					of the view.
+				  If whichSizer is 0, return 0. }
+
+				FUNCTION  TSizerView.GetSizerRect(whichSizer: INTEGER): VRect;
+				{ Return the specified sizer rectangle. The count starts from the
+				  top/left at 1. }
+
+				FUNCTION  TSizerView.GetSizerThickness: INTEGER;
+				{ Return the thickness of the pane splitter rectangle. }
+
+				FUNCTION  TSizerView.GetSizingCursor: INTEGER;
+				{ Return the resource id of the cursor to use when sizing.
+				  Must be overridden. }
+
+				FUNCTION  TSizerView.GetSplitDirection: VHSelect;
+				{ Return the direction of the split: v or h. Defaults to h. }
+
+				FUNCTION  TSizerView.IsPointInSizer(localPoint: Point): INTEGER;
+				{ Return the number of the sizer rect the localPoint is in, or 0 if none. }
+
+				FUNCTION  TSizerView.IsValidSplitPt(aPoint: VPoint): BOOLEAN;
+				{ Return TRUE if the pane can be split at the given location. }
+
+				FUNCTION  TSizerView.MakeSizerRect(itsLocation: VCoordinate): VRect;
+				{ Direction-dependent: must be overridden }
+
+				PROCEDURE TSizerView.SetMinPaneLength(minLength: VCoordinate);
+				{ Set the minimum width/height of a pane of this view. }
+
+				PROCEDURE TSizerView.SetSizerThickness(thickness: INTEGER);
+				{ Set the thickness of the pane splitter rectangle. }
+
+				PROCEDURE TSizerView.SetSizerRect(whichSizer: INTEGER; itsSizerRect: VRect);
+				{ Change the specified sizerRect and invalidate both the old and new rectangles. }
+
+				PROCEDURE TSizerView.Fields(PROCEDURE
+											DoToField(fieldName: Str255; fieldAddr: Ptr;
+													  fieldType: INTEGER)); OVERRIDE;
+				END;
+
+			THorizontalSizer	= OBJECT (TSizerView)
+			{ This view contains subviews which are stacked one on top of the other. }
+
+				FUNCTION  THorizontalSizer.CompareViewLocations(view1, view2: TView): CompareResult; OVERRIDE;
+				{ Tell whether view1 is above or below view2, by location. }
+
+				PROCEDURE THorizontalSizer.DrawSizerRect(aRect: Rect); OVERRIDE;
+				{ Draw two parallel horizontal lines to represent the sizer rectangle. }
+
+				FUNCTION  THorizontalSizer.GetNextSizerRect(aPane: TView): VRect; OVERRIDE;
+
+				FUNCTION  THorizontalSizer.GetSizerCoord(whichSizer: INTEGER;
+														 min: BOOLEAN): VCoordinate; OVERRIDE;
+
+				FUNCTION  THorizontalSizer.GetSizerRect(whichSizer: INTEGER): VRect; OVERRIDE;
+
+				FUNCTION  THorizontalSizer.GetSizingCursor: INTEGER; OVERRIDE;
+				{ Return the resource id of the cursor to display when it's over horizontal
+				  sizer bars. }
+
+				FUNCTION  THorizontalSizer.IsValidSplitPt(aPoint: VPoint): BOOLEAN; OVERRIDE;
+
+				FUNCTION  THorizontalSizer.MakeSizerRect(itsLocation: VCoordinate): VRect; OVERRIDE;
+				{ Return the sizer VRect with the specified top coordinate. }
+
+				PROCEDURE THorizontalSizer.Resize(width, height: VCoordinate; invalidate: BOOLEAN); OVERRIDE;
+				{ Resize the panes proportionally. }
+
+				PROCEDURE THorizontalSizer.SetPane(whichSizer: INTEGER; itsSizerRect: VRect); OVERRIDE;
+				PROCEDURE THorizontalSizer.SetPanes(newSizerRects: TVRectList; invalidate: BOOLEAN); OVERRIDE;
+				{ Direction-dependent resizing. See description in the parent class. }
+
+				PROCEDURE THorizontalSizer.TrackConstrain(anchorPoint, previousPoint: VPoint;
+														  VAR nextPoint: VPoint); OVERRIDE;
+				{ Constrain mouse tracking to my interior, allowing for the minimum pane size }
+
+				END;
+
+	{ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - }
+
+			TSizerCommand		= OBJECT (TCommand)
+			{ This command is for moving existing sizer bars, resizing the panes they separate. }
+
+				fSizerView: 		TSizerView;			{ view in which to track sizers }
+				fNewEdge:			LONGINT;			{ the new sizer rectangle location }
+				fOldSizerRect:		VRect;				{ the old sizer rectangle }
+				fSplitDir:			VHSelect;			{ direction of the split: h or v }
+				fWhichSizer:		INTEGER;			{ which sizer we’re tracking, }
+														{ …counting from the left or top }
+
+				PROCEDURE TSizerCommand.ISizerCommand(itsSizerView: TSizerView;
+													  whichSizer: INTEGER; whichWay: VHSelect);
+				{ Add whichWay parameter so command doesn’t have to do a Member test on the
+				  sizer view }
+
+				FUNCTION  TSizerCommand.TrackMouse(aTrackPhase: TrackPhase; VAR anchorPoint,
+												  previousPoint, nextPoint: VPoint;
+												  mouseDidMove: BOOLEAN): TCommand; OVERRIDE;
+
+				PROCEDURE TSizerCommand.TrackFeedback(anchorPoint, nextPoint: VPoint; turnItOn,
+													  mouseDidMove: BOOLEAN); OVERRIDE;
+
+				PROCEDURE TSizerCommand.TrackConstrain(anchorPoint, previousPoint: VPoint;
+													   VAR nextPoint: VPoint); OVERRIDE;
+
+				PROCEDURE TSizerCommand.DoIt; OVERRIDE;
+				{ Compute the new sizer rectangle and resize the appropriate panes }
+
+				PROCEDURE TSizerCommand.UndoIt; OVERRIDE;
+				{ Set sizer rectangle back to its previous location, and resize panes }
+
+				PROCEDURE TSizerCommand.RedoIt; OVERRIDE;
+				{ DoIt again }
+
+				PROCEDURE TSizerCommand.SetPenForFeedback(aPoint: VPoint);
+				{ Set the pen pattern and size for showing feedback when tracking at the
+				  given point }
+
+				PROCEDURE TSizerCommand.Fields(PROCEDURE
+											   DoToField(fieldName: Str255; fieldAddr: Ptr;
+														 fieldType: INTEGER)); OVERRIDE;
+
+				END;									{ TSizerCommand }
+
+	{ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - }
+
+			TSplitterCommand	= OBJECT (TSizerCommand)
+			{ This command is for creating new sizer bars using a splitter control. The pane
+			  split by the new sizer is cloned, creating a new subview of the SizerView. }
+
+				PROCEDURE TSplitterCommand.ISplitterCommand(itsSizerView: TSizerView);
+				{ Set fWhichSizer to 0, so that it tracks over the entire SizerView. }
+
+				PROCEDURE TSplitterCommand.TrackConstrain(anchorPoint, previousPoint: VPoint;
+														  VAR nextPoint: VPoint); OVERRIDE;
+				{ Override to do nothing, so that tracking will be constrained to the SizerView }
+
+				PROCEDURE TSplitterCommand.DoIt; OVERRIDE;
+				{ Create the new pane via cloning and add it to the SizerView. }
+
+				PROCEDURE TSplitterCommand.SetPenForFeedback(aPoint: VPoint); OVERRIDE;
+				{ Show a gray line when tracking outside areas where splitting is allowed. }
+
+				FUNCTION  TSplitterCommand.TrackMouse(aTrackPhase: TrackPhase;
+													  VAR anchorPoint, previousPoint, nextPoint: VPoint;
+													  mouseDidMove: BOOLEAN): TCommand; OVERRIDE;
+				{ If the pane is not splittable at the mouse-up location, return NIL. }
+
+				PROCEDURE TSplitterCommand.Fields(PROCEDURE DoToField(fieldName: Str255; fieldAddr: Ptr;
+											fieldType: INTEGER)); OVERRIDE;
+
+				END;
+			
+	{ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - }
+
+			SizerTracking = (kResizeOK, kResizeNotOK, kDeleteSizer);
+
+			TDeSizerCommand		= OBJECT (TSizerCommand)
+			{ This command is for moving or deleting existing sizer bars.
+			  The SizerView must contain a splitter control. }
+
+				fResizeRect:		VRect;			{ valid area for resizing }
+				fResizeOK:			BOOLEAN;		{ characterize area of fSizerView… }
+													{ …we're tracking in }
+
+				PROCEDURE TDeSizerCommand.IDeSizerCommand(itsSizerView: TSizerView; whichSizer: INTEGER;
+														  whichWay: VHSelect);
+
+				PROCEDURE TDeSizerCommand.DoIt; OVERRIDE;
+				{ If final mouse position was at either end of the SizerView,
+				  delete the sizer bars; otherwise, just resize. }
+
+				PROCEDURE TDeSizerCommand.SetPenForFeedback(aPoint: VPoint); OVERRIDE;
+				{ Set the pen to black, gray, or white, depending on where aPoint is. }
+
+				PROCEDURE TDeSizerCommand.TrackConstrain(anchorPoint, previousPoint: VPoint;
+											VAR nextPoint: VPoint); OVERRIDE;
+				{ Track over the entire SizerView, but keep track of whether nextPoint
+				  is a valid spot for the sizer bars to move to. }
+
+				FUNCTION  TDeSizerCommand.TrackMouse(aTrackPhase: TrackPhase; VAR anchorPoint,
+													 previousPoint, nextPoint: VPoint;
+													 mouseDidMove: BOOLEAN): TCommand; OVERRIDE;
+				{ Return NIL if trackRelease is in original sizer rect, or if trackRelease
+				  is outside the valid resizing area (but not in the sizer deletion area). }
+
+				PROCEDURE TDeSizerCommand.Fields(PROCEDURE DoToField(fieldName: Str255;
+																	 fieldAddr: Ptr;
+																	 fieldType: INTEGER)); OVERRIDE;
+				END;
+
+	{ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - }
+
+			TSplitter	= OBJECT (TControl)
+
+				fSizerView:			TSizerView;		{ the view that handles multiple panes }
+				fLocDeterminer:		ARRAY[VHSelect] OF BOOLEAN;	{ T: adjust location coordinate }
+													{ …in SuperViewChangedSize }
+
+				PROCEDURE TSplitter.IRes(itsDocument: TDocument; itsSuperView: TView;
+										 VAR itsParams: Ptr); OVERRIDE;
+
+				PROCEDURE TSplitter.ISplitter(itsDocument: TDocument; itsSuperview: TView;
+											  itsLocation: VPoint; itsSize: VPoint);
+
+				PROCEDURE TSplitter.IFinish(itsSuperView: TView);
+				{ Finish up initialization by setting the fSizerView and fLocDeterminer fields.
+				  The latter are determined by the SizerView’s split direction. }
+
+				PROCEDURE TSplitter.Draw(area: Rect); OVERRIDE;
+				{ Default is just a black rectangle, like a splitter well }
+
+				FUNCTION  TSplitter.DoMouseCommand(VAR theMouse: Point; VAR info: EventInfo;
+												   VAR hysteresis: Point): TCommand; OVERRIDE;
+				{ Override to return a TSplitterCommand. }
+
+				FUNCTION  TSplitter.GetThickness: LONGINT;
+				{ Return the thickness of the splitter control. }
+
+				PROCEDURE TSplitter.SuperViewChangedSize(delta: VPoint; invalidate: BOOLEAN); OVERRIDE;
+				{ Adjust the coordinates for which fLocDeterminer = T }
+
+				PROCEDURE TSplitter.Fields(PROCEDURE DoToField(fieldName: Str255; fieldAddr: Ptr;
+											   fieldType: INTEGER)); OVERRIDE;
+
+				END;
+
+	{ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - }
+
+		VAR
+			gVertSBarSetback:	VRect;					{ Use when installing scroller subviews which
+														  have only a vertical scrollbar }
+			gHorzSBarSetback:	VRect;					{ Use when installing scroller subviews which
+														  have only a horizontal scrollbar }
+			gBothSBarSetback:	VRect;					{ Use when installing scroller subviews which
+														  have horiz AND vert scrollbars }
+
+			gNonPanes:			TIntegerArray;			{ list of ids of classes that may not be panes }
+
+
+		PROCEDURE InitUSizerView;
+		{ Initializes utility VRects and registers TSizerView }
+
+		FUNCTION  CloneAView(aView: TView): TView;
+		{ Clone aView and all its subviews }
+
+		PROCEDURE ExcludeAsPane(obj: TObject);
+		{ Make the class of obj ineligible for pane-dom (i.e., add the class id of obj
+		  to the gNonPanes list). }
+
+
+	IMPLEMENTATION
+
+		{$I USizerView.impl.p}
+
+END.

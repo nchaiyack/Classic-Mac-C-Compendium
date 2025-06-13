@@ -1,1 +1,120 @@
-Note: compiled using 2-byte integers.Sort Library, Version 2.0, Copyright (c) 1990-1994, Ari HalberstadtCompiled on Sep 25 1994 at 12:19:48Hardware:          Macintosh PlusSystem:            System 7.0.0Compiler:          THINK C v7.0Preparing data        Allocating arrays        Creating 8196 random integers        Presorting data        Reversing dataRunning tests. If you see any failure messages then it's timeto fix something.It will take at least 165 seconds to run all of the tests.Testing random data  sort     order           nelem      seconds     sec/elem   qsort/sort  ---------------------------------------------------------------------  qsort    random           8196       37.817    4.614e-03    1.000e+00  qksort   random           8196        7.600    9.273e-04    4.976e+00  hpsort   random           8196       32.250    3.935e-03    1.173e+00  mgsort   random           8196       14.050    1.714e-03    2.692e+00  shsort   random           8196       21.050    2.568e-03    1.797e+00  insort   random           1024       19.050    1.860e-02    2.480e-01  tqksort  random          16392        5.633    3.437e-04    1.343e+01  thpsort  random           8196       20.917    2.552e-03    1.808e+00  tmgsort  random           8196        5.883    7.178e-04    6.428e+00  tshsort  random          16392        8.367    5.104e-04    9.040e+00  tinsort  random           1024        9.900    9.668e-03    4.773e-01Sorted results:  sort     order           nelem      seconds     sec/elem   qsort/sort  ---------------------------------------------------------------------  tqksort  random          16392        5.633    3.437e-04    1.343e+01  tshsort  random          16392        8.367    5.104e-04    9.040e+00  tmgsort  random           8196        5.883    7.178e-04    6.428e+00  qksort   random           8196        7.600    9.273e-04    4.976e+00  mgsort   random           8196       14.050    1.714e-03    2.692e+00  thpsort  random           8196       20.917    2.552e-03    1.808e+00  shsort   random           8196       21.050    2.568e-03    1.797e+00  hpsort   random           8196       32.250    3.935e-03    1.173e+00  qsort    random           8196       37.817    4.614e-03    1.000e+00  tinsort  random           1024        9.900    9.668e-03    4.773e-01  insort   random           1024       19.050    1.860e-02    2.480e-01Testing sorted data  sort     order           nelem      seconds     sec/elem   qsort/sort  ---------------------------------------------------------------------  qsort    sorted            512       27.583    5.387e-02    1.000e+00  qksort   sorted          16392        7.900    4.819e-04    1.118e+02  hpsort   sorted           8196       33.517    4.089e-03    1.317e+01  mgsort   sorted           8196       12.267    1.497e-03    3.600e+01  shsort   sorted           8196        8.433    1.029e-03    5.236e+01  insort   sorted          98352        5.050    5.135e-05    1.049e+03  tqksort  sorted          40980        5.450    1.330e-04    4.051e+02  thpsort  sorted           8196       21.683    2.646e-03    2.036e+01  tmgsort  sorted           8196        5.450    6.650e-04    8.102e+01  tshsort  sorted          32784        6.200    1.891e-04    2.849e+02  tinsort  sorted         237684        5.117    2.153e-05    2.503e+03Sorted results:  sort     order           nelem      seconds     sec/elem   qsort/sort  ---------------------------------------------------------------------  tinsort  sorted         237684        5.117    2.153e-05    2.503e+03  insort   sorted          98352        5.050    5.135e-05    1.049e+03  tqksort  sorted          40980        5.450    1.330e-04    4.051e+02  tshsort  sorted          32784        6.200    1.891e-04    2.849e+02  qksort   sorted          16392        7.900    4.819e-04    1.118e+02  tmgsort  sorted           8196        5.450    6.650e-04    8.102e+01  shsort   sorted           8196        8.433    1.029e-03    5.236e+01  mgsort   sorted           8196       12.267    1.497e-03    3.600e+01  thpsort  sorted           8196       21.683    2.646e-03    2.036e+01  hpsort   sorted           8196       33.517    4.089e-03    1.317e+01  qsort    sorted            512       27.583    5.387e-02    1.000e+00Testing reversed data  sort     order           nelem      seconds     sec/elem   qsort/sort  ---------------------------------------------------------------------  qsort    reversed          512       26.150    5.107e-02    1.000e+00  qksort   reversed        16392        8.550    5.216e-04    9.792e+01  hpsort   reversed         8196       30.867    3.766e-03    1.356e+01  mgsort   reversed         8196       12.350    1.507e-03    3.390e+01  shsort   reversed         8196       11.250    1.373e-03    3.721e+01  insort   reversed          512        9.183    1.794e-02    2.848e+00  tqksort  reversed        40980        6.067    1.480e-04    3.450e+02  thpsort  reversed         8196       20.033    2.444e-03    2.090e+01  tmgsort  reversed         8196        5.283    6.446e-04    7.923e+01  tshsort  reversed        24588        6.400    2.603e-04    1.962e+02  tinsort  reversed         1024        9.567    9.342e-03    5.467e+00Sorted results:  sort     order           nelem      seconds     sec/elem   qsort/sort  ---------------------------------------------------------------------  tqksort  reversed        40980        6.067    1.480e-04    3.450e+02  tshsort  reversed        24588        6.400    2.603e-04    1.962e+02  qksort   reversed        16392        8.550    5.216e-04    9.792e+01  tmgsort  reversed         8196        5.283    6.446e-04    7.923e+01  shsort   reversed         8196       11.250    1.373e-03    3.721e+01  mgsort   reversed         8196       12.350    1.507e-03    3.390e+01  thpsort  reversed         8196       20.033    2.444e-03    2.090e+01  hpsort   reversed         8196       30.867    3.766e-03    1.356e+01  tinsort  reversed         1024        9.567    9.342e-03    5.467e+00  insort   reversed          512        9.183    1.794e-02    2.848e+00  qsort    reversed          512       26.150    5.107e-02    1.000e+00Testing small numbers of items (0 through 16)Finished all tests.
+Note: compiled using 2-byte integers.
+
+Sort Library, Version 2.0, Copyright (c) 1990-1994, Ari Halberstadt
+Compiled on Sep 25 1994 at 12:19:48
+
+Hardware:          Macintosh Plus
+System:            System 7.0.0
+Compiler:          THINK C v7.0
+
+Preparing data
+
+        Allocating arrays
+        Creating 8196 random integers
+        Presorting data
+        Reversing data
+
+Running tests. If you see any failure messages then it's time
+to fix something.
+
+It will take at least 165 seconds to run all of the tests.
+
+Testing random data
+
+  sort     order           nelem      seconds     sec/elem   qsort/sort
+  ---------------------------------------------------------------------
+  qsort    random           8196       37.817    4.614e-03    1.000e+00
+  qksort   random           8196        7.600    9.273e-04    4.976e+00
+  hpsort   random           8196       32.250    3.935e-03    1.173e+00
+  mgsort   random           8196       14.050    1.714e-03    2.692e+00
+  shsort   random           8196       21.050    2.568e-03    1.797e+00
+  insort   random           1024       19.050    1.860e-02    2.480e-01
+  tqksort  random          16392        5.633    3.437e-04    1.343e+01
+  thpsort  random           8196       20.917    2.552e-03    1.808e+00
+  tmgsort  random           8196        5.883    7.178e-04    6.428e+00
+  tshsort  random          16392        8.367    5.104e-04    9.040e+00
+  tinsort  random           1024        9.900    9.668e-03    4.773e-01
+
+Sorted results:
+
+  sort     order           nelem      seconds     sec/elem   qsort/sort
+  ---------------------------------------------------------------------
+  tqksort  random          16392        5.633    3.437e-04    1.343e+01
+  tshsort  random          16392        8.367    5.104e-04    9.040e+00
+  tmgsort  random           8196        5.883    7.178e-04    6.428e+00
+  qksort   random           8196        7.600    9.273e-04    4.976e+00
+  mgsort   random           8196       14.050    1.714e-03    2.692e+00
+  thpsort  random           8196       20.917    2.552e-03    1.808e+00
+  shsort   random           8196       21.050    2.568e-03    1.797e+00
+  hpsort   random           8196       32.250    3.935e-03    1.173e+00
+  qsort    random           8196       37.817    4.614e-03    1.000e+00
+  tinsort  random           1024        9.900    9.668e-03    4.773e-01
+  insort   random           1024       19.050    1.860e-02    2.480e-01
+
+Testing sorted data
+
+  sort     order           nelem      seconds     sec/elem   qsort/sort
+  ---------------------------------------------------------------------
+  qsort    sorted            512       27.583    5.387e-02    1.000e+00
+  qksort   sorted          16392        7.900    4.819e-04    1.118e+02
+  hpsort   sorted           8196       33.517    4.089e-03    1.317e+01
+  mgsort   sorted           8196       12.267    1.497e-03    3.600e+01
+  shsort   sorted           8196        8.433    1.029e-03    5.236e+01
+  insort   sorted          98352        5.050    5.135e-05    1.049e+03
+  tqksort  sorted          40980        5.450    1.330e-04    4.051e+02
+  thpsort  sorted           8196       21.683    2.646e-03    2.036e+01
+  tmgsort  sorted           8196        5.450    6.650e-04    8.102e+01
+  tshsort  sorted          32784        6.200    1.891e-04    2.849e+02
+  tinsort  sorted         237684        5.117    2.153e-05    2.503e+03
+
+Sorted results:
+
+  sort     order           nelem      seconds     sec/elem   qsort/sort
+  ---------------------------------------------------------------------
+  tinsort  sorted         237684        5.117    2.153e-05    2.503e+03
+  insort   sorted          98352        5.050    5.135e-05    1.049e+03
+  tqksort  sorted          40980        5.450    1.330e-04    4.051e+02
+  tshsort  sorted          32784        6.200    1.891e-04    2.849e+02
+  qksort   sorted          16392        7.900    4.819e-04    1.118e+02
+  tmgsort  sorted           8196        5.450    6.650e-04    8.102e+01
+  shsort   sorted           8196        8.433    1.029e-03    5.236e+01
+  mgsort   sorted           8196       12.267    1.497e-03    3.600e+01
+  thpsort  sorted           8196       21.683    2.646e-03    2.036e+01
+  hpsort   sorted           8196       33.517    4.089e-03    1.317e+01
+  qsort    sorted            512       27.583    5.387e-02    1.000e+00
+
+Testing reversed data
+
+  sort     order           nelem      seconds     sec/elem   qsort/sort
+  ---------------------------------------------------------------------
+  qsort    reversed          512       26.150    5.107e-02    1.000e+00
+  qksort   reversed        16392        8.550    5.216e-04    9.792e+01
+  hpsort   reversed         8196       30.867    3.766e-03    1.356e+01
+  mgsort   reversed         8196       12.350    1.507e-03    3.390e+01
+  shsort   reversed         8196       11.250    1.373e-03    3.721e+01
+  insort   reversed          512        9.183    1.794e-02    2.848e+00
+  tqksort  reversed        40980        6.067    1.480e-04    3.450e+02
+  thpsort  reversed         8196       20.033    2.444e-03    2.090e+01
+  tmgsort  reversed         8196        5.283    6.446e-04    7.923e+01
+  tshsort  reversed        24588        6.400    2.603e-04    1.962e+02
+  tinsort  reversed         1024        9.567    9.342e-03    5.467e+00
+
+Sorted results:
+
+  sort     order           nelem      seconds     sec/elem   qsort/sort
+  ---------------------------------------------------------------------
+  tqksort  reversed        40980        6.067    1.480e-04    3.450e+02
+  tshsort  reversed        24588        6.400    2.603e-04    1.962e+02
+  qksort   reversed        16392        8.550    5.216e-04    9.792e+01
+  tmgsort  reversed         8196        5.283    6.446e-04    7.923e+01
+  shsort   reversed         8196       11.250    1.373e-03    3.721e+01
+  mgsort   reversed         8196       12.350    1.507e-03    3.390e+01
+  thpsort  reversed         8196       20.033    2.444e-03    2.090e+01
+  hpsort   reversed         8196       30.867    3.766e-03    1.356e+01
+  tinsort  reversed         1024        9.567    9.342e-03    5.467e+00
+  insort   reversed          512        9.183    1.794e-02    2.848e+00
+  qsort    reversed          512       26.150    5.107e-02    1.000e+00
+
+Testing small numbers of items (0 through 16)
+
+Finished all tests.

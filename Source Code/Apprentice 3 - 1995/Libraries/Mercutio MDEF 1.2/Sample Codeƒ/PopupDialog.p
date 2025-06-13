@@ -1,1 +1,243 @@
-UNIT PopupDialog;INTERFACE	USES		MercutioAPI;	CONST		Off = 0;		On = 1;		Disable = 255;		enterKey = 3;		helpKey = 5;		deleteKey = 8;		tabKey = 9;		linefeedKey = 10;		CR = 13;		return = 13;		periodKey = 46;		slashKey = 47;		questionmarkKey = 63;		PopupDLOG = 3001;		popupTitleItem = 3;		defaultItem = 5;	PROCEDURE doPopupDialog (theMenu: menuHandle);IMPLEMENTATION	TYPE		dialogGlobals = RECORD				hMenu: menuHandle;				popUpRect: rect;				popSelected: integer;			END;		dialogGlobalsPtr = ^dialogGlobals;	PROCEDURE FakeClick (VAR theDialog: DialogPtr; theButton: Integer);{ select/deselect a button in a dialog }		VAR			thetype: Integer;			itemHdl: Handle;			iRect: Rect;			Ticks: LongInt;	BEGIN		GetDItem(theDialog, theButton, thetype, ItemHdl, iRect);		HiliteControl(ControlHandle(ItemHdl), On);		Delay(8, Ticks);		HiliteControl(ControlHandle(ItemHdl), Off);	END; { of proc FakeClick }	PROCEDURE DrawDefaultBtn (theDialog: DialogPtr; ItemNumber: Integer);  { heavy black outline }		VAR			iType: Integer;			itmHdl: Handle;			thePen: PenState;			iRect: Rect;	BEGIN		SetPort(theDialog);                 { set window to current graf port }		GetDItem(theDialog, ItemNumber, iType, itmHdl, iRect); { get location }		GetPenState(thePen);                               { save current pen }		PenNormal;		PenSize(3, 3);		InsetRect(iRect, -4, -4);		FrameRoundRect(iRect, 16, 16);		SetPenState(thePen);                               { restore old pen }	END;  { of proc DrawDefaultBtn }	PROCEDURE UpdatePopUp (theDialog: DialogPtr; Item: Integer);{   draw popup menu }		VAR			aRect: Rect;			theGlobals: dialogGlobalsPtr;			IsNovice: boolean;			thetype: Integer;			itmHdl: Handle;			iRect: Rect;	BEGIN		theGlobals := dialogGlobalsPtr(GetWRefCon(theDialog));		GetDItem(theDialog, popupTitleItem, theType, ItmHdl, aRect);		insetRect(aRect, -2, -2);		eraseRect(aRect);		insetRect(aRect, 2, 2);		MDEF_CalcItemSize(theGlobals^.hMenu, theGlobals^.popSelected, aRect);		MoveTo(aRect.left + 2, aRect.bottom);		LineTo(aRect.right, aRect.bottom);		MoveTo(aRect.right, aRect.top + 2);		LineTo(aRect.right, aRect.bottom);		MoveTo(aRect.Left + 6, aRect.Bottom - 5);	{ move to text position }		FillRect(aRect, white);		MDEF_DrawItem(theGlobals^.hMenu, theGlobals^.PopSelected, aRect);		FrameRect(aRect);		CheckItem(theGlobals^.hMenu, theGlobals^.PopSelected, true);		SetDItem(theDialog, popupTitleItem, theType, ItmHdl, aRect);	END;	PROCEDURE doPopupDialog (theMenu: menuHandle);		VAR			theDialog: dialogPtr;			itemHit: integer;			iType: integer;			iRect: rect;			iHandle: handle;			popupRect: rect;			theEvent: eventRecord;			theGlobals: dialogGlobals;			eventOccured: boolean;			popRect: rect;			theErr, result: longint;			ShiftUsed, CmdKeyUsed, BadKey: boolean;			thePoint: point;			OldPort: GrafPtr;			theKey: integer;			tempStr: str255;			mouseLoc: point;				{ the area it was in		}			whichWindow: WindowPtr;			{ Dummy,cause we have no windows}			DragBounds: rect;			windowLoc: integer;	BEGIN		DragBounds := thePort^.portBits.bounds;		theDialog := GetNewDialog(PopupDLOG, NIL, pointer(-1));		IF theDialog = NIL THEN			BEGIN				sysbeep(1);				exit(doPopupDialog);			END;		SetPort(theDialog);		theGlobals.hMenu := theMenu;		SetWRefCon(theDialog, longint(@theGlobals));		CalcMenuSize(theMenu);		GetDItem(theDialog, popupTitleItem, iType, iHandle, iRect);		SetRect(theGlobals.PopUpRect, iRect.left + 3, iRect.top, iRect.left + theMenu^^.menuwidth + 4, iRect.bottom + 2);		GetDItem(theDialog, popupTitleItem, iType, iHandle, iRect);		SetDItem(theDialog, popupTitleItem, iType, iHandle, theGlobals.PopUpRect);		GetDItem(theDialog, popupTitleItem, iType, iHandle, iRect);  { get item's rect }		SetDItem(theDialog, popupTitleItem, userItem, Handle(@UpdatePopup), iRect);		GetDItem(theDialog, defaultItem, iType, iHandle, iRect);  { get item's rect }		SetDItem(theDialog, defaultItem, userItem, Handle(@DrawDefaultBtn), iRect);		ShowWindow(theDialog);		REPEAT			eventOccured := GetNextEvent(everyEvent, theEvent);			IF eventOccured THEN				BEGIN					CASE theEvent.what OF						keydown, autokey:{ any key down! }							BEGIN								theKey := BitAnd(theEvent.message, charCodeMask);		{ decode char }								CmdKeyUsed := (BitAnd(theEvent.modifiers, cmdKey) <> 0);	{ cmd key down? }								ShiftUsed := (BitAnd(theEvent.modifiers, shiftKey) <> 0);		{ shift key down? }								CASE theKey OF									enterKey, CR:	{ OK Button equivalents }										BEGIN											itemHit := OK;											FakeClick(theDialog, itemHit);										END;									OTHERWISE										IF CmdKeyUsed & (theKey = periodKey) THEN											BEGIN												FakeClick(theDialog, Cancel);												itemHit := Cancel;											END;								END;							END;						mouseDown:			{ we had a mouse-down theEvent	}							BEGIN								mouseLoc := theEvent.where;	{ wheres the pesky mouse	}								windowLoc := FindWindow(mouseLoc, whichWindow); { find out where }								CASE windowLoc OF		{ now case on the location	}									inMenuBar: 										BEGIN											sysbeep(1);										END;									inSysWindow: 										SystemClick(theEvent, whichWindow); {It was in a desk acc	}									inContent: 										IF FrontWindow <> whichWindow THEN											SelectWindow(whichWindow)										ELSE											BEGIN												IF isDialogEvent(theEvent) & DialogSelect(theEvent, theDialog, itemHit) THEN													CASE itemHit OF														popupTitleItem: 															BEGIN																GetDItem(theDialog, popupTitleitem, iType, iHandle, iRect);																InsetRect(iRect, 1, 1);																InvertRect(iRect);																popRect := theGlobals.PopUpRect;																LocalToGlobal(popRect.TopLeft);																LocalToGlobal(popRect.BotRight);																Result := PopUpMenuSelect(theGlobals.hMenu, popRect.Top, popRect.Left, theGlobals.popSelected);																InvertRect(iRect);																IF (Result > 0) AND (LoWord(Result) <> theGlobals.Popselected) THEN																	BEGIN																		CheckItem(theGlobals.hMenu, theGlobals.popSelected, False);																		theGlobals.popSelected := LoWord(Result);																		UpdatePopUp(theDialog, popupTitleItem);																		itemHit := PopupTitleItem;	{ pass number of popupmenu selected }																	END;															END;														OTHERWISE															;													END;											END;									inGoAway: 										BEGIN											IF TrackGoAway(whichWindow, theEvent.where) THEN												sysbeep(1);										END;									inDrag: 										DragWindow(whichWindow, theEvent.where, DragBounds);									inGrow: 										BEGIN											sysbeep(1);										END;									OTHERWISE										BEGIN										END;								END;							END;						OTHERWISE							IF DialogSelect(theEvent, theDialog, itemHit) THEN								BEGIN								END;					END				END;		UNTIL itemhit IN [1, 2];		DisposDialog(theDialog);	END;END.
+UNIT PopupDialog;
+INTERFACE
+	USES
+		MercutioAPI;
+	CONST
+		Off = 0;
+		On = 1;
+		Disable = 255;
+
+		enterKey = 3;
+		helpKey = 5;
+		deleteKey = 8;
+		tabKey = 9;
+		linefeedKey = 10;
+		CR = 13;
+		return = 13;
+
+		periodKey = 46;
+		slashKey = 47;
+		questionmarkKey = 63;
+
+		PopupDLOG = 3001;
+		popupTitleItem = 3;
+		defaultItem = 5;
+
+	PROCEDURE doPopupDialog (theMenu: menuHandle);
+
+IMPLEMENTATION
+
+	TYPE
+		dialogGlobals = RECORD
+				hMenu: menuHandle;
+				popUpRect: rect;
+				popSelected: integer;
+			END;
+		dialogGlobalsPtr = ^dialogGlobals;
+
+	PROCEDURE FakeClick (VAR theDialog: DialogPtr; theButton: Integer);
+{ select/deselect a button in a dialog }
+		VAR
+			thetype: Integer;
+			itemHdl: Handle;
+			iRect: Rect;
+			Ticks: LongInt;
+	BEGIN
+		GetDItem(theDialog, theButton, thetype, ItemHdl, iRect);
+		HiliteControl(ControlHandle(ItemHdl), On);
+		Delay(8, Ticks);
+		HiliteControl(ControlHandle(ItemHdl), Off);
+	END; { of proc FakeClick }
+
+	PROCEDURE DrawDefaultBtn (theDialog: DialogPtr; ItemNumber: Integer);
+  { heavy black outline }
+		VAR
+			iType: Integer;
+			itmHdl: Handle;
+			thePen: PenState;
+			iRect: Rect;
+	BEGIN
+		SetPort(theDialog);                 { set window to current graf port }
+		GetDItem(theDialog, ItemNumber, iType, itmHdl, iRect); { get location }
+		GetPenState(thePen);                               { save current pen }
+		PenNormal;
+		PenSize(3, 3);
+		InsetRect(iRect, -4, -4);
+		FrameRoundRect(iRect, 16, 16);
+		SetPenState(thePen);                               { restore old pen }
+	END;  { of proc DrawDefaultBtn }
+
+
+	PROCEDURE UpdatePopUp (theDialog: DialogPtr; Item: Integer);
+{   draw popup menu }
+		VAR
+			aRect: Rect;
+			theGlobals: dialogGlobalsPtr;
+			IsNovice: boolean;
+			thetype: Integer;
+			itmHdl: Handle;
+			iRect: Rect;
+	BEGIN
+		theGlobals := dialogGlobalsPtr(GetWRefCon(theDialog));
+		GetDItem(theDialog, popupTitleItem, theType, ItmHdl, aRect);
+		insetRect(aRect, -2, -2);
+		eraseRect(aRect);
+		insetRect(aRect, 2, 2);
+
+		MDEF_CalcItemSize(theGlobals^.hMenu, theGlobals^.popSelected, aRect);
+
+		MoveTo(aRect.left + 2, aRect.bottom);
+		LineTo(aRect.right, aRect.bottom);
+		MoveTo(aRect.right, aRect.top + 2);
+		LineTo(aRect.right, aRect.bottom);
+
+		MoveTo(aRect.Left + 6, aRect.Bottom - 5);	{ move to text position }
+		FillRect(aRect, white);
+		MDEF_DrawItem(theGlobals^.hMenu, theGlobals^.PopSelected, aRect);
+
+		FrameRect(aRect);
+		CheckItem(theGlobals^.hMenu, theGlobals^.PopSelected, true);
+		SetDItem(theDialog, popupTitleItem, theType, ItmHdl, aRect);
+	END;
+
+
+	PROCEDURE doPopupDialog (theMenu: menuHandle);
+		VAR
+			theDialog: dialogPtr;
+			itemHit: integer;
+			iType: integer;
+			iRect: rect;
+			iHandle: handle;
+			popupRect: rect;
+			theEvent: eventRecord;
+			theGlobals: dialogGlobals;
+			eventOccured: boolean;
+			popRect: rect;
+			theErr, result: longint;
+			ShiftUsed, CmdKeyUsed, BadKey: boolean;
+			thePoint: point;
+			OldPort: GrafPtr;
+			theKey: integer;
+			tempStr: str255;
+			mouseLoc: point;				{ the area it was in		}
+			whichWindow: WindowPtr;			{ Dummy,cause we have no windows}
+			DragBounds: rect;
+			windowLoc: integer;
+	BEGIN
+		DragBounds := thePort^.portBits.bounds;
+		theDialog := GetNewDialog(PopupDLOG, NIL, pointer(-1));
+		IF theDialog = NIL THEN
+			BEGIN
+				sysbeep(1);
+				exit(doPopupDialog);
+			END;
+		SetPort(theDialog);
+
+		theGlobals.hMenu := theMenu;
+		SetWRefCon(theDialog, longint(@theGlobals));
+
+		CalcMenuSize(theMenu);
+		GetDItem(theDialog, popupTitleItem, iType, iHandle, iRect);
+		SetRect(theGlobals.PopUpRect, iRect.left + 3, iRect.top, iRect.left + theMenu^^.menuwidth + 4, iRect.bottom + 2);
+		GetDItem(theDialog, popupTitleItem, iType, iHandle, iRect);
+		SetDItem(theDialog, popupTitleItem, iType, iHandle, theGlobals.PopUpRect);
+
+		GetDItem(theDialog, popupTitleItem, iType, iHandle, iRect);  { get item's rect }
+		SetDItem(theDialog, popupTitleItem, userItem, Handle(@UpdatePopup), iRect);
+
+		GetDItem(theDialog, defaultItem, iType, iHandle, iRect);  { get item's rect }
+		SetDItem(theDialog, defaultItem, userItem, Handle(@DrawDefaultBtn), iRect);
+
+		ShowWindow(theDialog);
+
+		REPEAT
+			eventOccured := GetNextEvent(everyEvent, theEvent);
+			IF eventOccured THEN
+				BEGIN
+					CASE theEvent.what OF
+						keydown, autokey:{ any key down! }
+							BEGIN
+								theKey := BitAnd(theEvent.message, charCodeMask);		{ decode char }
+								CmdKeyUsed := (BitAnd(theEvent.modifiers, cmdKey) <> 0);	{ cmd key down? }
+								ShiftUsed := (BitAnd(theEvent.modifiers, shiftKey) <> 0);		{ shift key down? }
+								CASE theKey OF
+									enterKey, CR:	{ OK Button equivalents }
+										BEGIN
+											itemHit := OK;
+											FakeClick(theDialog, itemHit);
+										END;
+									OTHERWISE
+										IF CmdKeyUsed & (theKey = periodKey) THEN
+											BEGIN
+												FakeClick(theDialog, Cancel);
+												itemHit := Cancel;
+											END;
+								END;
+							END;
+						mouseDown:			{ we had a mouse-down theEvent	}
+							BEGIN
+								mouseLoc := theEvent.where;	{ wheres the pesky mouse	}
+								windowLoc := FindWindow(mouseLoc, whichWindow); { find out where }
+								CASE windowLoc OF		{ now case on the location	}
+									inMenuBar: 
+										BEGIN
+											sysbeep(1);
+										END;
+									inSysWindow: 
+										SystemClick(theEvent, whichWindow); {It was in a desk acc	}
+									inContent: 
+										IF FrontWindow <> whichWindow THEN
+											SelectWindow(whichWindow)
+										ELSE
+											BEGIN
+												IF isDialogEvent(theEvent) & DialogSelect(theEvent, theDialog, itemHit) THEN
+													CASE itemHit OF
+														popupTitleItem: 
+															BEGIN
+																GetDItem(theDialog, popupTitleitem, iType, iHandle, iRect);
+																InsetRect(iRect, 1, 1);
+																InvertRect(iRect);
+																popRect := theGlobals.PopUpRect;
+																LocalToGlobal(popRect.TopLeft);
+																LocalToGlobal(popRect.BotRight);
+																Result := PopUpMenuSelect(theGlobals.hMenu, popRect.Top, popRect.Left, theGlobals.popSelected);
+																InvertRect(iRect);
+																IF (Result > 0) AND (LoWord(Result) <> theGlobals.Popselected) THEN
+																	BEGIN
+																		CheckItem(theGlobals.hMenu, theGlobals.popSelected, False);
+																		theGlobals.popSelected := LoWord(Result);
+																		UpdatePopUp(theDialog, popupTitleItem);
+																		itemHit := PopupTitleItem;	{ pass number of popupmenu selected }
+																	END;
+															END;
+														OTHERWISE
+															;
+													END;
+											END;
+									inGoAway: 
+										BEGIN
+											IF TrackGoAway(whichWindow, theEvent.where) THEN
+												sysbeep(1);
+										END;
+									inDrag: 
+										DragWindow(whichWindow, theEvent.where, DragBounds);
+									inGrow: 
+										BEGIN
+											sysbeep(1);
+										END;
+									OTHERWISE
+										BEGIN
+										END;
+								END;
+							END;
+						OTHERWISE
+							IF DialogSelect(theEvent, theDialog, itemHit) THEN
+								BEGIN
+								END;
+					END
+				END;
+		UNTIL itemhit IN [1, 2];
+		DisposDialog(theDialog);
+	END;
+
+END.

@@ -1,1 +1,22 @@
-/**	FILE:		offscreen2.c*	AUTHOR:		R. Gonzalez*	CREATED:	June 28, 1993**	Demonstrates*	offscreen drawing. Code taken from CopyBits example in Think Ref 2.0*	and from Offscreen Graphics example. (Also tried Offscreen PixMaps*	example and Creating Offscreen BitMaps example.)**	This version checks for presence of Color QuickDraw.**	It also tries to sync to vertical retrace -- doesn't work if bitmap too large.**	Try using global coords for NewGWorld rec.**	PROJECT CONTENTS:*		offscreen.c, MacTraps, ANSI**	COMPILATION:*		68881 code generation if avail. MacHeaders prefix.*/
+/*
+*	FILE:		offscreen2.c
+*	AUTHOR:		R. Gonzalez
+*	CREATED:	June 28, 1993
+*
+*	Demonstrates
+*	offscreen drawing. Code taken from CopyBits example in Think Ref 2.0
+*	and from Offscreen Graphics example. (Also tried Offscreen PixMaps
+*	example and Creating Offscreen BitMaps example.)
+*
+*	This version checks for presence of Color QuickDraw.
+*
+*	It also tries to sync to vertical retrace -- doesn't work if bitmap too large.
+*
+*	Try using global coords for NewGWorld rec.
+*
+*	PROJECT CONTENTS:
+*		offscreen.c, MacTraps, ANSI
+*
+*	COMPILATION:
+*		68881 code generation if avail. MacHeaders prefix.
+*/

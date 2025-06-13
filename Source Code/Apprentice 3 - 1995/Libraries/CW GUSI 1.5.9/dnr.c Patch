@@ -1,1 +1,110 @@
-The version of dnr.c shipped on the CodeWarrior 6 CD does not work with the 68K compiler.Here's how to fix dnr.c (I am not licensed to distribute the whole file, sorry).*** Backup:CodeWarrior6:Metrowerks C/C++:Headers:System Extras Headers:MacTCP Headers:dnr.c	Thu Mar  9 09:54:22 1995--- jelena:CodeWarrior6:Metrowerks C/C++:Headers:System Extras Headers:MacTCP Headers:dnr.c	Sat Jun  3 18:51:11 1995****************** 264,268 ****  	// RRK modification 1/95 use CallOpenResolverProc define to call UPP  	! 	rc = CallOpenResolverProc(gDNRCodePtr, OPENRESOLVER, fileName);  	if (rc != noErr)   	{--- 264,268 ----  	// RRK modification 1/95 use CallOpenResolverProc define to call UPP  	! 	rc = CallOpenResolverProc((OpenResolverUPP) gDNRCodePtr, OPENRESOLVER, fileName);  	if (rc != noErr)   	{****************** 287,291 ****  	// (void) (*dnr)(CLOSERESOLVER);  ! 	CallCloseResolverProc(gDNRCodePtr, CLOSERESOLVER);  	  	/* release the DNR resource package */--- 287,291 ----  	// (void) (*dnr)(CLOSERESOLVER);  ! 	CallCloseResolverProc((CloseResolverUPP) gDNRCodePtr, CLOSERESOLVER);  	  	/* release the DNR resource package */****************** 309,313 ****  	// return((*dnr)(STRTOADDR, hostName, rtnStruct, resultproc, userDataPtr));  			! 	return (CallStrToAddrProc(gDNRCodePtr, STRTOADDR, hostName, rtnStruct, resultproc, userDataPtr));  }  	--- 309,313 ----  	// return((*dnr)(STRTOADDR, hostName, rtnStruct, resultproc, userDataPtr));  			! 	return (CallStrToAddrProc((StrToAddrUPP) gDNRCodePtr, STRTOADDR, hostName, rtnStruct, resultproc, userDataPtr));  }  	****************** 322,326 ****  	// (*dnr)(ADDRTOSTR, addr, addrStr);  	! 	err = CallAddrToStrProc(gDNRCodePtr, ADDRTOSTR, addr, addrStr);  	return(noErr);  }--- 322,326 ----  	// (*dnr)(ADDRTOSTR, addr, addrStr);  	! 	err = CallAddrToStrProc((AddrToStrUPP) gDNRCodePtr, ADDRTOSTR, addr, addrStr);  	return(noErr);  }****************** 336,340 ****  	// return((*dnr)(ENUMCACHE, resultproc, userDataPtr));  ! 	return (CallEnumCacheProc(gDNRCodePtr, ENUMCACHE, resultproc, userDataPtr));  }  	--- 336,340 ----  	// return((*dnr)(ENUMCACHE, resultproc, userDataPtr));  ! 	return (CallEnumCacheProc((EnumCacheUPP) gDNRCodePtr, ENUMCACHE, resultproc, userDataPtr));  }  	****************** 350,354 ****  	// return((*dnr)(ADDRTONAME, addr, rtnStruct, resultproc, userDataPtr));  ! 	return(CallAddrToNameProc(gDNRCodePtr, ADDRTONAME, addr, rtnStruct, resultproc, userDataPtr));  }  --- 350,354 ----  	// return((*dnr)(ADDRTONAME, addr, rtnStruct, resultproc, userDataPtr));  ! 	return(CallAddrToNameProc((AddrToNameUPP) gDNRCodePtr, ADDRTONAME, addr, rtnStruct, resultproc, userDataPtr));  }  ****************** 364,368 ****  	// return((*dnr)(HINFO, hostName, returnRecPtr, resultProc, userDataPtr));  ! 	return(CallHInfoProc(gDNRCodePtr, HXINFO, hostName, returnRecPtr, resultProc, userDataPtr));    }--- 364,368 ----  	// return((*dnr)(HINFO, hostName, returnRecPtr, resultProc, userDataPtr));  ! 	return(CallHInfoProc((HInfoUPP) gDNRCodePtr, HXINFO, hostName, returnRecPtr, resultProc, userDataPtr));    }****************** 378,382 ****  	// return((*dnr)(MXINFO, hostName, returnRecPtr, resultProc, userDataPtr));  ! 	return(CallMXInfoProc(gDNRCodePtr, MXINFO, hostName, returnRecPtr, resultProc, userDataPtr));    }	/* removed ; (causes syntax err in Think C 5.0 */--- 378,382 ----  	// return((*dnr)(MXINFO, hostName, returnRecPtr, resultProc, userDataPtr));  ! 	return(CallMXInfoProc((MXInfoUPP) gDNRCodePtr, MXINFO, hostName, returnRecPtr, resultProc, userDataPtr));    }	/* removed ; (causes syntax err in Think C 5.0 */
+The version of dnr.c shipped on the CodeWarrior 6 CD does not work with the 68K compiler.
+Here's how to fix dnr.c (I am not licensed to distribute the whole file, sorry).
+
+
+*** Backup:CodeWarrior6:Metrowerks C/C++:Headers:System Extras Headers:MacTCP Headers:dnr.c	Thu Mar  9 09:54:22 1995
+--- jelena:CodeWarrior6:Metrowerks C/C++:Headers:System Extras Headers:MacTCP Headers:dnr.c	Sat Jun  3 18:51:11 1995
+***************
+*** 264,268 ****
+  	// RRK modification 1/95 use CallOpenResolverProc define to call UPP
+  	
+! 	rc = CallOpenResolverProc(gDNRCodePtr, OPENRESOLVER, fileName);
+  	if (rc != noErr) 
+  	{
+--- 264,268 ----
+  	// RRK modification 1/95 use CallOpenResolverProc define to call UPP
+  	
+! 	rc = CallOpenResolverProc((OpenResolverUPP) gDNRCodePtr, OPENRESOLVER, fileName);
+  	if (rc != noErr) 
+  	{
+***************
+*** 287,291 ****
+  	// (void) (*dnr)(CLOSERESOLVER);
+  
+! 	CallCloseResolverProc(gDNRCodePtr, CLOSERESOLVER);
+  	
+  	/* release the DNR resource package */
+--- 287,291 ----
+  	// (void) (*dnr)(CLOSERESOLVER);
+  
+! 	CallCloseResolverProc((CloseResolverUPP) gDNRCodePtr, CLOSERESOLVER);
+  	
+  	/* release the DNR resource package */
+***************
+*** 309,313 ****
+  	// return((*dnr)(STRTOADDR, hostName, rtnStruct, resultproc, userDataPtr));
+  			
+! 	return (CallStrToAddrProc(gDNRCodePtr, STRTOADDR, hostName, rtnStruct, resultproc, userDataPtr));
+  }
+  	
+--- 309,313 ----
+  	// return((*dnr)(STRTOADDR, hostName, rtnStruct, resultproc, userDataPtr));
+  			
+! 	return (CallStrToAddrProc((StrToAddrUPP) gDNRCodePtr, STRTOADDR, hostName, rtnStruct, resultproc, userDataPtr));
+  }
+  	
+***************
+*** 322,326 ****
+  	// (*dnr)(ADDRTOSTR, addr, addrStr);
+  	
+! 	err = CallAddrToStrProc(gDNRCodePtr, ADDRTOSTR, addr, addrStr);
+  	return(noErr);
+  }
+--- 322,326 ----
+  	// (*dnr)(ADDRTOSTR, addr, addrStr);
+  	
+! 	err = CallAddrToStrProc((AddrToStrUPP) gDNRCodePtr, ADDRTOSTR, addr, addrStr);
+  	return(noErr);
+  }
+***************
+*** 336,340 ****
+  	// return((*dnr)(ENUMCACHE, resultproc, userDataPtr));
+  
+! 	return (CallEnumCacheProc(gDNRCodePtr, ENUMCACHE, resultproc, userDataPtr));
+  }
+  	
+--- 336,340 ----
+  	// return((*dnr)(ENUMCACHE, resultproc, userDataPtr));
+  
+! 	return (CallEnumCacheProc((EnumCacheUPP) gDNRCodePtr, ENUMCACHE, resultproc, userDataPtr));
+  }
+  	
+***************
+*** 350,354 ****
+  	// return((*dnr)(ADDRTONAME, addr, rtnStruct, resultproc, userDataPtr));
+  
+! 	return(CallAddrToNameProc(gDNRCodePtr, ADDRTONAME, addr, rtnStruct, resultproc, userDataPtr));
+  }
+  
+--- 350,354 ----
+  	// return((*dnr)(ADDRTONAME, addr, rtnStruct, resultproc, userDataPtr));
+  
+! 	return(CallAddrToNameProc((AddrToNameUPP) gDNRCodePtr, ADDRTONAME, addr, rtnStruct, resultproc, userDataPtr));
+  }
+  
+***************
+*** 364,368 ****
+  	// return((*dnr)(HINFO, hostName, returnRecPtr, resultProc, userDataPtr));
+  
+! 	return(CallHInfoProc(gDNRCodePtr, HXINFO, hostName, returnRecPtr, resultProc, userDataPtr));
+  
+  }
+--- 364,368 ----
+  	// return((*dnr)(HINFO, hostName, returnRecPtr, resultProc, userDataPtr));
+  
+! 	return(CallHInfoProc((HInfoUPP) gDNRCodePtr, HXINFO, hostName, returnRecPtr, resultProc, userDataPtr));
+  
+  }
+***************
+*** 378,382 ****
+  	// return((*dnr)(MXINFO, hostName, returnRecPtr, resultProc, userDataPtr));
+  
+! 	return(CallMXInfoProc(gDNRCodePtr, MXINFO, hostName, returnRecPtr, resultProc, userDataPtr));
+  
+  }	/* removed ; (causes syntax err in Think C 5.0 */
+--- 378,382 ----
+  	// return((*dnr)(MXINFO, hostName, returnRecPtr, resultProc, userDataPtr));
+  
+! 	return(CallMXInfoProc((MXInfoUPP) gDNRCodePtr, MXINFO, hostName, returnRecPtr, resultProc, userDataPtr));
+  
+  }	/* removed ; (causes syntax err in Think C 5.0 */

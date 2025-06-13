@@ -1,1 +1,118 @@
-Graphics Buffers 3.0Written by Hiep Damemail: starlabs@aol.comMail: 2226 Parkside Ave #302Los Angeles, CA 90031 USAJune 1995Usage: The source code contained in GraphicsBuffers is copyrighted by me. However, you can include the GraphicsBuffers.h and GraphicsBuffers.c files in your own applications without any restrictions. It's free!If you decide to modify any of the files, please keep the modified copies to yourself. If you have improved the GraphicsBuffers in any way and would like to see your changes incorporated in the next version, please email me and I'll include it in the next iteration.As for the GraphicsBuffer package as a whole, please distribute it in the same condition as you received it, i.e. all the files together, unmodified. You may not distribute any files by themselves (this includes GraphicsBuffers.h/c); you must include the package as a whole in distributing it.What's a "GraphicsBuffer"?A GraphicsBuffer is similar to a GWorld in theory; it encapsulates many video phenomena and keeps the "grungy stuff" out of the way so you can go about your business on a higher conceptual level without having to worry about gdevices, color tables, inverse tables, etc. In fact, a GraphicsBuffer contains a GWorld. The most important thing you really need to know about the GraphicsBuffer is that it also contains some precalculated "cached" data that helps speed up animation.What do I need to know in order to use GraphicsBuffers?If you're familiar with GWorlds and how to use them, you're 90% there already. The API for GraphicsBuffers is modeled right after the GWorld API; GraphicsBuffers contain analogous routines to GWorlds.If you use:                    Use instead:GWorlds								->	GraphicsBuffersÑÑÑÑÑÑÑÑÑÑÑÑÑÑ    ÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑNewGWorld   						NewGraphicsBufferDisposeGWorld 				DisposeGraphicsBufferSetGWorld    					SetGraphicsBuffer*GetGWorld   					*GetGWorldUpdateGWorld  				UpdateGraphicsBufferCopyBits  							 CopyGraphicsBuffer, CopyGraphicsBufferRegionCopyMask  								CopyGraphicsBufferMask<none>												Convert2GraphicsBuffer<none>												BlitGraphicsBuffer_8bit, etc.Why would I want to use GraphicsBuffers over GWorlds?Well, GraphicsBuffers contain blitters for 16-bit, 8-bit, and 4-bit monitor depths! You can get speed improvements from 200-500% over CopyMask and CopyBits! And the source is all there right in front of you to analyze and learn from. 'Nuff said!What kind of blitters does GraphicsBuffers utilize?Good thing you asked. You may have noticed that there are actually two kinds of pixel copying operations: straight rectangular copying, a la CopyBits without any region mask, and a mask copy, a la CopyMask. Guess which one is the slow poke? Bingo! The mask copy, of course.GraphicsBuffers contain blitters for both kinds of pixel copying operations. As you can also probably guess, the biggest performance increases come from the mask blitter (this is where your real bottleneck is).As it turns out, there are three ways to implement a mask blitter. The most popular way, and a very fast one at that, is to use a mask. Not any ordinary mask, but usually a mask with the same bit-depth as what you're copying. This is unlike CopyMask, where one usually uses a mask with a depth of 1 (black and white). While this is fast, it's also very expensive in terms of memory requirements. Another method is a transparency blitter. The advantage of this method is that no mask is used at all. Instead, each pixel in the source image is looked at, and if it's white, it's not copied. If it's any other pixel color then it's copied. While this is fast, it's not as fast as the deep mask blitter mentioned previously. The last method is blitting your source image directly. This is more commonly known as using a "sprite compiler". It's too long to explain it here, but the point of this method is that it's probably the fastest and doesn't use a mask either. The current version of GraphicsBuffers doesn't support sprite compilers, unfortunately.What about a PowerPCª version?Huh? You're a tough customer, fella! The conventional wisdom is that PowerPC cpus are fast enough without having to resort to blitters. Hogwash! While the cpus are currently fast enough to provide very decent animation rates, this is just for the current generation of games. Imagine what you can develop on the next generation of games with that animation rate doubled or even tripled. This opens up avenues never before thought possible, simply because the computer was too slow. Of course, things might become complicated when video memory access changes with the release of Copeland. But that's another topic altogether...Anyway, this is a moot point as the current version is written and optimized for 680x0 architectures only. However, as soon as I can get my grimy hands on a PowerPC I'll consider writing 60x optimized routines.This all sounds too good. What's the catch?You're pretty sharp. The blitters come with some restrictions, the most strangling of them are the 4-bit blitters. For the 16-bit blitters, the width of the images that you use should be a multiple of two. So if you have a sprite that's 31 pixels wide, you have to make them 32 pixels. For the 8-bit blitters, the width should be a multiple of 4. And for the 4-bit blitters... Well, you probably guessed an 8-pixel multiple. And you're right.As for the 16-bit and 8-bit blitters, I could have added some code in there to remove the width multiple restrictions, but I figured it wasn't too hard to make your width multiples of 2 or 4. If anyone would like to write alternate routines which can use any width, please feel free to do so and email me so I can include them in the next version.With the 4-bit blitters, well all I can say that I will never make any 4-bit games so support for this bit depth was sort of an afterthought. The width restriction can be cut to 4 pixels (using the same method for the above 16-bit and 8-bit blitters) but again, I'm just too lazy at the moment.I've tested GraphicsBuffers code only on System 7.5, but it should be compatible with System 7.0 or later. It might even be compatible with System 6.0.8 (although I shudder at the thought of anyone still using that!)Give me frame rates!From the "TestBed" demo:Running on a PowerBook Duo 230/8 megs RAM+RamDoubler/8-bit color/32-bit addressing/System 7.512 (32x32) pixel sprites			Deep mask blitter 				= 76 fps																						Transparent Blitter 		= 58 fps																						CopyBits & CopyMask = 20 fpsWhat's in the future?Most likely:¥ More documentation! Actually, an article/tutorial on double-buffered animation and how blitters work. These will probably assume you know how to program using the Mac Toolbox but not how to develop Mac animation and games.¥ Additional alternate routines for PowerPC processors.¥ Additional routines and support for Windows-based animation (via WinG). I'll try to be as transparent about it as much as possible (i.e. same calls for both platforms). This however, will be difficult since I have a PC only for about a month.¥ Addition of sprite compilers.Somewhat likely:¥ Optimized versions specially written for 68020, 68030 and 68040 processor chips.I wouldn't put my money on it:¥ 1-bit blittersI would like your help dept:In some cases you might notice "shearing" in the animation, especially at higher fps. My best guess is that I haven't synched the animation to the vertical retrace of the monitor, which is a pain to do in any event. If anyone would care to explain this shearing phenomena to me, and/or give me a way to fix it, I would be most grateful!If you can help me optimize the blitters (especially the transparent blitters) I would bow down to you 10 times and worship your godliness. Seriously! <grin>Thank you'sCode is almost never written in a vacuum. It's copied, analyzed, studied, torn apart, critiqued, and improved from other versions of code. So I would like to thank some people who've made their code out there accessible to everyone.Tony Myles     Not only did Tony Myles create a respectable sprite animation framework, but he distributed the source code as well, along with all of it's blitters. Wow. I learned a lot about blitting from his work.Brigham Stevens     Brigham's article on drawing directly to the screen in develop was exactly what the doctor ordered. Very informative and very educating.Macneil Shonle     From his blitter C++ encapsulated class to his pixel crossfades, Macneil's contributions show high wheat-to-chaff ratios. Cool!john calhoun     Mr. Glider himself. Long, long ago john calhoun made his Glypha source available, along with a file describing the process of double-buffered animation. This was what started me in Macintosh animation and gaming, square one. I am totally indebted to john and his contribution. Sheepishly, I admit I haven't paid him the shareware fee for the source code, but I'll be sending him my next completed game as a substitute. ;-)Version History3.0: First public release.2.0: Private release. Changed GraphicsBuffer format significantly.1.0: Private release.
+Graphics Buffers 3.0
+
+Written by Hiep Dam
+email: starlabs@aol.com
+Mail: 2226 Parkside Ave #302
+Los Angeles, CA 90031 USA
+
+June 1995
+
+
+Usage: The source code contained in GraphicsBuffers is copyrighted by me. However, you can include the GraphicsBuffers.h and GraphicsBuffers.c files in your own applications without any restrictions. It's free!
+If you decide to modify any of the files, please keep the modified copies to yourself. If you have improved the GraphicsBuffers in any way and would like to see your changes incorporated in the next version, please email me and I'll include it in the next iteration.
+As for the GraphicsBuffer package as a whole, please distribute it in the same condition as you received it, i.e. all the files together, unmodified. You may not distribute any files by themselves (this includes GraphicsBuffers.h/c); you must include the package as a whole in distributing it.
+
+
+
+What's a "GraphicsBuffer"?
+A GraphicsBuffer is similar to a GWorld in theory; it encapsulates many video phenomena and keeps the "grungy stuff" out of the way so you can go about your business on a higher conceptual level without having to worry about gdevices, color tables, inverse tables, etc. In fact, a GraphicsBuffer contains a GWorld. The most important thing you really need to know about the GraphicsBuffer is that it also contains some precalculated "cached" data that helps speed up animation.
+
+
+
+What do I need to know in order to use GraphicsBuffers?
+If you're familiar with GWorlds and how to use them, you're 90% there already. The API for GraphicsBuffers is modeled right after the GWorld API; GraphicsBuffers contain analogous routines to GWorlds.
+
+If you use:                    Use instead:
+
+GWorlds								->	GraphicsBuffers
+ÑÑÑÑÑÑÑÑÑÑÑÑÑÑ    ÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑ
+NewGWorld   						NewGraphicsBuffer
+DisposeGWorld 				DisposeGraphicsBuffer
+SetGWorld    					SetGraphicsBuffer
+*GetGWorld   					*GetGWorld
+UpdateGWorld  				UpdateGraphicsBuffer
+CopyBits  							 CopyGraphicsBuffer, CopyGraphicsBufferRegion
+CopyMask  								CopyGraphicsBufferMask
+
+<none>												Convert2GraphicsBuffer
+<none>												BlitGraphicsBuffer_8bit, etc.
+
+
+
+Why would I want to use GraphicsBuffers over GWorlds?
+Well, GraphicsBuffers contain blitters for 16-bit, 8-bit, and 4-bit monitor depths! You can get speed improvements from 200-500% over CopyMask and CopyBits! And the source is all there right in front of you to analyze and learn from. 'Nuff said!
+
+
+
+What kind of blitters does GraphicsBuffers utilize?
+Good thing you asked. You may have noticed that there are actually two kinds of pixel copying operations: straight rectangular copying, a la CopyBits without any region mask, and a mask copy, a la CopyMask. Guess which one is the slow poke? Bingo! The mask copy, of course.
+GraphicsBuffers contain blitters for both kinds of pixel copying operations. As you can also probably guess, the biggest performance increases come from the mask blitter (this is where your real bottleneck is).
+As it turns out, there are three ways to implement a mask blitter. The most popular way, and a very fast one at that, is to use a mask. Not any ordinary mask, but usually a mask with the same bit-depth as what you're copying. This is unlike CopyMask, where one usually uses a mask with a depth of 1 (black and white). While this is fast, it's also very expensive in terms of memory requirements. Another method is a transparency blitter. The advantage of this method is that no mask is used at all. Instead, each pixel in the source image is looked at, and if it's white, it's not copied. If it's any other pixel color then it's copied. While this is fast, it's not as fast as the deep mask blitter mentioned previously. The last method is blitting your source image directly. This is more commonly known as using a "sprite compiler". It's too long to explain it here, but the point of this method is that it's probably the fastest and doesn't use a mask either. The current version of GraphicsBuffers doesn't support sprite compilers, unfortunately.
+
+
+
+What about a PowerPCª version?
+Huh? You're a tough customer, fella! The conventional wisdom is that PowerPC cpus are fast enough without having to resort to blitters. Hogwash! While the cpus are currently fast enough to provide very decent animation rates, this is just for the current generation of games. Imagine what you can develop on the next generation of games with that animation rate doubled or even tripled. This opens up avenues never before thought possible, simply because the computer was too slow. Of course, things might become complicated when video memory access changes with the release of Copeland. But that's another topic altogether...
+Anyway, this is a moot point as the current version is written and optimized for 680x0 architectures only. However, as soon as I can get my grimy hands on a PowerPC I'll consider writing 60x optimized routines.
+
+
+
+This all sounds too good. What's the catch?
+You're pretty sharp. The blitters come with some restrictions, the most strangling of them are the 4-bit blitters. For the 16-bit blitters, the width of the images that you use should be a multiple of two. So if you have a sprite that's 31 pixels wide, you have to make them 32 pixels. For the 8-bit blitters, the width should be a multiple of 4. And for the 4-bit blitters... Well, you probably guessed an 8-pixel multiple. And you're right.
+As for the 16-bit and 8-bit blitters, I could have added some code in there to remove the width multiple restrictions, but I figured it wasn't too hard to make your width multiples of 2 or 4. If anyone would like to write alternate routines which can use any width, please feel free to do so and email me so I can include them in the next version.
+With the 4-bit blitters, well all I can say that I will never make any 4-bit games so support for this bit depth was sort of an afterthought. The width restriction can be cut to 4 pixels (using the same method for the above 16-bit and 8-bit blitters) but again, I'm just too lazy at the moment.
+
+I've tested GraphicsBuffers code only on System 7.5, but it should be compatible with System 7.0 or later. It might even be compatible with System 6.0.8 (although I shudder at the thought of anyone still using that!)
+
+
+
+Give me frame rates!
+From the "TestBed" demo:
+Running on a PowerBook Duo 230/8 megs RAM+RamDoubler/8-bit color/32-bit addressing/System 7.5
+12 (32x32) pixel sprites			Deep mask blitter 				= 76 fps
+																						Transparent Blitter 		= 58 fps
+																						CopyBits & CopyMask = 20 fps
+
+
+
+What's in the future?
+Most likely:
+¥ More documentation! Actually, an article/tutorial on double-buffered animation and how blitters work. These will probably assume you know how to program using the Mac Toolbox but not how to develop Mac animation and games.
+¥ Additional alternate routines for PowerPC processors.
+¥ Additional routines and support for Windows-based animation (via WinG). I'll try to be as transparent about it as much as possible (i.e. same calls for both platforms). This however, will be difficult since I have a PC only for about a month.
+¥ Addition of sprite compilers.
+
+Somewhat likely:
+¥ Optimized versions specially written for 68020, 68030 and 68040 processor chips.
+
+I wouldn't put my money on it:
+¥ 1-bit blitters
+
+
+I would like your help dept:
+In some cases you might notice "shearing" in the animation, especially at higher fps. My best guess is that I haven't synched the animation to the vertical retrace of the monitor, which is a pain to do in any event. If anyone would care to explain this shearing phenomena to me, and/or give me a way to fix it, I would be most grateful!
+
+If you can help me optimize the blitters (especially the transparent blitters) I would bow down to you 10 times and worship your godliness. Seriously! <grin>
+
+
+Thank you's
+Code is almost never written in a vacuum. It's copied, analyzed, studied, torn apart, critiqued, and improved from other versions of code. So I would like to thank some people who've made their code out there accessible to everyone.
+
+Tony Myles
+     Not only did Tony Myles create a respectable sprite animation framework, but he distributed the source code as well, along with all of it's blitters. Wow. I learned a lot about blitting from his work.
+
+Brigham Stevens
+     Brigham's article on drawing directly to the screen in develop was exactly what the doctor ordered. Very informative and very educating.
+
+Macneil Shonle
+     From his blitter C++ encapsulated class to his pixel crossfades, Macneil's contributions show high wheat-to-chaff ratios. Cool!
+
+john calhoun
+     Mr. Glider himself. Long, long ago john calhoun made his Glypha source available, along with a file describing the process of double-buffered animation. This was what started me in Macintosh animation and gaming, square one. I am totally indebted to john and his contribution. Sheepishly, I admit I haven't paid him the shareware fee for the source code, but I'll be sending him my next completed game as a substitute. ;-)
+
+
+
+Version History
+3.0: First public release.
+2.0: Private release. Changed GraphicsBuffer format significantly.
+1.0: Private release.

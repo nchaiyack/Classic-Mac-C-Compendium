@@ -1,1 +1,469 @@
-adlcheck.icn                check for bad address list dataadlcount.icn                        count address list entriesadlfiltr.icn                       filter address list entriesadllist.icn                          list address list fieldsadlsort.icn                          sort address list entriesadlfirst.icn          write first line of addressesunique.icn               delete identical adjacent linesdiffn.icn                show differences among filesanimal.icn                         play ``animal'' guessing gameqt.icn                                    announce time in Englishgenqueen.icn                        solve arbitrary-size n-queens problempress.icn                                 archive filesshar.icn                      crate shell archive UNIXparsex.icn                          parse arithmetic expressionscolm.icn                                  arrange data into columnsreply.icn                   reply to news-articles or mailicvt.icn                                  ASCII/EBCDIC program conversionadlcheck.icn                    check for bad address list dataparens.icn                 produce random balanced stringsgraphdem.icn           demonstrate simple bar graphicsidxtext.icn         creating indexed text-baseempg.icn               produce expression-benchmark programfixpath.icn             replace path in a binary fileverse.icn                        generate bizarre versesbj.icn                               play blackjack gamedeal.icn                             deal bridge handsibrow.icn                                 browse Icon files for declarationscstrings.icn             print strings in C filescalc.icn                    simulate desk calculatoricalc.icn             simulate infix desk calculatorhebcalen.icn     combination Jewish/Civil calendarhebcalen.icn     combination Jewish/Civil calendarfindstr.icn                 find imbedded character stringsruler.icn                         write a character rulerxtable.icn                           show character code translationsdelamc.icn      delaminate file using tab charactersfileprnt.icn                      display characters in filetablc.icn                        tabulate characters in a fileadlcheck.icn                              check for bad address list datasing.icn          sing The Twelve Days of Christmashebcalen.icn           combination Jewish/Civil calendarhebcalen.icn           combination Jewish/Civil calendarisrcline.icn                        count code lines in Icon programiwriter.icn                    write Icon code to write inputmorse.icn         convert string to Morse codextable.icn                 show character code translationszipsort.icn    sort mailing labels by ZIP codeipldoc.icn                                collect library documentationcolm.icn                arrange data into columnshebcalen.icn                              combination Jewish/Civil calendarhebcalen.icn                              combination Jewish/Civil calendardetex.icn                     strip LaTeX commandsroffcmds.icn                    list roff commands and macrosistrip.icn                          strip comments from Icon programgcomp.icn                         produce complement of file specificationconcord.icn                       produce concordancecsgen.icn                        generate context-sensitive sentenceskwic.icn              produce keywords in contextpargen.icn                       generate context-free parserrecgen.icn                       generate context-free recognizericvt.icn             ASCII/EBCDIC program conversionconman.icn                                convert unitsfilecnvt.icn                              convert line terminatorsmorse.icn                                 convert string to Morse codenocr.icn                                  convert MS-DOS text files to UNIXyescr.icn                                 convert UNIX files to DOS formatadlcount.icn                              count address list entriescountlst.icn                              count items in a listisrcline.icn                              count code lines in Icon programshar.icn                                  crate shell archive UNIXitags.icn                                 create tags file for Icon programspuzz.icn                                  create word search puzzleidxtext.icn                               creating indexed text-baseilnkxref.icn            produce Icon link cross referenceipxref.icn                                cross reference Icon programadlcheck.icn   check for bad address list datacolm.icn                          arrange data into columnssing.icn                  sing The Twelve Days of Christmasdeal.icn                                  deal bridge handsduplproc.icn               find duplicate declarationsibrow.icn           browse Icon files for declarationsiidecode.icn                              decode text in style of uudecodedelam.icn                                 delaminate filedelamc.icn                                delaminate file using tab charactersunique.icn                                delete identical adjacent linesgraphdem.icn                              demonstrate simple bar graphicscalc.icn                         simulate desk calculatoricalc.icn                  simulate infix desk calculatordiffn.icn                            show differences among filesdiffu.icn                            show differences in filesdiffword.icn                         list different wordscross.icn                                 display intersection of wordsfileprnt.icn                              display characters in filestars.icn                                 display ``star'' fieldvnq.icn                                   display solutions to n-queens problemfset.icn                                  do set operations on wildcard specsscramble.icn                   scramble a documentipldoc.icn                collect library documentationnocr.icn                       convert MS-DOS text files to UNIXyescr.icn           convert UNIX files to DOS formatduplproc.icn                         find duplicate declarationsicvt.icn                            ASCII/EBCDIC program conversionedscript.icn           produce script for ed(1)igrep.icn          search in the style of egrepiiencode.icn                              encode text in the style of uuencodecrypt.icn                                 encript filehebeng.icn         print mixed Hebrew and English textqt.icn                   announce time in Englishitab.icn                                  entab an Icon programadlcount.icn           count address list entriesadlfiltr.icn          filter address list entriesadlsort.icn             sort address list entriesempg.icn                          produce expression-benchmark programinterpe.icn                interpret Icon expressionsparsex.icn               parse arithmetic expressionsfarb2.icn                        generate Farberismsfarb2.icn                        generate Farberismsstars.icn                display ``star'' fieldadllist.icn             list address list fieldscrypt.icn                         encript filedelam.icn                      delaminate filedelamc.icn                     delaminate file using tab charactersfileprnt.icn        display characters in filefixpath.icn      replace path in a binary filegcomp.icn           produce complement of file specificationitags.icn                     create tags file for Icon programslatexidx.icn            process LaTeX idx fileloadmap.icn  show load map of UNIX object filelongest.icn   length of longest line in a filemtf3.icn                          map tar fileshuffile.icn           shuffle lines in a filetablc.icn        tabulate characters in a filetablw.icn             tabulate words in a filetextcnt.icn   tabulate properties of text filetrim.icn                  trim lines in a filecstrings.icn           print strings in C filesdiffn.icn          show differences among filesdiffu.icn             show differences in filesibrow.icn                     browse Icon files for declarationsilump.icn         lump linked Icon source filesipsplit.icn       split Icon program into fileslam.icn                          laminate filesnocr.icn              convert MS-DOS text files to UNIXpack.icn                 package multiple filespress.icn                         archive filesunpack.icn                      unpackage filesyescr.icn                    convert UNIX files to DOS formatadlfiltr.icn                              filter address list entriesfilter.icn           skeleton for generic filterduplproc.icn                              find duplicate declarationsfindstr.icn                               find imbedded character stringsiundecl.icn                               find undeclared Icon identifiersmakepuzz.icn                         make find-the-word puzzleadlfirst.icn                        write first line of addresseslabels.icn                                format mailing labelsyescr.icn       convert UNIX files to DOS formatpaginate.icn                       insert formfeedsproto.icn             show Icon syntactic formspargen.icn               generate context-free parserrecgen.icn               generate context-free recognizerfnctmpl.icn                       produce function templatesanimal.icn       play ``animal'' guessing gamebj.icn                     play blackjack gamenim.icn                          play the game of nimsnake.icn                  play the snake gamecsgen.icn                                 generate context-sensitive sentencesfarb2.icn                                 generate Farberismsfarb2.icn                                 generate Farberismslinden.icn                                generate sentences in 0L-systemsmiu.icn                                   generate strings from the MIU systemmonkeys.icn                               generate random textpargen.icn                                generate context-free parserqueens.icn                                generate solutions to n-queens problemrecgen.icn                                generate context-free recognizerrsg.icn                                   generate randomly selected sentencesverse.icn                                 generate bizarre versespt.icn                produce parse table generatorfilter.icn                   skeleton for generic filterihelp.icn                                 give on-line help for Icongraphdem.icn       demonstrate simple bar graphicsgrpsort.icn                          sort groups of linesanimal.icn                play ``animal'' guessing gamedeal.icn                      deal bridge handshebeng.icn                    print mixed Hebrew and English textihelp.icn                    give on-line help for Iconhufftab.icn                       compute Huffman state transitions iversion.icn                         show icode versionibrow.icn                          browse Icon files for declarationsicontent.icn                         list Icon proceduresihelp.icn           give on-line help for Iconilnkxref.icn                      produce Icon link cross referenceilump.icn                     lump linked Icon source filesinterpe.icn                     interpret Icon expressionsinterpp.icn                     interpret Icon programsipp.icn                        preprocess Icon programsiprint.icn                          print Icon programiprofile.icn                      profile Icon procedure usageipsort.icn                           sort Icon proceduresipsplit.icn                         split Icon program into filesipxref.icn                cross reference Icon programisrcline.icn          count code lines in Icon programistrip.icn            strip comments from Icon programitab.icn                         entab an Icon programitags.icn            create tags file for Icon programsiundecl.icn               find undeclared Icon identifiersiwriter.icn                         write Icon code to write inputmemsum.icn                      summarize Icon memory managementprofile.icn                       profile Icon programsproto.icn                            show Icon syntactic formsunique.icn                         delete identical adjacent linesiundecl.icn          find undeclared Icon identifierslatexidx.icn                process LaTeX idx filefindstr.icn                          find imbedded character stringspatchu.icn                                implement UNIX-like patchidxtext.icn                      creating indexed text-baseicalc.icn                        simulate infix desk calculatoriwriter.icn      write Icon code to write inputpaginate.icn                              insert formfeedsinterpe.icn                               interpret Icon expressionsinterpp.icn                               interpret Icon programslisp.icn                                  interpret LISP programscross.icn                         display intersection of wordskross.icn                            show intersections of stringscountlst.icn                        count items in a listrepro.icn                       reproduce itselfhebcalen.icn                  combination Jewish/Civil calendarhebcalen.icn                  combination Jewish/Civil calendarkwic.icn                          produce keywords in contextkrieg.icn                            play kriegspiellinden.icn         generate sentences in 0L-systemslabels.icn                 format mailing labelszipsort.icn                  sort mailing labels by ZIP codelam.icn                                   laminate filessortname.icn                     order by last namedetex.icn                           strip LaTeX commandslatexidx.icn                      process LaTeX idx filelongest.icn                         write length of longest line in a fileipldoc.icn                        collect library documentationpatchu.icn                 implement UNIX-like patchadlfirst.icn                  write first line of addressesfilecnvt.icn                      convert line terminatorsihelp.icn                         give on-line help for Iconlongest.icn       write length of longest line in a filegrpsort.icn                sort groups of linesisrcline.icn                   count code lines in Icon programshuffile.icn                      shuffle lines in a filetrim.icn                             trim lines in a fileunique.icn      delete identical adjacent linesilnkxref.icn                 produce Icon link cross referenceilump.icn                            lump linked Icon source fileslisp.icn                        interpret LISP programsadlcheck.icn        check for bad address list dataadlcount.icn                count address list entriesadlfiltr.icn               filter address list entriesadllist.icn                               list address list fieldsadllist.icn                  list address list fieldsadlsort.icn                  sort address list entriescountlst.icn             count items in a listdiffword.icn                              list different wordsicontent.icn                              list Icon proceduresroffcmds.icn                              list roff commands and macrosloadmap.icn                          show load map of UNIX object filelongest.icn               write length of longest line in a fileilump.icn                                 lump linked Icon source filesturing.icn              simulate a Turing machineroffcmds.icn       list roff commands and macrosmr.icn                               read mailreply.icn       reply to news-articles or maillabels.icn                         format mailing labelszipsort.icn                          sort mailing labels by ZIP codemakepuzz.icn                              make find-the-word puzzlememsum.icn          summarize Icon memory managementloadmap.icn                     show load map of UNIX object filemtf3.icn                                  map tar filememsum.icn                 summarize Icon memory managementmiu.icn         generate strings from the MIU systemhebeng.icn                          print mixed Hebrew and English textmorse.icn               convert string to Morse codenocr.icn                          convert MS-DOS text files to UNIXpack.icn                          package multiple filesgenqueen.icn         solve arbitrary-size n-queens problemqueens.icn          generate solutions to n-queens problemvnq.icn              display solutions to n-queens problemsortname.icn                order by last namepost.icn                             post newsreply.icn                        reply to news-articles or mailnim.icn                  play the game of nimloadmap.icn         show load map of UNIX object filefset.icn                           do set operations on wildcard specssortname.icn                              order by last namepsrsplit.icn separate PostScript recorder outputpack.icn                                  package multiple filesparse.icn                                 parse simple statementsparsex.icn                                parse arithmetic expressionspt.icn                            produce parse table generatorpargen.icn          generate context-free parserpatchu.icn            implement UNIX-like patchfixpath.icn                       replace path in a binary fileanimal.icn                                play ``animal'' guessing gamebj.icn                                    play blackjack gamekrieg.icn                                 play kriegspielnim.icn                                   play the game of nimsnake.icn                                 play the snake gamesolit.icn                                 play solitairettt.icn                                   play tic-tac-toeyahtz.icn                                 play yahtzeepost.icn                                  post newspsrsplit.icn                     separate PostScript recorder outputipp.icn                                   preprocess Icon programscstrings.icn                              print strings in C fileshebeng.icn                                print mixed Hebrew and English textiprint.icn                                print Icon programiprofile.icn                 profile Icon procedure usageicontent.icn                    list Icon proceduresipsort.icn                      sort Icon procedureslatexidx.icn                              process LaTeX idx fileiprofile.icn                              profile Icon procedure usageprofile.icn                               profile Icon programsempg.icn     produce expression-benchmark programicvt.icn                     ASCII/EBCDIC program conversioniprint.icn                     print Icon programipsplit.icn                    split Icon program into filesipxref.icn           cross reference Icon programisrcline.icn     count code lines in Icon programistrip.icn       strip comments from Icon programitab.icn                    entab an Icon programinterpp.icn                interpret Icon programsipp.icn                   preprocess Icon programsitags.icn       create tags file for Icon programslisp.icn                   interpret LISP programsprofile.icn                  profile Icon programstextcnt.icn                      tabulate properties of text filemakepuzz.icn           make find-the-word puzzlepuzz.icn               create word search puzzlegenqueen.icn       solve arbitrary-size n-queens problemqueens.icn        generate solutions to n-queens problemvnq.icn            display solutions to n-queens problemmonkeys.icn                      generate random textparens.icn                        produce random balanced stringsrsg.icn                          generate randomly selected sentencesformat.icn                    word wrap a range of textmr.icn                                    read mailrecgen.icn          generate context-free recognizerpsrsplit.icn          separate PostScript recorder outputilnkxref.icn      produce Icon link cross referenceipxref.icn                          cross reference Icon programfixpath.icn                               replace path in a binary filereply.icn                                 reply to news-articles or mailrepro.icn                                 reproduce itselfroffcmds.icn                         list roff commands and macrosruler.icn               write a character rulerscramble.icn                              scramble a documentedscript.icn                      produce script for ed(1)igrep.icn                                 search in the style of egreppuzz.icn                      create word search puzzlersg.icn                 generate randomly selected sentencescsgen.icn                generate context-sensitive sentencescsgen.icn      generate context-sensitive sentenceslinden.icn                       generate sentences in 0L-systemsrsg.icn        generate randomly selected sentencespsrsplit.icn                              separate PostScript recorder outputfset.icn                               do set operations on wildcard specsstrpsgml.icn              strip/translate SGML tagsshar.icn                            crate shell archive UNIXdiffn.icn                                 show differences among filesdiffu.icn                                 show differences in filesiversion.icn                              show icode versionkross.icn                                 show intersections of stringsloadmap.icn                               show load map of UNIX object fileproto.icn                                 show Icon syntactic formsxtable.icn                                show character code translationsshuffile.icn                              shuffle lines in a filegraphdem.icn                  demonstrate simple bar graphicsparse.icn                           parse simple statementscalc.icn                                  simulate desk calculatoricalc.icn                                 simulate infix desk calculatorturing.icn                                simulate a Turing machinesing.icn                                  sing The Twelve Days of Christmasgenqueen.icn              solve arbitrary-size n-queens problemfilter.icn                                skeleton for generic filtersnake.icn                        play the snake gamesolit.icn                            play solitairequeens.icn                       generate solutions to n-queens problemvnq.icn                           display solutions to n-queens problemgenqueen.icn                              solve arbitrary-size n-queens problemadlsort.icn                               sort address list entriesgrpsort.icn                               sort groups of linesipsort.icn                                sort Icon procedureszipsort.icn                               sort mailing labels by ZIP codeilump.icn                lump linked Icon source filesgcomp.icn      produce complement of file specificationfset.icn     o set operations on wildcard specsipsplit.icn                               split Icon program into filesstars.icn                       display ``star'' fieldhufftab.icn               compute Huffman state transitions parse.icn                    parse simple statementsmorse.icn                         convert string to Morse codecstrings.icn                        print strings in C filesfindstr.icn       find imbedded character stringskross.icn           show intersections of stringsmiu.icn                          generate strings from the MIU systemparens.icn        produce random balanced stringsdetex.icn                                 strip LaTeX commandsistrip.icn                                strip comments from Icon programstrpsgml.icn                              strip/translate SGML tagsigrep.icn                   search in the style of egrepiidecode.icn               decode text in style of uudecodeiiencode.icn           encode text in the style of uuencodememsum.icn                                summarize Icon memory managementproto.icn                       show Icon syntactic formsmiu.icn      enerate strings from the MIU systemlinden.icn       generate sentences in 0L-systemsdelamc.icn          delaminate file using tab characterspt.icn                      produce parse table generatortablc.icn                                 tabulate characters in a filetablw.icn                                 tabulate words in a filetextcnt.icn                               tabulate properties of text filettt.icn                          play tic-tac-toeitags.icn                          create tags file for Icon programsstrpsgml.icn         strip/translate SGML tagsmtf3.icn                              map tar filefnctmpl.icn              produce function templatesfilecnvt.icn                 convert line terminatorsformat.icn           word wrap a range of texthebeng.icn   int mixed Hebrew and English textidxtext.icn              creating indexed text-baseiidecode.icn                       decode text in style of uudecodeiiencode.icn                       encode text in the style of uuencodemonkeys.icn               generate random textnocr.icn                   convert MS-DOS text files to UNIXtextcnt.icn        tabulate properties of text filettt.icn                              play tic-tac-toeqt.icn                           announce time in Englishttt.icn                      play tic-tac-toehufftab.icn         compute Huffman state transitions strpsgml.icn                        strip/translate SGML tagsxtable.icn            show character code translationstrim.icn                                  trim lines in a fileturing.icn                     simulate a Turing machinesing.icn                         sing The Twelve Days of Christmasiundecl.icn                          find undeclared Icon identifiersconman.icn                        convert unitsloadmap.icn              show load map of UNIX object filenocr.icn     convert MS-DOS text files to UNIXpatchu.icn                      implement UNIX-like patchshar.icn              crate shell archive UNIXyescr.icn                         convert UNIX files to DOS formatunpack.icn                                unpackage filesiprofile.icn       profile Icon procedure usagedelamc.icn                delaminate file using tab charactersiidecode.icn      decode text in style of uudecodeiiencode.icn  encode text in the style of uuencodeverse.icn                generate bizarre versesiversion.icn                   show icode versionfset.icn             do set operations on wildcard specsformat.icn                                word wrap a range of textmakepuzz.icn                make find-the-word puzzlepuzz.icn                           create word search puzzlecross.icn         display intersection of wordsdiffword.icn               list different wordstablw.icn                        tabulate words in a fileformat.icn                           word wrap a range of textadlfirst.icn                              write first line of addressesiwriter.icn                               write Icon code to write inputiwriter.icn            write Icon code to write inputlongest.icn                               write length of longest line in a fileruler.icn                                 write a character ruleryahtz.icn                            play yahtzeezipsort.icn        sort mailing labels by ZIP code
+adlcheck.icn                check for bad address list data
+adlcount.icn                        count address list entries
+adlfiltr.icn                       filter address list entries
+adllist.icn                          list address list fields
+adlsort.icn                          sort address list entries
+adlfirst.icn          write first line of addresses
+unique.icn               delete identical adjacent lines
+diffn.icn                show differences among files
+animal.icn                         play ``animal'' guessing game
+qt.icn                                    announce time in English
+genqueen.icn                        solve arbitrary-size n-queens problem
+press.icn                                 archive files
+shar.icn                      crate shell archive UNIX
+parsex.icn                          parse arithmetic expressions
+colm.icn                                  arrange data into columns
+reply.icn                   reply to news-articles or mail
+icvt.icn                                  ASCII/EBCDIC program conversion
+adlcheck.icn                    check for bad address list data
+parens.icn                 produce random balanced strings
+graphdem.icn           demonstrate simple bar graphics
+idxtext.icn         creating indexed text-base
+empg.icn               produce expression-benchmark program
+fixpath.icn             replace path in a binary file
+verse.icn                        generate bizarre verses
+bj.icn                               play blackjack game
+deal.icn                             deal bridge hands
+ibrow.icn                                 browse Icon files for declarations
+cstrings.icn             print strings in C files
+calc.icn                    simulate desk calculator
+icalc.icn             simulate infix desk calculator
+hebcalen.icn     combination Jewish/Civil calendar
+hebcalen.icn     combination Jewish/Civil calendar
+findstr.icn                 find imbedded character strings
+ruler.icn                         write a character ruler
+xtable.icn                           show character code translations
+delamc.icn      delaminate file using tab characters
+fileprnt.icn                      display characters in file
+tablc.icn                        tabulate characters in a file
+adlcheck.icn                              check for bad address list data
+sing.icn          sing The Twelve Days of Christmas
+hebcalen.icn           combination Jewish/Civil calendar
+hebcalen.icn           combination Jewish/Civil calendar
+isrcline.icn                        count code lines in Icon program
+iwriter.icn                    write Icon code to write input
+morse.icn         convert string to Morse code
+xtable.icn                 show character code translations
+zipsort.icn    sort mailing labels by ZIP code
+ipldoc.icn                                collect library documentation
+colm.icn                arrange data into columns
+hebcalen.icn                              combination Jewish/Civil calendar
+hebcalen.icn                              combination Jewish/Civil calendar
+detex.icn                     strip LaTeX commands
+roffcmds.icn                    list roff commands and macros
+istrip.icn                          strip comments from Icon program
+gcomp.icn                         produce complement of file specification
+concord.icn                       produce concordance
+csgen.icn                        generate context-sensitive sentences
+kwic.icn              produce keywords in context
+pargen.icn                       generate context-free parser
+recgen.icn                       generate context-free recognizer
+icvt.icn             ASCII/EBCDIC program conversion
+conman.icn                                convert units
+filecnvt.icn                              convert line terminators
+morse.icn                                 convert string to Morse code
+nocr.icn                                  convert MS-DOS text files to UNIX
+yescr.icn                                 convert UNIX files to DOS format
+adlcount.icn                              count address list entries
+countlst.icn                              count items in a list
+isrcline.icn                              count code lines in Icon program
+shar.icn                                  crate shell archive UNIX
+itags.icn                                 create tags file for Icon programs
+puzz.icn                                  create word search puzzle
+idxtext.icn                               creating indexed text-base
+ilnkxref.icn            produce Icon link cross reference
+ipxref.icn                                cross reference Icon program
+adlcheck.icn   check for bad address list data
+colm.icn                          arrange data into columns
+sing.icn                  sing The Twelve Days of Christmas
+deal.icn                                  deal bridge hands
+duplproc.icn               find duplicate declarations
+ibrow.icn           browse Icon files for declarations
+iidecode.icn                              decode text in style of uudecode
+delam.icn                                 delaminate file
+delamc.icn                                delaminate file using tab characters
+unique.icn                                delete identical adjacent lines
+graphdem.icn                              demonstrate simple bar graphics
+calc.icn                         simulate desk calculator
+icalc.icn                  simulate infix desk calculator
+diffn.icn                            show differences among files
+diffu.icn                            show differences in files
+diffword.icn                         list different words
+cross.icn                                 display intersection of words
+fileprnt.icn                              display characters in file
+stars.icn                                 display ``star'' field
+vnq.icn                                   display solutions to n-queens problem
+fset.icn                                  do set operations on wildcard specs
+scramble.icn                   scramble a document
+ipldoc.icn                collect library documentation
+nocr.icn                       convert MS-DOS text files to UNIX
+yescr.icn           convert UNIX files to DOS format
+duplproc.icn                         find duplicate declarations
+icvt.icn                            ASCII/EBCDIC program conversion
+edscript.icn           produce script for ed(1)
+igrep.icn          search in the style of egrep
+iiencode.icn                              encode text in the style of uuencode
+crypt.icn                                 encript file
+hebeng.icn         print mixed Hebrew and English text
+qt.icn                   announce time in English
+itab.icn                                  entab an Icon program
+adlcount.icn           count address list entries
+adlfiltr.icn          filter address list entries
+adlsort.icn             sort address list entries
+empg.icn                          produce expression-benchmark program
+interpe.icn                interpret Icon expressions
+parsex.icn               parse arithmetic expressions
+farb2.icn                        generate Farberisms
+farb2.icn                        generate Farberisms
+stars.icn                display ``star'' field
+adllist.icn             list address list fields
+crypt.icn                         encript file
+delam.icn                      delaminate file
+delamc.icn                     delaminate file using tab characters
+fileprnt.icn        display characters in file
+fixpath.icn      replace path in a binary file
+gcomp.icn           produce complement of file specification
+itags.icn                     create tags file for Icon programs
+latexidx.icn            process LaTeX idx file
+loadmap.icn  show load map of UNIX object file
+longest.icn   length of longest line in a file
+mtf3.icn                          map tar file
+shuffile.icn           shuffle lines in a file
+tablc.icn        tabulate characters in a file
+tablw.icn             tabulate words in a file
+textcnt.icn   tabulate properties of text file
+trim.icn                  trim lines in a file
+cstrings.icn           print strings in C files
+diffn.icn          show differences among files
+diffu.icn             show differences in files
+ibrow.icn                     browse Icon files for declarations
+ilump.icn         lump linked Icon source files
+ipsplit.icn       split Icon program into files
+lam.icn                          laminate files
+nocr.icn              convert MS-DOS text files to UNIX
+pack.icn                 package multiple files
+press.icn                         archive files
+unpack.icn                      unpackage files
+yescr.icn                    convert UNIX files to DOS format
+adlfiltr.icn                              filter address list entries
+filter.icn           skeleton for generic filter
+duplproc.icn                              find duplicate declarations
+findstr.icn                               find imbedded character strings
+iundecl.icn                               find undeclared Icon identifiers
+makepuzz.icn                         make find-the-word puzzle
+adlfirst.icn                        write first line of addresses
+labels.icn                                format mailing labels
+yescr.icn       convert UNIX files to DOS format
+paginate.icn                       insert formfeeds
+proto.icn             show Icon syntactic forms
+pargen.icn               generate context-free parser
+recgen.icn               generate context-free recognizer
+fnctmpl.icn                       produce function templates
+animal.icn       play ``animal'' guessing game
+bj.icn                     play blackjack game
+nim.icn                          play the game of nim
+snake.icn                  play the snake game
+csgen.icn                                 generate context-sensitive sentences
+farb2.icn                                 generate Farberisms
+farb2.icn                                 generate Farberisms
+linden.icn                                generate sentences in 0L-systems
+miu.icn                                   generate strings from the MIU system
+monkeys.icn                               generate random text
+pargen.icn                                generate context-free parser
+queens.icn                                generate solutions to n-queens problem
+recgen.icn                                generate context-free recognizer
+rsg.icn                                   generate randomly selected sentences
+verse.icn                                 generate bizarre verses
+pt.icn                produce parse table generator
+filter.icn                   skeleton for generic filter
+ihelp.icn                                 give on-line help for Icon
+graphdem.icn       demonstrate simple bar graphics
+grpsort.icn                          sort groups of lines
+animal.icn                play ``animal'' guessing game
+deal.icn                      deal bridge hands
+hebeng.icn                    print mixed Hebrew and English text
+ihelp.icn                    give on-line help for Icon
+hufftab.icn                       compute Huffman state transitions 
+iversion.icn                         show icode version
+ibrow.icn                          browse Icon files for declarations
+icontent.icn                         list Icon procedures
+ihelp.icn           give on-line help for Icon
+ilnkxref.icn                      produce Icon link cross reference
+ilump.icn                     lump linked Icon source files
+interpe.icn                     interpret Icon expressions
+interpp.icn                     interpret Icon programs
+ipp.icn                        preprocess Icon programs
+iprint.icn                          print Icon program
+iprofile.icn                      profile Icon procedure usage
+ipsort.icn                           sort Icon procedures
+ipsplit.icn                         split Icon program into files
+ipxref.icn                cross reference Icon program
+isrcline.icn          count code lines in Icon program
+istrip.icn            strip comments from Icon program
+itab.icn                         entab an Icon program
+itags.icn            create tags file for Icon programs
+iundecl.icn               find undeclared Icon identifiers
+iwriter.icn                         write Icon code to write input
+memsum.icn                      summarize Icon memory management
+profile.icn                       profile Icon programs
+proto.icn                            show Icon syntactic forms
+unique.icn                         delete identical adjacent lines
+iundecl.icn          find undeclared Icon identifiers
+latexidx.icn                process LaTeX idx file
+findstr.icn                          find imbedded character strings
+patchu.icn                                implement UNIX-like patch
+idxtext.icn                      creating indexed text-base
+icalc.icn                        simulate infix desk calculator
+iwriter.icn      write Icon code to write input
+paginate.icn                              insert formfeeds
+interpe.icn                               interpret Icon expressions
+interpp.icn                               interpret Icon programs
+lisp.icn                                  interpret LISP programs
+cross.icn                         display intersection of words
+kross.icn                            show intersections of strings
+countlst.icn                        count items in a list
+repro.icn                       reproduce itself
+hebcalen.icn                  combination Jewish/Civil calendar
+hebcalen.icn                  combination Jewish/Civil calendar
+kwic.icn                          produce keywords in context
+krieg.icn                            play kriegspiel
+linden.icn         generate sentences in 0L-systems
+labels.icn                 format mailing labels
+zipsort.icn                  sort mailing labels by ZIP code
+lam.icn                                   laminate files
+sortname.icn                     order by last name
+detex.icn                           strip LaTeX commands
+latexidx.icn                      process LaTeX idx file
+longest.icn                         write length of longest line in a file
+ipldoc.icn                        collect library documentation
+patchu.icn                 implement UNIX-like patch
+adlfirst.icn                  write first line of addresses
+filecnvt.icn                      convert line terminators
+ihelp.icn                         give on-line help for Icon
+longest.icn       write length of longest line in a file
+grpsort.icn                sort groups of lines
+isrcline.icn                   count code lines in Icon program
+shuffile.icn                      shuffle lines in a file
+trim.icn                             trim lines in a file
+unique.icn      delete identical adjacent lines
+ilnkxref.icn                 produce Icon link cross reference
+ilump.icn                            lump linked Icon source files
+lisp.icn                        interpret LISP programs
+adlcheck.icn        check for bad address list data
+adlcount.icn                count address list entries
+adlfiltr.icn               filter address list entries
+adllist.icn                               list address list fields
+adllist.icn                  list address list fields
+adlsort.icn                  sort address list entries
+countlst.icn             count items in a list
+diffword.icn                              list different words
+icontent.icn                              list Icon procedures
+roffcmds.icn                              list roff commands and macros
+loadmap.icn                          show load map of UNIX object file
+longest.icn               write length of longest line in a file
+ilump.icn                                 lump linked Icon source files
+turing.icn              simulate a Turing machine
+roffcmds.icn       list roff commands and macros
+mr.icn                               read mail
+reply.icn       reply to news-articles or mail
+labels.icn                         format mailing labels
+zipsort.icn                          sort mailing labels by ZIP code
+makepuzz.icn                              make find-the-word puzzle
+memsum.icn          summarize Icon memory management
+loadmap.icn                     show load map of UNIX object file
+mtf3.icn                                  map tar file
+memsum.icn                 summarize Icon memory management
+miu.icn         generate strings from the MIU system
+hebeng.icn                          print mixed Hebrew and English text
+morse.icn               convert string to Morse code
+nocr.icn                          convert MS-DOS text files to UNIX
+pack.icn                          package multiple files
+genqueen.icn         solve arbitrary-size n-queens problem
+queens.icn          generate solutions to n-queens problem
+vnq.icn              display solutions to n-queens problem
+sortname.icn                order by last name
+post.icn                             post news
+reply.icn                        reply to news-articles or mail
+nim.icn                  play the game of nim
+loadmap.icn         show load map of UNIX object file
+fset.icn                           do set operations on wildcard specs
+sortname.icn                              order by last name
+psrsplit.icn separate PostScript recorder output
+pack.icn                                  package multiple files
+parse.icn                                 parse simple statements
+parsex.icn                                parse arithmetic expressions
+pt.icn                            produce parse table generator
+pargen.icn          generate context-free parser
+patchu.icn            implement UNIX-like patch
+fixpath.icn                       replace path in a binary file
+animal.icn                                play ``animal'' guessing game
+bj.icn                                    play blackjack game
+krieg.icn                                 play kriegspiel
+nim.icn                                   play the game of nim
+snake.icn                                 play the snake game
+solit.icn                                 play solitaire
+ttt.icn                                   play tic-tac-toe
+yahtz.icn                                 play yahtzee
+post.icn                                  post news
+psrsplit.icn                     separate PostScript recorder output
+ipp.icn                                   preprocess Icon programs
+cstrings.icn                              print strings in C files
+hebeng.icn                                print mixed Hebrew and English text
+iprint.icn                                print Icon program
+iprofile.icn                 profile Icon procedure usage
+icontent.icn                    list Icon procedures
+ipsort.icn                      sort Icon procedures
+latexidx.icn                              process LaTeX idx file
+iprofile.icn                              profile Icon procedure usage
+profile.icn                               profile Icon programs
+empg.icn     produce expression-benchmark program
+icvt.icn                     ASCII/EBCDIC program conversion
+iprint.icn                     print Icon program
+ipsplit.icn                    split Icon program into files
+ipxref.icn           cross reference Icon program
+isrcline.icn     count code lines in Icon program
+istrip.icn       strip comments from Icon program
+itab.icn                    entab an Icon program
+interpp.icn                interpret Icon programs
+ipp.icn                   preprocess Icon programs
+itags.icn       create tags file for Icon programs
+lisp.icn                   interpret LISP programs
+profile.icn                  profile Icon programs
+textcnt.icn                      tabulate properties of text file
+makepuzz.icn           make find-the-word puzzle
+puzz.icn               create word search puzzle
+genqueen.icn       solve arbitrary-size n-queens problem
+queens.icn        generate solutions to n-queens problem
+vnq.icn            display solutions to n-queens problem
+monkeys.icn                      generate random text
+parens.icn                        produce random balanced strings
+rsg.icn                          generate randomly selected sentences
+format.icn                    word wrap a range of text
+mr.icn                                    read mail
+recgen.icn          generate context-free recognizer
+psrsplit.icn          separate PostScript recorder output
+ilnkxref.icn      produce Icon link cross reference
+ipxref.icn                          cross reference Icon program
+fixpath.icn                               replace path in a binary file
+reply.icn                                 reply to news-articles or mail
+repro.icn                                 reproduce itself
+roffcmds.icn                         list roff commands and macros
+ruler.icn               write a character ruler
+scramble.icn                              scramble a document
+edscript.icn                      produce script for ed(1)
+igrep.icn                                 search in the style of egrep
+puzz.icn                      create word search puzzle
+rsg.icn                 generate randomly selected sentences
+csgen.icn                generate context-sensitive sentences
+csgen.icn      generate context-sensitive sentences
+linden.icn                       generate sentences in 0L-systems
+rsg.icn        generate randomly selected sentences
+psrsplit.icn                              separate PostScript recorder output
+fset.icn                               do set operations on wildcard specs
+strpsgml.icn              strip/translate SGML tags
+shar.icn                            crate shell archive UNIX
+diffn.icn                                 show differences among files
+diffu.icn                                 show differences in files
+iversion.icn                              show icode version
+kross.icn                                 show intersections of strings
+loadmap.icn                               show load map of UNIX object file
+proto.icn                                 show Icon syntactic forms
+xtable.icn                                show character code translations
+shuffile.icn                              shuffle lines in a file
+graphdem.icn                  demonstrate simple bar graphics
+parse.icn                           parse simple statements
+calc.icn                                  simulate desk calculator
+icalc.icn                                 simulate infix desk calculator
+turing.icn                                simulate a Turing machine
+sing.icn                                  sing The Twelve Days of Christmas
+genqueen.icn              solve arbitrary-size n-queens problem
+filter.icn                                skeleton for generic filter
+snake.icn                        play the snake game
+solit.icn                            play solitaire
+queens.icn                       generate solutions to n-queens problem
+vnq.icn                           display solutions to n-queens problem
+genqueen.icn                              solve arbitrary-size n-queens problem
+adlsort.icn                               sort address list entries
+grpsort.icn                               sort groups of lines
+ipsort.icn                                sort Icon procedures
+zipsort.icn                               sort mailing labels by ZIP code
+ilump.icn                lump linked Icon source files
+gcomp.icn      produce complement of file specification
+fset.icn     o set operations on wildcard specs
+ipsplit.icn                               split Icon program into files
+stars.icn                       display ``star'' field
+hufftab.icn               compute Huffman state transitions 
+parse.icn                    parse simple statements
+morse.icn                         convert string to Morse code
+cstrings.icn                        print strings in C files
+findstr.icn       find imbedded character strings
+kross.icn           show intersections of strings
+miu.icn                          generate strings from the MIU system
+parens.icn        produce random balanced strings
+detex.icn                                 strip LaTeX commands
+istrip.icn                                strip comments from Icon program
+strpsgml.icn                              strip/translate SGML tags
+igrep.icn                   search in the style of egrep
+iidecode.icn               decode text in style of uudecode
+iiencode.icn           encode text in the style of uuencode
+memsum.icn                                summarize Icon memory management
+proto.icn                       show Icon syntactic forms
+miu.icn      enerate strings from the MIU system
+linden.icn       generate sentences in 0L-systems
+delamc.icn          delaminate file using tab characters
+pt.icn                      produce parse table generator
+tablc.icn                                 tabulate characters in a file
+tablw.icn                                 tabulate words in a file
+textcnt.icn                               tabulate properties of text file
+ttt.icn                          play tic-tac-toe
+itags.icn                          create tags file for Icon programs
+strpsgml.icn         strip/translate SGML tags
+mtf3.icn                              map tar file
+fnctmpl.icn              produce function templates
+filecnvt.icn                 convert line terminators
+format.icn           word wrap a range of text
+hebeng.icn   int mixed Hebrew and English text
+idxtext.icn              creating indexed text-base
+iidecode.icn                       decode text in style of uudecode
+iiencode.icn                       encode text in the style of uuencode
+monkeys.icn               generate random text
+nocr.icn                   convert MS-DOS text files to UNIX
+textcnt.icn        tabulate properties of text file
+ttt.icn                              play tic-tac-toe
+qt.icn                           announce time in English
+ttt.icn                      play tic-tac-toe
+hufftab.icn         compute Huffman state transitions 
+strpsgml.icn                        strip/translate SGML tags
+xtable.icn            show character code translations
+trim.icn                                  trim lines in a file
+turing.icn                     simulate a Turing machine
+sing.icn                         sing The Twelve Days of Christmas
+iundecl.icn                          find undeclared Icon identifiers
+conman.icn                        convert units
+loadmap.icn              show load map of UNIX object file
+nocr.icn     convert MS-DOS text files to UNIX
+patchu.icn                      implement UNIX-like patch
+shar.icn              crate shell archive UNIX
+yescr.icn                         convert UNIX files to DOS format
+unpack.icn                                unpackage files
+iprofile.icn       profile Icon procedure usage
+delamc.icn                delaminate file using tab characters
+iidecode.icn      decode text in style of uudecode
+iiencode.icn  encode text in the style of uuencode
+verse.icn                generate bizarre verses
+iversion.icn                   show icode version
+fset.icn             do set operations on wildcard specs
+format.icn                                word wrap a range of text
+makepuzz.icn                make find-the-word puzzle
+puzz.icn                           create word search puzzle
+cross.icn         display intersection of words
+diffword.icn               list different words
+tablw.icn                        tabulate words in a file
+format.icn                           word wrap a range of text
+adlfirst.icn                              write first line of addresses
+iwriter.icn                               write Icon code to write input
+iwriter.icn            write Icon code to write input
+longest.icn                               write length of longest line in a file
+ruler.icn                                 write a character ruler
+yahtz.icn                            play yahtzee
+zipsort.icn        sort mailing labels by ZIP code

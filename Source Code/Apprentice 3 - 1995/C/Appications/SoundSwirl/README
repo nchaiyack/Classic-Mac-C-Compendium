@@ -1,1 +1,6 @@
-SoundSwirl is a small application that generates geometricshapes around the mouse pointer.  The shape's size correspondsto the current sound level of the built-in microphone.  Thus,you must have sound-input hardware to use this program. Portedto CodeWarrior 6 by Paul Celestin from the original project byBrent Burton.
+SoundSwirl is a small application that generates geometric
+shapes around the mouse pointer.  The shape's size corresponds
+to the current sound level of the built-in microphone.  Thus,
+you must have sound-input hardware to use this program. Ported
+to CodeWarrior 6 by Paul Celestin from the original project by
+Brent Burton.

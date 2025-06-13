@@ -1,1 +1,23 @@
-#pragma once/***** * *	AEFunc.h * *	This is a support file for "Grant's CGI Framework". *	Please see the license agreement that accompanies the distribution package *	for licensing details. * *	Copyright ©1995 by Grant Neufeld *	grant@acm.com *	http://arpp1.carleton.ca/grant/ * *****//***  FUNCTION PROTOTYPES  ***/		OSErr		MyGotRequiredParams	( AppleEvent * );pascal	Boolean		MyAEIdleFunc		( const EventRecord *, long *, RgnHandle * );/***** EOF *****/
+#pragma once
+/*****
+ *
+ *	AEFunc.h
+ *
+ *	This is a support file for "Grant's CGI Framework".
+ *	Please see the license agreement that accompanies the distribution package
+ *	for licensing details.
+ *
+ *	Copyright ©1995 by Grant Neufeld
+ *	grant@acm.com
+ *	http://arpp1.carleton.ca/grant/
+ *
+ *****/
+
+/***  FUNCTION PROTOTYPES  ***/
+
+		OSErr		MyGotRequiredParams	( AppleEvent * );
+
+pascal	Boolean		MyAEIdleFunc		( const EventRecord *, long *, RgnHandle * );
+
+
+/***** EOF *****/

@@ -1,1 +1,347 @@
-Path: ruc.dk!dkuug!sunic!mcsun!uunet!usc!sdd.hp.com!nigel.msen.com!heifetz!tbomb!timeFrom: time@ice.com (Tim Endres)Newsgroups: comp.sys.mac.commSubject: Async MacTCP?? ( was **ATTN: Ripped off by Frank Price? *** )Date: Sun, 6 Dec 92 19:52:41 ESTOrganization: ICE Engineering, Inc.Message-ID: <1CE00001.kg2k9d@tbomb.ice.com>Reply-To: time@ice.com (Tim Endres)X-Mailer: uAccess - Macintosh Release: 1.6v2Lines: 26Wow! Frank really does have a profound affect!Can we get back to communications now?How do people handle asynchronous TCP read/writerequests with respect to canceling? I want to letIBP users press Cmd-Period to cancel the TCPReadthat I'm doing asynchronously.TCPAbort seems a little rude to me. It basicallymakes the connection invalid for further use, andI find it hard to believe you have to re-establisha connection just to cancel a read.Or do I have to delay the TCPRead and spin watchingthe TCPStatus for bytes to come in and not actuallyissue a read until I see bytes?tim endres - time@ice.comRegister your company in the Internet Business Pages! ...send email to "ibp-info@msen.com" for details...USENET - a slow moving self parody... ph---------------------------------------------------------------------------Path: ruc.dk!dkuug!sunic!mcsun!uunet!olivea!spool.mu.edu!yale.edu!nigel.msen.com!emvFrom: emv@msen.com (Edward Vielmetti)Newsgroups: comp.sys.mac.commSubject: Re: Async MacTCP??Message-ID: <1g0482INN43d@nigel.msen.com>Date: 7 Dec 92 18:13:08 GMTReferences: <1CE00001.kg2k9d@tbomb.ice.com>Organization: Msen, Inc. -- Ann Arbor, MichiganLines: 20NNTP-Posting-Host: garnet.msen.comX-Newsreader: TIN [version 1.1 PL6]Tim Endres (time@ice.com) wrote:: TCPAbort seems a little rude to me. It basically: makes the connection invalid for further use, and: I find it hard to believe you have to re-establish: a connection just to cancel a read.Tim, if you make the "connection" orientation of your protocollight weight enough - i.e. if there's a minimum of packets neededto go across the wire to re-establish the link - then droppingthe connection and re-establishing it would be the best choice.Otherwise you could look at how some other TCP protocols interrupta read in progress.  FTP, for instance, has an "ABOR" command thatit sends down the "control channel" of the connection, but that takestwo parallel TCP sessions to manage.  I will bet that 'gopher'just drops the line and re-starts since the setup there is so trivial.  Edward Vielmetti, vice president for research, Msen Inc. emv@Msen.com        Msen Inc., 628 Brooks, Ann Arbor MI  48103 +1 313 998 GLOB---------------------------------------------------------------------------Path: ruc.dk!dkuug!sunic!mcsun!uunet!olivea!spool.mu.edu!yale.edu!qt.cs.utexas.edu!cs.utexas.edu!swrinde!zaphod.mps.ohio-state.edu!sol.ctr.columbia.edu!eff!news.oc.com!nuntiusFrom: psaslaw@oc.com (Piet Saslawsky)Newsgroups: comp.sys.mac.commSubject: Re: Async MacTCP??Message-ID: <1992Dec7.180902.22187@ra.oc.com>Date: 7 Dec 92 18:09:02 GMTReferences: <1CE00001.kg2k9d@tbomb.ice.com>Sender: usenet@ra.oc.comOrganization: Advanced Software ConceptsLines: 31X-Useragent: Nuntius v1.1In article <1CE00001.kg2k9d@tbomb.ice.com> Tim Endres, time@ice.comwrites:>How do people handle asynchronous TCP read/write>requests with respect to canceling? I want to let>IBP users press Cmd-Period to cancel the TCPRead>that I'm doing asynchronously.>>TCPAbort seems a little rude to me. It basically>makes the connection invalid for further use, and>I find it hard to believe you have to re-establish>a connection just to cancel a read.>>Or do I have to delay the TCPRead and spin watching>the TCPStatus for bytes to come in and not actually>issue a read until I see bytes?That's it : MacTCP does not support PBKillIO() so you can't get rid ofany pending call. You are also right about the way TCPRead must be used :it should only be called when TCPStatus reports that there is somethingto read. This is also the safe way to use a CTB Connection Tool, and notonly those based on MacTCP : always call CMStatus() in idle and CMRead()when something arrived. Just FYI : you should not rely on theTCPDataArrival in the NotifyProc to read data.Piet Saslawsky+-------------------------------------+-------------------------------+| Advanced Software Concepts (France) | Open Connect Systems (Dallas) || email: adv.soft@applelink.apple.com | email: psaslaw@oc.com         || voice: (33) 93 24 76 00             | voice: (214) 888 0658         |+-------------------------------------+-------------------------------+---------------------------------------------------------------------------Newsgroups: comp.sys.mac.commPath: ruc.dk!dkuug!sunic!mcsun!uunet!zaphod.mps.ohio-state.edu!uwm.edu!ux1.cso.uiuc.edu!news.cso.uiuc.edu!resnickFrom: resnick@cogsci.uiuc.edu (Pete Resnick)Subject: Re: Async MacTCP?? ( was **ATTN: Ripped off by Frank Price? *** )References: <1CE00001.kg2k9d@tbomb.ice.com>Message-ID: <BywH0C.Ey3@news.cso.uiuc.edu>Sender: usenet@news.cso.uiuc.edu (Net Noise owner)Organization: University of Illinois at UrbanaDate: Mon, 7 Dec 1992 17:38:33 GMTLines: 24time@ice.com (Tim Endres) writes:>How do people handle asynchronous TCP read/write>requests with respect to canceling? I want to let>IBP users press Cmd-Period to cancel the TCPRead>that I'm doing asynchronously.Choice 1: If you have an asynchronous notify routine set up, you willget a data arrival notify when data arrives if there is no outstandingTCPRcv, so you don't have to sit on TCPRcv all of the time.Choice 2: Make short command timeouts for TCPRcv and reissue theTCPRcv every so often. (Ick.)Choice 3 : TCPAbort. The least pretty solution.I would go for number 1.pr-- Pete Resnick             (...so what is a mojo, and why would one be rising?)Graduate assistant - Philosophy Department, Gregory Hall, UIUCSystem manager - Cognitive Science Group, Beckman Institute, UIUCInternet: resnick@cogsci.uiuc.edu---------------------------------------------------------------------------Newsgroups: comp.sys.mac.commPath: ruc.dk!dkuug!sunic!mcsun!uunet!ornl!utkcs2!emory!sol.ctr.columbia.edu!zaphod.mps.ohio-state.edu!darwin.sura.net!convex!news.oc.com!nuntiusFrom: Piet Saslawsky <psaslaw@oc.com>Subject: Re: Async MacTCP??Message-ID: <1992Dec7.192916.24045@ra.oc.com>Sender: usenet@ra.oc.comOrganization: Advanced Software ConceptsX-Useragent: Nuntius v1.1References: <1CE00001.kg2k9d@tbomb.ice.com> <BywH0C.Ey3@news.cso.uiuc.edu>Date: Mon, 7 Dec 1992 19:29:16 GMTLines: 17In article <BywH0C.Ey3@news.cso.uiuc.edu> Pete Resnick,resnick@cogsci.uiuc.edu writes:>Choice 1: If you have an asynchronous notify routine set up, you will>get a data arrival notify when data arrives if there is no outstanding>TCPRcv, so you don't have to sit on TCPRcv all of the time.You can't always rely on the data arrival notification since it is onlyposted when there is no other data waiting to be read by the application.So if a second packet arrives while the first one is not processed yet,you loose a notification.Piet Saslawsky+-------------------------------------+-------------------------------+| Advanced Software Concepts (France) | Open Connect Systems (Dallas) || email: adv.soft@applelink.apple.com | email: psaslaw@oc.com         || voice: (33) 93 24 76 00             | voice: (214) 888 0658         |+-------------------------------------+-------------------------------+---------------------------------------------------------------------------Newsgroups: comp.sys.mac.commPath: ruc.dk!dkuug!sunic!mcsun!uunet!spool.mu.edu!uwm.edu!ux1.cso.uiuc.edu!news.cso.uiuc.edu!resnickFrom: resnick@cogsci.uiuc.edu (Pete Resnick)Subject: Re: Async MacTCP??References: <1CE00001.kg2k9d@tbomb.ice.com> <BywH0C.Ey3@news.cso.uiuc.edu> <1992Dec7.192916.24045@ra.oc.com>Message-ID: <Byy5Et.81C@news.cso.uiuc.edu>Sender: usenet@news.cso.uiuc.edu (Net Noise owner)Organization: University of Illinois at UrbanaDate: Tue, 8 Dec 1992 15:23:14 GMTLines: 17Piet Saslawsky <psaslaw@oc.com> writes:>You can't always rely on the data arrival notification since it is only>posted when there is no other data waiting to be read by the application.>So if a second packet arrives while the first one is not processed yet,>you loose a notification.But don't you get all of the data (i.e. both packets) that is sittingin the buffer when you do the TCPRcv? Why would you need a secondnotification?pr-- Pete Resnick             (...so what is a mojo, and why would one be rising?)Graduate assistant - Philosophy Department, Gregory Hall, UIUCSystem manager - Cognitive Science Group, Beckman Institute, UIUCInternet: resnick@cogsci.uiuc.edu---------------------------------------------------------------------------Newsgroups: comp.sys.mac.commPath: ruc.dk!dkuug!sunic!mcsun!uunet!cs.utexas.edu!mercury.unt.edu!news.oc.com!nuntiusFrom: Piet Saslawsky <psaslaw@oc.com>Subject: Re: Async MacTCP?? ( was **ATTN: Ripped off by Frank Price? *** )Message-ID: <1992Dec8.183550.20750@ra.oc.com>Sender: usenet@ra.oc.comOrganization: Advanced Software ConceptsX-Useragent: Nuntius v1.1References: <1CE00001.kg2k9d@tbomb.ice.com>     <BywH0C.Ey3@news.cso.uiuc.edu> <1992Dec7.192916.24045@ra.oc.com>     <Byy5Et.81C@news.cso.uiuc.edu>Date: Tue, 8 Dec 1992 18:35:50 GMTLines: 27In article <Byy5Et.81C@news.cso.uiuc.edu> Pete Resnick,resnick@cogsci.uiuc.edu writes:>Why would you need a second notification?Because, when using notifications, the standard process would be :    1- Packet arrives    2- Notification is sent to application    3- Application calls TCPStatus to get the amount of data    4- Application calls TCPRcv to get the dataIf a new Packet arrives between points 2 and 3, or between 3 and 4, thenyou don't get the notification for it. And if you rely on thenotifications (and only on the notifications) to receive the data, thenthe new Packet stays in the buffer. And since there is something in thebuffer, you no longer get notifications for any other packets, and you nolonger receive data.Well... I don't have actually the MacTCP documentation but I almost sureto remind me that it is the reason for which we can't rely onnotifications.Piet Saslawsky+-------------------------------------+-------------------------------+| Advanced Software Concepts (France) | Open Connect Systems (Dallas) || email: adv.soft@applelink.apple.com | email: psaslaw@oc.com         || voice: (33) 93 24 76 00             | voice: (214) 888 0658         |+-------------------------------------+-------------------------------+---------------------------------------------------------------------------Newsgroups: comp.sys.mac.commPath: ruc.dk!dkuug!sunic!mcsun!uunet!spool.mu.edu!sdd.hp.com!ux1.cso.uiuc.edu!news.cso.uiuc.edu!resnickFrom: resnick@cogsci.uiuc.edu (Pete Resnick)Subject: Re: Async MacTCP?? ( was **ATTN: Ripped off by Frank Price? *** )References: <1CE00001.kg2k9d@tbomb.ice.com>      <BywH0C.Ey3@news.cso.uiuc.edu> <1992Dec7.192916.24045@ra.oc.com>      <Byy5Et.81C@news.cso.uiuc.edu> <1992Dec8.183550.20750@ra.oc.com>Message-ID: <Byypzu.K0x@news.cso.uiuc.edu>Sender: usenet@news.cso.uiuc.edu (Net Noise owner)Organization: University of Illinois at UrbanaDate: Tue, 8 Dec 1992 22:47:52 GMTLines: 31Piet Saslawsky <psaslaw@oc.com> writes:>>Why would you need a second notification?>Because, when using notifications, the standard process would be :>    1- Packet arrives>    2- Notification is sent to application>    3- Application calls TCPStatus to get the amount of data>    4- Application calls TCPRcv to get the dataI disagree. The process should be:1- Packet arrives2- Notification is sent to application3- Application calls TCPRcv4- If buffer or RDS is full, call TCPStatus to see if there is   anymore data.5- If more data, goto 3.Now you are only doing reads when the notification comes in. You willget another notification if the buffer is empty and there is no receiveoutstanding. In this case, there is no problem with packets coming inbetween calls. You're way, you constantly have to call TCPStatus,which is just wasting processor time for no reason.pr-- Pete Resnick             (...so what is a mojo, and why would one be rising?)Graduate assistant - Philosophy Department, Gregory Hall, UIUCSystem manager - Cognitive Science Group, Beckman Institute, UIUCInternet: resnick@cogsci.uiuc.edu---------------------------------------------------------------------------Newsgroups: comp.sys.mac.commPath: ruc.dk!dkuug!sunic!mcsun!uunet!usc!sol.ctr.columbia.edu!eff!news.oc.com!nuntiusFrom: Piet Saslawsky <psaslaw@oc.com>Subject: Re: Async MacTCP??Message-ID: <1992Dec9.030734.2911@ra.oc.com>Sender: usenet@ra.oc.comOrganization: Advanced Software ConceptsX-Useragent: Nuntius v1.1References: <1CE00001.kg2k9d@tbomb.ice.com>     <Byy5Et.81C@news.cso.uiuc.edu> <1992Dec8.183550.20750@ra.oc.com>     <Byypzu.K0x@news.cso.uiuc.edu>Date: Wed, 9 Dec 1992 03:07:34 GMTLines: 28That's the way I did, or something similar, but you can get a TCPStatuswhich returns "no data" and loose a notification. I didn't report thisproblem to the MacTCP Team at Apple's : I have already got in touch withthem so many times for significant problems that I prefered to not botherthem with this (very particular) case. The way I did after that wasalready described : I issue a TCPRcv with a short time-out and re-launcha TCPRcv in the completionProc. As it was for a particular purpose (in aCTB Tool, process the async calls from the application while filteringthe Telnet characters), I usually don't recommend it.I agree that calling TCPStatus may use some CPU time. I don't knowexactly how but I know that it can't be noticed, even when opening manysessions or when transfering some megabytes. In an application or even adriver, this easy way can be chosen without side-effects. And as often onMacintosh : better safe than sorry.I think that this talk between Pete Resnick and me should eventuallycontinue on private email. Please, don't hesitate to contact us if youwant it back on the Internet News.Thanks for your attention.Piet Saslawsky+-------------------------------------+-------------------------------+| Advanced Software Concepts (France) | Open Connect Systems (Dallas) || email: adv.soft@applelink.apple.com | email: psaslaw@oc.com         || voice: (33) 93 24 76 00             | voice: (214) 888 0658         |+-------------------------------------+-------------------------------+---------------------------------------------------------------------------
+Path: ruc.dk!dkuug!sunic!mcsun!uunet!usc!sdd.hp.com!nigel.msen.com!heifetz!tbomb!time
+From: time@ice.com (Tim Endres)
+Newsgroups: comp.sys.mac.comm
+Subject: Async MacTCP?? ( was **ATTN: Ripped off by Frank Price? *** )
+Date: Sun, 6 Dec 92 19:52:41 EST
+Organization: ICE Engineering, Inc.
+Message-ID: <1CE00001.kg2k9d@tbomb.ice.com>
+Reply-To: time@ice.com (Tim Endres)
+X-Mailer: uAccess - Macintosh Release: 1.6v2
+Lines: 26
+
+
+Wow! Frank really does have a profound affect!
+
+Can we get back to communications now?
+
+How do people handle asynchronous TCP read/write
+requests with respect to canceling? I want to let
+IBP users press Cmd-Period to cancel the TCPRead
+that I'm doing asynchronously.
+
+TCPAbort seems a little rude to me. It basically
+makes the connection invalid for further use, and
+I find it hard to believe you have to re-establish
+a connection just to cancel a read.
+
+Or do I have to delay the TCPRead and spin watching
+the TCPStatus for bytes to come in and not actually
+issue a read until I see bytes?
+
+
+tim endres - time@ice.com
+
+Register your company in the Internet Business Pages!
+ ...send email to "ibp-info@msen.com" for details...
+
+USENET - a slow moving self parody... ph
+---------------------------------------------------------------------------
+Path: ruc.dk!dkuug!sunic!mcsun!uunet!olivea!spool.mu.edu!yale.edu!nigel.msen.com!emv
+From: emv@msen.com (Edward Vielmetti)
+Newsgroups: comp.sys.mac.comm
+Subject: Re: Async MacTCP??
+Message-ID: <1g0482INN43d@nigel.msen.com>
+Date: 7 Dec 92 18:13:08 GMT
+References: <1CE00001.kg2k9d@tbomb.ice.com>
+Organization: Msen, Inc. -- Ann Arbor, Michigan
+Lines: 20
+NNTP-Posting-Host: garnet.msen.com
+X-Newsreader: TIN [version 1.1 PL6]
+
+Tim Endres (time@ice.com) wrote:
+: TCPAbort seems a little rude to me. It basically
+: makes the connection invalid for further use, and
+: I find it hard to believe you have to re-establish
+: a connection just to cancel a read.
+
+Tim, if you make the "connection" orientation of your protocol
+light weight enough - i.e. if there's a minimum of packets needed
+to go across the wire to re-establish the link - then dropping
+the connection and re-establishing it would be the best choice.
+
+Otherwise you could look at how some other TCP protocols interrupt
+a read in progress.  FTP, for instance, has an "ABOR" command that
+it sends down the "control channel" of the connection, but that takes
+two parallel TCP sessions to manage.  I will bet that 'gopher'
+just drops the line and re-starts since the setup there is so 
+trivial.
+
+  Edward Vielmetti, vice president for research, Msen Inc. emv@Msen.com
+        Msen Inc., 628 Brooks, Ann Arbor MI  48103 +1 313 998 GLOB
+---------------------------------------------------------------------------
+Path: ruc.dk!dkuug!sunic!mcsun!uunet!olivea!spool.mu.edu!yale.edu!qt.cs.utexas.e
+du!cs.utexas.edu!swrinde!zaphod.mps.ohio-state.edu!sol.ctr.columbia.edu!eff!news
+.oc.com!nuntius
+From: psaslaw@oc.com (Piet Saslawsky)
+Newsgroups: comp.sys.mac.comm
+Subject: Re: Async MacTCP??
+Message-ID: <1992Dec7.180902.22187@ra.oc.com>
+Date: 7 Dec 92 18:09:02 GMT
+References: <1CE00001.kg2k9d@tbomb.ice.com>
+Sender: usenet@ra.oc.com
+Organization: Advanced Software Concepts
+Lines: 31
+X-Useragent: Nuntius v1.1
+
+In article <1CE00001.kg2k9d@tbomb.ice.com> Tim Endres, time@ice.com
+writes:
+>How do people handle asynchronous TCP read/write
+>requests with respect to canceling? I want to let
+>IBP users press Cmd-Period to cancel the TCPRead
+>that I'm doing asynchronously.
+>
+>TCPAbort seems a little rude to me. It basically
+>makes the connection invalid for further use, and
+>I find it hard to believe you have to re-establish
+>a connection just to cancel a read.
+>
+>Or do I have to delay the TCPRead and spin watching
+>the TCPStatus for bytes to come in and not actually
+>issue a read until I see bytes?
+
+
+That's it : MacTCP does not support PBKillIO() so you can't get rid of
+any pending call. You are also right about the way TCPRead must be used :
+it should only be called when TCPStatus reports that there is something
+to read. This is also the safe way to use a CTB Connection Tool, and not
+only those based on MacTCP : always call CMStatus() in idle and CMRead()
+when something arrived. Just FYI : you should not rely on the
+TCPDataArrival in the NotifyProc to read data.
+
+Piet Saslawsky
++-------------------------------------+-------------------------------+
+| Advanced Software Concepts (France) | Open Connect Systems (Dallas) |
+| email: adv.soft@applelink.apple.com | email: psaslaw@oc.com         |
+| voice: (33) 93 24 76 00             | voice: (214) 888 0658         |
++-------------------------------------+-------------------------------+
+---------------------------------------------------------------------------
+Newsgroups: comp.sys.mac.comm
+Path: ruc.dk!dkuug!sunic!mcsun!uunet!zaphod.mps.ohio-state.edu!uwm.edu!ux1.cso.u
+iuc.edu!news.cso.uiuc.edu!resnick
+From: resnick@cogsci.uiuc.edu (Pete Resnick)
+Subject: Re: Async MacTCP?? ( was **ATTN: Ripped off by Frank Price? *** )
+References: <1CE00001.kg2k9d@tbomb.ice.com>
+Message-ID: <BywH0C.Ey3@news.cso.uiuc.edu>
+Sender: usenet@news.cso.uiuc.edu (Net Noise owner)
+Organization: University of Illinois at Urbana
+Date: Mon, 7 Dec 1992 17:38:33 GMT
+Lines: 24
+
+time@ice.com (Tim Endres) writes:
+
+>How do people handle asynchronous TCP read/write
+>requests with respect to canceling? I want to let
+>IBP users press Cmd-Period to cancel the TCPRead
+>that I'm doing asynchronously.
+
+Choice 1: If you have an asynchronous notify routine set up, you will
+get a data arrival notify when data arrives if there is no outstanding
+TCPRcv, so you don't have to sit on TCPRcv all of the time.
+
+Choice 2: Make short command timeouts for TCPRcv and reissue the
+TCPRcv every so often. (Ick.)
+
+Choice 3 : TCPAbort. The least pretty solution.
+
+I would go for number 1.
+
+pr
+-- 
+Pete Resnick             (...so what is a mojo, and why would one be rising?)
+Graduate assistant - Philosophy Department, Gregory Hall, UIUC
+System manager - Cognitive Science Group, Beckman Institute, UIUC
+Internet: resnick@cogsci.uiuc.edu
+---------------------------------------------------------------------------
+Newsgroups: comp.sys.mac.comm
+Path: ruc.dk!dkuug!sunic!mcsun!uunet!ornl!utkcs2!emory!sol.ctr.columbia.edu!zaph
+od.mps.ohio-state.edu!darwin.sura.net!convex!news.oc.com!nuntius
+From: Piet Saslawsky <psaslaw@oc.com>
+Subject: Re: Async MacTCP??
+Message-ID: <1992Dec7.192916.24045@ra.oc.com>
+Sender: usenet@ra.oc.com
+Organization: Advanced Software Concepts
+X-Useragent: Nuntius v1.1
+References: <1CE00001.kg2k9d@tbomb.ice.com> <BywH0C.Ey3@news.cso.uiuc.edu>
+Date: Mon, 7 Dec 1992 19:29:16 GMT
+Lines: 17
+
+In article <BywH0C.Ey3@news.cso.uiuc.edu> Pete Resnick,
+resnick@cogsci.uiuc.edu writes:
+>Choice 1: If you have an asynchronous notify routine set up, you will
+>get a data arrival notify when data arrives if there is no outstanding
+>TCPRcv, so you don't have to sit on TCPRcv all of the time.
+
+You can't always rely on the data arrival notification since it is only
+posted when there is no other data waiting to be read by the application.
+So if a second packet arrives while the first one is not processed yet,
+you loose a notification.
+
+Piet Saslawsky
++-------------------------------------+-------------------------------+
+| Advanced Software Concepts (France) | Open Connect Systems (Dallas) |
+| email: adv.soft@applelink.apple.com | email: psaslaw@oc.com         |
+| voice: (33) 93 24 76 00             | voice: (214) 888 0658         |
++-------------------------------------+-------------------------------+
+---------------------------------------------------------------------------
+Newsgroups: comp.sys.mac.comm
+Path: ruc.dk!dkuug!sunic!mcsun!uunet!spool.mu.edu!uwm.edu!ux1.cso.uiuc.edu!news.
+cso.uiuc.edu!resnick
+From: resnick@cogsci.uiuc.edu (Pete Resnick)
+Subject: Re: Async MacTCP??
+References: <1CE00001.kg2k9d@tbomb.ice.com> <BywH0C.Ey3@news.cso.uiuc.edu> 
+<1992Dec7.192916.24045@ra.oc.com>
+Message-ID: <Byy5Et.81C@news.cso.uiuc.edu>
+Sender: usenet@news.cso.uiuc.edu (Net Noise owner)
+Organization: University of Illinois at Urbana
+Date: Tue, 8 Dec 1992 15:23:14 GMT
+Lines: 17
+
+Piet Saslawsky <psaslaw@oc.com> writes:
+
+>You can't always rely on the data arrival notification since it is only
+>posted when there is no other data waiting to be read by the application.
+>So if a second packet arrives while the first one is not processed yet,
+>you loose a notification.
+
+But don't you get all of the data (i.e. both packets) that is sitting
+in the buffer when you do the TCPRcv? Why would you need a second
+notification?
+
+pr
+-- 
+Pete Resnick             (...so what is a mojo, and why would one be rising?)
+Graduate assistant - Philosophy Department, Gregory Hall, UIUC
+System manager - Cognitive Science Group, Beckman Institute, UIUC
+Internet: resnick@cogsci.uiuc.edu
+---------------------------------------------------------------------------
+Newsgroups: comp.sys.mac.comm
+Path: ruc.dk!dkuug!sunic!mcsun!uunet!cs.utexas.edu!mercury.unt.edu!news.oc.com!nuntius
+From: Piet Saslawsky <psaslaw@oc.com>
+Subject: Re: Async MacTCP?? ( was **ATTN: Ripped off by Frank Price? *** )
+Message-ID: <1992Dec8.183550.20750@ra.oc.com>
+Sender: usenet@ra.oc.com
+Organization: Advanced Software Concepts
+X-Useragent: Nuntius v1.1
+References: <1CE00001.kg2k9d@tbomb.ice.com>
+     <BywH0C.Ey3@news.cso.uiuc.edu> <1992Dec7.192916.24045@ra.oc.com>
+     <Byy5Et.81C@news.cso.uiuc.edu>
+Date: Tue, 8 Dec 1992 18:35:50 GMT
+Lines: 27
+
+In article <Byy5Et.81C@news.cso.uiuc.edu> Pete Resnick,
+resnick@cogsci.uiuc.edu writes:
+>Why would you need a second notification?
+
+Because, when using notifications, the standard process would be :
+    1- Packet arrives
+    2- Notification is sent to application
+    3- Application calls TCPStatus to get the amount of data
+    4- Application calls TCPRcv to get the data
+
+If a new Packet arrives between points 2 and 3, or between 3 and 4, then
+you don't get the notification for it. And if you rely on the
+notifications (and only on the notifications) to receive the data, then
+the new Packet stays in the buffer. And since there is something in the
+buffer, you no longer get notifications for any other packets, and you no
+longer receive data.
+
+Well... I don't have actually the MacTCP documentation but I almost sure
+to remind me that it is the reason for which we can't rely on
+notifications.
+
+Piet Saslawsky
++-------------------------------------+-------------------------------+
+| Advanced Software Concepts (France) | Open Connect Systems (Dallas) |
+| email: adv.soft@applelink.apple.com | email: psaslaw@oc.com         |
+| voice: (33) 93 24 76 00             | voice: (214) 888 0658         |
++-------------------------------------+-------------------------------+
+---------------------------------------------------------------------------
+Newsgroups: comp.sys.mac.comm
+Path: ruc.dk!dkuug!sunic!mcsun!uunet!spool.mu.edu!sdd.hp.com!ux1.cso.uiuc.edu!ne
+ws.cso.uiuc.edu!resnick
+From: resnick@cogsci.uiuc.edu (Pete Resnick)
+Subject: Re: Async MacTCP?? ( was **ATTN: Ripped off by Frank Price? *** )
+References: <1CE00001.kg2k9d@tbomb.ice.com>      <BywH0C.Ey3@news.cso.uiuc.edu> 
+<1992Dec7.192916.24045@ra.oc.com>      <Byy5Et.81C@news.cso.uiuc.edu> 
+<1992Dec8.183550.20750@ra.oc.com>
+Message-ID: <Byypzu.K0x@news.cso.uiuc.edu>
+Sender: usenet@news.cso.uiuc.edu (Net Noise owner)
+Organization: University of Illinois at Urbana
+Date: Tue, 8 Dec 1992 22:47:52 GMT
+Lines: 31
+
+Piet Saslawsky <psaslaw@oc.com> writes:
+
+>>Why would you need a second notification?
+
+>Because, when using notifications, the standard process would be :
+>    1- Packet arrives
+>    2- Notification is sent to application
+>    3- Application calls TCPStatus to get the amount of data
+>    4- Application calls TCPRcv to get the data
+
+I disagree. The process should be:
+
+1- Packet arrives
+2- Notification is sent to application
+3- Application calls TCPRcv
+4- If buffer or RDS is full, call TCPStatus to see if there is
+   anymore data.
+5- If more data, goto 3.
+
+Now you are only doing reads when the notification comes in. You will
+get another notification if the buffer is empty and there is no receive
+outstanding. In this case, there is no problem with packets coming in
+between calls. You're way, you constantly have to call TCPStatus,
+which is just wasting processor time for no reason.
+
+pr
+-- 
+Pete Resnick             (...so what is a mojo, and why would one be rising?)
+Graduate assistant - Philosophy Department, Gregory Hall, UIUC
+System manager - Cognitive Science Group, Beckman Institute, UIUC
+Internet: resnick@cogsci.uiuc.edu
+---------------------------------------------------------------------------
+Newsgroups: comp.sys.mac.comm
+Path: ruc.dk!dkuug!sunic!mcsun!uunet!usc!sol.ctr.columbia.edu!eff!news.oc.com!nuntius
+From: Piet Saslawsky <psaslaw@oc.com>
+Subject: Re: Async MacTCP??
+Message-ID: <1992Dec9.030734.2911@ra.oc.com>
+Sender: usenet@ra.oc.com
+Organization: Advanced Software Concepts
+X-Useragent: Nuntius v1.1
+References: <1CE00001.kg2k9d@tbomb.ice.com>
+     <Byy5Et.81C@news.cso.uiuc.edu> <1992Dec8.183550.20750@ra.oc.com>
+     <Byypzu.K0x@news.cso.uiuc.edu>
+Date: Wed, 9 Dec 1992 03:07:34 GMT
+Lines: 28
+
+That's the way I did, or something similar, but you can get a TCPStatus
+which returns "no data" and loose a notification. I didn't report this
+problem to the MacTCP Team at Apple's : I have already got in touch with
+them so many times for significant problems that I prefered to not bother
+them with this (very particular) case. The way I did after that was
+already described : I issue a TCPRcv with a short time-out and re-launch
+a TCPRcv in the completionProc. As it was for a particular purpose (in a
+CTB Tool, process the async calls from the application while filtering
+the Telnet characters), I usually don't recommend it.
+
+I agree that calling TCPStatus may use some CPU time. I don't know
+exactly how but I know that it can't be noticed, even when opening many
+sessions or when transfering some megabytes. In an application or even a
+driver, this easy way can be chosen without side-effects. And as often on
+Macintosh : better safe than sorry.
+
+I think that this talk between Pete Resnick and me should eventually
+continue on private email. Please, don't hesitate to contact us if you
+want it back on the Internet News.
+
+Thanks for your attention.
+
+Piet Saslawsky
++-------------------------------------+-------------------------------+
+| Advanced Software Concepts (France) | Open Connect Systems (Dallas) |
+| email: adv.soft@applelink.apple.com | email: psaslaw@oc.com         |
+| voice: (33) 93 24 76 00             | voice: (214) 888 0658         |
++-------------------------------------+-------------------------------+
+---------------------------------------------------------------------------

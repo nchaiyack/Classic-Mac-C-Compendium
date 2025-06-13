@@ -1,1 +1,16 @@
-sed							# GNU sed is a batch stream editorsed [-hnV] [--quiet] [--silent] [--version] [-e script]		[-f script-file] [--expression=script] [--file=script-file] [file…]	-h						# print usage message on diagnostic output		--help	-n						# no default output; don't write out a line		--quiet				# unless an explicit print command is given		--silent			#	-V						# print version number on diagnostic output		--version			#	-e script				# a script to execute		--expression=script	#	-f script-file			# file containing a script to execute		--file=scriptfile	#-
+sed							# GNU sed is a batch stream editor
+sed [-hnV] [--quiet] [--silent] [--version] [-e script]
+		[-f script-file] [--expression=script] [--file=script-file] [file…]
+	-h						# print usage message on diagnostic output
+		--help
+	-n						# no default output; don't write out a line
+		--quiet				# unless an explicit print command is given
+		--silent			#
+	-V						# print version number on diagnostic output
+		--version			#
+	-e script				# a script to execute
+		--expression=script	#
+	-f script-file			# file containing a script to execute
+		--file=scriptfile	#
+
+-

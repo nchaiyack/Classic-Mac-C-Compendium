@@ -1,1 +1,8 @@
-This is an itty bitty bytesª modification of "Bullseye" with theKen Long window centering, a sound playing routine added, a keyhit routine added, and some other minor modifications.Number keys play the sounds asynchronously.  Mouse down plays a sound, too.kenlong@netcom.com
+This is an itty bitty bytesª modification of "Bullseye" with the
+Ken Long window centering, a sound playing routine added, a key
+hit routine added, and some other minor modifications.
+
+Number keys play the sounds asynchronously.  Mouse down plays a sound, too.
+
+kenlong@netcom.com
+

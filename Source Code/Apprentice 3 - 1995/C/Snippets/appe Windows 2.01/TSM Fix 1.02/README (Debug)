@@ -1,1 +1,20 @@
-The enclosed INIT fixes the jGNEFilter "Missing Clicks" bug. I have tried it withseveral of my TSM floating windows implementations, an old version PopUpFuncs,and SuperClock -- with no problems. It also works with FKEY's that call WNE andother cases with multiple event loops in the same application.Try it out for a couple of days with any software you commonly usethat implements a jGNEFilter?The DEBUG version has a DebugStr compiled in so that you know when it isabout to fix a "Missed Click." You can verify by NOP-ing out the jGNEFilterjump code and letting it run -- you will start missing those clicks again.Thanks alot,Matt Slot, fprefect@umich.eduBTW, it does head and tail patches GNE to see if an event was filtered,and if not it will jump thru the filters itself. It took me a few weeksto figure out the oddities of globally patching a trap that doesnt alwaysreturn to the same application -- but I think it works well. :)
+The enclosed INIT fixes the jGNEFilter "Missing Clicks" bug. I have tried it with
+several of my TSM floating windows implementations, an old version PopUpFuncs,
+and SuperClock -- with no problems. It also works with FKEY's that call WNE and
+other cases with multiple event loops in the same application.
+
+Try it out for a couple of days with any software you commonly use
+that implements a jGNEFilter?
+
+The DEBUG version has a DebugStr compiled in so that you know when it is
+about to fix a "Missed Click." You can verify by NOP-ing out the jGNEFilter
+jump code and letting it run -- you will start missing those clicks again.
+
+Thanks alot,
+Matt Slot, fprefect@umich.edu
+
+
+BTW, it does head and tail patches GNE to see if an event was filtered,
+and if not it will jump thru the filters itself. It took me a few weeks
+to figure out the oddities of globally patching a trap that doesnt always
+return to the same application -- but I think it works well. :)

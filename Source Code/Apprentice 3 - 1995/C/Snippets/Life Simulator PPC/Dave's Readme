@@ -1,1 +1,8 @@
-I've done a few things to this to speed it up. Other changes (suchas adding profiler calls) were designed to help me figure out whatneeded optimization. Yet other changes were put in just because Iwanted the code to look that way. I've tried to comment changes Imade with the reason for making them.-DavePdavep@eworld.com
+I've done a few things to this to speed it up. Other changes (such
+as adding profiler calls) were designed to help me figure out what
+needed optimization. Yet other changes were put in just because I
+wanted the code to look that way. I've tried to comment changes I
+made with the reason for making them.
+
+-DaveP
+davep@eworld.com

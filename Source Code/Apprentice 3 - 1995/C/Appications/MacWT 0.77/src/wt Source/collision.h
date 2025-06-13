@@ -1,1 +1,3 @@
-// collision.hvoid CheckCollision( Object *o );
+// collision.h
+
+void CheckCollision( Object *o );

@@ -1,1 +1,3 @@
-#pragma onceBoolean TrackMouseClick( Rect* frame, Boolean flash );
+#pragma once
+
+Boolean TrackMouseClick( Rect* frame, Boolean flash );

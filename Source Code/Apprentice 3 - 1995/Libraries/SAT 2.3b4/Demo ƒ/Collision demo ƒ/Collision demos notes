@@ -1,1 +1,14 @@
-Collision and Collision ][==============================The two Collision demos are almost as simple as SATminimal, but feature two sprite units and detects collisions. This makes them simple games rather than just demos, on the level for small kids.Both demos feature "Mr Egghead" who is controlled with the mouse, who eats apples.In Collision, all apples are "fresh". The apples detect collisions by inspecting their "kind" field.In Collision ][, apples can be "fresh" or "rotten". Apples can get rotten when bouncing in a wall, and they always get rotten when colliding with other apples. If Mr Egghead eats a fresh apple, he is happy, but if he touches a rotten apple, he isn't that happy about it… Since we must detect collisions both between apples and between apples and Mr Egghead, a smarter collision detection scheme is used, using callback routines (hitTasks). This is done by the apples, in HitOtherSprite.Collision ][ also demonstrates the use of SATPlotFace for modifying the background (by drawing apple cores in the background when Mr Egghead eats an apple).Collision /// is a different matter. See its separate note.
+Collision and Collision ][
+==============================
+
+The two Collision demos are almost as simple as SATminimal, but feature two sprite units and detects collisions. This makes them simple games rather than just demos, on the level for small kids.
+
+Both demos feature "Mr Egghead" who is controlled with the mouse, who eats apples.
+
+In Collision, all apples are "fresh". The apples detect collisions by inspecting their "kind" field.
+
+In Collision ][, apples can be "fresh" or "rotten". Apples can get rotten when bouncing in a wall, and they always get rotten when colliding with other apples. If Mr Egghead eats a fresh apple, he is happy, but if he touches a rotten apple, he isn't that happy about it… Since we must detect collisions both between apples and between apples and Mr Egghead, a smarter collision detection scheme is used, using callback routines (hitTasks). This is done by the apples, in HitOtherSprite.
+
+Collision ][ also demonstrates the use of SATPlotFace for modifying the background (by drawing apple cores in the background when Mr Egghead eats an apple).
+
+Collision /// is a different matter. See its separate note.

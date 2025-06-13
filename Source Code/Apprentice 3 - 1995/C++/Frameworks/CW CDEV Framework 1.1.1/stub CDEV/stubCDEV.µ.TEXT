@@ -1,1 +1,6 @@
-Project Name: "Phester:Desktop Folder:CW CDEV Framework 1.1.1:Stub CDEV:stubCDEV.µ"Segment 1	(preload, protected, locked)	MacOS.lib	stubCDEV.c
+Project Name: "Phester:Desktop Folder:CW CDEV Framework 1.1.1:Stub CDEV:stubCDEV.µ"
+
+
+Segment 1	(preload, protected, locked)
+	MacOS.lib
+	stubCDEV.c

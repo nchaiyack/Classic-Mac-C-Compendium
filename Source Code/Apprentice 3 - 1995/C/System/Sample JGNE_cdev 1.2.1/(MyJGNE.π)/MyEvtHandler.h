@@ -1,1 +1,3 @@
-/* PROTOTYPES for routines in MyEvtHandler.c */Boolean	MyEvtHandler( EventRecord *event );
+/* PROTOTYPES for routines in MyEvtHandler.c */
+
+Boolean	MyEvtHandler( EventRecord *event );

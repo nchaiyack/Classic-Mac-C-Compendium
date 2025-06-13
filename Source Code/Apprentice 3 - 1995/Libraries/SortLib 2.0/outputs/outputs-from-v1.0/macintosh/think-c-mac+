@@ -1,1 +1,30 @@
-Sortlib, Version 1.0, Copyright (c) 1990, Ari I. HalberstadtCompiled on Dec 18 1990 at 08:24:23Operating System:  Macintosh 6.0.5, Finder 6.1.4, MultiFinder 6.1b7Compiler:          THINK C 4.0.2Hardware:          Macintosh Plus with 2.5megsPreparing data...Creating 4096 random integersPresorting dataRunning tests. If you see any failure messages then it's time to fix something.   qsort   random     4096 17.733  qksort   random     4096 3.750  hpsort   random     4096 17.017  mgsort   random     4096 8.650  shsort   random     4096 10.767  insort   random     1024 21.783   qsort   sorted      512 29.983  qksort   sorted     4096 1.783  hpsort   sorted     4096 17.750  mgsort   sorted     4096 7.033  shsort   sorted     4096 4.983  insort   sorted     4096 0.200   qsort reversed      512 29.067  qksort reversed     4096 1.983  hpsort reversed     4096 16.217  mgsort reversed     4096 7.067  shsort reversed     4096 6.833  insort reversed     1024 43.533
+Sortlib, Version 1.0, Copyright (c) 1990, Ari I. Halberstadt
+Compiled on Dec 18 1990 at 08:24:23
+
+Operating System:  Macintosh 6.0.5, Finder 6.1.4, MultiFinder 6.1b7
+Compiler:          THINK C 4.0.2
+Hardware:          Macintosh Plus with 2.5megs
+
+Preparing data...
+Creating 4096 random integers
+Presorting data
+
+Running tests. If you see any failure messages then it's time to fix something.
+   qsort   random     4096 17.733
+  qksort   random     4096 3.750
+  hpsort   random     4096 17.017
+  mgsort   random     4096 8.650
+  shsort   random     4096 10.767
+  insort   random     1024 21.783
+   qsort   sorted      512 29.983
+  qksort   sorted     4096 1.783
+  hpsort   sorted     4096 17.750
+  mgsort   sorted     4096 7.033
+  shsort   sorted     4096 4.983
+  insort   sorted     4096 0.200
+   qsort reversed      512 29.067
+  qksort reversed     4096 1.983
+  hpsort reversed     4096 16.217
+  mgsort reversed     4096 7.067
+  shsort reversed     4096 6.833
+  insort reversed     1024 43.533

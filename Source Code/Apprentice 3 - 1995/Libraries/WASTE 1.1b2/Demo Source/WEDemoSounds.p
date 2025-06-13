@@ -1,1 +1,83 @@
-unit WEDemoSounds;{ WASTE DEMO PROJECT: }{ Object Handlers for embedded sounds }{ Copyright © 1993-1995 Marco Piovanelli }{ All Rights Reserved }{ Based on code written by by Michael F. Kamprath, kamprath@earthlink.net }interface	uses		WEDemoIntf;	function HandleNewSound (var defaultObjectSize: Point;									objectRef: WEObjectReference): OSErr;	function HandleDrawSound ({const} var destRect: Rect;									objectRef: WEObjectReference): OSErr;	function HandleClickSound (hitPt: Point;									modifiers: MacOSEventModifiers;									clickTime: LongInt;									objectRef: WEObjectReference): Boolean;implementation	uses		Icons, Sound;	const		kSoundIconID = 550;		{ resource ID of sound icon family resources }	function HandleNewSound (var defaultObjectSize: Point;									objectRef: WEObjectReference): OSErr;	begin{ we'll use a standard 32x32 icon to represent the sound object }		defaultObjectSize.v := 32;		defaultObjectSize.h := 32;{ return error code }		HandleNewSound := noErr;	end;  { HandleNewSound }	function HandleDrawSound ({const} var destRect: Rect;									objectRef: WEObjectReference): OSErr;	begin{ draw the sound icon }		HandleDrawSound := PlotIconID(destRect, atBottom, ttNone, kSoundIconID);	end;  { HandleDrawSound }	function HandleClickSound (hitPt: Point;									modifiers: MacOSEventModifiers;									clickTime: LongInt;									objectRef: WEObjectReference): Boolean;		var			theSound: SndListHandle;	begin{ WASTE sets the low bit of modifiers on double (multiple) clicks }		if (BAND(modifiers, $0001) <> 0) then			begin{ get a handle to the object data (in this case, a 'snd ' handle) }				theSound := SndListHandle(WEGetObjectDataHandle(objectRef));{ play the sound }				if (SndPlay(nil, theSound, false) <> noErr) then					;{ return TRUE so WASTE knows we handled the click }				HandleClickSound := true;			end		else{ not a double click: let WASTE handle the mouse-down }			HandleClickSound := false;	end;  { HandleClickSound }end.
+unit WEDemoSounds;
+
+{ WASTE DEMO PROJECT: }
+{ Object Handlers for embedded sounds }
+
+{ Copyright © 1993-1995 Marco Piovanelli }
+{ All Rights Reserved }
+
+{ Based on code written by by Michael F. Kamprath, kamprath@earthlink.net }
+
+interface
+	uses
+		WEDemoIntf;
+
+	function HandleNewSound (var defaultObjectSize: Point;
+									objectRef: WEObjectReference): OSErr;
+	function HandleDrawSound ({const} var destRect: Rect;
+									objectRef: WEObjectReference): OSErr;
+	function HandleClickSound (hitPt: Point;
+									modifiers: MacOSEventModifiers;
+									clickTime: LongInt;
+									objectRef: WEObjectReference): Boolean;
+
+implementation
+	uses
+		Icons, Sound;
+
+	const
+
+		kSoundIconID = 550;		{ resource ID of sound icon family resources }
+
+	function HandleNewSound (var defaultObjectSize: Point;
+									objectRef: WEObjectReference): OSErr;
+	begin
+
+{ we'll use a standard 32x32 icon to represent the sound object }
+		defaultObjectSize.v := 32;
+		defaultObjectSize.h := 32;
+
+{ return error code }
+		HandleNewSound := noErr;
+
+	end;  { HandleNewSound }
+
+	function HandleDrawSound ({const} var destRect: Rect;
+									objectRef: WEObjectReference): OSErr;
+	begin
+
+{ draw the sound icon }
+		HandleDrawSound := PlotIconID(destRect, atBottom, ttNone, kSoundIconID);
+
+	end;  { HandleDrawSound }
+
+	function HandleClickSound (hitPt: Point;
+									modifiers: MacOSEventModifiers;
+									clickTime: LongInt;
+									objectRef: WEObjectReference): Boolean;
+		var
+			theSound: SndListHandle;
+	begin
+
+{ WASTE sets the low bit of modifiers on double (multiple) clicks }
+		if (BAND(modifiers, $0001) <> 0) then
+			begin
+
+{ get a handle to the object data (in this case, a 'snd ' handle) }
+				theSound := SndListHandle(WEGetObjectDataHandle(objectRef));
+
+{ play the sound }
+				if (SndPlay(nil, theSound, false) <> noErr) then
+					;
+
+{ return TRUE so WASTE knows we handled the click }
+				HandleClickSound := true;
+			end
+		else
+
+{ not a double click: let WASTE handle the mouse-down }
+			HandleClickSound := false;
+
+	end;  { HandleClickSound }
+
+end.

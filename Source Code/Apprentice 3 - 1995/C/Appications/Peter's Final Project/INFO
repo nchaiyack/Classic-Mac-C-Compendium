@@ -1,1 +1,82 @@
- Peter's Final Project -- A texture mapping demonstration © 1995, Peter Mattis E-mail: petm@soda.csua.berkeley.edu Snail-mail:  Peter Mattis  557 Fort Laramie Dr.  Sunnyvale, CA 94087 Avaible from: http://www.csua.berkeley.edu/~petm/final.html This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. ---------------------------------------------------------------------Goals:  There were several goals in doing this projected. The main one,  however, was to write a portable texture mapping demo. The project  was originally written under unix/X on an HP 9000. Shortly after  starting, I realized that the X11 specific functions could be   contained within one file. The Macintosh port began and ended  the next day. ---------------------------------------------------------------------How it's done:  There are two major areas to the project. Scan conversion and  hidden surface removal.    Scan conversion relies on the fact that for walls, each column  has a constant z value and for floors and ceilings, each row  has a constant z value. At the end of the day, this measn that  instead of performing a perspective divide at each pixel, we  only need to perform the perspective divide for each row or column.  This is a big big win and is the key fact that allows the demo  to run at any reasonable speed.    There is one major idea to the whole hidden surface removal process.  That is, draw from front to back. The problem is to efficiently  determine when a pixel has already been drawn. The solution was  to maintain a span buffer. Spans of pixels that could be drawn into.  As pixels are drawn into the frame buffer, chunks are taken out  of the span buffer. When the buffer is empty, the screen is full  and scan conversion can end. This is the big win in drawing back  to front. Distant objects are never considered since scan conversion  ends before it even gets close to them. This does however complicate  the scan conversion loops, but they are still understandable, (I  think).     Note that any front to back drawing order will suffice, but there   is still a "best" drawing order. I originally used bsp (binary  space partitioning) trees to determine this drawing order. This  produced a correct result. However, in certain areas of the maze,  drawing slowed to a crawl for no apparent reason. An closer  inspection I realized that it was drawing many faces that were  directly behind a face just drawn. These faces were of course not  visible, but determining that took a sizable percentage of drawing  time. I decided to change to use a graph based approach. Each node  of the graph is a sector in the world. A sector is a convex region.  Each sector is connected to neighboring regions. Starting from the  node in which the viewer is in, a breadth first search of the graph  will produce a back to front drawing order. Well, this isn't exactly  true, but for the purposes of a maze, it works. The drawing order  is better than a bsp tree's since it tends to draw sectors that are  visible. (Note, faces behind the viewer will be clipped, which is  a fairly quick operation). The demo looks the same as it did before,  but there is virtually no slow down no matter what size maze is used.
+ Peter's Final Project -- A texture mapping demonstration
+ © 1995, Peter Mattis
+
+ E-mail:
+ petm@soda.csua.berkeley.edu
+
+ Snail-mail:
+  Peter Mattis
+  557 Fort Laramie Dr.
+  Sunnyvale, CA 94087
+
+ Avaible from:
+ http://www.csua.berkeley.edu/~petm/final.html
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ 
+---------------------------------------------------------------------
+
+Goals:
+  There were several goals in doing this projected. The main one,
+  however, was to write a portable texture mapping demo. The project
+  was originally written under unix/X on an HP 9000. Shortly after
+  starting, I realized that the X11 specific functions could be 
+  contained within one file. The Macintosh port began and ended
+  the next day.
+ 
+---------------------------------------------------------------------
+
+How it's done:
+  There are two major areas to the project. Scan conversion and
+  hidden surface removal.
+  
+  Scan conversion relies on the fact that for walls, each column
+  has a constant z value and for floors and ceilings, each row
+  has a constant z value. At the end of the day, this measn that
+  instead of performing a perspective divide at each pixel, we
+  only need to perform the perspective divide for each row or column.
+  This is a big big win and is the key fact that allows the demo
+  to run at any reasonable speed.
+  
+  There is one major idea to the whole hidden surface removal process.
+  That is, draw from front to back. The problem is to efficiently
+  determine when a pixel has already been drawn. The solution was
+  to maintain a span buffer. Spans of pixels that could be drawn into.
+  As pixels are drawn into the frame buffer, chunks are taken out
+  of the span buffer. When the buffer is empty, the screen is full
+  and scan conversion can end. This is the big win in drawing back
+  to front. Distant objects are never considered since scan conversion
+  ends before it even gets close to them. This does however complicate
+  the scan conversion loops, but they are still understandable, (I
+  think). 
+  
+  Note that any front to back drawing order will suffice, but there 
+  is still a "best" drawing order. I originally used bsp (binary
+  space partitioning) trees to determine this drawing order. This
+  produced a correct result. However, in certain areas of the maze,
+  drawing slowed to a crawl for no apparent reason. An closer
+  inspection I realized that it was drawing many faces that were
+  directly behind a face just drawn. These faces were of course not
+  visible, but determining that took a sizable percentage of drawing
+  time. I decided to change to use a graph based approach. Each node
+  of the graph is a sector in the world. A sector is a convex region.
+  Each sector is connected to neighboring regions. Starting from the
+  node in which the viewer is in, a breadth first search of the graph
+  will produce a back to front drawing order. Well, this isn't exactly
+  true, but for the purposes of a maze, it works. The drawing order
+  is better than a bsp tree's since it tends to draw sectors that are
+  visible. (Note, faces behind the viewer will be clipped, which is
+  a fairly quick operation). The demo looks the same as it did before,
+  but there is virtually no slow down no matter what size maze is used.

@@ -1,1 +1,1 @@
-exec gs -DNODISPLAY "$@"
+exec gs -DNODISPLAY "$@"

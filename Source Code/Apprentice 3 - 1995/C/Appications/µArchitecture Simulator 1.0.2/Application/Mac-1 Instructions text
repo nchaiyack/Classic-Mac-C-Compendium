@@ -1,1 +1,44 @@
-Opcode	Mnem	Action Performed	Class0000xxxxxxxxxxxx	LODD	ac=(x)	00001xxxxxxxxxxxx	STOD	(x)=ac	00010xxxxxxxxxxxx	ADDD	ac+=(x)	00011xxxxxxxxxxxx	SUBD	ac-=(x)	00100xxxxxxxxxxxx	JPOS	ac>=0 ? pc+=x	60101xxxxxxxxxxxx	JZER	ac==0 ? pc+=x	60110xxxxxxxxxxxx	JUMP	pc+=x	60111xxxxxxxxxxxx	MOVQ	ac=x	01000xxxxxxxxxxxx	JNEG	ac<0 ? pc+=x	61001xxxxxxxxxxxx	JNZE	ac!=0 ? pc+=x	610100xxxxxxxxxxx	LODL	ac=x(bp)	11010100000000000	MOVE	ac=(pc); pc++	41010100100000000	LSL1	ac<<=1	31010101000000000	LSL2	ac<<=2	31010101100000000	LSRA	(unsigned)ac>>=1	31010110000000000	ASRA	(signed)ac>>=1	31010110100000000	ANDI	ac&=(pc); pc++	410110xxxxxxxxxxx	STOL	x(bp)=ac	110111xxxxxxxxxxx	ADDL	ac+=x(bp)	111000xxxxxxxxxxx	SUBL	ac-=x(bp)	111001xxxxxxxxxxx	LINK	--sp; (sp)=bp; bp=sp; sp-=x	111010000xxxxxxxx	RETN	sp=bp; bp=(sp); ++sp; pc=(sp); sp+=x	211010001xxxxxxxx	RTS	pc=(sp); sp++; sp+=x	211010010xxxxxxxx	TRAP	jumps at address in $4+x	211010011xxxxxxxx	UNIM	exception; jumps at address in $2	211010100xxxxxxxx	INSP	sp+=x	211010101xxxxxxxx	DESP	sp-=x	211010110xxxxxxxx	INAC	ac+=x	211010111xxxxxxxx	DEAC	ac-=x	21101100000000000	SWBY	swaps high and low byte	31101100100000000	CALL	a=(pc)+; -(sp)=pc; pc+=a	51101101000000000	PSHI	--sp; (sp)=(ac)	31101101100000000	POPI	(ac)=(sp); sp++	31101110000000000	PUSH	--sp; (sp)=ac	31101110100000000	POP	ac=(sp); sp++	31101111000000000	SWSP	a=ac; ac=sp; sp=a	31101111100000000	SWBP	a=ac; ac=bp; bp=a	31110000000000000	LJMP	pc+=(pc)	51110000100000000	NOP	nop!!!	31110001000000000	NOTA	a=!a	31110001100000000	NEGA	a=-a	31110010000000000	HALT	halts the microprocessor	3			
+Opcode	Mnem	Action Performed	Class
+0000xxxxxxxxxxxx	LODD	ac=(x)	0
+0001xxxxxxxxxxxx	STOD	(x)=ac	0
+0010xxxxxxxxxxxx	ADDD	ac+=(x)	0
+0011xxxxxxxxxxxx	SUBD	ac-=(x)	0
+0100xxxxxxxxxxxx	JPOS	ac>=0 ? pc+=x	6
+0101xxxxxxxxxxxx	JZER	ac==0 ? pc+=x	6
+0110xxxxxxxxxxxx	JUMP	pc+=x	6
+0111xxxxxxxxxxxx	MOVQ	ac=x	0
+1000xxxxxxxxxxxx	JNEG	ac<0 ? pc+=x	6
+1001xxxxxxxxxxxx	JNZE	ac!=0 ? pc+=x	6
+10100xxxxxxxxxxx	LODL	ac=x(bp)	1
+1010100000000000	MOVE	ac=(pc); pc++	4
+1010100100000000	LSL1	ac<<=1	3
+1010101000000000	LSL2	ac<<=2	3
+1010101100000000	LSRA	(unsigned)ac>>=1	3
+1010110000000000	ASRA	(signed)ac>>=1	3
+1010110100000000	ANDI	ac&=(pc); pc++	4
+10110xxxxxxxxxxx	STOL	x(bp)=ac	1
+10111xxxxxxxxxxx	ADDL	ac+=x(bp)	1
+11000xxxxxxxxxxx	SUBL	ac-=x(bp)	1
+11001xxxxxxxxxxx	LINK	--sp; (sp)=bp; bp=sp; sp-=x	1
+11010000xxxxxxxx	RETN	sp=bp; bp=(sp); ++sp; pc=(sp); sp+=x	2
+11010001xxxxxxxx	RTS	pc=(sp); sp++; sp+=x	2
+11010010xxxxxxxx	TRAP	jumps at address in $4+x	2
+11010011xxxxxxxx	UNIM	exception; jumps at address in $2	2
+11010100xxxxxxxx	INSP	sp+=x	2
+11010101xxxxxxxx	DESP	sp-=x	2
+11010110xxxxxxxx	INAC	ac+=x	2
+11010111xxxxxxxx	DEAC	ac-=x	2
+1101100000000000	SWBY	swaps high and low byte	3
+1101100100000000	CALL	a=(pc)+; -(sp)=pc; pc+=a	5
+1101101000000000	PSHI	--sp; (sp)=(ac)	3
+1101101100000000	POPI	(ac)=(sp); sp++	3
+1101110000000000	PUSH	--sp; (sp)=ac	3
+1101110100000000	POP	ac=(sp); sp++	3
+1101111000000000	SWSP	a=ac; ac=sp; sp=a	3
+1101111100000000	SWBP	a=ac; ac=bp; bp=a	3
+1110000000000000	LJMP	pc+=(pc)	5
+1110000100000000	NOP	nop!!!	3
+1110001000000000	NOTA	a=!a	3
+1110001100000000	NEGA	a=-a	3
+1110010000000000	HALT	halts the microprocessor	3
+			

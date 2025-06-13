@@ -1,1 +1,262 @@
-Changes in 1.17===============Macintosh Emacs now uses temporary system memory for large buffers.This means there is no longer a built-in limit on buffer size.The operation of Cut and Copy has been changed.  The selectionis no longer placed into the kill-ring, just into the clipboard.When printing multiple files, the standard job dialog appears for thefirst file only.Macintosh Emacs now includes a simple CodeWarrior AppleEvent suite anda CodeWarrior menu.  Uncomment the marked line in the .emacs fileprovided to use the menu.  The current version of Codewarriorcompilers often return large error result numbers after a successfulcompilation.  This is a bug in Codewarrior, and you can ignore it.A bug that caused Emacs to crash when saving very large files on 68Kmachines has been fixed.A bug that sometimes prevented a dired on a folder or disk droppedonto Emacs has been fixed.  You may have to remove old version ofEmacs from your disk and rebuild your desktop folder before you candrop folders and disks on Emacs.The GNU file utilities are upgraded to version 3.12 from 3.9.  The GNUgrep utility is upgraded to 2.0 from 1.6.Changes in 1.16===============Emacs can intelligently read, edit, and write Unix and MS-DOSformatted text files, as well as binary files.  See the file "Abouttext file translation" for more.Any file can now be dropped onto Emacs in the Finder.  Folders anddisks can also be dropped onto Emacs -- the result is a dired on thefolder or disk.Emacs now looks for backup files with names ending .~[0-9]+~ as wellas just ~ when looking for a type, creator, and resource fork for anew version of a file.A bug affecting window size changes has been fixed.Some bugs in the Think Project Manager external editor interfacehave been fixed.  Make sure to turn off "Always save session" inthe Think Project Manager when using the debugger.Changes in 1.15===============If Emacs is launched on a machine with more than 32 megabytes ofmemory, Emacs now will attempt to load itself into low memory.When Emacs is launched, the previously-used window size is reused onlywhen that window would fit entirely on the desktop.Other small bugs have been fixed.Changes in 1.14b1=================It is now possible to redefine the keys on the numeric keypad, thekeys F1-F15, the cursor keys, and the keys labeled help, home, pageup, del, end, and page down.  See the file lisp/term/Macintosh-win.el,and the sample .emacs file.Both Emacs and the "Emacs Keyboard" INIT are now fat binaries forPower Macintoshes.  The utilities are still 68000 based only.The color editor now works correctly on direct devices.  The frame andbackground colors are set immediately when the dialog is dismissedwith OK.The Emacs window position from the preferences file is used even whenthe window was previouly on a second monitor, as long as that monitoris still operating.Various timing parameters have been adjusted to make Emacs moreresponsive in the foreground, and more friendly in the background.Character 177 octal, produced with C-q DEL, is now properly displayedas ^? with ctl-arrow t, \0177 with ctl-arrow nil.Printing has been rewritten, this time as a second application.  Anitem "Page Setup" appears in the File menu.  That setup is used forall printing.  The "Print File From Disk" item now produces outputwith page headers.  Tabs when printed on a LaserWriter now leave thecorrect amount of white space.The Apple event support for Symantec C++ includes support for ThinkReference.  Include the statement	(load "think-c/think-ref")in your •emacs file to load support for Think Reference alone.The sources are available.Changes in 1.13b2:==================The name for .emacs is now •emacs.  The drivers of Emacs nowautomatically convert an initial '.' of any pathname component to '•'.The •emacs file is now kept in the directory ~/, and no longer in~emacs/.  Does this create any problems?It is now possible to set a specific color for the text appearingunder the cursor.Emacs will run without its system extension installed.  In this case,modifier key remapping is ignored.C-_ again does undo.  More generally, the key combinationcontrol-shift has been added to those recognized.  The combinationscontrol-option and control-shift-option, required by some non-Americankeyboards, are also recognized.When printing in landscape mode, lines now extend the full width ofthe paper.  The program lpr recognizes the -p option, and printsheadings with it, no headings without it.  This means lpr-buffer andprint-buffer now do different things.A bug involving menus that crashed many machines at the startup ofEmacs has been fixed.Changes in 1.13b1:==================The startup file .emacs now goes by the name •emacs in order to avoidthe problems other Macintosh programs have with filenames that beginwith a period.  This is not a backward-compatible change--you mustrename .emacs to •emacs to use it now.  The character • is typedoption-8.  If you use option as meta, you must type option-command-8.The utility “wakeup” is now included, and the function display-time works.Emacs now runs on machines with the 68000 processor.  Emacs stillrequires System 7.The quit character C-g is now consistently caught properly when Emacsprompts for (y or n), or for (yes or no).When the option key functions as a meta key, the behavior of M-e, M-i, M-u,and other previous dead-key combinations is now correct.The meanings of the control, option, shift, command, and caps-lock keys arenow configurable from the “Change modifier keys” menu item in the Special menu.See the file About Emacs for more information.Printing is faster, and less prone to crashing.Dragging or growing the editor window now works correctly on systemswith more than one monitor.  Very large or tall windows may requireyou to give Emacs more stack space.The keystrokes C-m and C-j are no longer reversed.A bug in the shell involving expansion of '*' alone has been fixed.The use of automatically repeating keystrokes is smoother when manyextensions are present.The Unix emulation now considers a file to have write-permission onlywhen that file is not locked.  Folders and volumes always havewrite-permission.A menu “Buffers” has been added.  Work buffers are listed first,followed by buffers created by dired, followed by all other buffers.The window size and position is now stored in a preferences fileinstead of in the resource fork of Emacs itself.  The choice of fontand font size is now stored in the preferences file.A bug in the handler for the quit-application event has been fixed.In dired mode, 'G', which runs chgrp, now changes the type of a file.'M', which runs chown, now changes the mode bits of a file.  Only thewrite permissions are affected.  The file is effectively locked orunlocked. 'O' still changes the creator of a file.On four or more bit-per-pixel displays, Emacs now works in color.There is a dialog box to change the colors Emacs uses, available fromthe Special menu.  The color choices are stored in the preferencesfile.A bug that caused an incorrect display of lines that were previouslyhighlighted has been fixed.The function suspend-emacs, usually called with C-z, now brings theFinder to the front.  Emacs is not actually suspended in the senseit would be in Unix, since all Macintosh processes are always running.Now C-@ as well as C-space sets mark.A partial implementation of the Apple event suite for Symantec C++version 6.0 is included.Much more Toolbox support has been added.  Use it at your own risk.See the directory ~emacs/lisp/mac.Changes in 1.12d:=================A bug in the Paste command (command-V) has been fixed.The dired code of Emacs 19 has replaced that of Emacs 18.  There isnow information about dired available from M-x info.A bug that prevented complete loading of textures.el from .emacs hasbeen fixed.The functions user-full-name, user-login-name, user-real-login-name,and system-name now take their values from the strings entered intothe “Sharing Setup” control panel.The function make-symbolic-link is now implemented correctly.  Itcreates an alias.Changes in 1.11d:=================A bug in the threads package that broke lpr and printing functionswithin Emacs has been fixed.A bug that caused Emacs to give errors when parsing pathnames prefixedwith ~dirname/.. has been fixed.A bug that caused Emacs to hang sometimes when brought from the backto be the front application has been fixed.A first attempt has been made to enable Emacs to read files that use'\n' instead of '\r' to end lines.  See "About Emacs".Emacs now works correctly with non-American keyboards.Slashes in Macintosh filenames now appear as colons within Emacs.Using a colon in a filename within Emacs gives you that filename withslashes within the Finder.The handling of ~ in directory names has been changed.  The meaning ofdirectory ~/ is now configurable.  See "About Emacs" for more.The Toolbox is more accessible, though its direct use is notrecommended.  See ~emacs/lisp/mac/traps.el.The function of the option key can be changed.  See "About Emacs".When a file X is edited and saved, file X is renamed X~, and a newfile X is created.  Now, the creator, type, and resource fork of theoriginal X are preserved in the new X.The behavior of Emacs when saving files referenced by aliases issaner.The menu items New, Save, Save As, and Close now conform more closelyto regular Macintosh behavior.Emacs is now stationery-aware.AEInstallEventHandler has been implemented.  See the file~emacs/lisp/mac/core-suite.el for an example.
+Changes in 1.17
+===============
+
+Macintosh Emacs now uses temporary system memory for large buffers.
+This means there is no longer a built-in limit on buffer size.
+
+The operation of Cut and Copy has been changed.  The selection
+is no longer placed into the kill-ring, just into the clipboard.
+
+When printing multiple files, the standard job dialog appears for the
+first file only.
+
+Macintosh Emacs now includes a simple CodeWarrior AppleEvent suite and
+a CodeWarrior menu.  Uncomment the marked line in the .emacs file
+provided to use the menu.  The current version of Codewarrior
+compilers often return large error result numbers after a successful
+compilation.  This is a bug in Codewarrior, and you can ignore it.
+
+A bug that caused Emacs to crash when saving very large files on 68K
+machines has been fixed.
+
+A bug that sometimes prevented a dired on a folder or disk dropped
+onto Emacs has been fixed.  You may have to remove old version of
+Emacs from your disk and rebuild your desktop folder before you can
+drop folders and disks on Emacs.
+
+The GNU file utilities are upgraded to version 3.12 from 3.9.  The GNU
+grep utility is upgraded to 2.0 from 1.6.
+
+Changes in 1.16
+===============
+
+Emacs can intelligently read, edit, and write Unix and MS-DOS
+formatted text files, as well as binary files.  See the file "About
+text file translation" for more.
+
+Any file can now be dropped onto Emacs in the Finder.  Folders and
+disks can also be dropped onto Emacs -- the result is a dired on the
+folder or disk.
+
+Emacs now looks for backup files with names ending .~[0-9]+~ as well
+as just ~ when looking for a type, creator, and resource fork for a
+new version of a file.
+
+A bug affecting window size changes has been fixed.
+
+Some bugs in the Think Project Manager external editor interface
+have been fixed.  Make sure to turn off "Always save session" in
+the Think Project Manager when using the debugger.
+
+Changes in 1.15
+===============
+
+If Emacs is launched on a machine with more than 32 megabytes of
+memory, Emacs now will attempt to load itself into low memory.
+
+When Emacs is launched, the previously-used window size is reused only
+when that window would fit entirely on the desktop.
+
+Other small bugs have been fixed.
+
+Changes in 1.14b1
+=================
+
+It is now possible to redefine the keys on the numeric keypad, the
+keys F1-F15, the cursor keys, and the keys labeled help, home, page
+up, del, end, and page down.  See the file lisp/term/Macintosh-win.el,
+and the sample .emacs file.
+
+Both Emacs and the "Emacs Keyboard" INIT are now fat binaries for
+Power Macintoshes.  The utilities are still 68000 based only.
+
+The color editor now works correctly on direct devices.  The frame and
+background colors are set immediately when the dialog is dismissed
+with OK.
+
+The Emacs window position from the preferences file is used even when
+the window was previouly on a second monitor, as long as that monitor
+is still operating.
+
+Various timing parameters have been adjusted to make Emacs more
+responsive in the foreground, and more friendly in the background.
+
+Character 177 octal, produced with C-q DEL, is now properly displayed
+as ^? with ctl-arrow t, \0177 with ctl-arrow nil.
+
+Printing has been rewritten, this time as a second application.  An
+item "Page Setup" appears in the File menu.  That setup is used for
+all printing.  The "Print File From Disk" item now produces output
+with page headers.  Tabs when printed on a LaserWriter now leave the
+correct amount of white space.
+
+The Apple event support for Symantec C++ includes support for Think
+Reference.  Include the statement
+	(load "think-c/think-ref")
+in your •emacs file to load support for Think Reference alone.
+
+The sources are available.
+
+Changes in 1.13b2:
+==================
+
+The name for .emacs is now •emacs.  The drivers of Emacs now
+automatically convert an initial '.' of any pathname component to '•'.
+The •emacs file is now kept in the directory ~/, and no longer in
+~emacs/.  Does this create any problems?
+
+It is now possible to set a specific color for the text appearing
+under the cursor.
+
+Emacs will run without its system extension installed.  In this case,
+modifier key remapping is ignored.
+
+C-_ again does undo.  More generally, the key combination
+control-shift has been added to those recognized.  The combinations
+control-option and control-shift-option, required by some non-American
+keyboards, are also recognized.
+
+When printing in landscape mode, lines now extend the full width of
+the paper.  The program lpr recognizes the -p option, and prints
+headings with it, no headings without it.  This means lpr-buffer and
+print-buffer now do different things.
+
+A bug involving menus that crashed many machines at the startup of
+Emacs has been fixed.
+
+Changes in 1.13b1:
+==================
+
+The startup file .emacs now goes by the name •emacs in order to avoid
+the problems other Macintosh programs have with filenames that begin
+with a period.  This is not a backward-compatible change--you must
+rename .emacs to •emacs to use it now.  The character • is typed
+option-8.  If you use option as meta, you must type option-command-8.
+
+The utility “wakeup” is now included, and the function display-time works.
+
+Emacs now runs on machines with the 68000 processor.  Emacs still
+requires System 7.
+
+The quit character C-g is now consistently caught properly when Emacs
+prompts for (y or n), or for (yes or no).
+
+When the option key functions as a meta key, the behavior of M-e, M-i, M-u,
+and other previous dead-key combinations is now correct.
+
+The meanings of the control, option, shift, command, and caps-lock keys are
+now configurable from the “Change modifier keys” menu item in the Special menu.
+See the file About Emacs for more information.
+
+Printing is faster, and less prone to crashing.
+
+Dragging or growing the editor window now works correctly on systems
+with more than one monitor.  Very large or tall windows may require
+you to give Emacs more stack space.
+
+The keystrokes C-m and C-j are no longer reversed.
+
+A bug in the shell involving expansion of '*' alone has been fixed.
+
+The use of automatically repeating keystrokes is smoother when many
+extensions are present.
+
+The Unix emulation now considers a file to have write-permission only
+when that file is not locked.  Folders and volumes always have
+write-permission.
+
+A menu “Buffers” has been added.  Work buffers are listed first,
+followed by buffers created by dired, followed by all other buffers.
+
+The window size and position is now stored in a preferences file
+instead of in the resource fork of Emacs itself.  The choice of font
+and font size is now stored in the preferences file.
+
+A bug in the handler for the quit-application event has been fixed.
+
+In dired mode, 'G', which runs chgrp, now changes the type of a file.
+'M', which runs chown, now changes the mode bits of a file.  Only the
+write permissions are affected.  The file is effectively locked or
+unlocked. 'O' still changes the creator of a file.
+
+On four or more bit-per-pixel displays, Emacs now works in color.
+There is a dialog box to change the colors Emacs uses, available from
+the Special menu.  The color choices are stored in the preferences
+file.
+
+A bug that caused an incorrect display of lines that were previously
+highlighted has been fixed.
+
+The function suspend-emacs, usually called with C-z, now brings the
+Finder to the front.  Emacs is not actually suspended in the sense
+it would be in Unix, since all Macintosh processes are always running.
+
+Now C-@ as well as C-space sets mark.
+
+A partial implementation of the Apple event suite for Symantec C++
+version 6.0 is included.
+
+Much more Toolbox support has been added.  Use it at your own risk.
+See the directory ~emacs/lisp/mac.
+
+Changes in 1.12d:
+=================
+
+A bug in the Paste command (command-V) has been fixed.
+
+The dired code of Emacs 19 has replaced that of Emacs 18.  There is
+now information about dired available from M-x info.
+
+A bug that prevented complete loading of textures.el from .emacs has
+been fixed.
+
+The functions user-full-name, user-login-name, user-real-login-name,
+and system-name now take their values from the strings entered into
+the “Sharing Setup” control panel.
+
+The function make-symbolic-link is now implemented correctly.  It
+creates an alias.
+
+Changes in 1.11d:
+=================
+
+A bug in the threads package that broke lpr and printing functions
+within Emacs has been fixed.
+
+A bug that caused Emacs to give errors when parsing pathnames prefixed
+with ~dirname/.. has been fixed.
+
+A bug that caused Emacs to hang sometimes when brought from the back
+to be the front application has been fixed.
+
+A first attempt has been made to enable Emacs to read files that use
+'\n' instead of '\r' to end lines.  See "About Emacs".
+
+Emacs now works correctly with non-American keyboards.
+
+Slashes in Macintosh filenames now appear as colons within Emacs.
+Using a colon in a filename within Emacs gives you that filename with
+slashes within the Finder.
+
+The handling of ~ in directory names has been changed.  The meaning of
+directory ~/ is now configurable.  See "About Emacs" for more.
+
+The Toolbox is more accessible, though its direct use is not
+recommended.  See ~emacs/lisp/mac/traps.el.
+
+The function of the option key can be changed.  See "About Emacs".
+
+When a file X is edited and saved, file X is renamed X~, and a new
+file X is created.  Now, the creator, type, and resource fork of the
+original X are preserved in the new X.
+
+The behavior of Emacs when saving files referenced by aliases is
+saner.
+
+The menu items New, Save, Save As, and Close now conform more closely
+to regular Macintosh behavior.
+
+Emacs is now stationery-aware.
+
+AEInstallEventHandler has been implemented.  See the file
+~emacs/lisp/mac/core-suite.el for an example.

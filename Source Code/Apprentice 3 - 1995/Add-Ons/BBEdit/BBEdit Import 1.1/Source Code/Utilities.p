@@ -1,1 +1,43 @@
-unit Utilities;{ BBIMPORT PROJECT: }{ Miscellaneous utility routines that couldn't fit elsewhere }{ Some of the routines here are defined in BBImport.Lib }{ ANTI© 1993-1994 Merzwaren }interface{ how I wish I had a new Pascal interface to the Memory Manager }{ that returns error codes directly, rather than via MemErr }	function %_NewHandleClear (blockSize: Size;									var h: univ Handle): OSErr;	inline		$225F,			{ movea.l (sp)+, a1 }		$201F,			{ move.l (sp)+, d0 }		$A322,			{ _NewHandle, CLEAR }		$3E80, 			{ move.w d0, (sp) }		$2288;			{ move.l a0, (a1) }	procedure BlockClear (blockPtr: Ptr;									blockSize: Integer);	procedure ForgetHandle (var h: univ Handle);	function SetHandleLock (h: univ Handle;									lock: Boolean): Boolean;	function RawGestalt (selector: OSType;									var response: LongInt): OSErr;	function FeatureAvailable (selector: OSType;									attribute: Integer): Boolean;implementation	function FeatureAvailable (selector: OSType;									attribute: Integer): Boolean;		var			response: LongInt;	begin		FeatureAvailable := (RawGestalt(selector, response) = noErr) & BTST(response, attribute);	end;  { FeatureAvailable }end.
+unit Utilities;
+
+{ BBIMPORT PROJECT: }
+{ Miscellaneous utility routines that couldn't fit elsewhere }
+{ Some of the routines here are defined in BBImport.Lib }
+
+{ ANTI© 1993-1994 Merzwaren }
+
+interface
+
+{ how I wish I had a new Pascal interface to the Memory Manager }
+{ that returns error codes directly, rather than via MemErr }
+
+	function %_NewHandleClear (blockSize: Size;
+									var h: univ Handle): OSErr;
+	inline
+		$225F,			{ movea.l (sp)+, a1 }
+		$201F,			{ move.l (sp)+, d0 }
+		$A322,			{ _NewHandle, CLEAR }
+		$3E80, 			{ move.w d0, (sp) }
+		$2288;			{ move.l a0, (a1) }
+
+	procedure BlockClear (blockPtr: Ptr;
+									blockSize: Integer);
+	procedure ForgetHandle (var h: univ Handle);
+	function SetHandleLock (h: univ Handle;
+									lock: Boolean): Boolean;
+	function RawGestalt (selector: OSType;
+									var response: LongInt): OSErr;
+	function FeatureAvailable (selector: OSType;
+									attribute: Integer): Boolean;
+
+implementation
+
+	function FeatureAvailable (selector: OSType;
+									attribute: Integer): Boolean;
+		var
+			response: LongInt;
+	begin
+		FeatureAvailable := (RawGestalt(selector, response) = noErr) & BTST(response, attribute);
+	end;  { FeatureAvailable }
+
+end.

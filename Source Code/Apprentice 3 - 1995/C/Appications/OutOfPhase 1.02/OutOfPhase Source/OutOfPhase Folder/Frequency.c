@@ -1,1 +1,8 @@
-/* Frequency.c */#include "MiscInfo.h"#include "Audit.h"#include "Debug.h"#include "Definitions.h"#include "Frequency.h"
+/* Frequency.c */
+
+#include "MiscInfo.h"
+#include "Audit.h"
+#include "Debug.h"
+#include "Definitions.h"
+
+#include "Frequency.h"

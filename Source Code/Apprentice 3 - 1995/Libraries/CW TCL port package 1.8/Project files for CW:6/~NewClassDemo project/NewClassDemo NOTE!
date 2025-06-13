@@ -1,1 +1,5 @@
-In order to get the NewClassDemo to run you need to DeRez the file "Demo.r" and combineit with "Project Resources".  If you don't your version will crash just after it is openedbecause it will not be able to find the window resource.  I can not distribute the changed file because it is copyritten by Symantec.
+In order to get the NewClassDemo to run you need to DeRez the file "Demo.r" and combine
+it with "Project Resources".  If you don't your version will crash just after it is opened
+because it will not be able to find the window resource.  
+
+I can not distribute the changed file because it is copyritten by Symantec.

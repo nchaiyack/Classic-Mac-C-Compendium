@@ -1,1 +1,46 @@
-What is it?some C++ classes for accessing Directed Acyclic Word Graphs (DAWGs).A dawg can be used to store an alphabetically ordered list of wordsin very compact form, and allows for rapid searching (especially whensome initial letters are known)Dict Maker is used to 'compile' a sorted text file into a 'dawg' file.Caveats:	- The file _must_ be sorted and 'clean' (i.e. contain only letters)	- Dict Maker needs _a_lot_ of memoryDict Reader is a fast hack to test the dawg classes. Enter a line,and the program replies with all matching words.Entry					Replyletters only			All anagrams of the entryletters & +, -, .		matching words,							'.' matches anything							'+' matches vowels							'-' matches consonantsnumber					matching words, counting 'A' = 1, É, 'Z' = 26, and						multiplying to get the resultFor more information: read the source code ;-)The word list in 'Dutch dawg' contains about 180.000 Dutch words.If you can find a list of English words you can compile it with Dict Maker.The Dutch dawg can be browsed with 'Dict Reader'. The Dutch word list isn'tperfect. If you have a better one (or a good British or American one), and arewilling to share it, let me know about it. The same applies if you use the codeand add a real Mac interface to it.This source code may be freely distributed.Reinder Verlinde (reinder@neuretV.biol.ruu.nl, reinder@neuretP.biol.ruu.nl)PS: I know that 'Dict' is a misnomer. Dawgs can not be used to store dictionary	information.
+
+What is it?
+
+some C++ classes for accessing Directed Acyclic Word Graphs (DAWGs).
+
+A dawg can be used to store an alphabetically ordered list of words
+in very compact form, and allows for rapid searching (especially when
+some initial letters are known)
+
+Dict Maker is used to 'compile' a sorted text file into a 'dawg' file.
+Caveats:
+	- The file _must_ be sorted and 'clean' (i.e. contain only letters)
+	- Dict Maker needs _a_lot_ of memory
+
+Dict Reader is a fast hack to test the dawg classes. Enter a line,
+and the program replies with all matching words.
+
+
+Entry					Reply
+letters only			All anagrams of the entry
+letters & +, -, .		matching words,
+							'.' matches anything
+							'+' matches vowels
+							'-' matches consonants
+
+number					matching words, counting 'A' = 1, É, 'Z' = 26, and
+						multiplying to get the result
+
+
+For more information: read the source code ;-)
+
+The word list in 'Dutch dawg' contains about 180.000 Dutch words.
+If you can find a list of English words you can compile it with Dict Maker.
+The Dutch dawg can be browsed with 'Dict Reader'. The Dutch word list isn't
+perfect. If you have a better one (or a good British or American one), and are
+willing to share it, let me know about it. The same applies if you use the code
+and add a real Mac interface to it.
+
+This source code may be freely distributed.
+
+
+Reinder Verlinde (reinder@neuretV.biol.ruu.nl, reinder@neuretP.biol.ruu.nl)
+
+
+PS: I know that 'Dict' is a misnomer. Dawgs can not be used to store dictionary
+	information.

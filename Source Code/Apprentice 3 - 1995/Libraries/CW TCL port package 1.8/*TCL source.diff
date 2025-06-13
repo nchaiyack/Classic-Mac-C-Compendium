@@ -1,1 +1,1641 @@
-r(Supplementary Info)fCApplication AE fns.docifCClipboard AE fns.docifCDocument AE fns.docifCEnvirons.docifCFileElement.docifConstructors & Destructors.docifConverting To TCL 2.0.docifCPICTGridDirector.docifCSaver.docifCSimpleSaver.docifCSwitchboard AE fns.docifCWindow AE fns.docifResource TMPLs.docifUsing CSaver with CList.docifUsing CSaver.dociorApple Event ClassesfCAppleEvent.cpifCAppleEvent.hifCAppleEventObject.cppx240717599,57834684c0,26a#if mc68881c28,480a	long i;a	for (i = 1; i <= num; i++)c482,943a #if mc68881c945,2808efCAppleEventObject.hifCAppleEventSender.cppifCAppleEventSender.hifCFileElement.cppifCFileElement.hifCProperty.cppifCProperty.hifCWatchDesc.cppifCWatchDesc.hiorBedrock Exception LibraryfBEL #includes.cppirBRCommonfBRCommon.hifBRMacWin.hifBRMath.hifBRPriMem.hifBRPriStr.hifBRStdDef.hiorBRDebugfBRDbgStr.hiorBRExcLibrHeadersfBRAutoDe.hifBRBedExc.hifBRBreakC.hifBRDelSta.hifBRExcDef.hifBRExcept.hifBRExcLib.hifBRExcLog.hifBRExcRun.hx384479718,434027176c0,35aextern void BRterminate();			// •• CW TCL 2.0 renamed due to conflict in MWExceptions.cpaextern void BRunexpected();c38,38aextern PFV BRset_terminate(PFV);aextern PFV BRset_unexpected(PFV);	// •• CW TCL 2.0 renamed due to conflict in MWExceptions.cpc38,38c42,116efBRExcTas.hifBRNewHel.hifBROnStac.hx309072200,423230434c0,19a#ifdef __MWERKS__					// •• CW TCL 1.7a	int _BR_BedIsOnStack(void *);	// •• CW TCL 1.7a#else								// •• CW TCL 1.7c20,22a#endif								// •• CW TCL 1.7c23,154efBRPostEx.hifBRPriDeb.hifBRSExcep.hifBRSExcLo.hifBRSPostE.hifBRTryBlo.hioorBRRunTypfBRClaInf.hifBRRunTyp.hiorBRTaskGfBRBedTas.hifBRTaskG.hiorSourcefBRAutoDe.cppifBRBedExc.cppifBrBedTas.cppifBRBreakC.cppifBRClaInf.cppifBRDelSta.cppifBRExcept.cppifBRExcLog.cppifBRExcRun.cppx272124776,229305144c0,69avoid BRterminate()c71,77avoid BRunexpected()c79,85aPFV BRset_terminate(PFV terminate)c87,90aPFV BRset_unexpected(PFV unexpected)c92,101a//#endif					// •• CW TCL 2.0 _BR_BedIsOnStack was not defined for 68Ka//#ifdef TCL_POWER_PC		// •• CW TCLa#else						// •• CW TCLc104,221a		BRterminate();c223,248a		BRunexpected();c246,246c251,269a		BRterminate();c271,297a		BRunexpected();c295,295c300,347a		BRunexpected();c345,345c350,402efBRExcTas.cppifBRNewHel.cppifBRPostEx.cppifBRPriMem.cppifBRPriStr.cppifBRTryBlo.cppx276351068,367260224c0,27a//#pragma trace off		// •• CW TCLc29,92eoorControl ClassesfCArrowPopupPane.cpx4046896,430280209c0,31avoid* _TCLNewCArrowPopupPane();	// •• CW TCLc33,33c32,157efCArrowPopupPane.hifCButton.cpx256872469,453287712c0,38avoid* _TCLNewCButton();	// •• CW TCLc40,40c39,361efCButton.hifCCheckBox.cpx280935936,435182807c0,29avoid* _TCLNewCCheckBox();	// •• CW TCLc31,31c30,224efCCheckBox.hifCGroupButton.cppifCGroupButton.hifCGroupButtonEnclosure.cppx464612958,144183717c0,15a#ifdef __MWERKS__						// •• CW TCL 1.6a#include "CPtrArray.tem"				// •• CW TCL 1.6a#endif									// •• CW TCL 1.6c18,18c28,28c17,82efCGroupButtonEnclosure.hifCIconPane.cpx53091011,261798298c0,56avoid* _TCLNewCIconPane();	// •• CW TCLc58,58c57,418efCIconPane.hifCPopupMenu.cpx467085645,74658444c0,36avoid* _TCLNewCPopupMenu();	// •• CW TCLc38,38c37,753efCPopupMenu.hifCPopupPane.cpifCPopupPane.hifCRadioControl.cpx453720107,337384188c0,26avoid* _TCLNewCRadioControl();	// •• CW TCLc28,28c27,240efCRadioControl.hifCRadioGroupPane.cpx327955371,489947546c0,28avoid* _TCLNewCRadioGroupPane();	// •• CW TCLc30,30c29,190efCRadioGroupPane.hifCStdPopupPane.cpx324783507,304064619c0,72avoid* _TCLNewCStdPopupPane();	// •• CW TCLc73,688efCStdPopupPane.hiorCore ClassesrCore HeadersfCApplication.hifCArray.hifCArrayIterator.hifCBartender.hifCBureaucrat.hifCChore.hifCClipboard.hifCCollaborator.hifCCollection.hifCControl.hifCDecorator.hifCDesktop.hifCDirector.hifCDirectorOwner.hifCDocument.hifCEnvironment.hifCEnvirons.hifCError.hifCFile.hifCMBarChore.hifCMouseTask.hifCommands.hifConstants.hifCPane.hifCPaneBorder.hifCPanorama.hifCPicture.hifCPrinter.hifCRunArray.hifCScrollBar.hifCScrollPane.hifCSimpleSaver.hifCSizeBox.hifCSwitchboard.hifCTask.hifCView.hx439273972,288765429c0,47a#ifndef __MWERKS__						// •• CW TCL 1.6: why was this there, anyway?c48,48a#endif									// •• CW TCL 1.6c49,181efCVoidPtrArray.hifCVoidPtrArrayIterator.hifCWindow.hifGlobal.hiorCore SourcesfCApplication.asmifCApplication.cpx292677699,507193167c0,59a#include "TCLpstring.h"					// •• CW TCL: added missing headerc60,72a#ifdef __MWERKS__						// •• CW TCL 1.6a#include "CPtrArray.tem"				// •• CW TCL 1.6a#endif									// •• CW TCL 1.6c74,74c73,500a#ifndef TCL_NO_PATCHES					// •• CW TCL: okay, mostly no patchesc501,503a#endif									// •• CW TCLc525,525c506,506c509,509c529,529c508,520a#ifndef TCL_NO_PATCHES						// •• CW TCLc521,522a#endif										// •• CW TCLc527,527c553,553c588,588c526,2428a			while (iter.Next((void*&) doc))c2430,2464a			while (iter.Next((void*&) doc))c2466,2472a#if defined(__MWERKS__) && !defined(TCL_POWER_PC) \a			&& !defined(TCL_NO_PATCHES)					// •• CW TCLa#include "CApplication.asm"								// •• CW TCLa#endif													// •• CW TCLc2472,2472efCArray.cpx159480452,250420291c0,39avoid* _TCLNewCArray();	// •• CW TCLc41,41c40,593efCArrayIterator.cpifCBartender.cpifCBureaucrat.cpifCChore.cpifCClipboard.cpifCCollaborator.cpx115295655,281578369c0,34a#ifdef __MWERKS__							// •• CW TCL 1.6a#include "CPtrArray.tem"					// •• CW TCL 1.6a#endif										// •• CW TCL 1.6c35,78a		while (iter.Next((void*&) aDependent))c80,88a		while (iter.Next((void*&) aProvider))c90,260a		while (iter.Next((void*&) aDependent))c262,311efCCollection.cpifCControl.cpifCDecorator.cpifCDesktop.cpx414255847,292509017c0,49a#include "TCLUtilities.h"				// •• CW TCLc50,55a#include <stdlib.h>						// •• CW TCL 2.0c57,57c56,80a#ifdef __MWERKS__							// •• CW TCL 1.6a#include "CPtrArray.tem"					// •• CW TCL 1.6a#endif										// •• CW TCL 1.6c88,88c81,1059a	return((abs(pointA.h - pointB.h) < REASONABLY_CLOSE)  &&a			(abs(pointA.v - pointB.v) < REASONABLY_CLOSE) );c1062,1222efCDirector.cpifCDirectorOwner.cpx431357368,322791396c0,26a#ifdef __MWERKS__							// •• CW TCL 1.6a#include "CPtrArray.tem"					// •• CW TCL 1.6a#endif										// •• CW TCL 1.6c27,219efCDocument.cpx213306551,142891465c0,339ashort i;c348,348a	for (i = 0; i < gApplication->sfNumTypes; i++)c341,490a	*lastPage = Min(*lastPage, (long)PageCount());c492,1253efCEnvironment.cpx505569526,410118295c0,29avoid* _TCLNewCEnvironment();	// •• CW TCLc31,31c30,57efCEnvirons.cppx262639258,515779953c0,38avoid* _TCLNewCEnvirons();	// •• CW TCLc40,40c39,252efCError.cpifCFile.cpifCMBarChore.cpifCMouseTask.cpifCPane.cpx383470948,192802344c0,41avoid* _TCLNewCPane();	// •• CW TCLc43,43c42,1162a	CView::DoForEachDevice((DoForEachDeviceCallBack)&CPane::DrawAll, area);		// •• CW TCL 2.0c1164,2183efCPaneBorder.cpx20248479,473355688c0,51avoid* _TCLNewCPaneBorder();	// •• CW TCLc53,53c52,528efCPanorama.cpx7403561,459381530c0,54avoid* _TCLNewCPanorama();	// •• CW TCLc56,56c55,319a    hScale = Max(aHScale, (long)1);a    vScale = Max(aVScale, (long)1);c322,872efCPicture.cpx289446145,167215781c0,23avoid* _TCLNewCPicture();	// •• CW TCLc24,412efCPrinter.cpifCRunArray.cpx485149650,280586923c0,43avoid* _TCLNewCRunArray();	// •• CW TCLc45,45c44,552efCScrollBar.cpx178060121,268960920c0,39avoid* _TCLNewCScrollBar();	// •• CW TCLc41,41c40,393efCScrollPane.cpx610009,32867788c0,44avoid* _TCLNewCScrollPane();	// •• CW TCLc46,46c45,329a	hStep = Max((long)hUnit, (long)hStep);	// •• CW TCL 2.0a	vStep = Max((long)vUnit, (long)vStep);	// •• CW TCL 2.0c332,419a			delta = Min(hOverlap - hSpan, (long)-1);	// •• CW TCL 2.0c421,424a			delta = Max(hSpan - hOverlap, (long)1);		// •• CW TCL 2.0c426,480a			delta = Min(vOverlap - vSpan, (long)-1);	// •• CW TCL 2.0c482,485a			delta = Max(vSpan - vOverlap, (long)1);		// •• CW TCL 2.0c482,482c488,703efCSimpleSaver.cppifCSizeBox.cpx30806353,461765366c0,28avoid* _TCLNewCSizeBox();	// •• CW TCLc30,30c29,186efCSwitchboard.cpifCTask.cpifCView.cpx440199180,331633209c0,74a#ifdef __MWERKS__							// •• CW TCL 1.6a#include "CPtrArray.tem"					// •• CW TCL 1.6a#endif										// •• CW TCL 1.6c77,77c89,91c78,1467efCVoidPtrArray.cpifCVoidPtrArrayIterator.cpifCWindow.cpx89070441,176205096c0,65avoid* _TCLNewCWindow();	// •• CW TCLc67,67c66,1149a								Max(hMax, (long)sizeRect.left);c1151,1151a								Max(vMax, (long)sizeRect.top);c1153,1156a					Max(dGDRect.left - zoomRect->left, (long)0),a					Max(dGDRect.top - zoomRect->top, (long)0));c1159,1167a							(long)zoomRect->left - dGDRect.left),a						(long)0),c1166,1166c1171,1171a							(long)zoomRect->top - dGDRect.top),a						(long)0));c1174,1176a		zoomRect->right = Min(zoomRect->right, (long)dGDRect.right);a		zoomRect->bottom = Min(zoomRect->bottom, (long)dGDRect.bottom);c1179,1251a	width = Min(width, (long)sizeRect.right);a	height = Min(height, (long)sizeRect.bottom);a	width = Max(width, (long)sizeRect.left);a	height = Max(height, (long)sizeRect.top);c1245,1245c1257,1332a	CView::DoForEachDevice((DoForEachDeviceCallBack)&CWindow::UpdateDraw, NULL);c1322,1322c1335,1943efGlobalVars.cpioorDialog ClassesfCDialog.cpx78670314,254179573c0,37avoid* _TCLNewCDialog();	// •• CW TCLc39,39c38,608efCDialog.hifCDialogDirector.cpifCDialogDirector.hifCDialogText.cpx306881191,481917794c0,45avoid* _TCLNewCDialogText();	// •• CW TCLc47,47c46,446a	short length = Min((**macTE).teLength, (long)255);c448,594efCDialogText.hifCDLOGDialog.cpx210485930,126291734c0,567a		length = Min(ditlItem->itemLength - 1, (long)255);c569,615a		length = Min(ditlItem->itemLength - 1, (long)255);c617,914efCDLOGDialog.hifCDLOGDirector.cpifCDLOGDirector.hifCIntegerText.cpx251354307,282518630c0,47avoid* _TCLNewCIntegerText();	// •• CW TCLc49,49c48,342efCIntegerText.hiorFile ClassesfCDataFile.cpifCDataFile.hifCPictFile.cpifCPictFile.hifCPNTGFile.cpifCPNTGFile.hifCResFile.cpifCResFile.hiofFixed in TCL 2.0.5ifFixed in TCL 2.0.6irFW/TearoffsfCCharGrid.cpifCCharGrid.hifCFWDesktop.cpifCFWDesktop.hifCGridSelector.cpifCGridSelector.hifCMenuDefProc.cpifCMenuDefProc.hifCPaneMDEF.cpifCPaneMDEF.hifCPatternGrid.cpifCPatternGrid.hifCSelector.cpifCSelector.hifCSelectorMDEF.cpifCSelectorMDEF.hifCTearChore.cpifCTearChore.hifCTearOffMenu.cpifCTearOffMenu.hifGenericMDEF.cpifGenericMDEF.hirWindoid WDEF ƒfWindoidWDEF.cifWindoidWDEF.hioorMore ClassesfCBitMap.cpx487919953,122953820c0,25avoid* _TCLNewCBitMap();	// •• CW TCLc27,27c26,436efCBitMap.hifCBitMapPane.cpx101386957,216393940c0,17avoid* _TCLNewCBitMapPane();	// •• CW TCLc19,19c18,219efCBitMapPane.hifCTextEnvirons.cpx407147022,445541609c0,26avoid* _TCLNewCTextEnvirons();	// •• CW TCLc28,28c27,179efCTextEnvirons.hiorObject I/OrHeadersfCBufferedStream.hifCCountingStream.hifCFileStream.hifCHandleStream.hifCSaver.hifCSaver.temifCStream.hifCString.hifReference.hifStreamResources.hiorSourcefCBufferedStream.cpifCCountingStream.cpifCFileStream.cpifCHandleStream.cpifCSaver.cpifCStream.cpx259222566,215240540c0,25a#ifndef __MWERKS__						// •• CW TCLc26,26a#else									// •• CW TCLa#ifndef TCL_POWER_PC					// •• CW TCLa#include <ThinkSANE.h>					// •• CW TCL: Symantec's version of <SANE.h> is differenta#endif									// •• CW TCL:      grrr....a#endif									// •• CW TCLc27,33a//#include <Pascal.h>					// •• CW TCL: <Pascal.h> not usedc35,1006a	PutStr((CString&)s);c1008,1008efCString.cppx41588877,109198660c0,11aBoolean pstreq(char *s, const unsigned char *str);	// •• CW TCLc18,18c12,174eoofpascal.hx449057754,254419282c0,15a//unsigned char *CtoPstr(char *);			// •• CW TCL 2.0a//char *PtoCstr(unsigned char *);			// •• CW TCL 2.0a//pascal unsigned char *C2PStr(char *);		// •• CW TCL 2.0a//pascal char *P2CStr(unsigned char *);		// •• CW TCL 2.0c20,35erPrecompiled HeadersorShared TCLorTable ClassesfCArrayPane.cpx42500743,472681412c0,26avoid* _TCLNewCArrayPane();	// •• CW TCLc28,28c27,283efCArrayPane.hifCTable.cpx454464677,361488000c0,67avoid* _TCLNewCTable();	// •• CW TCLc69,69c68,512a		afterRow = Min(afterRow, (long)tableBounds.bottom-1);a		afterRow = Max(afterRow, (long)-1);c515,557a		afterCol = Min(afterCol, (long)tableBounds.right-1);a		afterCol = Max(afterCol, (long)-1);c560,606a		startRow = Min(tableBounds.bottom -1, (long)startRow);a		numRows = Min(numRows, tableBounds.bottom - (long)startRow);c606,606c610,645a		startCol = Min(tableBounds.right -1, (long)startCol);a		numCols = Min(numCols, tableBounds.right - (long)startCol);c641,641c649,2284efCTable.hifCTableBorder.cpx196333494,214128473c0,15avoid* _TCLNewCTableBorder();	// •• CW TCLc17,17c16,120efCTableBorder.hifCTableDragger.cpifCTableDragger.hiofTCL #includes.cppx428444888,486623631c0,112a//#pragma template_access externc114,116a#ifndef __MWERKS__							// •• CW TCL: already includedc117,117a#endif										// •• CW TCLc118,196a#ifndef TCL_NO_PRECOMPILED_CLASS			// •• CW TCLc197,205a#endif										// •• CW TCLc206,214a#ifndef TCL_NO_PRECOMPILED_CLASS			// •• CW TCLa#ifndef TCL_NO_PRECOMPILED_TEMPLATES		// •• CW TCLc215,270a#endif // #ifndef TCL_NO_PRECOMPILED_TEMPLATES		// •• CW TCLa#endif // TCL_NO_PRECOMPILED_CLASS					// •• CW TCLc271,271c273,273erTCL LibrariesrTCL Library headersfCException.hifExceptions.hx467410721,29539202c0,305avoid _TCL_CheckPtr(const void *ptr);						// •• CW TCL 1.6: corrected prototypeavoid _TCL_CheckObjectPtr(const void* ptr);					// •• CW TCL 1.6c308,350efLongCoordinates.hifLongQD.hifOSChecks.hifqsort++.hifTBUtilities.hifTCL.hifTCLClassInfo.hifTCLForceReferences.hifTCLNulls.hifTCLpstrcmp.hifTCLpstring.hifTCLUtilities.hiorTCL Library sourcesfalloc.cpx426293483,34053297c0,18a#ifndef TCL_USE_MW_OPER_NEW						// •• CW TCL 1.6c19,19a#endif											// •• CW TCL 1.6c20,23a#ifdef __MWERKS__								// •• CW TCLa#define TCL_NO_INSPECTOR						// •• CW TCLaBoolean __MMPrimitiveAllocate = 0;				// •• CW TCL 1.6a#endif											// •• CW TCLc27,27a#if defined(__TCL_DEBUG__) && !defined(TCL_NO_INSPECTOR)c25,32c34,34a#ifdef TCL_USE_MW_OPER_NEW						// •• CW TCL 1.6a#define OPERATOR_NEW _cw_operator_new			// •• CW TCL 1.6a#define OPERATOR_DELETE _cw_operator_delete		// •• CW TCL 1.6avoid *OPERATOR_NEW(size_t, void *p);			// •• CW TCL 1.6avoid *OPERATOR_NEW(size_t size);				// •• CW TCL 1.6avoid OPERATOR_DELETE(void *ptr);				// •• CW TCL 1.6a#define NEWMODE NEWMODE_SIMPLE					// •• CW TCL 1.7c34,34a#ifdef TCL_POWER_PC								// •• CW TCL 1.6a#include <NewPPC.cp>							// •• CW TCL 1.6a#else											// •• CW TCL 1.6a#include <New68K.cp>							// •• CW TCL 1.6a#endif // TCL_POWER_PC							// •• CW TCL 1.6a#endif // __MWERKS__							// •• CW TCL 1.6c40,45a#ifndef TCL_USE_MW_OPER_NEW						// •• CW TCL 1.6c46,46c80,80c47,48a		p = malloc(objSize);c45,45c60,60c86,86a	elsea		p = malloc(objSize);a#else											// •• CW TCLa	p = OPERATOR_NEW(objSize);					// •• CW TCLa#endif											// •• CW TCLc48,48c62,78a	TCL_ASSERT(objStorage != NULL);c67,67c81,81a	__cp_ForgetCPlusObject(objStorage);				// <pcb> added for inspector.c72,73a#ifndef TCL_USE_MW_OPER_NEW						// •• CW TCL 1.6a	free(objStorage);a#else											// •• CW TCLa	OPERATOR_DELETE(objStorage);				// •• CW TCLa#endif											// •• CW TCLc75,75efExceptions.cpx106405378,39211553c0,16c24,24c23,23c26,26c18,23c25,51a#ifndef __MWERKS__							// •• CW TCL: not available in CodeWarriorc52,52a#endif										// •• CW TCLc182,182c54,180a#ifndef TCL_NO_DEBUGGER_CALLS				// •• CW TCLc198,198a#endif										// •• CW TCLc199,200c184,197a#ifndef TCL_NO_DEBUGGER_CALLS				// •• CW TCLc215,215a#endif										// •• CW TCLc216,217c201,214a#ifndef TCL_NO_DEBUGGER_CALLS				// •• CW TCLc238,238a#endif										// •• CW TCLc239,240c218,237a#ifndef TCL_NO_DEBUGGER_CALLS				// •• CW TCLc258,258a#endif										// •• CW TCLc259,266c247,257a#ifndef TCL_NO_DEBUGGER_CALLS				// •• CW TCLc278,278a#endif										// •• CW TCLc279,286c267,277a#ifndef TCL_NO_DEBUGGER_CALLS				// •• CW TCLc181,181a#endif										// •• CW TCLc335,336c241,246c287,330a#ifndef TCL_NO_DEBUGGER_CALLS				// •• CW TCLc331,331a#endif										// •• CW TCLc336,336c333,368a#ifndef TCL_NO_DEBUGGER_CALLS				// •• CW TCL: if we got here, there was no handlera	DebugStr("\pFailure: No handler");		// •• CW TCLa#endif										// •• CW TCLc370,631a#ifdef __MWERKS__						// •• CW TCLa#define pascala#endif									// •• CW TCLc632,721a	const char *s;c722,725a	for (s = msg; *s && (s-msg) < 255; s++)c727,730efLongCoordinates.cpifLongQD.cpifOSChecks.cpx169208839,288713412c0,136a#ifdef __MWERKS__							// •• CW TCLastatic void AsmCacheFlush()					// •• CW TCLa	ONEWORDINLINE(_CacheFlushTrap);			// •• CW TCLa#endif										// •• CW TCLc137,141c2,2a#ifndef TCL_POWER_PC						// •• CW TCLa		AsmCacheFlush();a#else										// •• CW TCLa		CallOSTrapUniversalProc(GetOSTrapAddress(_CacheFlushTrap), kRegisterBased);a#endif										// •• CW TCLa		c143,144efqsort++.cpifTBUtilities.cpx68078017,161864322c0,224a	top = Max(top, LMGetMBarHeight() + (long)1);c226,269a	corner->v = Max(corner->v, LMGetMBarHeight() + (long)1);c271,334a    charsToCopy = Min(second[0], 255 - (long)first[0]);c336,493a	long     virtualKey, keyInfo, lowChar, highChar, keyCId;a	unsigned long	state;			// •• CW TCL This had to be an unsigned long, why??c495,655efTCLpstrcmp.cpifTCLpstring.cpx152433003,138563418c0,13a//#include <BDC.h>						// •• CW TCL: didn’t really need this anywayc15,103efTCLUtilities.asmifTCLUtilities.cpioorTemplatesfCList.cppifCList.hifCList.temifCListIterator.cpifCListIterator.hifCList_CView.cppx389682597,391018387c0,2a//#pragma template_access public	// •• CW TCLc4,4a//#pragma template CList<CView>		// •• CW TCLa//#pragma template CList<CWindow>	// •• CW TCLc4,4avoid* _TCLNewCList_CView();			// •• CW TCLavoid* _TCLNewCList_CWindow();		// •• CW TCLc7,11efCPtrArray.cpifCPtrArray.hifCPtrArray.temifCPtrArrayIterator.cppifCPtrArrayIterator.hifCPtrArray_CChore.cppx279271734,237362088c0,2a#ifndef __MWERKS__							// •• CW TCL 1.6c3,5a#else										// •• CW TCL 1.6aclass CPtrArray<CChore>;					// •• CW TCL 1.6a#endif										// •• CW TCL 1.6c6,9efCPtrArray_CDirector.cppx270739850,319677311c0,2a//#pragma template_access public		// •• CW TCLc4,4a//#pragma template CPtrArray<CDirector>	// •• CW TCLc4,4c7,9efCPtrArray_CView.cppx444711567,202624558c0,3a//#pragma template_access public				// •• CW TCLc5,5a//#pragma template CPtrArray<CCollaborator>		// •• CW TCLa//#pragma template CPtrArray<CView>				// •• CW TCLa//#pragma template CPtrArray<CWindow>			// •• CW TCLa//#pragma template CPtrArray<CGroupButton>		// •• CW TCLc5,5c11,16efCStream.temifCStream_CBitMap.cppx490631420,516423053c0,2a//#pragma template_access public					// •• CW TCLc4,4a//#pragma template PutObject(CStream&, CBitMap*)	// •• CW TCLa//#pragma template GetObject(CStream&, CBitMap*&)	// •• CW TCLc4,4c8,8efCStream_CCollaborator.cppx535514564,119740647c0,2a//#pragma template_access public						// •• CW TCLc4,4a//#pragma template PutObject(CStream&, CCollaborator*)	// •• CW TCLa//#pragma template GetObject(CStream&, CCollaborator*&)	// •• CW TCLa//#pragma template PutObject(CStream&, CView*)			// •• CW TCLa//#pragma template GetObject(CStream&, CView*&)			// •• CW TCLa//#pragma template PutObject(CStream&, CWindow*)		// •• CW TCLa//#pragma template GetObject(CStream&, CWindow*&)		// •• CW TCLc4,4c12,12efCStream_CEnvironment.cppx518521852,280600021c0,2a//#pragma template_access public						// •• CW TCLc4,4a//#pragma template PutObject(CStream&, CEnvironment*)	// •• CW TCLa//#pragma template GetObject(CStream&, CEnvironment*&)	// •• CW TCLc4,4c8,8efCStream_CEnvirons.cppx164286842,131478445c0,2a//#pragma template_access public						// •• CW TCLc4,4a//#pragma template PutObject(CStream&, CEnvirons*)		// •• CW TCLa//#pragma template GetObject(CStream&, CEnvirons*&)		// •• CW TCLa	c8,8efCStream_CPaneBorder.cppx469483124,151593745c0,2a//#pragma template_access public						// •• CW TCLc4,4a//#pragma template PutObject(CStream&, CPaneBorder*)	// •• CW TCLa//#pragma template GetObject(CStream&, CPaneBorder*&)	// •• CW TCLc4,4c8,8efPutObject1.cppx492085006,5115823c0,2a//#pragma template_access public				// •• CW TCLc4,4a//#pragma template PutObject1(CView*, long)		// •• CW TCLa//#pragma template PutObject1(CWindow*, long)	// •• CW TCLc4,4c8,8efPutObject1.temiorText ClassesfCAbstractText.cpifCAbstractText.hifCEditText.cpx498099419,277461501c0,81avoid * _TCLNewCEditText();c83,1340efCEditText.hifCStyleTEClipboard.cpifCStyleTEClipboard.hifCStyleTEEditTask.cpifCStyleTEEditTask.hifCStyleTEStyleTask.cpifCStyleTEStyleTask.hifCStyleText.cpx271436853,520410484c0,47avoid* _TCLNewCStyleText();	// •• CW TCLc49,49c48,419efCStyleText.hifCTextEditTask.cpifCTextEditTask.hifCTextStyleTask.cpifCTextStyleTask.hiofTHINK.hx34647882,522763275c16,16c39,39a *  THINK.h - THINK C extensions to Apple headersc2,2a *  Copyright (c) 1991 Symantec Corporation.  All rights reserved.c4,8a *  the THINK C interfaces, but which does not appear in the Applea *  headers we are now using.  It is provided for backward compatibility.c14,16a#ifndef __THINK__a#define __THINK__c16,16a#ifndef __TYPES__c19,19c25,26a#ifndef __FILES__c20,20c25,26a#ifndef __QUICKDRAW__c21,21c25,26c23,38a	/*  dCtlFlags bits  */c37,37c49,58c60,60c60,60a	/*  I/O traps  */c60,60c64,67c60,60c60,60c71,77c69,69a	/*  QuickDraw globals  */c69,69c89,97c77,77c77,77c100,121c123,123c101,101c101,101a	/*  menu bar height (from Script.h)  */c104,104a#define GetMBarHeight() (* (short*) 0x0BAA)c104,105c126,128c110,110a#endif // __THINK__efThinkSANE.hirVisual Architect LibraryfCColorTextEnvirons.cpx209781653,90768214c0,27avoid* _TCLNewCColorTextEnvirons();	// •• CW TCLc29,29c28,570efCColorTextEnvirons.hifCFloatDirector.cpifCFloatDirector.hifCGridMDEF.cpifCGridMDEF.hifCIconButton.cpx529659688,303289649c0,26avoid* _TCLNewCIconButton();	// •• CW TCLc28,28c27,515efCIconButton.hifCLine.cpx314485202,92017899c0,26avoid* _TCLNewCLine();	// •• CW TCLc28,28c27,447efCLine.hifCPICTGrid.cpx116441809,154296744c0,43avoid* _TCLNewCPICTGrid();	// •• CW TCLc45,45c44,278efCPICTGrid.hifCPICTGridDirector.cpifCPICTGridDirector.hifCPICTSelector.cpifCPICTSelector.hifCPictureButton.cpx188342263,89874735c0,32avoid* _TCLNewCPictureButton();	// •• CW TCLc33,360efCPictureButton.hifCPolyButton.cpx531289659,225227846c0,26avoid* _TCLNewCPolyButton();	// •• CW TCLc28,28c27,196efCPolyButton.hifCRectOvalButton.cpx389148034,100711289c0,26avoid* _TCLNewCRectOvalButton();	// •• CW TCLc28,28c27,140efCRectOvalButton.hifCRoundRectButton.cpx296513971,290838904c0,26avoid* _TCLNewCRoundRectButton();	// •• CW TCLc28,28c27,186efCRoundRectButton.hifCSelectorDirector.cpifCSelectorDirector.hifCShapeButton.cpifCShapeButton.hifCStaticText.cpx234212368,43231773c0,11avoid* _TCLNewCStaticText();	// •• CW TCLc13,13c12,65efCStaticText.hifCSubviewDisplayer.cpx48928559,10826332c0,25avoid* _TCLNewCSubviewDisplayer();	// •• CW TCLc27,27c26,325efCSubviewDisplayer.hifCSwissArmyButton.cpifCSwissArmyButton.hifCTearOffDirector.cpifCTearOffDirector.hifDialogFunctions.cpifDialogFunctions.hifViewUtilities.cpifViewUtilities.hioz2498,CW TCLHeaders.c//// TCL 2.0 CodeWarrior port////	Precompiled headers////	Use this file to build the precompiled header file, instead//	of “TCL #includes.cpp” provided by Symantec.////	UPDATED FOR CodeWarrior CW/6//	Martin R. Wachter, 1 June 1995//// prevent multiple compilations#ifndef CW_TCL_HDR#define CW_TCL_HDR// use Metrowerks’ standard precompiled header file#include <MacHeaders.c>#ifdef powerc	#pragma precompile_target "CW TCLHeaders-PPC"#else	#pragma precompile_target "CW TCLHeaders-68K"#endif	#undef TRUE						// redefined in <THINK.h>#undef FALSE#pragma cplusplus on			// wonder why this is necessary?//________________________________________________________________________//// several new conditional compilation macros for the CodeWarrior port//#define TCL_CW_VERSION 6	// Set this macro to the current release number of CodeWarrior	// (currently CW/6). As features are added to CodeWarrior, this	// macro will be used to maintain compatibility with older	// versions.	//#if TCL_CW_VERSION==6#define TCL_NO_PRECOMPILED_TEMPLATES#endif	// In CW/5 it is not possible to precompile template definitions. *sigh*	// This restriction should be lifted for CW/6.	// In CW/6 it is *still* not possible to precompile template definitions.//#define TCL_USE_MW_OPER_NEW	// Flag to use the optional Metrowerks implementation of "operator new".	// Disable to route new/delete directly to NewPtr/DisposePtr, for easier	// debugging.	#define TCL_NO_DEBUGGER_CALLS	// Because all the Debugger() calls aren’t trapped by CW’s source-level	// debugger. It’s just plain annoying to drop into MacsBug all the	// time (especially in PPC code)!	#define TCL_NO_PATCHES	// Because LoadSeg_Patch doesn’t work with CW. Applies only	// to 68K builds.//#define TCL_USE_PP_EXCEPTIONS	// Optional switch to use the PowerPlant exception library instead of Bedrock	// Exception Library. Requires UException and UDebugging from PowerPlant.	// (Added in 1.2 port.)//________________________________________________________________________//// include the TCL standard headers//#include "TCL #includes.cpp"#include "BEL #includes.cpp"//#ifndef TCL_NO_PRECOMPILED_CLASS//#include "CSizeBox.h"					// •• CW TCL temporary//#endif// (dis)allow object I/O (you may comment this out when you pre-compile)//#define TCL_OBJECT_IO// make sure to prevent attempts at including precompiled headers again#undef TCL_PCH#endif  // #ifndef CW_TCL_HDRz271,CW TCLHeaders.pch//// TCL 2.0 CodeWarrior port////	Precompiled headers////	Use this file to build the precompiled header file, instead//	of “TCL #includes.cpp” provided by Symantec.////	UPDATED FOR CodeWarrior CW/6//	Martin R. Wachter, 1 June 1995//#include "CW TCLHeaders.c"o
+r(Supplementary Info)
+fCApplication AE fns.doc
+i
+fCClipboard AE fns.doc
+i
+fCDocument AE fns.doc
+i
+fCEnvirons.doc
+i
+fCFileElement.doc
+i
+fConstructors & Destructors.doc
+i
+fConverting To TCL 2.0.doc
+i
+fCPICTGridDirector.doc
+i
+fCSaver.doc
+i
+fCSimpleSaver.doc
+i
+fCSwitchboard AE fns.doc
+i
+fCWindow AE fns.doc
+i
+fResource TMPLs.doc
+i
+fUsing CSaver with CList.doc
+i
+fUsing CSaver.doc
+i
+o
+rApple Event Classes
+fCAppleEvent.cp
+i
+fCAppleEvent.h
+i
+fCAppleEventObject.cpp
+x240717599,57834684
+c0,26
+a#if mc68881
+c28,480
+a	long i;
+a	for (i = 1; i <= num; i++)
+c482,943
+a #if mc68881
+c945,2808
+e
+fCAppleEventObject.h
+i
+fCAppleEventSender.cpp
+i
+fCAppleEventSender.h
+i
+fCFileElement.cpp
+i
+fCFileElement.h
+i
+fCProperty.cpp
+i
+fCProperty.h
+i
+fCWatchDesc.cpp
+i
+fCWatchDesc.h
+i
+o
+rBedrock Exception Library
+fBEL #includes.cpp
+i
+rBRCommon
+fBRCommon.h
+i
+fBRMacWin.h
+i
+fBRMath.h
+i
+fBRPriMem.h
+i
+fBRPriStr.h
+i
+fBRStdDef.h
+i
+o
+rBRDebug
+fBRDbgStr.h
+i
+o
+rBRExcLib
+rHeaders
+fBRAutoDe.h
+i
+fBRBedExc.h
+i
+fBRBreakC.h
+i
+fBRDelSta.h
+i
+fBRExcDef.h
+i
+fBRExcept.h
+i
+fBRExcLib.h
+i
+fBRExcLog.h
+i
+fBRExcRun.h
+x384479718,434027176
+c0,35
+aextern void BRterminate();			// •• CW TCL 2.0 renamed due to conflict in MWExceptions.cp
+aextern void BRunexpected();
+c38,38
+aextern PFV BRset_terminate(PFV);
+aextern PFV BRset_unexpected(PFV);	// •• CW TCL 2.0 renamed due to conflict in MWExceptions.cp
+c38,38
+c42,116
+e
+fBRExcTas.h
+i
+fBRNewHel.h
+i
+fBROnStac.h
+x309072200,423230434
+c0,19
+a#ifdef __MWERKS__					// •• CW TCL 1.7
+a	int _BR_BedIsOnStack(void *);	// •• CW TCL 1.7
+a#else								// •• CW TCL 1.7
+c20,22
+a#endif								// •• CW TCL 1.7
+c23,154
+e
+fBRPostEx.h
+i
+fBRPriDeb.h
+i
+fBRSExcep.h
+i
+fBRSExcLo.h
+i
+fBRSPostE.h
+i
+fBRTryBlo.h
+i
+o
+o
+rBRRunTyp
+fBRClaInf.h
+i
+fBRRunTyp.h
+i
+o
+rBRTaskG
+fBRBedTas.h
+i
+fBRTaskG.h
+i
+o
+rSource
+fBRAutoDe.cpp
+i
+fBRBedExc.cpp
+i
+fBrBedTas.cpp
+i
+fBRBreakC.cpp
+i
+fBRClaInf.cpp
+i
+fBRDelSta.cpp
+i
+fBRExcept.cpp
+i
+fBRExcLog.cpp
+i
+fBRExcRun.cpp
+x272124776,229305144
+c0,69
+avoid BRterminate()
+c71,77
+avoid BRunexpected()
+c79,85
+aPFV BRset_terminate(PFV terminate)
+c87,90
+aPFV BRset_unexpected(PFV unexpected)
+c92,101
+a//#endif					// •• CW TCL 2.0 _BR_BedIsOnStack was not defined for 68K
+a//#ifdef TCL_POWER_PC		// •• CW TCL
+a#else						// •• CW TCL
+c104,221
+a		BRterminate();
+c223,248
+a		BRunexpected();
+c246,246
+c251,269
+a		BRterminate();
+c271,297
+a		BRunexpected();
+c295,295
+c300,347
+a		BRunexpected();
+c345,345
+c350,402
+e
+fBRExcTas.cpp
+i
+fBRNewHel.cpp
+i
+fBRPostEx.cpp
+i
+fBRPriMem.cpp
+i
+fBRPriStr.cpp
+i
+fBRTryBlo.cpp
+x276351068,367260224
+c0,27
+a//#pragma trace off		// •• CW TCL
+c29,92
+e
+o
+o
+rControl Classes
+fCArrowPopupPane.cp
+x4046896,430280209
+c0,31
+avoid* _TCLNewCArrowPopupPane();	// •• CW TCL
+c33,33
+c32,157
+e
+fCArrowPopupPane.h
+i
+fCButton.cp
+x256872469,453287712
+c0,38
+avoid* _TCLNewCButton();	// •• CW TCL
+c40,40
+c39,361
+e
+fCButton.h
+i
+fCCheckBox.cp
+x280935936,435182807
+c0,29
+avoid* _TCLNewCCheckBox();	// •• CW TCL
+c31,31
+c30,224
+e
+fCCheckBox.h
+i
+fCGroupButton.cpp
+i
+fCGroupButton.h
+i
+fCGroupButtonEnclosure.cpp
+x464612958,144183717
+c0,15
+a#ifdef __MWERKS__						// •• CW TCL 1.6
+a#include "CPtrArray.tem"				// •• CW TCL 1.6
+a#endif									// •• CW TCL 1.6
+c18,18
+c28,28
+c17,82
+e
+fCGroupButtonEnclosure.h
+i
+fCIconPane.cp
+x53091011,261798298
+c0,56
+avoid* _TCLNewCIconPane();	// •• CW TCL
+c58,58
+c57,418
+e
+fCIconPane.h
+i
+fCPopupMenu.cp
+x467085645,74658444
+c0,36
+avoid* _TCLNewCPopupMenu();	// •• CW TCL
+c38,38
+c37,753
+e
+fCPopupMenu.h
+i
+fCPopupPane.cp
+i
+fCPopupPane.h
+i
+fCRadioControl.cp
+x453720107,337384188
+c0,26
+avoid* _TCLNewCRadioControl();	// •• CW TCL
+c28,28
+c27,240
+e
+fCRadioControl.h
+i
+fCRadioGroupPane.cp
+x327955371,489947546
+c0,28
+avoid* _TCLNewCRadioGroupPane();	// •• CW TCL
+c30,30
+c29,190
+e
+fCRadioGroupPane.h
+i
+fCStdPopupPane.cp
+x324783507,304064619
+c0,72
+avoid* _TCLNewCStdPopupPane();	// •• CW TCL
+c73,688
+e
+fCStdPopupPane.h
+i
+o
+rCore Classes
+rCore Headers
+fCApplication.h
+i
+fCArray.h
+i
+fCArrayIterator.h
+i
+fCBartender.h
+i
+fCBureaucrat.h
+i
+fCChore.h
+i
+fCClipboard.h
+i
+fCCollaborator.h
+i
+fCCollection.h
+i
+fCControl.h
+i
+fCDecorator.h
+i
+fCDesktop.h
+i
+fCDirector.h
+i
+fCDirectorOwner.h
+i
+fCDocument.h
+i
+fCEnvironment.h
+i
+fCEnvirons.h
+i
+fCError.h
+i
+fCFile.h
+i
+fCMBarChore.h
+i
+fCMouseTask.h
+i
+fCommands.h
+i
+fConstants.h
+i
+fCPane.h
+i
+fCPaneBorder.h
+i
+fCPanorama.h
+i
+fCPicture.h
+i
+fCPrinter.h
+i
+fCRunArray.h
+i
+fCScrollBar.h
+i
+fCScrollPane.h
+i
+fCSimpleSaver.h
+i
+fCSizeBox.h
+i
+fCSwitchboard.h
+i
+fCTask.h
+i
+fCView.h
+x439273972,288765429
+c0,47
+a#ifndef __MWERKS__						// •• CW TCL 1.6: why was this there, anyway?
+c48,48
+a#endif									// •• CW TCL 1.6
+c49,181
+e
+fCVoidPtrArray.h
+i
+fCVoidPtrArrayIterator.h
+i
+fCWindow.h
+i
+fGlobal.h
+i
+o
+rCore Sources
+fCApplication.asm
+i
+fCApplication.cp
+x292677699,507193167
+c0,59
+a#include "TCLpstring.h"					// •• CW TCL: added missing header
+c60,72
+a#ifdef __MWERKS__						// •• CW TCL 1.6
+a#include "CPtrArray.tem"				// •• CW TCL 1.6
+a#endif									// •• CW TCL 1.6
+c74,74
+c73,500
+a#ifndef TCL_NO_PATCHES					// •• CW TCL: okay, mostly no patches
+c501,503
+a#endif									// •• CW TCL
+c525,525
+c506,506
+c509,509
+c529,529
+c508,520
+a#ifndef TCL_NO_PATCHES						// •• CW TCL
+c521,522
+a#endif										// •• CW TCL
+c527,527
+c553,553
+c588,588
+c526,2428
+a			while (iter.Next((void*&) doc))
+c2430,2464
+a			while (iter.Next((void*&) doc))
+c2466,2472
+a#if defined(__MWERKS__) && !defined(TCL_POWER_PC) \
+a			&& !defined(TCL_NO_PATCHES)					// •• CW TCL
+a#include "CApplication.asm"								// •• CW TCL
+a#endif													// •• CW TCL
+c2472,2472
+e
+fCArray.cp
+x159480452,250420291
+c0,39
+avoid* _TCLNewCArray();	// •• CW TCL
+c41,41
+c40,593
+e
+fCArrayIterator.cp
+i
+fCBartender.cp
+i
+fCBureaucrat.cp
+i
+fCChore.cp
+i
+fCClipboard.cp
+i
+fCCollaborator.cp
+x115295655,281578369
+c0,34
+a#ifdef __MWERKS__							// •• CW TCL 1.6
+a#include "CPtrArray.tem"					// •• CW TCL 1.6
+a#endif										// •• CW TCL 1.6
+c35,78
+a		while (iter.Next((void*&) aDependent))
+c80,88
+a		while (iter.Next((void*&) aProvider))
+c90,260
+a		while (iter.Next((void*&) aDependent))
+c262,311
+e
+fCCollection.cp
+i
+fCControl.cp
+i
+fCDecorator.cp
+i
+fCDesktop.cp
+x414255847,292509017
+c0,49
+a#include "TCLUtilities.h"				// •• CW TCL
+c50,55
+a#include <stdlib.h>						// •• CW TCL 2.0
+c57,57
+c56,80
+a#ifdef __MWERKS__							// •• CW TCL 1.6
+a#include "CPtrArray.tem"					// •• CW TCL 1.6
+a#endif										// •• CW TCL 1.6
+c88,88
+c81,1059
+a	return((abs(pointA.h - pointB.h) < REASONABLY_CLOSE)  &&
+a			(abs(pointA.v - pointB.v) < REASONABLY_CLOSE) );
+c1062,1222
+e
+fCDirector.cp
+i
+fCDirectorOwner.cp
+x431357368,322791396
+c0,26
+a#ifdef __MWERKS__							// •• CW TCL 1.6
+a#include "CPtrArray.tem"					// •• CW TCL 1.6
+a#endif										// •• CW TCL 1.6
+c27,219
+e
+fCDocument.cp
+x213306551,142891465
+c0,339
+ashort i;
+c348,348
+a	for (i = 0; i < gApplication->sfNumTypes; i++)
+c341,490
+a	*lastPage = Min(*lastPage, (long)PageCount());
+c492,1253
+e
+fCEnvironment.cp
+x505569526,410118295
+c0,29
+avoid* _TCLNewCEnvironment();	// •• CW TCL
+c31,31
+c30,57
+e
+fCEnvirons.cpp
+x262639258,515779953
+c0,38
+avoid* _TCLNewCEnvirons();	// •• CW TCL
+c40,40
+c39,252
+e
+fCError.cp
+i
+fCFile.cp
+i
+fCMBarChore.cp
+i
+fCMouseTask.cp
+i
+fCPane.cp
+x383470948,192802344
+c0,41
+avoid* _TCLNewCPane();	// •• CW TCL
+c43,43
+c42,1162
+a	CView::DoForEachDevice((DoForEachDeviceCallBack)&CPane::DrawAll, area);		// •• CW TCL 2.0
+c1164,2183
+e
+fCPaneBorder.cp
+x20248479,473355688
+c0,51
+avoid* _TCLNewCPaneBorder();	// •• CW TCL
+c53,53
+c52,528
+e
+fCPanorama.cp
+x7403561,459381530
+c0,54
+avoid* _TCLNewCPanorama();	// •• CW TCL
+c56,56
+c55,319
+a    hScale = Max(aHScale, (long)1);
+a    vScale = Max(aVScale, (long)1);
+c322,872
+e
+fCPicture.cp
+x289446145,167215781
+c0,23
+avoid* _TCLNewCPicture();	// •• CW TCL
+c24,412
+e
+fCPrinter.cp
+i
+fCRunArray.cp
+x485149650,280586923
+c0,43
+avoid* _TCLNewCRunArray();	// •• CW TCL
+c45,45
+c44,552
+e
+fCScrollBar.cp
+x178060121,268960920
+c0,39
+avoid* _TCLNewCScrollBar();	// •• CW TCL
+c41,41
+c40,393
+e
+fCScrollPane.cp
+x610009,32867788
+c0,44
+avoid* _TCLNewCScrollPane();	// •• CW TCL
+c46,46
+c45,329
+a	hStep = Max((long)hUnit, (long)hStep);	// •• CW TCL 2.0
+a	vStep = Max((long)vUnit, (long)vStep);	// •• CW TCL 2.0
+c332,419
+a			delta = Min(hOverlap - hSpan, (long)-1);	// •• CW TCL 2.0
+c421,424
+a			delta = Max(hSpan - hOverlap, (long)1);		// •• CW TCL 2.0
+c426,480
+a			delta = Min(vOverlap - vSpan, (long)-1);	// •• CW TCL 2.0
+c482,485
+a			delta = Max(vSpan - vOverlap, (long)1);		// •• CW TCL 2.0
+c482,482
+c488,703
+e
+fCSimpleSaver.cpp
+i
+fCSizeBox.cp
+x30806353,461765366
+c0,28
+avoid* _TCLNewCSizeBox();	// •• CW TCL
+c30,30
+c29,186
+e
+fCSwitchboard.cp
+i
+fCTask.cp
+i
+fCView.cp
+x440199180,331633209
+c0,74
+a#ifdef __MWERKS__							// •• CW TCL 1.6
+a#include "CPtrArray.tem"					// •• CW TCL 1.6
+a#endif										// •• CW TCL 1.6
+c77,77
+c89,91
+c78,1467
+e
+fCVoidPtrArray.cp
+i
+fCVoidPtrArrayIterator.cp
+i
+fCWindow.cp
+x89070441,176205096
+c0,65
+avoid* _TCLNewCWindow();	// •• CW TCL
+c67,67
+c66,1149
+a								Max(hMax, (long)sizeRect.left);
+c1151,1151
+a								Max(vMax, (long)sizeRect.top);
+c1153,1156
+a					Max(dGDRect.left - zoomRect->left, (long)0),
+a					Max(dGDRect.top - zoomRect->top, (long)0));
+c1159,1167
+a							(long)zoomRect->left - dGDRect.left),
+a						(long)0),
+c1166,1166
+c1171,1171
+a							(long)zoomRect->top - dGDRect.top),
+a						(long)0));
+c1174,1176
+a		zoomRect->right = Min(zoomRect->right, (long)dGDRect.right);
+a		zoomRect->bottom = Min(zoomRect->bottom, (long)dGDRect.bottom);
+c1179,1251
+a	width = Min(width, (long)sizeRect.right);
+a	height = Min(height, (long)sizeRect.bottom);
+a	width = Max(width, (long)sizeRect.left);
+a	height = Max(height, (long)sizeRect.top);
+c1245,1245
+c1257,1332
+a	CView::DoForEachDevice((DoForEachDeviceCallBack)&CWindow::UpdateDraw, NULL);
+c1322,1322
+c1335,1943
+e
+fGlobalVars.cp
+i
+o
+o
+rDialog Classes
+fCDialog.cp
+x78670314,254179573
+c0,37
+avoid* _TCLNewCDialog();	// •• CW TCL
+c39,39
+c38,608
+e
+fCDialog.h
+i
+fCDialogDirector.cp
+i
+fCDialogDirector.h
+i
+fCDialogText.cp
+x306881191,481917794
+c0,45
+avoid* _TCLNewCDialogText();	// •• CW TCL
+c47,47
+c46,446
+a	short length = Min((**macTE).teLength, (long)255);
+c448,594
+e
+fCDialogText.h
+i
+fCDLOGDialog.cp
+x210485930,126291734
+c0,567
+a		length = Min(ditlItem->itemLength - 1, (long)255);
+c569,615
+a		length = Min(ditlItem->itemLength - 1, (long)255);
+c617,914
+e
+fCDLOGDialog.h
+i
+fCDLOGDirector.cp
+i
+fCDLOGDirector.h
+i
+fCIntegerText.cp
+x251354307,282518630
+c0,47
+avoid* _TCLNewCIntegerText();	// •• CW TCL
+c49,49
+c48,342
+e
+fCIntegerText.h
+i
+o
+rFile Classes
+fCDataFile.cp
+i
+fCDataFile.h
+i
+fCPictFile.cp
+i
+fCPictFile.h
+i
+fCPNTGFile.cp
+i
+fCPNTGFile.h
+i
+fCResFile.cp
+i
+fCResFile.h
+i
+o
+fFixed in TCL 2.0.5
+i
+fFixed in TCL 2.0.6
+i
+rFW/Tearoffs
+fCCharGrid.cp
+i
+fCCharGrid.h
+i
+fCFWDesktop.cp
+i
+fCFWDesktop.h
+i
+fCGridSelector.cp
+i
+fCGridSelector.h
+i
+fCMenuDefProc.cp
+i
+fCMenuDefProc.h
+i
+fCPaneMDEF.cp
+i
+fCPaneMDEF.h
+i
+fCPatternGrid.cp
+i
+fCPatternGrid.h
+i
+fCSelector.cp
+i
+fCSelector.h
+i
+fCSelectorMDEF.cp
+i
+fCSelectorMDEF.h
+i
+fCTearChore.cp
+i
+fCTearChore.h
+i
+fCTearOffMenu.cp
+i
+fCTearOffMenu.h
+i
+fGenericMDEF.cp
+i
+fGenericMDEF.h
+i
+rWindoid WDEF ƒ
+fWindoidWDEF.c
+i
+fWindoidWDEF.h
+i
+o
+o
+rMore Classes
+fCBitMap.cp
+x487919953,122953820
+c0,25
+avoid* _TCLNewCBitMap();	// •• CW TCL
+c27,27
+c26,436
+e
+fCBitMap.h
+i
+fCBitMapPane.cp
+x101386957,216393940
+c0,17
+avoid* _TCLNewCBitMapPane();	// •• CW TCL
+c19,19
+c18,219
+e
+fCBitMapPane.h
+i
+fCTextEnvirons.cp
+x407147022,445541609
+c0,26
+avoid* _TCLNewCTextEnvirons();	// •• CW TCL
+c28,28
+c27,179
+e
+fCTextEnvirons.h
+i
+o
+rObject I/O
+rHeaders
+fCBufferedStream.h
+i
+fCCountingStream.h
+i
+fCFileStream.h
+i
+fCHandleStream.h
+i
+fCSaver.h
+i
+fCSaver.tem
+i
+fCStream.h
+i
+fCString.h
+i
+fReference.h
+i
+fStreamResources.h
+i
+o
+rSource
+fCBufferedStream.cp
+i
+fCCountingStream.cp
+i
+fCFileStream.cp
+i
+fCHandleStream.cp
+i
+fCSaver.cp
+i
+fCStream.cp
+x259222566,215240540
+c0,25
+a#ifndef __MWERKS__						// •• CW TCL
+c26,26
+a#else									// •• CW TCL
+a#ifndef TCL_POWER_PC					// •• CW TCL
+a#include <ThinkSANE.h>					// •• CW TCL: Symantec's version of <SANE.h> is different
+a#endif									// •• CW TCL:      grrr....
+a#endif									// •• CW TCL
+c27,33
+a//#include <Pascal.h>					// •• CW TCL: <Pascal.h> not used
+c35,1006
+a	PutStr((CString&)s);
+c1008,1008
+e
+fCString.cpp
+x41588877,109198660
+c0,11
+aBoolean pstreq(char *s, const unsigned char *str);	// •• CW TCL
+c18,18
+c12,174
+e
+o
+o
+fpascal.h
+x449057754,254419282
+c0,15
+a//unsigned char *CtoPstr(char *);			// •• CW TCL 2.0
+a//char *PtoCstr(unsigned char *);			// •• CW TCL 2.0
+a//pascal unsigned char *C2PStr(char *);		// •• CW TCL 2.0
+a//pascal char *P2CStr(unsigned char *);		// •• CW TCL 2.0
+c20,35
+e
+rPrecompiled Headers
+o
+rShared TCL
+o
+rTable Classes
+fCArrayPane.cp
+x42500743,472681412
+c0,26
+avoid* _TCLNewCArrayPane();	// •• CW TCL
+c28,28
+c27,283
+e
+fCArrayPane.h
+i
+fCTable.cp
+x454464677,361488000
+c0,67
+avoid* _TCLNewCTable();	// •• CW TCL
+c69,69
+c68,512
+a		afterRow = Min(afterRow, (long)tableBounds.bottom-1);
+a		afterRow = Max(afterRow, (long)-1);
+c515,557
+a		afterCol = Min(afterCol, (long)tableBounds.right-1);
+a		afterCol = Max(afterCol, (long)-1);
+c560,606
+a		startRow = Min(tableBounds.bottom -1, (long)startRow);
+a		numRows = Min(numRows, tableBounds.bottom - (long)startRow);
+c606,606
+c610,645
+a		startCol = Min(tableBounds.right -1, (long)startCol);
+a		numCols = Min(numCols, tableBounds.right - (long)startCol);
+c641,641
+c649,2284
+e
+fCTable.h
+i
+fCTableBorder.cp
+x196333494,214128473
+c0,15
+avoid* _TCLNewCTableBorder();	// •• CW TCL
+c17,17
+c16,120
+e
+fCTableBorder.h
+i
+fCTableDragger.cp
+i
+fCTableDragger.h
+i
+o
+fTCL #includes.cpp
+x428444888,486623631
+c0,112
+a//#pragma template_access extern
+c114,116
+a#ifndef __MWERKS__							// •• CW TCL: already included
+c117,117
+a#endif										// •• CW TCL
+c118,196
+a#ifndef TCL_NO_PRECOMPILED_CLASS			// •• CW TCL
+c197,205
+a#endif										// •• CW TCL
+c206,214
+a#ifndef TCL_NO_PRECOMPILED_CLASS			// •• CW TCL
+a#ifndef TCL_NO_PRECOMPILED_TEMPLATES		// •• CW TCL
+c215,270
+a#endif // #ifndef TCL_NO_PRECOMPILED_TEMPLATES		// •• CW TCL
+a#endif // TCL_NO_PRECOMPILED_CLASS					// •• CW TCL
+c271,271
+c273,273
+e
+rTCL Libraries
+rTCL Library headers
+fCException.h
+i
+fExceptions.h
+x467410721,29539202
+c0,305
+avoid _TCL_CheckPtr(const void *ptr);						// •• CW TCL 1.6: corrected prototype
+avoid _TCL_CheckObjectPtr(const void* ptr);					// •• CW TCL 1.6
+c308,350
+e
+fLongCoordinates.h
+i
+fLongQD.h
+i
+fOSChecks.h
+i
+fqsort++.h
+i
+fTBUtilities.h
+i
+fTCL.h
+i
+fTCLClassInfo.h
+i
+fTCLForceReferences.h
+i
+fTCLNulls.h
+i
+fTCLpstrcmp.h
+i
+fTCLpstring.h
+i
+fTCLUtilities.h
+i
+o
+rTCL Library sources
+falloc.cp
+x426293483,34053297
+c0,18
+a#ifndef TCL_USE_MW_OPER_NEW						// •• CW TCL 1.6
+c19,19
+a#endif											// •• CW TCL 1.6
+c20,23
+a#ifdef __MWERKS__								// •• CW TCL
+a#define TCL_NO_INSPECTOR						// •• CW TCL
+aBoolean __MMPrimitiveAllocate = 0;				// •• CW TCL 1.6
+a#endif											// •• CW TCL
+c27,27
+a#if defined(__TCL_DEBUG__) && !defined(TCL_NO_INSPECTOR)
+c25,32
+c34,34
+a#ifdef TCL_USE_MW_OPER_NEW						// •• CW TCL 1.6
+a#define OPERATOR_NEW _cw_operator_new			// •• CW TCL 1.6
+a#define OPERATOR_DELETE _cw_operator_delete		// •• CW TCL 1.6
+avoid *OPERATOR_NEW(size_t, void *p);			// •• CW TCL 1.6
+avoid *OPERATOR_NEW(size_t size);				// •• CW TCL 1.6
+avoid OPERATOR_DELETE(void *ptr);				// •• CW TCL 1.6
+a#define NEWMODE NEWMODE_SIMPLE					// •• CW TCL 1.7
+c34,34
+a#ifdef TCL_POWER_PC								// •• CW TCL 1.6
+a#include <NewPPC.cp>							// •• CW TCL 1.6
+a#else											// •• CW TCL 1.6
+a#include <New68K.cp>							// •• CW TCL 1.6
+a#endif // TCL_POWER_PC							// •• CW TCL 1.6
+a#endif // __MWERKS__							// •• CW TCL 1.6
+c40,45
+a#ifndef TCL_USE_MW_OPER_NEW						// •• CW TCL 1.6
+c46,46
+c80,80
+c47,48
+a		p = malloc(objSize);
+c45,45
+c60,60
+c86,86
+a	else
+a		p = malloc(objSize);
+a#else											// •• CW TCL
+a	p = OPERATOR_NEW(objSize);					// •• CW TCL
+a#endif											// •• CW TCL
+c48,48
+c62,78
+a	TCL_ASSERT(objStorage != NULL);
+c67,67
+c81,81
+a	__cp_ForgetCPlusObject(objStorage);				// <pcb> added for inspector.
+c72,73
+a#ifndef TCL_USE_MW_OPER_NEW						// •• CW TCL 1.6
+a	free(objStorage);
+a#else											// •• CW TCL
+a	OPERATOR_DELETE(objStorage);				// •• CW TCL
+a#endif											// •• CW TCL
+c75,75
+e
+fExceptions.cp
+x106405378,39211553
+c0,16
+c24,24
+c23,23
+c26,26
+c18,23
+c25,51
+a#ifndef __MWERKS__							// •• CW TCL: not available in CodeWarrior
+c52,52
+a#endif										// •• CW TCL
+c182,182
+c54,180
+a#ifndef TCL_NO_DEBUGGER_CALLS				// •• CW TCL
+c198,198
+a#endif										// •• CW TCL
+c199,200
+c184,197
+a#ifndef TCL_NO_DEBUGGER_CALLS				// •• CW TCL
+c215,215
+a#endif										// •• CW TCL
+c216,217
+c201,214
+a#ifndef TCL_NO_DEBUGGER_CALLS				// •• CW TCL
+c238,238
+a#endif										// •• CW TCL
+c239,240
+c218,237
+a#ifndef TCL_NO_DEBUGGER_CALLS				// •• CW TCL
+c258,258
+a#endif										// •• CW TCL
+c259,266
+c247,257
+a#ifndef TCL_NO_DEBUGGER_CALLS				// •• CW TCL
+c278,278
+a#endif										// •• CW TCL
+c279,286
+c267,277
+a#ifndef TCL_NO_DEBUGGER_CALLS				// •• CW TCL
+c181,181
+a#endif										// •• CW TCL
+c335,336
+c241,246
+c287,330
+a#ifndef TCL_NO_DEBUGGER_CALLS				// •• CW TCL
+c331,331
+a#endif										// •• CW TCL
+c336,336
+c333,368
+a#ifndef TCL_NO_DEBUGGER_CALLS				// •• CW TCL: if we got here, there was no handler
+a	DebugStr("\pFailure: No handler");		// •• CW TCL
+a#endif										// •• CW TCL
+c370,631
+a#ifdef __MWERKS__						// •• CW TCL
+a#define pascal
+a#endif									// •• CW TCL
+c632,721
+a	const char *s;
+c722,725
+a	for (s = msg; *s && (s-msg) < 255; s++)
+c727,730
+e
+fLongCoordinates.cp
+i
+fLongQD.cp
+i
+fOSChecks.cp
+x169208839,288713412
+c0,136
+a#ifdef __MWERKS__							// •• CW TCL
+astatic void AsmCacheFlush()					// •• CW TCL
+a	ONEWORDINLINE(_CacheFlushTrap);			// •• CW TCL
+a#endif										// •• CW TCL
+c137,141
+c2,2
+a#ifndef TCL_POWER_PC						// •• CW TCL
+a		AsmCacheFlush();
+a#else										// •• CW TCL
+a		CallOSTrapUniversalProc(GetOSTrapAddress(_CacheFlushTrap), kRegisterBased);
+a#endif										// •• CW TCL
+a		
+c143,144
+e
+fqsort++.cp
+i
+fTBUtilities.cp
+x68078017,161864322
+c0,224
+a	top = Max(top, LMGetMBarHeight() + (long)1);
+c226,269
+a	corner->v = Max(corner->v, LMGetMBarHeight() + (long)1);
+c271,334
+a    charsToCopy = Min(second[0], 255 - (long)first[0]);
+c336,493
+a	long     virtualKey, keyInfo, lowChar, highChar, keyCId;
+a	unsigned long	state;			// •• CW TCL This had to be an unsigned long, why??
+c495,655
+e
+fTCLpstrcmp.cp
+i
+fTCLpstring.cp
+x152433003,138563418
+c0,13
+a//#include <BDC.h>						// •• CW TCL: didn’t really need this anyway
+c15,103
+e
+fTCLUtilities.asm
+i
+fTCLUtilities.cp
+i
+o
+o
+rTemplates
+fCList.cpp
+i
+fCList.h
+i
+fCList.tem
+i
+fCListIterator.cp
+i
+fCListIterator.h
+i
+fCList_CView.cpp
+x389682597,391018387
+c0,2
+a//#pragma template_access public	// •• CW TCL
+c4,4
+a//#pragma template CList<CView>		// •• CW TCL
+a//#pragma template CList<CWindow>	// •• CW TCL
+c4,4
+avoid* _TCLNewCList_CView();			// •• CW TCL
+avoid* _TCLNewCList_CWindow();		// •• CW TCL
+c7,11
+e
+fCPtrArray.cp
+i
+fCPtrArray.h
+i
+fCPtrArray.tem
+i
+fCPtrArrayIterator.cpp
+i
+fCPtrArrayIterator.h
+i
+fCPtrArray_CChore.cpp
+x279271734,237362088
+c0,2
+a#ifndef __MWERKS__							// •• CW TCL 1.6
+c3,5
+a#else										// •• CW TCL 1.6
+aclass CPtrArray<CChore>;					// •• CW TCL 1.6
+a#endif										// •• CW TCL 1.6
+c6,9
+e
+fCPtrArray_CDirector.cpp
+x270739850,319677311
+c0,2
+a//#pragma template_access public		// •• CW TCL
+c4,4
+a//#pragma template CPtrArray<CDirector>	// •• CW TCL
+c4,4
+c7,9
+e
+fCPtrArray_CView.cpp
+x444711567,202624558
+c0,3
+a//#pragma template_access public				// •• CW TCL
+c5,5
+a//#pragma template CPtrArray<CCollaborator>		// •• CW TCL
+a//#pragma template CPtrArray<CView>				// •• CW TCL
+a//#pragma template CPtrArray<CWindow>			// •• CW TCL
+a//#pragma template CPtrArray<CGroupButton>		// •• CW TCL
+c5,5
+c11,16
+e
+fCStream.tem
+i
+fCStream_CBitMap.cpp
+x490631420,516423053
+c0,2
+a//#pragma template_access public					// •• CW TCL
+c4,4
+a//#pragma template PutObject(CStream&, CBitMap*)	// •• CW TCL
+a//#pragma template GetObject(CStream&, CBitMap*&)	// •• CW TCL
+c4,4
+c8,8
+e
+fCStream_CCollaborator.cpp
+x535514564,119740647
+c0,2
+a//#pragma template_access public						// •• CW TCL
+c4,4
+a//#pragma template PutObject(CStream&, CCollaborator*)	// •• CW TCL
+a//#pragma template GetObject(CStream&, CCollaborator*&)	// •• CW TCL
+a//#pragma template PutObject(CStream&, CView*)			// •• CW TCL
+a//#pragma template GetObject(CStream&, CView*&)			// •• CW TCL
+a//#pragma template PutObject(CStream&, CWindow*)		// •• CW TCL
+a//#pragma template GetObject(CStream&, CWindow*&)		// •• CW TCL
+c4,4
+c12,12
+e
+fCStream_CEnvironment.cpp
+x518521852,280600021
+c0,2
+a//#pragma template_access public						// •• CW TCL
+c4,4
+a//#pragma template PutObject(CStream&, CEnvironment*)	// •• CW TCL
+a//#pragma template GetObject(CStream&, CEnvironment*&)	// •• CW TCL
+c4,4
+c8,8
+e
+fCStream_CEnvirons.cpp
+x164286842,131478445
+c0,2
+a//#pragma template_access public						// •• CW TCL
+c4,4
+a//#pragma template PutObject(CStream&, CEnvirons*)		// •• CW TCL
+a//#pragma template GetObject(CStream&, CEnvirons*&)		// •• CW TCL
+a	
+c8,8
+e
+fCStream_CPaneBorder.cpp
+x469483124,151593745
+c0,2
+a//#pragma template_access public						// •• CW TCL
+c4,4
+a//#pragma template PutObject(CStream&, CPaneBorder*)	// •• CW TCL
+a//#pragma template GetObject(CStream&, CPaneBorder*&)	// •• CW TCL
+c4,4
+c8,8
+e
+fPutObject1.cpp
+x492085006,5115823
+c0,2
+a//#pragma template_access public				// •• CW TCL
+c4,4
+a//#pragma template PutObject1(CView*, long)		// •• CW TCL
+a//#pragma template PutObject1(CWindow*, long)	// •• CW TCL
+c4,4
+c8,8
+e
+fPutObject1.tem
+i
+o
+rText Classes
+fCAbstractText.cp
+i
+fCAbstractText.h
+i
+fCEditText.cp
+x498099419,277461501
+c0,81
+avoid * _TCLNewCEditText();
+c83,1340
+e
+fCEditText.h
+i
+fCStyleTEClipboard.cp
+i
+fCStyleTEClipboard.h
+i
+fCStyleTEEditTask.cp
+i
+fCStyleTEEditTask.h
+i
+fCStyleTEStyleTask.cp
+i
+fCStyleTEStyleTask.h
+i
+fCStyleText.cp
+x271436853,520410484
+c0,47
+avoid* _TCLNewCStyleText();	// •• CW TCL
+c49,49
+c48,419
+e
+fCStyleText.h
+i
+fCTextEditTask.cp
+i
+fCTextEditTask.h
+i
+fCTextStyleTask.cp
+i
+fCTextStyleTask.h
+i
+o
+fTHINK.h
+x34647882,522763275
+c16,16
+c39,39
+a *  THINK.h - THINK C extensions to Apple headers
+c2,2
+a *  Copyright (c) 1991 Symantec Corporation.  All rights reserved.
+c4,8
+a *  the THINK C interfaces, but which does not appear in the Apple
+a *  headers we are now using.  It is provided for backward compatibility.
+c14,16
+a#ifndef __THINK__
+a#define __THINK__
+c16,16
+a#ifndef __TYPES__
+c19,19
+c25,26
+a#ifndef __FILES__
+c20,20
+c25,26
+a#ifndef __QUICKDRAW__
+c21,21
+c25,26
+c23,38
+a	/*  dCtlFlags bits  */
+c37,37
+c49,58
+c60,60
+c60,60
+a	/*  I/O traps  */
+c60,60
+c64,67
+c60,60
+c60,60
+c71,77
+c69,69
+a	/*  QuickDraw globals  */
+c69,69
+c89,97
+c77,77
+c77,77
+c100,121
+c123,123
+c101,101
+c101,101
+a	/*  menu bar height (from Script.h)  */
+c104,104
+a#define GetMBarHeight() (* (short*) 0x0BAA)
+c104,105
+c126,128
+c110,110
+a#endif // __THINK__
+e
+fThinkSANE.h
+i
+rVisual Architect Library
+fCColorTextEnvirons.cp
+x209781653,90768214
+c0,27
+avoid* _TCLNewCColorTextEnvirons();	// •• CW TCL
+c29,29
+c28,570
+e
+fCColorTextEnvirons.h
+i
+fCFloatDirector.cp
+i
+fCFloatDirector.h
+i
+fCGridMDEF.cp
+i
+fCGridMDEF.h
+i
+fCIconButton.cp
+x529659688,303289649
+c0,26
+avoid* _TCLNewCIconButton();	// •• CW TCL
+c28,28
+c27,515
+e
+fCIconButton.h
+i
+fCLine.cp
+x314485202,92017899
+c0,26
+avoid* _TCLNewCLine();	// •• CW TCL
+c28,28
+c27,447
+e
+fCLine.h
+i
+fCPICTGrid.cp
+x116441809,154296744
+c0,43
+avoid* _TCLNewCPICTGrid();	// •• CW TCL
+c45,45
+c44,278
+e
+fCPICTGrid.h
+i
+fCPICTGridDirector.cp
+i
+fCPICTGridDirector.h
+i
+fCPICTSelector.cp
+i
+fCPICTSelector.h
+i
+fCPictureButton.cp
+x188342263,89874735
+c0,32
+avoid* _TCLNewCPictureButton();	// •• CW TCL
+c33,360
+e
+fCPictureButton.h
+i
+fCPolyButton.cp
+x531289659,225227846
+c0,26
+avoid* _TCLNewCPolyButton();	// •• CW TCL
+c28,28
+c27,196
+e
+fCPolyButton.h
+i
+fCRectOvalButton.cp
+x389148034,100711289
+c0,26
+avoid* _TCLNewCRectOvalButton();	// •• CW TCL
+c28,28
+c27,140
+e
+fCRectOvalButton.h
+i
+fCRoundRectButton.cp
+x296513971,290838904
+c0,26
+avoid* _TCLNewCRoundRectButton();	// •• CW TCL
+c28,28
+c27,186
+e
+fCRoundRectButton.h
+i
+fCSelectorDirector.cp
+i
+fCSelectorDirector.h
+i
+fCShapeButton.cp
+i
+fCShapeButton.h
+i
+fCStaticText.cp
+x234212368,43231773
+c0,11
+avoid* _TCLNewCStaticText();	// •• CW TCL
+c13,13
+c12,65
+e
+fCStaticText.h
+i
+fCSubviewDisplayer.cp
+x48928559,10826332
+c0,25
+avoid* _TCLNewCSubviewDisplayer();	// •• CW TCL
+c27,27
+c26,325
+e
+fCSubviewDisplayer.h
+i
+fCSwissArmyButton.cp
+i
+fCSwissArmyButton.h
+i
+fCTearOffDirector.cp
+i
+fCTearOffDirector.h
+i
+fDialogFunctions.cp
+i
+fDialogFunctions.h
+i
+fViewUtilities.cp
+i
+fViewUtilities.h
+i
+o
+z2498,CW TCLHeaders.c
+//
+// TCL 2.0 CodeWarrior port
+//
+//	Precompiled headers
+//
+//	Use this file to build the precompiled header file, instead
+//	of “TCL #includes.cpp” provided by Symantec.
+//
+//	UPDATED FOR CodeWarrior CW/6
+//	Martin R. Wachter, 1 June 1995
+//
+
+// prevent multiple compilations
+
+#ifndef CW_TCL_HDR
+#define CW_TCL_HDR
+
+
+// use Metrowerks’ standard precompiled header file
+
+#include <MacHeaders.c>
+#ifdef powerc
+	#pragma precompile_target "CW TCLHeaders-PPC"
+#else
+	#pragma precompile_target "CW TCLHeaders-68K"
+#endif	
+
+
+#undef TRUE						// redefined in <THINK.h>
+#undef FALSE
+#pragma cplusplus on			// wonder why this is necessary?
+
+
+//________________________________________________________________________
+//
+// several new conditional compilation macros for the CodeWarrior port
+//
+
+#define TCL_CW_VERSION 6
+	// Set this macro to the current release number of CodeWarrior
+	// (currently CW/6). As features are added to CodeWarrior, this
+	// macro will be used to maintain compatibility with older
+	// versions.
+	//
+
+#if TCL_CW_VERSION==6
+#define TCL_NO_PRECOMPILED_TEMPLATES
+#endif
+	// In CW/5 it is not possible to precompile template definitions. *sigh*
+	// This restriction should be lifted for CW/6.
+
+	// In CW/6 it is *still* not possible to precompile template definitions.
+
+//#define TCL_USE_MW_OPER_NEW
+	// Flag to use the optional Metrowerks implementation of "operator new".
+	// Disable to route new/delete directly to NewPtr/DisposePtr, for easier
+	// debugging.
+	
+#define TCL_NO_DEBUGGER_CALLS
+	// Because all the Debugger() calls aren’t trapped by CW’s source-level
+	// debugger. It’s just plain annoying to drop into MacsBug all the
+	// time (especially in PPC code)!
+	
+#define TCL_NO_PATCHES
+	// Because LoadSeg_Patch doesn’t work with CW. Applies only
+	// to 68K builds.
+
+//#define TCL_USE_PP_EXCEPTIONS
+	// Optional switch to use the PowerPlant exception library instead of Bedrock
+	// Exception Library. Requires UException and UDebugging from PowerPlant.
+	// (Added in 1.2 port.)
+
+
+//________________________________________________________________________
+//
+// include the TCL standard headers
+//
+
+#include "TCL #includes.cpp"
+#include "BEL #includes.cpp"
+
+//#ifndef TCL_NO_PRECOMPILED_CLASS
+//#include "CSizeBox.h"					// •• CW TCL temporary
+//#endif
+
+
+// (dis)allow object I/O (you may comment this out when you pre-compile)
+
+//#define TCL_OBJECT_IO
+
+
+// make sure to prevent attempts at including precompiled headers again
+
+#undef TCL_PCH
+
+
+#endif  // #ifndef CW_TCL_HDR
+z271,CW TCLHeaders.pch
+//
+// TCL 2.0 CodeWarrior port
+//
+//	Precompiled headers
+//
+//	Use this file to build the precompiled header file, instead
+//	of “TCL #includes.cpp” provided by Symantec.
+//
+//	UPDATED FOR CodeWarrior CW/6
+//	Martin R. Wachter, 1 June 1995
+//
+
+#include "CW TCLHeaders.c"
+o

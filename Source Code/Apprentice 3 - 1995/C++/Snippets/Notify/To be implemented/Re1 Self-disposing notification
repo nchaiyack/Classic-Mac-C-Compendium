@@ -1,1 +1,100 @@
-Path: ruu.nl!news.nic.surfnet.nl!sun4nl!EU.net!howland.reston.ans.net!vixen.cso.uiuc.edu!resnick1.isdn.uiuc.edu!userFrom: resnick@uiuc.edu (Pete Resnick)Newsgroups: comp.sys.mac.programmerSubject: Re: Self-disposing notification crashesDate: Fri, 16 Sep 1994 15:00:26 -0500Organization: University of Illinois at Urbana-ChampaignLines: 89Message-ID: <resnick-1609941500260001@resnick1.isdn.uiuc.edu>References: <1994Sep16.163509.33240@waikato.ac.nz>NNTP-Posting-Host: resnick1.isdn.uiuc.eduIn article <1994Sep16.163509.33240@waikato.ac.nz>, ldo@waikato.ac.nz(Lawrence D'Oliveiro, Waikato University) wrote:> Anyway, this notification routine is very small, and is written in assembler.> Here it is in its entirety:> >         move.l  4(sp), a0>         _NMRemove>         move.l  NMRec.nmRefCon(a0), a0>         _DisposePtr>         move.l  (sp)+, (sp)>         rts> > Note that the DisposePtr call is disposing of the block containing the code> (and the notification record) itself! However, I have stepped through this> code with MacsBug, and watched it successfully return from DisposePtr and> execute those last two instructions just fine.Yow!! This would be bad since you can't depend on when that memory isgoing to be overwritten, and for you, it's happening in the call to_DisposePtr. There are two ways around this:On anything better than a 68010 (which is all Macs except for the classicone) there is a wonderful little instruction: RTD. That instructionreturns, but also simultaneously deallocates space on the stack. So, whatI do is call _NMRemove (and whatever other cleanup I want to do) and thenmove the _DisposePtr and an RTD instruction to the stack:        move.l  4(sp),a0                ; Move the NMRec        _NMRemove                       ; Remove it        move.l  NMRec.nmRefCon(a0),a1   ; Address of code+NMRec into A1        movea.l (sp)+,a0                ; Return address into A0        move.l  #$4E740006,-(sp)        ; RTD #$0006        move.w  #$a01f,-(sp)            ; _DisposePtr        move.l  a0,-(sp)                ; Return address back onto stack        pea     4(sp)                   ; Address of _DisposePtr on stack        moveq   #$1,d0        _HWPriv                         ; Flush the cache        movea.l a1,a0                   ; Address to dispose        rts                             ; Return to _DisposePtr on stackSo the stack (before the final RTS) looks like:        +0000   <sp + 8>        +0004   <old return address>        +0008   _DisposePtr        +000A   RTD #$0006        .....Rest of stackSo when that last RTS executes, it rips the address of sp+8 off of thestack and jumps to it. The _DisposePtr disposes what's in A0 (the code andthe NMRec), then the RTD takes the old return address off the stack, movesthe stack pointer 6 bytes (past the _DisposePtr and the RTD #$0006), andjumps to the return address. Frightening, eh?On the old 68000, you don't have the RTD instruction (nor an instructioncache), but life is generally a good deal simpler: There is a low memoryglobal called "ToolScratch", which is an 8-byte scratch area. It staysconstant across the call to _DisposePtr, so what you can do instead is:        move.l  4(sp),a1                ; Move the NMRec        move.l  (sp)+,(sp)              ; Move the return address into place        _NMRemove                       ; Remove it        move.l  NMRec.nmRefCon(a1),a0   ; Address of code+NMRec into A0        movea.w #ToolScratch,a1         ; Address of the LM global        move.l  a1,-(sp)                ; Put the address onto the stack        move.l  #$a01f4E75,(a1)         ; _DisposePtr / RTS        rtsSo now the stack looks like:        +0000   <address of ToolScratch>        +0004   <old return address>        .....Rest of stackAnd ToolScratch has in it:        _DisposePtr        RTSThis has worked perfectly for me. Executing code on the stack is prettywierd, but it works just great.pr-- Pete Resnick    (...so what is a mojo, and why would one be rising?)Doctoral Student - Philosophy Department, Gregory Hall, UIUCSystem manager - Cognitive Science Group, Beckman Institute, UIUCInternet: resnick@uiuc.edu
+Path: ruu.nl!news.nic.surfnet.nl!sun4nl!EU.net!howland.reston.ans.net!vixen.cso.uiuc.edu!resnick1.isdn.uiuc.edu!user
+From: resnick@uiuc.edu (Pete Resnick)
+Newsgroups: comp.sys.mac.programmer
+Subject: Re: Self-disposing notification crashes
+Date: Fri, 16 Sep 1994 15:00:26 -0500
+Organization: University of Illinois at Urbana-Champaign
+Lines: 89
+Message-ID: <resnick-1609941500260001@resnick1.isdn.uiuc.edu>
+References: <1994Sep16.163509.33240@waikato.ac.nz>
+NNTP-Posting-Host: resnick1.isdn.uiuc.edu
+
+In article <1994Sep16.163509.33240@waikato.ac.nz>, ldo@waikato.ac.nz
+(Lawrence D'Oliveiro, Waikato University) wrote:
+
+> Anyway, this notification routine is very small, and is written in assembler.
+> Here it is in its entirety:
+> 
+>         move.l  4(sp), a0
+>         _NMRemove
+>         move.l  NMRec.nmRefCon(a0), a0
+>         _DisposePtr
+>         move.l  (sp)+, (sp)
+>         rts
+> 
+> Note that the DisposePtr call is disposing of the block containing the code
+> (and the notification record) itself! However, I have stepped through this
+> code with MacsBug, and watched it successfully return from DisposePtr and
+> execute those last two instructions just fine.
+
+Yow!! This would be bad since you can't depend on when that memory is
+going to be overwritten, and for you, it's happening in the call to
+_DisposePtr. There are two ways around this:
+
+On anything better than a 68010 (which is all Macs except for the classic
+one) there is a wonderful little instruction: RTD. That instruction
+returns, but also simultaneously deallocates space on the stack. So, what
+I do is call _NMRemove (and whatever other cleanup I want to do) and then
+move the _DisposePtr and an RTD instruction to the stack:
+
+        move.l  4(sp),a0                ; Move the NMRec
+        _NMRemove                       ; Remove it
+        move.l  NMRec.nmRefCon(a0),a1   ; Address of code+NMRec into A1
+        movea.l (sp)+,a0                ; Return address into A0
+        move.l  #$4E740006,-(sp)        ; RTD #$0006
+        move.w  #$a01f,-(sp)            ; _DisposePtr
+        move.l  a0,-(sp)                ; Return address back onto stack
+        pea     4(sp)                   ; Address of _DisposePtr on stack
+        moveq   #$1,d0
+        _HWPriv                         ; Flush the cache
+        movea.l a1,a0                   ; Address to dispose
+        rts                             ; Return to _DisposePtr on stack
+
+So the stack (before the final RTS) looks like:
+
+        +0000   <sp + 8>
+        +0004   <old return address>
+        +0008   _DisposePtr
+        +000A   RTD #$0006
+        .....Rest of stack
+
+So when that last RTS executes, it rips the address of sp+8 off of the
+stack and jumps to it. The _DisposePtr disposes what's in A0 (the code and
+the NMRec), then the RTD takes the old return address off the stack, moves
+the stack pointer 6 bytes (past the _DisposePtr and the RTD #$0006), and
+jumps to the return address. Frightening, eh?
+
+On the old 68000, you don't have the RTD instruction (nor an instruction
+cache), but life is generally a good deal simpler: There is a low memory
+global called "ToolScratch", which is an 8-byte scratch area. It stays
+constant across the call to _DisposePtr, so what you can do instead is:
+
+        move.l  4(sp),a1                ; Move the NMRec
+        move.l  (sp)+,(sp)              ; Move the return address into place
+        _NMRemove                       ; Remove it
+        move.l  NMRec.nmRefCon(a1),a0   ; Address of code+NMRec into A0
+        movea.w #ToolScratch,a1         ; Address of the LM global
+        move.l  a1,-(sp)                ; Put the address onto the stack
+        move.l  #$a01f4E75,(a1)         ; _DisposePtr / RTS
+        rts
+
+So now the stack looks like:
+
+        +0000   <address of ToolScratch>
+        +0004   <old return address>
+        .....Rest of stack
+
+And ToolScratch has in it:
+
+        _DisposePtr
+        RTS
+
+This has worked perfectly for me. Executing code on the stack is pretty
+wierd, but it works just great.
+
+pr
+-- 
+Pete Resnick    (...so what is a mojo, and why would one be rising?)
+Doctoral Student - Philosophy Department, Gregory Hall, UIUC
+System manager - Cognitive Science Group, Beckman Institute, UIUC
+Internet: resnick@uiuc.edu

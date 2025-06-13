@@ -1,1 +1,1 @@
-int DoSwitch(int opCode);
+int DoSwitch(int opCode);

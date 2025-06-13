@@ -1,1 +1,66 @@
-The Mercutio MDEF is a Menu DEFinition resource that allow developers to easilyand elegantly extend the power of their application menus. These MDEFs allowmenus to have multiple-modifier key-equivalents (e.g. shift-command-C),custom icons, item callbacks, and other goodies.Fixes since last beta release (1.2b20):Major feature additions and changes since 1.1.5 are:  - Support for non-printing keys (function keys, page up/down,    arrow keys, etc)  - Support for icon suites  - Support for all 4 modifier keys (command, shift, option, control)  - Removed command-key requirement (can have control-A as an equivalent)  - User-definable style mapping: developer determines which style    bits are used as feature flags  - Dynamic items: items whose contents change depending on what     modifier keys are being held down (e.g. when the option key is    held down, Save becomes Save All).  - Application callback routine to let you decide on the fly what    the item contents should be.Minor changes since 1.1.5 include:  - MDEF recognized by new resource ID (19999) so you can delete the resource    name before shipping.  - Fixed "Option" character icon.  - Color icons drawn unhilited, even when the menu item is hilited.  - Full support for Xmnu resource; includes TMPL resources for ResEdit    and Resorcerer.  - Xmnu with resource ID 0 lets you set default settings for all    Mercutio menus.  - Dvorak keyboard support  - Fixed various small bugs.  As before, Mercutio includes:  - System 7's Balloon Help and True Gray.  - Color menus.  - Small and large icons.  - SICNs in hierarchical menu items.  - 99% compatible with standard MDEF.    The Mercutio MDEF works under System 6.0.4 or later, with or withoutColor QuickDraw. Mercutio is fully compatible with System 7, and supportsall the features of the System MDEF. Integrating the MDEF into your programshouldn't take more than 15 minutes.The documentation for Mercutio is in Adobe's Acrobat format. To obtain afree Acrobat reader application, FTP from:<ftp://ftp.adobe.com/pub/adobe/Applications/Acrobat/Macintosh/AcroRead.sea.hqx>Licensing=========Developers may use Mercutio free of charge as long as they give mecredit in the About box and documentation, and send me a copy of thefinal program (including future upgrades for as long as they usethe MDEF.) See documentation for details on terms of use. Other licensingterms are available.Mercutio is copyright (c) 1992-1995 by Ramon M. FelcianoRamon Felciano                                          felciano@camis.stanford.eduDigital Alchemy2/19/95
+The Mercutio MDEF is a Menu DEFinition resource that allow developers to easily
+and elegantly extend the power of their application menus. These MDEFs allow
+menus to have multiple-modifier key-equivalents (e.g. shift-command-C),
+custom icons, item callbacks, and other goodies.
+
+Fixes since last beta release (1.2b20):
+
+Major feature additions and changes since 1.1.5 are:
+
+  - Support for non-printing keys (function keys, page up/down,
+    arrow keys, etc)
+  - Support for icon suites
+  - Support for all 4 modifier keys (command, shift, option, control)
+  - Removed command-key requirement (can have control-A as an equivalent)
+  - User-definable style mapping: developer determines which style
+    bits are used as feature flags
+  - Dynamic items: items whose contents change depending on what 
+    modifier keys are being held down (e.g. when the option key is
+    held down, Save becomes Save All).
+  - Application callback routine to let you decide on the fly what
+    the item contents should be.
+
+Minor changes since 1.1.5 include:
+
+  - MDEF recognized by new resource ID (19999) so you can delete the resource
+    name before shipping.
+  - Fixed "Option" character icon.
+  - Color icons drawn unhilited, even when the menu item is hilited.
+  - Full support for Xmnu resource; includes TMPL resources for ResEdit
+    and Resorcerer.
+  - Xmnu with resource ID 0 lets you set default settings for all
+    Mercutio menus.
+  - Dvorak keyboard support
+  - Fixed various small bugs.
+  
+As before, Mercutio includes:
+
+  - System 7's Balloon Help and True Gray.
+  - Color menus.
+  - Small and large icons.
+  - SICNs in hierarchical menu items.
+  - 99% compatible with standard MDEF.
+    
+The Mercutio MDEF works under System 6.0.4 or later, with or without
+Color QuickDraw. Mercutio is fully compatible with System 7, and supports
+all the features of the System MDEF. Integrating the MDEF into your program
+shouldn't take more than 15 minutes.
+
+The documentation for Mercutio is in Adobe's Acrobat format. To obtain a
+free Acrobat reader application, FTP from:
+
+<ftp://ftp.adobe.com/pub/adobe/Applications/Acrobat/Macintosh/AcroRead.sea.hqx>
+
+Licensing
+=========
+Developers may use Mercutio free of charge as long as they give me
+credit in the About box and documentation, and send me a copy of the
+final program (including future upgrades for as long as they use
+the MDEF.) See documentation for details on terms of use. Other licensing
+terms are available.
+
+Mercutio is copyright (c) 1992-1995 by Ramon M. Felciano
+
+Ramon Felciano                                          felciano@camis.stanford.edu
+Digital Alchemy
+2/19/95

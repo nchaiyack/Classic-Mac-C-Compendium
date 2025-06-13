@@ -1,1 +1,2 @@
-void SaveGameF();void LoadGameF();
+void SaveGameF();
+void LoadGameF();

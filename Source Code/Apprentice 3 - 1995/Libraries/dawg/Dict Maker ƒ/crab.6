@@ -1,1 +1,57 @@
-.TH CRAB 6 10/5/86.UC 4.SH NAMEcrab \- play Scrabble.SH SYNOPSIS.B crab[ .B -l.I prefix].SH DESCRIPTION.I Crabplays the Scrabble Brand Crossword game against you.  The game isscreen-oriented and should be fairly self-explanatory.  Try typing a.B ?to toggle the help window, if you are confused.  You can move the cursorwith a numeric keypad, or using the commands.B ^B\,.B ^F\,.B ^Pand.B ^Na la Emacs..brIf you want to knowthe rules of Scrabble (which is a trademark of Selchow and Righter,by the way) you'll have to look on the inside of the box that thegame comes in..SH OPTIONSIf you specify the.B -lflag, the program will print all acceptable words beginning with.I prefixto the standard output (instead of playing the game).  If.I prefixis null, you get the entire wordlist..SH DIAGNOSTICSWhen.I crabdoesn't like what you're trying to do, it issues a corrective message.If you are unable to figure out what's wrong, it probably indicatesthat you should be playing the game.I fishinstead of Scrabble..SH BUGSThe program is a strategic moron since it always picks the move withthe hightest score..PPThe inclusion of a large number of uncommon words in.I crab\'s wordlist is.B nota bug; it's a feature..SH AUTHORSGuy Jacobson and Andrew Appel
+.TH CRAB 6 10/5/86
+.UC 4
+.SH NAME
+crab \- play Scrabble
+.SH SYNOPSIS
+.B crab
+[ 
+.B -l
+.I prefix
+]
+.SH DESCRIPTION
+.I Crab
+plays the Scrabble Brand Crossword game against you.  The game is
+screen-oriented and should be fairly self-explanatory.  Try typing a
+.B ?
+to toggle the help window, if you are confused.  You can move the cursor
+with a numeric keypad, or using the commands
+.B ^B
+\,
+.B ^F
+\,
+.B ^P
+and
+.B ^N
+a la Emacs.
+.br
+If you want to know
+the rules of Scrabble (which is a trademark of Selchow and Righter,
+by the way) you'll have to look on the inside of the box that the
+game comes in.
+.SH OPTIONS
+If you specify the
+.B -l
+flag, the program will print all acceptable words beginning with
+.I prefix
+to the standard output (instead of playing the game).  If
+.I prefix
+is null, you get the entire wordlist.
+.SH DIAGNOSTICS
+When
+.I crab
+doesn't like what you're trying to do, it issues a corrective message.
+If you are unable to figure out what's wrong, it probably indicates
+that you should be playing the game
+.I fish
+instead of Scrabble.
+.SH BUGS
+The program is a strategic moron since it always picks the move with
+the hightest score.
+.PP
+The inclusion of a large number of uncommon words in
+.I crab
+\'s wordlist is
+.B not
+a bug; it's a feature.
+.SH AUTHORS
+Guy Jacobson and Andrew Appel

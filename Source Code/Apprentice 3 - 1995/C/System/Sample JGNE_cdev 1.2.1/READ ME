@@ -1,1 +1,108 @@
-Documentation for Sample JGNE/cdev 1.2.1Hi,This project is a "sample" combination of a JGNE filter and a control panel.  It includes all the source code and resources necessary to build a completed product.I've included some general explanations here, but the real down and dirty documentation is in with the code itself.WHAT'S A JGNE FILTER?:A JGNE filter is a piece of code that is called every time GetNextEvent or WaitNextEvent is called by an application to retrieve an event.  When the filter code is called, it has access to the event that will be passed back to the application IF the filter allows it.  The filter may change the event and allow it to be returned to the application; it may allow the event to be returned to the application unchanged, or it may intercept the event (allowing it to be returned to the application only as a NULL event).  In any case, the filter code has the chance to also do any other processing it needs to EVERY time GetNextEvent or WaitNextEvent is called.  Most filters analyze events and take some action when certain events appear.JGNE filters must be "installed" by an extension (or INIT as it was called previously).  The installation is done by putting the address of the filter code into the low memory global JGNEFilter.  Multiple filters may be installed by remembering the address of an already installed filter before installing a new one.  When the new filter is through executing, it calls the next filter in line by recalling the saved address and jumping to it. This is called "chaining."This package is a combination of a JGNE filter (and installer extension), and a control panel which controls how the filter code works.By the way, the GNE in JGNE stands for GetNextEvent.  The J stands for Jump.WHAT THIS PROJECT DOES:The finished product's only real function is to intercept mouse down events when certain modifier keys are down and play the system alert sound.DESCRIPTION OF PARTS:The control panel is fully functional and includes several controls which affect how the filter works (like which modifier keys should be down to intercept the event).   These modifications take effect immediately, not just after restart, because the control panel and the JGNE filter share a data structure (myData).  This data is actually a global assigned by the extension whose address was passed to the control panel.The control panel also will display an "about" box when the about button is pressed.  It can be opened and adjusted even when it has not yet been loaded at startup, and warns the user that changes made in certain instances will not be made until restart.  This occurs when the user makes changes to the control panel when it has not been loaded, or if it was "off" when the computer was restarted.The extension takes care of installing the filter, checking out the system to see what version of system software is running, seeing what the control panel's settings were when it was last closed, seeing if the system has Color QuickDraw available, loading resources, and allocating memory.  The extension and the filter code share global variables because they are compiled as one block.  They share memory with the control panel through a shared data structure kept in the system heap (myData).  A separate routine (in an #include file) takes care of project specific loading of resources or allocation of memory.  This keeps most project specific code separate from the extension code that shouldn't change much.The filter code takes care of analyzing each event and doing further processing.  Several separate routines take care of different aspects of this process so that, again, project specific code can be mostly separated from the code that stays the same from project to project.BUILDING THE PROJECTS:This package does include project files (as well as the sources) for Symantec C++ v7.0.  If you have an earlier version, you won't be able to open the project files, so here's how you build new ones.  The resource file (MyControlPanel.π.rsrc) is included and a copy of the finished product is also included.  There are two projects involved:  one for the installer and jgne filter code, and the other for the control panel code.  The project files should be created in the same folder as the resource file and the shielded source folders.Here’s how to build the projects:	MyControlPanel.π		Use this name so the resource file will be copied.		Project type is code resource		File type is 'cdev'		Creator can be anything you want		Resource type is 'cdev'		Resource ID has to be -4064		Do NOT check the Custom Header check box		Attributes should be 20 (Purgeable)		Do NOT check the multi segment box		Project includes as source files MacTraps and MyControlPanel.c		(MyControlPanel.c includes several other files with #include commands			so they are not included in the project file list.)		When you build the code resource, make sure the Merge		check box is NOT checked.  Build this project before you		build the JGNE part so that it creates a new file.		You can use any name you like for the finished file.	MyJGNE.π		Project type is code resource		File type is 'INIT'		Creator can be anything you want		Resource type is 'INIT'		Resource ID is 0		Do NOT check the Custom Header check box		Attributes should be 50 (System Heap, Locked)		Do NOT check the multi segment box		Project includes MacTraps and MyJGNE.c		(MyJGNE.c includes other source files with #include commands)		When you build the code resource, make sure the Merge		check box IS checked and you use the same file name as		you did for MyControlPanel.  This will add the resource to		the cdev file rather than making a new file.Source files should include MacHeaders (it's in my prefix).These are all the files included in this package:		MyControlPanel.c							control panel source code		MyJGNE.c													extension/Installer source code		MyInitialize.c										source code included by MyJGNE.c    MyDefines&Globals.h         defines and global declarations included by MyJGNE.c		MyEvtHandler.c									source code included by MyJGNE.c		MyEvtHandler.h									prototypes for routines in MyEvtHandler.c		SharedData.h										data structures common to INIT and cdev (myData)		ShowIconFamily.c						draws the icon at system startup		MyControlPanel.π.rsrc			resources used by the cdev and INIT		Sample JGNE/cdev 1.1			finished control panel		READ ME														this fileWhen modifying this sample project into a real project, most of the changes you make should be in MyInitialize.c, MyDefines&Globals.h, MyEvtHandler.c, MyControlPanel.c, and SharedData.c.  Most of the code outside of these files will remain the same from project to project.If you have any questions at all, feel free to e-mail me or just mail me.Thanks,Ken Worley6818 Pasadena Rd.Cheyenne, WY 82009AOL KNEworleyinternet KNEworley@aol.comHave fun!
+Documentation for Sample JGNE/cdev 1.2.1
+
+Hi,
+
+This project is a "sample" combination of a JGNE filter and a control panel.  It includes all the source code and resources necessary to build a completed product.
+
+I've included some general explanations here, but the real down and dirty documentation is in with the code itself.
+
+WHAT'S A JGNE FILTER?:
+
+A JGNE filter is a piece of code that is called every time GetNextEvent or WaitNextEvent is called by an application to retrieve an event.  When the filter code is called, it has access to the event that will be passed back to the application IF the filter allows it.  The filter may change the event and allow it to be returned to the application; it may allow the event to be returned to the application unchanged, or it may intercept the event (allowing it to be returned to the application only as a NULL event).  In any case, the filter code has the chance to also do any other processing it needs to EVERY time GetNextEvent or WaitNextEvent is called.  Most filters analyze events and take some action when certain events appear.
+
+JGNE filters must be "installed" by an extension (or INIT as it was called previously).  The installation is done by putting the address of the filter code into the low memory global JGNEFilter.  Multiple filters may be installed by remembering the address of an already installed filter before installing a new one.  When the new filter is through executing, it calls the next filter in line by recalling the saved address and jumping to it. This is called "chaining."
+
+This package is a combination of a JGNE filter (and installer extension), and a control panel which controls how the filter code works.
+
+By the way, the GNE in JGNE stands for GetNextEvent.  The J stands for Jump.
+
+WHAT THIS PROJECT DOES:
+
+The finished product's only real function is to intercept mouse down events when certain modifier keys are down and play the system alert sound.
+
+DESCRIPTION OF PARTS:
+
+The control panel is fully functional and includes several controls which affect how the filter works (like which modifier keys should be down to intercept the event).   These modifications take effect immediately, not just after restart, because the control panel and the JGNE filter share a data structure (myData).  This data is actually a global assigned by the extension whose address was passed to the control panel.
+
+The control panel also will display an "about" box when the about button is pressed.  It can be opened and adjusted even when it has not yet been loaded at startup, and warns the user that changes made in certain instances will not be made until restart.  This occurs when the user makes changes to the control panel when it has not been loaded, or if it was "off" when the computer was restarted.
+
+The extension takes care of installing the filter, checking out the system to see what version of system software is running, seeing what the control panel's settings were when it was last closed, seeing if the system has Color QuickDraw available, loading resources, and allocating memory.  The extension and the filter code share global variables because they are compiled as one block.  They share memory with the control panel through a shared data structure kept in the system heap (myData).  A separate routine (in an #include file) takes care of project specific loading of resources or allocation of memory.  This keeps most project specific code separate from the extension code that shouldn't change much.
+
+The filter code takes care of analyzing each event and doing further processing.  Several separate routines take care of different aspects of this process so that, again, project specific code can be mostly separated from the code that stays the same from project to project.
+
+BUILDING THE PROJECTS:
+
+This package does include project files (as well as the sources) for Symantec C++ v7.0.  If you have an earlier version, you won't be able to open the project files, so here's how you build new ones.  The resource file (MyControlPanel.π.rsrc) is included and a copy of the finished product is also included.  There are two projects involved:  one for the installer and jgne filter code, and the other for the control panel code.  The project files should be created in the same folder as the resource file and the shielded source folders.
+
+Here’s how to build the projects:
+
+	MyControlPanel.π
+
+		Use this name so the resource file will be copied.
+		Project type is code resource
+		File type is 'cdev'
+		Creator can be anything you want
+		Resource type is 'cdev'
+		Resource ID has to be -4064
+		Do NOT check the Custom Header check box
+		Attributes should be 20 (Purgeable)
+		Do NOT check the multi segment box
+
+		Project includes as source files MacTraps and MyControlPanel.c
+		(MyControlPanel.c includes several other files with #include commands
+			so they are not included in the project file list.)
+
+		When you build the code resource, make sure the Merge
+		check box is NOT checked.  Build this project before you
+		build the JGNE part so that it creates a new file.
+		You can use any name you like for the finished file.
+
+	MyJGNE.π
+
+		Project type is code resource
+		File type is 'INIT'
+		Creator can be anything you want
+		Resource type is 'INIT'
+		Resource ID is 0
+		Do NOT check the Custom Header check box
+		Attributes should be 50 (System Heap, Locked)
+		Do NOT check the multi segment box
+
+		Project includes MacTraps and MyJGNE.c
+		(MyJGNE.c includes other source files with #include commands)
+
+		When you build the code resource, make sure the Merge
+		check box IS checked and you use the same file name as
+		you did for MyControlPanel.  This will add the resource to
+		the cdev file rather than making a new file.
+
+Source files should include MacHeaders (it's in my prefix).
+
+These are all the files included in this package:
+
+		MyControlPanel.c							control panel source code
+		MyJGNE.c													extension/Installer source code
+		MyInitialize.c										source code included by MyJGNE.c
+    MyDefines&Globals.h         defines and global declarations included by MyJGNE.c
+		MyEvtHandler.c									source code included by MyJGNE.c
+		MyEvtHandler.h									prototypes for routines in MyEvtHandler.c
+		SharedData.h										data structures common to INIT and cdev (myData)
+		ShowIconFamily.c						draws the icon at system startup
+		MyControlPanel.π.rsrc			resources used by the cdev and INIT
+		Sample JGNE/cdev 1.1			finished control panel
+		READ ME														this file
+
+When modifying this sample project into a real project, most of the changes you make should be in MyInitialize.c, MyDefines&Globals.h, MyEvtHandler.c, MyControlPanel.c, and SharedData.c.  Most of the code outside of these files will remain the same from project to project.
+
+If you have any questions at all, feel free to e-mail me or just mail me.
+
+Thanks,
+Ken Worley
+6818 Pasadena Rd.
+Cheyenne, WY 82009
+
+AOL KNEworley
+internet KNEworley@aol.com
+
+Have fun!
+

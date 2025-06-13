@@ -1,1 +1,315 @@
-WELCOME TO MPW PERLThis is Perl for the Mac, ported to MPW C by Matthias Neeracher <neeri@iis.ee.ethz.ch> and Tim Endres <time@ice.com>. It runs every program in the test suite that you could it reasonably expect to, and some you probably didn't expect. Feel free to give this program away according to the terms stated in the README file.System RequirementsThe MPW tool probably runs under System 6 and 7, although only System 7 has beentested by me lately. The standalone application requires System 7, but "MacPerlRuntime" provides a decent subset of the functionality under System 6. Some of the really cool features require ToolServer, System 7, and enough RAM (Notablystuff like `CFront MacApp.cp`, while (<Å.c>) or open(XXX, "Catenate Å.c |"))Some of the files barely compile with 5 megabytes of RAM. MPW C 3.3.1 is the latest version of MPW C that has been used for rebuilding this release of Perl.Bugs, Suggestions, DamnationsPlease send your bug reports and/or fixes to <neeri@iis.ee.ethz.ch> (It is rather unlikely that any of the bugs are relevant to the UNIX version). Note that MPW Perl is neither developed nor supported by Apple Computer, Inc.Mailing listThere is now a mailing list for announcing new releases, sharing scripts, and discussions about how to make MPW Perl change your life. To subscribe, senda mail to <mpw-perl-request@iis.ee.ethz.ch>Ftp sitesIf you have internet access, you can obtain the newest versions of Perl by anonymous ftp from one of the following addresses:nic.switch.ch [130.59.1.40]       software/mac/perlftp.eunet.ch  [146.228.10.15]     software/mac/perlRevision History19Feb95	4.1.8- `hostname` is now hardcoded to Do The Right Thing.- Changed the behaviour of batch mode: No input is accepted beyond  what is in the DoScript AppleEvent.  31Jan95	4.1.7- Saving as System 7 Runtime would crash PowerMacs. Now it doesn't, but it may  produce fat runtimes up to 1.5M in size [Hannu Strang].23Jan95	4.1.6- The TFileSpec constructor taking working directories was broken, which in  turn resulted in wrong directories for choose() [Barry Eynon].  08Jan95	4.1.5- Under some circumstances, MacHTTP CGI Scripts would crash on PowerPC  [C. Joe Holmes, Charles Albrecht].- Fixed a bug in XL callbacks [Shimizu Shu].- MacPerl would write to address 0 on the second and following scripts  [Peter Lewis].31Dec94	4.1.427Dec94	4.1.4b8- 4.1.4b7 had a disastrous floating point bug [Kevin Altis].27Dec94	4.1.4b7[Some of these were already fixed in previous betas]- `` now returns both stdout and stderr, like on Un*x perl [Gus Fernandez].- $? now returns a nonzero value on errors [Gus Fernandez].- &MacPerl'GetFileInfo now returns undef (instead of garbage) when called  on folders or nonexistent files.- times() works now [Hal Wine].- MacPerl tries to fail more gracefully on deep recursions [Forrest Whitcher].- Added &MacPerl'Volumes() which returns all mounted volumes.- Saving a console window would cause its name to change [Tom Pollard].- Typing into a read only window would send them to another window [Alun Carr].- DoScript AppleEvents return a success/failure indication and scripts  started from within the application pop up the error location [Tom Pollard].- MacPerl'Quit(2) would quit without offering to save changes [Hal Wine].  Furthermore, a new value Quit(3) now causes the application to try quitting  if the currently ran script was the first to run after startup.- srand(time) didn't [Omar Souka].- Plausibility checking for window areas was not always sufficient [Peter Lewis].- open("|-") is now caught early and a more accurate diagnostic message is given.- The feet of the camel cursor used to run backwards [Tom Pollard].- MacPerl would consider "" in numeric context a NaN [Henry Churchyard].16Dec94	4.1.4b6- Crash reports have practically ceased. Unless new problems turn up, all that  will change until the release will be the list of credits and the version numbers.- Balloon help for Perl operators was broken on the PowerPC [Sandra Silcot].- Editing running MacHTTP CGIs would leave temporary files in rather   obvious places. They are now moved to the temporary folder  [Thorsten von Eicken].  03Dec94	4.1.4b5- I currently have a major problem in that lots of people seem to experience  hard-to reproduce crashes. Please keep those crash reports coming!- Running two subsequent scripts using chop() would crash   [Tom Pollard, Bill Moore, Joaquim Baptista, Sandra Silcot].- Implemented a "Jump" command in the Edit menu.- Added balloon help in several places. Peter Lewis' Balloon2Rez script  actually makes this fun!16Nov94	4.1.4b4- The PowerPC version crashed on all Macs that didn't have StdCLibInit.- Update and Activate events would get lost on ToolServer launches.- Combining Application and MPW Tool was widely unpopular. This version  releases them separately again.07Nov94	4.1.4b3- This beta adds PowerPC support.- AppleScript should record somewhat nicer code. Furthermore, some loose   ends in scripting support were tied ("the clipboard" works now) [Mike West].- MacPerl should now be fully manipulatable from another application, though  it will still take the TCL skills of Tom Pollard to bring that potential  to life [Tom Pollard, Pete Keleher].- The droplet glue code was moved into a separate and much more general  "package" feature. See MacPerl.Frontend for more about the last two items.- Added chmod [John Kamp].- Added a little more XCMD glue, so CommConnect will now let you access the  serial port.- Added CommConnect.pl and FileCopy.pl, see their corresponding tests in  :t:mac: for examples how to use them.- More details to follow.04May94	4.1.325Apr94	4.1.3b3- implemented utime() as far as possible (i.e., for modification times, the  Mac has no concept of access times) [James Burgess].- Pressing Control when launching a droplet enters the Perl debugger.- Introduced a preference option for inline input vs. floating input windows  for Japanese input.- Introduced a built-in variable $MacPerl'Version containing a string   "4.1.3b3 MPW" or "4.1.3b3 Application", respectively.- Attempting to write on half open sockets would still sometimes hang   [Asa Packer].- Permissions returned by stat() for locked files were wrong [John Kamp].- rename() on aliases renamed the original, not the alias   [Maki Watanabe, Man Wei Tam].- gethostbyname() in scalar context would hang or return nonsense [Asa Packer].  This bug even appears in Unix Perl.- read() and recv() wouldn't work on stream sockets [James Burgess, Asa Packer].- Under certain conditions, malloc() would allocate memory in a pathological way  [Jim Kateley, Gary LaVoy, Barry Wolman]- While I was fixing the following, I rewrote malloc() for small blocks, which  appears to improve performance of the application considerably.- The font list in the format dialog now scrolls to make the default font visible  and draws font names in the correct *script system* (I don't believe in drawing   fonts in their own font).- (Hopefully) fixed the timelocal.pl library.- Deleting all text in a console window would disable further input   [Jim Kateley].- The cursor would not always revert to an arrow at the end of a script   [Jim Kateley].- Added support for inline input for Japanese. This is supposed to work if  a system extension "Inline Tuika Kinou" is present. - Avoid interrupting Perl scripts in the middle of asynchronous calls. Now, it   should first interrupt the call, and wait with killing the script until a safe   state is reached. This might fix a few nonspecific bugs.- Changed segmentation strategy and preloaded all segments which should fix a   crash occuring when a window was dragged while a droplet ran   [Michael Greenspon].- The sleep strategy still was a disaster (among others, performance was bad, and  TCP transfers would stop when Perl was in the background    [Man Wei Tam, Michael Greenspon et al.]- getservbyname would fail unless /etc/services was in the preferences folder  [Alasdair Rawsthorne]- gmtime should work now, provided you either live in Greenwich or set your   location in the Map control panel correctly [reported long ago by Roger Linder]- If any Perl script in a MacPerl session except the first one would try to use  TCP/IP, utterly nasty crashes would result   [Sal Gurnani, Torsten Ekedahl et al.].- If no #! line was given, error line counts were off [David Friedlander]- ... and a few more GUSI related bug fixes.19Jan94	4.1.2- Cursor wouldn't spin anymore [Jim Kateley]- Droplets didn't accept dropped files [Brad Hanson]- Opening two copies of MacPerl at the same time would give strange   effects [Peter Lewis].  12Jan94	4.1.1- chdir() under some circumstances would not fail when trying to change to   a nonexistent directory [Peter Lewis]- Added StandardFile.pl, originally written by Maki Watanabe.- Console windows behave better under stress (like when used by   GUSIRemoteConsole).- Adapted semantics of GUSI select() on eof to the Un*x behavior.- Overwriting a file with a shorter version would sometimes produce trailing  garbage.- Supports -i without backup extension now [Reported long ago by Steve Dorner]- Supports opening up to 64 stdio files or 32 sockets [James Tisdall]- Fixed handling of default arguments to standard putfile/getfile/getfolder   dialogs [Maki Watanabe]- Get folder dialogs now show the prompt argument given to choose [Maki Watanabe]- Fixed many aspects about cursor handling in MacPerl   [Peter Lewis, Maki Watanabe].- When opening a script bigger than 32K, you are now offered to save it in any  format that MacPerl supports, which makes creating big runtimes or droplets  easier [David N. Blank-Edelman].- Perl would on startup open all network drivers, causing inconveniences and   crashes on machines running SLIP or PPP [Lots of people].- MacPerl would die ungracefully under System 6.0.x. Now it dies gracefully.- MacPerl didn't display the list of acknowledgments correctly.- MacPerl didn't handle the desk scrap correctly [Maki Watanabe].- Made Perl more robust against out of memory situations [James Tisdall].- -t in MacPerl would lie for console windows [James Tisdall].- Cleaned up usage messages for &MacPerl'XXX extensions and in droplets.- Perl now supports calling many HyperCard XCMDs.- Added support for faccess() in the MPW Tool [Scott Collins].- Added a few options to MacPerl's preference dialog [Joe Bearly]. Among   others, you can make MacPerl insist on a #! in your scripts.23Oct93	4.1.0- Unified version for E.T.O. and non-E.T.O. release.- The standalone application has been completely rewritten and now supports:  - A separate window for the debugger  - Built-in support for creating Droplet applications and Runtimes for both    System 6 and System 7.  - Online Help, including balloons for all Perl commands.  - Recordability and scriptability from AppleScript.  - A cool new suite of icons (don't forget to rebuild the desktop file after     installing if you had an old version of MacPerl installed).    I have tried to credit all people who contributed to the development of Perl in  the About box. If you feel left out, feel free to drop me a note :-)- Disk based associative arrays are supported again.- All Mac specific commands are renamed again (maybe this time for good).- AppleScript is supported through the &MacPerl'DoAppleScript command.09Apr93	4.0.7¥- Cleaned packaging up for E.T.O. release.- This version currently excludes support for disk based associative arrays. A   version which supports them is available by anonymous ftp from the above sites. 14Mar93	4.0.7- Upgraded to UNIX pathlevel 36- Added &fgetinfo() and &fsetinfo() (David N. Blank-Edelman suggested these)- `pwd` or `Directory` (case is important) are hardcoded as a substitute for   getcwd().- find2perl works now, thanks to Charlie Reiman- The Mac specific Perl routines are discussed in MacPerl.Specifics, as are my  namespace migration plans (as suggested by numerous people). This file is  still in a very rough state; suggestions for improvements are welcome.- The standalone version no longer presents a save dialog before quitting (as   suggested by David N. Blank-Edelman).- Line numbers for extracted scripts (that is, practically all MPW Perl scripts)  are now presented more honestly. Unfortunately, this currently seems to break  the "b subroutine" function of the debugger.- GUSI related changes:	- Added support for the Printer Access Protocol (PAP): You can open a 	  connection to the currently chosen LaserWriter with open("Dev:Printer").	- Added support for Dave Peterson's forthcoming inetd.	- st_nlink in statbufs used to return 1 for both files and folders. While it 	  might be argued that this is true, it breaks some Unix programs. Therefore, 	  the current version returns for folders either the number of items the 	  folder contains + 2 or the number of subdirectories the folder contains + 2 	  (the 2 is an Unixism), depending on a flag in the configuration resource 	  (thanks to Charlie Reiman for reporting).	- fstat() used to claim that sockets were regular files. This bug had horrible      consequences for Perl. Now, it correctly declares sockets to be     such.	- PPC sockets might work better now.24Jan93	4.0.6- choose() for files no longer includes the terminating null character.- rename() and TCP sockets work better (thanks to Brad Pickering for reporting  these bugs).- standalone version can read scripts from its data fork and accepts more   startup files.- (hopefully) improved the documentation a little. Added ObiWan support.  20Dec92	4.0.5- Supports sockets and symbolic links.- "ask", "answer" and "pick" are now builtins with a slightly changed syntax   (sorry).- A few mac scripts are now provided in :t:mac and :macscripts:- The application now always searches for a #! line first. If none is found,  the script is executed anyway, but the file has to be read twice.  27Sep92	4.0.4This release upgrades the Mac version to UNIX patchlevel 35.08Jun92	4.0.3This release supports opendir (In fact, I thought the last one'd already support it. Thanks to Mike Meckler <meckler@egg.gg.caltech.edu> for reporting this bug).dbmopen & friends are now supported.20Jan92	4.0.2First public release.
+WELCOME TO MPW PERL
+
+This is Perl for the Mac, ported to MPW C by Matthias Neeracher 
+<neeri@iis.ee.ethz.ch> and Tim Endres <time@ice.com>. It runs every program in 
+the test suite that you could it reasonably expect to, and some you probably 
+didn't expect. Feel free to give this program away according to the terms stated 
+in the README file.
+
+System Requirements
+
+The MPW tool probably runs under System 6 and 7, although only System 7 has been
+tested by me lately. The standalone application requires System 7, but "MacPerl
+Runtime" provides a decent subset of the functionality under System 6. Some of 
+the really cool features require ToolServer, System 7, and enough RAM (Notably
+stuff like `CFront MacApp.cp`, while (<Å.c>) or open(XXX, "Catenate Å.c |"))
+Some of the files barely compile with 5 megabytes of RAM. MPW C 3.3.1 is the 
+latest version of MPW C that has been used for rebuilding this release of Perl.
+
+Bugs, Suggestions, Damnations
+
+Please send your bug reports and/or fixes to <neeri@iis.ee.ethz.ch> (It is rather 
+unlikely that any of the bugs are relevant to the UNIX version). Note that MPW 
+Perl is neither developed nor supported by Apple Computer, Inc.
+
+Mailing list
+
+There is now a mailing list for announcing new releases, sharing scripts, and 
+discussions about how to make MPW Perl change your life. To subscribe, send
+a mail to <mpw-perl-request@iis.ee.ethz.ch>
+
+Ftp sites
+
+If you have internet access, you can obtain the newest versions of Perl by 
+anonymous ftp from one of the following addresses:
+
+nic.switch.ch [130.59.1.40]       software/mac/perl
+ftp.eunet.ch  [146.228.10.15]     software/mac/perl
+
+Revision History
+
+19Feb95	4.1.8
+
+- `hostname` is now hardcoded to Do The Right Thing.
+- Changed the behaviour of batch mode: No input is accepted beyond
+  what is in the DoScript AppleEvent.
+  
+31Jan95	4.1.7
+
+- Saving as System 7 Runtime would crash PowerMacs. Now it doesn't, but it may
+  produce fat runtimes up to 1.5M in size [Hannu Strang].
+
+23Jan95	4.1.6
+
+- The TFileSpec constructor taking working directories was broken, which in
+  turn resulted in wrong directories for choose() [Barry Eynon].
+  
+08Jan95	4.1.5
+
+- Under some circumstances, MacHTTP CGI Scripts would crash on PowerPC
+  [C. Joe Holmes, Charles Albrecht].
+- Fixed a bug in XL callbacks [Shimizu Shu].
+- MacPerl would write to address 0 on the second and following scripts
+  [Peter Lewis].
+
+31Dec94	4.1.4
+
+27Dec94	4.1.4b8
+
+- 4.1.4b7 had a disastrous floating point bug [Kevin Altis].
+
+27Dec94	4.1.4b7
+
+[Some of these were already fixed in previous betas]
+- `` now returns both stdout and stderr, like on Un*x perl [Gus Fernandez].
+- $? now returns a nonzero value on errors [Gus Fernandez].
+- &MacPerl'GetFileInfo now returns undef (instead of garbage) when called
+  on folders or nonexistent files.
+- times() works now [Hal Wine].
+- MacPerl tries to fail more gracefully on deep recursions [Forrest Whitcher].
+- Added &MacPerl'Volumes() which returns all mounted volumes.
+- Saving a console window would cause its name to change [Tom Pollard].
+- Typing into a read only window would send them to another window [Alun Carr].
+- DoScript AppleEvents return a success/failure indication and scripts
+  started from within the application pop up the error location [Tom Pollard].
+- MacPerl'Quit(2) would quit without offering to save changes [Hal Wine].
+  Furthermore, a new value Quit(3) now causes the application to try quitting
+  if the currently ran script was the first to run after startup.
+- srand(time) didn't [Omar Souka].
+- Plausibility checking for window areas was not always sufficient [Peter Lewis].
+- open("|-") is now caught early and a more accurate diagnostic message is given.
+- The feet of the camel cursor used to run backwards [Tom Pollard].
+- MacPerl would consider "" in numeric context a NaN [Henry Churchyard].
+
+16Dec94	4.1.4b6
+
+- Crash reports have practically ceased. Unless new problems turn up, all that
+  will change until the release will be the list of credits and the version numbers.
+- Balloon help for Perl operators was broken on the PowerPC [Sandra Silcot].
+- Editing running MacHTTP CGIs would leave temporary files in rather 
+  obvious places. They are now moved to the temporary folder
+  [Thorsten von Eicken].
+  
+03Dec94	4.1.4b5
+
+- I currently have a major problem in that lots of people seem to experience
+  hard-to reproduce crashes. Please keep those crash reports coming!
+- Running two subsequent scripts using chop() would crash 
+  [Tom Pollard, Bill Moore, Joaquim Baptista, Sandra Silcot].
+- Implemented a "Jump" command in the Edit menu.
+- Added balloon help in several places. Peter Lewis' Balloon2Rez script
+  actually makes this fun!
+
+16Nov94	4.1.4b4
+
+- The PowerPC version crashed on all Macs that didn't have StdCLibInit.
+- Update and Activate events would get lost on ToolServer launches.
+- Combining Application and MPW Tool was widely unpopular. This version
+  releases them separately again.
+
+07Nov94	4.1.4b3
+
+- This beta adds PowerPC support.
+- AppleScript should record somewhat nicer code. Furthermore, some loose 
+  ends in scripting support were tied ("the clipboard" works now) [Mike West].
+- MacPerl should now be fully manipulatable from another application, though
+  it will still take the TCL skills of Tom Pollard to bring that potential
+  to life [Tom Pollard, Pete Keleher].
+- The droplet glue code was moved into a separate and much more general
+  "package" feature. See MacPerl.Frontend for more about the last two items.
+- Added chmod [John Kamp].
+- Added a little more XCMD glue, so CommConnect will now let you access the
+  serial port.
+- Added CommConnect.pl and FileCopy.pl, see their corresponding tests in
+  :t:mac: for examples how to use them.
+- More details to follow.
+
+04May94	4.1.3
+
+25Apr94	4.1.3b3
+
+- implemented utime() as far as possible (i.e., for modification times, the
+  Mac has no concept of access times) [James Burgess].
+- Pressing Control when launching a droplet enters the Perl debugger.
+- Introduced a preference option for inline input vs. floating input windows
+  for Japanese input.
+- Introduced a built-in variable $MacPerl'Version containing a string 
+  "4.1.3b3 MPW" or "4.1.3b3 Application", respectively.
+- Attempting to write on half open sockets would still sometimes hang 
+  [Asa Packer].
+- Permissions returned by stat() for locked files were wrong [John Kamp].
+- rename() on aliases renamed the original, not the alias 
+  [Maki Watanabe, Man Wei Tam].
+- gethostbyname() in scalar context would hang or return nonsense [Asa Packer].
+  This bug even appears in Unix Perl.
+- read() and recv() wouldn't work on stream sockets [James Burgess, Asa Packer].
+- Under certain conditions, malloc() would allocate memory in a pathological way
+  [Jim Kateley, Gary LaVoy, Barry Wolman]
+- While I was fixing the following, I rewrote malloc() for small blocks, which
+  appears to improve performance of the application considerably.
+- The font list in the format dialog now scrolls to make the default font visible
+  and draws font names in the correct *script system* (I don't believe in drawing 
+  fonts in their own font).
+- (Hopefully) fixed the timelocal.pl library.
+- Deleting all text in a console window would disable further input 
+  [Jim Kateley].
+- The cursor would not always revert to an arrow at the end of a script 
+  [Jim Kateley].
+- Added support for inline input for Japanese. This is supposed to work if
+  a system extension "Inline Tuika Kinou" is present. 
+- Avoid interrupting Perl scripts in the middle of asynchronous calls. Now, it 
+  should first interrupt the call, and wait with killing the script until a safe 
+  state is reached. This might fix a few nonspecific bugs.
+- Changed segmentation strategy and preloaded all segments which should fix a 
+  crash occuring when a window was dragged while a droplet ran 
+  [Michael Greenspon].
+- The sleep strategy still was a disaster (among others, performance was bad, and
+  TCP transfers would stop when Perl was in the background  
+  [Man Wei Tam, Michael Greenspon et al.]
+- getservbyname would fail unless /etc/services was in the preferences folder
+  [Alasdair Rawsthorne]
+- gmtime should work now, provided you either live in Greenwich or set your 
+  location in the Map control panel correctly [reported long ago by Roger Linder]
+- If any Perl script in a MacPerl session except the first one would try to use
+  TCP/IP, utterly nasty crashes would result 
+  [Sal Gurnani, Torsten Ekedahl et al.].
+- If no #! line was given, error line counts were off [David Friedlander]
+- ... and a few more GUSI related bug fixes.
+
+19Jan94	4.1.2
+
+- Cursor wouldn't spin anymore [Jim Kateley]
+- Droplets didn't accept dropped files [Brad Hanson]
+- Opening two copies of MacPerl at the same time would give strange 
+  effects [Peter Lewis].
+  
+12Jan94	4.1.1
+
+- chdir() under some circumstances would not fail when trying to change to 
+  a nonexistent directory [Peter Lewis]
+- Added StandardFile.pl, originally written by Maki Watanabe.
+- Console windows behave better under stress (like when used by 
+  GUSIRemoteConsole).
+- Adapted semantics of GUSI select() on eof to the Un*x behavior.
+- Overwriting a file with a shorter version would sometimes produce trailing
+  garbage.
+- Supports -i without backup extension now [Reported long ago by Steve Dorner]
+- Supports opening up to 64 stdio files or 32 sockets [James Tisdall]
+- Fixed handling of default arguments to standard putfile/getfile/getfolder 
+  dialogs [Maki Watanabe]
+- Get folder dialogs now show the prompt argument given to choose [Maki Watanabe]
+- Fixed many aspects about cursor handling in MacPerl 
+  [Peter Lewis, Maki Watanabe].
+- When opening a script bigger than 32K, you are now offered to save it in any
+  format that MacPerl supports, which makes creating big runtimes or droplets
+  easier [David N. Blank-Edelman].
+- Perl would on startup open all network drivers, causing inconveniences and 
+  crashes on machines running SLIP or PPP [Lots of people].
+- MacPerl would die ungracefully under System 6.0.x. Now it dies gracefully.
+- MacPerl didn't display the list of acknowledgments correctly.
+- MacPerl didn't handle the desk scrap correctly [Maki Watanabe].
+- Made Perl more robust against out of memory situations [James Tisdall].
+- -t in MacPerl would lie for console windows [James Tisdall].
+- Cleaned up usage messages for &MacPerl'XXX extensions and in droplets.
+- Perl now supports calling many HyperCard XCMDs.
+- Added support for faccess() in the MPW Tool [Scott Collins].
+- Added a few options to MacPerl's preference dialog [Joe Bearly]. Among 
+  others, you can make MacPerl insist on a #! in your scripts.
+
+23Oct93	4.1.0
+
+- Unified version for E.T.O. and non-E.T.O. release.
+- The standalone application has been completely rewritten and now supports:
+  - A separate window for the debugger
+  - Built-in support for creating Droplet applications and Runtimes for both
+    System 6 and System 7.
+  - Online Help, including balloons for all Perl commands.
+  - Recordability and scriptability from AppleScript.
+  - A cool new suite of icons (don't forget to rebuild the desktop file after 
+    installing if you had an old version of MacPerl installed).
+  
+  I have tried to credit all people who contributed to the development of Perl in
+  the About box. If you feel left out, feel free to drop me a note :-)
+- Disk based associative arrays are supported again.
+- All Mac specific commands are renamed again (maybe this time for good).
+- AppleScript is supported through the &MacPerl'DoAppleScript command.
+
+09Apr93	4.0.7¥
+
+- Cleaned packaging up for E.T.O. release.
+- This version currently excludes support for disk based associative arrays. A 
+  version which supports them is available by anonymous ftp from the above sites. 
+
+14Mar93	4.0.7
+
+- Upgraded to UNIX pathlevel 36
+- Added &fgetinfo() and &fsetinfo() (David N. Blank-Edelman suggested these)
+- `pwd` or `Directory` (case is important) are hardcoded as a substitute for 
+  getcwd().
+- find2perl works now, thanks to Charlie Reiman
+- The Mac specific Perl routines are discussed in MacPerl.Specifics, as are my
+  namespace migration plans (as suggested by numerous people). This file is
+  still in a very rough state; suggestions for improvements are welcome.
+- The standalone version no longer presents a save dialog before quitting (as 
+  suggested by David N. Blank-Edelman).
+- Line numbers for extracted scripts (that is, practically all MPW Perl scripts)
+  are now presented more honestly. Unfortunately, this currently seems to break
+  the "b subroutine" function of the debugger.
+- GUSI related changes:
+	- Added support for the Printer Access Protocol (PAP): You can open a 
+	  connection to the currently chosen LaserWriter with open("Dev:Printer").
+	- Added support for Dave Peterson's forthcoming inetd.
+	- st_nlink in statbufs used to return 1 for both files and folders. While it 
+	  might be argued that this is true, it breaks some Unix programs. Therefore, 
+	  the current version returns for folders either the number of items the 
+	  folder contains + 2 or the number of subdirectories the folder contains + 2 
+	  (the 2 is an Unixism), depending on a flag in the configuration resource 
+	  (thanks to Charlie Reiman for reporting).
+	- fstat() used to claim that sockets were regular files. This bug had horrible 
+     consequences for Perl. Now, it correctly declares sockets to be
+     such.
+	- PPC sockets might work better now.
+
+24Jan93	4.0.6
+
+- choose() for files no longer includes the terminating null character.
+- rename() and TCP sockets work better (thanks to Brad Pickering for reporting
+  these bugs).
+- standalone version can read scripts from its data fork and accepts more 
+  startup files.
+- (hopefully) improved the documentation a little. Added ObiWan support.
+  
+20Dec92	4.0.5
+
+- Supports sockets and symbolic links.
+- "ask", "answer" and "pick" are now builtins with a slightly changed syntax 
+  (sorry).
+- A few mac scripts are now provided in :t:mac and :macscripts:
+- The application now always searches for a #! line first. If none is found,
+  the script is executed anyway, but the file has to be read twice.
+  
+27Sep92	4.0.4
+
+This release upgrades the Mac version to UNIX patchlevel 35.
+
+08Jun92	4.0.3
+
+This release supports opendir (In fact, I thought the last one'd already 
+support it. Thanks to Mike Meckler <meckler@egg.gg.caltech.edu> for reporting 
+this bug).
+
+dbmopen & friends are now supported.
+
+20Jan92	4.0.2
+
+First public release.

@@ -1,1 +1,3 @@
-#define	BINDER#include	"misc.c"
+#define	BINDER
+
+#include	"misc.c"

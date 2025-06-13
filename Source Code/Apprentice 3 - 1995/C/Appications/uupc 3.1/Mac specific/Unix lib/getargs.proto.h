@@ -1,1 +1,3 @@
-/* getargs.c */int getargs(char *cp, char *flds[]);
+
+/* getargs.c */
+int getargs(char *cp, char *flds[]);

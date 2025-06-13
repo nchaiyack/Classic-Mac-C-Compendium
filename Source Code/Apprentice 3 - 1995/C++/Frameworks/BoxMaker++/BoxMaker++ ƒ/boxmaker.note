@@ -1,1 +1,15 @@
-Version history:941201: 1.0		For publication with Apprentice, release 2950110: 1.1		Name change: DropShell++ becomes BoxMaker++.				Made BoxMaker skip folders for which no read priviliges exist.				Added 'CantEnterFolder' virtual member.				Made BoxMaker call WaitNextEvent during a directory traversal				(it is ugly, but it works with minimal effort)950525:	1.2		Made really compatible with universal interfaces, thanks to Guillaume Lessard				Added Rez definition of the 'tycr' resource type				Got StandardGetAnything example source code from Ammon Skidmore, and learned				that implementing a proper file Open dialog does not make the program much				larger. Rewrote it in C++ (original in C)950612:	1.3		Some info for CodeWarrior users added.950622: 1.3.1	fix to make it compatible with ApplWindows 2.0.2
+Version history:
+
+941201: 1.0		For publication with Apprentice, release 2
+950110: 1.1		Name change: DropShell++ becomes BoxMaker++.
+				Made BoxMaker skip folders for which no read priviliges exist.
+				Added 'CantEnterFolder' virtual member.
+				Made BoxMaker call WaitNextEvent during a directory traversal
+				(it is ugly, but it works with minimal effort)
+950525:	1.2		Made really compatible with universal interfaces, thanks to Guillaume Lessard
+				Added Rez definition of the 'tycr' resource type
+				Got StandardGetAnything example source code from Ammon Skidmore, and learned
+				that implementing a proper file Open dialog does not make the program much
+				larger. Rewrote it in C++ (original in C)
+950612:	1.3		Some info for CodeWarrior users added.
+950622: 1.3.1	fix to make it compatible with ApplWindows 2.0.2

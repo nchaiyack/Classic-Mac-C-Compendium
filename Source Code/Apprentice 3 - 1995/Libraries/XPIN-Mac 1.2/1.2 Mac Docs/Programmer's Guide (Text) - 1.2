@@ -1,1 +1,535 @@
-The XPIN Cross Platform Plugin ToolkitUser's GuideVersion 1.2December 1992Ramin Firoozyérp&A Inc. - San Francisco, CaliforniaInternet: rpa@netcom.comCompuServe: 70751,252[ NOTE: A version of this material first appeared in an abbreviated form in an article in the July 1993 edition of Dr. Dobb's Journal. ]-IntroductionPlug-ins are the ultimate embodiment of modular software. A plug-in is a small self-contained program that can not be invoked by itself. A plug-in aware program (or caller) acts as a host for a plug-in. At runtime, the caller looks for all plug-in files in a given directory and registers their presence. The caller can invoke a plug-in at any time during execution.  The key here is: the caller has no idea what it may encounter at runtime. The only predefined constants are the directory to look into and the file type to locate. When found, the plug-ins become integral parts of the main program. This is a powerful way to modularize programs. Your killer app need not be static. With a little planning, it could be infinitely extensible. Since the act of locating the plug-ins occurs at runtime, no special registry or patching mechanism is required. Just copy the plug-in file into the directory and restart the program. It's that easy.I first tried to implement plug-ins on the Macintosh. This was because Macintosh programs like Adobe Photoshop have popularized the notion of plug-ins for special effect and import/export filters and are living illustrations of their power (there are even a few documents on how plug-ins may work on the Macintosh. The references are listed in [2], [4], and [7] and I would strongly urge you to read them).But there was a problem. The application I wanted to provide with plug-in support was intended to eventually run under Microsoft Windows. Not wanting to do things twice, I intended to use one of a number of commercial libraries available for writing portable GUI applications. But I realized quickly that adding plug-in functionality to my code would introduce a platform-specific non-portable element. This was, as movie robots proclaim: Not Acceptable.My solution was the Cross-Platform Plug-in Toolkit (XPIN). The toolkit consists of two parts: the caller API and the plug-in skeleton. The caller API consists of a set of routines that make an application plug-in aware. The plug-in skeleton is a simple set of declarations that can be used to build a simple plug-in. The developer can use the skeleton to create fully functional plug-ins. The XPIN toolkit takes care of all the underlying book-keeping necessary for looking up, managing, and invoking plug-ins.I had two general goals in creating the XPIN toolkit. The first was source-level compatibility across multiple platforms. The caller API would be identical across Macintosh and Windows, as would be the plug-in skeleton. You take the same plug-in skeleton from one system to another and recompile it without any changes. The contents of the plug-in, however, are as portable as the developer makes them. The toolkit provides some compile-time portability mechanisms to help isolate system dependencies. The second goal was simplicity in the interface. The caller API consists of seven C-language functions that look and behave identically across all platforms.Before I get to how this was done, some examples are in order. Figure 1 shows a sample Macintosh caller program with no plug-ins present.		                                      Figure 1: Sample Caller Folder with no plug-ins present.Figure 2 shows what the menu-bar for the Sample Caller program looks like when run. Nothing spectacular there.		                             Figure 2: Sample Caller menubar with no plug-ins present.Figure 3 shows the same program with two plug-in files copied into its directory. The Sample Caller program is then invoked again.		                                      Figure 3: After copying two plug-ins into the folder.Figure 4 shows the same program. This time, it detected the presence of the plug-ins, obtained their labels (an internal value that has nothing to do with the filename) and added them to the menu bar. The user can now invoke each of these plug-ins as if they were integral parts of the original code. Adding this functionality to the Sample Caller program required about 30 extra lines of code, primarily having to do with handling the menu.		                                 Figure 4: The plug-ins are now available for use by the Sample Caller program.Figures 5-8 present the same scenario running under Windows. Figures 5 and 6 show  the directory for the Sample Caller as shown by the File Manager and a snapshot of the program running without any plug-ins in the directory. 		                           Figure 5: Directory with no plug-ins.		                           Figure 6: Sample Caller with no plug-ins.Figures 7 and 8 show the program after two plug-in files were copied into the directory and the program was restarted.		                              Figure 7: Directory with two plug-ins copied in.		                               Figure 8: The two plug-ins available at runtime. The source code for the plug-ins was directly copied from a Macintosh to a PC and recompiled. The platform-specific functions of the plug-in were isolated using the appropriate #ifdef's, but otherwise, they were built with no code modification. Figure 9 lists the code for the "Dialog" plug-in with the comments stripped out.#include "XPIN.h"#ifdef OS_MAC#include <Dialogs.h>#endifXPIN(xblk){int localVarsGoHere;DescribeXPIN(xblk, "Dialog","Description of Dialog", 1, 0);#ifdef OS_WIN      	MessageBox(NULL, "This is a sample dialog box...",					"Dialog Plug-in Message",		MB_ICONSTOP | MB_YESNO);#elif OS_MAC		ParamText("\pThis is a sample dialog box...", 				NIL, NIL, NIL);		Alert(128, NIL);#endif     	XSETSTATw(xblk, 0);	// Return 0 as statusEndXPIN();}Figure 9: Code listing for a sample plug-in.- The Caller APIThe toolkit defines only six functions for use of the caller:	XPINInit		Initializes internal data and searches the toolkit for 				plug-ins. Those found are asked to provide a label 				and a description. These are cached in the caller 				data space for quick access.	XPINCount	Returns the number of plug-ins found.	XPINLabel	Returns the label associated with a given plug-in.	XPINDesc		Returns the description string associated with a given 				plug-in. This could be used for an "About" message 				or a simple help screen.	XPINCall		Calls a single plug-in. A general purpose parameter				block is used to pass arguments to the plug-in.	XPINDone		Called before the program exits. The internal data 				structures are deallocated. Each plug-in is also sent 				a "done" message to allow it to deallocate any space 				it may have allocated. 				- Plug-in IdentificationPlug-ins are individual files which happen to contain code. Installing and removing them is a simple matter of moving files around, an act presumably mastered by most users. Plug-ins, therefore, have to be distinguished from other files in a directory. This is done by assigning a "type" to each plug-in. I decided to let the operating system help identify files of this type. This was not only faster, but simpler. On a Macintosh every file has a creator and a type associated with it. These values allow the Macintosh Finder to automatically find and launch a program when one of its datafiles is double-clicked. On the Macintosh all plug-ins of one category must have a given finder type. For example, all import filters may be of type 'impf'.There are routines in the Macintosh Toolbox that allow a directory to be scanned for all files of a given type, effectively performing a wildcard search.. A happy side-effect of this mechanism is that the Macintosh Finder assigns individual icons to each file type. So plug-ins can have icons that visually distinguish them from other files.On the PC, no such intrinsic type can be associated with a file. What you do have, however, is the three letter file extension. Many DOS programs, including the command processor use this file extension to locate special-use files (for example, COMMAND.COM allows files of type .EXE, .COM, and .BAT to be executed by simply typing the filename). Moreover, there are corresponding DOS functions that return files based on filename wildcards. You can, for example, look for all files with the same 3-letter extension (ie., 'PIN') using the pattern '*.PIN'.Since it is possible for a non-plug in file to be accidentally assigned a plug-in type value, the toolkit validates all files it locates to make sure they are legitimate plug-ins. The toolkit effectively ignores all "bad" plug-ins. The caller never sees them.The toolkit does not apply any architectural limits to the types and numbers of plug-ins a single program can handle. To stop runaway searches, the toolkit stops the directory search after 100 files, a constant defined in a header file. This limit could be easily updated or removed altogether. An application program can also support multiple plug-in types. Each type could be located in a different directory (or all together). The overhead for the plug-in structure is small. The main internal tracking structure takes about 120 bytes of space. Each plug-in located takes about 300 bytes. The number of internal structures is limited by available memory. The plug-in structure is allocated off the heap and released when XPINDone is called.- The Pathname DilemmaA problem in writing cross-platform software has to do with the way directory pathnames are identified under each operating system. For example, the directory name separator under DOS is the backslash character '\'; the Macintosh uses the colon ':', and Unix has the forward slash '/'. There are other syntactic and semantic differences in pathnames that go beyond the scope of this article. One option was to force the developer to make sure the right pathname was passed to the toolkit on each platform. I took this route. But it seemed like a cop-out to put all the burden on the developer. It turned out that under both operating systems, there are two "blessed" locations: the application's home directory, and the environment's "system" directory. On the Mac-OS, this is the System Folder. Under Windows, this is the directory in which Windows is installed. So the toolkit was extended to support two "aliases" as a replacement for the plug-in search path. The $HOME and $SYSTEM names are aliases that are replaced with absolute paths at runtime.  They can  be used on their own (for maximum portability), or incorporated into an absolute path (i.e. $HOME\PLUGIN\ or $HOME:PlugIn:). The other advantage of using these aliases is that the $HOME alias allows the user to freely move the entire application with plug-ins from one directory to the other and the $SYSTEM alias simplifies booting off different volumes. The application and its plug-ins can be located easily, since the aliases are resolved at runtime. - Passing ParametersThe toolkit takes care of all the background work finding plug-ins and invoking them. But the developer has a few more issues to consider. An application needs to be able to exchange information between itself and the plug-in. In the case of plug-ins, the compiler does not have the luxury of knowing what type of parameters are being passed around. In a static program, the compiler and linker know how many parameters of which type are to be exchanged between a program and a function. The compiler often takes care of all type casting and parameter conversion. Parameters are usually passed to a function using the stack. The compiler generates the instructions necessary to pass the right number of parameters onto the stack and to restore the stack after the function returns. The function being called expects the stack to be in a well-defined state. The only exception to this rule is the varargs mechanism first popularized under Unix. Despite its flexibility, I chose not to use this mechanism because of implementation discrepancies across platforms.In a dynamic situation like the one facing plug-ins, the compiler basically has no idea what it may encounter at runtime. The solution to this problem is the parameter block (called the XBlock in the toolkit). The number and type of parameters between the caller and the plug-in function are pre-defined. However, one of the parameters is a pointer to an XBlock structure. The caller is free to load anything it wants into the XBlock, as long as the plug-in is designed to expect the proper values in the right order. The alternative to using a parameter block was to devise a dynamic runtime parsing mechanism that supported a stream of variable length arguments, each identified by their data type and size. Despite its flexibility, I decided against this "parameter stream" approach due to its overhead. I will probably revisit the issue at some future time, but for now, the XBlock mechanism appears to be sufficient.  The XBlock is a fixed size block of arguments (the number of slots can be changed in a header file). Each slot can be either a byte, word, long, or a pointer (a far pointer under Windows). The values in the slots can be easily accessed through a series of XSET# and XGET# macros (where # is one of b, w, l, or p). Figure 10 shows the definition of the XBlock structure.#define	XBLOCK_MAXARGS		5union	Arg {		UPtr	p;    // Pointer		Ubyte	b;    // Byte		Uword	w;    // Word		Ulong	l;    // Longword		};typedef union Arg Arg;struct	XBlock {	Uword	action;			// action code (XOP)	Arg	args[XBLOCK_MAXARGS];	// array of args	Arg	status;			// result sent back from XPIN	};Figure 10: The XBlock structureThe XBlock also has space for an action code and a status value. The action code can be defined by the developer. It is most useful for defining behavior that is common to all plug-ins. Internally, the toolkit reserves two action codes to get the plug-ins to return their label and description fields (XOP_INIT), and to perform cleanup action (XOP_DONE). Other popular attempts at plug-ins either require fixed parameters (Adobe Photoshop), or the use of parameter blocks (Hypercard). Coming up with a flexible specification for the XBlock is one of the crucial tasks of application programmers who want to create plug-in aware programs. If not specified correctly, ill-defined plug-ins will instantly throw the main program into asphyxiating spasms. It behooves the wise programmer to define how the application intends to pass parameters to the plug-in and properly document it. The published specification can be used by enterprising third-parties to write undoubtedly amazing plug-ins.- TANSTAAFL (There Ain't No Such Thing As A Free Lunch)What I have been calling plug-ins are, in reality, standalone code resources under the Macintosh environment, and Dynamic Link Libraries (DLL) under Windows. I have just simplified their interfaces. Under the hood, however, they have to obey the rules and restrictions of their host operating system. These are not debilitating restrictions.However, if not properly observed, they will quickly block the oxygen supply to the application. The references list a number of publications on standalone code resources and DLL's. The prudent programmer should read them for details on the proper do's and don'ts. I will briefly summarize some of the more important concerns.The main thing to consider is that using plug-ins requires an understanding of how programs use memory, particularly in the form of the stack and the heap (it was illuminating to discover that Macintosh CODE resources and Windows DLL's had similar but opposite memory requirements--otherwise, they behaved very similarly. Who knows, maybe operating systems will someday merge into one giant MCP).Windows plug-ins (DLL's) have no stack of their own. When loaded, they share the stack of the calling application. This means that the plug-in should not assume the presence of a large amount of stack space. Whatever space the application started with minus what was used before invoking the plug-in is all that is left. If the plug-in accidentally exceeds the stack space, the heap will almost certainly become corrupted (gasp!). Allocating space on the heap, however, carries much less risk. The well-behaved plug-in should check the status returns from all memory request calls and handle errors gracefully. You should also be aware that Windows keeps only one copy of  a DLL in memory at any given time. This can cause problems with static variables declared inside a DLL.The literature, particularly [3] and [5] cover this and solutions to it in more detail.Macintosh CODE resources, on the other hand, can have a stack. But they have to be careful how they access global variables (called A5-globals) and the heap (which is accessed as an offset from A5). Both the Apple MPW and the Symantec Think development environment provide ways to access globals. I personally prefer the Think method due to its simplicity, but you should read up on each environment's technique for more information. Reading [7] is essential to understanding how globals are managed inside standalone CODE resources.  If you think this might not apply to you, I should mention that QuickDraw uses A5-globals. If you are not careful, the first time you use a QuickDraw function inside the plug-in will lead to the gallows.The main rule to remember for memory management and plug-ins is: leave the world the same way you found it. If a plug-in allocates any memory, it should deallocate it before returning. Unless previously arranged, allocated memory can not be retained by plug-ins. A better solution is for the calling program to allocate enough memory and pass its address to plug-ins through the XBlock. The plug-ins can be assured of  a safe clean area to operate in. To have persistent memory, the plug-in can return a value to the caller through the XBlock that indicates the block of memory should be preserved by the caller.- PresentationHow should plug-ins be shown to the user? There seems to be some sort of a secret agreement (probably involving fat men with cigars behind closed doors) that plug-ins should be added and invoked through menus. In fact, there is no need to limit plug-ins to the menu-bar. The menu just happens to be a user-interface element that can be dynamically changed at runtime. It is, of course, up to the developers to associate plug-ins with the appropriate user-interface elements in their applications.The toolkit associates a string label and a description string with each plug-in. These are maintained internally by each plug-in and have nothing to do with filenames. The plug-in returns these values to the caller when the toolkit first finds and initializes all plug-ins (this, of course, is all handled transparently by the toolkit. The programmer only calls XPINLabel.). The developer is free to use the label in any way. Internally, each plug-in is identified by an index (starting at 0). It is up to the developer to devise a way to associate the menu (or whatever) items with the index for each plug-in. For example, the first element of the plug-in menu can be associated with the zero'th plug-in index. When the user selects the first item in the menu bar, the application program is required to translate that command to a call to the plug-in toolkit with 0 as the plug-in index. The second menu may be associated with index 1 and so forth. This is not as hard as it may sound. A simple lookup table, or a clever menu numbering scheme will do nicely. In the Sample Caller application, all plug-in menu items start at a base value (1000) and go up sequentially. When the application gets a menu command with an ID above the base value, it simply subtracts 1000 to get the 0 based plug-in index and makes the call to the toolkit with that index. It takes about 5 lines of code to accomplish all this.- Missing FeaturesThere were a number of features I deliberately left out of this version of the XPIN toolkit. The most important was callbacks. A callback is a function inside the main application that can be called by a plug-in. Callbacks allow plug-ins and the application to maintain a two-way dialog and exchanged information freely. I kept callbacks out because of serious cross-platform incompatibilities they would introduce into the toolkit, especially in the use of stacks and globals. A future version may add this feature if an appropriate scheme can be found. Designing generic callbacks required making assumptions that varied between different applications and unnecessarily complicated the design. An application that requires the plug-in to call it back can pass the address of the callback entry point inside the XBlock. I leave it to the developer to devise a callback mechanism that works with the individual application.As mentioned before, each plug-in has a label and a description associated with it. This brings up the other feature that was left out: icons. I would have liked to have associated icons (or other multimedia datatypes) with each plug-in. These could be used, for example, in button strips or toolbars.There is a certain attraction to a plug-in that carries all its baggage in a single package. However, icons are among those system dependent entities that require special treatment. Again, simplicity was used as the driving goal and icons were dropped. It is possible, however, for an application to associate icons with each plug-in index, just as it was possible to associate a label with a menu item.- Cross-Platform SupportTo be able to write portable code, you need to be able to know the environment and platform on which you are running. On each platform, there are also a number of popular development tools, each with their own idiosyncrasies. Determining what system and compiler is being used can either be done when compiling or at runtime. For performance reasons, I chose the compile-time option.The C language provides the #ifdef construct to allow the compiler to strip out code that does not meet certain conditions. To help break the code into common and platform-independent code, the toolkit provides the XCONFIG.H include file. Including this file on top of every source file will enable the proper #define's that can be used by subsequent #ifdef's. The toolkit takes advantage of certain predefined settings and combinations of values to help define a common set of constants.This eliminates the need for a large amount of hand-editing of include files or special "configuration" programs that are often needed when supporting cross-platform programming. Figure 11 lists the values that are set by XCONFIG.H:IS_SUPPORTED	Platform is supportedOS_MAC		MacintoshOS_WIN		WindowsOS_NT			Windows/NTOS_UNIX		UnixCOMPILER_MSC	Microsoft C/C++COMPILER_BORLAND	Borland C++COMPILER_THINK	Think-CCOMPILER_MPW	MPW C/C++ COMPILER_GNU	GNU C/C++LANGUAGE_C		C languageLANGUAGE_CC		C++ languageFigure 11: Environment settings flags.I found these settings to be sufficient for a majority of cases. In order to avoid being accused of not practicing one's preachings, I used these settings for the toolkit itself. The entire finished source code for the XPIN toolkit library can be copied between the PC and Macintosh systems and recompiled with no modification necessary (in fact, it was surprising how much of the toolkit worked on both systems and did not require the use of conditional compilation).- Other SystemsAs of this writing the toolkit has been tested against a number of C compilers.The Borland and Microsoft compilers under Windows, and both Think and MPW C under Macintosh are supported.  Ports to Windows/NT and SunOS are under way. To be able to handle plug-ins, the operating system needs to support three main features:- The ability to associate a file type  with each file.- It should be able to perform wildcard searches based on the file type. - The ability to dynamically load standalone code modules at runtime, invoke their functions, and remove them from program memory.- ConclusionWriting portable programs requires a certain degree of planning. It mainly requires programmers to reexamine some assumptions they had made about a given platform or environment. The XPIN plug-in toolkit should introduce a larger audience in the developer community to the benefits of plug-ins. At the same time, it should remove a technical barrier to developing robust cross-platform programs. Publishing plug-in interfaces is a good way to encourage other programmers to extend your application and make it more attractive to end-users.- References[1] Inside Macintosh, Volumes I-VI. Apple Computer. Available in bookstores or through APDA. Particularly the sections on Memory Management, the Segment Loader, Resource Manager, and the Process Manager.[2] Macintosh Technical Notes #256: Stand-Alone Code, ad nauseam. August 1990. Available through online services or through APDA. One of the earliest discussions of stand-alone code resources. Must read for MPW users.[3] Klein, Mike, Windows Programmer's Guide To DLL's and Memory Management. Focus on the details of memory management and DLL's. [4] Knoll, Thomas, Filter Module Interface for Adobe Photoshop. Part of the Adobe Photoshop Plug-In Development Kit version 2.0. Available from Adobe Systems.[5] Microsoft Developer's Network CD. Search for the "DLL" keyword. Many entries in the Knowledgebase on how to work around restrictions in DLL's.[6] Microsoft Windows Version 3.1 Software Development Kit - Guide to Programming. Chapter 20 on Dynamic Link Libraries is required reading for plug-in writers. Chapters 15 and 16 is a good introduction to memory management under Windows.[7] Rollin, Keith, Another Take on Globals in Standalone Code. develop, Issue 12, December 1992. An update to TN#256. Excellent discussion of the differences between MPW and Think C in handling the A5-relative addressing problem. Presents the STaRT toolkit to help MPW users write standalone code resources.[8] Think C Reference Manual, Version 5.0, Symantec. Chapter 7 has a wide-ranging discussion of how to build applications and code resources. Chapter 13 presents a discussion of the compiler calling conventions.---
+
+The XPIN 
+Cross Platform Plugin Toolkit
+User's Guide
+
+Version 1.2
+December 1992
+
+Ramin Firoozyé
+rp&A Inc. - San Francisco, California
+Internet: rpa@netcom.com
+CompuServe: 70751,252
+
+[ NOTE: A version of this material first appeared in an abbreviated form in an 
+article in the July 1993 edition of Dr. Dobb's Journal. ]
+
+-Introduction
+Plug-ins are the ultimate embodiment of modular software. A plug-in is a small 
+self-contained program that can not be invoked by itself. A plug-in aware 
+program (or caller) acts as a host for a plug-in. At runtime, the caller looks for all 
+plug-in files in a given directory and registers their presence. The caller can 
+invoke a plug-in at any time during execution.  The key here is: the caller has no 
+idea what it may encounter at runtime. The only predefined constants are the 
+directory to look into and the file type to locate. When found, the plug-ins 
+become integral parts of the main program. This is a powerful way to 
+modularize programs. Your killer app need not be static. With a little planning, it 
+could be infinitely extensible. Since the act of locating the plug-ins occurs at 
+runtime, no special registry or patching mechanism is required. Just copy the 
+plug-in file into the directory and restart the program. It's that easy.
+
+I first tried to implement plug-ins on the Macintosh. This was because Macintosh 
+programs like Adobe Photoshop have popularized the notion of plug-ins for 
+special effect and import/export filters and are living illustrations of their power 
+(there are even a few documents on how plug-ins may work on the Macintosh. 
+The references are listed in [2], [4], and [7] and I would strongly urge you to read 
+them).
+
+But there was a problem. The application I wanted to provide with plug-in 
+support was intended to eventually run under Microsoft Windows. Not wanting 
+to do things twice, I intended to use one of a number of commercial libraries 
+available for writing portable GUI applications. But I realized quickly that adding 
+plug-in functionality to my code would introduce a platform-specific non-
+portable element. This was, as movie robots proclaim: Not Acceptable.
+
+My solution was the Cross-Platform Plug-in Toolkit (XPIN). The toolkit consists 
+of two parts: the caller API and the plug-in skeleton. The caller API consists of a 
+set of routines that make an application plug-in aware. The plug-in skeleton is a 
+simple set of declarations that can be used to build a simple plug-in. The 
+developer can use the skeleton to create fully functional plug-ins. The XPIN 
+toolkit takes care of all the underlying book-keeping necessary for looking up, 
+managing, and invoking plug-ins.
+
+I had two general goals in creating the XPIN toolkit. The first was source-level 
+compatibility across multiple platforms. The caller API would be identical across 
+Macintosh and Windows, as would be the plug-in skeleton. You take the same 
+plug-in skeleton from one system to another and recompile it without any 
+changes. The contents of the plug-in, however, are as portable as the developer 
+makes them. The toolkit provides some compile-time portability mechanisms to 
+help isolate system dependencies. The second goal was simplicity in the 
+interface. The caller API consists of seven C-language functions that look and 
+behave identically across all platforms.
+
+Before I get to how this was done, some examples are in order. Figure 1 shows 
+a sample Macintosh caller program with no plug-ins present.
+
+
+		                                      
+
+Figure 1: Sample Caller Folder with no plug-ins present.
+
+
+Figure 2 shows what the menu-bar for the Sample Caller program looks like 
+when run. Nothing spectacular there.
+
+
+		                             
+
+
+Figure 2: Sample Caller menubar with no plug-ins present.
+
+
+Figure 3 shows the same program with two plug-in files copied into its directory. 
+The Sample Caller program is then invoked again.
+
+
+		                                      
+
+Figure 3: After copying two plug-ins into the folder.
+
+
+Figure 4 shows the same program. This time, it detected the presence of the 
+plug-ins, obtained their labels (an internal value that has nothing to do with the 
+filename) and added them to the menu bar. The user can now invoke each of 
+these plug-ins as if they were integral parts of the original code. Adding this 
+functionality to the Sample Caller program required about 30 extra lines of 
+code, primarily having to do with handling the menu.
+
+
+		                                 
+
+Figure 4: The plug-ins are now available for use by the Sample Caller program.
+
+
+Figures 5-8 present the same scenario running under Windows. Figures 5 and 
+6 show  the directory for the Sample Caller as shown by the File Manager and a 
+snapshot of the program running without any plug-ins in the directory. 
+
+		                           
+
+Figure 5: Directory with no plug-ins.
+
+
+		                           
+
+Figure 6: Sample Caller with no plug-ins.
+
+
+Figures 7 and 8 show the program after two plug-in files were copied into the 
+directory and the program was restarted.
+
+
+		                              
+
+Figure 7: Directory with two plug-ins copied in.
+
+
+		                               
+
+Figure 8: The two plug-ins available at runtime.
+ 
+
+The source code for the plug-ins was directly copied from a Macintosh to a PC 
+and recompiled. The platform-specific functions of the plug-in were isolated 
+using the appropriate #ifdef's, but otherwise, they were built with no code 
+modification. Figure 9 lists the code for the "Dialog" plug-in with the comments 
+stripped out.
+
+#include "XPIN.h"
+#ifdef OS_MAC
+#include <Dialogs.h>
+#endif
+
+XPIN(xblk)
+{
+int localVarsGoHere;
+
+DescribeXPIN(xblk, "Dialog","Description of Dialog", 1, 0);
+
+#ifdef OS_WIN 
+     	MessageBox(NULL, "This is a sample dialog box...",
+					"Dialog Plug-in Message",
+		MB_ICONSTOP | MB_YESNO);
+#elif OS_MAC
+		ParamText("\pThis is a sample dialog box...", 
+				NIL, NIL, NIL);
+		Alert(128, NIL);
+#endif
+     	XSETSTATw(xblk, 0);	// Return 0 as status
+EndXPIN();
+}
+
+Figure 9: Code listing for a sample plug-in.
+
+
+- The Caller API
+The toolkit defines only six functions for use of the caller:
+
+	XPINInit		Initializes internal data and searches the toolkit for 
+				plug-ins. Those found are asked to provide a label 
+				and a description. These are cached in the caller 
+				data space for quick access.
+	XPINCount	Returns the number of plug-ins found.
+	XPINLabel	Returns the label associated with a given plug-in.
+	XPINDesc		Returns the description string associated with a given 
+				plug-in. This could be used for an "About" message 
+				or a simple help screen.
+	XPINCall		Calls a single plug-in. A general purpose parameter
+				block is used to pass arguments to the plug-in.
+	XPINDone		Called before the program exits. The internal data 
+				structures are deallocated. Each plug-in is also sent 
+				a "done" message to allow it to deallocate any space 
+				it may have allocated. 				
+
+
+- Plug-in Identification
+Plug-ins are individual files which happen to contain code. Installing and 
+removing them is a simple matter of moving files around, an act presumably 
+mastered by most users. Plug-ins, therefore, have to be distinguished from other 
+files in a directory. This is done by assigning a "type" to each plug-in. I decided 
+to let the operating system help identify files of this type. This was not only 
+faster, but simpler. On a Macintosh every file has a creator and a type 
+associated with it. These values allow the Macintosh Finder to automatically find 
+and launch a program when one of its datafiles is double-clicked. On the 
+Macintosh all plug-ins of one category must have a given finder type. For 
+example, all import filters may be of type 'impf'.There are routines in the 
+Macintosh Toolbox that allow a directory to be scanned for all files of a given 
+type, effectively performing a wildcard search.. A happy side-effect of this 
+mechanism is that the Macintosh Finder assigns individual icons to each file 
+type. So plug-ins can have icons that visually distinguish them from other files.
+
+On the PC, no such intrinsic type can be associated with a file. What you do 
+have, however, is the three letter file extension. Many DOS programs, including 
+the command processor use this file extension to locate special-use files (for 
+example, COMMAND.COM allows files of type .EXE, .COM, and .BAT to be 
+executed by simply typing the filename). Moreover, there are corresponding 
+DOS functions that return files based on filename wildcards. You can, for 
+example, look for all files with the same 3-letter extension (ie., 'PIN') using the 
+pattern '*.PIN'.
+
+Since it is possible for a non-plug in file to be accidentally assigned a plug-in 
+type value, the toolkit validates all files it locates to make sure they are 
+legitimate plug-ins. The toolkit effectively ignores all "bad" plug-ins. The caller 
+never sees them.
+
+The toolkit does not apply any architectural limits to the types and numbers of 
+plug-ins a single program can handle. To stop runaway searches, the toolkit 
+stops the directory search after 100 files, a constant defined in a header file. 
+This limit could be easily updated or removed altogether. An application 
+program can also support multiple plug-in types. Each type could be located in 
+a different directory (or all together). The overhead for the plug-in structure is 
+small. The main internal tracking structure takes about 120 bytes of space. Each 
+plug-in located takes about 300 bytes. The number of internal structures is 
+limited by available memory. The plug-in structure is allocated off the heap and 
+released when XPINDone is called.
+
+
+- The Pathname Dilemma
+A problem in writing cross-platform software has to do with the way directory 
+pathnames are identified under each operating system. For example, the 
+directory name separator under DOS is the backslash character '\'; the 
+Macintosh uses the colon ':', and Unix has the forward slash '/'. There are other 
+syntactic and semantic differences in pathnames that go beyond the scope of 
+this article. One option was to force the developer to make sure the right 
+pathname was passed to the toolkit on each platform. I took this route. But it 
+seemed like a cop-out to put all the burden on the developer. 
+
+It turned out that under both operating systems, there are two "blessed" 
+locations: the application's home directory, and the environment's "system" 
+directory. On the Mac-OS, this is the System Folder. Under Windows, this is the 
+directory in which Windows is installed. So the toolkit was extended to support 
+two "aliases" as a replacement for the plug-in search path. The $HOME and 
+$SYSTEM names are aliases that are replaced with absolute paths at runtime.  
+They can  be used on their own (for maximum portability), or incorporated into 
+an absolute path (i.e. $HOME\PLUGIN\ or $HOME:PlugIn:). 
+
+The other advantage of using these aliases is that the $HOME alias allows the 
+user to freely move the entire application with plug-ins from one directory to the 
+other and the $SYSTEM alias simplifies booting off different volumes. The 
+application and its plug-ins can be located easily, since the aliases are resolved 
+at runtime. 
+
+
+- Passing Parameters
+The toolkit takes care of all the background work finding plug-ins and invoking 
+them. But the developer has a few more issues to consider. An application 
+needs to be able to exchange information between itself and the plug-in. In the 
+case of plug-ins, the compiler does not have the luxury of knowing what type of 
+parameters are being passed around. In a static program, the compiler and 
+linker know how many parameters of which type are to be exchanged between 
+a program and a function. The compiler often takes care of all type casting and 
+parameter conversion. Parameters are usually passed to a function using the 
+stack. The compiler generates the instructions necessary to pass the right 
+number of parameters onto the stack and to restore the stack after the function 
+returns. The function being called expects the stack to be in a well-defined state. 
+The only exception to this rule is the varargs mechanism first popularized under 
+Unix. Despite its flexibility, I chose not to use this mechanism because of 
+implementation discrepancies across platforms.
+
+In a dynamic situation like the one facing plug-ins, the compiler basically has no 
+idea what it may encounter at runtime. The solution to this problem is the 
+parameter block (called the XBlock in the toolkit). The number and type of 
+parameters between the caller and the plug-in function are pre-defined. 
+However, one of the parameters is a pointer to an XBlock structure. The caller is 
+free to load anything it wants into the XBlock, as long as the plug-in is designed 
+to expect the proper values in the right order. 
+
+The alternative to using a parameter block was to devise a dynamic runtime 
+parsing mechanism that supported a stream of variable length arguments, each 
+identified by their data type and size. Despite its flexibility, I decided against this 
+"parameter stream" approach due to its overhead. I will probably revisit the 
+issue at some future time, but for now, the XBlock mechanism appears to be 
+sufficient.  The XBlock is a fixed size block of arguments (the number of slots 
+can be changed in a header file). Each slot can be either a byte, word, long, or a 
+pointer (a far pointer under Windows). The values in the slots can be easily 
+accessed through a series of XSET# and XGET# macros (where # is one of b, 
+w, l, or p). Figure 10 shows the definition of the XBlock structure.
+
+#define	XBLOCK_MAXARGS		5
+
+union	Arg {
+		UPtr	p;    // Pointer
+		Ubyte	b;    // Byte
+		Uword	w;    // Word
+		Ulong	l;    // Longword
+		};
+typedef union Arg Arg;
+
+struct	XBlock {
+	Uword	action;			// action code (XOP)
+	Arg	args[XBLOCK_MAXARGS];	// array of args
+	Arg	status;			// result sent back from XPIN
+	};
+
+Figure 10: The XBlock structure
+
+
+The XBlock also has space for an action code and a status value. The action 
+code can be defined by the developer. It is most useful for defining behavior that 
+is common to all plug-ins. Internally, the toolkit reserves two action codes to get 
+the plug-ins to return their label and description fields (XOP_INIT), and to 
+perform cleanup action (XOP_DONE). Other popular attempts at plug-ins either 
+require fixed parameters (Adobe Photoshop), or the use of parameter blocks 
+(Hypercard). 
+
+Coming up with a flexible specification for the XBlock is one of the crucial tasks 
+of application programmers who want to create plug-in aware programs. If not 
+specified correctly, ill-defined plug-ins will instantly throw the main program into 
+asphyxiating spasms. It behooves the wise programmer to define how the 
+application intends to pass parameters to the plug-in and properly document it. 
+The published specification can be used by enterprising third-parties to write 
+undoubtedly amazing plug-ins.
+
+
+- TANSTAAFL (There Ain't No Such Thing As A Free Lunch)
+What I have been calling plug-ins are, in reality, standalone code resources 
+under the Macintosh environment, and Dynamic Link Libraries (DLL) under 
+Windows. I have just simplified their interfaces. Under the hood, however, they 
+have to obey the rules and restrictions of their host operating system. These are 
+not debilitating restrictions.However, if not properly observed, they will quickly 
+block the oxygen supply to the application. The references list a number of 
+publications on standalone code resources and DLL's. The prudent 
+programmer should read them for details on the proper do's and don'ts. I will 
+briefly summarize some of the more important concerns.
+
+The main thing to consider is that using plug-ins requires an understanding of 
+how programs use memory, particularly in the form of the stack and the heap (it 
+was illuminating to discover that Macintosh CODE resources and Windows 
+DLL's had similar but opposite memory requirements--otherwise, they behaved 
+very similarly. Who knows, maybe operating systems will someday merge into 
+one giant MCP).
+
+Windows plug-ins (DLL's) have no stack of their own. When loaded, they share 
+the stack of the calling application. This means that the plug-in should not 
+assume the presence of a large amount of stack space. Whatever space the 
+application started with minus what was used before invoking the plug-in is all 
+that is left. If the plug-in accidentally exceeds the stack space, the heap will 
+almost certainly become corrupted (gasp!). Allocating space on the heap, 
+however, carries much less risk. The well-behaved plug-in should check the 
+status returns from all memory request calls and handle errors gracefully. You 
+should also be aware that Windows keeps only one copy of  a DLL in memory 
+at any given time. This can cause problems with static variables declared inside 
+a DLL.The literature, particularly [3] and [5] cover this and solutions to it in more 
+detail.
+
+Macintosh CODE resources, on the other hand, can have a stack. But they have 
+to be careful how they access global variables (called A5-globals) and the heap 
+(which is accessed as an offset from A5). Both the Apple MPW and the 
+Symantec Think development environment provide ways to access globals. I 
+personally prefer the Think method due to its simplicity, but you should read up 
+on each environment's technique for more information. Reading [7] is essential 
+to understanding how globals are managed inside standalone CODE 
+resources.  If you think this might not apply to you, I should mention that 
+QuickDraw uses A5-globals. If you are not careful, the first time you use a 
+QuickDraw function inside the plug-in will lead to the gallows.
+
+The main rule to remember for memory management and plug-ins is: leave the 
+world the same way you found it. If a plug-in allocates any memory, it should 
+deallocate it before returning. Unless previously arranged, allocated memory 
+can not be retained by plug-ins. A better solution is for the calling program to 
+allocate enough memory and pass its address to plug-ins through the XBlock. 
+The plug-ins can be assured of  a safe clean area to operate in. To have 
+persistent memory, the plug-in can return a value to the caller through the 
+XBlock that indicates the block of memory should be preserved by the caller.
+
+
+
+- Presentation
+How should plug-ins be shown to the user? There seems to be some sort of a 
+secret agreement (probably involving fat men with cigars behind closed doors) 
+that plug-ins should be added and invoked through menus. In fact, there is no 
+need to limit plug-ins to the menu-bar. The menu just happens to be a user-
+interface element that can be dynamically changed at runtime. It is, of course, 
+up to the developers to associate plug-ins with the appropriate user-interface 
+elements in their applications.
+
+The toolkit associates a string label and a description string with each plug-in. 
+These are maintained internally by each plug-in and have nothing to do with 
+filenames. The plug-in returns these values to the caller when the toolkit first 
+finds and initializes all plug-ins (this, of course, is all handled transparently by 
+the toolkit. The programmer only calls XPINLabel.). The developer is free to use 
+the label in any way. Internally, each plug-in is identified by an index (starting at 
+0). It is up to the developer to devise a way to associate the menu (or whatever) 
+items with the index for each plug-in. For example, the first element of the plug-
+in menu can be associated with the zero'th plug-in index. When the user selects 
+the first item in the menu bar, the application program is required to translate 
+that command to a call to the plug-in toolkit with 0 as the plug-in index. The 
+second menu may be associated with index 1 and so forth. 
+
+This is not as hard as it may sound. A simple lookup table, or a clever menu 
+numbering scheme will do nicely. In the Sample Caller application, all plug-in 
+menu items start at a base value (1000) and go up sequentially. When the 
+application gets a menu command with an ID above the base value, it simply 
+subtracts 1000 to get the 0 based plug-in index and makes the call to the toolkit 
+with that index. It takes about 5 lines of code to accomplish all this.
+
+
+- Missing Features
+There were a number of features I deliberately left out of this version of the XPIN 
+toolkit. The most important was callbacks. A callback is a function inside the 
+main application that can be called by a plug-in. Callbacks allow plug-ins and 
+the application to maintain a two-way dialog and exchanged information freely. I 
+kept callbacks out because of serious cross-platform incompatibilities they 
+would introduce into the toolkit, especially in the use of stacks and globals. A 
+future version may add this feature if an appropriate scheme can be found. 
+Designing generic callbacks required making assumptions that varied between 
+different applications and unnecessarily complicated the design. An application 
+that requires the plug-in to call it back can pass the address of the callback entry 
+point inside the XBlock. I leave it to the developer to devise a callback 
+mechanism that works with the individual application.
+
+As mentioned before, each plug-in has a label and a description associated 
+with it. This brings up the other feature that was left out: icons. I would have liked 
+to have associated icons (or other multimedia datatypes) with each plug-in. 
+These could be used, for example, in button strips or toolbars.There is a certain 
+attraction to a plug-in that carries all its baggage in a single package. However, 
+icons are among those system dependent entities that require special 
+treatment. Again, simplicity was used as the driving goal and icons were 
+dropped. It is possible, however, for an application to associate icons with each 
+plug-in index, just as it was possible to associate a label with a menu item.
+
+
+- Cross-Platform Support
+To be able to write portable code, you need to be able to know the environment 
+and platform on which you are running. On each platform, there are also a 
+number of popular development tools, each with their own idiosyncrasies. 
+Determining what system and compiler is being used can either be done when 
+compiling or at runtime. For performance reasons, I chose the compile-time 
+option.The C language provides the #ifdef construct to allow the compiler to 
+strip out code that does not meet certain conditions. To help break the code into 
+common and platform-independent code, the toolkit provides the XCONFIG.H 
+include file. Including this file on top of every source file will enable the proper 
+#define's that can be used by subsequent #ifdef's. 
+
+The toolkit takes advantage of certain predefined settings and combinations of 
+values to help define a common set of constants.This eliminates the need for a 
+large amount of hand-editing of include files or special "configuration" programs 
+that are often needed when supporting cross-platform programming. 
+
+Figure 11 lists the values that are set by XCONFIG.H:
+
+IS_SUPPORTED	Platform is supported
+
+OS_MAC		Macintosh
+OS_WIN		Windows
+OS_NT			Windows/NT
+OS_UNIX		Unix
+
+COMPILER_MSC	Microsoft C/C++
+COMPILER_BORLAND	Borland C++
+COMPILER_THINK	Think-C
+COMPILER_MPW	MPW C/C++ 
+COMPILER_GNU	GNU C/C++
+
+LANGUAGE_C		C language
+LANGUAGE_CC		C++ language
+
+Figure 11: Environment settings flags.
+
+
+I found these settings to be sufficient for a majority of cases. In order to avoid 
+being accused of not practicing one's preachings, I used these settings for the 
+toolkit itself. The entire finished source code for the XPIN toolkit library can be 
+copied between the PC and Macintosh systems and recompiled with no 
+modification necessary (in fact, it was surprising how much of the toolkit worked 
+on both systems and did not require the use of conditional compilation).
+
+
+- Other Systems
+As of this writing the toolkit has been tested against a number of C 
+compilers.The Borland and Microsoft compilers under Windows, and both Think 
+and MPW C under Macintosh are supported.  Ports to Windows/NT and SunOS 
+are under way. To be able to handle plug-ins, the operating system needs to 
+support three main features:
+
+- The ability to associate a file type  with each file.
+- It should be able to perform wildcard searches based on the file type. 
+- The ability to dynamically load standalone code modules at runtime, invoke 
+their functions, and remove them from program memory.
+
+
+- Conclusion
+Writing portable programs requires a certain degree of planning. It mainly 
+requires programmers to reexamine some assumptions they had made about a 
+given platform or environment. The XPIN plug-in toolkit should introduce a 
+larger audience in the developer community to the benefits of plug-ins. At the 
+same time, it should remove a technical barrier to developing robust cross-
+platform programs. Publishing plug-in interfaces is a good way to encourage 
+other programmers to extend your application and make it more attractive to 
+end-users.
+
+
+- References
+[1] Inside Macintosh, Volumes I-VI. Apple Computer. Available in bookstores or 
+through APDA. Particularly the sections on Memory Management, the Segment 
+Loader, Resource Manager, and the Process Manager.
+
+[2] Macintosh Technical Notes #256: Stand-Alone Code, ad nauseam. August 
+1990. Available through online services or through APDA. One of the earliest 
+discussions of stand-alone code resources. Must read for MPW users.
+
+[3] Klein, Mike, Windows Programmer's Guide To DLL's and Memory 
+Management. Focus on the details of memory management and DLL's. 
+
+[4] Knoll, Thomas, Filter Module Interface for Adobe Photoshop. Part of the 
+Adobe Photoshop Plug-In Development Kit version 2.0. Available from Adobe 
+Systems.
+
+[5] Microsoft Developer's Network CD. Search for the "DLL" keyword. Many 
+entries in the Knowledgebase on how to work around restrictions in DLL's.
+
+[6] Microsoft Windows Version 3.1 Software Development Kit - Guide to 
+Programming. Chapter 20 on Dynamic Link Libraries is required reading for 
+plug-in writers. Chapters 15 and 16 is a good introduction to memory 
+management under Windows.
+
+[7] Rollin, Keith, Another Take on Globals in Standalone Code. develop, Issue 
+12, December 1992. An update to TN#256. Excellent discussion of the 
+differences between MPW and Think C in handling the A5-relative addressing 
+problem. Presents the STaRT toolkit to help MPW users write standalone code 
+resources.
+
+[8] Think C Reference Manual, Version 5.0, Symantec. Chapter 7 has a wide-
+ranging discussion of how to build applications and code resources. Chapter 13 
+presents a discussion of the compiler calling conventions.
+---

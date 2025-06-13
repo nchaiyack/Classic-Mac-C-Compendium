@@ -1,1 +1,10 @@
-###################################################################	Quit¥Sounds### Quit file for MPW sounds###  3/31/94 Gregory E. Allen <gallen@arlut.utexas.edu>#################################################################	Play the "Quit" sound, if it existsIf "`Exists "{Sounds}"Quit`" != ""	Play "{Sounds}"QuitEnd
+################################################################
+###	Quit¥Sounds
+### Quit file for MPW sounds
+###  3/31/94 Gregory E. Allen <gallen@arlut.utexas.edu>
+################################################################
+
+#	Play the "Quit" sound, if it exists
+If "`Exists "{Sounds}"Quit`" != ""
+	Play "{Sounds}"Quit
+End

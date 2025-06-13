@@ -1,1 +1,10 @@
-for d in scratch-1:csm:comp.≈	cd {d}	echo {d} >> {worksheet}	echo -n > qIndex	rm q≈	MakeArticleIndex	setfile -c 'MPS ' ≈endcd {nuntius}
+
+for d in scratch-1:csm:comp.≈
+	cd {d}
+	echo {d} >> {worksheet}
+	echo -n > qIndex
+	rm q≈
+	MakeArticleIndex
+	setfile -c 'MPS ' ≈
+end
+cd {nuntius}

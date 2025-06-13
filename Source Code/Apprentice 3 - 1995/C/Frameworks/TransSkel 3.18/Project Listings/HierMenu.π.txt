@@ -1,1 +1,12 @@
-HierMenu.¹2 segments3 filesSegment 21 files:HierMenu.cSegment 32 files:MacTrapsTransSkel
+HierMenu.¹
+2 segments
+3 files
+
+Segment 2
+1 files:
+HierMenu.c
+
+Segment 3
+2 files:
+MacTraps
+TransSkel

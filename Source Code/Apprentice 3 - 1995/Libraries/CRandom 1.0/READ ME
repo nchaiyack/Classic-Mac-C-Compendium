@@ -1,1 +1,26 @@
-Name: CRandomVersion: 1.0Category: classesContributor: Jamie McCarthy <k044477@kzoo.edu>Date: 92-04TCL-Version: 1.1.xTCL-Language: CCopyright: Copyright (C) 1992 by Jamie R. McCarthy. All rights reserved.A handy little random-number generator.  Just drop it in your project,include the header, and call "x = gRandom->linearShort(low, high)".So far, the only implemented method to get random numbers islinearShort(), which will return a signed 16-bit value between twonumbers you specify, with equal probability of each number occurring.I've been meaning to write spinoffs of linearShort(), likepoissonShort() and bellCurveShort(), but haven't gotten around to it.If you'd like to see them (or if you make one), drop me a line.The algorithm is straight out of Numerical Recipes, translated fromthe original Fortran version.  I've made it as clear as possible, andkept it reasonably fast without dropping into assembly.(c) Copyright 1992 by James R. McCarthy.  All rights reserved.This code can be both distributed and used freely.Internet: k044477@kzoo.edu			AppleLink: j.mccarthy
+Name: CRandom
+Version: 1.0
+Category: classes
+Contributor: Jamie McCarthy <k044477@kzoo.edu>
+Date: 92-04
+TCL-Version: 1.1.x
+TCL-Language: C
+Copyright: Copyright (C) 1992 by Jamie R. McCarthy. All rights reserved.
+
+A handy little random-number generator.  Just drop it in your project,
+include the header, and call "x = gRandom->linearShort(low, high)".
+
+So far, the only implemented method to get random numbers is
+linearShort(), which will return a signed 16-bit value between two
+numbers you specify, with equal probability of each number occurring.
+I've been meaning to write spinoffs of linearShort(), like
+poissonShort() and bellCurveShort(), but haven't gotten around to it.
+If you'd like to see them (or if you make one), drop me a line.
+
+The algorithm is straight out of Numerical Recipes, translated from
+the original Fortran version.  I've made it as clear as possible, and
+kept it reasonably fast without dropping into assembly.
+
+(c) Copyright 1992 by James R. McCarthy.  All rights reserved.
+This code can be both distributed and used freely.
+Internet: k044477@kzoo.edu			AppleLink: j.mccarthy

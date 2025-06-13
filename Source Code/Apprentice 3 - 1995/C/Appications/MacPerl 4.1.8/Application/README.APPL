@@ -1,1 +1,44 @@
-COMMENTS ON THE STANDALONE APPLICATIONThe user interface has been completely redone:- The application is AppleScriptable- Publishers and Subscribers are supported- Balloon help is supported (try pointing the mouse at some text like "print")- Online help supported by selecting text and pressing Command-H.- The perl debugger runs in a separate window, as does the debug log.System RequirementsPerl might run on any Mac with at least 4 Megabytes of RAM. If you experienceanything different, tell us. MacPerl itself will run only under System 7 or later,but "MacPerl Runtime" will also run under System 6.InstallingMacPerl can be anywhere."MacPerl Help" and "MacPerl Runtime" must either be in the same folder as MacPerl or in the Preferences Folder (System 7). The "lib" folder may be anywhere, but ifyou rename it or put it in a different folder than MacPerl, you have to give thenew location in the Preferences… dialog.Hints - Running a script "MyScript" has the same effect as "Perl -x myscript" 	would have on a Unix implementation. - Dropping a script on MacPerl opens it, unless you hold down the option key,   in which case the script is run. This may be reversed in the preferences	dialog. -	Dropping several files with the option key down is not recommended. The first  	one is assumed to be the script and the rest are assumed to be arguments.  - Many arguments that would be given on the command line can be specified on the 	#! line. - A very useful way to deal with a script is to save it as a Droplet. A droplet   is a very small application that can be started either by double clicking it	or by dropping files (whose names will appear in @ARGV) on it. Known Deficiencies- Perl doesn't prevent AppleEvents sent to it from timing out.- Only an extremely small subset of command line options are currently supported  (You are allowed, however, to send arbitrary command line options in AppleEvents).
+COMMENTS ON THE STANDALONE APPLICATION
+
+The user interface has been completely redone:
+
+- The application is AppleScriptable
+- Publishers and Subscribers are supported
+- Balloon help is supported (try pointing the mouse at some text like "print")
+- Online help supported by selecting text and pressing Command-H.
+- The perl debugger runs in a separate window, as does the debug log.
+
+System Requirements
+
+Perl might run on any Mac with at least 4 Megabytes of RAM. If you experience
+anything different, tell us. MacPerl itself will run only under System 7 or later,
+but "MacPerl Runtime" will also run under System 6.
+
+Installing
+
+MacPerl can be anywhere.
+"MacPerl Help" and "MacPerl Runtime" must either be in the same folder as MacPerl 
+or in the Preferences Folder (System 7). The "lib" folder may be anywhere, but if
+you rename it or put it in a different folder than MacPerl, you have to give the
+new location in the Preferences… dialog.
+
+Hints
+
+ - Running a script "MyScript" has the same effect as "Perl -x myscript" 
+	would have on a Unix implementation.
+ - Dropping a script on MacPerl opens it, unless you hold down the option key,
+   in which case the script is run. This may be reversed in the preferences
+	dialog.
+ -	Dropping several files with the option key down is not recommended. The first 
+ 	one is assumed to be the script and the rest are assumed to be arguments. 
+ - Many arguments that would be given on the command line can be specified on the
+ 	#! line.
+ - A very useful way to deal with a script is to save it as a Droplet. A droplet
+   is a very small application that can be started either by double clicking it
+	or by dropping files (whose names will appear in @ARGV) on it. 
+
+Known Deficiencies
+
+- Perl doesn't prevent AppleEvents sent to it from timing out.
+- Only an extremely small subset of command line options are currently supported
+  (You are allowed, however, to send arbitrary command line options in AppleEvents).

@@ -1,1 +1,407 @@
-[Display using Geneva 12]                 T o o l s   P l u s   2 . 6   E v a l u a t i o n   K i t                   copyright © 1989-95 Water’s Edge Software        ----------------------------------------------------             Tools Plus “GUI Building/Event Managing” libraries        ----------------------------------------------------What is “Tools Plus”~~~~~~~~~~~~~~~~  Tools Plus is a set of powerful “GUI Building/Event Managing” libraries for Macintosh programmers using any of the following compilers:    • Symantec Corporation’s THINK C or Symantec C/C++    • Symantec Corporation’s THINK Pascal    • Metrowerks CodeWarrior C/C++ and CodeWarrior Pascal       (for 680x0 and PowerPC processors)  Over 170 high-powered “set and forget” routines let you easily create your application’s user interface, while Tools Plus maintains it for you and takes care of event management.  In spite of its power and robust features, Tools Plus is easy to learn and easy to use, making it ideal for novices, intermediate developers, and experts.  With Tools Plus, you have the advantage of enhanced functionality, automation, and full integration of: windows, floating palettes, tool bar, cursors, buttons, picture buttons, scroll bars, editing fields, list boxes, pull-down and hierarchical menus, pop-up menus, the Edit menu, clipboard, alerts, event handling, and more.  Once you create your user interface with Tools Plus’ routines, Tools Plus makes it work.  Virtually all Tools Plus routines can be executed with a single line of code.  Using Tools Plus simplifies your programming and accelerates development, so you’ll be able to create applications…     √ in less time     √ with considerably less source code     √ with far fewer bugs     √ and with more featuresthan if you use ordinary C/C++ or Pascal.  Tools Plus libraries can be compiled into applications intended for System 5 and 6 (running under Finder and MultiFinder), System 7, and on the PowerPC (in emulated or native mode)...............................................................................................................................................If you decide to buy Tools Plus, you will receive these special benefits:   √ License to continue using Tools Plus after the thirty day      evaluation period has expired   √ The latest version of Tools Plus on a disk   √ Libraries that are more compact (when compiled) and       memory-efficient   √ A printed 250-page User Manual -- It has pictures, illustrations,       programming tips, and an index that are not included in this       condensed documentation. The printed manual is also much       easier to use than a set of text files.   √ A floating palette WDEF that features a full color drag bar (just       like commercial applications)   √ Free PROMPT technical support   √ Free software updates   √ Major software upgrades at reduced prices   √ License to distribute the programs you create with Tools Plus       (royalty free, unlimited number of apps, unlimited copies)..............................................................................................................................................How do you Program with Tools Plus?~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  If you already know how to program in C, C++, or Pascal, you are well on your way to programming with Tools Plus. Tools Plus lets you build on what you already know instead of starting over again.  If you are just learning how to program, Tools Plus fits easily into C, C++, or Pascal, and makes Macintosh programming a quantum leap easier than learning all the intricacies of the Macintosh’s toolbox, then having to constantly use them.  Instead of using a multitude of Macintosh toolbox routines to create your user interface, you’ll use relatively few Tools Plus routines. A single Tools Plus routine often performs the work of hundreds (sometimes thousands) of lines of conventional code.  The difference between Tools Plus and other tools becomes very apparent when you want to make your application’s user interface work. With Tools Plus, this happens _automatically_, saving you programming and debugging time and hassles.  To finish things off, your application’s event handling logic is reduced to a simple premise: Tools Plus tells me what happened, and I do it. For example, Tools Plus may tell your application that the user selected the 15th item in the “Fonts” pop-up menu located in the “Format Text” window. You simply do whatever is appropriate for that user-oriented action.  All this time, Tools Plus is making your application’s user interface work, so you don’t have to bother with intercepting and processing low-level events, or managing your GUI. You also won’t have to deal with cryptic commands and data structures, complex processes, or convoluted work-arounds.Important Things to Remember:~~~~~~~~~~~~~~~~~~~~~~~~Tools Plus IS:       √ Small, efficient, quick and flexible       √ Easy to learn and easy to use       √ A great way to get more done with a lot less workTools Plus is       - NOT a code generator, shell program, or class library       - NOT an assembly of custom resourcesYour Existing Applications and Tools Plus~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~The following is an excerpt from an e-mail sent to us by a new Tools Plus developer:      “I converted a fairly large C program to use ToolsPlus. It took    me a couple of days. I was able to eliminate hundreds of lines of    source code and greatly simplify my event processing and window    handling...      I'm a former Apple employee (Mac DTS) [Macintosh Developer    Technical Support] and I've seen lots of half-baked applications    frameworks and "class libraries." I applaud the consistency,    simplicity, and adherence to the Mac interface that ToolsPlus    gives to Mac programmers.”Even your existing applications can take advantage of Tools Plus libraries. Your apps will have more features, they’ll be easier to maintain and easier to modify. You get more results with less effort.Tools Plus’ Future~~~~~~~~~~~~~~Tools Plus is constantly being enhanced to add more features and to make the current feature set even more robust. Our future is being built upon what we are doing today:  √ Continuous enhancements of Tools Plus libraries means more      (and better) features.  √ We are working on our “screen builder” project which will let      you design your application’s user interface with a MacDraw-      like tool, then generate the appropriate C or Pascal code that      makes calls to Tools Plus libraries. Unlike other code-      generators, our “screen builder” promises to create a _small_      amount of _simple_ source code, due entirely to the power of      Tools Plus libraries.Nobody else gives you both the power and simplicity of Tools Plus.Evaluating Tools Plus~~~~~~~~~~~~~~~~~  This fully featured copy of Tools Plus is distributed at no cost as EVALUATION SOFTWARE. The purpose of this is to allow you to EVALUATE Tools Plus before buying it. There are, however, terms and conditions to using this copy of Tools Plus, even for the purpose of evaluation.  For full details, please read the “Evaluation License & Legal Info” document included with this kit.Why an “Evaluation Kit” instead of a demo?~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  The Tools Plus Evaluation Kit is a method of software distribution that gives you an opportunity to try Tools Plus before buying it. It has ALL the features of our commercially distributed software. Demos, on the other hand, offer limited functionality or they are “crippled” in some way. We believe the best way to evaluate Tools Plus is to try it for yourself in real-life situations. You can’t do that with a demo.  You should always buy software that suits your requirements and budget. This Evaluation Kit makes it easier to determine if Tools Plus suits your needs, because you can try it before you buy it. We give you the ultimate money-back guarantee: if you don’t use Tools Plus, you don’t pay for it!  During your evaluation, you may use Tools Plus to develop and create applications without charge or obligation for up to thirty (30) days, but you may NOT distribute applications written with Tools Plus. Please read the “Evaluation License & Legal Info” document for full details on conditions and terms.  Tools Plus is COMMERCIAL software. Copyright laws apply, and Water’s Edge Software (the copyright holder) retains all rights with a few exceptions as specifically stated.MINIMUM Requirements to Develop Applications using Tools Plus~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~•    THINK C 5.0.1 or later      System 5.0 -- 1 MB RAM (2 MB with System 7)      Macintosh Plus  or Symantec C/C++ 6.0.1 or later      System 6.0.4 -- 4 MB RAM      Macintosh Plus  or Symantec C/C++ 7.0 or later      System 6.0.4 -- 8 MB RAM      Macintosh with 68020 processor or better  or THINK Pascal 4.0.2 or later      System 6.0.4 -- 1 MB RAM (2 MB with System 7)      Macintosh Plus  or CodeWarrior C/C++ 1.2.1 or later (from CW6 CD), 68K or PPC      System 7 -- 8 MB of RAM      Macintosh with 68020 processor or better  or CodeWarrior Pascal 950331 or later (from CW6 CD), 68K or PPC      System 7 -- 8 MB of RAM      Macintosh with 68020 processor or better• Hard disk (for your compiler and development environment)MINIMUM Requirements to Run Applications Written With Tools Plus~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~• Macintosh 512KE computer• System 5.0*• 512K RAM (64K for application)• Floppy disk drive*Tools Plus takes advantage of System 7’s features, but doesn’t  depend on them. You can compile Tools Plus libraries into  applications intended to run on System 5, 6 and System 7.Tools Plus User Manual~~~~~~~~~~~~~~~~~~  The User Manual that is included in this Evaluation Kit is extensive, well organized, and easy to follow. It has, however, been edited to (a) reduce its size to facilitate electronic transfer, and (b) allow you to read the files regardless of your brand and version of word processor. As a result, the User Manual included with this kit does not include pictures, illustrations, programming tips, or an index. When you become a Registered Developer, you will receive a beautiful 250 page illustrated and indexed Tools Plus User Manual.  For the best viewing results, please open the Tools Plus User Manual documents by first launching your word processor, then use the File menu’s Open command to open the desired document. Display the document using a monospaced font (Monaco 9pt is recommended). As a last resort, if you do not have a word processor, you can double-click any of the documents and TeachText (a free application from Apple that comes with each set of System-7 disks) will display them.Tools Plus User Manual’s Chapters~~~~~~~~~~~~~~~~~~~~~~~~~~~  The Tools Plus User Manual can be found as a set of documents in the “User Manual” folder. Each document represents a single chapter of the User Manual. If you view the folder by name, you will see the documents sorted by chapter number (because the documents’ names all start with the chapter number).  TeachText has a file limit of 32k (as do some low-end text processors), so chapters that exceed that limit have been split into several smaller files, each one suffixed with “1 of 2” and “2 of 2” etc. The following is a summary of the User Manual’s chapters:  “Evaluation License & Legal Info”       • Copyright and trademark information       • An explanation of Evaluation Software       • Software License and Warranty       • How to become a Tools Plus Registered Developer  “00-Contents”       • User Manual’s table of contents  “01-Introduction”       • What is Tools Plus       • An Overview of Tools Plus       • Who can benefit from Tools Plus       • What kind of applications can be written with Tools Plus       • What is Tools Plus not suitable for       • System Requirements (computer, system, memory, disk, etc.)       • Before You Start Programming       • If you are new to Macintosh programming  “02-Installing Tools Plus”       • Installation instructions describing how to install Tools Plus         in your THINK C/C++ project, or THINK Pascal project.       • How to compile the demo application included with Tools Plus  “03-Designing Your Application”       • How to design your application to work with Tools Plus       • Overview of Macintosh events vs Tools Plus events       • The main event loop       • Differences in Finder, MultiFinder and System 7  “04-Initializing Tools Plus”       • How to initialize the Tools Plus libraries before using them  “05-Windows”       • Explanation of windows’ features       • Creating and using windows in your application       • Creating and using a tool bar in your application       • Creating and using floating palettes in your application  “06-Buttons”       • Explanation of buttons’ features       • Creating and using buttons in your application (includes push-         buttons, radio buttons and check-boxes)  “07-Picture Buttons”       • Explanation of picture buttons’ features       • Creating and using picture buttons in your application  “08-Scroll Bars”       • Explanation of scroll bars’ features       • Creating and using scroll bars in your application  “09-Editing Fields”       • Explanation of editing fields’ features       • Creating and using editing fields in your application  “10-List Boxes”       • Explanation of list boxes’ features       • Creating and using list boxes in your application  “11-Pop-Up Menus”       • Explanation of pop-up menu’ features       • Creating and using pop-up menus in your application  “12-Menus”       • Explanation of menus’ features       • Creating and using pull-down menus in your application       • Creating and using hierarchical menus in your application  “13-Cursors”       • Explanation of cursor features       • Automatic cursor changes (cursor tables and zones)       • Cursor animation       • Creating and using cursors in your application  “14-System Polling”       • Explanation of Tools Plus’s automatic processes       • Polling for events (the main event loop)       • Tools Plus events vs Macintosh Toolbox events       • Responding to Tools Plus events  “15-Color&Multi Screen”       • Programming for Macs that have several monitors       • Color-dependent drawing (drawing that changes depending on          the monitor’s settings, such as: [1] color, gray or B&W,          [2] number of colors or grays)       • Highlighting and text on highlighted area  “16-User Notification”       • Explanation of User Notification features       • Setting and triggering User Notification in your application  “17-Dynamic Alerts”       • Explanation of Dynamic Alerts’ features       • Creating and using Dynamic Alerts in your application  “18-Misc Routines”       • Several Macro routines that perform commonly used tasks,          such as drawing icon families, drawing “zoom lines”, and          drawing the standard progress thermometer.  “19-Other Macintosh Features”       • Creating and using the Macintosh toolbox’s alerts and dialogs,          custom controls, and list manager.  “20-Memory”       • List of Tools Plus routines that consume memory, and details          as to how much memory.  “21-Font Heights”       • List of commonly used fonts and their heights  “22-Special Routines”       • Macintosh toolbox routines that should be used with caution or          not at all.       • Substitute Tools Plus routines are listed where the toolbox’s          routines should not be used.  “23-Completing Your Application”       • Finishing touches needed to complete an application written          with Tools Plus. Most of this is similar to ordinary Macintosh          applications (i.e. the SIZE resource, the application’s icon          family, the BNDL resource, etc.)  “24-Technical Support & Updates”       • How Water’s Edge Software technical support can help you       • Free software updates and upgradesP L E A S E   R E A D ....~~~~~~~~~~~~~~~~~  Please read the “Evaluation License & Legal Info” document. It grants you specific rights and defines the legal limits of use for this Evaluation Kit.  Also, please read the User Manual (“glancing” through it doesn’t count).Feedback~~~~~~~  In the interest of providing you with the best possible tools, we invite you to tell us your thoughts about Tools Plus, even if you decide not to get it. We reply promptly (and personally) to all queries.  Tell us what you like, what you don’t like, and let us know what features you would like to see in future releases. Please send your comments to any of the following:                         Water’s Edge Software                         2441 Lakeshore Road West                         Box 70022                         Oakville, Ontario                         Canada, L6L 6M9             Voice:  (416) 219-5628                 Fax:  (905) 847-1638          Internet:  WatersEdge@eWorld.com      (preferred)            eWorld:  WatersEdge    CompuServe:  73424,2507                          73424.2507@CompuServe.comNOTE: If you are using AppleLink or other e-mail system, you can likely send email to us through Internet. Please check your e-mail User Manual, or contact your e-mail Customer Service representative for information on sending email to Internet accounts. AppleLink users, for example, can reach us at:   WatersEdge@eWorld.com@INTERNET#E N J O Y !------------------------------------------------------------The “Tools Plus 2.6 Package” is a self-extracting archive created with StuffIt Deluxe. Portions are Copyright © 1990-94 by Aladdin Systems Inc., and Raymond Lau.Tools Plus™ is a trademark of Water’s Edge SoftwareStuffIt Deluxe™ is a trademark of Aladdin Systems Inc.
+[Display using Geneva 12]
+
+
+
+
+                 T o o l s   P l u s   2 . 6   E v a l u a t i o n   K i t
+
+                   copyright © 1989-95 Water’s Edge Software
+
+
+
+        ----------------------------------------------------
+             Tools Plus “GUI Building/Event Managing” libraries
+        ----------------------------------------------------
+
+
+
+
+What is “Tools Plus”
+~~~~~~~~~~~~~~~~
+  Tools Plus is a set of powerful “GUI Building/Event Managing” libraries for Macintosh programmers using any of the following compilers:
+    • Symantec Corporation’s THINK C or Symantec C/C++
+    • Symantec Corporation’s THINK Pascal
+    • Metrowerks CodeWarrior C/C++ and CodeWarrior Pascal
+       (for 680x0 and PowerPC processors)
+
+  Over 170 high-powered “set and forget” routines let you easily create your application’s user interface, while Tools Plus maintains it for you and takes care of event management.
+
+  In spite of its power and robust features, Tools Plus is easy to learn and easy to use, making it ideal for novices, intermediate developers, and experts.
+
+  With Tools Plus, you have the advantage of enhanced functionality, automation, and full integration of: windows, floating palettes, tool bar, cursors, buttons, picture buttons, scroll bars, editing fields, list boxes, pull-down and hierarchical menus, pop-up menus, the Edit menu, clipboard, alerts, event handling, and more.  Once you create your user interface with Tools Plus’ routines, Tools Plus makes it work.  Virtually all Tools Plus routines can be executed with a single line of code.
+
+  Using Tools Plus simplifies your programming and accelerates development, so you’ll be able to create applications…
+     √ in less time
+     √ with considerably less source code
+     √ with far fewer bugs
+     √ and with more features
+than if you use ordinary C/C++ or Pascal.
+
+  Tools Plus libraries can be compiled into applications intended for System 5 and 6 (running under Finder and MultiFinder), System 7, and on the PowerPC (in emulated or native mode).
+
+
+
+
+..............................................................................................................................................
+
+If you decide to buy Tools Plus, you will receive these special benefits:
+   √ License to continue using Tools Plus after the thirty day
+      evaluation period has expired
+   √ The latest version of Tools Plus on a disk
+   √ Libraries that are more compact (when compiled) and
+       memory-efficient
+   √ A printed 250-page User Manual -- It has pictures, illustrations,
+       programming tips, and an index that are not included in this
+       condensed documentation. The printed manual is also much
+       easier to use than a set of text files.
+   √ A floating palette WDEF that features a full color drag bar (just
+       like commercial applications)
+   √ Free PROMPT technical support
+   √ Free software updates
+   √ Major software upgrades at reduced prices
+   √ License to distribute the programs you create with Tools Plus
+       (royalty free, unlimited number of apps, unlimited copies)
+
+..............................................................................................................................................
+
+
+
+
+
+
+How do you Program with Tools Plus?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  If you already know how to program in C, C++, or Pascal, you are well on your way to programming with Tools Plus. Tools Plus lets you build on what you already know instead of starting over again.
+
+  If you are just learning how to program, Tools Plus fits easily into C, C++, or Pascal, and makes Macintosh programming a quantum leap easier than learning all the intricacies of the Macintosh’s toolbox, then having to constantly use them.
+
+  Instead of using a multitude of Macintosh toolbox routines to create your user interface, you’ll use relatively few Tools Plus routines. A single Tools Plus routine often performs the work of hundreds (sometimes thousands) of lines of conventional code.
+
+  The difference between Tools Plus and other tools becomes very apparent when you want to make your application’s user interface work. With Tools Plus, this happens _automatically_, saving you programming and debugging time and hassles.
+
+  To finish things off, your application’s event handling logic is reduced to a simple premise: Tools Plus tells me what happened, and I do it. For example, Tools Plus may tell your application that the user selected the 15th item in the “Fonts” pop-up menu located in the “Format Text” window. You simply do whatever is appropriate for that user-oriented action.
+
+  All this time, Tools Plus is making your application’s user interface work, so you don’t have to bother with intercepting and processing low-level events, or managing your GUI. You also won’t have to deal with cryptic commands and data structures, complex processes, or convoluted work-arounds.
+
+
+
+Important Things to Remember:
+~~~~~~~~~~~~~~~~~~~~~~~~
+Tools Plus IS:
+       √ Small, efficient, quick and flexible
+       √ Easy to learn and easy to use
+       √ A great way to get more done with a lot less work
+
+Tools Plus is
+       - NOT a code generator, shell program, or class library
+       - NOT an assembly of custom resources
+
+
+
+
+
+
+Your Existing Applications and Tools Plus
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The following is an excerpt from an e-mail sent to us by a new Tools Plus developer:
+
+      “I converted a fairly large C program to use ToolsPlus. It took
+    me a couple of days. I was able to eliminate hundreds of lines of
+    source code and greatly simplify my event processing and window
+    handling...
+      I'm a former Apple employee (Mac DTS) [Macintosh Developer
+    Technical Support] and I've seen lots of half-baked applications
+    frameworks and "class libraries." I applaud the consistency,
+    simplicity, and adherence to the Mac interface that ToolsPlus
+    gives to Mac programmers.”
+
+Even your existing applications can take advantage of Tools Plus libraries. Your apps will have more features, they’ll be easier to maintain and easier to modify. You get more results with less effort.
+
+
+
+
+
+
+Tools Plus’ Future
+~~~~~~~~~~~~~~
+Tools Plus is constantly being enhanced to add more features and to make the current feature set even more robust. Our future is being built upon what we are doing today:
+  √ Continuous enhancements of Tools Plus libraries means more
+      (and better) features.
+  √ We are working on our “screen builder” project which will let
+      you design your application’s user interface with a MacDraw-
+      like tool, then generate the appropriate C or Pascal code that
+      makes calls to Tools Plus libraries. Unlike other code-
+      generators, our “screen builder” promises to create a _small_
+      amount of _simple_ source code, due entirely to the power of
+      Tools Plus libraries.
+Nobody else gives you both the power and simplicity of Tools Plus.
+
+
+
+
+
+
+Evaluating Tools Plus
+~~~~~~~~~~~~~~~~~
+  This fully featured copy of Tools Plus is distributed at no cost as EVALUATION SOFTWARE. The purpose of this is to allow you to EVALUATE Tools Plus before buying it. There are, however, terms and conditions to using this copy of Tools Plus, even for the purpose of evaluation.
+
+  For full details, please read the “Evaluation License & Legal Info” document included with this kit.
+
+
+
+Why an “Evaluation Kit” instead of a demo?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  The Tools Plus Evaluation Kit is a method of software distribution that gives you an opportunity to try Tools Plus before buying it. It has ALL the features of our commercially distributed software. Demos, on the other hand, offer limited functionality or they are “crippled” in some way. We believe the best way to evaluate Tools Plus is to try it for yourself in real-life situations. You can’t do that with a demo.
+
+  You should always buy software that suits your requirements and budget. This Evaluation Kit makes it easier to determine if Tools Plus suits your needs, because you can try it before you buy it. We give you the ultimate money-back guarantee: if you don’t use Tools Plus, you don’t pay for it!
+
+  During your evaluation, you may use Tools Plus to develop and create applications without charge or obligation for up to thirty (30) days, but you may NOT distribute applications written with Tools Plus. Please read the “Evaluation License & Legal Info” document for full details on conditions and terms.
+
+  Tools Plus is COMMERCIAL software. Copyright laws apply, and Water’s Edge Software (the copyright holder) retains all rights with a few exceptions as specifically stated.
+
+
+
+
+
+
+MINIMUM Requirements to Develop Applications using Tools Plus
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+•    THINK C 5.0.1 or later
+      System 5.0 -- 1 MB RAM (2 MB with System 7)
+      Macintosh Plus
+
+  or Symantec C/C++ 6.0.1 or later
+      System 6.0.4 -- 4 MB RAM
+      Macintosh Plus
+
+  or Symantec C/C++ 7.0 or later
+      System 6.0.4 -- 8 MB RAM
+      Macintosh with 68020 processor or better
+
+  or THINK Pascal 4.0.2 or later
+      System 6.0.4 -- 1 MB RAM (2 MB with System 7)
+      Macintosh Plus
+
+  or CodeWarrior C/C++ 1.2.1 or later (from CW6 CD), 68K or PPC
+      System 7 -- 8 MB of RAM
+      Macintosh with 68020 processor or better
+
+  or CodeWarrior Pascal 950331 or later (from CW6 CD), 68K or PPC
+      System 7 -- 8 MB of RAM
+      Macintosh with 68020 processor or better
+
+• Hard disk (for your compiler and development environment)
+
+
+
+
+MINIMUM Requirements to Run Applications Written With Tools Plus
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+• Macintosh 512KE computer
+• System 5.0*
+• 512K RAM (64K for application)
+• Floppy disk drive
+
+*Tools Plus takes advantage of System 7’s features, but doesn’t
+  depend on them. You can compile Tools Plus libraries into
+  applications intended to run on System 5, 6 and System 7.
+
+
+
+
+
+
+Tools Plus User Manual
+~~~~~~~~~~~~~~~~~~
+  The User Manual that is included in this Evaluation Kit is extensive, well organized, and easy to follow. It has, however, been edited to (a) reduce its size to facilitate electronic transfer, and (b) allow you to read the files regardless of your brand and version of word processor. As a result, the User Manual included with this kit does not include pictures, illustrations, programming tips, or an index. When you become a Registered Developer, you will receive a beautiful 250 page illustrated and indexed Tools Plus User Manual.
+
+  For the best viewing results, please open the Tools Plus User Manual documents by first launching your word processor, then use the File menu’s Open command to open the desired document. Display the document using a monospaced font (Monaco 9pt is recommended). As a last resort, if you do not have a word processor, you can double-click any of the documents and TeachText (a free application from Apple that comes with each set of System-7 disks) will display them.
+
+
+
+Tools Plus User Manual’s Chapters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  The Tools Plus User Manual can be found as a set of documents in the “User Manual” folder. Each document represents a single chapter of the User Manual. If you view the folder by name, you will see the documents sorted by chapter number (because the documents’ names all start with the chapter number).
+  TeachText has a file limit of 32k (as do some low-end text processors), so chapters that exceed that limit have been split into several smaller files, each one suffixed with “1 of 2” and “2 of 2” etc. The following is a summary of the User Manual’s chapters:
+
+  “Evaluation License & Legal Info”
+       • Copyright and trademark information
+       • An explanation of Evaluation Software
+       • Software License and Warranty
+       • How to become a Tools Plus Registered Developer
+
+  “00-Contents”
+       • User Manual’s table of contents
+
+  “01-Introduction”
+       • What is Tools Plus
+       • An Overview of Tools Plus
+       • Who can benefit from Tools Plus
+       • What kind of applications can be written with Tools Plus
+       • What is Tools Plus not suitable for
+       • System Requirements (computer, system, memory, disk, etc.)
+       • Before You Start Programming
+       • If you are new to Macintosh programming
+
+  “02-Installing Tools Plus”
+       • Installation instructions describing how to install Tools Plus
+         in your THINK C/C++ project, or THINK Pascal project.
+       • How to compile the demo application included with Tools Plus
+
+  “03-Designing Your Application”
+       • How to design your application to work with Tools Plus
+       • Overview of Macintosh events vs Tools Plus events
+       • The main event loop
+       • Differences in Finder, MultiFinder and System 7
+
+  “04-Initializing Tools Plus”
+       • How to initialize the Tools Plus libraries before using them
+
+  “05-Windows”
+       • Explanation of windows’ features
+       • Creating and using windows in your application
+       • Creating and using a tool bar in your application
+       • Creating and using floating palettes in your application
+
+  “06-Buttons”
+       • Explanation of buttons’ features
+       • Creating and using buttons in your application (includes push-
+         buttons, radio buttons and check-boxes)
+
+  “07-Picture Buttons”
+       • Explanation of picture buttons’ features
+       • Creating and using picture buttons in your application
+
+  “08-Scroll Bars”
+       • Explanation of scroll bars’ features
+       • Creating and using scroll bars in your application
+
+  “09-Editing Fields”
+       • Explanation of editing fields’ features
+       • Creating and using editing fields in your application
+
+  “10-List Boxes”
+       • Explanation of list boxes’ features
+       • Creating and using list boxes in your application
+
+  “11-Pop-Up Menus”
+       • Explanation of pop-up menu’ features
+       • Creating and using pop-up menus in your application
+
+  “12-Menus”
+       • Explanation of menus’ features
+       • Creating and using pull-down menus in your application
+       • Creating and using hierarchical menus in your application
+
+  “13-Cursors”
+       • Explanation of cursor features
+       • Automatic cursor changes (cursor tables and zones)
+       • Cursor animation
+       • Creating and using cursors in your application
+
+  “14-System Polling”
+       • Explanation of Tools Plus’s automatic processes
+       • Polling for events (the main event loop)
+       • Tools Plus events vs Macintosh Toolbox events
+       • Responding to Tools Plus events
+
+  “15-Color&Multi Screen”
+       • Programming for Macs that have several monitors
+       • Color-dependent drawing (drawing that changes depending on
+          the monitor’s settings, such as: [1] color, gray or B&W,
+          [2] number of colors or grays)
+       • Highlighting and text on highlighted area
+
+  “16-User Notification”
+       • Explanation of User Notification features
+       • Setting and triggering User Notification in your application
+
+  “17-Dynamic Alerts”
+       • Explanation of Dynamic Alerts’ features
+       • Creating and using Dynamic Alerts in your application
+
+  “18-Misc Routines”
+       • Several Macro routines that perform commonly used tasks,
+          such as drawing icon families, drawing “zoom lines”, and
+          drawing the standard progress thermometer.
+
+  “19-Other Macintosh Features”
+       • Creating and using the Macintosh toolbox’s alerts and dialogs,
+          custom controls, and list manager.
+
+  “20-Memory”
+       • List of Tools Plus routines that consume memory, and details
+          as to how much memory.
+
+  “21-Font Heights”
+       • List of commonly used fonts and their heights
+
+  “22-Special Routines”
+       • Macintosh toolbox routines that should be used with caution or
+          not at all.
+       • Substitute Tools Plus routines are listed where the toolbox’s
+          routines should not be used.
+
+  “23-Completing Your Application”
+       • Finishing touches needed to complete an application written
+          with Tools Plus. Most of this is similar to ordinary Macintosh
+          applications (i.e. the SIZE resource, the application’s icon
+          family, the BNDL resource, etc.)
+
+  “24-Technical Support & Updates”
+       • How Water’s Edge Software technical support can help you
+       • Free software updates and upgrades
+
+
+
+
+
+
+P L E A S E   R E A D ....
+~~~~~~~~~~~~~~~~~
+  Please read the “Evaluation License & Legal Info” document. It grants you specific rights and defines the legal limits of use for this Evaluation Kit.
+  Also, please read the User Manual (“glancing” through it doesn’t count).
+
+
+
+
+
+
+Feedback
+~~~~~~~
+  In the interest of providing you with the best possible tools, we invite you to tell us your thoughts about Tools Plus, even if you decide not to get it. We reply promptly (and personally) to all queries.
+
+  Tell us what you like, what you don’t like, and let us know what features you would like to see in future releases. Please send your comments to any of the following:
+
+                         Water’s Edge Software
+                         2441 Lakeshore Road West
+                         Box 70022
+                         Oakville, Ontario
+                         Canada, L6L 6M9
+
+             Voice:  (416) 219-5628
+                 Fax:  (905) 847-1638
+
+          Internet:  WatersEdge@eWorld.com      (preferred)
+            eWorld:  WatersEdge
+    CompuServe:  73424,2507
+                          73424.2507@CompuServe.com
+
+NOTE: If you are using AppleLink or other e-mail system, you can likely send email to us through Internet. Please check your e-mail User Manual, or contact your e-mail Customer Service representative for information on sending email to Internet accounts. AppleLink users, for example, can reach us at:
+
+   WatersEdge@eWorld.com@INTERNET#
+
+
+
+
+
+E N J O Y !
+
+
+
+
+------------------------------------------------------------
+The “Tools Plus 2.6 Package” is a self-extracting archive created with StuffIt Deluxe. Portions are Copyright © 1990-94 by Aladdin Systems Inc., and Raymond Lau.
+
+Tools Plus™ is a trademark of Water’s Edge Software
+StuffIt Deluxe™ is a trademark of Aladdin Systems Inc.

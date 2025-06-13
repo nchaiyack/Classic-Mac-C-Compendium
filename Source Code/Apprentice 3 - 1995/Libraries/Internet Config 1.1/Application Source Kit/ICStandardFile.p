@@ -1,1 +1,125 @@
-unit ICStandardFile;interface	function ICStandardGetFile (t: OSType; var fs: FSSpec; var fi: FInfo): OSErr;	function ICStandardPutFile (prompt, name: str255; var fs: FSSpec): OSErr;	function ICStandardGetFolder (var fs: FSSpec; var dirID: longInt): OSErr;implementation	uses		Finder, ICGlobals, ICMiscSubs, StandardGetFolder;	function ICStandardGetFile (t: OSType; var fs: FSSpec; var fi: FInfo): OSErr;		var			tl: SFTypeList;			reply: SFReply;			valid: boolean;			info: FInfo;			types: integer;			err: OSErr;			junklong: longInt;			nreply: StandardFileReply;	begin		tl[0] := t;		if t = OSType(0) then begin			types := -1;		end		else if t = 'APPL' then begin			tl[1] := kApplicationAliasType;			types := 2;		end		else begin			types := 1;		end;		err := userCanceledErr;		if has_newStdFile then begin			StandardGetFile(nil, types, tl, nreply);			if nreply.sfGood then begin				fs := nreply.sfFile;				err := HGetFInfo(fs.vRefNum, fs.parID, fs.name, fi);			end;		end		else begin			SFGetFile(Point($00640064), '', nil, types, tl, nil, reply);			if reply.good then begin				err := GetFInfo(reply.fName, reply.vRefNum, fi);				if err = noErr then begin					fs.name := reply.fName;					err := GetWDinfo(reply.vRefNum, fs.vRefNum, fs.parID, junklong);				end;			end;		end;		ICStandardGetFile := err;	end;	function ICStandardPutFile (prompt, name: str255; var fs: FSSpec): OSErr;		var			reply: SFReply;			err: OSErr;			junklong: longInt;			nreply: StandardFileReply;	begin		err := userCanceledErr;		if has_newStdFile then begin			StandardPutFile(prompt, name, nreply);			if nreply.sfGood then begin				fs := nreply.sfFile;				err := noErr;			end;		end		else begin			SFPutFile(Point($00640064), prompt, name, nil, reply);			if reply.good then begin				fs.name := reply.fName;				err := GetWDinfo(reply.vRefNum, fs.vRefNum, fs.parID, junklong);			end;		end;		ICStandardPutFile := err;	end;	function ButtonHook (item: integer; dlg: DialogPtr): integer;	begin		if item = 11 then begin			item := sfItemOpenButton;		end;		ButtonHook := item;	end;	function ICStandardGetFolder (var fs: FSSpec; var dirID: longInt): OSErr;		var			err: OSErr;			typelist: SFTypeList;			cpb: CInfoPBRec;			reply: SFReply;			temp: FSSpec;			junklong: longInt;			nreply: StandardFileReply;	begin		err := userCanceledErr;		if has_newStdFile then begin			StandardGetFolder(Point($00640064), '', nreply);			if nreply.sfGood then begin				fs := nreply.sfFile;				err := noErr;			end;		end		else begin			typeList[0] := OSType(0); { numTypes=0 doesn't seem to stop files from being displayed }			SFPGetFile(Point($00640064), '', nil, 1, typeList, @ButtonHook, reply, 1500, nil);			if reply.good then begin				err := GetWDinfo(reply.vRefNum, fs.vRefNum, fs.parID, junklong);			end; (* if *)		end;		if err = noErr then begin			err := FSpGetCatInfo(fs, -1, cpb);			if err = noErr then begin				fs.parID := cpb.ioDrParID;				dirID := cpb.ioDirID;			end; (* if *)		end;		ICStandardGetFolder := err;	end;end.
+unit ICStandardFile;
+
+interface
+
+	function ICStandardGetFile (t: OSType; var fs: FSSpec; var fi: FInfo): OSErr;
+	function ICStandardPutFile (prompt, name: str255; var fs: FSSpec): OSErr;
+	function ICStandardGetFolder (var fs: FSSpec; var dirID: longInt): OSErr;
+
+implementation
+
+	uses
+		Finder, ICGlobals, ICMiscSubs, StandardGetFolder;
+
+	function ICStandardGetFile (t: OSType; var fs: FSSpec; var fi: FInfo): OSErr;
+		var
+			tl: SFTypeList;
+			reply: SFReply;
+			valid: boolean;
+			info: FInfo;
+			types: integer;
+			err: OSErr;
+			junklong: longInt;
+			nreply: StandardFileReply;
+	begin
+		tl[0] := t;
+		if t = OSType(0) then begin
+			types := -1;
+		end
+		else if t = 'APPL' then begin
+			tl[1] := kApplicationAliasType;
+			types := 2;
+		end
+		else begin
+			types := 1;
+		end;
+		err := userCanceledErr;
+		if has_newStdFile then begin
+			StandardGetFile(nil, types, tl, nreply);
+			if nreply.sfGood then begin
+				fs := nreply.sfFile;
+				err := HGetFInfo(fs.vRefNum, fs.parID, fs.name, fi);
+			end;
+		end
+		else begin
+			SFGetFile(Point($00640064), '', nil, types, tl, nil, reply);
+			if reply.good then begin
+				err := GetFInfo(reply.fName, reply.vRefNum, fi);
+				if err = noErr then begin
+					fs.name := reply.fName;
+					err := GetWDinfo(reply.vRefNum, fs.vRefNum, fs.parID, junklong);
+				end;
+			end;
+		end;
+		ICStandardGetFile := err;
+	end;
+
+	function ICStandardPutFile (prompt, name: str255; var fs: FSSpec): OSErr;
+		var
+			reply: SFReply;
+			err: OSErr;
+			junklong: longInt;
+			nreply: StandardFileReply;
+	begin
+		err := userCanceledErr;
+		if has_newStdFile then begin
+			StandardPutFile(prompt, name, nreply);
+			if nreply.sfGood then begin
+				fs := nreply.sfFile;
+				err := noErr;
+			end;
+		end
+		else begin
+			SFPutFile(Point($00640064), prompt, name, nil, reply);
+			if reply.good then begin
+				fs.name := reply.fName;
+				err := GetWDinfo(reply.vRefNum, fs.vRefNum, fs.parID, junklong);
+			end;
+		end;
+		ICStandardPutFile := err;
+	end;
+
+	function ButtonHook (item: integer; dlg: DialogPtr): integer;
+	begin
+		if item = 11 then begin
+			item := sfItemOpenButton;
+		end;
+		ButtonHook := item;
+	end;
+
+	function ICStandardGetFolder (var fs: FSSpec; var dirID: longInt): OSErr;
+		var
+			err: OSErr;
+			typelist: SFTypeList;
+			cpb: CInfoPBRec;
+			reply: SFReply;
+			temp: FSSpec;
+			junklong: longInt;
+			nreply: StandardFileReply;
+	begin
+		err := userCanceledErr;
+		if has_newStdFile then begin
+			StandardGetFolder(Point($00640064), '', nreply);
+			if nreply.sfGood then begin
+				fs := nreply.sfFile;
+				err := noErr;
+			end;
+		end
+		else begin
+			typeList[0] := OSType(0); { numTypes=0 doesn't seem to stop files from being displayed }
+			SFPGetFile(Point($00640064), '', nil, 1, typeList, @ButtonHook, reply, 1500, nil);
+			if reply.good then begin
+				err := GetWDinfo(reply.vRefNum, fs.vRefNum, fs.parID, junklong);
+			end; (* if *)
+		end;
+		if err = noErr then begin
+			err := FSpGetCatInfo(fs, -1, cpb);
+			if err = noErr then begin
+				fs.parID := cpb.ioDrParID;
+				dirID := cpb.ioDirID;
+			end; (* if *)
+		end;
+		ICStandardGetFolder := err;
+	end;
+
+end.

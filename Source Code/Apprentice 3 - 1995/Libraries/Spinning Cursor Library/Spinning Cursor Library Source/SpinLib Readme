@@ -1,1 +1,7 @@
-/*	This is just a simple beachball spinning library.  It will spin a beachball either forwards or	backwards.  See main.c for usage.		All code © 1994 by Dave Nebinger.	*/
+/*
+	This is just a simple beachball spinning library.  It will spin a beachball either forwards or
+	backwards.  See main.c for usage.
+	
+	All code © 1994 by Dave Nebinger.
+	
+*/

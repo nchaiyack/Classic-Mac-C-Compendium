@@ -1,1 +1,108 @@
-rDemo HeadersfCBrowseResDoc.hifCClickCmdPane.hifCDemoApp.hifCDemoDocument.hifCDemoTable.hifCDemoTableDoc.hifCDLOGBrowser.hifCNewDocDialog.hifCResBrowser.hifCResListPane.hifCResTypePane.hifCRowColSizer.hifCStringArray.hx510573183,331204045c0,17a//#include <size_t.h>		// ¥¥ CW TCLc19,39efCStringTable.hifCStringTableDemo.hifCTableLabels.hifCTableScroller.hifCTextDoc.hifDemo.hifDemoCommands.hifResourceStructs.hiorDemo SourcesfCBrowseResDoc.cpifCClickCmdPane.cpifCDemoApp.cpx1734983,206121732c0,37a#include "CScrollPane.h"					// ¥¥ CW TCLc38,142a	MenuHandle fontMenu = GetMHandle(MENUfont);		// ¥¥ CW TCL 1.8a	ASSERT(fontMenu != NULL);						// ¥¥ CW TCL 1.8a	FailNIL(fontMenu);								// ¥¥ CW TCL 1.8c152,152a	AddResMenu(fontMenu, 'FONT');c144,452efCDemoTable.cpifCDemoTableDoc.cpifCDLOGBrowser.cpifCNewDocDialog.cpifCResBrowser.cpifCResListPane.cpifCResTypePane.cpifCRowColSizer.cpifCStringArray.cpx426100354,364015432c0,23a	CArray::IArray( Min( maxStringLength, (long)sizeof( Str255)));c25,118efCStringTable.cpifCStringTableDemo.cpifCTableLabels.cpifCTableScroller.cpifCTextDoc.cpx349207861,22032297c0,295a	sizeRect.right = Min(pageWidth + SBARSIZE, (long)sizeRect.right);a	sizeRect.bottom = Min(pageHeight + SBARSIZE, (long)sizeRect.bottom);c298,621efDemo.cpifDemo.rioo
+rDemo Headers
+fCBrowseResDoc.h
+i
+fCClickCmdPane.h
+i
+fCDemoApp.h
+i
+fCDemoDocument.h
+i
+fCDemoTable.h
+i
+fCDemoTableDoc.h
+i
+fCDLOGBrowser.h
+i
+fCNewDocDialog.h
+i
+fCResBrowser.h
+i
+fCResListPane.h
+i
+fCResTypePane.h
+i
+fCRowColSizer.h
+i
+fCStringArray.h
+x510573183,331204045
+c0,17
+a//#include <size_t.h>		// ¥¥ CW TCL
+c19,39
+e
+fCStringTable.h
+i
+fCStringTableDemo.h
+i
+fCTableLabels.h
+i
+fCTableScroller.h
+i
+fCTextDoc.h
+i
+fDemo.h
+i
+fDemoCommands.h
+i
+fResourceStructs.h
+i
+o
+rDemo Sources
+fCBrowseResDoc.cp
+i
+fCClickCmdPane.cp
+i
+fCDemoApp.cp
+x1734983,206121732
+c0,37
+a#include "CScrollPane.h"					// ¥¥ CW TCL
+c38,142
+a	MenuHandle fontMenu = GetMHandle(MENUfont);		// ¥¥ CW TCL 1.8
+a	ASSERT(fontMenu != NULL);						// ¥¥ CW TCL 1.8
+a	FailNIL(fontMenu);								// ¥¥ CW TCL 1.8
+c152,152
+a	AddResMenu(fontMenu, 'FONT');
+c144,452
+e
+fCDemoTable.cp
+i
+fCDemoTableDoc.cp
+i
+fCDLOGBrowser.cp
+i
+fCNewDocDialog.cp
+i
+fCResBrowser.cp
+i
+fCResListPane.cp
+i
+fCResTypePane.cp
+i
+fCRowColSizer.cp
+i
+fCStringArray.cp
+x426100354,364015432
+c0,23
+a	CArray::IArray( Min( maxStringLength, (long)sizeof( Str255)));
+c25,118
+e
+fCStringTable.cp
+i
+fCStringTableDemo.cp
+i
+fCTableLabels.cp
+i
+fCTableScroller.cp
+i
+fCTextDoc.cp
+x349207861,22032297
+c0,295
+a	sizeRect.right = Min(pageWidth + SBARSIZE, (long)sizeRect.right);
+a	sizeRect.bottom = Min(pageHeight + SBARSIZE, (long)sizeRect.bottom);
+c298,621
+e
+fDemo.cp
+i
+fDemo.r
+i
+o
+o

@@ -1,1 +1,203 @@
-/* Definitions of cross-interface commands for Xconq.   Copyright (C) 1993, 1994, 1995 Stanley T. Shebs.Xconq is free software; you can redistribute it and/or modifyit under the terms of the GNU General Public License as published bythe Free Software Foundation; either version 2, or (at your option)any later version.  See the file COPYING.  */DEF_CMD(  ' ' , "reserve", "U", do_reserve,  "put into reserve for this turn")DEF_CMD(  '?' , "help", "", do_help,  "display help info")DEF_CMD(  '!' , "detonate", "U", do_detonate,  "detonate")DEF_CMD(  '.' , "recenter", "", do_recenter,  "center around the current point or selected units")DEF_CMD(  '#' , "distance", "", do_distance,  "display distance to selected place")DEF_CMD(  'a' , "attack", "U", do_attack,  "attack")DEF_CMD(  'A' , "add-terrain", "U", do_add_terrain,  "add terrain")DEF_CMD(C('A'), "auto", "U", do_auto,  "toggle AI control of unit")DEF_CMD(  'b' , "southwest", "U", do_dir,  "move southwest")DEF_CMD(  'B' , "southwest-multiple", "U", do_dir_multiple,  "move southwest multiple")DEF_CMD(  'C' , "clear-plan", "U", do_clear_plan,  "clear unit plans")DEF_CMD(C('C'), "end-turn", "", do_end_turn,  "end activity for this turn")DEF_CMD(  'd' , "delay", "U", do_delay,  "delay unit action until after others have moved")DEF_CMD(  'D' , "disband", "U", do_disband,  "disband a unit")DEF_CMD(C('D'), "detach", "U", do_detach,  "detach part of a unit")DEF_CMD(  'f' , "fire", "U", do_fire,  "fire at a unit")DEF_CMD(  'F' , "formation", "U", do_set_formation,  "set position of units relative to another")DEF_CMD(C('F'), "fire-into", "U", do_fire_into,  "fire into a location")DEF_CMD(  'g' , "give", "U", do_give,  "give supplies")DEF_CMD(  'G' , "give-unit", "US", do_give_unit,  "give unit to side")DEF_CMD(  'h' , "west", "U", do_dir,  "move west")DEF_CMD(  'H' , "west-multiple", "U", do_dir_multiple,  "move west multiple")DEF_CMD(  'j' , "south", "U", do_dir,  "move south")DEF_CMD(  'J' , "south-multiple", "U", do_dir_multiple,  "move south multiple")DEF_CMD(  'k' , "north", "U", do_dir,  "move north")DEF_CMD(  'K' , "north-multiple", "U", do_dir_multiple,  "move north multiple")DEF_CMD(  'l' , "east", "U", do_dir,  "move east")DEF_CMD(  'L' , "east-multiple", "U", do_dir_multiple,  "move east multiple")DEF_CMD(  'm' , "move-to", "U", do_move_to,  "move to a place")DEF_CMD(  'M' , "message", "S", do_message,  "send a message to another side or sides")DEF_CMD(C('M'), "end-turn", "", do_end_turn,  "end activity for this turn")DEF_CMD(  'n' , "southeast", "U", do_dir,  "move southeast")DEF_CMD(  'N' , "southeast-multiple", "U", do_dir_multiple,  "move southeast multiple")DEF_CMD(  'o' , "other", "", do_other,  "other commands")DEF_CMD(  'p' , "produce", "U", do_produce,  "set material production")DEF_CMD(  'P' , "build", "U", do_build,  "set up construction tasks")DEF_CMD(  'Q' , "quit", "", do_quit,  "get out of the game")DEF_CMD(  'r' , "return", "U", do_return,  "return to a resupply point")DEF_CMD(  'R' , "remove-terrain", "U", do_remove_terrain,  "remove terrain")DEF_CMD(C('R'), "refresh", "", do_refresh,  "refresh/redraw display")DEF_CMD(  's' , "sleep", "U", do_sleep,  "go to sleep")DEF_CMD(  'S' , "save", "", do_save,  "save the game into a file")DEF_CMD(  't' , "take", "U", do_take,  "take supplies from unit or terrain")DEF_CMD(  'T' , "take-unit", "U", do_take_unit,  "take unit from another side")DEF_CMD(  'u' , "northeast", "U", do_dir,  "move northeast")DEF_CMD(  'U' , "northeast-multiple", "U", do_dir_multiple,  "move northeast multiple")DEF_CMD(  'w' , "wake", "U", do_wake,  "wake units up")DEF_CMD(  'W' , "wakeall", "U", do_wake_all,  "wake units and all their occupants up")DEF_CMD(  'y' , "northwest", "U", do_dir,  "move northwest")DEF_CMD(  'Y' , "northwest-multiple", "U", do_dir_multiple,  "move northwest multiple")DEF_CMD(  'z' , "survey", "", do_survey,  "switch between surveying and moving")/* Commands with no dedicated single characters. */DEF_CMD(   0  , "add-player", "", do_add_player,  "add another player to the game")DEF_CMD(   0  , "ai", "", do_ai_side,  "switch side over to AI control")DEF_CMD(   0  , "copying", "", do_copying,  "display copying conditions")DEF_CMD(   0  , "name", "U", do_name,  "name a unit")DEF_CMD(   0  , "print", "", do_print_view,  "print a view of the world")DEF_CMD(   0  , "version", "", do_version,  "display version info")DEF_CMD(   0  , "warranty", "", do_warranty,  "display non-warranty")#ifdef DESIGNERSDEF_CMD(   0  , "design", "", do_design,  "toggle designer abilities")#endif /* DESIGNERS */#ifdef DEBUGGINGDEF_CMD(   0  , "D", "", do_debug,  "toggle general debugging")DEF_CMD(   0  , "DG", "", do_debugg,  "toggle graphical interface debugging")DEF_CMD(   0  , "DM", "", do_debugm,  "toggle AI (mplayer) debugging")#endif /* DEBUGGING */
+/* Definitions of cross-interface commands for Xconq.
+   Copyright (C) 1993, 1994, 1995 Stanley T. Shebs.
+
+Xconq is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2, or (at your option)
+any later version.  See the file COPYING.  */
+
+DEF_CMD(  ' ' , "reserve", "U", do_reserve,
+  "put into reserve for this turn")
+
+DEF_CMD(  '?' , "help", "", do_help,
+  "display help info")
+
+DEF_CMD(  '!' , "detonate", "U", do_detonate,
+  "detonate")
+
+DEF_CMD(  '.' , "recenter", "", do_recenter,
+  "center around the current point or selected units")
+
+DEF_CMD(  '#' , "distance", "", do_distance,
+  "display distance to selected place")
+
+DEF_CMD(  'a' , "attack", "U", do_attack,
+  "attack")
+
+DEF_CMD(  'A' , "add-terrain", "U", do_add_terrain,
+  "add terrain")
+
+DEF_CMD(C('A'), "auto", "U", do_auto,
+  "toggle AI control of unit")
+
+DEF_CMD(  'b' , "southwest", "U", do_dir,
+  "move southwest")
+
+DEF_CMD(  'B' , "southwest-multiple", "U", do_dir_multiple,
+  "move southwest multiple")
+
+DEF_CMD(  'C' , "clear-plan", "U", do_clear_plan,
+  "clear unit plans")
+
+DEF_CMD(C('C'), "end-turn", "", do_end_turn,
+  "end activity for this turn")
+
+DEF_CMD(  'd' , "delay", "U", do_delay,
+  "delay unit action until after others have moved")
+
+DEF_CMD(  'D' , "disband", "U", do_disband,
+  "disband a unit")
+
+DEF_CMD(C('D'), "detach", "U", do_detach,
+  "detach part of a unit")
+
+DEF_CMD(  'f' , "fire", "U", do_fire,
+  "fire at a unit")
+
+DEF_CMD(  'F' , "formation", "U", do_set_formation,
+  "set position of units relative to another")
+
+DEF_CMD(C('F'), "fire-into", "U", do_fire_into,
+  "fire into a location")
+
+DEF_CMD(  'g' , "give", "U", do_give,
+  "give supplies")
+
+DEF_CMD(  'G' , "give-unit", "US", do_give_unit,
+  "give unit to side")
+
+DEF_CMD(  'h' , "west", "U", do_dir,
+  "move west")
+
+DEF_CMD(  'H' , "west-multiple", "U", do_dir_multiple,
+  "move west multiple")
+
+DEF_CMD(  'j' , "south", "U", do_dir,
+  "move south")
+
+DEF_CMD(  'J' , "south-multiple", "U", do_dir_multiple,
+  "move south multiple")
+
+DEF_CMD(  'k' , "north", "U", do_dir,
+  "move north")
+
+DEF_CMD(  'K' , "north-multiple", "U", do_dir_multiple,
+  "move north multiple")
+
+DEF_CMD(  'l' , "east", "U", do_dir,
+  "move east")
+
+DEF_CMD(  'L' , "east-multiple", "U", do_dir_multiple,
+  "move east multiple")
+
+DEF_CMD(  'm' , "move-to", "U", do_move_to,
+  "move to a place")
+
+DEF_CMD(  'M' , "message", "S", do_message,
+  "send a message to another side or sides")
+
+DEF_CMD(C('M'), "end-turn", "", do_end_turn,
+  "end activity for this turn")
+
+DEF_CMD(  'n' , "southeast", "U", do_dir,
+  "move southeast")
+
+DEF_CMD(  'N' , "southeast-multiple", "U", do_dir_multiple,
+  "move southeast multiple")
+
+DEF_CMD(  'o' , "other", "", do_other,
+  "other commands")
+
+DEF_CMD(  'p' , "produce", "U", do_produce,
+  "set material production")
+
+DEF_CMD(  'P' , "build", "U", do_build,
+  "set up construction tasks")
+
+DEF_CMD(  'Q' , "quit", "", do_quit,
+  "get out of the game")
+
+DEF_CMD(  'r' , "return", "U", do_return,
+  "return to a resupply point")
+
+DEF_CMD(  'R' , "remove-terrain", "U", do_remove_terrain,
+  "remove terrain")
+
+DEF_CMD(C('R'), "refresh", "", do_refresh,
+  "refresh/redraw display")
+
+DEF_CMD(  's' , "sleep", "U", do_sleep,
+  "go to sleep")
+
+DEF_CMD(  'S' , "save", "", do_save,
+  "save the game into a file")
+
+DEF_CMD(  't' , "take", "U", do_take,
+  "take supplies from unit or terrain")
+
+DEF_CMD(  'T' , "take-unit", "U", do_take_unit,
+  "take unit from another side")
+
+DEF_CMD(  'u' , "northeast", "U", do_dir,
+  "move northeast")
+
+DEF_CMD(  'U' , "northeast-multiple", "U", do_dir_multiple,
+  "move northeast multiple")
+
+DEF_CMD(  'w' , "wake", "U", do_wake,
+  "wake units up")
+
+DEF_CMD(  'W' , "wakeall", "U", do_wake_all,
+  "wake units and all their occupants up")
+
+DEF_CMD(  'y' , "northwest", "U", do_dir,
+  "move northwest")
+
+DEF_CMD(  'Y' , "northwest-multiple", "U", do_dir_multiple,
+  "move northwest multiple")
+
+DEF_CMD(  'z' , "survey", "", do_survey,
+  "switch between surveying and moving")
+
+/* Commands with no dedicated single characters. */
+
+DEF_CMD(   0  , "add-player", "", do_add_player,
+  "add another player to the game")
+
+DEF_CMD(   0  , "ai", "", do_ai_side,
+  "switch side over to AI control")
+
+DEF_CMD(   0  , "copying", "", do_copying,
+  "display copying conditions")
+
+DEF_CMD(   0  , "name", "U", do_name,
+  "name a unit")
+
+DEF_CMD(   0  , "print", "", do_print_view,
+  "print a view of the world")
+
+DEF_CMD(   0  , "version", "", do_version,
+  "display version info")
+
+DEF_CMD(   0  , "warranty", "", do_warranty,
+  "display non-warranty")
+
+#ifdef DESIGNERS
+
+DEF_CMD(   0  , "design", "", do_design,
+  "toggle designer abilities")
+
+#endif /* DESIGNERS */
+
+#ifdef DEBUGGING
+
+DEF_CMD(   0  , "D", "", do_debug,
+  "toggle general debugging")
+
+DEF_CMD(   0  , "DG", "", do_debugg,
+  "toggle graphical interface debugging")
+
+DEF_CMD(   0  , "DM", "", do_debugm,
+  "toggle AI (mplayer) debugging")
+
+#endif /* DEBUGGING */

@@ -1,1 +1,1 @@
-void InitAll(void);
+void InitAll(void);

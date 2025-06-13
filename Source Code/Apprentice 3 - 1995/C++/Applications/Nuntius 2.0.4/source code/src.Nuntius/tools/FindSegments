@@ -1,1 +1,1 @@
-s -q -s '#' Å.cp Å.h | s pragma | s segment | sort -unique
+s -q -s '#' Å.cp Å.h | s pragma | s segment | sort -unique

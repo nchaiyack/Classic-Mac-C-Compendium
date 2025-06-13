@@ -1,1 +1,71 @@
-dialogs.c:Here there are a lot of dialogs, with a lot of differentthings, including popups (in the old style, no System 7-stylepopup controls) and lists. A very unusual thing: a routine(dialogo_tipi_creatori) which builds a DITL in memory ratherthen loading it from a resource, so that the number of controlsin the dialog is chosen at run time, and the controls areautomatically resized and realigned to fit the available space.folderStdfile.cAlmost everything you wished to do with standard file dialogs:select files or folders or multiple files, a destination folder(no file name), almost everything. Only defect: for greatercompatibility with System 6, it exploits only one of theSystem 7-only functions.init windows.c + mainEvent.c + windows.cA TextEdit-based text editor. Unusual things: it can pass from"horizontal scroll" mode to autowrap and viceversa, and withoutlosing the current position of vertical scrolling, and it candelete "old" text in order to emulate a TTY-like console.There is also a way to handle updating of windows when they'rebelow a modal dialog, handling of special keys of extended keyboardsand some other things that the two inspirators (TESample and MiniEdit)had not.printf.cNothing special, but without this you can't exploit the TTY-likeconsole.suntar.cThe main program. Could you believe that a Mac application may lacka main event loop ? In spite of this anomaly, and of its UNIX-likeconsole (from which some commands expect some input...), it has someMac-like features which a number of Mac applications lack, e.g. almostany command may be paused or aborted, and the menu bar is always active(but commands which are meaningless during execution of another commandare greyed).semimodal.cAn implementation of movable modal dialogs dated before the introductionof System 7. No more interesting today.diskDriver.c, SCSI.cA lot of things rarely performed by any Mac programmer. Accessingdevices at very low level, creating an HFS catalog without callingthe HFS, handling a tape drive...BEWARE: SCSI.c is free but is not public domain.untar.c, tar.c, dehqx.c, unpit.cWell, suntar is a file converter, and these do the job. They arecarefully optimized for speed, so they're also difficult to read,but often the original, non-optimazed version is still there.You'll discover here which is the fastest way to compute a CRC anddo other things.loadpref.cSuntar is unusual about preferences: it may keep them inside itselfor store them in a file in the Preferences folder, and it can pass"on the fly" from one setting to the other one.swap.cNot part of suntar: it's a single function doing a non-obvious thing(swap two adjacent memory areas, of different sizes, without loosingtheir contents)gcNot part of suntar: it is an old "programming exercise", a simpleoptimizing compiler featuring a left-corner parser of C expressions.The user interface was quite crude, so I'm not including the filesused to implement it.
+dialogs.c:
+Here there are a lot of dialogs, with a lot of different
+things, including popups (in the old style, no System 7-style
+popup controls) and lists. A very unusual thing: a routine
+(dialogo_tipi_creatori) which builds a DITL in memory rather
+then loading it from a resource, so that the number of controls
+in the dialog is chosen at run time, and the controls are
+automatically resized and realigned to fit the available space.
+
+folderStdfile.c
+Almost everything you wished to do with standard file dialogs:
+select files or folders or multiple files, a destination folder
+(no file name), almost everything. Only defect: for greater
+compatibility with System 6, it exploits only one of the
+System 7-only functions.
+
+init windows.c + mainEvent.c + windows.c
+A TextEdit-based text editor. Unusual things: it can pass from
+"horizontal scroll" mode to autowrap and viceversa, and without
+losing the current position of vertical scrolling, and it can
+delete "old" text in order to emulate a TTY-like console.
+There is also a way to handle updating of windows when they're
+below a modal dialog, handling of special keys of extended keyboards
+and some other things that the two inspirators (TESample and MiniEdit)
+had not.
+
+printf.c
+Nothing special, but without this you can't exploit the TTY-like
+console.
+
+suntar.c
+The main program. Could you believe that a Mac application may lack
+a main event loop ? In spite of this anomaly, and of its UNIX-like
+console (from which some commands expect some input...), it has some
+Mac-like features which a number of Mac applications lack, e.g. almost
+any command may be paused or aborted, and the menu bar is always active
+(but commands which are meaningless during execution of another command
+are greyed).
+
+semimodal.c
+An implementation of movable modal dialogs dated before the introduction
+of System 7. No more interesting today.
+
+diskDriver.c, SCSI.c
+A lot of things rarely performed by any Mac programmer. Accessing
+devices at very low level, creating an HFS catalog without calling
+the HFS, handling a tape drive...
+BEWARE: SCSI.c is free but is not public domain.
+
+untar.c, tar.c, dehqx.c, unpit.c
+Well, suntar is a file converter, and these do the job. They are
+carefully optimized for speed, so they're also difficult to read,
+but often the original, non-optimazed version is still there.
+You'll discover here which is the fastest way to compute a CRC and
+do other things.
+
+loadpref.c
+Suntar is unusual about preferences: it may keep them inside itself
+or store them in a file in the Preferences folder, and it can pass
+"on the fly" from one setting to the other one.
+
+swap.c
+Not part of suntar: it's a single function doing a non-obvious thing
+(swap two adjacent memory areas, of different sizes, without loosing
+their contents)
+
+gc
+Not part of suntar: it is an old "programming exercise", a simple
+optimizing compiler featuring a left-corner parser of C expressions.
+The user interface was quite crude, so I'm not including the files
+used to implement it.

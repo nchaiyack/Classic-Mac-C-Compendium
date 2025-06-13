@@ -1,1 +1,24 @@
-##	MacGzip MPW build - README.##	25may95,ejo  written.#How to build------------	Create a folder named obj in this directory (if not already there).	Set this directory as the current directory and choose Build from	the Build menu. Answer all to Program Name? dialog. Take a break,	this is not CodeWarrior.NOTE----	MPW build of MacGzip has only been tested with ETO #16 Prerelease MPW. The	universal interfaces are constantly changing, so it might be necessary to	fix a few things if using another version of MPW.Thanks to SPDSoft for doing the hard part. Any errors in this versionare all mine.Erling Johansen (ejo@vingmed.no)
+#
+#	MacGzip MPW build - README.
+#
+#	25may95,ejo  written.
+#
+
+How to build
+------------
+	Create a folder named obj in this directory (if not already there).
+	Set this directory as the current directory and choose Build from
+	the Build menu. Answer all to Program Name? dialog. Take a break,
+	this is not CodeWarrior.
+
+
+NOTE
+----
+	MPW build of MacGzip has only been tested with ETO #16 Prerelease MPW. The
+	universal interfaces are constantly changing, so it might be necessary to
+	fix a few things if using another version of MPW.
+
+Thanks to SPDSoft for doing the hard part. Any errors in this version
+are all mine.
+
+Erling Johansen (ejo@vingmed.no)

@@ -1,1 +1,88 @@
-/* Alert resources */#define	NOT_8_BIT_MODE	128/* Window resources */#define MAIN_WINDOW		128/* Menu resources */#define	APPLE_MENU	1001#define	FILE_MENU	1002#define	EDIT_MENU	1003/* Pulldown menu items in the Apple menu */#define ABOUT_ITEM	1/* Pulldown menu items in the File menu */#define NEW_ITEM	1#define QUIT_ITEM	3/* Pulldown menu items in the Edit menu */#define UNDO_ITEM	1#define CUT_ITEM	3#define COPY_ITEM	4#define PASTE_ITEM	5#define CLEAR_ITEM	6/* PICT resources */#define	CONTROLS_PICT		128#define	SCORE_BAR_PICT		129#define	GAME_OVER_PICT		130#define	WELCOME_PICT		131#define	WEAPONS_BAR_PICT	132#define	ABILITIES_BAR_PICT	133#define FIRST_SHIP_ID		1000#define FIRST_TERRAIN_ID	2000#define FIRST_BIPLANE_ID	3000#define FIRST_FIREBALL_ID	4000#define SHELL_ID			5000#define FIRST_TRACER_ID		6000#define FIRST_MISSILE_ID	7000#define BOMB_ID				8000#define LARGE_BOMB_ID		8001#define FIRST_SILO_ID		9000#define DESTROYED_SILO_ID	9009#define FIRST_CANNON_ID		10000#define DESTROYED_CANNON_ID	10016#define FIRST_GUN_ID		11000#define DESTROYED_GUN_ID	11016#define	FIRST_FF_ID			12000#define	FIRST_EXPLOSION_ID	13000#define	FIRST_ABILITY_ID	14000#define	FIRST_PRIMARY_WEAPON_ID		15000#define	FIRST_SECONDARY_WEAPON_ID	15100#define	FIRST_UNUSED_WEAPON_ID		15200#define	WEAPONS_LOCK_ON_PICT	16000#define LOCK_DETECTED_ON_PICT	16001#define	WEAPONS_LOCK_OFF_PICT	16500#define	LOCK_DETECTED_OFF_PICT	16501#define FIRST_BASE_BOTTOM_ID	17000#define FIRST_BASE_TOP_ID		17100#define FIRST_DEAD_BASE_ID		17200#define	FIRST_GOODIE_ID			18000#define FIRST_CIRCLE_ENEMY_ID	19000#define FIRST_LASER_GUN_ID		20000#define FIRST_BLASTER_ENEMY_ID	21000#define FIRST_ENEMY_JET_ID		22000#define FIRST_FLYING_WING_ID	23000#define SPIKED_BALL_ID			24000#define FIRST_TRACER_ENEMY_ID	25000/* Sound resources */#define	EXPLOSION_SOUND		128#define	BULLET_SOUND		129#define	CANNON_SOUND		130#define	CRYSTAL_SOUND		131#define	GOODIE_SOUND		132#define	LASER_SOUND			133#define	BLASTER_SOUND		134#define	CIRCLE_SOUND		135#define	NEW_LEVEL_SOUND		136#define	TRACER_SOUND		137#define	CLUNK_SOUND			138/* String resource */#define	FIRST_INSTRUCTIONS	128
+/* Alert resources */
+#define	NOT_8_BIT_MODE	128
+
+/* Window resources */
+#define MAIN_WINDOW		128
+
+/* Menu resources */
+#define	APPLE_MENU	1001
+#define	FILE_MENU	1002
+#define	EDIT_MENU	1003
+
+/* Pulldown menu items in the Apple menu */
+#define ABOUT_ITEM	1
+
+/* Pulldown menu items in the File menu */
+#define NEW_ITEM	1
+#define QUIT_ITEM	3
+
+/* Pulldown menu items in the Edit menu */
+#define UNDO_ITEM	1
+#define CUT_ITEM	3
+#define COPY_ITEM	4
+#define PASTE_ITEM	5
+#define CLEAR_ITEM	6
+
+/* PICT resources */
+#define	CONTROLS_PICT		128
+#define	SCORE_BAR_PICT		129
+#define	GAME_OVER_PICT		130
+#define	WELCOME_PICT		131
+#define	WEAPONS_BAR_PICT	132
+#define	ABILITIES_BAR_PICT	133
+#define FIRST_SHIP_ID		1000
+#define FIRST_TERRAIN_ID	2000
+#define FIRST_BIPLANE_ID	3000
+#define FIRST_FIREBALL_ID	4000
+#define SHELL_ID			5000
+#define FIRST_TRACER_ID		6000
+#define FIRST_MISSILE_ID	7000
+#define BOMB_ID				8000
+#define LARGE_BOMB_ID		8001
+#define FIRST_SILO_ID		9000
+#define DESTROYED_SILO_ID	9009
+#define FIRST_CANNON_ID		10000
+#define DESTROYED_CANNON_ID	10016
+#define FIRST_GUN_ID		11000
+#define DESTROYED_GUN_ID	11016
+#define	FIRST_FF_ID			12000
+#define	FIRST_EXPLOSION_ID	13000
+#define	FIRST_ABILITY_ID	14000
+
+#define	FIRST_PRIMARY_WEAPON_ID		15000
+#define	FIRST_SECONDARY_WEAPON_ID	15100
+#define	FIRST_UNUSED_WEAPON_ID		15200
+
+#define	WEAPONS_LOCK_ON_PICT	16000
+#define LOCK_DETECTED_ON_PICT	16001
+#define	WEAPONS_LOCK_OFF_PICT	16500
+#define	LOCK_DETECTED_OFF_PICT	16501
+
+#define FIRST_BASE_BOTTOM_ID	17000
+#define FIRST_BASE_TOP_ID		17100
+#define FIRST_DEAD_BASE_ID		17200
+
+#define	FIRST_GOODIE_ID			18000
+#define FIRST_CIRCLE_ENEMY_ID	19000
+#define FIRST_LASER_GUN_ID		20000
+#define FIRST_BLASTER_ENEMY_ID	21000
+#define FIRST_ENEMY_JET_ID		22000
+#define FIRST_FLYING_WING_ID	23000
+#define SPIKED_BALL_ID			24000
+#define FIRST_TRACER_ENEMY_ID	25000
+
+/* Sound resources */
+#define	EXPLOSION_SOUND		128
+#define	BULLET_SOUND		129
+#define	CANNON_SOUND		130
+#define	CRYSTAL_SOUND		131
+#define	GOODIE_SOUND		132
+#define	LASER_SOUND			133
+#define	BLASTER_SOUND		134
+#define	CIRCLE_SOUND		135
+#define	NEW_LEVEL_SOUND		136
+#define	TRACER_SOUND		137
+#define	CLUNK_SOUND			138
+
+/* String resource */
+#define	FIRST_INSTRUCTIONS	128

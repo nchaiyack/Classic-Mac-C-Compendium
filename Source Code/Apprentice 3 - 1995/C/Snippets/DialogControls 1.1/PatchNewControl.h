@@ -1,1 +1,2 @@
-void	UnPatchNewControl( void );void	PatchNewControl( void );
+void	UnPatchNewControl( void );
+void	PatchNewControl( void );

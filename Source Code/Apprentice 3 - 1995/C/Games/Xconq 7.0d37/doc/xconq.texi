@@ -1,1 +1,338 @@
-\input texinfo@setfilename xconq.info@c To produce just the player's guide, @clear DESIGNING and HACKING.@set DESIGNING@set HACKING@c @clear DESIGNING@c @clear HACKING@c @set DOUBLEDENSITY@clear DOUBLEDENSITY@settitle Xconq@setchapternewpage odd@ifinfoThis file documents the strategy game @i{Xconq}.Copyright (C) 1987, 1988, 1989, 1991, 1992, 1993, 1994, 1995 Stanley T. ShebsPermission is granted to make and distribute verbatim copies ofthis manual provided the copyright notice and this permission noticeare preserved on all copies.@ignorePermission is granted to process this file through Tex and print theresults, provided the printed document carries copying permissionnotice identical to this one except for the removal of this paragraph(this paragraph not being relevant to the printed manual).@end ignorePermission is granted to copy and distribute modified versions of thismanual under the conditions for verbatim copying, provided also that thesection entitled ``GNU General Public License'' isincluded exactly as in the original, and provided that the entireresulting derived work is distributed under the terms of a permissionnotice identical to this one.Permission is granted to copy and distribute translations of this manualinto another language, under the above conditions for modified versions,except that the section entitled ``GNU General Public License'',and this permission notice, may be included in translationsapproved by the Free Software Foundation instead of in the originalEnglish.@end ifinfo@c This is one way to make a double-density printout.  Another@c way is to use the mpage utility on postscript.@c@c @ifset DOUBLEDENSITY@c @iftex@c @magnification = 833@c @smallbook@c @c from @afourpaper:@c @global@tolerance=700@c @global@hfuzz=1pt@c @setleading{12pt}@c @global@parskip 2pt plus 1pt@c @global@vsize= 65@baselineskip@c @advance@vsize by @topskip@c @global@hsize= 20cm@c @global@outerhsize=@hsize@c @global@advance@outerhsize by 0.5in@c @global@outervsize=@vsize@c @global@advance@outervsize by 0.6in@c @global@pagewidth=@hsize@c @global@pageheight=@vsize@c @end iftex@c @end ifset@titlepage@sp 6@center @titlefont{Xconq}@sp 4@center The Penultimate Strategy Game@sp 4@center Version 7.0@sp 4@center March 1995@sp 5@center Stanley T. Shebs@page@vskip 0pt plus 1filllCopyright @copyright{} 1987, 1988, 1989, 1991, 1992, 1993, 1994, 1995Stanley T. ShebsPermission is granted to make and distribute verbatim copies ofthis manual provided the copyright notice and this permission noticeare preserved on all copies.Permission is granted to copy and distribute modified versions of thismanual under the conditions for verbatim copying, provided also that thesection entitled ``GNU General Public License'' isincluded exactly as in the original, and provided that the entireresulting derived work is distributed under the terms of a permissionnotice identical to this one.Permission is granted to copy and distribute translations of this manualinto another language, under the above conditions for modified versions,except that the section entitled ``GNU General Public License'',and this permission notice, may be included in translationsapproved by the Free Software Foundation instead of in the originalEnglish.@end titlepage@iftex@headings off@everyheading @thistitle @| @thischapter @| @thispage@everyfooting DRAFT d35 @| @today{} @| DRAFT d35@end iftex@node Top, Acknowledgments, (dir), (dir)@chapter Xconq, the Penultimate Strategy GameWelcome to @i{Xconq}!@i{Xconq} is a powerful multi-player game system.With @i{Xconq} you can build empires, fight wars, relive history,and adventure across fantastic worlds. You can play computerized board games,or be Godzilla rampaging through Tokyo.@i{Xconq} runs on many computer systems.It features several different user interfaces,including ones based on Unix(tm) terminal graphics (``curses''),the X Window System, and the Apple Macintosh(tm).Although all share the same basic design,the ``look and feel'' of each interface matches the system you're on.The details of a particular @i{Xconq} game depend heavily onits @i{game design}, which defines the pieces in the game and itsrules of play.  So, to understand everything about a game you're playing,you need three sources of information: this manual, which covers allgeneral information; documentation for the user interface; anddocumentation for the game design in effect.  Although this soundslike a lot,most games don't use every feature of @i{Xconq},and the user interfaces will usually offer plenty ofonline guidance.@section About This ManualThe remainder of this chapter discusses compatibility witholder versions of @i{Xconq}, and additional informationresources.Chapter 2, ``Playing Xconq'' is the player's guide.It describes the general concepts shared by all the@i{Xconq} games.Chapter 3, ``Designing Games with Xconq'' is a designer'sguide for building and modifying @i{Xconq} game designs,using both Game Design Language (GDL) and online editing tools.Chapter 4, ``Reference Manual'' is the complete definitionof GDL.  It includes the syntax and semantics of allparts of the language.Chapter 5, ``Hacking Xconq'' describes the general architectureof @i{Xconq}, and how to extend the basic program.This chapter also includes a rationale for the major designdecisions, and some ideas for future development.@section Compatibility@i{Xconq} version 7 is not directly compatible with previous versions,although most of the basic game concepts remain unchanged.If you've played @i{Xconq} before, you should have little troublegetting used to the differences.If you've designed any games (periods, maps, or scenarios)for version 5, you will discover many changes.Version 5 of @i{Xconq}used a mix of crude fixed-format syntax and a simple postfix languagefor game designs (which were then called ``periods'').This version has changed too radically to be able to readany of the old period, map, or scenario files.For instance, version 7 eliminates the distinctionsbetween ``period'', ``map'', and ``scenario''.Therefore, if you have old @i{Xconq} files,you should invest the time to convert.You may even discover that some of the new features of @i{Xconq} providea better solution to your design problems.(The shell scripts @code{per2game}, @code{map2game}, and@code{scn2game} will help you get started on conversion;you can find them in the @code{misc} directory.)@section Where to Get Game Designs@i{Xconq} is not useful without game designs.The library distributed with @i{Xconq}includes many designs, some inherited from previous releasesand others that are entirely new.You are encouraged both to modify any of the existing game designsand to develop your own.  Chapter 3, ``Designing Games with Xconq'',includes a comprehensive tutorial on how to do this.The version 7 game design language (GDL) is better-designedand more robust than the machinery in version 5,so if you've been discouraged by mysterious problems before,you might want to try designing with version 7 instead.@section For More InformationThe ftp server @code{ftp.cygnus.com} usually has the latest version of@i{Xconq}, as well as other contributed material,in the directory @code{pub/xconq}.Other servers also have copies of @i{Xconq}.  See your local Internetwizard, or buy one of the many excellent Internet guidesif this isn't enough information for you.@node Acknowledgments, Playing Xconq, Top, Top@section AcknowledgmentsSince the first release of @i{Xconq} in 1987, it has benefited from the workand ideas of literally hundreds of people, first at the University of Utah,then worldwide.Special thanks must go to Eric Muehle,a tireless source of ideas, advice, and playtesting at Utah;Greg Fisher, who added many good things to make 5.4;and Robert Forsman, who did a great deal of work for 5.5.Eric Ziegast and Alan Clegg have been essential to maintainingthe @i{Xconq} mailing list and archives.Massimo Campostrini contributed the printing code, xshowimf, and a numberof library modules, as well as many other fixes and enhancements.Other contributors have been (in alphabetical order):Jim Anderson,Ed Boston,Mark Bradakis,Alain Brossard,Richard Buonanno,Germano Caronni,Harold Carr,Ben Chase,Chris Christensen,Kevin Deford,Dan Dickey,Fred Douglis,Miles Duke,Barry Eynon,David Harr,Scott Herod,Eiji(``A.J.'') Hirai,Kurt Hoyt,Jeff Kelley,Bob Kessler,Jed Krohnfeldt,Rick Ledoux,Brian Lewis,Sandra Loosemore,Michael Lounsbery,Steve McInerney,Eric Mehlhaff,Jimmy Miklavcic,Tim Moore,Scott Mueller,Julian Onions,Dave Pare,Stephen Peters,Chris Peterson,Mohammad Pourheidari,Dan Reading,Tom Richards,Joel Rives,Jay Scott,John Shovic,Josh Siegel,Leigh Stoller,Ravi Subrahmanyam,Cimarron Taylor,Spencer Thomas,John Tonry,Rich van Gaasbeeck,Henry Ware,Grant Weiler,Jeff Young,and many others.Thanks also to the University of Utah, Apple Computer, Inc.,and Cygnus Support, who have allcontributed machine resources that helped in thedevelopment of @i{Xconq}.@include play.texi@lowersections@include x11-chap.texi@raisesections@lowersections@include mac-chap.texi@raisesections@lowersections@include curses-chap.texi@raisesections@ifset DESIGNING@include design.texi@include refman.texi@end ifset@ifset HACKING@include hacking.texi@end ifset@node Glossary@appendix Glossary@include glossary.texi@ifset DESIGNING@appendix Summary of GDL Syntax@include syntax.texi@include gpl.texi@appendix Index@printindex fn@end ifset@contents@bye
+\input texinfo
+@setfilename xconq.info
+@c To produce just the player's guide, @clear DESIGNING and HACKING.
+@set DESIGNING
+@set HACKING
+@c @clear DESIGNING
+@c @clear HACKING
+
+@c @set DOUBLEDENSITY
+@clear DOUBLEDENSITY
+
+@settitle Xconq
+@setchapternewpage odd
+
+@ifinfo
+This file documents the strategy game @i{Xconq}.
+
+Copyright (C) 1987, 1988, 1989, 1991, 1992, 1993, 1994, 1995 Stanley T. Shebs
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+@ignore
+Permission is granted to process this file through Tex and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+@end ignore
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided also that the
+section entitled ``GNU General Public License'' is
+included exactly as in the original, and provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that the section entitled ``GNU General Public License'',
+and this permission notice, may be included in translations
+approved by the Free Software Foundation instead of in the original
+English.
+@end ifinfo
+
+@c This is one way to make a double-density printout.  Another
+@c way is to use the mpage utility on postscript.
+@c
+@c @ifset DOUBLEDENSITY
+@c @iftex
+@c @magnification = 833
+@c @smallbook
+@c @c from @afourpaper:
+@c @global@tolerance=700
+@c @global@hfuzz=1pt
+@c @setleading{12pt}
+@c @global@parskip 2pt plus 1pt
+@c @global@vsize= 65@baselineskip
+@c @advance@vsize by @topskip
+@c @global@hsize= 20cm
+@c @global@outerhsize=@hsize
+@c @global@advance@outerhsize by 0.5in
+@c @global@outervsize=@vsize
+@c @global@advance@outervsize by 0.6in
+@c @global@pagewidth=@hsize
+@c @global@pageheight=@vsize
+@c @end iftex
+@c @end ifset
+
+@titlepage
+@sp 6
+@center @titlefont{Xconq}
+@sp 4
+@center The Penultimate Strategy Game
+@sp 4
+@center Version 7.0
+@sp 4
+@center March 1995
+@sp 5
+@center Stanley T. Shebs
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 1987, 1988, 1989, 1991, 1992, 1993, 1994, 1995
+Stanley T. Shebs
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided also that the
+section entitled ``GNU General Public License'' is
+included exactly as in the original, and provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that the section entitled ``GNU General Public License'',
+and this permission notice, may be included in translations
+approved by the Free Software Foundation instead of in the original
+English.
+@end titlepage
+
+@iftex
+@headings off
+@everyheading @thistitle @| @thischapter @| @thispage
+@everyfooting DRAFT d35 @| @today{} @| DRAFT d35
+@end iftex
+
+@node Top, Acknowledgments, (dir), (dir)
+
+@chapter Xconq, the Penultimate Strategy Game
+
+Welcome to @i{Xconq}!
+
+@i{Xconq} is a powerful multi-player game system.
+With @i{Xconq} you can build empires, fight wars, relive history,
+and adventure across fantastic worlds. 
+You can play computerized board games,
+or be Godzilla rampaging through Tokyo.
+
+@i{Xconq} runs on many computer systems.
+It features several different user interfaces,
+including ones based on Unix(tm) terminal graphics (``curses''),
+the X Window System, and the Apple Macintosh(tm).
+Although all share the same basic design,
+the ``look and feel'' of each interface matches the system you're on.
+The details of a particular @i{Xconq} game depend heavily on
+its @i{game design}, which defines the pieces in the game and its
+rules of play.  So, to understand everything about a game you're playing,
+you need three sources of information: this manual, which covers all
+general information; documentation for the user interface; and
+documentation for the game design in effect.  Although this sounds
+like a lot,
+most games don't use every feature of @i{Xconq},
+and the user interfaces will usually offer plenty of
+online guidance.
+
+@section About This Manual
+
+The remainder of this chapter discusses compatibility with
+older versions of @i{Xconq}, and additional information
+resources.
+
+Chapter 2, ``Playing Xconq'' is the player's guide.
+It describes the general concepts shared by all the
+@i{Xconq} games.
+
+Chapter 3, ``Designing Games with Xconq'' is a designer's
+guide for building and modifying @i{Xconq} game designs,
+using both Game Design Language (GDL) and online editing tools.
+
+Chapter 4, ``Reference Manual'' is the complete definition
+of GDL.  It includes the syntax and semantics of all
+parts of the language.
+
+Chapter 5, ``Hacking Xconq'' describes the general architecture
+of @i{Xconq}, and how to extend the basic program.
+This chapter also includes a rationale for the major design
+decisions, and some ideas for future development.
+
+@section Compatibility
+
+@i{Xconq} version 7 is not directly compatible with previous versions,
+although most of the basic game concepts remain unchanged.
+If you've played @i{Xconq} before, you should have little trouble
+getting used to the differences.
+
+If you've designed any games (periods, maps, or scenarios)
+for version 5, you will discover many changes.
+Version 5 of @i{Xconq}
+used a mix of crude fixed-format syntax and a simple postfix language
+for game designs (which were then called ``periods'').
+This version has changed too radically to be able to read
+any of the old period, map, or scenario files.
+For instance, version 7 eliminates the distinctions
+between ``period'', ``map'', and ``scenario''.
+Therefore, if you have old @i{Xconq} files,
+you should invest the time to convert.
+You may even discover that some of the new features of @i{Xconq} provide
+a better solution to your design problems.
+(The shell scripts @code{per2game}, @code{map2game}, and
+@code{scn2game} will help you get started on conversion;
+you can find them in the @code{misc} directory.)
+
+@section Where to Get Game Designs
+
+@i{Xconq} is not useful without game designs.
+The library distributed with @i{Xconq}
+includes many designs, some inherited from previous releases
+and others that are entirely new.
+
+You are encouraged both to modify any of the existing game designs
+and to develop your own.  Chapter 3, ``Designing Games with Xconq'',
+includes a comprehensive tutorial on how to do this.
+The version 7 game design language (GDL) is better-designed
+and more robust than the machinery in version 5,
+so if you've been discouraged by mysterious problems before,
+you might want to try designing with version 7 instead.
+
+@section For More Information
+
+The ftp server @code{ftp.cygnus.com} usually has the latest version of
+@i{Xconq}, as well as other contributed material,
+in the directory @code{pub/xconq}.
+Other servers also have copies of @i{Xconq}.  See your local Internet
+wizard, or buy one of the many excellent Internet guides
+if this isn't enough information for you.
+
+@node Acknowledgments, Playing Xconq, Top, Top
+
+@section Acknowledgments
+
+Since the first release of @i{Xconq} in 1987, it has benefited from the work
+and ideas of literally hundreds of people, first at the University of Utah,
+then worldwide.
+
+Special thanks must go to Eric Muehle,
+a tireless source of ideas, advice, and playtesting at Utah;
+Greg Fisher, who added many good things to make 5.4;
+and Robert Forsman, who did a great deal of work for 5.5.
+Eric Ziegast and Alan Clegg have been essential to maintaining
+the @i{Xconq} mailing list and archives.
+
+Massimo Campostrini contributed the printing code, xshowimf, and a number
+of library modules, as well as many other fixes and enhancements.
+
+Other contributors have been (in alphabetical order):
+Jim Anderson,
+Ed Boston,
+Mark Bradakis,
+Alain Brossard,
+Richard Buonanno,
+Germano Caronni,
+Harold Carr,
+Ben Chase,
+Chris Christensen,
+Kevin Deford,
+Dan Dickey,
+Fred Douglis,
+Miles Duke,
+Barry Eynon,
+David Harr,
+Scott Herod,
+Eiji(``A.J.'') Hirai,
+Kurt Hoyt,
+Jeff Kelley,
+Bob Kessler,
+Jed Krohnfeldt,
+Rick Ledoux,
+Brian Lewis,
+Sandra Loosemore,
+Michael Lounsbery,
+Steve McInerney,
+Eric Mehlhaff,
+Jimmy Miklavcic,
+Tim Moore,
+Scott Mueller,
+Julian Onions,
+Dave Pare,
+Stephen Peters,
+Chris Peterson,
+Mohammad Pourheidari,
+Dan Reading,
+Tom Richards,
+Joel Rives,
+Jay Scott,
+John Shovic,
+Josh Siegel,
+Leigh Stoller,
+Ravi Subrahmanyam,
+Cimarron Taylor,
+Spencer Thomas,
+John Tonry,
+Rich van Gaasbeeck,
+Henry Ware,
+Grant Weiler,
+Jeff Young,
+and many others.
+
+Thanks also to the University of Utah, Apple Computer, Inc.,
+and Cygnus Support, who have all
+contributed machine resources that helped in the
+development of @i{Xconq}.
+
+@include play.texi
+
+@lowersections
+@include x11-chap.texi
+@raisesections
+
+@lowersections
+@include mac-chap.texi
+@raisesections
+
+@lowersections
+@include curses-chap.texi
+@raisesections
+
+@ifset DESIGNING
+
+@include design.texi
+
+@include refman.texi
+
+@end ifset
+
+@ifset HACKING
+
+@include hacking.texi
+
+@end ifset
+
+@node Glossary
+
+@appendix Glossary
+
+@include glossary.texi
+
+@ifset DESIGNING
+
+@appendix Summary of GDL Syntax
+
+@include syntax.texi
+
+@include gpl.texi
+
+@appendix Index
+
+@printindex fn
+
+@end ifset
+
+@contents
+
+@bye
+

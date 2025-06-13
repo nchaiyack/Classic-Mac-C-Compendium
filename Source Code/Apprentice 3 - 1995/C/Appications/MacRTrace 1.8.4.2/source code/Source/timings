@@ -1,1 +1,15 @@
-no background tasks during timingstimings without optimization:11 seconds CPU time for sphere.sff, default settings31 seconds CPU time for camaro.sff, default settingstimings with optimization:9 seconds CPU time for sphere.sff, default settings7 seconds CPU time for sphere.sff, default settings, image window hidden28 seconds CPU time for camaro.sff, default settings24 seconds CPU time for camaro.sff, default settings, image window hidden82 seconds CPU time for aircar.ff, default settings, image window hidden
+no background tasks during timings
+
+timings without optimization:
+
+11 seconds CPU time for sphere.sff, default settings
+31 seconds CPU time for camaro.sff, default settings
+
+timings with optimization:
+
+9 seconds CPU time for sphere.sff, default settings
+7 seconds CPU time for sphere.sff, default settings, image window hidden
+28 seconds CPU time for camaro.sff, default settings
+24 seconds CPU time for camaro.sff, default settings, image window hidden
+
+82 seconds CPU time for aircar.ff, default settings, image window hidden

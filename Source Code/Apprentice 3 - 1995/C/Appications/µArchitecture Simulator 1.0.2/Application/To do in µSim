@@ -1,1 +1,13 @@
-Known deficiencies:- rework code implementing the input/output window (I fixed lots of bugs inherited from Apple’s TESample, but a couple of them are still there);- Drag Manager drag & drop is implemented only in part;- undo is not implemented;- the assembler is fast but not very clever in error checking & recovering;- real "Apple II-like" I/O in the I/O window.Due to the fact that I have LOTS of other things to do, these modifications will not happen soon (unless somebody sends me tons of dollars, which is not going to happen in the near future, I guess).
+Known deficiencies:
+
+- rework code implementing the input/output window (I fixed lots of bugs inherited from Apple’s TESample, but a couple of them are still there);
+
+- Drag Manager drag & drop is implemented only in part;
+
+- undo is not implemented;
+
+- the assembler is fast but not very clever in error checking & recovering;
+
+- real "Apple II-like" I/O in the I/O window.
+
+Due to the fact that I have LOTS of other things to do, these modifications will not happen soon (unless somebody sends me tons of dollars, which is not going to happen in the near future, I guess).

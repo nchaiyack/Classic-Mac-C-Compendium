@@ -1,1 +1,128 @@
-[Display using Geneva 12]This document contains…  • Copyright and trademark information  • Software License and Warranty...........................................................................................................................................Copyright ©1989-1995 by Water’s Edge SoftwareTools Plus™ is a trademark of Water’s Edge Software4th Dimension® is a registered trademarks of ACIUSPhotoshop™ is a trademark of Adobe Systems IncorporatedApple®, Lisa®, AppleLink®, and eWorld® are registered trademarks of    Apple Computer, Inc.Finder™, Macintosh™, MultiFinder™, Power Macintosh™, QuickTime™    and ResEdit™ are trademarks of Apple Computer, Inc.MacPaint® and MacDraw® are registered trademark of    Claris CorporationCompuServe® is a registered trademark, and CompuServe Mail™ is    a trademark of CompuServe IncorporatedInfinity Windoid™ is a trademark of Infinity SystemsPowerPC™ is a trademark of International Business Machines    Corporation, used under license therefromCodeWarrior™ is a trademark or Metrowerks Inc.Microsoft® and Word® are registered trademark of    Microsoft CorporationTHINK Pascal™, THINK C™, Symantec C™, Symantec C++™ and    THINK Reference™ are trademarks of Symantec CorporationEudora™ is a trademark of the University of Illinois Board of    Trustees, licensed to QUALCOMM IncorporatedThe “Tools Plus 2.6 Package” is a self-extracting archive created with StuffIt Deluxe. Portions are Copyright © 1990-93 by Aladdin Systems Inc., and Raymond Lau.Tools Plus libraries and User Manual were designed and created by    Steve Makohin and Steven Waters............................................................................................................................................Evaluating Tools Plus~~~~~~~~~~~~~~~~~  This fully featured copy of Tools Plus is distributed at no cost as EVALUATION SOFTWARE. The purpose of this is to allow you to EVALUATE Tools Plus before buying it. There are, however, terms and conditions to using this product, even for the purpose of evaluation. For full details, please read the remainder of this document.Why an “Evaluation Kit” instead of a demo?~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  The Tools Plus Evaluation Kit is a method of software distribution that gives you an opportunity to try Tools Plus before buying it. It has ALL the features of our commercially distributed software. Demos, on the other hand, offer limited functionality or they are crippled in some way. We believe the best way to evaluate Tools Plus is to try it for yourself in real-life situations. You just can’t do that with a demo.  You should always buy software that suits your requirements and budget. This Evaluation Kit makes it easier to determine if Tools Plus suits your needs, because you can try it before you buy it. You have the ultimate money-back guarantee: if you don’t use Tools Plus, you don’t pay for it!  During your evaluation, you may use Tools Plus to develop and create applications without charge or obligation for up to thirty (30) days, but you may NOT distribute Tools Plus or application’s written with Tools Plus. Please read this entire document for full details on conditions and terms.  Tools Plus is COMMERCIAL software. Copyright laws apply, and Water’s Edge Software (the copyright holder) retains all rights with a few exceptions as specifically stated............................................................................................................................................                   SOFTWARE LICENSE & LIMITED WARRANTY                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  In order to preserve and protect its rights under applicable law, Water’s Edge Software (the author and distributor) does not sell any rights in its SOFTWARE. Rather, Water’s Edge Software grants the right to use its SOFTWARE by means of a SOFTWARE LICENSE. Water’s Edge Software specifically retains title to all Water’s Edge Software products.  This is a special EVALUATION Software License. It has restrictions that do not apply to people who purchase and register Tools Plus.SOFTWARE LICENSE~~~~~~~~~~~~~~~1. GRANT OF LICENSE. In consideration of your agreement to abide by the terms and conditions of this License and the Limited Warranty, Water’s Edge Software, as Licensor, grants you, the Licensee, a non-exclusive right to use and display this copy of Tools Plus and its related files (hereinafter the “SOFTWARE”) so long as you comply with the terms of this License. You are also granted a non-exclusive right to use and display the enclosed Tools Plus documentation (hereinafter the “DOCUMENTATION”). Water’s Edge Software reserves all rights not expressly granted to the LICENSEE.2. OWNERSHIP OF SOFTWARE. As the LICENSEE, you own the magnetic disk or other physical media on which the SOFTWARE is originally or subsequently recorded or fixed, but an express condition of this License is that Water’s Edge Software retains title and ownership of the SOFTWARE and DOCUMENTATION, regardless of the form or media in or on which the original and other copies may exist. This License is not a sale of the original SOFTWARE or DOCUMENTATION, or any copy.3. COPY and DISTRIBUTION RESTRICTIONS. This SOFTWARE and DOCUMENTATION are copyrighted, and are protected by United States and Canadian copyright laws and international treaty provisions. Unauthorized copying of SOFTWARE or DOCUMENTATION, including SOFTWARE that has been modified, merged, or included with other software, is expressly forbidden unless otherwise stated in this license. You may be held legally responsible for any copyright infringement that is caused or encouraged by your failure to abide by the terms of this License.  Tools Plus is provided at no charge to the user for the purpose of EVALUATION. You are encouraged to copy and distribute Tools Plus with the restrictions listed below.  Please note that the self-extracting “Tools Plus 2.6 Package” file MAY have been renamed to comply with various networks’ and Bulletin Boards’ file naming conventions. Whenever you read the file name “Tools Plus 2.6 Package”, understand that it also refers to the file you have received, regardless of its actual name.    [i]  You may copy and distribute the self-extracting “Tools Plus 2.6 Package” file but _NOT_ the individual libraries, files and documents. This ensures that users receive a complete package with all documentation.   [ii]  You may not modify the “Tools Plus 2.6 Package” file in any way.  [iii]  You may not charge any fee for the use, copying, or distribution of the product. Clubs and user groups may charge a nominal fee (not more than $10 US) for expenses incurred while distributing Tools Plus. All other individuals and organizations must obtain written permission to distribute copies of Tools Plus if any fee is charged for the use, copying, or distribution of the product.   [iv]  You may integrate the SOFTWARE product(s) (namely the files “ToolsPlus.Lib”, “ToolsPlus.Lib1”, “ToolsPlus.Lib2”, “ToolsPlus.Lib3”, “ToolsPlus.p”, “ToolsPlus.c” and “ToolsPlus.h”, and the “Palette WDEF”) with source code produced by you in your development of executable applications products using the SOFTWARE. You may also compile the SOFTWARE and imbed the resulting object code into executable applications products that you have developed.    [v]  You may NOT distribute, commercially or otherwise, any product that includes the SOFTWARE, in whole or in part. This includes, but is not limited to, applications that you develop with the SOFTWARE. Distribution privileges are granted only to REGISTERED users who have purchased the SOFTWARE.   [vi]  Except as specifically provided above, you shall not copy, modify, transfer, license, sublicense, rent, lease, sell, convey, translate, adapt, convert to any programming language or format, reverse engineer, decompile or disassemble the SOFTWARE, or create derivative works based on the SOFTWARE, or any portion of the SOFTWARE.  >>> PLEASE NOTE that REGISTERED users have a different Software License that permits them to distribute applications they create with Tools Plus ROYALTY FREE!  Water’s Edge Software monitors and strictly enforces these restrictions.4. USE RESTRICTIONS. This copy of Tools Plus is distributed as evaluation software, and is for EVALUATION PURPOSES ONLY. You may use the SOFTWARE for thirty (30) consecutive days, starting from the day when you start using the SOFTWARE. After the evaluation period (30 days), you must either:    [a]  PURCHASE the SOFTWARE, or    [b]  permanently destroy the SOFTWARE and all copies, including any applications or entities that may have been created into which the SOFTWARE, in whole or in part, has been imbedded. If you decide not to purchase the SOFTWARE, you may not re-acquire the SOFTWARE for a period of 6 months, regardless of the SOFTWARE version (otherwise, it would be possible to be perpetually “evaluating” the latest version of the SOFTWARE). You do not have to destroy the “Tools Plus 2.6 Package” file.LIMITED WARRANTY~~~~~~~~~~~~~~~  THIS SOFTWARE AND ACCOMPANYING MATERIALS (INCLUDING INSTRUCTIONS FOR USE) ARE PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND. FURTHER, WATER’S EDGE SOFTWARE DOES NOT WARRANTY, GUARANTEE OR MAKE ANY REPRESENTATIONS REGARDING THE USE, OR THE RESULTS OF USE, OF THE SOFTWARE OR WRITTEN MATERIALS IN TERMS OF CORRECTNESS, ACCURACY, RELIABILITY, CURRENTNESS, OR OTHERWISE. THE ENTIRE RISK AS TO THE RESULTS AND PERFORMANCE OF THE SOFTWARE IS ASSUMED BY YOU. IF THE SOFTWARE OR WRITTEN MATERIALS ARE DEFECTIVE, YOU (AND NOT WATER’S EDGE SOFTWARE OR ITS DEALERS, DISTRIBUTORS, AGENTS, OR EMPLOYEES), ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR, OR CORRECTION.The above is the only warranty of any kind, either expressed or implied, statutory or otherwise, including but not limited to the implied warranties of merchantability and fitness for a particular purpose that is made by Water’s Edge Software on this product.No oral or written information or advice given by Water’s Edge Software, its dealers, distributors, agents or employees shall create a warranty or in any way increase the scope of this warranty, and you may not rely on any such information or advice.Neither Water’s Edge Software, nor anyone else who has been involved in the creation, production, or delivery of this product shall be liable for any direct, indirect, consequential or incidental damages (including damages for the loss of business profits, business interruption, loss of business information, and the like) arising out of the use or inability to use such product even if Water’s Edge Software has been advised of the possibility of such damages.ACKNOWLEDGMENT~~~~~~~~~~~~~~You acknowledge that you have read the License and the Limited Warranty, understand them, and agree to be bound by their terms and conditions. You also agree that the exclusive statement of agreement between the parties and supersede all proposals or prior oral or written agreements, or any other communications between the parties relating to the subject matter of the License or Limited Warranty.Should you have any questions concerning this License or this Limited Warranty, or if you desire to contact Water’s Edge Software for any reason, please contact in writing:           Water’s Edge Software           2441 Lakeshore Road West           Box 70022           Oakville, Ontario           Canada           L6L 6M9.
+[Display using Geneva 12]
+
+
+
+This document contains…
+  • Copyright and trademark information
+  • Software License and Warranty
+
+
+
+
+...........................................................................................................................................
+
+
+Copyright ©1989-1995 by Water’s Edge Software
+Tools Plus™ is a trademark of Water’s Edge Software
+
+
+4th Dimension® is a registered trademarks of ACIUS
+Photoshop™ is a trademark of Adobe Systems Incorporated
+Apple®, Lisa®, AppleLink®, and eWorld® are registered trademarks of
+    Apple Computer, Inc.
+Finder™, Macintosh™, MultiFinder™, Power Macintosh™, QuickTime™
+    and ResEdit™ are trademarks of Apple Computer, Inc.
+MacPaint® and MacDraw® are registered trademark of
+    Claris Corporation
+CompuServe® is a registered trademark, and CompuServe Mail™ is
+    a trademark of CompuServe Incorporated
+Infinity Windoid™ is a trademark of Infinity Systems
+PowerPC™ is a trademark of International Business Machines
+    Corporation, used under license therefrom
+CodeWarrior™ is a trademark or Metrowerks Inc.
+Microsoft® and Word® are registered trademark of
+    Microsoft Corporation
+THINK Pascal™, THINK C™, Symantec C™, Symantec C++™ and
+    THINK Reference™ are trademarks of Symantec Corporation
+Eudora™ is a trademark of the University of Illinois Board of
+    Trustees, licensed to QUALCOMM Incorporated
+
+
+The “Tools Plus 2.6 Package” is a self-extracting archive created with StuffIt Deluxe. Portions are Copyright © 1990-93 by Aladdin Systems Inc., and Raymond Lau.
+
+
+Tools Plus libraries and User Manual were designed and created by
+    Steve Makohin and Steven Waters.
+
+
+...........................................................................................................................................
+
+
+
+
+Evaluating Tools Plus
+~~~~~~~~~~~~~~~~~
+  This fully featured copy of Tools Plus is distributed at no cost as EVALUATION SOFTWARE. The purpose of this is to allow you to EVALUATE Tools Plus before buying it. There are, however, terms and conditions to using this product, even for the purpose of evaluation. For full details, please read the remainder of this document.
+
+
+Why an “Evaluation Kit” instead of a demo?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  The Tools Plus Evaluation Kit is a method of software distribution that gives you an opportunity to try Tools Plus before buying it. It has ALL the features of our commercially distributed software. Demos, on the other hand, offer limited functionality or they are crippled in some way. We believe the best way to evaluate Tools Plus is to try it for yourself in real-life situations. You just can’t do that with a demo.
+
+  You should always buy software that suits your requirements and budget. This Evaluation Kit makes it easier to determine if Tools Plus suits your needs, because you can try it before you buy it. You have the ultimate money-back guarantee: if you don’t use Tools Plus, you don’t pay for it!
+
+  During your evaluation, you may use Tools Plus to develop and create applications without charge or obligation for up to thirty (30) days, but you may NOT distribute Tools Plus or application’s written with Tools Plus. Please read this entire document for full details on conditions and terms.
+
+  Tools Plus is COMMERCIAL software. Copyright laws apply, and Water’s Edge Software (the copyright holder) retains all rights with a few exceptions as specifically stated.
+
+
+
+...........................................................................................................................................
+
+
+
+                   SOFTWARE LICENSE & LIMITED WARRANTY
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In order to preserve and protect its rights under applicable law, Water’s Edge Software (the author and distributor) does not sell any rights in its SOFTWARE. Rather, Water’s Edge Software grants the right to use its SOFTWARE by means of a SOFTWARE LICENSE. Water’s Edge Software specifically retains title to all Water’s Edge Software products.
+
+  This is a special EVALUATION Software License. It has restrictions that do not apply to people who purchase and register Tools Plus.
+
+
+
+SOFTWARE LICENSE
+~~~~~~~~~~~~~~~
+1. GRANT OF LICENSE. In consideration of your agreement to abide by the terms and conditions of this License and the Limited Warranty, Water’s Edge Software, as Licensor, grants you, the Licensee, a non-exclusive right to use and display this copy of Tools Plus and its related files (hereinafter the “SOFTWARE”) so long as you comply with the terms of this License. You are also granted a non-exclusive right to use and display the enclosed Tools Plus documentation (hereinafter the “DOCUMENTATION”). Water’s Edge Software reserves all rights not expressly granted to the LICENSEE.
+
+2. OWNERSHIP OF SOFTWARE. As the LICENSEE, you own the magnetic disk or other physical media on which the SOFTWARE is originally or subsequently recorded or fixed, but an express condition of this License is that Water’s Edge Software retains title and ownership of the SOFTWARE and DOCUMENTATION, regardless of the form or media in or on which the original and other copies may exist. This License is not a sale of the original SOFTWARE or DOCUMENTATION, or any copy.
+
+3. COPY and DISTRIBUTION RESTRICTIONS. This SOFTWARE and DOCUMENTATION are copyrighted, and are protected by United States and Canadian copyright laws and international treaty provisions. Unauthorized copying of SOFTWARE or DOCUMENTATION, including SOFTWARE that has been modified, merged, or included with other software, is expressly forbidden unless otherwise stated in this license. You may be held legally responsible for any copyright infringement that is caused or encouraged by your failure to abide by the terms of this License.
+  Tools Plus is provided at no charge to the user for the purpose of EVALUATION. You are encouraged to copy and distribute Tools Plus with the restrictions listed below.
+  Please note that the self-extracting “Tools Plus 2.6 Package” file MAY have been renamed to comply with various networks’ and Bulletin Boards’ file naming conventions. Whenever you read the file name “Tools Plus 2.6 Package”, understand that it also refers to the file you have received, regardless of its actual name.
+    [i]  You may copy and distribute the self-extracting “Tools Plus 2.6 Package” file but _NOT_ the individual libraries, files and documents. This ensures that users receive a complete package with all documentation.
+   [ii]  You may not modify the “Tools Plus 2.6 Package” file in any way.
+  [iii]  You may not charge any fee for the use, copying, or distribution of the product. Clubs and user groups may charge a nominal fee (not more than $10 US) for expenses incurred while distributing Tools Plus. All other individuals and organizations must obtain written permission to distribute copies of Tools Plus if any fee is charged for the use, copying, or distribution of the product.
+   [iv]  You may integrate the SOFTWARE product(s) (namely the files “ToolsPlus.Lib”, “ToolsPlus.Lib1”, “ToolsPlus.Lib2”, “ToolsPlus.Lib3”, “ToolsPlus.p”, “ToolsPlus.c” and “ToolsPlus.h”, and the “Palette WDEF”) with source code produced by you in your development of executable applications products using the SOFTWARE. You may also compile the SOFTWARE and imbed the resulting object code into executable applications products that you have developed.
+    [v]  You may NOT distribute, commercially or otherwise, any product that includes the SOFTWARE, in whole or in part. This includes, but is not limited to, applications that you develop with the SOFTWARE. Distribution privileges are granted only to REGISTERED users who have purchased the SOFTWARE.
+   [vi]  Except as specifically provided above, you shall not copy, modify, transfer, license, sublicense, rent, lease, sell, convey, translate, adapt, convert to any programming language or format, reverse engineer, decompile or disassemble the SOFTWARE, or create derivative works based on the SOFTWARE, or any portion of the SOFTWARE.
+  >>> PLEASE NOTE that REGISTERED users have a different Software License that permits them to distribute applications they create with Tools Plus ROYALTY FREE!  Water’s Edge Software monitors and strictly enforces these restrictions.
+
+4. USE RESTRICTIONS. This copy of Tools Plus is distributed as evaluation software, and is for EVALUATION PURPOSES ONLY. You may use the SOFTWARE for thirty (30) consecutive days, starting from the day when you start using the SOFTWARE. After the evaluation period (30 days), you must either:
+    [a]  PURCHASE the SOFTWARE, or
+    [b]  permanently destroy the SOFTWARE and all copies, including any applications or entities that may have been created into which the SOFTWARE, in whole or in part, has been imbedded. If you decide not to purchase the SOFTWARE, you may not re-acquire the SOFTWARE for a period of 6 months, regardless of the SOFTWARE version (otherwise, it would be possible to be perpetually “evaluating” the latest version of the SOFTWARE). You do not have to destroy the “Tools Plus 2.6 Package” file.
+
+
+
+LIMITED WARRANTY
+~~~~~~~~~~~~~~~
+  THIS SOFTWARE AND ACCOMPANYING MATERIALS (INCLUDING INSTRUCTIONS FOR USE) ARE PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND. FURTHER, WATER’S EDGE SOFTWARE DOES NOT WARRANTY, GUARANTEE OR MAKE ANY REPRESENTATIONS REGARDING THE USE, OR THE RESULTS OF USE, OF THE SOFTWARE OR WRITTEN MATERIALS IN TERMS OF CORRECTNESS, ACCURACY, RELIABILITY, CURRENTNESS, OR OTHERWISE. THE ENTIRE RISK AS TO THE RESULTS AND PERFORMANCE OF THE SOFTWARE IS ASSUMED BY YOU. IF THE SOFTWARE OR WRITTEN MATERIALS ARE DEFECTIVE, YOU (AND NOT WATER’S EDGE SOFTWARE OR ITS DEALERS, DISTRIBUTORS, AGENTS, OR EMPLOYEES), ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR, OR CORRECTION.
+
+The above is the only warranty of any kind, either expressed or implied, statutory or otherwise, including but not limited to the implied warranties of merchantability and fitness for a particular purpose that is made by Water’s Edge Software on this product.
+
+No oral or written information or advice given by Water’s Edge Software, its dealers, distributors, agents or employees shall create a warranty or in any way increase the scope of this warranty, and you may not rely on any such information or advice.
+
+Neither Water’s Edge Software, nor anyone else who has been involved in the creation, production, or delivery of this product shall be liable for any direct, indirect, consequential or incidental damages (including damages for the loss of business profits, business interruption, loss of business information, and the like) arising out of the use or inability to use such product even if Water’s Edge Software has been advised of the possibility of such damages.
+
+
+
+ACKNOWLEDGMENT
+~~~~~~~~~~~~~~
+You acknowledge that you have read the License and the Limited Warranty, understand them, and agree to be bound by their terms and conditions. You also agree that the exclusive statement of agreement between the parties and supersede all proposals or prior oral or written agreements, or any other communications between the parties relating to the subject matter of the License or Limited Warranty.
+
+Should you have any questions concerning this License or this Limited Warranty, or if you desire to contact Water’s Edge Software for any reason, please contact in writing:
+
+           Water’s Edge Software
+           2441 Lakeshore Road West
+           Box 70022
+           Oakville, Ontario
+           Canada
+           L6L 6M9.

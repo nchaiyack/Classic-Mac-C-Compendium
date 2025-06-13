@@ -1,1 +1,174 @@
-%    Copyright (C) 1995 Aladdin Enterprises.  All rights reserved.% % This file is part of Aladdin Ghostscript.% % Aladdin Ghostscript is distributed with NO WARRANTY OF ANY KIND.  No author% or distributor accepts any responsibility for the consequences of using it,% or for whether it serves any particular purpose or works at all, unless he% or she says so in writing.  Refer to the Aladdin Ghostscript Free Public% License (the "License") for full details.% % Every copy of Aladdin Ghostscript must include a copy of the License,% normally in a plain ASCII text file named PUBLIC.  The License grants you% the right to copy, modify and redistribute Aladdin Ghostscript, but only% under certain conditions described in the License.  Among other things, the% License requires that the copyright notice and this notice be preserved on% all copies.% executive is redefined so that .setinterpstate gets called.  This in% lets Mac GS Viewer know what state the interpreter is in so it can% display the correct menus and various dialogs and cursors./.interpstateinput 1 def/.interpstaterun 2 def/.interpstatepause 3 def/executive	{ { prompt		.interpstateinput .setinterpstate	     { (%statementedit) (r) file } stopped	     { pop pop $error /errorname get /undefinedfilename eq		{ exit } if		% EOF	       handleerror null		% ioerror??	     }	    if	    .interpstaterun .setinterpstate	    cvx execute	  } loop	} odef/.confirm	{ pop } bind def% .newwindow creates a new output device for the Mac/.newwindow	% hwres pagesize depth title visible -> -	{		mark 6 1 roll		/HWResolution 6 1 roll		/PageSize 5 1 roll		/BitsPerPixel 4 1 roll		/GSTitle 3 1 roll		/GSVisible exch		currentdevice copydevice		putdeviceprops		setdevice	} def% .newfile creates a output file for an arbitrary device/.newfile	% hwres pagesize outputfile -> -	{		mark 4 1 roll		/HWResolution 4 1 roll		/PageSize 3 1 roll		/OutputFile exch		currentdevice		putdeviceprops		pop	} def% .closefile closes a file by setting the output file to be a dash/.closefile	% --	{ mark /OutputFile (-) currentdevice putdeviceprops pop } def% .beginjob and .endjob are used to 'wrap' rendering of files% so that one file can't corrupt the VM state for another.% Both procedures assume one value on the stack which they% preserve.% This pair does the full save and restore of the VM environment% What was on the operand and dictionary stacks before the .beginjob% will be restored after the .endjob./.beginjob			% |- old...stack proc -> proc	{ save		5 dict dup		serverdict /.jobinfo 3 2 roll put		begin			/saveid exch def			/proc exch def  			count array astore /ostack exch def  			/proc load  		end  		serverdict /.jobinfo get  		/dstack countdictstack array dictstack put	} def/.endjob			% |- junk...stack result -> old...stack result	{		serverdict /.jobinfo known {			cleardictstack				serverdict /.jobinfo get begin				/result exch def				clear ostack aload pop				result				saveid				dstack			end			dup length 1 sub countdictstack exch 1 exch			{ 1 index exch get begin } for			pop		restore		} if	} def% This pair just does a save and restore.  It cleans out% the operand and dictionay stack both before and after.% /.beginjob		% |- ... proc -> proc% 	{% 		count 1 roll% 		count 1 sub { pop } repeat% 		cleardictstack% 		save% 		serverdict /.jobinfo 3 2 roll put% 	} def% 	% /.endjob		% |- ... result -> result% 	{% 		count 1 roll% 		count 1 sub { pop } repeat% 		cleardictstack% 		serverdict /.jobinfo get% 		restore% 	} def% This pair does no job saving what so ever.% /.beginjob { } def% /.endjob { } def% .runjob is called from the application when you open a file/.runjob		% proc -> -	{		.beginjob			stopped		.endjob		{ stop } if	} def% our way of handling user interruptserrordict begin  /interrupt {  					% do the normal errorhandler, but ignore its stop  	/interrupt dup  	systemdict /.errorhandler get stopped pop  	.clearerror		% so stacks don't get printed  	  	(\nInterrupted by user.\n) print					% tell the user	stop			% propigate the interrupt  } bind defend	
+%    Copyright (C) 1995 Aladdin Enterprises.  All rights reserved.
+% 
+% This file is part of Aladdin Ghostscript.
+% 
+% Aladdin Ghostscript is distributed with NO WARRANTY OF ANY KIND.  No author
+% or distributor accepts any responsibility for the consequences of using it,
+% or for whether it serves any particular purpose or works at all, unless he
+% or she says so in writing.  Refer to the Aladdin Ghostscript Free Public
+% License (the "License") for full details.
+% 
+% Every copy of Aladdin Ghostscript must include a copy of the License,
+% normally in a plain ASCII text file named PUBLIC.  The License grants you
+% the right to copy, modify and redistribute Aladdin Ghostscript, but only
+% under certain conditions described in the License.  Among other things, the
+% License requires that the copyright notice and this notice be preserved on
+% all copies.
+
+
+% executive is redefined so that .setinterpstate gets called.  This in
+% lets Mac GS Viewer know what state the interpreter is in so it can
+% display the correct menus and various dialogs and cursors.
+
+/.interpstateinput 1 def
+/.interpstaterun 2 def
+/.interpstatepause 3 def
+
+/executive
+	{ { prompt
+		.interpstateinput .setinterpstate
+	     { (%statementedit) (r) file } stopped
+	     { pop pop $error /errorname get /undefinedfilename eq
+		{ exit } if		% EOF
+	       handleerror null		% ioerror??
+	     }
+	    if
+	    .interpstaterun .setinterpstate
+	    cvx execute
+	  } loop
+	} odef
+
+/.confirm
+	{ pop } bind def
+
+
+% .newwindow creates a new output device for the Mac
+
+/.newwindow	% hwres pagesize depth title visible -> -
+	{
+		mark 6 1 roll
+		/HWResolution 6 1 roll
+		/PageSize 5 1 roll
+		/BitsPerPixel 4 1 roll
+		/GSTitle 3 1 roll
+		/GSVisible exch
+		currentdevice copydevice
+		putdeviceprops
+		setdevice
+	} def
+
+% .newfile creates a output file for an arbitrary device
+
+/.newfile	% hwres pagesize outputfile -> -
+	{
+		mark 4 1 roll
+		/HWResolution 4 1 roll
+		/PageSize 3 1 roll
+		/OutputFile exch
+		currentdevice
+		putdeviceprops
+		pop
+	} def
+
+% .closefile closes a file by setting the output file to be a dash
+
+/.closefile	% --
+	{ mark /OutputFile (-) currentdevice putdeviceprops pop } def
+
+% .beginjob and .endjob are used to 'wrap' rendering of files
+% so that one file can't corrupt the VM state for another.
+% Both procedures assume one value on the stack which they
+% preserve.
+
+% This pair does the full save and restore of the VM environment
+% What was on the operand and dictionary stacks before the .beginjob
+% will be restored after the .endjob.
+
+/.beginjob			% |- old...stack proc -> proc
+	{ save
+		5 dict dup
+		serverdict /.jobinfo 3 2 roll put
+		begin
+			/saveid exch def
+			/proc exch def
+  			count array astore /ostack exch def
+  			/proc load
+  		end
+  		serverdict /.jobinfo get
+  		/dstack countdictstack array dictstack put
+	} def
+
+/.endjob			% |- junk...stack result -> old...stack result
+	{
+		serverdict /.jobinfo known {
+			cleardictstack
+	
+			serverdict /.jobinfo get begin
+				/result exch def
+				clear ostack aload pop
+				result
+				saveid
+				dstack
+			end
+			dup length 1 sub countdictstack exch 1 exch
+			{ 1 index exch get begin } for
+			pop
+		restore
+		} if
+	} def
+
+% This pair just does a save and restore.  It cleans out
+% the operand and dictionay stack both before and after.
+
+% /.beginjob		% |- ... proc -> proc
+% 	{
+% 		count 1 roll
+% 		count 1 sub { pop } repeat
+% 		cleardictstack
+% 		save
+% 		serverdict /.jobinfo 3 2 roll put
+% 	} def
+% 	
+% /.endjob		% |- ... result -> result
+% 	{
+% 		count 1 roll
+% 		count 1 sub { pop } repeat
+% 		cleardictstack
+% 		serverdict /.jobinfo get
+% 		restore
+% 	} def
+
+
+% This pair does no job saving what so ever.
+
+% /.beginjob { } def
+% /.endjob { } def
+
+
+% .runjob is called from the application when you open a file
+
+/.runjob		% proc -> -
+	{
+		.beginjob
+			stopped
+		.endjob
+		{ stop } if
+	} def
+
+
+% our way of handling user interrupts
+
+errordict begin
+  /interrupt {
+  					% do the normal errorhandler, but ignore its stop
+  	/interrupt dup
+  	systemdict /.errorhandler get stopped pop
+  	.clearerror		% so stacks don't get printed
+  	
+  	(\nInterrupted by user.\n) print
+					% tell the user
+	stop			% propigate the interrupt
+  } bind def
+end
+
+	

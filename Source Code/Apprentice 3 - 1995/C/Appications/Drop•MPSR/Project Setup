@@ -1,1 +1,23 @@
-develop:Project Ä:Drop¥MPSR Ä:Drop¥MPSR.¹1 segments11 filesSegment 2Name: Main SegmentPreload: falseProtected: trueLocked: truePurgeable: trueSystemHeap: false11 files:develop:Project Ä:Drop¥MPSR Ä:DropShell.cdevelop:Project Ä:Drop¥MPSR Ä:DropShell.rsrcdevelop:Project Ä:Drop¥MPSR Ä:Drop¥MPSR.cdevelop:Project Ä:Drop¥MPSR Ä:DSAppleEvents.cdevelop:Project Ä:Drop¥MPSR Ä:DSUserProcs.cdevelop:Project Ä:Drop¥MPSR Ä:DSUtils.cdevelop:Sym C++ Ä:Mac Libraries:MacTrapsdevelop:Sym C++ Ä:Mac Libraries:MacTraps2develop:Project Ä:Drop¥MPSR Ä:MPSR.rsrcdevelop:Project Ä:Drop¥MPSR Ä:Spinning Cursor Lib Ä:SpinLib.cdevelop:Project Ä:Drop¥MPSR Ä:Spinning Cursor Lib Ä:SpinLib.rsrc
+develop:Project Ä:Drop¥MPSR Ä:Drop¥MPSR.¹
+1 segments
+11 files
+
+Segment 2
+Name: Main Segment
+Preload: false
+Protected: true
+Locked: true
+Purgeable: true
+SystemHeap: false
+11 files:
+develop:Project Ä:Drop¥MPSR Ä:DropShell.c
+develop:Project Ä:Drop¥MPSR Ä:DropShell.rsrc
+develop:Project Ä:Drop¥MPSR Ä:Drop¥MPSR.c
+develop:Project Ä:Drop¥MPSR Ä:DSAppleEvents.c
+develop:Project Ä:Drop¥MPSR Ä:DSUserProcs.c
+develop:Project Ä:Drop¥MPSR Ä:DSUtils.c
+develop:Sym C++ Ä:Mac Libraries:MacTraps
+develop:Sym C++ Ä:Mac Libraries:MacTraps2
+develop:Project Ä:Drop¥MPSR Ä:MPSR.rsrc
+develop:Project Ä:Drop¥MPSR Ä:Spinning Cursor Lib Ä:SpinLib.c
+develop:Project Ä:Drop¥MPSR Ä:Spinning Cursor Lib Ä:SpinLib.rsrc

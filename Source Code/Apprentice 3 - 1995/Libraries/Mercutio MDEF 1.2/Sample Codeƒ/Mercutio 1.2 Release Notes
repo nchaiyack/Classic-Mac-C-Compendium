@@ -1,1 +1,82 @@
-Version 1.2===========- Final release of v 1.2 (2/19/95)- Fixed scroll bug that wouldn't hilight the last item in a menu after scrolling down- Misc. code cleaning- Added 'Xmnu' menu to demonstrate preference resource- Removed flicker in dynamic items when they don't change- Version 1.2b24==============- Third public release (12/21/94)- Added support for Dvorak keyboard; should solve some of the internationalization problems as well.- Fixed misc. bugs, including flickering balloon help.- Documentation revised, and distributed in Acrobat format. Acrobat Reader available at <ftp://ftp.adobe.com/pub/adobe/Applications/Acrobat/Macintosh/AcroRead.sea.hqx>- First draft of C API (w. UPP) and C sample code- Known Bugs: 1. Popupmenu sample code not ported yet.              2. Documentation still a little sketchy in some areas.              3. Licensing change: credit must be given in documentation                 as well as the About box.- Xmnu id 0 as a defaults for all the menusVersion 1.2b20==============- Second public release (9/29/94)- Dynamic items: the modifiers of the default item (the one that shows up if no modifiers are pressed) are used as a mask, so any item alternates must _at least_ have those modifiers.- Fixed menu width bug with dynamic items.- Revised sample code.- Known Bugs: 1. Missing API and Sample Code in C (either by porting the API code or by providing a library with a C header file)                       2. Implement using PowerPC Universal Headers for C sample code.                       3. Flicker in dynamic items that don't change when modifiers change                       4. Documentation is sketchyVersion 1.2b18==============- NEW FEATURE: Dynamic items! They work, too!- Major internal changes to support new feature.- Revamped callback structure- API routines changed to all have "MDEF_" prefix- Bug fix in drawing color menus- Still need to do: C sample code, finish documentationVersion 1.2b13==============- Slightly revised documentation- Pseudo-public release to MacDevelop ftp site.Version 1.2b12============== - integrated all MDEFs into one - support for DrawItemMsg and CalcItemSize msg (new in System 7) -- check out the "Test Popup Menu" window - introduced Menu preferences for setting style bit mapping and required modifier keys - new 'dirty' parameter to Callback avoids unnecessary flicker - revamped documentationTo do for version 1.3=====================- Support different fonts and sizes (e.g. for Geneva 9 pt popup menus)- Investigate different ways of storing globals in Mercutio. Mercutio currently  appends globals and menu-relative data to the end of the MENU resource. This  slows down PowerMenuKey if it has to parse through alot of menuHandles, each  of which may have its own "styles-to-features" mapping. I plan to split this  into two tasks:    	1. Store globals via A4/A5 relative or Rollins' globals method as  	   described in Develop.  	2. Come up with a mechanism to quickly accessing menu-relative   	   data. This is a tricky one. I think the only way to do it is to store  	   the data at the end of the menuHandle: this makes sure the data moves  	   with the menu if it is renumbered, and is deleted when the menuHandle  	   goes away.  	  Any suggestions welcomed!  Ramon M. Felcianofelciano@camis.stanford.edu
+
+Version 1.2
+===========
+- Final release of v 1.2 (2/19/95)
+- Fixed scroll bug that wouldn't hilight the last item in a menu after scrolling down
+- Misc. code cleaning
+- Added 'Xmnu' menu to demonstrate preference resource
+- Removed flicker in dynamic items when they don't change
+- 
+
+Version 1.2b24
+==============
+- Third public release (12/21/94)
+- Added support for Dvorak keyboard; should solve some of the internationalization problems as well.
+- Fixed misc. bugs, including flickering balloon help.
+- Documentation revised, and distributed in Acrobat format. Acrobat Reader available at <ftp://ftp.adobe.com/pub/adobe/Applications/Acrobat/Macintosh/AcroRead.sea.hqx>
+- First draft of C API (w. UPP) and C sample code
+- Known Bugs: 1. Popupmenu sample code not ported yet.
+              2. Documentation still a little sketchy in some areas.
+              3. Licensing change: credit must be given in documentation
+                 as well as the About box.
+- Xmnu id 0 as a defaults for all the menus
+
+Version 1.2b20
+==============
+- Second public release (9/29/94)
+- Dynamic items: the modifiers of the default item (the one that shows up if no modifiers are pressed) are used as a mask, so any item alternates must _at least_ have those modifiers.
+- Fixed menu width bug with dynamic items.
+- Revised sample code.
+- Known Bugs: 1. Missing API and Sample Code in C (either by porting the API code or by providing a library with a C header file)
+                       2. Implement using PowerPC Universal Headers for C sample code.
+                       3. Flicker in dynamic items that don't change when modifiers change
+                       4. Documentation is sketchy
+
+
+Version 1.2b18
+==============
+- NEW FEATURE: Dynamic items! They work, too!
+- Major internal changes to support new feature.
+- Revamped callback structure
+- API routines changed to all have "MDEF_" prefix
+- Bug fix in drawing color menus
+- Still need to do: C sample code, finish documentation
+
+
+Version 1.2b13
+==============
+- Slightly revised documentation
+- Pseudo-public release to MacDevelop ftp site.
+
+
+Version 1.2b12
+==============
+ - integrated all MDEFs into one
+ - support for DrawItemMsg and CalcItemSize msg (new in System 7) -- check out the "Test Popup Menu" window
+ - introduced Menu preferences for setting style bit mapping and required modifier keys
+ - new 'dirty' parameter to Callback avoids unnecessary flicker
+ - revamped documentation
+
+
+To do for version 1.3
+=====================
+- Support different fonts and sizes (e.g. for Geneva 9 pt popup menus)
+- Investigate different ways of storing globals in Mercutio. Mercutio currently
+  appends globals and menu-relative data to the end of the MENU resource. This
+  slows down PowerMenuKey if it has to parse through alot of menuHandles, each
+  of which may have its own "styles-to-features" mapping. I plan to split this
+  into two tasks:
+  
+  	1. Store globals via A4/A5 relative or Rollins' globals method as
+  	   described in Develop.
+  	2. Come up with a mechanism to quickly accessing menu-relative 
+  	   data. This is a tricky one. I think the only way to do it is to store
+  	   the data at the end of the menuHandle: this makes sure the data moves
+  	   with the menu if it is renumbered, and is deleted when the menuHandle
+  	   goes away.
+  	  
+Any suggestions welcomed!
+  
+
+Ramon M. Felciano
+felciano@camis.stanford.edu

@@ -1,1 +1,16 @@
-/* * Copyright (C) 1985-1992  New York University *  * This file is part of the Ada/Ed-C system.  See the Ada/Ed README file for * warranty (none) and distribution info and also the GNU General Public * License for more details. */int binder(#ifdef TBSLTuple#elsevoid#endif);
+/*
+ * Copyright (C) 1985-1992  New York University
+ * 
+ * This file is part of the Ada/Ed-C system.  See the Ada/Ed README file for
+ * warranty (none) and distribution info and also the GNU General Public
+ * License for more details.
+
+ */
+
+int binder(
+#ifdef TBSL
+Tuple
+#else
+void
+#endif
+);

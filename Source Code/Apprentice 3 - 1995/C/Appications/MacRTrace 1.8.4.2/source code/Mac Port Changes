@@ -1,1 +1,108 @@
-PowerPC Port Changes--------------------(key: * = code/resource change, - = Rainbow setup change, ¥Ê= bugfix)* added 68k alignment pragmas for preferences_struct in mactypes.h- turn off unintended assignment warning (too many hits)* change call of TrackControl in maclog.c to use a UPP (requires universal headers)* bugfix in StdCompression.h header file (not really necessary)* remove menu patch code in macdialogs.c for now	- fixing to use new code in TCL. Cache flush no longer required on PowerPC (?)* changed extern.h to not use the definition of macintosh to define FAR (?)	- after exchanging email with Greg, removed FAR for macintosh model* changed prototype of setup_popup_menu() in macoptions.c to take a UserItemProc  instead of a UserItemProc*. Also changed function in macdialogs.c (although the  type is irrelevant anyway.) This should work OK in both THINK and SC.* changed macstuff.c to include LowMem.h instead of LoMem.h* changed use of GetTrapAddress to NGetTrapAddress in macstuff.c* added UPPs to init_apple_events() in macstuff.c* will need to fix VBL code in macstuff.c; removed for now (maybe use a thread instead?)	- fixed to use Mixed Mode on PowerPC* changed use of macintosh to define FAR in a number of files: alias.c, csg.c, data.c,  etc.c, noise.c, object.c, params.c. A number of these files (all but data.c) already  include a header that defines FAR. Maybe a better fix would be to bracket the usage  with #ifndef FAR ?	- after exchanging email with Greg, removed FAR for macintosh model* commented out prototype of create_pp_obj() in get_at_text() in texttrace.c. This is  due to a bug in SC vs. THINK C behavior. THINK C doesn't require the prototype,  though. If possible, the prototype should be removed from the common code, or  #ifdef'd.* changed use of gray to qd.gray, white to qd.white, black to qd.black, screenBits  to qd.screenBits, thePort to qd.thePort* change macmovie.c to include <QuickTimeComponents.h> instead of "StdCompression.h"- added cast to first argument of SCGetCompression() in <QuickTimeComponents.h>* changed code for opening up components in macmove.c (guessed at API, but looks OK)* ifdef out checks in get_system_info() for FPU and '020 on PowerPC. Not sure if  this is a completely correct fix.¥ removed call to set_default_preferences() from init_mac(). It gets called  before the global prefs is allocated, and ends up trying to write to random memory.  (found due to Even Better Bus Error)* added code to init_alert_dialogs() in macdialogs.c to initalize UPPs for the user  items* numerous UPP changes in macxxx.c files, lost track* add #pragma align for OffscreenPICTStruct in macstuff* renamed resource file to MacRTrace.rsrc, added it to both 68k and PowerPC projectsChanges to code in Mac Port:* defined WRITE to call mac_write* changed some hit1_list and hit2_list of csg_sec_intersect and csg_intersect to be dynamically  allocated (MESSY CHANGE)  * split patch.c/patch1.c into patch.c/patch1.c/patch2.c.  * changed patch_divide in patch1.c to non-static, so it could be called from patch2.c.  changed patch_damped_nr and subpatch_enclose in patch.c to non-static, so it could  be called from the other patch files.  * split shadtext.c into shadtxt1.c/shadtxt2.c.* changed all static functions in shadtxt1.c to non-static, so they  could be called from shadtxt2.c.* define GRX and display_plot for Mac in etc.c* define GRX for Mac in picture.c* Set up main in main.c to be rtrace_main when compiling on Mac.* Made input_parameters in main.c non-static so it could be called from the mac code.* Created macros UPDATE_STATUS_TEXT, UPDATE_STATUS_FREE_MEMORY, UPDATE_STATUS_INIT_STEP_MODE,  and UPDATE_STATUS_STEP_ON_TRUE to allow user to get continual feedback during time-consuming  parsing sections.  Added calls to these macros to scene.c, object.c, and enclose.c. * Added call to CHECK_EVENTS every 10 steps during enclose_all* Added serp_free_pixel_list and hilb_free_pixel_list* Made temp_image global* Changed OPEN to open temp files in Temporary Items directory* Removed the call to line_picture in ray_trace, since Mac figures out  the bitmap on the fly and doesn't use image output files.
+PowerPC Port Changes
+--------------------
+(key: * = code/resource change, - = Rainbow setup change, ¥Ê= bugfix)
+
+* added 68k alignment pragmas for preferences_struct in mactypes.h
+
+- turn off unintended assignment warning (too many hits)
+
+* change call of TrackControl in maclog.c to use a UPP (requires universal headers)
+
+* bugfix in StdCompression.h header file (not really necessary)
+
+* remove menu patch code in macdialogs.c for now
+	- fixing to use new code in TCL. Cache flush no longer required on PowerPC (?)
+
+* changed extern.h to not use the definition of macintosh to define FAR (?)
+	- after exchanging email with Greg, removed FAR for macintosh model
+
+* changed prototype of setup_popup_menu() in macoptions.c to take a UserItemProc
+  instead of a UserItemProc*. Also changed function in macdialogs.c (although the
+  type is irrelevant anyway.) This should work OK in both THINK and SC.
+
+* changed macstuff.c to include LowMem.h instead of LoMem.h
+
+* changed use of GetTrapAddress to NGetTrapAddress in macstuff.c
+
+* added UPPs to init_apple_events() in macstuff.c
+
+* will need to fix VBL code in macstuff.c; removed for now (maybe use a thread instead?)
+	- fixed to use Mixed Mode on PowerPC
+
+* changed use of macintosh to define FAR in a number of files: alias.c, csg.c, data.c,
+  etc.c, noise.c, object.c, params.c. A number of these files (all but data.c) already
+  include a header that defines FAR. Maybe a better fix would be to bracket the usage
+  with #ifndef FAR ?
+	- after exchanging email with Greg, removed FAR for macintosh model
+
+* commented out prototype of create_pp_obj() in get_at_text() in texttrace.c. This is
+  due to a bug in SC vs. THINK C behavior. THINK C doesn't require the prototype,
+  though. If possible, the prototype should be removed from the common code, or
+  #ifdef'd.
+
+* changed use of gray to qd.gray, white to qd.white, black to qd.black, screenBits
+  to qd.screenBits, thePort to qd.thePort
+
+* change macmovie.c to include <QuickTimeComponents.h> instead of "StdCompression.h"
+
+- added cast to first argument of SCGetCompression() in <QuickTimeComponents.h>
+
+* changed code for opening up components in macmove.c (guessed at API, but looks OK)
+
+* ifdef out checks in get_system_info() for FPU and '020 on PowerPC. Not sure if
+  this is a completely correct fix.
+
+¥ removed call to set_default_preferences() from init_mac(). It gets called
+  before the global prefs is allocated, and ends up trying to write to random memory.
+  (found due to Even Better Bus Error)
+
+* added code to init_alert_dialogs() in macdialogs.c to initalize UPPs for the user
+  items
+
+* numerous UPP changes in macxxx.c files, lost track
+
+* add #pragma align for OffscreenPICTStruct in macstuff
+
+* renamed resource file to MacRTrace.rsrc, added it to both 68k and PowerPC projects
+
+
+Changes to code in Mac Port:
+
+* defined WRITE to call mac_write
+
+* changed some hit1_list and hit2_list of csg_sec_intersect and csg_intersect to be dynamically
+  allocated (MESSY CHANGE)
+  
+* split patch.c/patch1.c into patch.c/patch1.c/patch2.c.
+  
+* changed patch_divide in patch1.c to non-static, so it could be called from patch2.c.
+  changed patch_damped_nr and subpatch_enclose in patch.c to non-static, so it could
+  be called from the other patch files.
+  
+* split shadtext.c into shadtxt1.c/shadtxt2.c.
+
+* changed all static functions in shadtxt1.c to non-static, so they
+  could be called from shadtxt2.c.
+
+* define GRX and display_plot for Mac in etc.c
+
+* define GRX for Mac in picture.c
+
+* Set up main in main.c to be rtrace_main when compiling on Mac.
+
+* Made input_parameters in main.c non-static so it could be called from the mac code.
+
+* Created macros UPDATE_STATUS_TEXT, UPDATE_STATUS_FREE_MEMORY, UPDATE_STATUS_INIT_STEP_MODE,
+  and UPDATE_STATUS_STEP_ON_TRUE to allow user to get continual feedback during time-consuming
+  parsing sections.  Added calls to these macros to scene.c, object.c, and enclose.c.
+ 
+* Added call to CHECK_EVENTS every 10 steps during enclose_all
+
+* Added serp_free_pixel_list and hilb_free_pixel_list
+
+* Made temp_image global
+
+* Changed OPEN to open temp files in Temporary Items directory
+
+* Removed the call to line_picture in ray_trace, since Mac figures out
+  the bitmap on the fly and doesn't use image output files.

@@ -1,1 +1,8 @@
-#!/bin/csh#	GNU C++ linking/usr/local/bin/gcc -O -pipe -W -Wall -Wpointer-arith -Wenum-clash -Woverloaded-virtual \-Wstrict-prototypes -Wmissing-prototypes \-finline-functions  -fforce-mem -funsigned-char \-fforce-addr -fomit-frame-pointer \-L{$HOME}/croot/c++serv \$* -lserv -liostream -liberty -lg++ -lm
+#!/bin/csh
+#	GNU C++ linking
+/usr/local/bin/gcc -O -pipe -W -Wall -Wpointer-arith -Wenum-clash -Woverloaded-virtual \
+-Wstrict-prototypes -Wmissing-prototypes \
+-finline-functions  -fforce-mem -funsigned-char \
+-fforce-addr -fomit-frame-pointer \
+-L{$HOME}/croot/c++serv \
+$* -lserv -liostream -liberty -lg++ -lm

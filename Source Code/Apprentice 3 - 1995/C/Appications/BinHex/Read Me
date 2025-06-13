@@ -1,1 +1,34 @@
-Whats contained in this archive:BinHex Code: full C source code for BinHex and un-BinHexPowerHex: A simple, sample app that has a nice threaded     interface.  (only BinHexes - not finished)     (with C source - 68K and PPC)DropHex: A simple, drag n drop, sample app that will BinHex     and un-BinHex a file.  (with C source - 68K and PPC)I hereby place this code fully within the Public Domain,with the hope that if anybody uses it, it won't suck.If you find a use for this code, and your a kind heartedperson, drop me a line.  I'll take comments, compliments as well as criticisms!Pros: The native encoder/decoder both process >1 Megabyte/Second       on most PowerMacs  (except when they are waiting for      filesystem!)Cons: But, ...I thought my code was perfect!Disclaimer:  Although I have heavily tested the code (theBinHex code, NOT the demo apps!) it may still suck.  Ifyou can find (and reproduce) a bug in the actual encoder(or decoder) I will gladly fix it free of charge.Thanks, enjoy, and happy coding!Ed Wynnearwyn@engin.umich.edu
+Whats contained in this archive:
+
+BinHex Code: full C source code for BinHex and un-BinHex
+PowerHex: A simple, sample app that has a nice threaded
+     interface.  (only BinHexes - not finished)
+     (with C source - 68K and PPC)
+DropHex: A simple, drag n drop, sample app that will BinHex
+     and un-BinHex a file.  (with C source - 68K and PPC)
+
+I hereby place this code fully within the Public Domain,
+with the hope that if anybody uses it, it won't suck.
+
+If you find a use for this code, and your a kind hearted
+person, drop me a line.  I'll take comments, compliments 
+as well as criticisms!
+
+
+Pros: The native encoder/decoder both process >1 Megabyte/Second 
+      on most PowerMacs  (except when they are waiting for
+      filesystem!)
+
+Cons: But, ...I thought my code was perfect!
+
+
+Disclaimer:  Although I have heavily tested the code (the
+BinHex code, NOT the demo apps!) it may still suck.  If
+you can find (and reproduce) a bug in the actual encoder
+(or decoder) I will gladly fix it free of charge.
+
+
+Thanks, enjoy, and happy coding!
+
+Ed Wynne
+arwyn@engin.umich.edu

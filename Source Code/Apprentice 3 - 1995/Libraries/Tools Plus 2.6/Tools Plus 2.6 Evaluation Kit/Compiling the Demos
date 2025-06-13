@@ -1,1 +1,280 @@
-[Display using Geneva 12]This document includes information about:  • compiling the demo application that is included with this     package  • resolving issues that may arise when compiling the demoCompiling The THINK C Demo Application~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~The easiest way to compile the C demo application included with Tools Plus is to have the following files in the same folder:    Demo.π    Demo.π.rsrc    Demo.c    ToolsPlus.Lib1    ToolsPlus.Lib2    ToolsPlus.Lib3    ToolsPlus.h    ToolsPlus.c    PascalStrHandles.cDouble-click the Demo.π project file to launch THINK C, then run your project.  Your project file keeps track of each file’s location as you add it to your project, so you may want to create a new project file after you have put all the Tools Plus libraries and their related files in their permanent folders.  Create a new (empty) project named “Demo.π” in the same folder as “Demo.π.rsrc” and “PascalStrHandles.c”.  Add the following files to your new project:    Segment 1:   MacTraps                        MacTraps2    Segment 2:   ANSI    Segment 3:   ToolsPlus.Lib1    Segment 4:   ToolsPlus.Lib2    Segment 5:   ToolsPlus.Lib3                        ToolsPlus.c    Segment 6:   Demo.cYou can now build your project and run your application.Note:  Make sure you allocate sufficient memory to the debugger if you are going to run the Tools Plus demo application with the debugger on.  The Tools Plus demo was written as one large source file, making it easier to compile and study, but making it hungry for debugger memory.  Allocate at least 500K to the debugger.  If you don’t have enough memory, turn the debugger off (Project menu, deselect “Use Debugger”) when running the demo.  Your applications will likely be written in a more intelligent fashion, abandoning one large source file in favor of several smaller ones.IMPORTANT! Errors when compiling the THINK C Demo…~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  At the time of this writing, Water’s Edge Software has made every effort to ensure that our demo application will compile successfully the first time. Unfortunately, Symantec C/C++ compilers have undergone a series of revisions and some inconsistencies have arisen between compiler versions. Fortunately, these differences are simple to resolve.  If your compiler gives you an error that states “argument to function ‘x’ does not match prototype,” it indicates that Symantec has made a minor revision to that function’s prototype (in the error message, ‘x’ will be replaced by the function’s name). To correct this error, inspect the offending line in the source file, which is likely a line like:    PenPat(&gray);and revise it to match the prototype in the related header file. In the example above, the correction is as simple as changing the line to:    PenPat(gray);        /* Remove ampersand (&) from the variable */  To date, all inconsistencies have been of this nature. We are sorry for the inconvenience these issues may cause you, and would like to offer our assistance if you have problems getting the demo compiled. See the “Technical Support” chapter for information on how to contact Water’s Edge Software for assistance.------------------------------------------------------------Compiling The THINK Pascal Demo Application~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~The easiest way to compile the Pascal demo application included with Tools Plus is to have the following files in the same folder:    Demo.π    Demo.π.rsrc    Demo.p    ToolsPlus.Lib1    ToolsPlus.Lib2    ToolsPlus.Lib3    ToolsPlus.pDouble-click the Demo.π project file to launch THINK Pascal, then run your project.  Your project file keeps track of each file’s location as you add it to your project, so you may want to create a new project file after you have put all the Tools Plus libraries and their related files in their permanent folders.  Create a new project named “Demo.π” in the same folder as “Demo.π.rsrc”.  Add the following files to your new project:    Segment 1:   Runtime.Lib                        Interface.Lib    Segment 2:   ToolsPlus.Lib1    Segment 3:   ToolsPlus.Lib2    Segment 4:   ToolsPlus.Lib3                        ToolsPlus.p    Segment 5:   Sound.p                        Demo.pYou can now build your project.  After the initial compile, you will notice THINK Pascal created some additional entries in your project file:    «ToolsPlus.Lib1:1»    «ToolsPlus.Lib2:1»    «ToolsPlus.Lib3:1»    «%_MethTables»    «%_SelProcs»    «%_Profiler»  The «ToolsPlus.Lib1:1», «ToolsPlus.Lib2:1» and «ToolsPlus.Lib3:1» items contain the object code from the Tools Plus libraries, while «%_MethTables», «%_SelProcs» and «%_Profiler» items are part of THINK Pascal’s overhead (consult your THINK Pascal User Manual for details).  Drag «ToolsPlus.Lib1:1» into the same segment as ToolsPlus.Lib1, «ToolsPlus.Lib2:1» into the same segment as ToolsPlus.Lib2, and «ToolsPlus.Lib3:1» into the same segment as ToolsPlus.Lib3.  Drag «%_MethTables», «%_SelProcs» and «%_Profiler» to any segment that won’t be unloaded while your application is running, such as the one containing the Runtime.lib library.  Even though the project window indicates that Segment 1 exceeds the 32k limit imposed on segments, the project will compile and run.  When you build your application, the smart linker will strip away unneeded code and significantly reduce the size of this segment.------------------------------------------------------------Compiling the CodeWarrior C (68K) Demo Application~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~The easiest way to compile the CodeWarrior C demo application included with Tools Plus is to have the following files in the same folder:    Demo.µ    Demo.π.rsrc    Demo.c    ToolsPlus.Lib    ToolsPlus.h    ToolsPlus.c    PascalStrHandles.cDouble-click the Demo.µ project file to launch CodeWarrior C/C++, then run your project.  If you are creating a new project (instead of using the one included as part of Tools Plus), copy the files “Demo.µ”, “Demo.π.rsrc” and “PascalStrHandles.c” to the folder containing your project.  Add the following files to your new project:    Segment 1:   MacOS.Lib                        ANSI (2i) C.68K.Lib    (or equivalent)                        Pascal/RT.68K.Lib      (or equivalent)    Segment 2:   ToolsPlus.Lib                        ToolsPlus.c    Segment 3:   Demo.π.rsrc                        Demo.c(Note that “Pascal/RT.68K.Lib” is part of your Pascal compiler.)  You can now build your project and run your application.------------------------------------------------------------Compiling the CodeWarrior Pascal (68K) Demo Application~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~The easiest way to compile the CodeWarrior Pascal demo application included with Tools Plus is to have the following files in the same folder:    Demo.µ    Demo.π.rsrc    Demo.p    ToolsPlus.Lib    ToolsPlus.pDouble-click the Demo.µ project file to launch CodeWarrior Pascal, then run your project.  If you are creating a new project (instead of using the one included as part of Tools Plus), copy the files “Demo.µ” and “Demo.π.rsrc” to the folder containing your project.  Add the following files to your new project:    Segment 1:   Pascal/MacOS.Lib                        Pascal/RT.68K.Lib                        MacIntf(MPW).Lib    (or equivalent interface)                        P/ANSI.68K.Lib       (or equivalent)    Segment 2:   ToolsPlus.Lib                        ToolsPlus.p    Segment 3:   Demo.π.rsrc                        Demo.pYou can now build your project and run your application.------------------------------------------------------------Compiling the CodeWarrior C (PPC) Demo Application~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~The easiest way to compile the CodeWarrior C demo application included with Tools Plus is to have the following files in the same folder:    Demo.µ    Demo.π.rsrc    Demo.c    ToolsPlus.Lib    ToolsPlus.h    ToolsPlus.c    PascalStrHandles.cDouble-click the Demo.µ project file to launch CodeWarrior C/C++, then run your project.  If you are creating a new project (instead of using the one included as part of Tools Plus), copy the files “Demo.µ”, “Demo.π.rsrc” and “PascalStrHandles.c” to the folder containing your project.  Add the following files to your new project:      Group 1:   MWCRuntime.Lib                      InterfaceLib                      ANSI C.PPC.Lib           (or equivalent)                      Pascal/Rt.PPC.Lib      (or equivalent)      Group 2:   ToolsPlus.Lib                      ToolsPlus.c      Group 3:   Demo.π.rsrc                      Demo.c(Note that “Pascal/Rt.PPC.lib” is part of your Pascal compiler.)  You can now build your project and run your application.------------------------------------------------------------Compiling the CodeWarrior Pascal (PPC) Demo Application~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~The easiest way to compile the CodeWarrior Pascal demo application included with Tools Plus is to have the following files in the same folder:    Demo.µ    Demo.π.rsrc    Demo.p    ToolsPlus.Lib    ToolsPlus.pDouble-click the Demo.µ project file to launch CodeWarrior Pascal, then run your project.  If you are creating a new project (instead of using the one included as part of Tools Plus), copy the files “Demo.µ” and “Demo.π.rsrc” to the folder containing your project.  Add the following files to your new project:      Group 1:   MWPRuntime.Lib                     InterfaceLib                     MacIntf(UPI).PPC.Lib      (or equivalent interface)                     Pascal/ANSI.PPC.Lib     (or equivalent)                     Pascal/Rt.PPC.Lib      Group 2:   ToolsPlus.Lib                     ToolsPlus.p      Group 3:   Demo.π.rsrc                     Demo.pYou can now build your project and run your application.------------------------------------------------------------Errors when compiling the CodeWarrior demos (or applications):~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  At the time of this writing, Water’s Edge Software has made every effort to ensure that our demo application will compile successfully the first time. Unfortunately, Apple (who produces the C/C++ headers and Pascal interfaces into the Macintosh’s toolbox) and Metrowerks development environments are undergoing a series of revisions. As a result, some inconsistencies may arise between compiler versions. Fortunately, these differences are simple to resolve.Access Paths~~~~~~~~~~  When using Tools Plus for CodeWarrior C/C++ (680x0 or PowerMac), a Pascal runtime library is required. You may have to change the Access Path (in your project’s preferences) to locate the required file. This applies to the demo application as well as the project in the “starter files” folder.File Names~~~~~~~~~  Metrowerks occasionally changes the names of their libraries. If your demo project (or starter project) can’t locate a file, remove the problem file from your project then add the equivalent, correctly named file. An Access Path to the correctly named file will be created automatically if it is required.Routine Names~~~~~~~~~~~  At the time of this writing, Apple was still revising the routine and constants names in their universal interfaces. Your compiler or linker will find these inconsistencies and bring them to your attention. If the application you are compiling uses constants that have been renamed in the new universal interfaces, you can resolve this in one of two ways:1) Go through your source code and replace all occurrences of the old    constant with the new constant name2) Define the old constant in a C/C++ header or Pascal interface file  If the application you are compiling uses routine names that have been renamed in the new universal interfaces, the linker will discover this and report it to you. You can resolve this in one of two ways:1) Go through your source code and replace all occurrences of the old    routine name with the new routine name2) “Map” the old routine name to the new routine name used in the    newest universal interfaces. If a Tools Plus library refers to a    routine that has been renamed in the new universal interfaces,    define the old routine (so that the Tools Plus library can find it),    and have the old routine call the new routine. The following    example shows you how to do this:       function GetCtlValue (theControl: ControlRef): INTEGER;       begin         GetCtlValue := GetControlValue(theControl)       end;    The above example illustrates how the old GetCtlValue routine is    mapped to the new GetControlValue routine found in the universal    interfaces. Make sure that you defile the old routine with    identical parameter names and types as the new routine.------------------------------------------------------------Having Problems?~~~~~~~~~~~~~If you are having problems compiling the demo or getting Tools Plus to work flawlessly, please contact Water’s Edge Software Technical Support (see the “Technical Support” chapter for details).We pride ourselves on our product excellence and customer service, and we’d like to help you start using Tools Plus as quickly as possible!
+[Display using Geneva 12]
+
+
+
+This document includes information about:
+  • compiling the demo application that is included with this
+     package
+  • resolving issues that may arise when compiling the demo
+
+
+
+
+Compiling The THINK C Demo Application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The easiest way to compile the C demo application included with Tools Plus is to have the following files in the same folder:
+    Demo.π
+    Demo.π.rsrc
+    Demo.c
+    ToolsPlus.Lib1
+    ToolsPlus.Lib2
+    ToolsPlus.Lib3
+    ToolsPlus.h
+    ToolsPlus.c
+    PascalStrHandles.c
+Double-click the Demo.π project file to launch THINK C, then run your project.
+
+  Your project file keeps track of each file’s location as you add it to your project, so you may want to create a new project file after you have put all the Tools Plus libraries and their related files in their permanent folders.  Create a new (empty) project named “Demo.π” in the same folder as “Demo.π.rsrc” and “PascalStrHandles.c”.  Add the following files to your new project:
+    Segment 1:   MacTraps
+                        MacTraps2
+    Segment 2:   ANSI
+    Segment 3:   ToolsPlus.Lib1
+    Segment 4:   ToolsPlus.Lib2
+    Segment 5:   ToolsPlus.Lib3
+                        ToolsPlus.c
+    Segment 6:   Demo.c
+You can now build your project and run your application.
+
+
+Note:
+  Make sure you allocate sufficient memory to the debugger if you are going to run the Tools Plus demo application with the debugger on.  The Tools Plus demo was written as one large source file, making it easier to compile and study, but making it hungry for debugger memory.  Allocate at least 500K to the debugger.  If you don’t have enough memory, turn the debugger off (Project menu, deselect “Use Debugger”) when running the demo.
+  Your applications will likely be written in a more intelligent fashion, abandoning one large source file in favor of several smaller ones.
+
+
+
+IMPORTANT! Errors when compiling the THINK C Demo…
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  At the time of this writing, Water’s Edge Software has made every effort to ensure that our demo application will compile successfully the first time. Unfortunately, Symantec C/C++ compilers have undergone a series of revisions and some inconsistencies have arisen between compiler versions. Fortunately, these differences are simple to resolve.
+
+  If your compiler gives you an error that states “argument to function ‘x’ does not match prototype,” it indicates that Symantec has made a minor revision to that function’s prototype (in the error message, ‘x’ will be replaced by the function’s name). To correct this error, inspect the offending line in the source file, which is likely a line like:
+
+    PenPat(&gray);
+
+and revise it to match the prototype in the related header file. In the example above, the correction is as simple as changing the line to:
+
+    PenPat(gray);        /* Remove ampersand (&) from the variable */
+
+
+  To date, all inconsistencies have been of this nature. We are sorry for the inconvenience these issues may cause you, and would like to offer our assistance if you have problems getting the demo compiled. See the “Technical Support” chapter for information on how to contact Water’s Edge Software for assistance.
+
+------------------------------------------------------------
+
+
+Compiling The THINK Pascal Demo Application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The easiest way to compile the Pascal demo application included with Tools Plus is to have the following files in the same folder:
+    Demo.π
+    Demo.π.rsrc
+    Demo.p
+    ToolsPlus.Lib1
+    ToolsPlus.Lib2
+    ToolsPlus.Lib3
+    ToolsPlus.p
+Double-click the Demo.π project file to launch THINK Pascal, then run your project.
+
+  Your project file keeps track of each file’s location as you add it to your project, so you may want to create a new project file after you have put all the Tools Plus libraries and their related files in their permanent folders.  Create a new project named “Demo.π” in the same folder as “Demo.π.rsrc”.  Add the following files to your new project:
+    Segment 1:   Runtime.Lib
+                        Interface.Lib
+    Segment 2:   ToolsPlus.Lib1
+    Segment 3:   ToolsPlus.Lib2
+    Segment 4:   ToolsPlus.Lib3
+                        ToolsPlus.p
+    Segment 5:   Sound.p
+                        Demo.p
+You can now build your project.  After the initial compile, you will notice THINK Pascal created some additional entries in your project file:
+    «ToolsPlus.Lib1:1»
+    «ToolsPlus.Lib2:1»
+    «ToolsPlus.Lib3:1»
+    «%_MethTables»
+    «%_SelProcs»
+    «%_Profiler»
+
+  The «ToolsPlus.Lib1:1», «ToolsPlus.Lib2:1» and «ToolsPlus.Lib3:1» items contain the object code from the Tools Plus libraries, while «%_MethTables», «%_SelProcs» and «%_Profiler» items are part of THINK Pascal’s overhead (consult your THINK Pascal User Manual for details).
+
+  Drag «ToolsPlus.Lib1:1» into the same segment as ToolsPlus.Lib1, «ToolsPlus.Lib2:1» into the same segment as ToolsPlus.Lib2, and «ToolsPlus.Lib3:1» into the same segment as ToolsPlus.Lib3.
+
+  Drag «%_MethTables», «%_SelProcs» and «%_Profiler» to any segment that won’t be unloaded while your application is running, such as the one containing the Runtime.lib library.
+
+  Even though the project window indicates that Segment 1 exceeds the 32k limit imposed on segments, the project will compile and run.  When you build your application, the smart linker will strip away unneeded code and significantly reduce the size of this segment.
+
+
+
+
+------------------------------------------------------------
+
+
+Compiling the CodeWarrior C (68K) Demo Application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The easiest way to compile the CodeWarrior C demo application included with Tools Plus is to have the following files in the same folder:
+    Demo.µ
+    Demo.π.rsrc
+    Demo.c
+    ToolsPlus.Lib
+    ToolsPlus.h
+    ToolsPlus.c
+    PascalStrHandles.c
+Double-click the Demo.µ project file to launch CodeWarrior C/C++, then run your project.
+
+  If you are creating a new project (instead of using the one included as part of Tools Plus), copy the files “Demo.µ”, “Demo.π.rsrc” and “PascalStrHandles.c” to the folder containing your project.  Add the following files to your new project:
+    Segment 1:   MacOS.Lib
+                        ANSI (2i) C.68K.Lib    (or equivalent)
+                        Pascal/RT.68K.Lib      (or equivalent)
+    Segment 2:   ToolsPlus.Lib
+                        ToolsPlus.c
+    Segment 3:   Demo.π.rsrc
+                        Demo.c
+
+(Note that “Pascal/RT.68K.Lib” is part of your Pascal compiler.)
+
+  You can now build your project and run your application.
+
+
+
+
+------------------------------------------------------------
+
+
+Compiling the CodeWarrior Pascal (68K) Demo Application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The easiest way to compile the CodeWarrior Pascal demo application included with Tools Plus is to have the following files in the same folder:
+    Demo.µ
+    Demo.π.rsrc
+    Demo.p
+    ToolsPlus.Lib
+    ToolsPlus.p
+Double-click the Demo.µ project file to launch CodeWarrior Pascal, then run your project.
+
+  If you are creating a new project (instead of using the one included as part of Tools Plus), copy the files “Demo.µ” and “Demo.π.rsrc” to the folder containing your project.  Add the following files to your new project:
+    Segment 1:   Pascal/MacOS.Lib
+                        Pascal/RT.68K.Lib
+                        MacIntf(MPW).Lib    (or equivalent interface)
+                        P/ANSI.68K.Lib       (or equivalent)
+    Segment 2:   ToolsPlus.Lib
+                        ToolsPlus.p
+    Segment 3:   Demo.π.rsrc
+                        Demo.p
+
+You can now build your project and run your application.
+
+
+
+
+------------------------------------------------------------
+
+
+Compiling the CodeWarrior C (PPC) Demo Application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The easiest way to compile the CodeWarrior C demo application included with Tools Plus is to have the following files in the same folder:
+    Demo.µ
+    Demo.π.rsrc
+    Demo.c
+    ToolsPlus.Lib
+    ToolsPlus.h
+    ToolsPlus.c
+    PascalStrHandles.c
+Double-click the Demo.µ project file to launch CodeWarrior C/C++, then run your project.
+
+  If you are creating a new project (instead of using the one included as part of Tools Plus), copy the files “Demo.µ”, “Demo.π.rsrc” and “PascalStrHandles.c” to the folder containing your project.  Add the following files to your new project:
+      Group 1:   MWCRuntime.Lib
+                      InterfaceLib
+                      ANSI C.PPC.Lib           (or equivalent)
+                      Pascal/Rt.PPC.Lib      (or equivalent)
+      Group 2:   ToolsPlus.Lib
+                      ToolsPlus.c
+      Group 3:   Demo.π.rsrc
+                      Demo.c
+(Note that “Pascal/Rt.PPC.lib” is part of your Pascal compiler.)
+
+  You can now build your project and run your application.
+
+
+
+
+------------------------------------------------------------
+
+
+Compiling the CodeWarrior Pascal (PPC) Demo Application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The easiest way to compile the CodeWarrior Pascal demo application included with Tools Plus is to have the following files in the same folder:
+    Demo.µ
+    Demo.π.rsrc
+    Demo.p
+    ToolsPlus.Lib
+    ToolsPlus.p
+Double-click the Demo.µ project file to launch CodeWarrior Pascal, then run your project.
+
+  If you are creating a new project (instead of using the one included as part of Tools Plus), copy the files “Demo.µ” and “Demo.π.rsrc” to the folder containing your project.  Add the following files to your new project:
+      Group 1:   MWPRuntime.Lib
+                     InterfaceLib
+                     MacIntf(UPI).PPC.Lib      (or equivalent interface)
+                     Pascal/ANSI.PPC.Lib     (or equivalent)
+                     Pascal/Rt.PPC.Lib
+      Group 2:   ToolsPlus.Lib
+                     ToolsPlus.p
+      Group 3:   Demo.π.rsrc
+                     Demo.p
+
+You can now build your project and run your application.
+
+
+
+
+------------------------------------------------------------
+
+
+Errors when compiling the CodeWarrior demos (or applications):
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  At the time of this writing, Water’s Edge Software has made every effort to ensure that our demo application will compile successfully the first time. Unfortunately, Apple (who produces the C/C++ headers and Pascal interfaces into the Macintosh’s toolbox) and Metrowerks development environments are undergoing a series of revisions. As a result, some inconsistencies may arise between compiler versions. Fortunately, these differences are simple to resolve.
+
+Access Paths
+~~~~~~~~~~
+  When using Tools Plus for CodeWarrior C/C++ (680x0 or PowerMac), a Pascal runtime library is required. You may have to change the Access Path (in your project’s preferences) to locate the required file. This applies to the demo application as well as the project in the “starter files” folder.
+
+File Names
+~~~~~~~~~
+  Metrowerks occasionally changes the names of their libraries. If your demo project (or starter project) can’t locate a file, remove the problem file from your project then add the equivalent, correctly named file. An Access Path to the correctly named file will be created automatically if it is required.
+
+Routine Names
+~~~~~~~~~~~
+  At the time of this writing, Apple was still revising the routine and constants names in their universal interfaces. Your compiler or linker will find these inconsistencies and bring them to your attention. If the application you are compiling uses constants that have been renamed in the new universal interfaces, you can resolve this in one of two ways:
+
+1) Go through your source code and replace all occurrences of the old
+    constant with the new constant name
+
+2) Define the old constant in a C/C++ header or Pascal interface file
+
+  If the application you are compiling uses routine names that have been renamed in the new universal interfaces, the linker will discover this and report it to you. You can resolve this in one of two ways:
+
+1) Go through your source code and replace all occurrences of the old
+    routine name with the new routine name
+
+2) “Map” the old routine name to the new routine name used in the
+    newest universal interfaces. If a Tools Plus library refers to a
+    routine that has been renamed in the new universal interfaces,
+    define the old routine (so that the Tools Plus library can find it),
+    and have the old routine call the new routine. The following
+    example shows you how to do this:
+
+       function GetCtlValue (theControl: ControlRef): INTEGER;
+       begin
+         GetCtlValue := GetControlValue(theControl)
+       end;
+
+    The above example illustrates how the old GetCtlValue routine is
+    mapped to the new GetControlValue routine found in the universal
+    interfaces. Make sure that you defile the old routine with
+    identical parameter names and types as the new routine.
+
+------------------------------------------------------------
+
+
+
+
+
+
+
+Having Problems?
+~~~~~~~~~~~~~
+If you are having problems compiling the demo or getting Tools Plus to work flawlessly, please contact Water’s Edge Software Technical Support (see the “Technical Support” chapter for details).
+
+We pride ourselves on our product excellence and customer service, and we’d like to help you start using Tools Plus as quickly as possible!

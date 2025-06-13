@@ -1,1 +1,25 @@
-This package provides source code for the nShell-Proª application.These files have been designed to build with Think C v5.  Project files are included for Think C only.The only real trick is that the file "nsh.h" contains two important defines:#define PROFESSIONAL	  1   // set to 1 to allow flow commands#define FULL_APP       1   // set to 0 to build drag 'n drop appIt is important that the PROFESSIONAL flag be on (to allow Pro features).  The second flag, FULL_APP is used to turn on or off features when the nShell Droplet is built. It is vital that the FULL_APP flag be 1 when you build the application and be 0 when you build the Droplet.To Build The nShell Using Think C=================================1. Start up Think C (version 5.0 or later).2. Open the project file (for the nShell or the nShell Droplet).3. Select "Build Application" from the "Project Menu".4. Give the command a unique name and select "Save" to store the command.5. Drop the new command into your "bin" directory.Good Luck, and thank you for your support.
+This package provides source code for the nShell-Proª application.
+
+These files have been designed to build with Think C v5.  Project files are included for Think C only.
+
+The only real trick is that the file "nsh.h" contains two important defines:
+
+#define PROFESSIONAL	  1   // set to 1 to allow flow commands
+#define FULL_APP       1   // set to 0 to build drag 'n drop app
+
+It is important that the PROFESSIONAL flag be on (to allow Pro features).  The second flag, FULL_APP is used to turn on or off features when the nShell Droplet is built. It is vital that the FULL_APP flag be 1 when you build the application and be 0 when you build the Droplet.
+
+To Build The nShell Using Think C
+=================================
+
+1. Start up Think C (version 5.0 or later).
+
+2. Open the project file (for the nShell or the nShell Droplet).
+
+3. Select "Build Application" from the "Project Menu".
+
+4. Give the command a unique name and select "Save" to store the command.
+
+5. Drop the new command into your "bin" directory.
+
+Good Luck, and thank you for your support.

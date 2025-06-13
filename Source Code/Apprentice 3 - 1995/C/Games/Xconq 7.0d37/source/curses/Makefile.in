@@ -1,1 +1,127 @@
-# Makefile for curses interface to Xconq.# Copyright (C) 1991, 1992, 1993, 1994 Stanley T. Shebs.# Xconq is free software; you can redistribute it and/or modify# it under the terms of the GNU General Public License as published by# the Free Software Foundation; either version 2, or (at your option)# any later version.# Where cconq itself lives.prefix = .exec_prefix = $(prefix)bindir = $(exec_prefix)/bin# this should be tweakedlibdir = $(srcdir)/../libdatadir = $(prefix)/libmandir = $(prefix)/manman6dir = $(mandir)/man6infodir = $(prefix)/infodocdir = $(datadir)/docsrcdir = .krnsrcdir = $(srcdir)/../kernel# Set this for wherever the library directory should be.LIBDIR = $(srcdir)/../lib# Set this for wherever the man page should live.MANDIR = /usr/man/manlSHELL = /bin/shINSTALL = `cd $(srcdir)/..;pwd`/install.sh -cINSTALL_PROGRAM = $(INSTALL)INSTALL_DATA = $(INSTALL)CC = ccCFLAGS = -gCURSES_LIB =  -lcurses -ltermlib# Host and target-dependent makefile fragments come in here.##### End of host and target-dependent makefile fragments.GAME_H = $(krnsrcdir)/game.h \	 $(krnsrcdir)/gvar.def \	 $(krnsrcdir)/utype.def \	 $(krnsrcdir)/mtype.def \	 $(krnsrcdir)/ttype.def \	 $(krnsrcdir)/table.defUNIT_H = $(krnsrcdir)/unit.h \	 $(krnsrcdir)/action.def \	 $(krnsrcdir)/plan.def \	 $(krnsrcdir)/task.defALL_H = $(krnsrcdir)/conq.h \	$(krnsrcdir)/config.h \	$(krnsrcdir)/misc.h \	$(krnsrcdir)/dir.h \	$(krnsrcdir)/lisp.h \	$(krnsrcdir)/module.h \	$(GAME_H) \	$(krnsrcdir)/player.h \	$(krnsrcdir)/side.h \	$(UNIT_H) \	$(krnsrcdir)/goal.def \	$(krnsrcdir)/world.h \	$(krnsrcdir)/score.h \	$(krnsrcdir)/history.h \	$(krnsrcdir)/ai.hC_H = cconq.hOBJ = cconq.o cdraw.o ccmd.oUNIX_CFLAGS = -DUNIX -DUSE_CONSOLE -DXCONQLIB=\"$(LIBDIR)\"# -Dcbreak=crmodeALL_CFLAGS = $(CFLAGS) $(UNIX_CFLAGS) -I$(srcdir) -I$(krnsrcdir).c.o:	$(CC) -c $(ALL_CFLAGS) $<all:	cconqcconq: $(OBJ) ../kernel/libconq.a ../kernel/libconqlow.a	rm -f cconq	$(CC) -o cconq $(ALL_CFLAGS) $(OBJ) ../kernel/libconq.a ../kernel/libconqlow.a $(CURSES_LIB)../kernel/libconq.a:	(cd ../kernel; make libconq.a)../kernel/libconqlow.a:	(cd ../kernel; make libconqlow.a)install: all install-onlyinstall-only:	$(INSTALL_PROGRAM) cconq $(prefix)	$(INSTALL_DATA) $(srcdir)/cconq.6 $(MANDIR)clean:	rm -f *.o core	rm -f cconq *.conq *.xconqdistclean: clean	rm -f Makefile config.statusextraclean: distclean	rm -f *~* .*~*realclean: distcleanMakefile: Makefile.in $(host_makefile_frag) $(target_makefile_frag)	$(SHELL) config.statuscconq.o:	$(ALL_H) $(C_H)ccmd.o:		$(ALL_H) $(C_H)cdraw.o:	$(ALL_H) $(C_H)
+# Makefile for curses interface to Xconq.
+# Copyright (C) 1991, 1992, 1993, 1994 Stanley T. Shebs.
+
+# Xconq is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+
+# Where cconq itself lives.
+
+prefix = .
+
+exec_prefix = $(prefix)
+bindir = $(exec_prefix)/bin
+# this should be tweaked
+libdir = $(srcdir)/../lib
+datadir = $(prefix)/lib
+mandir = $(prefix)/man
+man6dir = $(mandir)/man6
+infodir = $(prefix)/info
+docdir = $(datadir)/doc
+
+srcdir = .
+
+krnsrcdir = $(srcdir)/../kernel
+
+# Set this for wherever the library directory should be.
+
+LIBDIR = $(srcdir)/../lib
+
+# Set this for wherever the man page should live.
+
+MANDIR = /usr/man/manl
+
+SHELL = /bin/sh
+
+INSTALL = `cd $(srcdir)/..;pwd`/install.sh -c
+INSTALL_PROGRAM = $(INSTALL)
+INSTALL_DATA = $(INSTALL)
+
+CC = cc
+
+CFLAGS = -g
+
+CURSES_LIB =  -lcurses -ltermlib
+
+# Host and target-dependent makefile fragments come in here.
+####
+# End of host and target-dependent makefile fragments.
+
+GAME_H = $(krnsrcdir)/game.h \
+	 $(krnsrcdir)/gvar.def \
+	 $(krnsrcdir)/utype.def \
+	 $(krnsrcdir)/mtype.def \
+	 $(krnsrcdir)/ttype.def \
+	 $(krnsrcdir)/table.def
+
+UNIT_H = $(krnsrcdir)/unit.h \
+	 $(krnsrcdir)/action.def \
+	 $(krnsrcdir)/plan.def \
+	 $(krnsrcdir)/task.def
+
+ALL_H = $(krnsrcdir)/conq.h \
+	$(krnsrcdir)/config.h \
+	$(krnsrcdir)/misc.h \
+	$(krnsrcdir)/dir.h \
+	$(krnsrcdir)/lisp.h \
+	$(krnsrcdir)/module.h \
+	$(GAME_H) \
+	$(krnsrcdir)/player.h \
+	$(krnsrcdir)/side.h \
+	$(UNIT_H) \
+	$(krnsrcdir)/goal.def \
+	$(krnsrcdir)/world.h \
+	$(krnsrcdir)/score.h \
+	$(krnsrcdir)/history.h \
+	$(krnsrcdir)/ai.h
+
+C_H = cconq.h
+
+OBJ = cconq.o cdraw.o ccmd.o
+
+UNIX_CFLAGS = -DUNIX -DUSE_CONSOLE -DXCONQLIB=\"$(LIBDIR)\"
+
+# -Dcbreak=crmode
+
+ALL_CFLAGS = $(CFLAGS) $(UNIX_CFLAGS) -I$(srcdir) -I$(krnsrcdir)
+
+.c.o:
+	$(CC) -c $(ALL_CFLAGS) $<
+
+all:	cconq
+
+cconq: $(OBJ) ../kernel/libconq.a ../kernel/libconqlow.a
+	rm -f cconq
+	$(CC) -o cconq $(ALL_CFLAGS) $(OBJ) ../kernel/libconq.a ../kernel/libconqlow.a $(CURSES_LIB)
+
+../kernel/libconq.a:
+	(cd ../kernel; make libconq.a)
+
+../kernel/libconqlow.a:
+	(cd ../kernel; make libconqlow.a)
+
+install: all install-only
+
+install-only:
+	$(INSTALL_PROGRAM) cconq $(prefix)
+	$(INSTALL_DATA) $(srcdir)/cconq.6 $(MANDIR)
+
+clean:
+	rm -f *.o core
+	rm -f cconq *.conq *.xconq
+
+distclean: clean
+	rm -f Makefile config.status
+
+extraclean: distclean
+	rm -f *~* .*~*
+
+realclean: distclean
+
+Makefile: Makefile.in $(host_makefile_frag) $(target_makefile_frag)
+	$(SHELL) config.status
+
+cconq.o:	$(ALL_H) $(C_H)
+ccmd.o:		$(ALL_H) $(C_H)
+cdraw.o:	$(ALL_H) $(C_H)

@@ -1,1 +1,81 @@
-Note from Ken Long:I found this source on the net, but it was only the .c and .h file.Then after a time, I found the built application in a different placeand was able to get the resources out of it.  Then I made the .r filefrom it, for general principles.The two includes I excluded caused link errors I couldn't fix, but itseems to run okay at first glance.  I've done hardly any testing, andI'm sure there could be improvements, refinements and more thoroughcode added.  But HEY!  It's C source! 6. March	  1994 (v1.1.2) Compiles/runs - Think C v5.0.4/6.0.1-----------------------------------------------------------------------22 Nov 94 -Now it's a Code Warrior (Think Worrier) project. : )----------------------------------------------------------------------------------------------------------------------------------------------Date: Mon, 23 Oct 89 15:27 NFrom: "Rainer Fuchs (EMBL)" <FUCHS%EMBL.bitnet@forsythe.stanford.edu>To: info-mac@sumex-aim.stanford.eduDue to popular demand (hello Holgi!) FontShow v1.1.1 now contains a Fontsizemenu and indicates the font id in addition to the font name.Also a minor bug fix.Rainer---------------------------------------------------------------------------4The FontShow - a print utility (v1.1.1)I was sometimes asked by collegues what font they should use for a document. Well, Key Caps shows you what characters are available but you need a longer text to get some impression of what a font really looks like. So I made this quick hack called FontShow.The File menu allows you to direct the output either to the video screen or to the printer. After selecting either Print or Display you will first see a list of all fonts installed in your system (or under SuitCase) so that you can select any fonts you like to see. The Options menu only affects the screen output! You can select either a sample text, the well-known sentence "the quick brown fox..." in upper and lowercase, or a character table. When you direct your output to the printer you will always get all of this stuff printed out.The Fontsize menu can be used to select the character size. FontShow will only display a font if the selected size is available for this font; it will not scale fonts to that size.You may change the sample text or string by using ResEdit to edit the resource fork of FontShow. The sample text is contained in a TEXT resource with ID 128. Take care that each line is terminated by a 0x0D character! The program does no text length checking so make sure that your sample text fits on the page. The sample strings are in a STR# resource with ID 129. You may change or add strings but, again, no length checking is performed.This program is distributed under the HAPPYWARE system:If you like it, remember to SMILE!Written 1989 by 	Rainer Fuchs, 	Am Weingarten 13, 	D-6000 Frankfurt 90, 	FRG	Bitnet/EARN: fuchs@embl*No rights* reserved!____________________________________________________________Changes in v1.1.1:	- Now compatible with EZ-Menu (mouse clicks in menu bar disabled).Changes in v1.1: 	- Font number is shown.	- Fontsize menu added.
+Note from Ken Long:
+
+I found this source on the net, but it was only the .c and .h file.
+Then after a time, I found the built application in a different place
+and was able to get the resources out of it.  Then I made the .r file
+from it, for general principles.
+
+The two includes I excluded caused link errors I couldn't fix, but it
+seems to run okay at first glance.  I've done hardly any testing, and
+I'm sure there could be improvements, refinements and more thorough
+code added.  But HEY!  It's C source!
+
+ 6. March	  1994 (v1.1.2) Compiles/runs - Think C v5.0.4/6.0.1
+-----------------------------------------------------------------------
+22 Nov 94 -Now it's a Code Warrior (Think Worrier) project. : )
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+
+Date: Mon, 23 Oct 89 15:27 N
+From: "Rainer Fuchs (EMBL)" 
+<FUCHS%EMBL.bitnet@forsythe.stanford.edu>
+To: info-mac@sumex-aim.stanford.edu
+
+Due to popular demand (hello Holgi!) FontShow v1.1.1 now contains 
+a Fontsize
+menu and indicates the font id in addition to the font name.
+Also a minor bug fix.
+
+Rainer
+---------------------------------------------------------------------------4
+
+
+The FontShow - a print utility (v1.1.1)
+
+I was sometimes asked by collegues what font they should use for 
+a document. Well, Key Caps shows you what characters are available 
+but you need a longer text to get some impression of what a font 
+really looks like. So I made this quick hack called FontShow.
+
+The File menu allows you to direct the output either to the video 
+screen or to the printer. After selecting either Print or Display 
+you will first see a list of all fonts installed in your system 
+(or under SuitCase) so that you can select any fonts you like to see. 
+
+The Options menu only affects the screen output! You can select 
+either a sample text, the well-known sentence "the quick brown 
+fox..." in upper and lowercase, or a character table. When you 
+direct your output to the printer you will always get all of this 
+stuff printed out.
+
+The Fontsize menu can be used to select the character size. 
+FontShow will only display a font if the selected size is available 
+for this font; it will not scale fonts to that size.
+
+You may change the sample text or string by using ResEdit to edit 
+the resource fork of FontShow. The sample text is contained in a 
+TEXT resource with ID 128. Take care that each line is terminated 
+by a 0x0D character! The program does no text length checking so 
+make sure that your sample text fits on the page. The sample strings 
+are in a STR# resource with ID 129. You may change or add strings 
+but, again, no length checking is performed.
+
+This program is distributed under the HAPPYWARE system:
+If you like it, remember to SMILE!
+
+Written 1989 by 
+	Rainer Fuchs, 
+	Am Weingarten 13, 
+	D-6000 Frankfurt 90, 
+	FRG
+	
+Bitnet/EARN: fuchs@embl
+*No rights* reserved!
+____________________________________________________________
+
+Changes in v1.1.1:
+	- Now compatible with EZ-Menu (mouse clicks in menu bar disabled).
+
+Changes in v1.1: 
+	- Font number is shown.
+	- Fontsize menu added.

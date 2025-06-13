@@ -1,1 +1,98 @@
-#           USAF's Stealthy F-22 Fighter,#             built by Lockheed/Boeing# # (Rotater file courtesy of bob.leedom@tcs.wap.org)# version F22.1   25 Aug 94# Bob Leedom, Washington Apple Pi# L/R prefixes mean Left/Right# F/R suffixes mean Front/Rear#                      ***** Planform-12   0   0   0              nose-9  -.9   .3   3             Lradome-5.2  -1.2   .6   3          LinletRoot-3.6  -2.8   .4   3          Lshoulder .7  -3.2   .7   3           Lwingroot 7.7  -9.7   .7   3          LwingTipF 9.7  -9.7   .7   3          LwingTipR 11.6  -4   .6   3           LtailRoot 14.5  -7   .5   3           LtailTipF 15.5  -7   .5   3           LtailTipR 16.6  -3   .6   3           Ltailmost 15.2  -3   .6   3           LinnerTail 13.6  -2   .6   3           LinnerCentertail 13   0   .6   3             tailcenter 13.6   2   .6   3           RinnerCentertail 15.2   3   .6   3           RinnerTail 16.6   3   .6   3           Rtailmost 15.5   7   .5   3           RtailTipR 14.5   7   .5   3           RtailtipF 11.6   4   .6   3           Rtailroot 9.7   9.7   .7   3          RwingTipR 7.7   9.7   .7   3          RwingTipF .7   3.2   .7   3           RwingRoot-3.6   2.8   .4   3          Rshoulder-5.2   1.2   .6   3          RinletRoot-9   .9   .3   3             Rradome-12   0   0   3              nose#                      ***** Cockpit-12   0   0   0              nose-7   0   1.3   3             front-6.8  -.8   1   3            LbaseF-2.7  -.8   1.5   3          LbaseR-2   0   2   3               cockpitR-2.7   .8   1.5   3          RbaseR-6.8   .8   1   3            RbaseF-7   0   1.3   3             front-6.8  -.8   1   0            LbaseF-5   0   2.5   3             topF-6.8   .8   1   3            RbaseF-2.7  -.8   1.5   0          LbaseR-3.8   0   2.5   3           topR-2.7   .8   1.5   3          RbaseR-5   0   2.5   0             topF-3.8   0   2.5   3           topR-2   0   2   3               cockpitR .5   0   1.2   3            backCenter#                      ***** Top Side Profile-2.7  -.8   1.5   0          cockpit LbaseR 6.8  -2.2   1   3           LrudderrootF 9  -4.6   5.3   3           LrudderF 11  -4.6   5.3   3          LrudderR 13.6  -2   .6   3           LrudderrootR-2.7   .8   1.5   0          cockpit RbaseR 6.8   2.2   1   3           RrudderrootF 9   4.6   5.3   3           RrudderF 11   4.6   5.3   3          RrudderR 13.6   2   .6   3           RrudderrootR#                      ***** Bottom Side Profile-12   0   0   0              nose-9   0  -.7   3              radome-6.2   0  -1   3             bottomF-2.6   0  -1   3             bottomInlets-2.6   2.1  -1   0           RinletBottomOuter 7.2   2.1  -1   3           RbottomR 10   2.1  -.7   3           RbottomTailR 13.6   2   .6   3           LinnerCentertail-2.6  -2.1  -1   0           LinletBottomOuter 7.2  -2.1  -1   3           LbottomR 10  -2.1  -.7   3           LbottomTailR 13.6  -2   .6   3           LinnerCentertail#                      ***** Front Profile-6.8   .8   1   0            cockpit RbaseF-3.5   3   .3   3            RinletTopOuter-2.6   2.1  -1   3           RinletBottomOuter-2.6  -2.1  -1   3           LinletBottomOuter-3.5  -3   .3   3            LinletTopOuter-6.8  -.8   1   0            cockpit LbaseF-2.6   2.1  -1   0           RinletBottomOuter-4   .5  -.7   3             RinletBottomInner-5   1.4   .4   3            RinletTopInner-2.6  -2.1  -1   0           LinletBottomOuter-4  -.5  -.7   3             LinletBottomInner-5  -1.4   .4   3            LinletTopInner
+#           USAF's Stealthy F-22 Fighter,
+#             built by Lockheed/Boeing
+# 
+# (Rotater file courtesy of bob.leedom@tcs.wap.org)
+
+# version F22.1   25 Aug 94
+# Bob Leedom, Washington Apple Pi
+
+# L/R prefixes mean Left/Right
+# F/R suffixes mean Front/Rear
+#                      ***** Planform
+-12   0   0   0              nose
+-9  -.9   .3   3             Lradome
+-5.2  -1.2   .6   3          LinletRoot
+-3.6  -2.8   .4   3          Lshoulder
+ .7  -3.2   .7   3           Lwingroot
+ 7.7  -9.7   .7   3          LwingTipF
+ 9.7  -9.7   .7   3          LwingTipR
+ 11.6  -4   .6   3           LtailRoot
+ 14.5  -7   .5   3           LtailTipF
+ 15.5  -7   .5   3           LtailTipR
+ 16.6  -3   .6   3           Ltailmost
+ 15.2  -3   .6   3           LinnerTail
+ 13.6  -2   .6   3           LinnerCentertail
+ 13   0   .6   3             tailcenter
+ 13.6   2   .6   3           RinnerCentertail
+ 15.2   3   .6   3           RinnerTail
+ 16.6   3   .6   3           Rtailmost
+ 15.5   7   .5   3           RtailTipR
+ 14.5   7   .5   3           RtailtipF
+ 11.6   4   .6   3           Rtailroot
+ 9.7   9.7   .7   3          RwingTipR
+ 7.7   9.7   .7   3          RwingTipF
+ .7   3.2   .7   3           RwingRoot
+-3.6   2.8   .4   3          Rshoulder
+-5.2   1.2   .6   3          RinletRoot
+-9   .9   .3   3             Rradome
+-12   0   0   3              nose
+
+#                      ***** Cockpit
+-12   0   0   0              nose
+-7   0   1.3   3             front
+-6.8  -.8   1   3            LbaseF
+-2.7  -.8   1.5   3          LbaseR
+-2   0   2   3               cockpitR
+-2.7   .8   1.5   3          RbaseR
+-6.8   .8   1   3            RbaseF
+-7   0   1.3   3             front
+-6.8  -.8   1   0            LbaseF
+-5   0   2.5   3             topF
+-6.8   .8   1   3            RbaseF
+-2.7  -.8   1.5   0          LbaseR
+-3.8   0   2.5   3           topR
+-2.7   .8   1.5   3          RbaseR
+-5   0   2.5   0             topF
+-3.8   0   2.5   3           topR
+-2   0   2   3               cockpitR
+ .5   0   1.2   3            backCenter
+
+#                      ***** Top Side Profile
+-2.7  -.8   1.5   0          cockpit LbaseR
+ 6.8  -2.2   1   3           LrudderrootF
+ 9  -4.6   5.3   3           LrudderF
+ 11  -4.6   5.3   3          LrudderR
+ 13.6  -2   .6   3           LrudderrootR
+-2.7   .8   1.5   0          cockpit RbaseR
+ 6.8   2.2   1   3           RrudderrootF
+ 9   4.6   5.3   3           RrudderF
+ 11   4.6   5.3   3          RrudderR
+ 13.6   2   .6   3           RrudderrootR
+
+#                      ***** Bottom Side Profile
+-12   0   0   0              nose
+-9   0  -.7   3              radome
+-6.2   0  -1   3             bottomF
+-2.6   0  -1   3             bottomInlets
+-2.6   2.1  -1   0           RinletBottomOuter
+ 7.2   2.1  -1   3           RbottomR
+ 10   2.1  -.7   3           RbottomTailR
+ 13.6   2   .6   3           LinnerCentertail
+-2.6  -2.1  -1   0           LinletBottomOuter
+ 7.2  -2.1  -1   3           LbottomR
+ 10  -2.1  -.7   3           LbottomTailR
+ 13.6  -2   .6   3           LinnerCentertail
+
+#                      ***** Front Profile
+-6.8   .8   1   0            cockpit RbaseF
+-3.5   3   .3   3            RinletTopOuter
+-2.6   2.1  -1   3           RinletBottomOuter
+-2.6  -2.1  -1   3           LinletBottomOuter
+-3.5  -3   .3   3            LinletTopOuter
+-6.8  -.8   1   0            cockpit LbaseF
+-2.6   2.1  -1   0           RinletBottomOuter
+-4   .5  -.7   3             RinletBottomInner
+-5   1.4   .4   3            RinletTopInner
+-2.6  -2.1  -1   0           LinletBottomOuter
+-4  -.5  -.7   3             LinletBottomInner
+-5  -1.4   .4   3            LinletTopInner

@@ -1,1 +1,47 @@
-TransSkel/TP.¹1 segments41 filesSegment 241 files:SkelAlert.cSkelApple.cSkelCmdPeriod.cSkelDlogBtnOutliner.cSkelDlogFilter.cSkelDlogMapKey.cSkelDrawButtonOutline.cSkelEraseButtonOutline.cSkelEvents.cSkelFlashButton.cSkelGetDlogCtl.cSkelGetDlogCtlHilite.cSkelGetDlogCtlRefCon.cSkelGetDlogCtlValue.cSkelGetDlogProc.cSkelGetDlogRect.cSkelGetDlogStr.cSkelGetDlogType.cSkelGetMainDevRect.cSkelGetRectDevice.cSkelGetRefRect.cSkelGetWindDevice.cSkelGetWindRect.cSkelHiliteControl.cSkelPause.cSkelPosRect.cSkelPosWindow.cSkelSetDlogCtlHilite.cSkelSetDlogCtlRefCon.cSkelSetDlogCtlValue.cSkelSetDlogCursor.cSkelSetDlogProc.cSkelSetDlogRect.cSkelSetDlogStr.cSkelSetDlogType.cSkelSetRadio.cSkelTestRectVis.cSkelToggleCtlValue.cSkelToggleDlogCtlValue.cSkelWindTitleHt.cTransSkel.c
+TransSkel/TP.¹
+1 segments
+41 files
+
+Segment 2
+41 files:
+SkelAlert.c
+SkelApple.c
+SkelCmdPeriod.c
+SkelDlogBtnOutliner.c
+SkelDlogFilter.c
+SkelDlogMapKey.c
+SkelDrawButtonOutline.c
+SkelEraseButtonOutline.c
+SkelEvents.c
+SkelFlashButton.c
+SkelGetDlogCtl.c
+SkelGetDlogCtlHilite.c
+SkelGetDlogCtlRefCon.c
+SkelGetDlogCtlValue.c
+SkelGetDlogProc.c
+SkelGetDlogRect.c
+SkelGetDlogStr.c
+SkelGetDlogType.c
+SkelGetMainDevRect.c
+SkelGetRectDevice.c
+SkelGetRefRect.c
+SkelGetWindDevice.c
+SkelGetWindRect.c
+SkelHiliteControl.c
+SkelPause.c
+SkelPosRect.c
+SkelPosWindow.c
+SkelSetDlogCtlHilite.c
+SkelSetDlogCtlRefCon.c
+SkelSetDlogCtlValue.c
+SkelSetDlogCursor.c
+SkelSetDlogProc.c
+SkelSetDlogRect.c
+SkelSetDlogStr.c
+SkelSetDlogType.c
+SkelSetRadio.c
+SkelTestRectVis.c
+SkelToggleCtlValue.c
+SkelToggleDlogCtlValue.c
+SkelWindTitleHt.c
+TransSkel.c

@@ -1,1 +1,269 @@
-Rotater 3.0===========This is a program that reads a set of 3-dimensional pointsand lines and plots them in a window. The image can thenbe rotated with the mouse in real time.Requires System 7 or greater.8 bit colour screen and Power Macintosh preferable.Versions--------Rotater-FAT-3.0A fat binary for PowerMacs and 68K MacsRotater-881-3.0A binary for 68K Macs with an FPUWill not run on a PowerMac or a 68K Mac with no FPUChanges from 2.0----------------A new icon :-)faster!Can now have a white background in 3D-Glasses Mode.Recompiled with CW5 - slightly faster again.New folder icon :-)Floating Info Windows.New folder icon for rotater files :-)Can now center object on the screenReads in large files more than 20 times fasterMuchly speeded up (esp. small windows)Better default positionsBetter zooming of fast imagesAdded Funky modeCan now set Max window sizeOptimum window sizingNew rotation methodCan set vector image resolutionMore speed againNewer iconsShows anglesCan reset anglesFixed Vector Save file bugHelp----The program has balloon help for all of the menu items.Maximum Window Size-------------------You can now set the maximum window size that the programcan use. This can be done by holding down the option keyon startup. The selected size is saved for future sessions.Larger windows require more memory to run so set the Maxsize to as small as possible if you need to conservememory. You will also need to adjust the minimum andprefered memory sizes in Rotater's Get Info... boxfrom the Finder.If you cannot open the program because you have set theMax window size too high for available memory use theoption key at startup to set a smaller window size.Rotation Method---------------Click on the image and hold the mouse button down. Moving themouse now rotates the image.The track-ball rotation method is on by default.Imagine the image is inside a clear ball. Dragging the mouseacross it is like rolling the ball. Try it and see :-)Z-X rotation allows you to set the angle of looking at theobject by moving the mouse up and down and the z-rotationby moving it left and right. This works best for thingsthat have a natural up. Note the the up position is thecurrent one when switching from trackball rotation. Itcan be reset to the original by using the reset anglescommand.If you have the Grab & Spin option set under the action menu,when you let go of the mouse button while still moving the mousethe image will continue to rotate in the same direction.(or continue about the Z axis when using (Z-X rotation)Stop all rotation by clicking the mouse once. You may need tohold the mouse button down for a while on slow machines.Drag & Spin will not work if the image takes longer than 1/4 of asecond to calculate and draw. Copying to very large windows slowsthe program down considerably.Keyboard Rotations------------------The "x", "y" and "z" keys rotate about their respective axes. Byholding the shift key down when using them, the image will rotatein the opposite direction. The arrow keys can also be used forrotating the image.The 'x' axis runs left and right across the window, 'z' runs upand down the screen and 'y' runs into and out of the screen.Showing Angles--------------The "show angles" option displays the current or last rotationvector when in Trackball Mode or the absolute rotation of theobject when not in Trackball Mode. By switching to trackballmode the angles are zeroed. This can be used to realign theobject.Resizing the Viewing Window---------------------------The viewing window can be resized using an invisible handle onthe bottom right corner of the window.Maximum window size can be set by holding the option keydown while launching the program.Square windows are optimal in normal mode. Windows twice aswide as they are high are optimal for stereo mode.By clicking in the zoom box of the window with the optionkey held down the window will size itself optimally forthe current mode setting.Smaller windows run faster.Saving Images-------------Images can be saved to disk either as a 72 dot per inchbitmap or as Vector file that can be edited andprinted from draw type programs. Note that there is an upperlimit for the number of elements that can be saved in vectorformat somewhere around 20,000.The default resolution for saved vectors is 300 dpi. This canbe changed by holding down the option key when selecting themenu item. The new setting can be set as the default forfuture sessions by saving the preferences.Note that files saved at high dpi have joins at 72dpi intervalswhen imported to some programs or ungrouped in others.I am not sure how to fix this.Maximum Number of Points/Lines------------------------------The default memory allocation for the program should be enough toread about 20000 points or lines in. To increase this number,increase the memory allocation in the programs "Get Info" box.You will receive a warning if you try to read in a file that istoo large for available memory.Speed of Rotating-----------------Smaller windows run faster.Hiding lines slows the program down especially on non-PPC machines.Thinner lines and smaller dots run faster.Make sure your monitor is in 8-bit mode with the System colourpalette for maximum speed.This program runs VERY VERY much faster on a Power Macintosh thanon a 68K Macintosh (about 10 times faster!).Points plot faster than lines. 20000 points can becomfortably manipulated on a Power Macintosh 6100/60.Format of the Input File------------------------The input file consists of sets of four points on each linex y z cx = x coordinate of a point (real)y = y coordinate of a point (real)z = z coordinate of a point (real)c = colour and/or drawing method (integer)if (c = 0) move to the x,y,z point without drawingif (c > 0) draw a line to the x,y,z point from the current           position using colour cif (c < 0) draw a dot at x,y,z using colour -cwhereif (c = 1) colour is redif (c = 2) colour is greenif (c = 3) colour is blueif (c = 4) colour is yellowif (c = 5) colour is purpleif (c = 6) colour is cyanif (c > 6) colour is whiteeg0.5 2.3 -1 0  # moves to point 0.5 2.3 -1 without drawing3 5 6 2       # draws red line from 0.05 2.3 -1 to 3 5 65 -5 2 -3     # plots blue dot at 5 -5 2The points are automatically scaled to fit in the window androtation is about 0,0,0.The input file can be any text file.# Comment lines begin with the '#' character.Text after the four points on a line is ignored.Completely blank lines are ok (they are ignored).Contiguous comments at the very start of the file are read inand displayed in the program in the Info window.Use this to explain to the user what the image is and whereit comes from. Try to keep it short otherwise the window getstoo big. Internal documentation can be placed in othercomments after a blank line.Notes-----This program is free and I take no responsibility if it killsyour machine or drives you mad. Use at your own risk.It may not be sold.Source code and project files for the Metrowerks CW5 compilersare available at the archive site or on request.E-mail me if you find a use for this program or come up with acool set of points/lines worth adding to the collection.The official Archive site for source code, new updates,rotation files etc is:  ftp://raru.adelaide.edu.au/rotater/or  http://raru.adelaide.edu.au/rotater/Thanks To---------Thanks go to the following:Metrowerks for a great compiler.Toby Thain and Dale Greer for help speeding up the program.Andrew Maloney for speed and floating window help.Tim Olson for bzero.David Doak, Charles Williams and E.J. Chichilnisky for many helpful suggestions.Richard Chipper for the new icons and the new new icons.Troy Gaul for the Infinity Windoid WDEF.Patrick Rabou for a number of optimisations.Brent Stone for heaps of cool speed optimizations.Numerous people for rotation files (see comments in the files)EnjoyCraig Kloedencraig@raru.adelaide.edu.au27 May 1995
+Rotater 3.0
+===========
+This is a program that reads a set of 3-dimensional points
+and lines and plots them in a window. The image can then
+be rotated with the mouse in real time.
+
+Requires System 7 or greater.
+8 bit colour screen and Power Macintosh preferable.
+
+
+Versions
+--------
+Rotater-FAT-3.0
+A fat binary for PowerMacs and 68K Macs
+
+Rotater-881-3.0
+A binary for 68K Macs with an FPU
+Will not run on a PowerMac or a 68K Mac with no FPU
+
+
+Changes from 2.0
+----------------
+A new icon :-)
+faster!
+Can now have a white background in 3D-Glasses Mode.
+Recompiled with CW5 - slightly faster again.
+New folder icon :-)
+Floating Info Windows.
+New folder icon for rotater files :-)
+Can now center object on the screen
+Reads in large files more than 20 times faster
+Muchly speeded up (esp. small windows)
+Better default positions
+Better zooming of fast images
+Added Funky mode
+Can now set Max window size
+Optimum window sizing
+New rotation method
+Can set vector image resolution
+More speed again
+Newer icons
+Shows angles
+Can reset angles
+Fixed Vector Save file bug
+
+
+Help
+----
+The program has balloon help for all of the menu items.
+
+
+Maximum Window Size
+-------------------
+You can now set the maximum window size that the program
+can use. This can be done by holding down the option key
+on startup. The selected size is saved for future sessions.
+
+Larger windows require more memory to run so set the Max
+size to as small as possible if you need to conserve
+memory. You will also need to adjust the minimum and
+prefered memory sizes in Rotater's Get Info... box
+from the Finder.
+
+If you cannot open the program because you have set the
+Max window size too high for available memory use the
+option key at startup to set a smaller window size.
+
+
+Rotation Method
+---------------
+Click on the image and hold the mouse button down. Moving the
+mouse now rotates the image.
+
+The track-ball rotation method is on by default.
+Imagine the image is inside a clear ball. Dragging the mouse
+across it is like rolling the ball. Try it and see :-)
+
+Z-X rotation allows you to set the angle of looking at the
+object by moving the mouse up and down and the z-rotation
+by moving it left and right. This works best for things
+that have a natural up. Note the the up position is the
+current one when switching from trackball rotation. It
+can be reset to the original by using the reset angles
+command.
+
+If you have the Grab & Spin option set under the action menu,
+when you let go of the mouse button while still moving the mouse
+the image will continue to rotate in the same direction.
+(or continue about the Z axis when using (Z-X rotation)
+Stop all rotation by clicking the mouse once. You may need to
+hold the mouse button down for a while on slow machines.
+
+Drag & Spin will not work if the image takes longer than 1/4 of a
+second to calculate and draw. Copying to very large windows slows
+the program down considerably.
+
+
+Keyboard Rotations
+------------------
+The "x", "y" and "z" keys rotate about their respective axes. By
+holding the shift key down when using them, the image will rotate
+in the opposite direction. The arrow keys can also be used for
+rotating the image.
+
+The 'x' axis runs left and right across the window, 'z' runs up
+and down the screen and 'y' runs into and out of the screen.
+
+
+Showing Angles
+--------------
+The "show angles" option displays the current or last rotation
+vector when in Trackball Mode or the absolute rotation of the
+object when not in Trackball Mode. By switching to trackball
+mode the angles are zeroed. This can be used to realign the
+object.
+
+
+Resizing the Viewing Window
+---------------------------
+The viewing window can be resized using an invisible handle on
+the bottom right corner of the window.
+
+Maximum window size can be set by holding the option key
+down while launching the program.
+
+Square windows are optimal in normal mode. Windows twice as
+wide as they are high are optimal for stereo mode.
+By clicking in the zoom box of the window with the option
+key held down the window will size itself optimally for
+the current mode setting.
+
+Smaller windows run faster.
+
+
+Saving Images
+-------------
+Images can be saved to disk either as a 72 dot per inch
+bitmap or as Vector file that can be edited and
+printed from draw type programs. Note that there is an upper
+limit for the number of elements that can be saved in vector
+format somewhere around 20,000.
+
+The default resolution for saved vectors is 300 dpi. This can
+be changed by holding down the option key when selecting the
+menu item. The new setting can be set as the default for
+future sessions by saving the preferences.
+
+Note that files saved at high dpi have joins at 72dpi intervals
+when imported to some programs or ungrouped in others.
+I am not sure how to fix this.
+
+
+Maximum Number of Points/Lines
+------------------------------
+The default memory allocation for the program should be enough to
+read about 20000 points or lines in. To increase this number,
+increase the memory allocation in the programs "Get Info" box.
+
+You will receive a warning if you try to read in a file that is
+too large for available memory.
+
+
+Speed of Rotating
+-----------------
+Smaller windows run faster.
+
+Hiding lines slows the program down especially on non-PPC machines.
+
+Thinner lines and smaller dots run faster.
+
+Make sure your monitor is in 8-bit mode with the System colour
+palette for maximum speed.
+
+This program runs VERY VERY much faster on a Power Macintosh than
+on a 68K Macintosh (about 10 times faster!).
+
+Points plot faster than lines. 20000 points can be
+comfortably manipulated on a Power Macintosh 6100/60.
+
+
+Format of the Input File
+------------------------
+The input file consists of sets of four points on each line
+
+x y z c
+
+x = x coordinate of a point (real)
+y = y coordinate of a point (real)
+z = z coordinate of a point (real)
+c = colour and/or drawing method (integer)
+
+if (c = 0) move to the x,y,z point without drawing
+if (c > 0) draw a line to the x,y,z point from the current
+           position using colour c
+if (c < 0) draw a dot at x,y,z using colour -c
+
+where
+if (c = 1) colour is red
+if (c = 2) colour is green
+if (c = 3) colour is blue
+if (c = 4) colour is yellow
+if (c = 5) colour is purple
+if (c = 6) colour is cyan
+if (c > 6) colour is white
+
+eg
+0.5 2.3 -1 0  # moves to point 0.5 2.3 -1 without drawing
+3 5 6 2       # draws red line from 0.05 2.3 -1 to 3 5 6
+5 -5 2 -3     # plots blue dot at 5 -5 2
+
+The points are automatically scaled to fit in the window and
+rotation is about 0,0,0.
+
+The input file can be any text file.
+# Comment lines begin with the '#' character.
+Text after the four points on a line is ignored.
+Completely blank lines are ok (they are ignored).
+
+Contiguous comments at the very start of the file are read in
+and displayed in the program in the Info window.
+Use this to explain to the user what the image is and where
+it comes from. Try to keep it short otherwise the window gets
+too big. Internal documentation can be placed in other
+comments after a blank line.
+
+
+Notes
+-----
+This program is free and I take no responsibility if it kills
+your machine or drives you mad. Use at your own risk.
+
+It may not be sold.
+
+Source code and project files for the Metrowerks CW5 compilers
+are available at the archive site or on request.
+
+E-mail me if you find a use for this program or come up with a
+cool set of points/lines worth adding to the collection.
+
+The official Archive site for source code, new updates,
+rotation files etc is:
+  ftp://raru.adelaide.edu.au/rotater/
+or
+  http://raru.adelaide.edu.au/rotater/
+
+
+Thanks To
+---------
+Thanks go to the following:
+
+Metrowerks for a great compiler.
+Toby Thain and Dale Greer for help speeding up the program.
+Andrew Maloney for speed and floating window help.
+Tim Olson for bzero.
+David Doak, Charles Williams and E.J. Chichilnisky
+ for many helpful suggestions.
+Richard Chipper for the new icons and the new new icons.
+Troy Gaul for the Infinity Windoid WDEF.
+Patrick Rabou for a number of optimisations.
+Brent Stone for heaps of cool speed optimizations.
+
+Numerous people for rotation files (see comments in the files)
+
+
+Enjoy
+
+Craig Kloeden
+craig@raru.adelaide.edu.au
+27 May 1995

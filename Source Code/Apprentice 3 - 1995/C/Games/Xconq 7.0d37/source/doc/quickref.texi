@@ -1,1 +1,20 @@
-\input texinfo@setfilename quickref.info@settitle Xconq GDL Quick Reference@iftex@headings off@everyheading @| @thistitle @|@everyfooting DRAFT d35 @| @today{} @| DRAFT d35@end iftex@section GDL Syntax@include syntax.texi@section Permuted Index of Symbols@include syms.texi@bye
+\input texinfo
+@setfilename quickref.info
+
+@settitle Xconq GDL Quick Reference
+
+@iftex
+@headings off
+@everyheading @| @thistitle @|
+@everyfooting DRAFT d35 @| @today{} @| DRAFT d35
+@end iftex
+
+@section GDL Syntax
+
+@include syntax.texi
+
+@section Permuted Index of Symbols
+
+@include syms.texi
+
+@bye

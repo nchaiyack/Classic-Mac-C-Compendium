@@ -1,1 +1,30 @@
-Development Environment:========================We recommend that you create a "src" directory within your nShell application folder and copy these files to that location.For each command included in this package there are three files:something.¹      - A Think C project filesomething.c      - Source code for the commandsomething.¹.rsrc - Resources for the commandIn addition, commands may use files from the included "lib" directory.To Build Commands Using Think C:================================1. Start up Think C (version 5.0 or later)2. Open the project file3. Select "Build Code Resource" from the "Project Menu".4. Give the command a unique name and select "Save" to store the command.5. Drop the new command into your "bin" directory.To Build Commands Using Think Pascal or Metrowerks CodeWarrior:===============================================================See the "Tech Notes" folder for more information.
+Development Environment:
+========================
+
+We recommend that you create a "src" directory within your nShell application folder and copy these files to that location.
+
+For each command included in this package there are three files:
+
+something.¹      - A Think C project file
+something.c      - Source code for the command
+something.¹.rsrc - Resources for the command
+
+In addition, commands may use files from the included "lib" directory.
+
+To Build Commands Using Think C:
+================================
+
+1. Start up Think C (version 5.0 or later)
+
+2. Open the project file
+
+3. Select "Build Code Resource" from the "Project Menu".
+
+4. Give the command a unique name and select "Save" to store the command.
+
+5. Drop the new command into your "bin" directory.
+
+To Build Commands Using Think Pascal or Metrowerks CodeWarrior:
+===============================================================
+
+See the "Tech Notes" folder for more information.

@@ -1,1 +1,1 @@
-Boolean DealWithOtherPeople(void);
+Boolean DealWithOtherPeople(void);

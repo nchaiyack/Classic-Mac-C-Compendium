@@ -1,1 +1,65 @@
-CopyBits Demo 3.0 ReadMeRequires System 7 or later.CopyBits Demo is an example project that gives several examples of using CopyBits to copy pictures both on screen and between offscreen Graphics Worlds and an onscreen window (as well as between GWorlds). I also allows you to experiment with using CopyBits, CopyMask, and CopyDeepMask using different images, masks, and transfer modes. It does all the following things using CopyBits and its variations:1) Fade an area of the screen to black (using three different methods).2) Demonstrates "flickering" regular animation vs. smooth animation.3) Fades one image into another.(and new in v2.0)4) "Pixelizes" and "depixelizes" an image (an animation effect where the picture ends up in a very blocky representation of the original).5) Blurs an image.6) Flips an image horizontally or vertically.7) Applies fading effects to the entire screen rather than just part of a window.(and new in v3.0)8) Slides one image onto another from any of the four major directions.9) Imposes one image onto another inside a growing circle, or outside a shrinking circle.10) Demonstrates several of the techniques on the full screen rather than just part of the window.All the code and the project file to build the demo app is included (Metrowerks CodeWarrior C). The code is well documented.Using the demo application is pretty straightforward and shouldn't really require any instructions. Just press the buttons and see what happens!By the way, using GWorlds does NOT require Color QuickDraw, just System 7 or later. As a result, this app requires System 7 or later to run.This project was written by Kenneth Worley in the hopes of helping other programmers. If you have any questions, concerns, criticisms, bug reports, etc., please e-mail me at KNEworley@aol.com. The project is ©1995. All Rights Reserved.I'm a freelance programmer. Please send me work!Feel free to distribute this project (with all of its accompanying files) freely to anyone or upload it to other BBSs or online services. Please obtain my permission before including the project in a disk or CD for sale. Thanks!Notes:Only known to work well at 256 colors (not tested at higher bit depths).Works fine with grays instead of colors.950516Updated to handle "bad disk" insertions properly.Updated to handle update events in the main dialog by redrawing squares around picture areas.950518Updated to version 1.5Fading between images added.Code cleaned up.Speed range changed from 1-100 to 0-20.Changed PICTs (that's right! I used to be a cop!).950606Updated to version 2.0Pixelizing added.Blur added.Flipping added.Full screen demo added.Gave option of 3 different fade-to-black methods.Switched to my generic support routines to handle alerts, dialog controls, etc.950628Updated to version 3.0Slide added.Aperture effect added.CopyBits Technical Demo added to allow experimentation with the CopyBits family of routines.
+CopyBits Demo 3.0 ReadMe
+
+Requires System 7 or later.
+
+CopyBits Demo is an example project that gives several examples of using CopyBits to copy pictures both on screen and between offscreen Graphics Worlds and an onscreen window (as well as between GWorlds). I also allows you to experiment with using CopyBits, CopyMask, and CopyDeepMask using different images, masks, and transfer modes. It does all the following things using CopyBits and its variations:
+
+1) Fade an area of the screen to black (using three different methods).
+2) Demonstrates "flickering" regular animation vs. smooth animation.
+3) Fades one image into another.
+(and new in v2.0)
+4) "Pixelizes" and "depixelizes" an image (an animation effect where the picture ends up in a very blocky representation of the original).
+5) Blurs an image.
+6) Flips an image horizontally or vertically.
+7) Applies fading effects to the entire screen rather than just part of a window.
+(and new in v3.0)
+8) Slides one image onto another from any of the four major directions.
+9) Imposes one image onto another inside a growing circle, or outside a shrinking circle.
+10) Demonstrates several of the techniques on the full screen rather than just part of the window.
+
+All the code and the project file to build the demo app is included (Metrowerks CodeWarrior C). The code is well documented.
+
+Using the demo application is pretty straightforward and shouldn't really require any instructions. Just press the buttons and see what happens!
+
+By the way, using GWorlds does NOT require Color QuickDraw, just System 7 or later. As a result, this app requires System 7 or later to run.
+
+This project was written by Kenneth Worley in the hopes of helping other programmers. If you have any questions, concerns, criticisms, bug reports, etc., please e-mail me at KNEworley@aol.com. The project is ©1995. All Rights Reserved.
+
+I'm a freelance programmer. Please send me work!
+
+Feel free to distribute this project (with all of its accompanying files) freely to anyone or upload it to other BBSs or online services. Please obtain my permission before including the project in a disk or CD for sale. Thanks!
+
+Notes:
+
+Only known to work well at 256 colors (not tested at higher bit depths).
+Works fine with grays instead of colors.
+
+950516
+
+Updated to handle "bad disk" insertions properly.
+Updated to handle update events in the main dialog by redrawing squares around picture areas.
+
+950518
+
+Updated to version 1.5
+Fading between images added.
+Code cleaned up.
+Speed range changed from 1-100 to 0-20.
+Changed PICTs (that's right! I used to be a cop!).
+
+950606
+
+Updated to version 2.0
+Pixelizing added.
+Blur added.
+Flipping added.
+Full screen demo added.
+Gave option of 3 different fade-to-black methods.
+Switched to my generic support routines to handle alerts, dialog controls, etc.
+
+950628
+
+Updated to version 3.0
+Slide added.
+Aperture effect added.
+CopyBits Technical Demo added to allow experimentation with the CopyBits family of routines.

@@ -1,1 +1,6 @@
-rule 1 if a then b.rule 2 if b then c.rule 3 if c then d.
+rule 1 if a then b.
+
+rule 2 if b then c.
+
+rule 3 if c then d.
+

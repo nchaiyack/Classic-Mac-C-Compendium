@@ -1,1 +1,1 @@
-int adamain(int argc, char **argv);
+int adamain(int argc, char **argv);

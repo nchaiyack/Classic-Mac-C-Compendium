@@ -1,1 +1,4 @@
-/* help.c */int help(char *, char *, TBOOLEAN *);void FreeHelp(void);
+
+/* help.c */
+int help(char *, char *, TBOOLEAN *);
+void FreeHelp(void);

@@ -1,1 +1,11 @@
-Bricks demo notes================Bricks demonstrate the use of "resting sprites", which you get if you call SATRun2 instead of SATRun. The demo allows you to disable it, switch back to SATRun, which, as you will see, makes a big difference for a program like this.BUGS:¥ Resting sprites is currently incompatible with the 1-bit and 4-bit blitters.¥ The demo has sorting enabled, but initializes all sprites in a random order. This makes it rather slow for a few seconds after launch.¥ The cursor is neither hidden nor shielded, which leaves "mouse droppings" when using the fast blitters.The two last bugs mentioned above are fairly easy to fix. I leave that as an exercise. For the first, experiment with turning sorting off, or initialize the sprites in a better order. For the second, HideCursor solves the problem, but if so, you must add a sprite following the cursor ta make the demo meaningful.
+Bricks demo notes
+================
+
+Bricks demonstrate the use of "resting sprites", which you get if you call SATRun2 instead of SATRun. The demo allows you to disable it, switch back to SATRun, which, as you will see, makes a big difference for a program like this.
+
+BUGS:
+¥ Resting sprites is currently incompatible with the 1-bit and 4-bit blitters.
+¥ The demo has sorting enabled, but initializes all sprites in a random order. This makes it rather slow for a few seconds after launch.
+¥ The cursor is neither hidden nor shielded, which leaves "mouse droppings" when using the fast blitters.
+
+The two last bugs mentioned above are fairly easy to fix. I leave that as an exercise. For the first, experiment with turning sorting off, or initialize the sprites in a better order. For the second, HideCursor solves the problem, but if so, you must add a sprite following the cursor ta make the demo meaningful.

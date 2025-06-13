@@ -1,1 +1,14 @@
-###################################################################	UserStartup¥Sounds### Startup file for MPW sounds###  3/31/94 Gregory E. Allen <gallen@arlut.utexas.edu>#################################################################	Add sounds directorySet	Sounds "{MPW}Sounds:"Export Sounds#	Play the "Startup" sound, if it existsIf "`Exists "{Sounds}"Startup`" != ""	Play "{Sounds}"StartupEnd
+################################################################
+###	UserStartup¥Sounds
+### Startup file for MPW sounds
+###  3/31/94 Gregory E. Allen <gallen@arlut.utexas.edu>
+################################################################
+
+#	Add sounds directory
+Set	Sounds "{MPW}Sounds:"
+Export Sounds
+
+#	Play the "Startup" sound, if it exists
+If "`Exists "{Sounds}"Startup`" != ""
+	Play "{Sounds}"Startup
+End

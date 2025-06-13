@@ -1,1 +1,1 @@
-OSErr InstallRequiredAppleEvents(void);
+OSErr InstallRequiredAppleEvents(void);

@@ -1,1 +1,44 @@
-Thread Library is a free library, for use by Macintosh software developers, that implements cooperative multiple thread execution within a single application. Thread Library-	does not require any extensions;-	should work with all Macintosh models (from the Plus on up);-	works with system 7.x and with system 6.x under Finder or MultiFinder;-	runs in native mode on 680x0 and PowerPC* based Macintoshes;-	compiles into a small library of 3 to 8 kilobytes;-	works with the Symantec, Metrowerks, and MPW compilers.The 680x0 version of Thread Library is 2-3 times faster than Apple's Thread Manager. The PowerPC version of Thread Library is about 2 times faster than Apple's Thread Manager.Every thread has its own stack, and there are no restrictions on the objects that can be allocated on a thread's stack. All other global application data are shared by threads. Context switches are very efficient since they involve only a few operations to save the current thread's state, followed by a context switch to the new thread, and a few instructions to restore the new thread's state. This distribution includes:-	complete source code in C;-	detailed documentation in Microsoft Word 5.0 format;-	prebuilt libraries for 68K and PowerPC programs, including debug versions of the libraries;-	a new interface that mimics Apple's Thread Manager;-	a simple test application that demonstrates how threads may be used;-	an application that compares the speed of Thread Library with the speed of Apple's Thread Manager;-	Metrowerks CodeWarrior project files;-	AppleScript program for automatic builds.
+Thread Library is a free library, for use by Macintosh software developers, 
+that implements cooperative multiple thread execution within a single 
+application. Thread Library
+
+-	does not require any extensions;
+
+-	should work with all Macintosh models (from the Plus on up);
+
+-	works with system 7.x and with system 6.x under Finder or MultiFinder;
+
+-	runs in native mode on 680x0 and PowerPC* based Macintoshes;
+
+-	compiles into a small library of 3 to 8 kilobytes;
+
+-	works with the Symantec, Metrowerks, and MPW compilers.
+
+The 680x0 version of Thread Library is 2-3 times faster than Apple's Thread 
+Manager. The PowerPC version of Thread Library is about 2 times faster than 
+Apple's Thread Manager.
+
+Every thread has its own stack, and there are no restrictions on the objects that 
+can be allocated on a thread's stack. All other global application data are 
+shared by threads. Context switches are very efficient since they involve only 
+a few operations to save the current thread's state, followed by a context switch 
+to the new thread, and a few instructions to restore the new thread's state. 
+This distribution includes:
+
+-	complete source code in C;
+
+-	detailed documentation in Microsoft Word 5.0 format;
+
+-	prebuilt libraries for 68K and PowerPC programs, including debug 
+versions of the libraries;
+
+-	a new interface that mimics Apple's Thread Manager;
+
+-	a simple test application that demonstrates how threads may be used;
+
+-	an application that compares the speed of Thread Library with the 
+speed of Apple's Thread Manager;
+
+-	Metrowerks CodeWarrior project files;
+
+-	AppleScript program for automatic builds.

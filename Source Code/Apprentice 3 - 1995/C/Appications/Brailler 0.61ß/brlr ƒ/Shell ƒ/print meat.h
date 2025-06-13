@@ -1,1 +1,4 @@
-void InitThePrinting(void);void DoThePageSetup(void);void PrintText(TEHandle theText);
+void InitThePrinting(void);
+void DoThePageSetup(void);
+void PrintText(TEHandle theText);
+

@@ -1,1 +1,1518 @@
-               The Icon Program Library; Version 8.10                        Ralph E. Griswold    Department of Computer Science, The University of Arizona1.__Introduction   The Icon program library consists of Icon programs, pro-cedures, documentation, and data. Version 8 of Icon is requiredto run most of the library [1]. A few programs require Version8.10 [2].   Section 7 lists the contents of the library. More competedocumentation is contained in comments in the program and pro-cedure files, as well as in separate documentation files in somecases. You may wish to print these files to have documentationhandy.2.__Unloading_the_Library   The library is designed to be unloaded in a hierarchy thatcontains separate directories for different kinds of material.Material that requires X-Icon [3] is segregated so that personswho are using Icon on platforms that do not support the X facili-ties do not need to unload these files.   The normal directory structure for this version of the libraryis        |--data        |        |--docs        |        |--procs        |        |--progs|--ipl--|        |--xdata        |        |--xdocs        |        |--xprocs        |        |--xprogsDirectories whose names start with x contain material appropriatefor X-Icon.  There also are packages that can be unloaded intotheir own directories.  See the distribution disks for specificunloading instructions.IPD224                        - 1 -                March 23, 19933.__Link_Search_Paths   Many of the programs link procedures. For example, options()is used by many programs for processing command-line options andis linked from ``ucode'' files obtained from translatingoptions.icn.   Icon searches for ucode files first in the current directoryand then in directories specified by the IPATH environment vari-able.  IPATH consists of a sequence of blank-separated pathnames. The search is in the order of the names. For example, on aUNIX system running csh,        setenv IPATH "../procs /usr/icon/ilib"results in a search for file names in link declarations first inthe current directory, then in ../procs, and finally in/usr/icon/ilib.   The method of setting IPATH varies from system to system.Since the current directory always is searched first, IPATH neednot be set if ucode files are placed in the same directory as theprogram files.  See the next section.4.__Installing_the_Library   Installing the Icon program library consists of two steps: (1)translating the procedure files to produce ucode files and (2)compiling the programs.   Ucode files are produced by translating the procedure fileswith the -c option to icont, as in        icont -c optionswhich translates options.icn. The result is two ucode files namedoptions.u1 and options.u2. The .u1 file contains the procedure'scode and the .u2 file contains global information about the pro-cedure.  It is these files that a link declaration such as        link optionsneeds.   Scripts for translating the procedure files are provided withthe distribution.  Once the procedure files have been translated,the ucode files can be moved to any place that is accessible fromIPATH.   The programs are compiled using icont without the -c option,as inIPD224                        - 2 -                March 23, 1993        icont dealwhich compiles deal.icn, a program that produces randomlyselected bridge hands. The result of compiling a program is an``icode'' file.  On some systems, the name of the icode file isthe same as the name of the program file with the .icn suffixremoved (for example, deal). On other systems, the icode filename has the suffix .icx in place of .icn (for example,deal.icx).  Scripts for compiling the programs are provided withthe distribution.  Instructions for building the programs con-tained in separate packages are included with those packages.   On systems that support the direct execution of icode files(UNIX, for example), an icode file can be run just by enteringits name on the command line, as in        deal   On other systems (MS-DOS, for example), icode files must berun using the Icon executor, iconx, as in        iconx deal(This also works on systems that support direct execution.) Notethat the suffix (if any) need not be mentioned.   Many Icon programs take arguments and options from the commandline. Options are identified by dashes. For example, in        deal -h 10the -h 10 instructs deal to produce 10 hands.   Icode files can be moved to any location. Ucode files areneeded only during compilation. They need not be accessible whenicode files are run.5.__Usage_Notes   It is important to read the documentation at the beginning ofprograms and procedures in the library. It includes informationabout special requirements, limitations, known bugs, and soforth.   Some of the programs in the Icon program library are quitelarge and may require more memory than is available on some plat-forms.IPD224                        - 3 -                March 23, 19936.__Disclaimer   The material in the Icon program library is contributed byusers. It is in the public domain and can be freely copied,although author information should be left intact and any modifi-cations should be properly attributed.   Neither the Icon Project nor the authors of material in theIcon program library assume any responsibility as to its correct-ness or its suitability for any purpose. The responsibility foruse of the Icon program library lies entirely with the user.7.__Content_Listing7.1__Programs_-_progs     adlcheck.icn  check for bad address list data     adlcount.icn  count address list entries     adlfiltr.icn  filter address list entries     adlfirst.icn  write first line of addresses     adllist.icn   list address list fields     adlsort.icn   sort address list entries     animal.icn    play ``animal'' guessing game     bj.icn        play blackjack game     calc.icn      simulate desk calculator     colm.icn      arrange data into columns     concord.icn   produce concordance     conman.icn    convert units     countlst.icn  count items in a list     cross.icn     display intersection of words     crypt.icn     encript file     csgen.icn     generate context-sensitive sentences     cstrings.icn  print strings in C files     deal.icn      deal bridge handsIPD224                        - 4 -                March 23, 1993     delam.icn     delaminate file     delamc.icn    delaminate file using tab characters     detex.icn     strip LaTeX commands     diffn.icn     show differences among files     diffu.icn     show differences in files     diffword.icn  list different words     duplproc.icn  find duplicate declarations     edscript.icn  produce script for ed(1)     empg.icn      produce expression-benchmark program     farb.icn      generate Farberisms     farb2.icn     generate Farberisms     filecnvt.icn  convert line terminators     fileprnt.icn  display characters in file     filter.icn    skeleton for generic filter     findstr.icn   find imbedded character strings     fixpath.icn   replace path in a binary file     fnctmpl.icn   produce function templates     format.icn    word wrap a range of text     fset.icn      do set operations on file specifications     gcomp.icn     produce complement of file specification     genqueen.icn  solve arbitrary-size n-queens problem     graphdem.icn  demonstrate simple bar graphics     grpsort.icn   sort groups of lines     hcal4unx.icn  combination Jewish/Civil calendar     hebcalen.icn  combination Jewish/Civil calendar     hufftab.icn   compute Huffman state transitionsIPD224                        - 5 -                March 23, 1993     ibrow.icn     browse Icon files for declarations     icalc.icn     simulate infix desk calculator     icontent.icn  list Icon procedures     icvt.icn      ASCII/EBCDIC program conversion     idxtext.icn   creating indexed text-base     igrep.icn     search in the style of egrep     ihelp.icn     give on-line help for Icon     iidecode.icn  decode text in style of uudecode     iiencode.icn  encode text in the style of uuencode     ilnkxref.icn  produce Icon link cross reference     ilump.icn     lump linked Icon source files     interpe.icn   interpret Icon expressions     interpp.icn   interpret Icon programs     ipldoc.icn    collect library documentation     ipp.icn       preprocess Icon programs     iprint.icn    print Icon program     iprofile.icn  profile Icon procedure usage     ipsort.icn    sort Icon procedures     ipsplit.icn   split Icon program into files     ipxref.icn    cross reference Icon program     isrcline.icn  count code lines in Icon program     istrip.icn    strip comments from Icon program     itab.icn      entab an Icon program     itags.icn     create tags file for Icon programs     iundecl.icn   find undeclared Icon identifiers     iversion.icn  show icode versionIPD224                        - 6 -                March 23, 1993     iwriter.icn   write Icon code to write input     krieg.icn     play kriegspiel     kross.icn     show intersections of strings     kwic.icn      produce keywords in context     labels.icn    format mailing labels     lam.icn       laminate files     latexidx.icn  process LaTeX idx file     linden.icn    generate sentences in 0L-systems     lisp.icn      interpret LISP programs     loadmap.icn   show load map of UNIX object file     longest.icn   write length of longest line in a file     makepuzz.icn  make find-the-word puzzle     memsum.icn    summarize Icon memory management     miu.icn       generate strings from the MIU system     monkeys.icn   generate random text     morse.icn     convert string to Morse code     mr.icn        read mail     mtf3.icn      map tar file     nim.icn       play the game of nim     nocr.icn      convert MS-DOS text files to UNIX     pack.icn      package multiple files     paginate.icn  insert formfeeds     parens.icn    produce random balanced strings     pargen.icn    generate context-free parser     parse.icn     parse simple statements     parsex.icn    parse arithmetic expressionsIPD224                        - 7 -                March 23, 1993     patchu.icn    implement UNIX-like patch     post.icn      post news     press.icn     archive files     profile.icn   profile Icon programs     proto.icn     show Icon syntactic forms     psrsplit.icn  separate PostScript recorder output     pt.icn        produce parse table generator     puzz.icn      create word search puzzle     qt.icn        announce time in English     queens.icn    generate solutions to the n-queens problem     recgen.icn    generate context-free recognizer     reply.icn     reply to news-articles or mail     repro.icn     reproduce itself     roffcmds.icn  list roff commands and macros     rsg.icn       generate randomly selected sentences     ruler.icn     write a character ruler     scramble.icn  scramble a document     shar.icn      crate shell archive UNIX     shuffile.icn  shuffle lines in a file     sing.icn      sing ``The Twelve Days of Christmas''     snake.icn     play the snake game     solit.icn     play solitaire     sortname.icn  order by last name     stars.icn     display ``star'' field     strpsgml.icn  strip/translate SGML tags     tablc.icn     tabulate characters in a fileIPD224                        - 8 -                March 23, 1993     tablw.icn     tabulate words in a file     textcnt.icn   tabulate properties of text file     trim.icn      trim lines in a file     ttt.icn       play tic-tac-toe     turing.icn    simulate a Turing machine     unique.icn    delete identical adjacent lines     unpack.icn    unpackage files     verse.icn     generate bizarre verses     vnq.icn       display solutions to n-queens problem     xtable.icn    show character code translations     yahtz.icn     play yahtzee     yescr.icn     convert UNIX files to DOS format     zipsort.icn   sort mailing labels by ZIP code7.2__Programs_-_xprogs     bitplane.icn  demonstrate bitplanes     bme.icn       edit bitmap     calib.icn     calibrate color monitor     coloralc.icn  test color allocation     colrbook.icn  show named color     colrgrid.icn  show variation of color hue     colrname.icn  browse color names     colrpick.icn  pick RGB or HSV colors     concen.icn    play solitaire game Concentration     drip.icn      demonstrate color map animation     etch.icn      distributed Etch-A-Sketch     fev.icn       display text in fisheye viewIPD224                        - 9 -                March 23, 1993     flake.icn     draw a fractal snowflake     fract.icn     demonstrate fractal lines     hextile.icn   show a tiling of a bitmap     hvc.icn       pick colors for Tek HVC space     keypunch.icn  simulate a keypunch     koch.icn      demonstrate Koch curves     lsys.icn      experiment with lindenmeyer systems     pme.icn       edit pixmap     sensdemo.icn  demonstrate sensor routines     sier.icn      generalized Sierpinski's triangle     snapper.icn   display images     spiral.icn    draw polygonal spirals     spiro.icn     display spirograph lines     splat.icn     drop some paint splatters in a window     textures.icn  show various 4x4 stipple patterns     tgdemo.icn    demonstrate turtle graphics     travels.icn   animate the traveling salesman problem     trycolor.icn  investigate color specifications     tryfont.icn   demonstrate X font rankings     wheel.icn     show wheel of colors     xed.icn       edit text in a window     xevents.icn   report X-Icon events     xprompt.icn   prompt in a window     xscroll.icn   scroll image7.3__Procedures_-_procs     adjuncts.icn  gettext and idxtext supportIPD224                       - 10 -                March 23, 1993     adlutils.icn  process address lists     allof.icn     conjunction control operation     ansi.icn      ANSI-based terminal control     argparse.icn  parse pseudo-command-line     array.icn     n-dimensional arrays     asciinam.icn  ASCII name of unprintable character     bincvt.icn    convert binary data     binocoef.icn  binomial coefficient     bold.icn      enbolden and underscore text     buffer.icn    buffered input and output     calendat.icn  get date from Julian Day Number     codeobj.icn   encode and decode Icon data     collate.icn   collate and decollate strings     colmize.icn   arrange data into columns     commaize.icn  add commas to real or integers     complete.icn  complete partial input string     complex.icn   perform complex arithmetic     currency.icn  format currency     date.icn      produce date     datetime.icn  date manipulation     dif.icn       check for differences     distance.icn  compute distance in n-space     dosfiles.icn  get MS-DOS file names     ebcdic.icn    convert between ASCII and EBCDIC     escape.icn    interpret Icon literal escapes     everycat.icn  generating all concatenationsIPD224                       - 11 -                March 23, 1993     factorl.icn   computing factorials     fcopy.icn     copy a file     feval.icn     evaluate string as function call     filedim.icn   compute file dimensions     filename.icn  parse file names     filetext.icn  read text file into a list     findre.icn    find regular expression     full13th.icn  give days when a full moon occurs on     fullimag.icn  produce complete image of structured data     gauss.icn     compute Gaussian distributions     gcd.icn       compute greatest common denominator     gdl.icn       get directory list     gener.icn     generate miscellaneous sequences     getchlib.icn  getch for UNIX     getkeys.icn   get keys for a gettext file     getpaths.icn  generate elements in path environment variable     gettext.icn   gettext (simple text-base routines)     glabels.icn   produce graph ticks     gmean.icn     compute geometric mean     hexcvt.icn    hexadecimal conversion     hostname.icn  produce host name     huffstuf.icn  huffman coding     hyperbol.icn  hyperbolic functions     ibench.icn    support Icon benchmarking     ichartp.icn   a simple chart parser     identity.icn  produce identities for Icon typesIPD224                       - 12 -                March 23, 1993     ifncs.icn     wrappers for function tracing     iftrace.icn   trace Icon function calls     image.icn     produce images of Icon values     inbits.icn    read variable-length characters     inserts.icn   build tables with duplicate keys     intstr.icn    create string from bits     iolib.icn     termlib-type tools for MS-DOS and UNIX     ipause.icn    pause within an Icon program     irandom.icn   randomize the random number generator     iscreen.icn   screen functions     isort.icn     customizable sorting     ispf.icn      communicate between Icon and ISPF     itlib.icn     termlib-type tools     itlibdos.icn  termlib-type tools (MS-DOS version)     ivalue.icn    convert string to Icon value     julian.icn    produce Julian Day Number     jumpque.icn   jump element to head of queue     largint.icn   large integer arithmetic     lastname.icn  produce last name     lcomb.icn     generate lists of combinations     list2tab.icn  write list as tab-separated string     lmap.icn      map list elements     longstr.icn   match longest string     lpermute.icn  permute elements in a list     lscan.icn     quasi scanning routines for lists     mapbit.icn    map string into bit representationIPD224                       - 13 -                March 23, 1993     matchlib.icn  lexical matching     math.icn      perform mathematical computations     matrix.icn    matrix manipulation     morse.icn     convert string to Morse code     namepfx.icn   produce prefix portion of name     ngrams.icn    generate n-grams     numbers.icn   format and convert numbers     nxtprime.icn  find the next prime     object.icn    encode and decode Icon values     options.icn   get command-line options     outbits.icn   write variable-length characters     packunpk.icn  pack and unpack decimal strings     parscond.icn  condense parse tree     patch.icn     UNIX-like patch(1)     patterns.icn  SNOBOL4-style pattern matching     patword.icn   find letter patterns     pdae.icn      programmer-defined argument evaluation     pdco.icn      programmer-defined control operations     permute.icn   permutations, combinations, and such     phoname.icn   generate letters for phone numbers     plural.icn    produce plural of English noun     pom.icn       compute phase of the moon     popen.icn     pipes     printcol.icn  format columnar data     printf.icn    printf-style formatting     prockind.icn  produce code according to kind of procedureIPD224                       - 14 -                March 23, 1993     procname.icn  produce name of procedure     progary.icn   place program in a array     radcon.icn    radix conversion     randreal.icn  select random real number in range     ranseq.icn    generate all random integers over a range     rational.icn  arithmetic on rational numbers     readline.icn  read and write lines in pieces     readtbl.icn   read user-created stripsgml table     real2int.icn  various real-to-integer conversions     rec2tab.icn   write record as tab-separated string     recog.icn     main procedure for recognition     regexp.icn    regular expression pattern matching     rewrap.icn    advanced line rewrap utility     rexx.icn      communicate between Icon and Rexx     saytime.icn   produce the time in English     scanset.icn   set up string scanning procedures     segment.icn   segment string     senten1.icn   generate sentences     sentence.icn  generate sentences in file     seqimage.icn  produce string image of Icon result sequence     shquote.icn   quote word for UNIX-like shells     shuffle.icn   shuffle values     signed.icn    put bits into signed integer     slashbal.icn  balanced scanning with backslash escaping     slshupto.icn  upto scanning with backslash escaping     snapshot.icn  show snapshot of Icon string scanningIPD224                       - 15 -                March 23, 1993     soundex.icn   produce Soundex code for name     soundex1.icn  Soundex algorithm     statemap.icn  table of states and abbreviations     strings.icn   string utilities     strip.icn     strip characters from a string     stripcom.icn  strip comments out of Icon line     stripunb.icn  strip unbalanced material     structs.icn   structure operations     tab2list.icn  insert tab-separated strings in list     tab2rec.icn   put tab-separated strings in records     tblset.icn    set-theoretic table manipulation     tblutil.icn   table manipulation     tclass.icn    classify values as atomic or composite     tempname.icn  get temporary file name     title.icn     produce title portion of name     titleset.icn  produce set of titles     tuple.icn     process n-tuples     twt.icn       create two-way table     typecode.icn  produce letter code for Icon type     unsigned.icn  put bits unsigned integer     usage.icn     service functions     varsub.icn    perform UNIX-shell-style variable substitution     version.icn   produce Icon version number     wildcard.icn  UNIX-like wild-card pattern matching     wrap.icn      wrap output lines     ximage.icn    produce string image of dataIPD224                       - 16 -                March 23, 1993     xrotate.icn   rotate values in list or record7.4__Procedures_-_xprocs     autopost.icn  activate PostScript recorder     barchart.icn  dynamically growing barchart     button.icn    pushbutton sensors     cardbits.icn  construct playing card bitmaps     clip.icn      clipboard operations     control.icn   controls for windows     decay.icn     decaying-displays for windows     drawcard.icn  draw a playing card     evmux.icn     window event multiplexor     evqueue.icn   queued X events     glib.icn      graphics     imagedim.icn  getting X image dimensions     lsystem.icn   Lindenmeyer systems support     optwindw.icn  open window with standard options     overlay.icn   overlay an image in a window     psrecord.icn  make PostScript record of window     slider.icn    slider sensors for use with windows     stipplib.icn  stippling     strpchrt.icn  dynamic stripchart for windows     tcolors.icn   create a table of window bindings     textedit.icn  window-oriented text editing     turtle.icn    turtle-graphics interface     vbuttons.icn  buttons     vcoupler.icn  coupler variablesIPD224                       - 17 -                March 23, 1993     vdialog.icn   dialog boxes     vframe.icn    pane frame vidgets     vgrid.icn     vidget grids     vidgets.icn   vidgets     viface.icn    interfacing     vmenu.icn     vidget menus     vpane.icn     vidget panes     vradio.icn    radio buttons     vscroll.icn   scrollbars     vslider.icn   sliders     vstd.icn      standard lookups     vstyle.icn    drawing buttons     vtext.icn     textual vidgets     vtools.icn    vidget tools     wipe.icn      wipe window area     xbfont.icn    X font selection     xcompat.icn   obsolete X-Icon functions     xcontrst.icn  find a contrasting color     xkeysyms.icn  produce X key symbols     xplane.icn    bitplane manipulation     xputpixl.icn  write quantized, processed pixel     xshade.icn    set window color     xutils.icn    X-Icon utilities7.5__Data_-_data     a2n.csg       data for csg.icn     abc.csg       data for csg.icnIPD224                       - 18 -                March 23, 1993     abcd.csg      data for csg.icn     add.lbl       sample address labels     an2.csg       data for csg.icn     bb3.tur       data for turing.icn     cc.tur        data for turing.icn     chart.gmr     data for ichartp.icn     cm.tur        data for turing.icn     colors.rsg    data for rsg.icn     conman.sav    data base for conman.icn     darwin.txt    plain text     dickens.txt   plain text     dylan.txt     plain text     egg.krs       data for kross.icn     exp.rsg       data for rsg.icn     farber.sen    Farberisms     gilbert.txt   plain text     gmr1.lin      data for linden.icn     gmr2.lin      data for linden.icn     gmr3.lin      data for linden.icn     gmr4.lin      data for linden.icn     header        program library header skeleton     hebcalen.dat  data for hebcalen.icn     icon.wrd      words containing the substring ``icon''     iconproj.lbl  address labels for the Icon Project     ihelp.dat     data for ihelp.icn     joyce1.txt    plain textIPD224                       - 19 -                March 23, 1993     joyce2.txt    plain text     joyce3.txt    plain text     noci.wrd      words containing the substring ``noci''     ones.tur      data for turing.icn     palin.sen     palindromic sentences     poe.txt       plain text     poem.rsg      data for rsg.icn     pt1.gmr       data for pt.icn     pt2.gmr       data for pt.icn     pt3.gmr       data for pt.icn     pt4.gmr       data for pt.icn     pt5.gmr       data for pt.icn     pt6.gmr       data for pt.icn     red.lin       data for linden.icn     sen.rsg       data for rsg.icn     spencer.txt   plain text     termcap.dos   MS-DOS termcap data     termcap2.dos  alternative MS-DOS termcap data     verse.dat     vocabulary file for verse.icn     z1.lin        data for linden.icn     z2.lin        data for linden.icn     z3.lin        data for linden.icn     z4.lin        data for linden.icn7.6__Data_-_xdata   There is no data specific to X-Icon yet.7.7__Documentation_-_docsIPD224                       - 20 -                March 23, 1993     address.doc   documentation for address procedures     hebcalen.hlp  documentation for hebcalen.icn     hebcalpi.hlp  documentation for hebcalpi.icn     iconmake.doc  Make skeleton for Icon     ipp.doc       supplementary documentation for ipp.icn     mr.man        manual page for mr.icn     post.1        manual page source for post.icn     procs.kwc     keyword-in-context listing for procs     progs.kwc     keyword-in-context listing for progs     pt.man        manual page for pt.icn7.8__Documentation_-_xdocs     vidget.ps     PostScript documentation for X-Icon toolkit     xib.ps        PostScript documentation for X-Icon interface                   interface builder     xprocs.kwc    keyword-in-context listing for xprocs     xprogs.kwc    keyword-in-context listing for xprogs7.9__Packages_-_Icon     debug         Icon debugger     idol          Idol; object-oriented Icon written in Icon7.10__Packages_-_X-Icon     xib           X-Icon interface builder8.__Contributions_to_the_Icon_Program_Library   New material for the Icon program library always is welcome.It must be prepared in the style exemplified by the material inthis release. Adequate documentation is essential; it must be inthe format used for present library - we do not have theresources to rewrite or reformat contributed documentation. Testdata also must be provided - at least enough so that we candetermine that the contributed program material is basicallyfunctional. In cases where test data is impractical because ofthe nature of the contribution, instructions for testing must beprovided.IPD224                       - 21 -                March 23, 1993   Program material can be submitted by electronic mail at one ofthe addresses given in the next section or on Macintosh or MS-DOSdisks.  Printed listings are not acceptable.   Contributions to the Icon program library must be free of anyrestrictions and may not carry copyright notices, even if accom-panied by permission for unlimited copying.   The decision to include contributed material in the Icon pro-gram library rests entirely with the Icon Project.  The Icon Pro-ject reserves the right to modify submissions to conform tolibrary standards, to correct errors, and to make improvements.Contributors will be consulted in the case of substantialchanges.9.__Feedback   If you encounter problems with material in the Icon programlibrary, please let us know.  If you can provide corrections orimprovements to library material, please send them by electronicmail or on a diskette.   We can be reached as follows:        Icon Project        Department of Computer Science        Gould-Simpson Building        The University of Arizona        Tucson, AZ   85721        U.S.A.        (602) 621-8448 (voice)        (602) 621-4246 (fax)        icon-project@cs.arizona.edu     (Internet)        ... uunet!arizona!icon-project     (uucp)Acknowledgements   Dozens of persons have contributed material to this release ofthe Icon program library. See the program material itself forauthorship information.References1.   R. E. Griswold and M. T. Griswold, The Icon Programming     Language, Prentice-Hall, Inc., Englewood Cliffs, NJ, second     edition, 1990.2.   R. E. Griswold, C. L. Jeffery and G. M. Townsend, Version     8.10 of the Icon Programming Language, The Univ. of Arizona     Icon Project Document IPD212, 1993.IPD224                       - 22 -                March 23, 19933.   C. L. Jeffery and G. M. Townsend, X-Icon: An Icon Windows     Interface; Version 8.10, The Univ. of Arizona Tech. Rep.     93-9, 1993.IPD224                       - 23 -                March 23, 1993
+
+
+
+
+
+
+               The Icon Program Library; Version 8.10
+
+                        Ralph E. Griswold
+    Department of Computer Science, The University of Arizona
+
+
+1.__Introduction
+
+   The Icon program library consists of Icon programs, pro-
+cedures, documentation, and data. Version 8 of Icon is required
+to run most of the library [1]. A few programs require Version
+8.10 [2].
+
+   Section 7 lists the contents of the library. More compete
+documentation is contained in comments in the program and pro-
+cedure files, as well as in separate documentation files in some
+cases. You may wish to print these files to have documentation
+handy.
+
+
+2.__Unloading_the_Library
+
+   The library is designed to be unloaded in a hierarchy that
+contains separate directories for different kinds of material.
+Material that requires X-Icon [3] is segregated so that persons
+who are using Icon on platforms that do not support the X facili-
+ties do not need to unload these files.
+
+   The normal directory structure for this version of the library
+is
+
+        |--data
+        |
+        |--docs
+        |
+        |--procs
+        |
+        |--progs
+|--ipl--|
+        |--xdata
+        |
+        |--xdocs
+        |
+        |--xprocs
+        |
+        |--xprogs
+
+
+
+Directories whose names start with x contain material appropriate
+for X-Icon.  There also are packages that can be unloaded into
+their own directories.  See the distribution disks for specific
+unloading instructions.
+
+
+
+
+IPD224                        - 1 -                March 23, 1993
+
+
+
+
+
+
+
+
+3.__Link_Search_Paths
+
+   Many of the programs link procedures. For example, options()
+is used by many programs for processing command-line options and
+is linked from ``ucode'' files obtained from translating
+options.icn.
+
+   Icon searches for ucode files first in the current directory
+and then in directories specified by the IPATH environment vari-
+able.  IPATH consists of a sequence of blank-separated path
+names. The search is in the order of the names. For example, on a
+UNIX system running csh,
+
+        setenv IPATH "../procs /usr/icon/ilib"
+
+
+results in a search for file names in link declarations first in
+the current directory, then in ../procs, and finally in
+/usr/icon/ilib.
+
+   The method of setting IPATH varies from system to system.
+Since the current directory always is searched first, IPATH need
+not be set if ucode files are placed in the same directory as the
+program files.  See the next section.
+
+
+4.__Installing_the_Library
+
+   Installing the Icon program library consists of two steps: (1)
+translating the procedure files to produce ucode files and (2)
+compiling the programs.
+
+   Ucode files are produced by translating the procedure files
+with the -c option to icont, as in
+
+        icont -c options
+
+which translates options.icn. The result is two ucode files named
+options.u1 and options.u2. The .u1 file contains the procedure's
+code and the .u2 file contains global information about the pro-
+cedure.  It is these files that a link declaration such as
+
+        link options
+
+needs.
+
+   Scripts for translating the procedure files are provided with
+the distribution.  Once the procedure files have been translated,
+the ucode files can be moved to any place that is accessible from
+IPATH.
+
+   The programs are compiled using icont without the -c option,
+as in
+
+
+
+
+IPD224                        - 2 -                March 23, 1993
+
+
+
+
+
+
+
+
+        icont deal
+
+
+which compiles deal.icn, a program that produces randomly
+selected bridge hands. The result of compiling a program is an
+``icode'' file.  On some systems, the name of the icode file is
+the same as the name of the program file with the .icn suffix
+removed (for example, deal). On other systems, the icode file
+name has the suffix .icx in place of .icn (for example,
+deal.icx).  Scripts for compiling the programs are provided with
+the distribution.  Instructions for building the programs con-
+tained in separate packages are included with those packages.
+
+   On systems that support the direct execution of icode files
+(UNIX, for example), an icode file can be run just by entering
+its name on the command line, as in
+
+        deal
+
+
+   On other systems (MS-DOS, for example), icode files must be
+run using the Icon executor, iconx, as in
+
+        iconx deal
+
+(This also works on systems that support direct execution.) Note
+that the suffix (if any) need not be mentioned.
+
+   Many Icon programs take arguments and options from the command
+line. Options are identified by dashes. For example, in
+
+        deal -h 10
+
+the -h 10 instructs deal to produce 10 hands.
+
+   Icode files can be moved to any location. Ucode files are
+needed only during compilation. They need not be accessible when
+icode files are run.
+
+
+5.__Usage_Notes
+
+   It is important to read the documentation at the beginning of
+programs and procedures in the library. It includes information
+about special requirements, limitations, known bugs, and so
+forth.
+
+   Some of the programs in the Icon program library are quite
+large and may require more memory than is available on some plat-
+forms.
+
+
+
+
+
+
+
+IPD224                        - 3 -                March 23, 1993
+
+
+
+
+
+
+
+
+6.__Disclaimer
+
+   The material in the Icon program library is contributed by
+users. It is in the public domain and can be freely copied,
+although author information should be left intact and any modifi-
+cations should be properly attributed.
+
+   Neither the Icon Project nor the authors of material in the
+Icon program library assume any responsibility as to its correct-
+ness or its suitability for any purpose. The responsibility for
+use of the Icon program library lies entirely with the user.
+
+
+7.__Content_Listing
+
+7.1__Programs_-_progs
+
+     adlcheck.icn  check for bad address list data
+
+     adlcount.icn  count address list entries
+
+     adlfiltr.icn  filter address list entries
+
+     adlfirst.icn  write first line of addresses
+
+     adllist.icn   list address list fields
+
+     adlsort.icn   sort address list entries
+
+     animal.icn    play ``animal'' guessing game
+
+     bj.icn        play blackjack game
+
+     calc.icn      simulate desk calculator
+
+     colm.icn      arrange data into columns
+
+     concord.icn   produce concordance
+
+     conman.icn    convert units
+
+     countlst.icn  count items in a list
+
+     cross.icn     display intersection of words
+
+     crypt.icn     encript file
+
+     csgen.icn     generate context-sensitive sentences
+
+     cstrings.icn  print strings in C files
+
+     deal.icn      deal bridge hands
+
+
+
+
+
+IPD224                        - 4 -                March 23, 1993
+
+
+
+
+
+
+
+
+     delam.icn     delaminate file
+
+     delamc.icn    delaminate file using tab characters
+
+     detex.icn     strip LaTeX commands
+
+     diffn.icn     show differences among files
+
+     diffu.icn     show differences in files
+
+     diffword.icn  list different words
+
+     duplproc.icn  find duplicate declarations
+
+     edscript.icn  produce script for ed(1)
+
+     empg.icn      produce expression-benchmark program
+
+     farb.icn      generate Farberisms
+
+     farb2.icn     generate Farberisms
+
+     filecnvt.icn  convert line terminators
+
+     fileprnt.icn  display characters in file
+
+     filter.icn    skeleton for generic filter
+
+     findstr.icn   find imbedded character strings
+
+     fixpath.icn   replace path in a binary file
+
+     fnctmpl.icn   produce function templates
+
+     format.icn    word wrap a range of text
+
+     fset.icn      do set operations on file specifications
+
+     gcomp.icn     produce complement of file specification
+
+     genqueen.icn  solve arbitrary-size n-queens problem
+
+     graphdem.icn  demonstrate simple bar graphics
+
+     grpsort.icn   sort groups of lines
+
+     hcal4unx.icn  combination Jewish/Civil calendar
+
+     hebcalen.icn  combination Jewish/Civil calendar
+
+     hufftab.icn   compute Huffman state transitions
+
+
+
+
+
+
+IPD224                        - 5 -                March 23, 1993
+
+
+
+
+
+
+
+
+     ibrow.icn     browse Icon files for declarations
+
+     icalc.icn     simulate infix desk calculator
+
+     icontent.icn  list Icon procedures
+
+     icvt.icn      ASCII/EBCDIC program conversion
+
+     idxtext.icn   creating indexed text-base
+
+     igrep.icn     search in the style of egrep
+
+     ihelp.icn     give on-line help for Icon
+
+     iidecode.icn  decode text in style of uudecode
+
+     iiencode.icn  encode text in the style of uuencode
+
+     ilnkxref.icn  produce Icon link cross reference
+
+     ilump.icn     lump linked Icon source files
+
+     interpe.icn   interpret Icon expressions
+
+     interpp.icn   interpret Icon programs
+
+     ipldoc.icn    collect library documentation
+
+     ipp.icn       preprocess Icon programs
+
+     iprint.icn    print Icon program
+
+     iprofile.icn  profile Icon procedure usage
+
+     ipsort.icn    sort Icon procedures
+
+     ipsplit.icn   split Icon program into files
+
+     ipxref.icn    cross reference Icon program
+
+     isrcline.icn  count code lines in Icon program
+
+     istrip.icn    strip comments from Icon program
+
+     itab.icn      entab an Icon program
+
+     itags.icn     create tags file for Icon programs
+
+     iundecl.icn   find undeclared Icon identifiers
+
+     iversion.icn  show icode version
+
+
+
+
+
+
+IPD224                        - 6 -                March 23, 1993
+
+
+
+
+
+
+
+
+     iwriter.icn   write Icon code to write input
+
+     krieg.icn     play kriegspiel
+
+     kross.icn     show intersections of strings
+
+     kwic.icn      produce keywords in context
+
+     labels.icn    format mailing labels
+
+     lam.icn       laminate files
+
+     latexidx.icn  process LaTeX idx file
+
+     linden.icn    generate sentences in 0L-systems
+
+     lisp.icn      interpret LISP programs
+
+     loadmap.icn   show load map of UNIX object file
+
+     longest.icn   write length of longest line in a file
+
+     makepuzz.icn  make find-the-word puzzle
+
+     memsum.icn    summarize Icon memory management
+
+     miu.icn       generate strings from the MIU system
+
+     monkeys.icn   generate random text
+
+     morse.icn     convert string to Morse code
+
+     mr.icn        read mail
+
+     mtf3.icn      map tar file
+
+     nim.icn       play the game of nim
+
+     nocr.icn      convert MS-DOS text files to UNIX
+
+     pack.icn      package multiple files
+
+     paginate.icn  insert formfeeds
+
+     parens.icn    produce random balanced strings
+
+     pargen.icn    generate context-free parser
+
+     parse.icn     parse simple statements
+
+     parsex.icn    parse arithmetic expressions
+
+
+
+
+
+
+IPD224                        - 7 -                March 23, 1993
+
+
+
+
+
+
+
+
+     patchu.icn    implement UNIX-like patch
+
+     post.icn      post news
+
+     press.icn     archive files
+
+     profile.icn   profile Icon programs
+
+     proto.icn     show Icon syntactic forms
+
+     psrsplit.icn  separate PostScript recorder output
+
+     pt.icn        produce parse table generator
+
+     puzz.icn      create word search puzzle
+
+     qt.icn        announce time in English
+
+     queens.icn    generate solutions to the n-queens problem
+
+     recgen.icn    generate context-free recognizer
+
+     reply.icn     reply to news-articles or mail
+
+     repro.icn     reproduce itself
+
+     roffcmds.icn  list roff commands and macros
+
+     rsg.icn       generate randomly selected sentences
+
+     ruler.icn     write a character ruler
+
+     scramble.icn  scramble a document
+
+     shar.icn      crate shell archive UNIX
+
+     shuffile.icn  shuffle lines in a file
+
+     sing.icn      sing ``The Twelve Days of Christmas''
+
+     snake.icn     play the snake game
+
+     solit.icn     play solitaire
+
+     sortname.icn  order by last name
+
+     stars.icn     display ``star'' field
+
+     strpsgml.icn  strip/translate SGML tags
+
+     tablc.icn     tabulate characters in a file
+
+
+
+
+
+
+IPD224                        - 8 -                March 23, 1993
+
+
+
+
+
+
+
+
+     tablw.icn     tabulate words in a file
+
+     textcnt.icn   tabulate properties of text file
+
+     trim.icn      trim lines in a file
+
+     ttt.icn       play tic-tac-toe
+
+     turing.icn    simulate a Turing machine
+
+     unique.icn    delete identical adjacent lines
+
+     unpack.icn    unpackage files
+
+     verse.icn     generate bizarre verses
+
+     vnq.icn       display solutions to n-queens problem
+
+     xtable.icn    show character code translations
+
+     yahtz.icn     play yahtzee
+
+     yescr.icn     convert UNIX files to DOS format
+
+     zipsort.icn   sort mailing labels by ZIP code
+
+7.2__Programs_-_xprogs
+
+     bitplane.icn  demonstrate bitplanes
+
+     bme.icn       edit bitmap
+
+     calib.icn     calibrate color monitor
+
+     coloralc.icn  test color allocation
+
+     colrbook.icn  show named color
+
+     colrgrid.icn  show variation of color hue
+
+     colrname.icn  browse color names
+
+     colrpick.icn  pick RGB or HSV colors
+
+     concen.icn    play solitaire game Concentration
+
+     drip.icn      demonstrate color map animation
+
+     etch.icn      distributed Etch-A-Sketch
+
+     fev.icn       display text in fisheye view
+
+
+
+
+
+
+IPD224                        - 9 -                March 23, 1993
+
+
+
+
+
+
+
+
+     flake.icn     draw a fractal snowflake
+
+     fract.icn     demonstrate fractal lines
+
+     hextile.icn   show a tiling of a bitmap
+
+     hvc.icn       pick colors for Tek HVC space
+
+     keypunch.icn  simulate a keypunch
+
+     koch.icn      demonstrate Koch curves
+
+     lsys.icn      experiment with lindenmeyer systems
+
+     pme.icn       edit pixmap
+
+     sensdemo.icn  demonstrate sensor routines
+
+     sier.icn      generalized Sierpinski's triangle
+
+     snapper.icn   display images
+
+     spiral.icn    draw polygonal spirals
+
+     spiro.icn     display spirograph lines
+
+     splat.icn     drop some paint splatters in a window
+
+     textures.icn  show various 4x4 stipple patterns
+
+     tgdemo.icn    demonstrate turtle graphics
+
+     travels.icn   animate the traveling salesman problem
+
+     trycolor.icn  investigate color specifications
+
+     tryfont.icn   demonstrate X font rankings
+
+     wheel.icn     show wheel of colors
+
+     xed.icn       edit text in a window
+
+     xevents.icn   report X-Icon events
+
+     xprompt.icn   prompt in a window
+
+     xscroll.icn   scroll image
+
+7.3__Procedures_-_procs
+
+     adjuncts.icn  gettext and idxtext support
+
+
+
+
+
+
+IPD224                       - 10 -                March 23, 1993
+
+
+
+
+
+
+
+
+     adlutils.icn  process address lists
+
+     allof.icn     conjunction control operation
+
+     ansi.icn      ANSI-based terminal control
+
+     argparse.icn  parse pseudo-command-line
+
+     array.icn     n-dimensional arrays
+
+     asciinam.icn  ASCII name of unprintable character
+
+     bincvt.icn    convert binary data
+
+     binocoef.icn  binomial coefficient
+
+     bold.icn      enbolden and underscore text
+
+     buffer.icn    buffered input and output
+
+     calendat.icn  get date from Julian Day Number
+
+     codeobj.icn   encode and decode Icon data
+
+     collate.icn   collate and decollate strings
+
+     colmize.icn   arrange data into columns
+
+     commaize.icn  add commas to real or integers
+
+     complete.icn  complete partial input string
+
+     complex.icn   perform complex arithmetic
+
+     currency.icn  format currency
+
+     date.icn      produce date
+
+     datetime.icn  date manipulation
+
+     dif.icn       check for differences
+
+     distance.icn  compute distance in n-space
+
+     dosfiles.icn  get MS-DOS file names
+
+     ebcdic.icn    convert between ASCII and EBCDIC
+
+     escape.icn    interpret Icon literal escapes
+
+     everycat.icn  generating all concatenations
+
+
+
+
+
+
+IPD224                       - 11 -                March 23, 1993
+
+
+
+
+
+
+
+
+     factorl.icn   computing factorials
+
+     fcopy.icn     copy a file
+
+     feval.icn     evaluate string as function call
+
+     filedim.icn   compute file dimensions
+
+     filename.icn  parse file names
+
+     filetext.icn  read text file into a list
+
+     findre.icn    find regular expression
+
+     full13th.icn  give days when a full moon occurs on
+
+     fullimag.icn  produce complete image of structured data
+
+     gauss.icn     compute Gaussian distributions
+
+     gcd.icn       compute greatest common denominator
+
+     gdl.icn       get directory list
+
+     gener.icn     generate miscellaneous sequences
+
+     getchlib.icn  getch for UNIX
+
+     getkeys.icn   get keys for a gettext file
+
+     getpaths.icn  generate elements in path environment variable
+
+     gettext.icn   gettext (simple text-base routines)
+
+     glabels.icn   produce graph ticks
+
+     gmean.icn     compute geometric mean
+
+     hexcvt.icn    hexadecimal conversion
+
+     hostname.icn  produce host name
+
+     huffstuf.icn  huffman coding
+
+     hyperbol.icn  hyperbolic functions
+
+     ibench.icn    support Icon benchmarking
+
+     ichartp.icn   a simple chart parser
+
+     identity.icn  produce identities for Icon types
+
+
+
+
+
+
+IPD224                       - 12 -                March 23, 1993
+
+
+
+
+
+
+
+
+     ifncs.icn     wrappers for function tracing
+
+     iftrace.icn   trace Icon function calls
+
+     image.icn     produce images of Icon values
+
+     inbits.icn    read variable-length characters
+
+     inserts.icn   build tables with duplicate keys
+
+     intstr.icn    create string from bits
+
+     iolib.icn     termlib-type tools for MS-DOS and UNIX
+
+     ipause.icn    pause within an Icon program
+
+     irandom.icn   randomize the random number generator
+
+     iscreen.icn   screen functions
+
+     isort.icn     customizable sorting
+
+     ispf.icn      communicate between Icon and ISPF
+
+     itlib.icn     termlib-type tools
+
+     itlibdos.icn  termlib-type tools (MS-DOS version)
+
+     ivalue.icn    convert string to Icon value
+
+     julian.icn    produce Julian Day Number
+
+     jumpque.icn   jump element to head of queue
+
+     largint.icn   large integer arithmetic
+
+     lastname.icn  produce last name
+
+     lcomb.icn     generate lists of combinations
+
+     list2tab.icn  write list as tab-separated string
+
+     lmap.icn      map list elements
+
+     longstr.icn   match longest string
+
+     lpermute.icn  permute elements in a list
+
+     lscan.icn     quasi scanning routines for lists
+
+     mapbit.icn    map string into bit representation
+
+
+
+
+
+
+IPD224                       - 13 -                March 23, 1993
+
+
+
+
+
+
+
+
+     matchlib.icn  lexical matching
+
+     math.icn      perform mathematical computations
+
+     matrix.icn    matrix manipulation
+
+     morse.icn     convert string to Morse code
+
+     namepfx.icn   produce prefix portion of name
+
+     ngrams.icn    generate n-grams
+
+     numbers.icn   format and convert numbers
+
+     nxtprime.icn  find the next prime
+
+     object.icn    encode and decode Icon values
+
+     options.icn   get command-line options
+
+     outbits.icn   write variable-length characters
+
+     packunpk.icn  pack and unpack decimal strings
+
+     parscond.icn  condense parse tree
+
+     patch.icn     UNIX-like patch(1)
+
+     patterns.icn  SNOBOL4-style pattern matching
+
+     patword.icn   find letter patterns
+
+     pdae.icn      programmer-defined argument evaluation
+
+     pdco.icn      programmer-defined control operations
+
+     permute.icn   permutations, combinations, and such
+
+     phoname.icn   generate letters for phone numbers
+
+     plural.icn    produce plural of English noun
+
+     pom.icn       compute phase of the moon
+
+     popen.icn     pipes
+
+     printcol.icn  format columnar data
+
+     printf.icn    printf-style formatting
+
+     prockind.icn  produce code according to kind of procedure
+
+
+
+
+
+
+IPD224                       - 14 -                March 23, 1993
+
+
+
+
+
+
+
+
+     procname.icn  produce name of procedure
+
+     progary.icn   place program in a array
+
+     radcon.icn    radix conversion
+
+     randreal.icn  select random real number in range
+
+     ranseq.icn    generate all random integers over a range
+
+     rational.icn  arithmetic on rational numbers
+
+     readline.icn  read and write lines in pieces
+
+     readtbl.icn   read user-created stripsgml table
+
+     real2int.icn  various real-to-integer conversions
+
+     rec2tab.icn   write record as tab-separated string
+
+     recog.icn     main procedure for recognition
+
+     regexp.icn    regular expression pattern matching
+
+     rewrap.icn    advanced line rewrap utility
+
+     rexx.icn      communicate between Icon and Rexx
+
+     saytime.icn   produce the time in English
+
+     scanset.icn   set up string scanning procedures
+
+     segment.icn   segment string
+
+     senten1.icn   generate sentences
+
+     sentence.icn  generate sentences in file
+
+     seqimage.icn  produce string image of Icon result sequence
+
+     shquote.icn   quote word for UNIX-like shells
+
+     shuffle.icn   shuffle values
+
+     signed.icn    put bits into signed integer
+
+     slashbal.icn  balanced scanning with backslash escaping
+
+     slshupto.icn  upto scanning with backslash escaping
+
+     snapshot.icn  show snapshot of Icon string scanning
+
+
+
+
+
+
+IPD224                       - 15 -                March 23, 1993
+
+
+
+
+
+
+
+
+     soundex.icn   produce Soundex code for name
+
+     soundex1.icn  Soundex algorithm
+
+     statemap.icn  table of states and abbreviations
+
+     strings.icn   string utilities
+
+     strip.icn     strip characters from a string
+
+     stripcom.icn  strip comments out of Icon line
+
+     stripunb.icn  strip unbalanced material
+
+     structs.icn   structure operations
+
+     tab2list.icn  insert tab-separated strings in list
+
+     tab2rec.icn   put tab-separated strings in records
+
+     tblset.icn    set-theoretic table manipulation
+
+     tblutil.icn   table manipulation
+
+     tclass.icn    classify values as atomic or composite
+
+     tempname.icn  get temporary file name
+
+     title.icn     produce title portion of name
+
+     titleset.icn  produce set of titles
+
+     tuple.icn     process n-tuples
+
+     twt.icn       create two-way table
+
+     typecode.icn  produce letter code for Icon type
+
+     unsigned.icn  put bits unsigned integer
+
+     usage.icn     service functions
+
+     varsub.icn    perform UNIX-shell-style variable substitution
+
+     version.icn   produce Icon version number
+
+     wildcard.icn  UNIX-like wild-card pattern matching
+
+     wrap.icn      wrap output lines
+
+     ximage.icn    produce string image of data
+
+
+
+
+
+
+IPD224                       - 16 -                March 23, 1993
+
+
+
+
+
+
+
+
+     xrotate.icn   rotate values in list or record
+
+7.4__Procedures_-_xprocs
+
+     autopost.icn  activate PostScript recorder
+
+     barchart.icn  dynamically growing barchart
+
+     button.icn    pushbutton sensors
+
+     cardbits.icn  construct playing card bitmaps
+
+     clip.icn      clipboard operations
+
+     control.icn   controls for windows
+
+     decay.icn     decaying-displays for windows
+
+     drawcard.icn  draw a playing card
+
+     evmux.icn     window event multiplexor
+
+     evqueue.icn   queued X events
+
+     glib.icn      graphics
+
+     imagedim.icn  getting X image dimensions
+
+     lsystem.icn   Lindenmeyer systems support
+
+     optwindw.icn  open window with standard options
+
+     overlay.icn   overlay an image in a window
+
+     psrecord.icn  make PostScript record of window
+
+     slider.icn    slider sensors for use with windows
+
+     stipplib.icn  stippling
+
+     strpchrt.icn  dynamic stripchart for windows
+
+     tcolors.icn   create a table of window bindings
+
+     textedit.icn  window-oriented text editing
+
+     turtle.icn    turtle-graphics interface
+
+     vbuttons.icn  buttons
+
+     vcoupler.icn  coupler variables
+
+
+
+
+
+
+IPD224                       - 17 -                March 23, 1993
+
+
+
+
+
+
+
+
+     vdialog.icn   dialog boxes
+
+     vframe.icn    pane frame vidgets
+
+     vgrid.icn     vidget grids
+
+     vidgets.icn   vidgets
+
+     viface.icn    interfacing
+
+     vmenu.icn     vidget menus
+
+     vpane.icn     vidget panes
+
+     vradio.icn    radio buttons
+
+     vscroll.icn   scrollbars
+
+     vslider.icn   sliders
+
+     vstd.icn      standard lookups
+
+     vstyle.icn    drawing buttons
+
+     vtext.icn     textual vidgets
+
+     vtools.icn    vidget tools
+
+     wipe.icn      wipe window area
+
+     xbfont.icn    X font selection
+
+     xcompat.icn   obsolete X-Icon functions
+
+     xcontrst.icn  find a contrasting color
+
+     xkeysyms.icn  produce X key symbols
+
+     xplane.icn    bitplane manipulation
+
+     xputpixl.icn  write quantized, processed pixel
+
+     xshade.icn    set window color
+
+     xutils.icn    X-Icon utilities
+
+7.5__Data_-_data
+
+     a2n.csg       data for csg.icn
+
+     abc.csg       data for csg.icn
+
+
+
+
+
+
+IPD224                       - 18 -                March 23, 1993
+
+
+
+
+
+
+
+
+     abcd.csg      data for csg.icn
+
+     add.lbl       sample address labels
+
+     an2.csg       data for csg.icn
+
+     bb3.tur       data for turing.icn
+
+     cc.tur        data for turing.icn
+
+     chart.gmr     data for ichartp.icn
+
+     cm.tur        data for turing.icn
+
+     colors.rsg    data for rsg.icn
+
+     conman.sav    data base for conman.icn
+
+     darwin.txt    plain text
+
+     dickens.txt   plain text
+
+     dylan.txt     plain text
+
+     egg.krs       data for kross.icn
+
+     exp.rsg       data for rsg.icn
+
+     farber.sen    Farberisms
+
+     gilbert.txt   plain text
+
+     gmr1.lin      data for linden.icn
+
+     gmr2.lin      data for linden.icn
+
+     gmr3.lin      data for linden.icn
+
+     gmr4.lin      data for linden.icn
+
+     header        program library header skeleton
+
+     hebcalen.dat  data for hebcalen.icn
+
+     icon.wrd      words containing the substring ``icon''
+
+     iconproj.lbl  address labels for the Icon Project
+
+     ihelp.dat     data for ihelp.icn
+
+     joyce1.txt    plain text
+
+
+
+
+
+
+IPD224                       - 19 -                March 23, 1993
+
+
+
+
+
+
+
+
+     joyce2.txt    plain text
+
+     joyce3.txt    plain text
+
+     noci.wrd      words containing the substring ``noci''
+
+     ones.tur      data for turing.icn
+
+     palin.sen     palindromic sentences
+
+     poe.txt       plain text
+
+     poem.rsg      data for rsg.icn
+
+     pt1.gmr       data for pt.icn
+
+     pt2.gmr       data for pt.icn
+
+     pt3.gmr       data for pt.icn
+
+     pt4.gmr       data for pt.icn
+
+     pt5.gmr       data for pt.icn
+
+     pt6.gmr       data for pt.icn
+
+     red.lin       data for linden.icn
+
+     sen.rsg       data for rsg.icn
+
+     spencer.txt   plain text
+
+     termcap.dos   MS-DOS termcap data
+
+     termcap2.dos  alternative MS-DOS termcap data
+
+     verse.dat     vocabulary file for verse.icn
+
+     z1.lin        data for linden.icn
+
+     z2.lin        data for linden.icn
+
+     z3.lin        data for linden.icn
+
+     z4.lin        data for linden.icn
+
+7.6__Data_-_xdata
+
+   There is no data specific to X-Icon yet.
+
+7.7__Documentation_-_docs
+
+
+
+
+
+
+IPD224                       - 20 -                March 23, 1993
+
+
+
+
+
+
+
+
+     address.doc   documentation for address procedures
+
+     hebcalen.hlp  documentation for hebcalen.icn
+
+     hebcalpi.hlp  documentation for hebcalpi.icn
+
+     iconmake.doc  Make skeleton for Icon
+
+     ipp.doc       supplementary documentation for ipp.icn
+
+     mr.man        manual page for mr.icn
+
+     post.1        manual page source for post.icn
+
+     procs.kwc     keyword-in-context listing for procs
+
+     progs.kwc     keyword-in-context listing for progs
+
+     pt.man        manual page for pt.icn
+
+7.8__Documentation_-_xdocs
+
+     vidget.ps     PostScript documentation for X-Icon toolkit
+
+     xib.ps        PostScript documentation for X-Icon interface
+                   interface builder
+
+     xprocs.kwc    keyword-in-context listing for xprocs
+
+     xprogs.kwc    keyword-in-context listing for xprogs
+
+7.9__Packages_-_Icon
+
+     debug         Icon debugger
+
+     idol          Idol; object-oriented Icon written in Icon
+
+7.10__Packages_-_X-Icon
+
+     xib           X-Icon interface builder
+
+
+8.__Contributions_to_the_Icon_Program_Library
+
+   New material for the Icon program library always is welcome.
+It must be prepared in the style exemplified by the material in
+this release. Adequate documentation is essential; it must be in
+the format used for present library - we do not have the
+resources to rewrite or reformat contributed documentation. Test
+data also must be provided - at least enough so that we can
+determine that the contributed program material is basically
+functional. In cases where test data is impractical because of
+the nature of the contribution, instructions for testing must be
+provided.
+
+
+
+IPD224                       - 21 -                March 23, 1993
+
+
+
+
+
+
+
+
+   Program material can be submitted by electronic mail at one of
+the addresses given in the next section or on Macintosh or MS-DOS
+disks.  Printed listings are not acceptable.
+
+   Contributions to the Icon program library must be free of any
+restrictions and may not carry copyright notices, even if accom-
+panied by permission for unlimited copying.
+
+   The decision to include contributed material in the Icon pro-
+gram library rests entirely with the Icon Project.  The Icon Pro-
+ject reserves the right to modify submissions to conform to
+library standards, to correct errors, and to make improvements.
+Contributors will be consulted in the case of substantial
+changes.
+
+
+9.__Feedback
+
+
+   If you encounter problems with material in the Icon program
+library, please let us know.  If you can provide corrections or
+improvements to library material, please send them by electronic
+mail or on a diskette.
+
+   We can be reached as follows:
+
+        Icon Project
+        Department of Computer Science
+        Gould-Simpson Building
+        The University of Arizona
+        Tucson, AZ   85721
+        U.S.A.
+        (602) 621-8448 (voice)
+        (602) 621-4246 (fax)
+        icon-project@cs.arizona.edu     (Internet)
+        ... uunet!arizona!icon-project     (uucp)
+
+
+Acknowledgements
+
+   Dozens of persons have contributed material to this release of
+the Icon program library. See the program material itself for
+authorship information.
+
+References
+
+
+1.   R. E. Griswold and M. T. Griswold, The Icon Programming
+     Language, Prentice-Hall, Inc., Englewood Cliffs, NJ, second
+     edition, 1990.
+
+2.   R. E. Griswold, C. L. Jeffery and G. M. Townsend, Version
+     8.10 of the Icon Programming Language, The Univ. of Arizona
+     Icon Project Document IPD212, 1993.
+
+
+
+IPD224                       - 22 -                March 23, 1993
+
+
+
+
+
+
+
+
+3.   C. L. Jeffery and G. M. Townsend, X-Icon: An Icon Windows
+     Interface; Version 8.10, The Univ. of Arizona Tech. Rep.
+     93-9, 1993.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+IPD224                       - 23 -                March 23, 1993
+
+

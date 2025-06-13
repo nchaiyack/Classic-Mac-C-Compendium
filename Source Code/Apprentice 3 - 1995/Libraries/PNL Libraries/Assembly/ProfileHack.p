@@ -1,1 +1,9 @@
-unit ProfileHack;interface	procedure SetProfileProcs (pbegin, pexit: ProcPtr);implementationend.
+unit ProfileHack;
+
+interface
+
+	procedure SetProfileProcs (pbegin, pexit: ProcPtr);
+
+implementation
+
+end.

@@ -1,1 +1,23 @@
-Special Keys for PlayerPROTools window+: next pattern-: previous patternESC: stopsTab: playsPiano windowKeys defined in the Piano PreferencesDigital Editor windowApple Key + click: plays the current selectionOption Key + drag: drags and copies the selectionArrow left: selects left cellArrow right: selects right cellArrow up: selects up cellArrow down: selects down cellReturn: next lineClassical Editor windowApple Key + click: plays the current instrument at the current pitch (where you are clicking)Shift Key + click: deletes the current note or the current selectionOption Key + drag: drags and copies the selection
+Special Keys for PlayerPRO
+Tools window
++: next pattern
+-: previous pattern
+ESC: stops
+Tab: plays
+
+Piano window
+Keys defined in the Piano Preferences
+
+Digital Editor window
+Apple Key + click: plays the current selection
+Option Key + drag: drags and copies the selection
+Arrow left: selects left cell
+Arrow right: selects right cell
+Arrow up: selects up cell
+Arrow down: selects down cell
+Return: next line
+
+Classical Editor window
+Apple Key + click: plays the current instrument at the current pitch (where you are clicking)
+Shift Key + click: deletes the current note or the current selection
+Option Key + drag: drags and copies the selection

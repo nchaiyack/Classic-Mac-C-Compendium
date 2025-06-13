@@ -1,1 +1,2 @@
-void SpeakIt( char *, short );void CheckSpeechMgr(void);
+void SpeakIt( char *, short );
+void CheckSpeechMgr(void);

@@ -1,1 +1,25 @@
-This archive contains the complete THINK C 5.0.x source code foruupc 3.1.  Project files and archives are included.  Documentationand configuration files are _not_ included... you'll need to pickup those files from the uupc 3.1 binaries archive.Much of the C source code in this program is plug-ugly.  It startedout life as a Unix-style program, was ported to the Mac, hasbeen fiddled with by at least four and perhaps half-a-dozendifferent authors during its lifetime, and the seams show.  Much ofit badly needs to be redesigned and rewritten... it's more than atrifle brittle in places.  Don't say I didn't warn you!If you come up with any source modifications, patches, changes,ideas, etc., I'd certainly like to hear about them, although (as Isaid in the README) I don't promise to fix or change anything save bymy own whims.I may do some further work on uupc in the post-3.1 era... but then again, I may not.  Other projects beckon.  But then, that's what I said back in '92 when I released uupc 3.0, and look at it now...                            Dave Platt							dplatt@snulbug.mtview.ca.us							9/7/94
+This archive contains the complete THINK C 5.0.x source code for
+uupc 3.1.  Project files and archives are included.  Documentation
+and configuration files are _not_ included... you'll need to pick
+up those files from the uupc 3.1 binaries archive.
+
+Much of the C source code in this program is plug-ugly.  It started
+out life as a Unix-style program, was ported to the Mac, has
+been fiddled with by at least four and perhaps half-a-dozen
+different authors during its lifetime, and the seams show.  Much of
+it badly needs to be redesigned and rewritten... it's more than a
+trifle brittle in places.  Don't say I didn't warn you!
+
+If you come up with any source modifications, patches, changes,
+ideas, etc., I'd certainly like to hear about them, although (as I
+said in the README) I don't promise to fix or change anything save by
+my own whims.
+
+I may do some further work on uupc in the post-3.1 era... but then again, 
+I may not.  Other projects beckon.  But then, that's what I said back in 
+'92 when I released uupc 3.0, and look at it now...
+
+                            Dave Platt
+							dplatt@snulbug.mtview.ca.us
+							9/7/94
+

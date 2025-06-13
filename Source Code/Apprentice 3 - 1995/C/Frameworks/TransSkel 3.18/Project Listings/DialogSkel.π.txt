@@ -1,1 +1,12 @@
-DialogSkel.¹2 segments3 filesSegment 21 files:DialogSkel.cSegment 32 files:MacTrapsTransSkel
+DialogSkel.¹
+2 segments
+3 files
+
+Segment 2
+1 files:
+DialogSkel.c
+
+Segment 3
+2 files:
+MacTraps
+TransSkel

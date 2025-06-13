@@ -1,1 +1,74 @@
-unit WEDemoPictures;{ WASTE DEMO PROJECT: }{ Object Handlers for embedded pictures }{ Copyright © 1993-1995 Marco Piovanelli }{ All Rights Reserved }interface	uses		WEDemoIntf;	function HandleNewPicture (var defaultObjectSize: Point;									objectRef: WEObjectReference): OSErr;	function HandleDisposePicture (objectRef: WEObjectReference): OSErr;	function HandleDrawPicture ({const} var destRect: Rect;									objectRef: WEObjectReference): OSErr;implementation	function HandleNewPicture (var defaultObjectSize: Point;									objectRef: WEObjectReference): OSErr;		var			thePicture: PicHandle;			frame: Rect;	begin{ get handle to object data (in this case, a picture handle) }		thePicture := PicHandle(WEGetObjectDataHandle(objectRef));{ figure out the default object size by looking at the picFrame record }		frame := thePicture^^.picFrame;		OffsetRect(frame, -frame.left, -frame.top);		defaultObjectSize := frame.botRight;{ return error code }		HandleNewPicture := noErr;	end;  { HandleNewPicture }	function HandleDisposePicture (objectRef: WEObjectReference): OSErr;		var			thePicture: PicHandle;	begin{ get handle to object data (in this case, a picture handle) }		thePicture := PicHandle(WEGetObjectDataHandle(objectRef));{ kill the picture }		KillPicture(thePicture);{ return error code }		HandleDisposePicture := MemError;	end;  { HandleDisposePicture }	function HandleDrawPicture ({const} var destRect: Rect;									objectRef: WEObjectReference): OSErr;		var			thePicture: PicHandle;	begin{ get handle to object data (in this case, a picture handle) }		thePicture := PicHandle(WEGetObjectDataHandle(objectRef));{ draw the picture }		DrawPicture(thePicture, destRect);{ return error code }		HandleDrawPicture := noErr;	end;  { HandleDrawPicture }end.
+unit WEDemoPictures;
+
+{ WASTE DEMO PROJECT: }
+{ Object Handlers for embedded pictures }
+
+{ Copyright © 1993-1995 Marco Piovanelli }
+{ All Rights Reserved }
+
+interface
+	uses
+		WEDemoIntf;
+
+	function HandleNewPicture (var defaultObjectSize: Point;
+									objectRef: WEObjectReference): OSErr;
+	function HandleDisposePicture (objectRef: WEObjectReference): OSErr;
+	function HandleDrawPicture ({const} var destRect: Rect;
+									objectRef: WEObjectReference): OSErr;
+
+implementation
+
+	function HandleNewPicture (var defaultObjectSize: Point;
+									objectRef: WEObjectReference): OSErr;
+		var
+			thePicture: PicHandle;
+			frame: Rect;
+	begin
+
+{ get handle to object data (in this case, a picture handle) }
+		thePicture := PicHandle(WEGetObjectDataHandle(objectRef));
+
+{ figure out the default object size by looking at the picFrame record }
+		frame := thePicture^^.picFrame;
+		OffsetRect(frame, -frame.left, -frame.top);
+		defaultObjectSize := frame.botRight;
+
+{ return error code }
+		HandleNewPicture := noErr;
+
+	end;  { HandleNewPicture }
+
+	function HandleDisposePicture (objectRef: WEObjectReference): OSErr;
+		var
+			thePicture: PicHandle;
+	begin
+
+{ get handle to object data (in this case, a picture handle) }
+		thePicture := PicHandle(WEGetObjectDataHandle(objectRef));
+
+{ kill the picture }
+		KillPicture(thePicture);
+
+{ return error code }
+		HandleDisposePicture := MemError;
+
+	end;  { HandleDisposePicture }
+
+	function HandleDrawPicture ({const} var destRect: Rect;
+									objectRef: WEObjectReference): OSErr;
+		var
+			thePicture: PicHandle;
+	begin
+
+{ get handle to object data (in this case, a picture handle) }
+		thePicture := PicHandle(WEGetObjectDataHandle(objectRef));
+
+{ draw the picture }
+		DrawPicture(thePicture, destRect);
+
+{ return error code }
+		HandleDrawPicture := noErr;
+
+	end;  { HandleDrawPicture }
+
+end.

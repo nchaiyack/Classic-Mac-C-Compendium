@@ -1,1 +1,44 @@
-/********************************************************************************************	General Symantec C++ template class (generic class) info. for newcomers......		To use a template class, first declare it in standard C++ syntax (usually in a header file)	and write the routines in a separate file (usually with the cpp or cp extension at the end of	the file's name)			examples					(saved in "myHeader.h")			template <myVariableObject> class myTemplateClass {				myVariableObject	theObject;			public:				void	SetValue(myVariableObject thisObject);			};							(saved in "myCode.cp")						#include "myHeader.h"			template <myVariableObject> void myTemplateClass<myVariableObject>::SetValue(myVariableObject thisObject)			{				theObject=thisObject;			}						where myVariableObject represents the type of variable you'll within the class;			remember that you can define several variables to be used by the template class -			for example, template <myVarOb1, myVarOb2, etc>				Now, to create a specific instance of this template class, in a new file, have the following:			include "myCode.cp"		// other includes here, as necessary				#pragma template_access public		#pragma template myTemplateClass<short>			Save this file with a "cp" extension, as it will be compiled, and include it with your project.	You _don't need to include the original "myCope.cp" file because it will be loaded with the	creation of the actual class from the template class		********************************************************************************************/
+/********************************************************************************************
+
+
+	General Symantec C++ template class (generic class) info. for newcomers......
+	
+	To use a template class, first declare it in standard C++ syntax (usually in a header file)
+	and write the routines in a separate file (usually with the cpp or cp extension at the end of
+	the file's name)
+	
+		examples
+		
+			(saved in "myHeader.h")
+			template <myVariableObject> class myTemplateClass {
+				myVariableObject	theObject;
+			public:
+				void	SetValue(myVariableObject thisObject);
+			};
+		
+		
+			(saved in "myCode.cp")
+			
+			#include "myHeader.h"
+			template <myVariableObject> void myTemplateClass<myVariableObject>::SetValue(myVariableObject thisObject)
+			{
+				theObject=thisObject;
+			}
+			
+			where myVariableObject represents the type of variable you'll within the class;
+			remember that you can define several variables to be used by the template class -
+			for example, template <myVarOb1, myVarOb2, etc>
+			
+	Now, to create a specific instance of this template class, in a new file, have the following:
+	
+		include "myCode.cp"
+		// other includes here, as necessary
+		
+		#pragma template_access public
+		#pragma template myTemplateClass<short>
+		
+	Save this file with a "cp" extension, as it will be compiled, and include it with your project.
+	You _don't need to include the original "myCope.cp" file because it will be loaded with the
+	creation of the actual class from the template class
+		
+********************************************************************************************/

@@ -1,1 +1,553 @@
-unit PixelUtils;{Written by Scott Lindhurst, lindhurs@math.wisc.edu, in the Fall of 1993, revised Nov. 1994.}interface	uses		GraphicsModuleTypes;	type		PixelRec = record				sortValue: longint;				memoryValue: longint;	{private to Get and SetPixel; the value to put directly in memory.}			end;	var{Pixel numbering starts with number 1 in the upper left corner, down to ScreenPixels}{in the lower right corner. Only the main screen is considered.}		ScreenPixels: longint;		ScreenDepth: integer;		gHas32BitQD: boolean;	procedure InitPixelUtils (drawRect: Rect;									depth: integer;									colorQDAvail: boolean;									useDirectPixels: integer);	procedure EraseOutsideDrawArea (blankRgn: rgnHandle;									params: GMParamBlockPtr);	procedure LockForDrawing;	procedure UnlockForDrawing;	procedure RandomFillScreen;{Randomly fill the screen. Assumes that LockForDrawing has been called.}	function MyGetPixel (pixelNum: longint): PixelRec;{Get the value of the pixelNum pixel on the screen.}	procedure MySetPixel (pixelNum: longint;									pixelValue: pixelRec);{Set the pixel at pixelNum to value.}	procedure SwapPixels (first, second: longint);{Swap the pixels in positions first and second}	procedure SortPair (first, second: longint);{Sort the pair of pixels at positions first and second so the pixel at first is less.}	procedure SortThree (first, second, third: longint);{Sort the three pixels at first, second, and third, with first being the least.}implementation	uses		QDOffscreen, Picker;	type		SixBytes = packed array[1..6] of Byte;	{Used in converting RGBColor to a longint}		FourBytes = packed array[1..4] of Byte;		BitMapPtr = ^BitMap;		bytePtr = ^signedByte;		wordPtr = ^integer;		longPtr = ^longint;{Method for drawing pixels: Direct to screen in old QD, color QD, 32 Bit QD, or using QD calls.}		pixMethodType = (DirectMono, DirectColor, Direct32Bit, ColorQuickDraw, MonoQuickDraw);	var		ScreenWidth, ScreenHeight, ScreenLeft, ScreenTop: integer;	{Set by Initialize procedure.}		PixMethod: pixMethodType;		drawBitMap: BitMap;		{The bitmap to draw directly into, if no color QD}		drawPixMap: PixMapHandle;	{The PixMap to draw directly into, if color QD}		pmBaseAddr: longint;	{Base address of the currently used pixMap for direct drawing}		swapMode: boolean;	{Below are set up by Lock/Unlock forDrawing}		mode: signedByte;		{and generally used by Get/SetColorPixel}		pixState: GWorldFlags;		rowBytes: longint;		pixelDepth: integer;	procedure InitPixelUtils (drawRect: Rect;									depth: integer;									colorQDAvail: boolean;									useDirectPixels: integer);{Set ScreenWidth, Height, Pixels, depth, left, and top corner.}{Draws directly to screen if useDirectPixels is 1.}		var			GestaltResult: longint;			Has32Bit: boolean;			myPort: GrafPtr;	begin		ScreenLeft := drawRect.left;		ScreenTop := drawRect.top;		ScreenWidth := drawRect.right - ScreenLeft;		ScreenHeight := drawRect.bottom - ScreenTop;		ScreenPixels := longint(ScreenWidth) * ScreenHeight;		ScreenDepth := depth;		GetPort(myPort);		if (Gestalt(gestaltQuickDrawVersion, GestaltResult) = noErr) & (GestaltResult >= gestalt32BitQD) then			Has32Bit := true		else			Has32Bit := false;		if colorQDAvail then			begin				drawPixMap := CGrafPtr(myPort)^.portPixMap;				if useDirectPixels = 0 then	{Don’t draw directly}					pixMethod := ColorQuickDraw				else	{Direct drawing}					begin						ScreenTop := ScreenTop - drawPixMap^^.bounds.top;	{direct: we need global coords}						ScreenLeft := ScreenLeft - drawPixMap^^.bounds.left;						if Has32Bit then							pixMethod := Direct32Bit	{Direct to screen under 32Bit QD}						else							pixMethod := DirectColor;	{Direct to screen drawing on colorQD, no 32Bit QD}					end			end		else	{only Monochrome QuickDraw}			begin				drawBitMap := myPort^.portBits;				if useDirectPixels = 1 then					begin						ScreenTop := ScreenTop - drawBitMap.bounds.top;						ScreenLeft := ScreenLeft - drawBitMap.bounds.left;						pixMethod := DirectMono;		{Direct to screen drawing on a non-colorQD machine}					end				else					pixMethod := MonoQuickDraw;			end;	end;	{procedure InitPixelUtils}	procedure EraseOutsideDrawArea (blankRgn: rgnHandle;									params: GMParamBlockPtr);{Erase stuff in the blankRgn, but outside the area to draw in.}{The drawing area must have been set up by InitPixelUtils previously.}		var			drawRgn: rgnHandle;			drawRect: Rect;	begin		SetRect(drawRect, ScreenLeft, ScreenTop, ScreenLeft + ScreenWidth, ScreenTop + ScreenHeight);		if not (pixMethod in [ColorQuickDraw, MonoQuickDraw]) then			offsetRect(drawRect, -ScreenLeft, -ScreenTop);		drawRgn := NewRgn;		RectRgn(drawRgn, drawRect);		DiffRgn(blankRgn, drawRgn, drawRgn);		FillRgn(drawRgn, params^.qdGlobalsCopy^.qdBlack);		DisposeRgn(drawRgn);	end;	{procedure EraseOutsideDrawArea}	procedure LockForDrawing;{Call this just before drawing. Then draw using only MyGetPixel and MySetPixel;}{don’t call other drawing routines. Call UnlockForDrawing before exiting.}{It will draw to the bit or pixMap that was selected by the initialize procedure.}		var			ignore: boolean;	begin		case pixMethod of			DirectColor, Direct32Bit: 				begin					rowBytes := BitAnd(drawPixMap^^.rowBytes, $1FFF);	{Strip flags}					pixelDepth := drawPixMap^^.pixelSize;					if pixMethod = Direct32Bit then						begin							mode := true32b;							swapMode := PixMap32Bit(drawPixMap);							pixState := GetPixelsState(drawPixMap);							ignore := LockPixels(drawPixMap);							pmBaseAddr := longint(GetPixBaseAddr(drawPixMap));							if swapMode then								SwapMMUMode(mode);						end;				end;	{DirectColor or Direct32Bit}			otherwise				;		end;	{case pixMethod of}	end;	{procedure LockForDrawing}	procedure UnlockForDrawing;	begin		if pixMethod = Direct32Bit then			begin				if swapMode then					SwapMMUMode(mode);				SetPixelsState(drawPixMap, pixState);			end;	end;	{procedure UnlockForDrawing}	procedure SetBWPixel (x, y: integer;									value: longint;									var theBitMap: BitMap);{Set a pixel on a monochrome, non-colorQD display.}		var			mask, shiftBits: integer;			thePixel: longint;	begin		thePixel := longint(theBitMap.baseAddr);		thePixel := thePixel + (theBitMap.rowBytes * longint(y)) + (x div 8);		shiftBits := 7 - (x mod 8);		mask := BSL(1, shiftBits);{$R-}		bytePtr(thePixel)^ := BitAnd(bytePtr(thePixel)^, BitNot(mask));		bytePtr(thePixel)^ := BitOr(bytePtr(thePixel)^, BSL(value, shiftBits));{$R+}	end;	{procedure SetBWPixel}	function GetBWPixel (x, y: integer;									var theBitMap: BitMap): longint;{Get a pixel on a monochrome, non-colorQD display.}		var			mask, shiftBits: integer;			thePixel: longint;	begin		thePixel := longint(theBitMap.baseAddr);		thePixel := thePixel + (theBitMap.rowBytes * longint(y)) + BSR(x, 3);	{that’s x div 8}		shiftBits := 7 - BitAnd(x, $7);	{that’s x mod 8}		mask := BSL(1, shiftBits);		if BitAnd(bytePtr(thePixel)^, mask) <> 0 then			GetBWPixel := 1		else			GetBWPixel := 0;	end;	{function GetBWPixel}	procedure SetColorPixel (x, y: integer;									value: longint);{Set a pixel on a color display.}		var			mask, shiftBits: integer;			thePixel: longint;	begin		thePixel := pmBaseAddr;		case pixelDepth of			1, 2, 4: 				begin					thePixel := thePixel + (rowBytes * longint(y)) + BSR(pixelDepth * x, 3);{BSR is div 8}					shiftBits := (8 - pixelDepth) - BitAnd(x * pixelDepth, $7);	{BitAnd instead of mod 8}					mask := BSL(BSL(1, pixelDepth) - 1, shiftBits);					bytePtr(thePixel)^ := BitAnd(bytePtr(thePixel)^, BitNot(mask));					bytePtr(thePixel)^ := BitOr(bytePtr(thePixel)^, BSL(value, shiftBits));				end;			8: 				begin					thePixel := thePixel + (rowBytes * longint(y) + x);					bytePtr(thePixel)^ := value;				end;			16: 				begin					thePixel := thePixel + (rowBytes * longint(y)) + (2 * x);					wordPtr(thePixel)^ := value;				end;			32: 				begin					thePixel := thePixel + (rowBytes * longint(y)) + (4 * x);					longPtr(thePixel)^ := value;				end;		end;	{case depth of}	end;	{procedure SetPixel}	function GetColorPixel (x, y: integer): longint;{Get a pixel from a color display. Returns the actual value in memory, not an RGBcolor.}		var			mask, shiftBits: integer;			thePixel: longint;	begin		thePixel := pmBaseAddr;		case pixelDepth of			1, 2, 4: 				begin					thePixel := thePixel + (rowBytes * longint(y)) + BSR(pixelDepth * x, 3);{BSR is div 8}					shiftBits := (8 - pixelDepth) - BitAnd(x * pixelDepth, $7);	{BitAnd instead of mod 8}					mask := BSL(BSL(1, pixelDepth) - 1, shiftBits);					GetColorPixel := BSR(BitAnd(bytePtr(thePixel)^, mask), shiftBits);				end;			8: 				begin					thePixel := thePixel + (rowBytes * longint(y) + x);					GetColorPixel := bytePtr(thePixel)^;				end;			16: 				begin					thePixel := thePixel + (rowBytes * longint(y)) + (2 * x);					GetColorPixel := wordPtr(thePixel)^;				end;			32: 				begin					thePixel := thePixel + (rowBytes * longint(y)) + (4 * x);					GetColorPixel := longPtr(thePixel)^;				end;		end;	{case depth of}	end;	{function GetColorPixel}	function MyGetPixel (pixelNum: longint): PixelRec;{Get the value of the pixelNum pixel on the screen.}		var			x, y: integer;			memValue: longint;			cPix: RGBColor;			HSLPix: HSLColor;	begin		pixelNum := pixelNum - 1;		y := ScreenTop + (pixelNum div ScreenWidth);		x := ScreenLeft + (pixelNum mod ScreenWidth);		case pixMethod of			DirectMono: 				MyGetPixel.sortValue := GetBWPixel(x, y, drawBitMap);		{In BW the memoryValue is unused.}			MonoQuickDraw: 				if GetPixel(x, y) then					MyGetPixel.sortValue := 1				else					MyGetPixel.sortValue := 0;			DirectColor, Direct32Bit, ColorQuickDraw: 				begin					if pixMethod = ColorQuickDraw then						begin							GetCPixel(x, y, cPix);							FourBytes(memValue)[2] := SixBytes(cPix)[1];	{Red}							FourBytes(memValue)[3] := SixBytes(cPix)[3];	{Green}							FourBytes(memValue)[4] := SixBytes(cPix)[5];	{Blue}						end					else						begin	{Direct pixel access}							memValue := GetColorPixel(x, y);							case ScreenDepth of								1, 2, 4, 8: 									Index2Color(memValue, cPix);								16: {$R-}									begin	{memValue is 0rrr rrgg gggb bbbb bitwise}										cPix.red := BSL(BitAnd(memValue, $7C00), 1);										cPix.green := BSL(BitAnd(memValue, $03E0), 6);										cPix.blue := BSL(BitAnd(memValue, $001F), 11);									end;{$R+}								32: 	{MemValue is 00rr ggbb, four bytes}									begin										cPix.red := FourBytes(memValue)[2];										cPix.green := FourBytes(memValue)[3];										cPix.blue := FourBytes(memValue)[4];									end;							end;	{case ScreenDepth}						end;	{Direct pixel access}{Figure out the HSL version of the pixel and use that to get the sortValue}					RGB2HSL(cPix, HSLPix);		{Convert to HSL}					MyGetPixel.memoryValue := memValue;					FourBytes(MyGetPixel.sortValue)[2] := SixBytes(HSLPix)[1];	{Hue}					FourBytes(MyGetPixel.sortValue)[3] := SixBytes(HSLPix)[5];	{Saturation}					FourBytes(MyGetPixel.sortValue)[4] := SixBytes(HSLPix)[3];	{Lightness}				end;	{pixMethod one of the color ones}		end;	{case pixMethod}	end;	{procedure MyGetPixel}	procedure SwapPixels (first, second: longint);{Swap the pixels in positions first and second}		var			value1, value2: pixelRec;	begin		value1 := MyGetPixel(first);		value2 := MyGetPixel(second);		MySetPixel(first, value2);		MySetPixel(second, value1);	end;	{procedure SwapPixels}	procedure SortPair (first, second: longint);{Sort the pair of pixels at positions first and second so the pixel at first is less.}		var			value1, value2: pixelRec;	begin		value1 := MyGetPixel(first);		value2 := MyGetPixel(second);		if value1.sortValue > value2.sortValue then			begin	{swap them}				MySetPixel(first, value2);				MySetPixel(second, value1);			end;	end;	{procedure SortPair}	procedure SortThree (first, second, third: longint);{Sort the three pixels at first, second, and third, with first being the least.}		var			firstPixel, secondPixel, thirdPixel, tempPixel: pixelRec;	begin		firstPixel := MyGetPixel(first);		secondPixel := MyGetPixel(second);		thirdPixel := MyGetPixel(third);		if firstPixel.sortValue > secondPixel.sortValue then			begin				tempPixel := firstPixel;				firstPixel := secondPixel;				secondPixel := tempPixel;			end;{now first < second; third is unknown. That leaves 3 possible orderings: 123, 132, 312.}		if secondPixel.sortValue < thirdPixel.sortValue then			begin	{know order is 123}				MySetPixel(first, firstPixel);				MySetPixel(second, secondPixel);			end	{And the third is already correct.}		else	{order is 132 or 312}			if firstPixel.sortValue < thirdPixel.sortValue then				begin	{132}					MySetPixel(first, firstPixel);					MySetPixel(second, thirdPixel);					MySetPixel(third, secondPixel);				end	{132 order}			else	{order is 312}				begin					MySetPixel(first, thirdPixel);					MySetPixel(second, firstPixel);					MySetPixel(third, secondPixel);				end;	{312 order}	end;	{procedure SortThree}	procedure MySetPixel (pixelNum: longint;									pixelValue: pixelRec);{Set the pixel at pixelNum to value.}		var			x, y: integer;			cPix: RGBColor;	begin		pixelNum := pixelNum - 1;		y := ScreenTop + (pixelNum div ScreenWidth);		x := ScreenLeft + (pixelNum mod ScreenWidth);		case pixMethod of			DirectMono: 				SetBWPixel(x, y, pixelValue.sortValue, drawBitMap);		{In BW the memoryValue is unused.}			MonoQuickDraw: 				begin					if PixelValue.sortValue = 1 then						PenMode(patCopy)					else						PenMode(notPatCopy);					MoveTo(x, y);					Line(0, 0);				end;			DirectColor, Direct32Bit: 				SetColorPixel(x, y, pixelValue.memoryValue);			ColorQuickDraw: 				begin					SixBytes(cPix)[1] := FourBytes(pixelValue.memoryValue)[2];	{Red}					SixBytes(cPix)[3] := FourBytes(pixelValue.memoryValue)[3];	{Green}					SixBytes(cPix)[5] := FourBytes(pixelValue.memoryValue)[4];	{Blue}					SetCPixel(x, y, cPix);{•     RGBForeColor(cPix);•}{•     MoveTo(x, y);•}{•     Line(0, 0);			{Faster than SetCPixel, I think. I timed it but forgot.•]}				end;		end;	{case}	end;	{procedure MySetPixel}	procedure RandomBWFill (drawBitMap: BitMap);{Fill the screen (assumed to be monochrome) randomly.}		var			i: integer;			b: bitMap;			destRect: Rect;			WordNum: integer;			pt: wordPtr;	begin		b.baseAddr := NewPtr(256);		b.rowBytes := 256;		SetRect(b.bounds, 0, 0, ScreenWidth, 1);		for i := 0 to ScreenHeight do			begin				SetRect(destRect, 0, i, ScreenWidth, i + 1);				for WordNum := 0 to 32 do					begin						pt := WordPtr(ord4(b.baseAddr) + 2 * WordNum);						pt^ := random;					end;				CopyBits(b, drawBitMap, b.bounds, destRect, srcCopy, nil);			end;		DisposPtr(b.baseAddr);	end;	{procedure RandomBWFill}	procedure RandomColorFill (drawPixMap: pixMapHandle);{Fill the screen randomly (assuming color Quickdraw)}		var			myPMap: PixMapHandle;			rBytes, rWords, ignore, i, j: integer;			myBase: wordPtr;			destRect: Rect;	begin		myPMap := NewPixMap;		CopyPixMap(drawPixMap, myPMap);		rBytes := BAND(myPMap^^.rowBytes, $1FFF) + 4;	{Strip flags, and be sure}		rWords := rBytes div 2;				{the last word won’t overflow}		myPMap^^.baseAddr := NewPtr(rBytes);		SetRect(myPMap^^.bounds, 0, 0, ScreenWidth, 1);{Now randomize my PixMap and copyBits stuff in place}		for j := 0 to ScreenHeight do			begin				myBase := wordPtr(myPmap^^.baseAddr);				SetRect(destRect, 0, j, ScreenWidth, j + 1);				for i := 1 to rWords do					begin						myBase^ := random;						myBase := wordPtr(ord(myBase) + 2);					end;				CopyBits(BitMapPtr(myPMap^)^, BitMapPtr(drawPixMap^)^, myPMap^^.bounds, destRect, srcCopy, nil);			end;		DisposPtr(myPMap^^.baseAddr);		DisposPixMap(myPMap);	end;	{procedure RandomColorFill}	procedure RandomFillScreen;{Randomly fill the screen. Assumes that LockForDrawing has been called.}	begin		case pixMethod of			DirectMono, MonoQuickDraw: 				RandomBWFill(drawBitMap);			DirectColor, Direct32Bit, ColorQuickDraw: 				RandomColorFill(drawPixMap);		end;	end;end.
+unit PixelUtils;
+{Written by Scott Lindhurst, lindhurs@math.wisc.edu, in the Fall of 1993, revised Nov. 1994.}
+
+interface
+	uses
+		GraphicsModuleTypes;
+	type
+		PixelRec = record
+				sortValue: longint;
+				memoryValue: longint;	{private to Get and SetPixel; the value to put directly in memory.}
+			end;
+
+	var
+{Pixel numbering starts with number 1 in the upper left corner, down to ScreenPixels}
+{in the lower right corner. Only the main screen is considered.}
+		ScreenPixels: longint;
+		ScreenDepth: integer;
+		gHas32BitQD: boolean;
+
+	procedure InitPixelUtils (drawRect: Rect;
+									depth: integer;
+									colorQDAvail: boolean;
+									useDirectPixels: integer);
+
+	procedure EraseOutsideDrawArea (blankRgn: rgnHandle;
+									params: GMParamBlockPtr);
+
+	procedure LockForDrawing;
+
+	procedure UnlockForDrawing;
+
+	procedure RandomFillScreen;
+{Randomly fill the screen. Assumes that LockForDrawing has been called.}
+
+
+	function MyGetPixel (pixelNum: longint): PixelRec;
+{Get the value of the pixelNum pixel on the screen.}
+
+	procedure MySetPixel (pixelNum: longint;
+									pixelValue: pixelRec);
+{Set the pixel at pixelNum to value.}
+
+	procedure SwapPixels (first, second: longint);
+{Swap the pixels in positions first and second}
+	procedure SortPair (first, second: longint);
+{Sort the pair of pixels at positions first and second so the pixel at first is less.}
+	procedure SortThree (first, second, third: longint);
+{Sort the three pixels at first, second, and third, with first being the least.}
+
+
+implementation
+
+	uses
+		QDOffscreen, Picker;
+
+	type
+		SixBytes = packed array[1..6] of Byte;	{Used in converting RGBColor to a longint}
+		FourBytes = packed array[1..4] of Byte;
+		BitMapPtr = ^BitMap;
+		bytePtr = ^signedByte;
+		wordPtr = ^integer;
+		longPtr = ^longint;
+
+{Method for drawing pixels: Direct to screen in old QD, color QD, 32 Bit QD, or using QD calls.}
+		pixMethodType = (DirectMono, DirectColor, Direct32Bit, ColorQuickDraw, MonoQuickDraw);
+
+
+	var
+		ScreenWidth, ScreenHeight, ScreenLeft, ScreenTop: integer;	{Set by Initialize procedure.}
+		PixMethod: pixMethodType;
+		drawBitMap: BitMap;		{The bitmap to draw directly into, if no color QD}
+		drawPixMap: PixMapHandle;	{The PixMap to draw directly into, if color QD}
+		pmBaseAddr: longint;	{Base address of the currently used pixMap for direct drawing}
+		swapMode: boolean;	{Below are set up by Lock/Unlock forDrawing}
+		mode: signedByte;		{and generally used by Get/SetColorPixel}
+		pixState: GWorldFlags;
+		rowBytes: longint;
+		pixelDepth: integer;
+
+
+	procedure InitPixelUtils (drawRect: Rect;
+									depth: integer;
+									colorQDAvail: boolean;
+									useDirectPixels: integer);
+{Set ScreenWidth, Height, Pixels, depth, left, and top corner.}
+{Draws directly to screen if useDirectPixels is 1.}
+		var
+			GestaltResult: longint;
+			Has32Bit: boolean;
+			myPort: GrafPtr;
+
+	begin
+		ScreenLeft := drawRect.left;
+		ScreenTop := drawRect.top;
+		ScreenWidth := drawRect.right - ScreenLeft;
+		ScreenHeight := drawRect.bottom - ScreenTop;
+		ScreenPixels := longint(ScreenWidth) * ScreenHeight;
+		ScreenDepth := depth;
+		GetPort(myPort);
+
+		if (Gestalt(gestaltQuickDrawVersion, GestaltResult) = noErr) & (GestaltResult >= gestalt32BitQD) then
+			Has32Bit := true
+		else
+			Has32Bit := false;
+		if colorQDAvail then
+			begin
+				drawPixMap := CGrafPtr(myPort)^.portPixMap;
+				if useDirectPixels = 0 then	{Don’t draw directly}
+					pixMethod := ColorQuickDraw
+				else	{Direct drawing}
+					begin
+						ScreenTop := ScreenTop - drawPixMap^^.bounds.top;	{direct: we need global coords}
+						ScreenLeft := ScreenLeft - drawPixMap^^.bounds.left;
+						if Has32Bit then
+							pixMethod := Direct32Bit	{Direct to screen under 32Bit QD}
+						else
+							pixMethod := DirectColor;	{Direct to screen drawing on colorQD, no 32Bit QD}
+					end
+			end
+		else	{only Monochrome QuickDraw}
+			begin
+				drawBitMap := myPort^.portBits;
+				if useDirectPixels = 1 then
+					begin
+						ScreenTop := ScreenTop - drawBitMap.bounds.top;
+						ScreenLeft := ScreenLeft - drawBitMap.bounds.left;
+						pixMethod := DirectMono;		{Direct to screen drawing on a non-colorQD machine}
+					end
+				else
+					pixMethod := MonoQuickDraw;
+			end;
+	end;	{procedure InitPixelUtils}
+
+
+	procedure EraseOutsideDrawArea (blankRgn: rgnHandle;
+									params: GMParamBlockPtr);
+{Erase stuff in the blankRgn, but outside the area to draw in.}
+{The drawing area must have been set up by InitPixelUtils previously.}
+		var
+			drawRgn: rgnHandle;
+			drawRect: Rect;
+	begin
+		SetRect(drawRect, ScreenLeft, ScreenTop, ScreenLeft + ScreenWidth, ScreenTop + ScreenHeight);
+		if not (pixMethod in [ColorQuickDraw, MonoQuickDraw]) then
+			offsetRect(drawRect, -ScreenLeft, -ScreenTop);
+		drawRgn := NewRgn;
+		RectRgn(drawRgn, drawRect);
+		DiffRgn(blankRgn, drawRgn, drawRgn);
+		FillRgn(drawRgn, params^.qdGlobalsCopy^.qdBlack);
+		DisposeRgn(drawRgn);
+	end;	{procedure EraseOutsideDrawArea}
+
+
+	procedure LockForDrawing;
+{Call this just before drawing. Then draw using only MyGetPixel and MySetPixel;}
+{don’t call other drawing routines. Call UnlockForDrawing before exiting.}
+{It will draw to the bit or pixMap that was selected by the initialize procedure.}
+		var
+			ignore: boolean;
+	begin
+		case pixMethod of
+			DirectColor, Direct32Bit: 
+				begin
+					rowBytes := BitAnd(drawPixMap^^.rowBytes, $1FFF);	{Strip flags}
+					pixelDepth := drawPixMap^^.pixelSize;
+
+					if pixMethod = Direct32Bit then
+						begin
+							mode := true32b;
+							swapMode := PixMap32Bit(drawPixMap);
+							pixState := GetPixelsState(drawPixMap);
+							ignore := LockPixels(drawPixMap);
+							pmBaseAddr := longint(GetPixBaseAddr(drawPixMap));
+							if swapMode then
+								SwapMMUMode(mode);
+						end;
+				end;	{DirectColor or Direct32Bit}
+			otherwise
+				;
+		end;	{case pixMethod of}
+	end;	{procedure LockForDrawing}
+
+
+	procedure UnlockForDrawing;
+	begin
+		if pixMethod = Direct32Bit then
+			begin
+				if swapMode then
+					SwapMMUMode(mode);
+				SetPixelsState(drawPixMap, pixState);
+			end;
+	end;	{procedure UnlockForDrawing}
+
+
+	procedure SetBWPixel (x, y: integer;
+									value: longint;
+									var theBitMap: BitMap);
+{Set a pixel on a monochrome, non-colorQD display.}
+		var
+			mask, shiftBits: integer;
+			thePixel: longint;
+
+	begin
+		thePixel := longint(theBitMap.baseAddr);
+		thePixel := thePixel + (theBitMap.rowBytes * longint(y)) + (x div 8);
+		shiftBits := 7 - (x mod 8);
+		mask := BSL(1, shiftBits);
+{$R-}
+		bytePtr(thePixel)^ := BitAnd(bytePtr(thePixel)^, BitNot(mask));
+		bytePtr(thePixel)^ := BitOr(bytePtr(thePixel)^, BSL(value, shiftBits));
+{$R+}
+	end;	{procedure SetBWPixel}
+
+
+	function GetBWPixel (x, y: integer;
+									var theBitMap: BitMap): longint;
+{Get a pixel on a monochrome, non-colorQD display.}
+		var
+			mask, shiftBits: integer;
+			thePixel: longint;
+
+	begin
+		thePixel := longint(theBitMap.baseAddr);
+		thePixel := thePixel + (theBitMap.rowBytes * longint(y)) + BSR(x, 3);	{that’s x div 8}
+		shiftBits := 7 - BitAnd(x, $7);	{that’s x mod 8}
+		mask := BSL(1, shiftBits);
+		if BitAnd(bytePtr(thePixel)^, mask) <> 0 then
+			GetBWPixel := 1
+		else
+			GetBWPixel := 0;
+	end;	{function GetBWPixel}
+
+
+	procedure SetColorPixel (x, y: integer;
+									value: longint);
+{Set a pixel on a color display.}
+		var
+			mask, shiftBits: integer;
+			thePixel: longint;
+
+	begin
+		thePixel := pmBaseAddr;
+		case pixelDepth of
+			1, 2, 4: 
+				begin
+					thePixel := thePixel + (rowBytes * longint(y)) + BSR(pixelDepth * x, 3);{BSR is div 8}
+					shiftBits := (8 - pixelDepth) - BitAnd(x * pixelDepth, $7);	{BitAnd instead of mod 8}
+					mask := BSL(BSL(1, pixelDepth) - 1, shiftBits);
+					bytePtr(thePixel)^ := BitAnd(bytePtr(thePixel)^, BitNot(mask));
+					bytePtr(thePixel)^ := BitOr(bytePtr(thePixel)^, BSL(value, shiftBits));
+				end;
+
+			8: 
+				begin
+					thePixel := thePixel + (rowBytes * longint(y) + x);
+					bytePtr(thePixel)^ := value;
+				end;
+
+			16: 
+				begin
+					thePixel := thePixel + (rowBytes * longint(y)) + (2 * x);
+					wordPtr(thePixel)^ := value;
+				end;
+
+			32: 
+				begin
+					thePixel := thePixel + (rowBytes * longint(y)) + (4 * x);
+					longPtr(thePixel)^ := value;
+				end;
+		end;	{case depth of}
+	end;	{procedure SetPixel}
+
+
+
+	function GetColorPixel (x, y: integer): longint;
+{Get a pixel from a color display. Returns the actual value in memory, not an RGBcolor.}
+		var
+			mask, shiftBits: integer;
+			thePixel: longint;
+
+	begin
+		thePixel := pmBaseAddr;
+		case pixelDepth of
+			1, 2, 4: 
+				begin
+					thePixel := thePixel + (rowBytes * longint(y)) + BSR(pixelDepth * x, 3);{BSR is div 8}
+					shiftBits := (8 - pixelDepth) - BitAnd(x * pixelDepth, $7);	{BitAnd instead of mod 8}
+					mask := BSL(BSL(1, pixelDepth) - 1, shiftBits);
+					GetColorPixel := BSR(BitAnd(bytePtr(thePixel)^, mask), shiftBits);
+				end;
+
+			8: 
+				begin
+					thePixel := thePixel + (rowBytes * longint(y) + x);
+					GetColorPixel := bytePtr(thePixel)^;
+				end;
+
+			16: 
+				begin
+					thePixel := thePixel + (rowBytes * longint(y)) + (2 * x);
+					GetColorPixel := wordPtr(thePixel)^;
+				end;
+
+			32: 
+				begin
+					thePixel := thePixel + (rowBytes * longint(y)) + (4 * x);
+					GetColorPixel := longPtr(thePixel)^;
+				end;
+		end;	{case depth of}
+	end;	{function GetColorPixel}
+
+
+	function MyGetPixel (pixelNum: longint): PixelRec;
+{Get the value of the pixelNum pixel on the screen.}
+		var
+			x, y: integer;
+			memValue: longint;
+			cPix: RGBColor;
+			HSLPix: HSLColor;
+	begin
+		pixelNum := pixelNum - 1;
+		y := ScreenTop + (pixelNum div ScreenWidth);
+		x := ScreenLeft + (pixelNum mod ScreenWidth);
+		case pixMethod of
+			DirectMono: 
+				MyGetPixel.sortValue := GetBWPixel(x, y, drawBitMap);		{In BW the memoryValue is unused.}
+			MonoQuickDraw: 
+				if GetPixel(x, y) then
+					MyGetPixel.sortValue := 1
+				else
+					MyGetPixel.sortValue := 0;
+
+			DirectColor, Direct32Bit, ColorQuickDraw: 
+				begin
+					if pixMethod = ColorQuickDraw then
+						begin
+							GetCPixel(x, y, cPix);
+							FourBytes(memValue)[2] := SixBytes(cPix)[1];	{Red}
+							FourBytes(memValue)[3] := SixBytes(cPix)[3];	{Green}
+							FourBytes(memValue)[4] := SixBytes(cPix)[5];	{Blue}
+						end
+					else
+						begin	{Direct pixel access}
+							memValue := GetColorPixel(x, y);
+							case ScreenDepth of
+								1, 2, 4, 8: 
+									Index2Color(memValue, cPix);
+								16: 
+{$R-}
+									begin	{memValue is 0rrr rrgg gggb bbbb bitwise}
+										cPix.red := BSL(BitAnd(memValue, $7C00), 1);
+										cPix.green := BSL(BitAnd(memValue, $03E0), 6);
+										cPix.blue := BSL(BitAnd(memValue, $001F), 11);
+									end;
+{$R+}
+								32: 	{MemValue is 00rr ggbb, four bytes}
+									begin
+										cPix.red := FourBytes(memValue)[2];
+										cPix.green := FourBytes(memValue)[3];
+										cPix.blue := FourBytes(memValue)[4];
+									end;
+							end;	{case ScreenDepth}
+						end;	{Direct pixel access}
+
+{Figure out the HSL version of the pixel and use that to get the sortValue}
+					RGB2HSL(cPix, HSLPix);		{Convert to HSL}
+					MyGetPixel.memoryValue := memValue;
+					FourBytes(MyGetPixel.sortValue)[2] := SixBytes(HSLPix)[1];	{Hue}
+					FourBytes(MyGetPixel.sortValue)[3] := SixBytes(HSLPix)[5];	{Saturation}
+					FourBytes(MyGetPixel.sortValue)[4] := SixBytes(HSLPix)[3];	{Lightness}
+				end;	{pixMethod one of the color ones}
+		end;	{case pixMethod}
+	end;	{procedure MyGetPixel}
+
+
+
+
+	procedure SwapPixels (first, second: longint);
+{Swap the pixels in positions first and second}
+		var
+			value1, value2: pixelRec;
+	begin
+		value1 := MyGetPixel(first);
+		value2 := MyGetPixel(second);
+		MySetPixel(first, value2);
+		MySetPixel(second, value1);
+	end;	{procedure SwapPixels}
+
+
+
+	procedure SortPair (first, second: longint);
+{Sort the pair of pixels at positions first and second so the pixel at first is less.}
+		var
+			value1, value2: pixelRec;
+	begin
+		value1 := MyGetPixel(first);
+		value2 := MyGetPixel(second);
+		if value1.sortValue > value2.sortValue then
+			begin	{swap them}
+				MySetPixel(first, value2);
+				MySetPixel(second, value1);
+			end;
+	end;	{procedure SortPair}
+
+	procedure SortThree (first, second, third: longint);
+{Sort the three pixels at first, second, and third, with first being the least.}
+		var
+			firstPixel, secondPixel, thirdPixel, tempPixel: pixelRec;
+	begin
+		firstPixel := MyGetPixel(first);
+		secondPixel := MyGetPixel(second);
+		thirdPixel := MyGetPixel(third);
+		if firstPixel.sortValue > secondPixel.sortValue then
+			begin
+				tempPixel := firstPixel;
+				firstPixel := secondPixel;
+				secondPixel := tempPixel;
+			end;
+{now first < second; third is unknown. That leaves 3 possible orderings: 123, 132, 312.}
+		if secondPixel.sortValue < thirdPixel.sortValue then
+			begin	{know order is 123}
+				MySetPixel(first, firstPixel);
+				MySetPixel(second, secondPixel);
+			end	{And the third is already correct.}
+		else	{order is 132 or 312}
+			if firstPixel.sortValue < thirdPixel.sortValue then
+				begin	{132}
+					MySetPixel(first, firstPixel);
+					MySetPixel(second, thirdPixel);
+					MySetPixel(third, secondPixel);
+				end	{132 order}
+			else	{order is 312}
+				begin
+					MySetPixel(first, thirdPixel);
+					MySetPixel(second, firstPixel);
+					MySetPixel(third, secondPixel);
+				end;	{312 order}
+	end;	{procedure SortThree}
+
+
+	procedure MySetPixel (pixelNum: longint;
+									pixelValue: pixelRec);
+{Set the pixel at pixelNum to value.}
+		var
+			x, y: integer;
+			cPix: RGBColor;
+	begin
+		pixelNum := pixelNum - 1;
+		y := ScreenTop + (pixelNum div ScreenWidth);
+		x := ScreenLeft + (pixelNum mod ScreenWidth);
+		case pixMethod of
+			DirectMono: 
+				SetBWPixel(x, y, pixelValue.sortValue, drawBitMap);		{In BW the memoryValue is unused.}
+			MonoQuickDraw: 
+				begin
+					if PixelValue.sortValue = 1 then
+						PenMode(patCopy)
+					else
+						PenMode(notPatCopy);
+					MoveTo(x, y);
+					Line(0, 0);
+				end;
+			DirectColor, Direct32Bit: 
+				SetColorPixel(x, y, pixelValue.memoryValue);
+			ColorQuickDraw: 
+				begin
+					SixBytes(cPix)[1] := FourBytes(pixelValue.memoryValue)[2];	{Red}
+					SixBytes(cPix)[3] := FourBytes(pixelValue.memoryValue)[3];	{Green}
+					SixBytes(cPix)[5] := FourBytes(pixelValue.memoryValue)[4];	{Blue}
+					SetCPixel(x, y, cPix);
+{•     RGBForeColor(cPix);•}
+{•     MoveTo(x, y);•}
+{•     Line(0, 0);			{Faster than SetCPixel, I think. I timed it but forgot.•]}
+				end;
+		end;	{case}
+	end;	{procedure MySetPixel}
+
+
+
+
+	procedure RandomBWFill (drawBitMap: BitMap);
+{Fill the screen (assumed to be monochrome) randomly.}
+		var
+			i: integer;
+			b: bitMap;
+			destRect: Rect;
+			WordNum: integer;
+			pt: wordPtr;
+	begin
+		b.baseAddr := NewPtr(256);
+		b.rowBytes := 256;
+		SetRect(b.bounds, 0, 0, ScreenWidth, 1);
+
+		for i := 0 to ScreenHeight do
+			begin
+				SetRect(destRect, 0, i, ScreenWidth, i + 1);
+				for WordNum := 0 to 32 do
+					begin
+						pt := WordPtr(ord4(b.baseAddr) + 2 * WordNum);
+						pt^ := random;
+					end;
+				CopyBits(b, drawBitMap, b.bounds, destRect, srcCopy, nil);
+			end;
+		DisposPtr(b.baseAddr);
+	end;	{procedure RandomBWFill}
+
+
+	procedure RandomColorFill (drawPixMap: pixMapHandle);
+{Fill the screen randomly (assuming color Quickdraw)}
+		var
+			myPMap: PixMapHandle;
+			rBytes, rWords, ignore, i, j: integer;
+			myBase: wordPtr;
+			destRect: Rect;
+	begin
+		myPMap := NewPixMap;
+		CopyPixMap(drawPixMap, myPMap);
+		rBytes := BAND(myPMap^^.rowBytes, $1FFF) + 4;	{Strip flags, and be sure}
+		rWords := rBytes div 2;				{the last word won’t overflow}
+		myPMap^^.baseAddr := NewPtr(rBytes);
+		SetRect(myPMap^^.bounds, 0, 0, ScreenWidth, 1);
+{Now randomize my PixMap and copyBits stuff in place}
+
+		for j := 0 to ScreenHeight do
+			begin
+				myBase := wordPtr(myPmap^^.baseAddr);
+				SetRect(destRect, 0, j, ScreenWidth, j + 1);
+				for i := 1 to rWords do
+					begin
+						myBase^ := random;
+						myBase := wordPtr(ord(myBase) + 2);
+					end;
+				CopyBits(BitMapPtr(myPMap^)^, BitMapPtr(drawPixMap^)^, myPMap^^.bounds, destRect, srcCopy, nil);
+			end;
+		DisposPtr(myPMap^^.baseAddr);
+		DisposPixMap(myPMap);
+	end;	{procedure RandomColorFill}
+
+
+	procedure RandomFillScreen;
+{Randomly fill the screen. Assumes that LockForDrawing has been called.}
+
+	begin
+		case pixMethod of
+			DirectMono, MonoQuickDraw: 
+				RandomBWFill(drawBitMap);
+			DirectColor, Direct32Bit, ColorQuickDraw: 
+				RandomColorFill(drawPixMap);
+		end;
+	end;
+
+
+end.

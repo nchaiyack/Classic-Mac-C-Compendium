@@ -1,1 +1,220 @@
-unit ICIconSuites;interface	procedure InitICIconSuites;	function GetDTDBIconSuiteCached (ftype, fcreator: OSType; var suite: Handle): OSErr;implementation	uses		ICGlobals, ICMiscSubs, IconFamilies;	function GetDTDBIcon (ftype, fcreator: OSType; var cookie: integer; icon_to_get: SignedByte; var pbdt: DTPBRec): OSErr;		function GetTheIcon (dtrn: integer): boolean;		begin			pbdt.ioDTRefNum := dtrn;			pbdt.ioTagInfo := 0;			pbdt.ioIconType := icon_to_get;			pbdt.ioFileCreator := fcreator;			pbdt.ioFileType := ftype;			GetTheIcon := PBDTGetIconSync(@pbdt) = noErr;		end;		var			oe: OSErr;			i: integer;			found: boolean;			junkstr: Str63;			vrefnum: OSErr;			crdate: longint;	begin		found := false;		if system7 then begin			if cookie = 0 then begin				i := 1;				repeat					vrefnum := 0;					junkstr := '';					oe := GetVolInfo(junkstr, vrefnum, i, crdate);					i := i + 1;					if oe = noErr then begin						with pbdt do begin							ioNamePtr := nil;							ioVRefNum := vrefnum;							oe := PBDTGetPath(@pbdt);							if oe = noErr then begin								if GetTheIcon(pbdt.ioDTRefNum) then begin									cookie := pbdt.ioDTRefNum;									found := true;								end;							end;						end;						oe := noErr;					end;				until found or (oe <> noErr);			end			else begin				found := GetTheIcon(cookie);			end;		end;		if found then begin			oe := noErr;		end		else begin			oe := afpItemNotFound;		end;		GetDTDBIcon := oe;	end; (* GetDTDBIcon *)	var		icon_buffer: packed array[0..1023] of byte;	function GetDTDBIconH (ftype, fcreator: OSType; var cookie: integer; icon_to_get: SignedByte; var iconh: Handle): OSErr;		var			dtpb: DTPBRec;			err: OSErr;	begin		iconh := nil;		dtpb.ioDTBuffer := @icon_buffer;		dtpb.ioDTReqCount := sizeof(icon_buffer);		err := GetDTDBIcon(ftype, fcreator, cookie, icon_to_get, dtpb);		if err = noErr then begin			err := PtrToHand(@icon_buffer, iconh, dtpb.ioDTActCount);		end; (* if *)		if err <> noErr then begin			DisposeHandle(iconh);			iconh := nil;		end; (* if *)		GetDTDBIconH := err;	end; (* GetDTDBIconH *)	function GetDTDBAddSuite (suite: Handle; ftype, fcreator: OSType; var cookie: integer; icon_to_get: SignedByte; icon_to_put: OSType): OSErr;		var			err: OSErr;			iconh: Handle;	begin		err := GetDTDBIconH(ftype, fcreator, cookie, icon_to_get, iconh);		if err = noErr then begin			err := AddIconToSuite(iconh, suite, icon_to_put);		end; (* if *)		if err <> noErr then begin			DisposeHandle(iconh);			iconh := nil;		end; (* if *)		GetDTDBAddSuite := err;	end; (* GetDTDBAddSuite *)	function GetDTDBIconSuiteUncached (ftype, fcreator: OSType; var suite: Handle): OSErr;		var			err: OSErr;			junk: OSErr;			cookie: integer;	begin		suite := nil;		err := NewIconSuite(suite);		if err = noErr then begin			cookie := 0;			if GetDTDBAddSuite(suite, ftype, fcreator, cookie, kLargeIcon, large1BitMask) = noErr then begin				junk := GetDTDBAddSuite(suite, ftype, fcreator, cookie, kLarge4BitIcon, large4BitData);				junk := GetDTDBAddSuite(suite, ftype, fcreator, cookie, kLarge8BitIcon, large8BitData);			end			else begin				err := afpItemNotFound;			end; (* if *)		end; (* if *)		if err <> noErr then begin			if suite <> nil then begin				junk := DisposeIconSuite(suite, true);				suite := nil;			end; (* if *)		end; (* if *)		GetDTDBIconSuiteUncached := err;	end; (* GetDTDBIconSuiteUncached *)	const		cache_max = 20;	type		CacheRecord = record				usage: longInt;				ftype, fcreator: OSType;				suite: handle;			end;	var		cache: array[1..cache_max] of CacheRecord;		usage: longInt;		default_application_suite: handle;		default_document_suite: handle;	function GetDTDBIconSuiteCached (ftype, fcreator: OSType; var suite: Handle): OSErr;		var			err, junk: OSErr;			i, j: integer;			m: longInt;	begin		err := -1;		suite := nil;		for i := 1 to cache_max do begin			if (cache[i].usage > 0) & (cache[i].ftype = ftype) & (cache[i].fcreator = fcreator) then begin				suite := cache[i].suite;				err := noErr;				cache[i].usage := usage;				usage := usage + 1;				leave;			end;		end;		if err <> noErr then begin			m := maxLongInt;			for i := 1 to cache_max do begin				if (cache[i].usage < m) then begin					j := i;					m := cache[i].usage;				end;			end;			err := GetDTDBIconSuiteUncached(ftype, fcreator, suite);			if err = noErr then begin				if m > 0 then begin					junk := DisposeIconSuite(cache[j].suite, true);				end;				cache[j].suite := suite;				cache[j].ftype := ftype;				cache[j].fcreator := fcreator;				cache[j].usage := usage;				usage := usage + 1;			end;		end;		if (err = noErr) & (suite = nil) then begin			err := resNotFound;		end;		if (err <> noErr) then begin			suite := default_document_suite;			if (ftype = 'APPL') & (default_application_suite <> nil) then begin				suite := default_application_suite;			end;		end;		GetDTDBIconSuiteCached := err;	end;	procedure InitICIconSuites;		var			i: integer;	begin		for i := 1 to cache_max do begin			cache[i].usage := -1;		end;		usage := 1;		default_application_suite := nil;		default_document_suite := nil;		if system7 then begin			if GetIconSuite(default_document_suite, -4000, svAllLargeData) <> noErr then begin				default_document_suite := nil;			end; (* if *)			if GetIconSuite(default_application_suite, -3996, svAllLargeData) <> noErr then begin				default_application_suite := nil;			end; (* if *)		end; (* if *)	end;end.
+unit ICIconSuites;
+
+interface
+
+	procedure InitICIconSuites;
+	function GetDTDBIconSuiteCached (ftype, fcreator: OSType; var suite: Handle): OSErr;
+
+implementation
+
+	uses
+		ICGlobals, ICMiscSubs, IconFamilies;
+
+	function GetDTDBIcon (ftype, fcreator: OSType; var cookie: integer; icon_to_get: SignedByte; var pbdt: DTPBRec): OSErr;
+		function GetTheIcon (dtrn: integer): boolean;
+		begin
+			pbdt.ioDTRefNum := dtrn;
+			pbdt.ioTagInfo := 0;
+			pbdt.ioIconType := icon_to_get;
+			pbdt.ioFileCreator := fcreator;
+			pbdt.ioFileType := ftype;
+			GetTheIcon := PBDTGetIconSync(@pbdt) = noErr;
+		end;
+
+		var
+			oe: OSErr;
+			i: integer;
+			found: boolean;
+			junkstr: Str63;
+			vrefnum: OSErr;
+			crdate: longint;
+	begin
+		found := false;
+		if system7 then begin
+			if cookie = 0 then begin
+				i := 1;
+				repeat
+					vrefnum := 0;
+					junkstr := '';
+					oe := GetVolInfo(junkstr, vrefnum, i, crdate);
+					i := i + 1;
+					if oe = noErr then begin
+						with pbdt do begin
+							ioNamePtr := nil;
+							ioVRefNum := vrefnum;
+							oe := PBDTGetPath(@pbdt);
+							if oe = noErr then begin
+								if GetTheIcon(pbdt.ioDTRefNum) then begin
+									cookie := pbdt.ioDTRefNum;
+									found := true;
+								end;
+							end;
+						end;
+						oe := noErr;
+					end;
+				until found or (oe <> noErr);
+			end
+			else begin
+				found := GetTheIcon(cookie);
+			end;
+		end;
+		if found then begin
+			oe := noErr;
+		end
+		else begin
+			oe := afpItemNotFound;
+		end;
+		GetDTDBIcon := oe;
+	end; (* GetDTDBIcon *)
+
+	var
+		icon_buffer: packed array[0..1023] of byte;
+
+	function GetDTDBIconH (ftype, fcreator: OSType; var cookie: integer; icon_to_get: SignedByte; var iconh: Handle): OSErr;
+		var
+			dtpb: DTPBRec;
+			err: OSErr;
+	begin
+		iconh := nil;
+		dtpb.ioDTBuffer := @icon_buffer;
+		dtpb.ioDTReqCount := sizeof(icon_buffer);
+		err := GetDTDBIcon(ftype, fcreator, cookie, icon_to_get, dtpb);
+		if err = noErr then begin
+			err := PtrToHand(@icon_buffer, iconh, dtpb.ioDTActCount);
+		end; (* if *)
+		if err <> noErr then begin
+			DisposeHandle(iconh);
+			iconh := nil;
+		end; (* if *)
+		GetDTDBIconH := err;
+	end; (* GetDTDBIconH *)
+
+	function GetDTDBAddSuite (suite: Handle; ftype, fcreator: OSType; var cookie: integer; icon_to_get: SignedByte; icon_to_put: OSType): OSErr;
+		var
+			err: OSErr;
+			iconh: Handle;
+	begin
+		err := GetDTDBIconH(ftype, fcreator, cookie, icon_to_get, iconh);
+		if err = noErr then begin
+			err := AddIconToSuite(iconh, suite, icon_to_put);
+		end; (* if *)
+		if err <> noErr then begin
+			DisposeHandle(iconh);
+			iconh := nil;
+		end; (* if *)
+		GetDTDBAddSuite := err;
+	end; (* GetDTDBAddSuite *)
+
+	function GetDTDBIconSuiteUncached (ftype, fcreator: OSType; var suite: Handle): OSErr;
+		var
+			err: OSErr;
+			junk: OSErr;
+			cookie: integer;
+	begin
+		suite := nil;
+		err := NewIconSuite(suite);
+		if err = noErr then begin
+			cookie := 0;
+			if GetDTDBAddSuite(suite, ftype, fcreator, cookie, kLargeIcon, large1BitMask) = noErr then begin
+				junk := GetDTDBAddSuite(suite, ftype, fcreator, cookie, kLarge4BitIcon, large4BitData);
+				junk := GetDTDBAddSuite(suite, ftype, fcreator, cookie, kLarge8BitIcon, large8BitData);
+			end
+			else begin
+				err := afpItemNotFound;
+			end; (* if *)
+		end; (* if *)
+		if err <> noErr then begin
+			if suite <> nil then begin
+				junk := DisposeIconSuite(suite, true);
+				suite := nil;
+			end; (* if *)
+		end; (* if *)
+		GetDTDBIconSuiteUncached := err;
+	end; (* GetDTDBIconSuiteUncached *)
+
+	const
+		cache_max = 20;
+
+	type
+		CacheRecord = record
+				usage: longInt;
+				ftype, fcreator: OSType;
+				suite: handle;
+			end;
+
+	var
+		cache: array[1..cache_max] of CacheRecord;
+		usage: longInt;
+		default_application_suite: handle;
+		default_document_suite: handle;
+
+	function GetDTDBIconSuiteCached (ftype, fcreator: OSType; var suite: Handle): OSErr;
+		var
+			err, junk: OSErr;
+			i, j: integer;
+			m: longInt;
+	begin
+		err := -1;
+		suite := nil;
+		for i := 1 to cache_max do begin
+			if (cache[i].usage > 0) & (cache[i].ftype = ftype) & (cache[i].fcreator = fcreator) then begin
+				suite := cache[i].suite;
+				err := noErr;
+				cache[i].usage := usage;
+				usage := usage + 1;
+				leave;
+			end;
+		end;
+		if err <> noErr then begin
+			m := maxLongInt;
+			for i := 1 to cache_max do begin
+				if (cache[i].usage < m) then begin
+					j := i;
+					m := cache[i].usage;
+				end;
+			end;
+			err := GetDTDBIconSuiteUncached(ftype, fcreator, suite);
+			if err = noErr then begin
+				if m > 0 then begin
+					junk := DisposeIconSuite(cache[j].suite, true);
+				end;
+				cache[j].suite := suite;
+				cache[j].ftype := ftype;
+				cache[j].fcreator := fcreator;
+				cache[j].usage := usage;
+				usage := usage + 1;
+			end;
+		end;
+		if (err = noErr) & (suite = nil) then begin
+			err := resNotFound;
+		end;
+		if (err <> noErr) then begin
+			suite := default_document_suite;
+			if (ftype = 'APPL') & (default_application_suite <> nil) then begin
+				suite := default_application_suite;
+			end;
+		end;
+		GetDTDBIconSuiteCached := err;
+	end;
+
+	procedure InitICIconSuites;
+		var
+			i: integer;
+	begin
+		for i := 1 to cache_max do begin
+			cache[i].usage := -1;
+		end;
+		usage := 1;
+		default_application_suite := nil;
+		default_document_suite := nil;
+		if system7 then begin
+			if GetIconSuite(default_document_suite, -4000, svAllLargeData) <> noErr then begin
+				default_document_suite := nil;
+			end; (* if *)
+			if GetIconSuite(default_application_suite, -3996, svAllLargeData) <> noErr then begin
+				default_application_suite := nil;
+			end; (* if *)
+		end; (* if *)
+	end;
+
+end.

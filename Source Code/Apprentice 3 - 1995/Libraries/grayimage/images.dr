@@ -1,1 +1,36 @@
-		   Image Processing and Compressing		General image handling programsimage.h			Header fileimage.cc		Set of primitive operations on imagesimage_rect.cc		Operations on the rectangular part of the imageread_xwd.cc		Read the image from the X window dump filewrite_xwd.cc		Write the image into file as the X11 Window dumpx11wd.h			Definition of the X window dump file formatread_pgm.cc		Read an image from the PGM filewrite_pgm.cc		Write an image in the PGM formatread_def.cc		Read the data exchange format (for weather products)tiff.h			Description of the TIFF fileread_tiff.cc		Read in an image from the TIFF filewrite_tiff.cc		Write an image to the TIFF filemorph_filter.h		Declaration of the morphological filter operationsmorph_filter.cc		Implementation of opening, closing, etc.morph_filter_old.cc	Morphological filtration (opening/closing)vmorph_filter.cc	Verify the morphological filtration functionsfilter.cc		Various filtration schemes for the imagemedian_filter.cc	Median filtration of the imagevimage.cc		Verify the image handling programsvrectangle.cc		Verify operations over rectangular areas of the imagesvimage_io.cc		Verify reading/writing of various image formats		Picturespictures/pictures.dr	Images to work with		Misc routinescolor_coordinates.cc	Demonstration of the color image representation in			various color coordinate systems
+		   Image Processing and Compressing
+
+		General image handling programs
+image.h			Header file
+image.cc		Set of primitive operations on images
+image_rect.cc		Operations on the rectangular part of the image
+
+read_xwd.cc		Read the image from the X window dump file
+write_xwd.cc		Write the image into file as the X11 Window dump
+x11wd.h			Definition of the X window dump file format
+read_pgm.cc		Read an image from the PGM file
+write_pgm.cc		Write an image in the PGM format
+read_def.cc		Read the data exchange format (for weather products)
+
+tiff.h			Description of the TIFF file
+read_tiff.cc		Read in an image from the TIFF file
+write_tiff.cc		Write an image to the TIFF file
+
+morph_filter.h		Declaration of the morphological filter operations
+morph_filter.cc		Implementation of opening, closing, etc.
+morph_filter_old.cc	Morphological filtration (opening/closing)
+vmorph_filter.cc	Verify the morphological filtration functions
+
+filter.cc		Various filtration schemes for the image
+median_filter.cc	Median filtration of the image
+
+vimage.cc		Verify the image handling programs
+vrectangle.cc		Verify operations over rectangular areas of the images
+vimage_io.cc		Verify reading/writing of various image formats
+
+		Pictures
+pictures/pictures.dr	Images to work with
+
+		Misc routines
+color_coordinates.cc	Demonstration of the color image representation in
+			various color coordinate systems

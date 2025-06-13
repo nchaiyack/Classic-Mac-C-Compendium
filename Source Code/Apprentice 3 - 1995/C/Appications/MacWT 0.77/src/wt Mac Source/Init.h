@@ -1,1 +1,5 @@
-// Init.hvoid	Initialize(short moreMasters, long minHeap, long minSpace);void	AppInitialize(void);
+// Init.h
+
+void	Initialize(short moreMasters, long minHeap, long minSpace);
+
+void	AppInitialize(void);

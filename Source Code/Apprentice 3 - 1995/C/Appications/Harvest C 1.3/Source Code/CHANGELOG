@@ -1,1 +1,98 @@
-Change history--------------Release 1.3 -- 21 June 1993----The sample project files now work on systems other than mine.The Tool Command Language shell has been removed.It is no longer possible to double click on error messages and have	Alpha open the file.Harvest C should no longer crash on activate events after error	windows have been closed.The sample applications used to have Debugger() calls in them, making	it look like they crashed all the time.  These have been removed.The bug which caused the linker to crash frequently has been fixed.Some sample projects have been deleted.Release 1.2a1 -- 6 April 1992----Application is now freeware instead of sharewareEntire user interface rewritten        Project metaphor, like THINK C        New dialogs for options, warnings, and project info        New about box.        No Balloon help now        Support for resource filesSupport for AppleEvents was added for integration with Alpha and ResEditAutomatically generates a SIZE resource for apps nowDevelopment platform changed from MPW/Plus to THINK/IIsihandling of fatal errors is better.Memory management redone to use mallocGenerates file.o instead of file.c.oWe no longer generate object files when the source file contains errors.pascal functions now correctly compile.  The way return values are handled  was completely changed.4 byte structs (like Point) are passed on the stack as they should be, not  sometimes, but all the time.Harvest C now runs under 32 bit mode and virtual memoryarray subscripts no longer become magically converted to floating point  constants.occasionally, branches were branching to nowhere.implicit declarations are now being assigned run time code locations too.The linker was crashing regularly.  Better error handling seems to have  fixed this, since it hasn't crashed for me in weeks, and I use it a lot.pascal functions were not recognized as such if their return type was  a typedefed type.pascal functions were not using the right calling conventions for shorts  and chars.pascal functions were referencing their args using C stack order, even  though pascal function calls pushed their args correctly.segmentation was all wrong - fixedwasn't leaving room on the stack for pascal functions whose results  were discarded anyway - result: trash the frame pointerwas failing to do standard int promotions on ints mixed into pointer  arithmetic.switch statements were being generated backwards, resulting in the  program taking the default case every time.occasionally, link instructions were generated with odd offsetsthe preprocessor is better at finding include filesRelease 1.1b2 -- 24 November 1991----Handling of fatal errors is now better (such as include file not found)Program now explains problem if prefs file cannot be found.A major [recently introduced] memory leak was plugged.The Link... dialog box now remembers which directory you were in.Release 1.1b1 -- 14 November 1991----Still more efficient with memory. Still fiddling... I would guess   that Harvest C is still rather cramped on a 2meg machine.  Works   fine on my 4meg SE with a 2500k partition under System 7.End of line comments are now supported. // like C++Application is smaller due to trimming of useless code.Release 1.1a1 -- 25 October 1991----Harvest C now supports some balloon help.The linker no longer incorrectly sets the bundle bit of generated apps.The program should be more efficient with memory.  More work is needed here.It is no longer possible to set BOTH 'all warnings' and 'no warnings'Standard paths are no longer corrupted when the dialog boxes are cancelled.A real 'make' is now supported.Documentation has been revised.  More work is needed here.Release 1.01 -- 18 October 1991----Call of pascal function returning char crashed on a 68000 machine - fixed.Sample2a.h was missing from the distribution - fixed.The linker is now smarter than it was.There should be a slight increase in memory efficiency.The about box now reports the amount of free memory.Harvest C no longer crashes when the about box is displayed with another  window on the screen.Release 1.0 -- 14 October 1991----Initial release - sent to mac.archive.umich.edu
+Change history
+--------------
+
+Release 1.3 -- 21 June 1993
+----
+The sample project files now work on systems other than mine.
+The Tool Command Language shell has been removed.
+It is no longer possible to double click on error messages and have
+	Alpha open the file.
+Harvest C should no longer crash on activate events after error
+	windows have been closed.
+The sample applications used to have Debugger() calls in them, making
+	it look like they crashed all the time.  These have been removed.
+The bug which caused the linker to crash frequently has been fixed.
+Some sample projects have been deleted.
+
+Release 1.2a1 -- 6 April 1992
+----
+Application is now freeware instead of shareware
+Entire user interface rewritten
+        Project metaphor, like THINK C
+        New dialogs for options, warnings, and project info
+        New about box.
+        No Balloon help now
+        Support for resource files
+Support for AppleEvents was added for integration with Alpha and ResEdit
+Automatically generates a SIZE resource for apps now
+Development platform changed from MPW/Plus to THINK/IIsi
+handling of fatal errors is better.
+Memory management redone to use malloc
+Generates file.o instead of file.c.o
+We no longer generate object files when the source file contains errors.
+pascal functions now correctly compile.  The way return values are handled
+  was completely changed.
+4 byte structs (like Point) are passed on the stack as they should be, not
+  sometimes, but all the time.
+Harvest C now runs under 32 bit mode and virtual memory
+array subscripts no longer become magically converted to floating point
+  constants.
+occasionally, branches were branching to nowhere.
+implicit declarations are now being assigned run time code locations too.
+The linker was crashing regularly.  Better error handling seems to have
+  fixed this, since it hasn't crashed for me in weeks, and I use it a lot.
+pascal functions were not recognized as such if their return type was
+  a typedefed type.
+pascal functions were not using the right calling conventions for shorts
+  and chars.
+pascal functions were referencing their args using C stack order, even
+  though pascal function calls pushed their args correctly.
+segmentation was all wrong - fixed
+wasn't leaving room on the stack for pascal functions whose results
+  were discarded anyway - result: trash the frame pointer
+was failing to do standard int promotions on ints mixed into pointer
+  arithmetic.
+switch statements were being generated backwards, resulting in the
+  program taking the default case every time.
+occasionally, link instructions were generated with odd offsets
+the preprocessor is better at finding include files
+
+Release 1.1b2 -- 24 November 1991
+----
+Handling of fatal errors is now better (such as include file not found)
+Program now explains problem if prefs file cannot be found.
+A major [recently introduced] memory leak was plugged.
+The Link... dialog box now remembers which directory you were in.
+
+Release 1.1b1 -- 14 November 1991
+----
+Still more efficient with memory. Still fiddling... I would guess
+   that Harvest C is still rather cramped on a 2meg machine.  Works
+   fine on my 4meg SE with a 2500k partition under System 7.
+End of line comments are now supported. // like C++
+Application is smaller due to trimming of useless code.
+
+Release 1.1a1 -- 25 October 1991
+----
+Harvest C now supports some balloon help.
+The linker no longer incorrectly sets the bundle bit of generated apps.
+The program should be more efficient with memory.  More work is needed here.
+It is no longer possible to set BOTH 'all warnings' and 'no warnings'
+Standard paths are no longer corrupted when the dialog boxes are cancelled.
+A real 'make' is now supported.
+Documentation has been revised.  More work is needed here.
+
+Release 1.01 -- 18 October 1991
+----
+Call of pascal function returning char crashed on a 68000 machine - fixed.
+Sample2a.h was missing from the distribution - fixed.
+The linker is now smarter than it was.
+There should be a slight increase in memory efficiency.
+The about box now reports the amount of free memory.
+Harvest C no longer crashes when the about box is displayed with another
+  window on the screen.
+
+Release 1.0 -- 14 October 1991
+----
+Initial release - sent to mac.archive.umich.edu
+

@@ -1,1 +1,17 @@
-Read Me=======This package describes how to write command resources for the nShell(tm).  Included are source code examples and a hypertext Programmer's Guide to the nShell.  A User's Guide to the nShell(tm) is available separately.This software is distributed "as is" without warranty of any kind.  The entire risk as to the quality and performance of such software is with the user.  Newport Software Development specifically disclaims all warranties, expressed or implied, including but not limited to implied warranties of merchantability and fitness for a particular purpose.  Newport Software Development shall have no liability or responsibility to the user or any other person or entity with respect to any claim, loss, liability, or damage caused or alleged to be caused directly or indirectly by this software.  Copyright (c) 1994 Newport Software DevelopmentYou may distribute unmodified copies of the nShell(tm) for noncommercial purposes.  All other rights are reserved.nShell-Pro(tm) may not be distributed without the express written consent of Newport Software Development.nShell and nShell-Pro are trademarks of Newport Software Development.  Apple and Macintosh are registered trademarks of Apple Computer, Inc.  THINK C and THINK Pascal are trademarks of Symantec Corporation.  CodeWarrior is a trademark of Metrowerks, Inc.  Other brands and their products are trademarks of their respective holders.Newport Software DevelopmentP.O. Box 1485, Newport Beach, CA 92659
+Read Me
+=======
+
+This package describes how to write command resources for the nShell(tm).  Included are source code examples and a hypertext Programmer's Guide to the nShell.  A User's Guide to the nShell(tm) is available separately.
+
+This software is distributed "as is" without warranty of any kind.  The entire risk as to the quality and performance of such software is with the user.  Newport Software Development specifically disclaims all warranties, expressed or implied, including but not limited to implied warranties of merchantability and fitness for a particular purpose.  Newport Software Development shall have no liability or responsibility to the user or any other person or entity with respect to any claim, loss, liability, or damage caused or alleged to be caused directly or indirectly by this software.  
+
+Copyright (c) 1994 Newport Software Development
+
+You may distribute unmodified copies of the nShell(tm) for noncommercial purposes.  All other rights are reserved.
+
+nShell-Pro(tm) may not be distributed without the express written consent of Newport Software Development.
+
+nShell and nShell-Pro are trademarks of Newport Software Development.  Apple and Macintosh are registered trademarks of Apple Computer, Inc.  THINK C and THINK Pascal are trademarks of Symantec Corporation.  CodeWarrior is a trademark of Metrowerks, Inc.  Other brands and their products are trademarks of their respective holders.
+
+Newport Software Development
+P.O. Box 1485, Newport Beach, CA 92659

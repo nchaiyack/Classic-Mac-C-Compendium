@@ -1,1 +1,55 @@
-=head1 PPC socketsThese provide authenticated stream sockets without out-of-banddata. PPC sockets should work between all networked Macintoshes running System 7,and between applications on a single Macintosh running System 7.=head2 Differences to generic behaviorPPC socket addresses have the following format:    struct sockaddr_ppc {      short             family;     /* Always AF_PPC                     */      LocationNameRec   location;   /* Check your trusty Inside Macintosh  */      PPCPortRec        port;    };C<choose()> currently only works for existing sockets. To restrict the choice ofaddresses presented, pass a pointer to the following structure for the C<constraint>argument:    typedef struct   {      short       flags;      Str32       nbpType;      PPCPortRec  match;    } sa_constr_ppc;C<flags> is obtained by or'ing one or several of the following constants:=over 4=item C<PPC_CON_NEWSTYLE>Always required for compatibility reasons.=item C<PPC_CON_MATCH_NBP>Only display machines that have registered an entity of type C<nbpType>.=item C<PPC_CON_MATCH_NAME>Only display ports whose name matches C<match.name>.=item C<PPC_CON_MATCH_TYPE>Only display ports whose type matches C<match.u.portType>.=backC<nbpType> specifies the machines to be displayed, as explained above. C<match> contains the nameand/or type to match against.C<connect()> will block even if the socket is nonblocking. In practice, however,delays are likely to be quite short, as it never has to block on a higher levelprotocol and the PPC ToolBox will automatically establish the connection.
+=head1 PPC sockets
+
+These provide authenticated stream sockets without out-of-band
+data. PPC sockets should work between all networked Macintoshes running System 7,
+and between applications on a single Macintosh running System 7.
+
+=head2 Differences to generic behavior
+
+
+PPC socket addresses have the following format:
+
+    struct sockaddr_ppc {
+      short             family;     /* Always AF_PPC                     */
+      LocationNameRec   location;   /* Check your trusty Inside Macintosh  */
+      PPCPortRec        port;
+    };
+
+C<choose()> currently only works for existing sockets. To restrict the choice of
+addresses presented, pass a pointer to the following structure for the C<constraint>
+argument:
+
+    typedef struct   {
+      short       flags;
+      Str32       nbpType;
+      PPCPortRec  match;
+    } sa_constr_ppc;
+
+C<flags> is obtained by or'ing one or several of the following constants:
+
+=over 4
+
+=item C<PPC_CON_NEWSTYLE>
+
+Always required for compatibility reasons.
+
+=item C<PPC_CON_MATCH_NBP>
+
+Only display machines that have registered an entity of type C<nbpType>.
+
+=item C<PPC_CON_MATCH_NAME>
+
+Only display ports whose name matches C<match.name>.
+
+=item C<PPC_CON_MATCH_TYPE>
+
+Only display ports whose type matches C<match.u.portType>.
+
+=back
+
+C<nbpType> specifies the machines to be displayed, as explained above. C<match> contains the name
+and/or type to match against.
+
+C<connect()> will block even if the socket is nonblocking. In practice, however,
+delays are likely to be quite short, as it never has to block on a higher level
+protocol and the PPC ToolBox will automatically establish the connection.

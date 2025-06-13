@@ -1,1 +1,70 @@
-Headers ReadMeSunday, June 4, 1995About The Headers~~~~~~~~~~~~~~~~~I've provided the MacTCP header files for those of you who may not already havethem.  There are two sets of headers: those for use with Apple's new UniversalHeaders, and those for use with older headers (i.e., those found in older THINK Ccompilers).  Use only the set of headers appropriate for your compiler; forexample, if you have an old THINK C 5.0.4 compiler, you will want the "Pre -Universal Headers" set.Why Did I Include the UH Set?~~~~~~~~~~~~~~~~~~~~~~~~~~~~~The wise and quick among us will observe that some compilers that use theUniversal Headers (at least Metrowerks does) already include the MacTCP headers. For some wacky reason, the version of dnr.c provided along with the universalheaders does not work with software compiled for 68k machines.  Why?  I can'tremember, but there was a long thread on comp.sys.mac.programmer (pre-split)about it.Since this bug was discovered, John Norstad has included his modified copy ofdnr.c along with Newswatcher's source code.  In the headers included with SimpleSockets, I have renamed the original dnr.c file to "dnr.c - orig" and have addedJohn's copy as "dnr.c".  If you already have the UH MacTCP Headers, all you needto do is copy John's dnr.c.But Why Did I Include the pre-UH Set?~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~And those of you who have read the Simple Sockets Manual will note I have said"Simple Sockets expects and demands Apple's Universal Headers."  This still true.In the next release, I hope to provide support for older headers in a seamless,invisible way.  For now, you will need to hack up some of the ip source.If you absolutely have to use the older headers, and you need to hack up the ipsource, here are some guidelines for doing this:1) If you get an error involving a variable beginning with "qd", for example:		InitGraf(&qd.thePort);   simply remove the "qd." part:      		InitGraf(&thePort);2) If you get some kind of error involving a routine named "New***Proc", where   *** is some descriptive name, or any proc being cast as a "***UPP", for    example:		pb.csParam.create.notifyProc = 						(UDPNotifyUPP)NewUDPNotifyProc(MyUDPNotifyProc);						   simply replace the function call with the argument to that function. i.e.,   		pb.csParam.create.notifyProc = MyUDPNotifyProc;And that should take care of all of Simple Socket's Universal Headerdependencies.Installing The Headers~~~~~~~~~~~~~~~~~~~~~~If your compiler doesn't already have a special place for the MacTCP headers, youmight as well put them with your copies of ip Ä and butil Ä.Michael Trenttrentmd@stu.beloit.edu
+Headers ReadMe
+Sunday, June 4, 1995
+
+About The Headers
+~~~~~~~~~~~~~~~~~
+I've provided the MacTCP header files for those of you who may not already have
+them.  There are two sets of headers: those for use with Apple's new Universal
+Headers, and those for use with older headers (i.e., those found in older THINK C
+compilers).  Use only the set of headers appropriate for your compiler; for
+example, if you have an old THINK C 5.0.4 compiler, you will want the "Pre -
+Universal Headers" set.
+
+
+Why Did I Include the UH Set?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The wise and quick among us will observe that some compilers that use the
+Universal Headers (at least Metrowerks does) already include the MacTCP headers. 
+For some wacky reason, the version of dnr.c provided along with the universal
+headers does not work with software compiled for 68k machines.  Why?  I can't
+remember, but there was a long thread on comp.sys.mac.programmer (pre-split)
+about it.
+
+Since this bug was discovered, John Norstad has included his modified copy of
+dnr.c along with Newswatcher's source code.  In the headers included with Simple
+Sockets, I have renamed the original dnr.c file to "dnr.c - orig" and have added
+John's copy as "dnr.c".  If you already have the UH MacTCP Headers, all you need
+to do is copy John's dnr.c.
+
+
+But Why Did I Include the pre-UH Set?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+And those of you who have read the Simple Sockets Manual will note I have said
+"Simple Sockets expects and demands Apple's Universal Headers."  This still true.
+In the next release, I hope to provide support for older headers in a seamless,
+invisible way.  For now, you will need to hack up some of the ip source.
+
+If you absolutely have to use the older headers, and you need to hack up the ip
+source, here are some guidelines for doing this:
+
+1) If you get an error involving a variable beginning with "qd", for example:
+
+		InitGraf(&qd.thePort);
+
+   simply remove the "qd." part:
+   
+   		InitGraf(&thePort);
+
+2) If you get some kind of error involving a routine named "New***Proc", where
+   *** is some descriptive name, or any proc being cast as a "***UPP", for 
+   example:
+
+		pb.csParam.create.notifyProc = 
+						(UDPNotifyUPP)NewUDPNotifyProc(MyUDPNotifyProc);
+						
+   simply replace the function call with the argument to that function. i.e.,
+   
+		pb.csParam.create.notifyProc = MyUDPNotifyProc;
+
+And that should take care of all of Simple Socket's Universal Header
+dependencies.
+
+
+Installing The Headers
+~~~~~~~~~~~~~~~~~~~~~~
+If your compiler doesn't already have a special place for the MacTCP headers, you
+might as well put them with your copies of ip Ä and butil Ä.
+
+
+Michael Trent
+trentmd@stu.beloit.edu

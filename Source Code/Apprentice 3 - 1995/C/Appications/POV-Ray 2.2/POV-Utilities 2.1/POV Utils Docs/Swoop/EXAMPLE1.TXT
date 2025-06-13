@@ -1,1 +1,15 @@
-outfile test.incname testoutput_type 1segments 30vertex 0 1 1vertex 0 1 -1vertex 0 -1 -1vertex 0 -1 1var 1 0 180var 1 -5 5rotate &1 0 0translate &2 0 0
+outfile test.inc
+name test
+output_type 1
+segments 30
+
+vertex 0 1 1
+vertex 0 1 -1
+vertex 0 -1 -1
+vertex 0 -1 1
+
+var 1 0 180
+var 1 -5 5
+
+rotate &1 0 0
+translate &2 0 0

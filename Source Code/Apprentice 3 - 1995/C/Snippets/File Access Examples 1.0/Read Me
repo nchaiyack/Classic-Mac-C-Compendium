@@ -1,1 +1,28 @@
-File Access & Volume Scanning 1.0Hi,Included in this project are some routines dealing with file access and volume scanning.¥ FileRoutines.cContains routines that allow files to be treated as groups of numbered records. It contains routines to read and write byte, short int,long int and larger sized records easily just by specifying the file reference number, record number, and value.¥ Scanner.cContains routines that allow you to scan recursively through all the files and folders on one or more volumes, taking some action for each file or folder found.¥ Opening&ClosingFiles.txtContains comments and instructions on using the Standard File Package and opening and closing Macintosh files.¥ Sample application and project fileAlso, there is a Think Project Manager project (v7) that will create the sample application (also included). The sample application demonstrates some of the included routines by scanning all mounted volumes and creating a list of folders on all mounted volumes in a TeachText file.This source code is Copyright 1994 by Ken Worley. All Rights Reserved. You may use this code however you wish without any obligation to me. However, if you redistribute this source code unchanged, you must acknowledge this copyright by including this document. If you redistribute this source code after you've modified it, you must acknowledge that it was derived from this work.Ken Worley (KNEworley on AOL or eWorld)Apt Ideas Software(internet: KNEworley@eworld.com)
+File Access & Volume Scanning 1.0
+
+Hi,
+
+Included in this project are some routines dealing with file access and volume scanning.
+
+¥ FileRoutines.c
+
+Contains routines that allow files to be treated as groups of numbered records. It contains routines to read and write byte, short int,long int and larger sized records easily just by specifying the file reference number, record number, and value.
+
+¥ Scanner.c
+
+Contains routines that allow you to scan recursively through all the files and folders on one or more volumes, taking some action for each file or folder found.
+
+¥ Opening&ClosingFiles.txt
+
+Contains comments and instructions on using the Standard File Package and opening and closing Macintosh files.
+
+¥ Sample application and project file
+
+Also, there is a Think Project Manager project (v7) that will create the sample application (also included). The sample application demonstrates some of the included routines by scanning all mounted volumes and creating a list of folders on all mounted volumes in a TeachText file.
+
+This source code is Copyright 1994 by Ken Worley. All Rights Reserved. You may use this code however you wish without any obligation to me. However, if you redistribute this source code unchanged, you must acknowledge this copyright by including this document. If you redistribute this source code after you've modified it, you must acknowledge that it was derived from this work.
+
+Ken Worley (KNEworley on AOL or eWorld)
+Apt Ideas Software
+
+(internet: KNEworley@eworld.com)

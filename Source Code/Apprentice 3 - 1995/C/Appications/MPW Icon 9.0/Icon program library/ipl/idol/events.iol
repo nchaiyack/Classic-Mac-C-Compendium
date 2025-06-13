@@ -1,1 +1,1 @@
-const E_Tick := ".", E_Line := "_", E_Mask := '._'
+const E_Tick := ".", E_Line := "_", E_Mask := '._'

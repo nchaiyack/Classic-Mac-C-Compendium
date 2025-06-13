@@ -1,1 +1,419 @@
-UNIT MercutioAPI;    {xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}    {x                                                                         x}    {x         Developer's Programming Interface for the Mercutio MDEF         x}    {x            ©1992-1995 Ramon M. Felciano, All Rights Reserved            x}    {x                                                                         x}    {xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}INTERFACE	CONST		customDefProcSig = 'CUST';		areYouCustomMsg = ord('*') * 256 + ord('*');		getVersionMsg = ord('*') * 256 + ord('v');		getCopyrightMsg = ord('*') * 256 + ord('©');		setCallbackMsg = ord('*') * 256 + ord('c');		stripCustomDataMsg = ord('*') * 256 + ord('d');		setPrefsMsg = ord('*') * 256 + ord('p');		mMenuKeyMsg = ord('S') * 256 + ord('K');		{see if key press is key-equiv for this menu}		mDrawItemStateMsg = ord('S') * 256 + ord('D');		{ draw the specified item in the specifed box }		mCountItemsMsg = ord('S') * 256 + ord('C');	{ return count of items in menu }		cbBasicDataOnlyMsg = 1;		cbIconOnlyMsg = 2;		cbGetLongestItemMsg = 3;	TYPE		MenuPrefsPtr = ^MenuPrefsRec;		MenuPrefsRec = RECORD				isDynamicFlag, forceNewGroupFlag, useCallbackFlag, controlKeyFlag, optionKeyFlag, shiftKeyFlag, cmdKeyFlag, unused: style;				requiredModifiers: integer;			END;		MenuResPrefsHandle = ^MenuResPrefsPtr;		MenuResPrefsPtr = ^MenuResPrefs;		MenuResPrefs = RECORD				version: integer;				thePrefs: MenuPrefsRec;			END;	{ItemFlagsRec: additional fields supported by Mercutio MDEFs}		ItemFlagsPtr = ^ItemFlagsRec;		ItemFlagsRec = PACKED RECORD			{ high byte }				forceNewGroup: boolean;				isDynamic: boolean;				useCallback: boolean;				controlKey: boolean;				optionKey: boolean;				unused10: boolean;				shiftKey: boolean;				cmdKey: boolean;			{ low byte }				isHier: boolean;				changedByCallback: boolean;				Enabled: boolean;				hilited: boolean;				smallIcon: boolean;				hasIcon: boolean;				sameAlternateAsLastTime, unused0: boolean;			END;	{StdItemData: record structure from the standard menu item structure}		richItemData = PACKED RECORD				iconID: Byte;		{ resource ID of the icon to display (0 if none) }				keyEq: char;		{ keyboard equivalent (or special control value) }				mark: char;		{ mark character, (chr(0) if none) }				textStyle: Style;	{ text style of the item }				itemID: integer;	{ index position within the menu }				itemRect: rect;		{ where the item will be drawn }				flags: itemFlagsRec;	{ special Mercutio flags }				iconType: ResType;	{ resource type of the icon (used for disposing of icon data)}				hIcon: Handle;		{ handle to the icon data }				pString: stringPtr;	{ points to itemStr, or to string in menuHandle }				itemStr: str255;	{ used for callback string passing }				cbMsg: integer;		{ callback message }			END;		richItemPtr = ^richItemData;{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}{x}{x	MDEF_MenuKey is a replacement for the standard toolbox call MenuKey for use with the}{x	Mercutio MDEF. Given the keypress message and modifiers parameters from a standard event, it }{x	checks to see if the keypress is a key-equivalent for a particular menuitem. If you are currently}{x	using custom menus (i.e. menus using a Mercutio MDEF), pass the handle to one of these menus in}{x	hMenu. If you are not using custom menus, pass in NIL or another menu, and MDEF_MenuKey will use the}{x	standard MenuKey function to interpret the keypress.}{x}{x	As with MenuKey, MDEF_MenuKey returns the menu ID in high word of the result, and the menu}{x	item in the low word.}{x}{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}	FUNCTION MDEF_MenuKey (theMessage: longint; theModifiers: integer; hMenu: menuHandle): longint;{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}{x}{x	These routines allow you to retrieve the Copyright and Version information}{x	embedded within the MDEF. The Version information is returned as a longint,}{x	which can be typecast to a normal version resource.}{x}{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}	FUNCTION MDEF_GetCopyright (menu: MenuHandle): str255;	FUNCTION MDEF_GetVersion (menu: MenuHandle): longint;{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}{x}{x	MDEF_CalcItemSize will calculate the height and width for a given menu item. It assumes the top and}{x	left fields of theRect are filled in; the MDEF will fill in the bottom and right.}{x}{x	MDEF_DrawItem will draw a given item in the rectangle you specify. You can indicate whether the}{x	the item should be hilited or enabled.}{x}{x	MDEF_DrawItemState is similar but allows you to draw the item disabled or hilited.}{x}{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}	PROCEDURE MDEF_CalcItemSize (menu: MenuHandle; item: integer; VAR theRect: rect);	PROCEDURE MDEF_DrawItem (menu: MenuHandle; item: integer; destRect: rect);	PROCEDURE MDEF_DrawItemState (menu: MenuHandle; item: integer; destRect: rect; hilited, enabled: boolean);{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}{x}{x	MDEF_StripCustomMenuData will remove any custom data allocated by the Mercutio MDEFs. Use this}{x	before writing a MENU resource to disk (esp. if you are using callbacks)}{x}{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}	PROCEDURE MDEF_StripCustomMenuData (menu: MenuHandle);{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}{x}{x	MDEF_SetCallbackProc sets the procedure that will be called for each item before it is drawn. The}{x	procedure is also called during the SizeMenu message call.}{x}{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}	PROCEDURE MDEF_SetCallbackProc (menu: MenuHandle; theProc: procPtr);{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}{x}{x	MDEF_SetMenuPrefs lets you determine which style bits for the menuItems will be interepreted}{x	as feature flags for the MDEF.}{x}{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}	PROCEDURE MDEF_SetMenuPrefs (menu: MenuHandle; pPrefs: MenuPrefsPtr);IMPLEMENTATION	PROCEDURE CallMDEF (message: integer; theMenu: MenuHandle; VAR menuRect: Rect; hitPt: Point; VAR whichItem: integer; defProc: ProcPtr);	{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}	{x	Simple inline assembly code to call an MDEF, courtesy of John Cavallino. }	{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}	INLINE		$205F,	{ move.l (SP)+,A0 }		$4E90;	{ jsr (A0) }	PROCEDURE MDEF_SetMenuPrefs (menu: MenuHandle; pPrefs: MenuPrefsPtr);		VAR			state: SignedByte;			proc: handle;			dummyRect: rect;			dummyInt: integer;	BEGIN		proc := menu^^.menuProc;		state := HGetState(proc);		HLock(proc);		dummyInt := 0;		dummyRect.topLeft := point(longint(0));		dummyRect.botRight := point(longint(0));		CallMDEF(setPrefsMsg, menu, dummyRect, point(pPrefs), dummyInt, proc^);		HSetState(proc, state);		CalcMenuSize(menu);	{ size may have changed based on new Prefs }	END;	PROCEDURE MDEF_SetCallbackProc (menu: MenuHandle; theProc: procPtr);		VAR			state: SignedByte;			proc: handle;			dummyRect: rect;			dummyInt: integer;	BEGIN		proc := menu^^.menuProc;		state := HGetState(proc);		HLock(proc);		dummyInt := 0;		dummyRect.topLeft := point(longint(0));		dummyRect.botRight := point(longint(0));		CallMDEF(setCallbackMsg, menu, dummyRect, point(theProc), dummyInt, proc^);		HSetState(proc, state);	END;	PROCEDURE MDEF_StripCustomMenuData (menu: MenuHandle);		VAR			state: SignedByte;			proc: handle;			dummyPoint: point;			dummyItem: integer;			dummyRect: rect;	BEGIN		proc := menu^^.menuProc;		state := HGetState(proc);		HLock(proc);		CallMDEF(stripCustomDataMsg, menu, dummyRect, dummyPoint, dummyItem, proc^);		HSetState(proc, state);	END;	PROCEDURE MDEF_DrawItem (menu: MenuHandle; item: integer; destRect: rect);		VAR			state: SignedByte;			proc: handle;			dummyPt: point;	BEGIN		proc := menu^^.menuProc;		state := HGetState(proc);		HLock(proc);		CallMDEF(mDrawItemMsg, menu, destRect, dummyPt, item, proc^);		HSetState(proc, state);	END;	PROCEDURE MDEF_DrawItemState (menu: MenuHandle; item: integer; destRect: rect; hilited, enabled: boolean);		VAR			state: SignedByte;			proc: handle;			dummyPt: point;	BEGIN		proc := menu^^.menuProc;		state := HGetState(proc);		HLock(proc);		dummyPt.h := byte(hilited);		dummyPt.v := byte(enabled);		CallMDEF(mDrawItemStateMsg, menu, destRect, dummyPt, item, proc^);		HSetState(proc, state);	END;	PROCEDURE MDEF_CalcItemSize (menu: MenuHandle; item: integer; VAR theRect: rect);		VAR			state: SignedByte;			proc: handle;			dummyPt: point;	BEGIN		proc := menu^^.menuProc;		state := HGetState(proc);		HLock(proc);		CallMDEF(mCalcItemMsg, menu, theRect, dummyPt, item, proc^);		HSetState(proc, state);	END;	FUNCTION MDEF_IsCustom (menu: MenuHandle): boolean;	{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}	{x}	{x	MDEF_IsCustom returns true if hMenu is controlled by a custom MDEF. This relies on my}	{x	convention of returning the customDefProcSig constant in the rect parameter: this obtuse}	{x	convention should be unique enough that only my custom MDEFs behave this way.}	{x}	{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}		VAR			state: SignedByte;			proc: handle;			dummy: rect;			dummyInt: integer;			hRes: handle;	BEGIN		proc := menu^^.menuProc;		hRes := GetResource('MDEF', 0);		IF hRes^ = proc^ THEN			MDEF_IsCustom := false		ELSE			BEGIN				state := HGetState(proc);				HLock(proc);				dummy.topLeft := point(longint(0));				CallMDEF(areYouCustomMsg, menu, dummy, point(longint(0)), dummyInt, proc^);				HSetState(proc, state);				MDEF_IsCustom := longint(dummy.topLeft) = longint(customDefProcSig);			END;	END;	FUNCTION MDEF_GetVersion (menu: MenuHandle): longint;		VAR			state: SignedByte;			proc: handle;			dummy: rect;			dummyInt: integer;	BEGIN		proc := menu^^.menuProc;		state := HGetState(proc);		HLock(proc);		dummy.topLeft := point(longint(0));		CallMDEF(getVersionMsg, menu, dummy, point(longint(0)), dummyInt, proc^);		HSetState(proc, state);		MDEF_GetVersion := longint(dummy.topLeft);	END;	FUNCTION MDEF_GetCopyright (menu: MenuHandle): str255;		VAR			state: SignedByte;			proc: handle;			dummy: rect;			dummyInt: integer;			hCopyright: stringHandle;	BEGIN		MDEF_GetCopyright := '';		proc := menu^^.menuProc;		state := HGetState(proc);		HLock(proc);		dummy.topLeft := point(longint(0));		CallMDEF(getCopyrightMsg, menu, dummy, point(longint(0)), dummyInt, proc^);		HSetState(proc, state);		hCopyright := stringHandle(dummy.topLeft);		IF hCopyright <> NIL THEN			MDEF_GetCopyright := hCopyright^^;		disposeHandle(handle(hCopyright));	END;	FUNCTION MDEF_MenuKey (theMessage: longint; theModifiers: integer; hMenu: menuHandle): longint;		VAR			state: SignedByte;			proc: handle;			dummyRect: rect;			dummyInt: integer;	BEGIN		IF ((hMenu = NIL) | (NOT MDEF_IsCustom(hMenu))) THEN			MDEF_MenuKey := MenuKey(char(bitAnd(theMessage, charcodemask)))		ELSE			BEGIN				proc := hMenu^^.menuProc;				state := HGetState(proc);				HLock(proc);				dummyRect.topLeft := point(longint(0));				CallMDEF(mMenuKeyMsg, hMenu, dummyRect, point(theMessage), themodifiers, proc^);				HSetState(proc, state);				MDEF_MenuKey := longint(dummyRect.topleft);			END;	END;{ VERSION HISTORY }{1.2b27}{=====}{ - MDEF recognized by ID (19999) rather than by resource name}{ - Color icons now drawn unhilited when item is hilited (matches Apple menu behavior)}{ - Fixed option character in font (should be ^, not -^-)}{ - KNOWN BUG: doesn't react to GrafPort font info (e.g. for making 9 pt Geneva popup menus)}{1.2b26}{=====}{ - Fixed scroll bug that wouldn't hilight the last item in a menu after scrolling down}{ - Misc. code cleaning}{ - Added 'Xmnu' menu to demonstrate preference resource}{ - Removed flicker in dynamic items when they don't change}{1.2b24}{=====}{ - Dvorak keyboard support}{ - Fixed Balloon help flickering}{ - Added cbGetLongestItemMsg message to callback}{ - Misc bug fixes and code cleanups}{1.2b21}{=====}{ - Xmnu id 0 as a defaults for all the menus}{1.2b16}{=====}{ - fixed color menu bug (drew background in white)}{ - change callback procedure to accept a parameter block with cbMsg message}{ - callback called twice: once for item data, once for icon data}{ - renamed API for consistency (all routines start with MDEF_ )}{ - PowerMenuKey renamed MDEF_MenuKey}{}{1.2b12}{=====}{ - integrated all MDEFs back into Mercutio}{ - introduced Menu preferences for setting style bit mapping and required modifier keys}{ - new 'dirty' parameter to Callback avoids unnecessary flicker }{ - modifer parameter in Callback changed to Status to allow information to persist across calls }{}{Older versions}{==============}{11/13/92	1.1.1	Fixed keyTrans bug (w. Dvorak keyboard)}{1.1.2	Built C API, works with on-the-fly menus}{1.1.3	Added Copyright support}{1.1.4	Fixed popup bug, works with Greg's buttons}{1.1.5	Fixed bug with 'empty' mctbs; removed debugging code (alternate way to show disabled modifiers)}{2/21/93	1.2	Added icon suite support; renumbered MDEF font to resolve conflict with Geneva}END.
+UNIT MercutioAPI;
+
+    {xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+    {x                                                                         x}
+    {x         Developer's Programming Interface for the Mercutio MDEF         x}
+    {x            ©1992-1995 Ramon M. Felciano, All Rights Reserved            x}
+    {x                                                                         x}
+    {xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+
+INTERFACE
+
+	CONST
+
+		customDefProcSig = 'CUST';
+		areYouCustomMsg = ord('*') * 256 + ord('*');
+		getVersionMsg = ord('*') * 256 + ord('v');
+		getCopyrightMsg = ord('*') * 256 + ord('©');
+		setCallbackMsg = ord('*') * 256 + ord('c');
+		stripCustomDataMsg = ord('*') * 256 + ord('d');
+		setPrefsMsg = ord('*') * 256 + ord('p');
+
+		mMenuKeyMsg = ord('S') * 256 + ord('K');		{see if key press is key-equiv for this menu}
+		mDrawItemStateMsg = ord('S') * 256 + ord('D');		{ draw the specified item in the specifed box }
+		mCountItemsMsg = ord('S') * 256 + ord('C');	{ return count of items in menu }
+
+		cbBasicDataOnlyMsg = 1;
+		cbIconOnlyMsg = 2;
+		cbGetLongestItemMsg = 3;
+	TYPE
+		MenuPrefsPtr = ^MenuPrefsRec;
+		MenuPrefsRec = RECORD
+				isDynamicFlag, forceNewGroupFlag, useCallbackFlag, controlKeyFlag, optionKeyFlag, shiftKeyFlag, cmdKeyFlag, unused: style;
+				requiredModifiers: integer;
+			END;
+
+		MenuResPrefsHandle = ^MenuResPrefsPtr;
+		MenuResPrefsPtr = ^MenuResPrefs;
+		MenuResPrefs = RECORD
+				version: integer;
+				thePrefs: MenuPrefsRec;
+			END;
+
+	{ItemFlagsRec: additional fields supported by Mercutio MDEFs}
+		ItemFlagsPtr = ^ItemFlagsRec;
+		ItemFlagsRec = PACKED RECORD
+			{ high byte }
+				forceNewGroup: boolean;
+				isDynamic: boolean;
+				useCallback: boolean;
+				controlKey: boolean;
+				optionKey: boolean;
+				unused10: boolean;
+				shiftKey: boolean;
+				cmdKey: boolean;
+
+			{ low byte }
+				isHier: boolean;
+				changedByCallback: boolean;
+				Enabled: boolean;
+				hilited: boolean;
+				smallIcon: boolean;
+				hasIcon: boolean;
+				sameAlternateAsLastTime, unused0: boolean;
+			END;
+
+	{StdItemData: record structure from the standard menu item structure}
+		richItemData = PACKED RECORD
+				iconID: Byte;		{ resource ID of the icon to display (0 if none) }
+				keyEq: char;		{ keyboard equivalent (or special control value) }
+				mark: char;		{ mark character, (chr(0) if none) }
+				textStyle: Style;	{ text style of the item }
+				itemID: integer;	{ index position within the menu }
+				itemRect: rect;		{ where the item will be drawn }
+				flags: itemFlagsRec;	{ special Mercutio flags }
+				iconType: ResType;	{ resource type of the icon (used for disposing of icon data)}
+				hIcon: Handle;		{ handle to the icon data }
+				pString: stringPtr;	{ points to itemStr, or to string in menuHandle }
+				itemStr: str255;	{ used for callback string passing }
+				cbMsg: integer;		{ callback message }
+			END;
+		richItemPtr = ^richItemData;
+
+{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+{x}
+{x	MDEF_MenuKey is a replacement for the standard toolbox call MenuKey for use with the}
+{x	Mercutio MDEF. Given the keypress message and modifiers parameters from a standard event, it }
+{x	checks to see if the keypress is a key-equivalent for a particular menuitem. If you are currently}
+{x	using custom menus (i.e. menus using a Mercutio MDEF), pass the handle to one of these menus in}
+{x	hMenu. If you are not using custom menus, pass in NIL or another menu, and MDEF_MenuKey will use the}
+{x	standard MenuKey function to interpret the keypress.}
+{x}
+{x	As with MenuKey, MDEF_MenuKey returns the menu ID in high word of the result, and the menu}
+{x	item in the low word.}
+{x}
+{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+
+	FUNCTION MDEF_MenuKey (theMessage: longint; theModifiers: integer; hMenu: menuHandle): longint;
+
+
+{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+{x}
+{x	These routines allow you to retrieve the Copyright and Version information}
+{x	embedded within the MDEF. The Version information is returned as a longint,}
+{x	which can be typecast to a normal version resource.}
+{x}
+{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+
+	FUNCTION MDEF_GetCopyright (menu: MenuHandle): str255;
+	FUNCTION MDEF_GetVersion (menu: MenuHandle): longint;
+
+
+{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+{x}
+{x	MDEF_CalcItemSize will calculate the height and width for a given menu item. It assumes the top and}
+{x	left fields of theRect are filled in; the MDEF will fill in the bottom and right.}
+{x}
+{x	MDEF_DrawItem will draw a given item in the rectangle you specify. You can indicate whether the}
+{x	the item should be hilited or enabled.}
+{x}
+{x	MDEF_DrawItemState is similar but allows you to draw the item disabled or hilited.}
+{x}
+{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+
+	PROCEDURE MDEF_CalcItemSize (menu: MenuHandle; item: integer; VAR theRect: rect);
+	PROCEDURE MDEF_DrawItem (menu: MenuHandle; item: integer; destRect: rect);
+	PROCEDURE MDEF_DrawItemState (menu: MenuHandle; item: integer; destRect: rect; hilited, enabled: boolean);
+
+{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+{x}
+{x	MDEF_StripCustomMenuData will remove any custom data allocated by the Mercutio MDEFs. Use this}
+{x	before writing a MENU resource to disk (esp. if you are using callbacks)}
+{x}
+{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+	PROCEDURE MDEF_StripCustomMenuData (menu: MenuHandle);
+
+
+
+{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+{x}
+{x	MDEF_SetCallbackProc sets the procedure that will be called for each item before it is drawn. The}
+{x	procedure is also called during the SizeMenu message call.}
+{x}
+{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+	PROCEDURE MDEF_SetCallbackProc (menu: MenuHandle; theProc: procPtr);
+
+
+{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+{x}
+{x	MDEF_SetMenuPrefs lets you determine which style bits for the menuItems will be interepreted}
+{x	as feature flags for the MDEF.}
+{x}
+{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+	PROCEDURE MDEF_SetMenuPrefs (menu: MenuHandle; pPrefs: MenuPrefsPtr);
+
+
+
+IMPLEMENTATION
+
+	PROCEDURE CallMDEF (message: integer; theMenu: MenuHandle; VAR menuRect: Rect; hitPt: Point; VAR whichItem: integer; defProc: ProcPtr);
+	{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+	{x	Simple inline assembly code to call an MDEF, courtesy of John Cavallino. }
+	{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+	INLINE
+		$205F,	{ move.l (SP)+,A0 }
+		$4E90;	{ jsr (A0) }
+
+
+	PROCEDURE MDEF_SetMenuPrefs (menu: MenuHandle; pPrefs: MenuPrefsPtr);
+		VAR
+			state: SignedByte;
+			proc: handle;
+			dummyRect: rect;
+			dummyInt: integer;
+	BEGIN
+		proc := menu^^.menuProc;
+		state := HGetState(proc);
+		HLock(proc);
+		dummyInt := 0;
+		dummyRect.topLeft := point(longint(0));
+		dummyRect.botRight := point(longint(0));
+		CallMDEF(setPrefsMsg, menu, dummyRect, point(pPrefs), dummyInt, proc^);
+		HSetState(proc, state);
+		CalcMenuSize(menu);	{ size may have changed based on new Prefs }
+	END;
+
+
+
+	PROCEDURE MDEF_SetCallbackProc (menu: MenuHandle; theProc: procPtr);
+		VAR
+			state: SignedByte;
+			proc: handle;
+			dummyRect: rect;
+			dummyInt: integer;
+	BEGIN
+		proc := menu^^.menuProc;
+		state := HGetState(proc);
+		HLock(proc);
+		dummyInt := 0;
+		dummyRect.topLeft := point(longint(0));
+		dummyRect.botRight := point(longint(0));
+		CallMDEF(setCallbackMsg, menu, dummyRect, point(theProc), dummyInt, proc^);
+		HSetState(proc, state);
+	END;
+
+
+
+	PROCEDURE MDEF_StripCustomMenuData (menu: MenuHandle);
+		VAR
+			state: SignedByte;
+			proc: handle;
+			dummyPoint: point;
+			dummyItem: integer;
+			dummyRect: rect;
+	BEGIN
+		proc := menu^^.menuProc;
+		state := HGetState(proc);
+		HLock(proc);
+		CallMDEF(stripCustomDataMsg, menu, dummyRect, dummyPoint, dummyItem, proc^);
+		HSetState(proc, state);
+	END;
+
+
+
+	PROCEDURE MDEF_DrawItem (menu: MenuHandle; item: integer; destRect: rect);
+		VAR
+			state: SignedByte;
+			proc: handle;
+			dummyPt: point;
+	BEGIN
+		proc := menu^^.menuProc;
+		state := HGetState(proc);
+		HLock(proc);
+		CallMDEF(mDrawItemMsg, menu, destRect, dummyPt, item, proc^);
+		HSetState(proc, state);
+	END;
+
+
+
+	PROCEDURE MDEF_DrawItemState (menu: MenuHandle; item: integer; destRect: rect; hilited, enabled: boolean);
+		VAR
+			state: SignedByte;
+			proc: handle;
+			dummyPt: point;
+	BEGIN
+		proc := menu^^.menuProc;
+		state := HGetState(proc);
+		HLock(proc);
+		dummyPt.h := byte(hilited);
+		dummyPt.v := byte(enabled);
+		CallMDEF(mDrawItemStateMsg, menu, destRect, dummyPt, item, proc^);
+		HSetState(proc, state);
+	END;
+
+
+
+	PROCEDURE MDEF_CalcItemSize (menu: MenuHandle; item: integer; VAR theRect: rect);
+		VAR
+			state: SignedByte;
+			proc: handle;
+			dummyPt: point;
+	BEGIN
+		proc := menu^^.menuProc;
+		state := HGetState(proc);
+		HLock(proc);
+		CallMDEF(mCalcItemMsg, menu, theRect, dummyPt, item, proc^);
+		HSetState(proc, state);
+	END;
+
+
+
+	FUNCTION MDEF_IsCustom (menu: MenuHandle): boolean;
+	{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+	{x}
+	{x	MDEF_IsCustom returns true if hMenu is controlled by a custom MDEF. This relies on my}
+	{x	convention of returning the customDefProcSig constant in the rect parameter: this obtuse}
+	{x	convention should be unique enough that only my custom MDEFs behave this way.}
+	{x}
+	{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+		VAR
+			state: SignedByte;
+			proc: handle;
+			dummy: rect;
+			dummyInt: integer;
+			hRes: handle;
+	BEGIN
+		proc := menu^^.menuProc;
+		hRes := GetResource('MDEF', 0);
+		IF hRes^ = proc^ THEN
+			MDEF_IsCustom := false
+		ELSE
+			BEGIN
+				state := HGetState(proc);
+				HLock(proc);
+				dummy.topLeft := point(longint(0));
+				CallMDEF(areYouCustomMsg, menu, dummy, point(longint(0)), dummyInt, proc^);
+				HSetState(proc, state);
+				MDEF_IsCustom := longint(dummy.topLeft) = longint(customDefProcSig);
+			END;
+	END;
+
+
+	FUNCTION MDEF_GetVersion (menu: MenuHandle): longint;
+		VAR
+			state: SignedByte;
+			proc: handle;
+			dummy: rect;
+			dummyInt: integer;
+	BEGIN
+		proc := menu^^.menuProc;
+		state := HGetState(proc);
+		HLock(proc);
+		dummy.topLeft := point(longint(0));
+		CallMDEF(getVersionMsg, menu, dummy, point(longint(0)), dummyInt, proc^);
+		HSetState(proc, state);
+		MDEF_GetVersion := longint(dummy.topLeft);
+	END;
+
+	FUNCTION MDEF_GetCopyright (menu: MenuHandle): str255;
+		VAR
+			state: SignedByte;
+			proc: handle;
+			dummy: rect;
+			dummyInt: integer;
+			hCopyright: stringHandle;
+	BEGIN
+		MDEF_GetCopyright := '';
+		proc := menu^^.menuProc;
+		state := HGetState(proc);
+		HLock(proc);
+		dummy.topLeft := point(longint(0));
+		CallMDEF(getCopyrightMsg, menu, dummy, point(longint(0)), dummyInt, proc^);
+		HSetState(proc, state);
+		hCopyright := stringHandle(dummy.topLeft);
+		IF hCopyright <> NIL THEN
+			MDEF_GetCopyright := hCopyright^^;
+		disposeHandle(handle(hCopyright));
+	END;
+
+
+
+	FUNCTION MDEF_MenuKey (theMessage: longint; theModifiers: integer; hMenu: menuHandle): longint;
+		VAR
+			state: SignedByte;
+			proc: handle;
+			dummyRect: rect;
+			dummyInt: integer;
+	BEGIN
+		IF ((hMenu = NIL) | (NOT MDEF_IsCustom(hMenu))) THEN
+			MDEF_MenuKey := MenuKey(char(bitAnd(theMessage, charcodemask)))
+		ELSE
+			BEGIN
+				proc := hMenu^^.menuProc;
+				state := HGetState(proc);
+				HLock(proc);
+				dummyRect.topLeft := point(longint(0));
+				CallMDEF(mMenuKeyMsg, hMenu, dummyRect, point(theMessage), themodifiers, proc^);
+				HSetState(proc, state);
+				MDEF_MenuKey := longint(dummyRect.topleft);
+			END;
+	END;
+
+
+{ VERSION HISTORY }
+{1.2b27}
+{=====}
+{ - MDEF recognized by ID (19999) rather than by resource name}
+{ - Color icons now drawn unhilited when item is hilited (matches Apple menu behavior)}
+{ - Fixed option character in font (should be ^, not -^-)}
+{ - KNOWN BUG: doesn't react to GrafPort font info (e.g. for making 9 pt Geneva popup menus)}
+
+
+{1.2b26}
+{=====}
+{ - Fixed scroll bug that wouldn't hilight the last item in a menu after scrolling down}
+{ - Misc. code cleaning}
+{ - Added 'Xmnu' menu to demonstrate preference resource}
+{ - Removed flicker in dynamic items when they don't change}
+
+
+{1.2b24}
+{=====}
+{ - Dvorak keyboard support}
+{ - Fixed Balloon help flickering}
+{ - Added cbGetLongestItemMsg message to callback}
+{ - Misc bug fixes and code cleanups}
+
+
+{1.2b21}
+{=====}
+{ - Xmnu id 0 as a defaults for all the menus}
+
+{1.2b16}
+{=====}
+{ - fixed color menu bug (drew background in white)}
+{ - change callback procedure to accept a parameter block with cbMsg message}
+{ - callback called twice: once for item data, once for icon data}
+{ - renamed API for consistency (all routines start with MDEF_ )}
+{ - PowerMenuKey renamed MDEF_MenuKey}
+{}
+
+{1.2b12}
+{=====}
+{ - integrated all MDEFs back into Mercutio}
+{ - introduced Menu preferences for setting style bit mapping and required modifier keys}
+{ - new 'dirty' parameter to Callback avoids unnecessary flicker }
+{ - modifer parameter in Callback changed to Status to allow information to persist across calls }
+{}
+
+
+{Older versions}
+{==============}
+{11/13/92	1.1.1	Fixed keyTrans bug (w. Dvorak keyboard)}
+{1.1.2	Built C API, works with on-the-fly menus}
+{1.1.3	Added Copyright support}
+{1.1.4	Fixed popup bug, works with Greg's buttons}
+{1.1.5	Fixed bug with 'empty' mctbs; removed debugging code (alternate way to show disabled modifiers)}
+{2/21/93	1.2	Added icon suite support; renumbered MDEF font to resolve conflict with Geneva}
+
+END.

@@ -1,1 +1,50 @@
-¥ About the Macintosh Communications ToolboxThe Communications Toolbox consists of four managers and a set of utilities. These managers and utilities are an extension to the Macintosh Toolbox and provide basic networking and communications services.Each of the manager in the Communications Toolbox handles a different aspect of networking and communications: connection management, terminal emulation management, file transfer management, and communications resource management.There are two interfaces (besides the user interface) to consider when programming with the Communications Toolbox: the interface between the application and the Communications Toolbox, and the one between the Communications Toolbox and the Macintosh Operating System.The interface between an application and the Communications Toolbox is defined by the routines in each of the managers. By calling routines, an application can request basic networking and communications services.The interface between the Communications Toolbox and the Macintosh Operating System is controlled by tools. Tools are units of code that implement the networking and communications services that the application requests. When an application calls a Communications Toolbox routine, it does so without concern for the underlying protocol. It is the job of the tool to implement basic networking and communications services according to a specific protocol.The Communications Toolbox can be run on all Macintosh computers that have at least 1 megabyte (MB) of random-access memory (RAM), Macintosh Plus (128K) read-only memory (ROM) or later, and system 6.0.4 or a later version.The Communications Toolbox is now (system 7.0 or later) part of the Macintosh Operating System. For earlier system versions, an installation disk is available from APDA¨ (Apple Programmers and Developpers Association).¥ Contents of the archiveThe archive contains a set of geneneric TCL classes that handle the most important services of the Communications Toolbox.CConnection: connection management class.CFileTransfer: terminal management class.CTermPane: terminal emulation pane class.CCTBApp: generic CTB compatible application class.CCTBDesktop: CTB desktop class that handles tools menus.CCTBSwitchboard: CTB switchboard class that manages tools related events.The sources are well documented, but I have no time to write a very detailed documentation for each class.I have been using these classes for 6 monthes, in a product that will become commercial in a few weeks.These classes are free, but if you make something with them, you can send me a copy of your product.If you discover bugs, or find good ideas of improvement, you can send me your suggestions.NB: Classes were first realized in French. I have translated them in English for the archive, but I am not very happy of my translation. Any good advices ??Romain VignesDepartement InformatiqueINSA Lyon - FRANCEE-Mail: Romain.Vignes@Insa-Lyon.FRTEL   : +33 78 84 02 10
+¥ About the Macintosh Communications Toolbox
+
+The Communications Toolbox consists of four managers and a set of utilities. These managers and utilities are an extension to the Macintosh Toolbox and provide basic networking and communications services.
+
+Each of the manager in the Communications Toolbox handles a different aspect of networking and communications: connection management, terminal emulation management, file transfer management, and communications resource management.
+
+There are two interfaces (besides the user interface) to consider when programming with the Communications Toolbox: the interface between the application and the Communications Toolbox, and the one between the Communications Toolbox and the Macintosh Operating System.
+
+The interface between an application and the Communications Toolbox is defined by the routines in each of the managers. By calling routines, an application can request basic networking and communications services.
+
+The interface between the Communications Toolbox and the Macintosh Operating System is controlled by tools. Tools are units of code that implement the networking and communications services that the application requests. When an application calls a Communications Toolbox routine, it does so without concern for the underlying protocol. It is the job of the tool to implement basic networking and communications services according to a specific protocol.
+
+The Communications Toolbox can be run on all Macintosh computers that have at least 1 megabyte (MB) of random-access memory (RAM), Macintosh Plus (128K) read-only memory (ROM) or later, and system 6.0.4 or a later version.
+
+The Communications Toolbox is now (system 7.0 or later) part of the Macintosh Operating System. For earlier system versions, an installation disk is available from APDA¨ (Apple Programmers and Developpers Association).
+
+
+¥ Contents of the archive
+
+The archive contains a set of geneneric TCL classes that handle the most important services of the Communications Toolbox.
+
+CConnection: connection management class.
+
+CFileTransfer: terminal management class.
+
+CTermPane: terminal emulation pane class.
+
+CCTBApp: generic CTB compatible application class.
+
+CCTBDesktop: CTB desktop class that handles tools menus.
+
+CCTBSwitchboard: CTB switchboard class that manages tools related events.
+
+The sources are well documented, but I have no time to write a very detailed documentation for each class.
+
+I have been using these classes for 6 monthes, in a product that will become commercial in a few weeks.
+
+These classes are free, but if you make something with them, you can send me a copy of your product.
+
+If you discover bugs, or find good ideas of improvement, you can send me your suggestions.
+
+NB: Classes were first realized in French. I have translated them in English for the archive, but I am not very happy of my translation. Any good advices ??
+
+
+
+Romain Vignes
+Departement Informatique
+INSA Lyon - FRANCE
+E-Mail: Romain.Vignes@Insa-Lyon.FR
+TEL   : +33 78 84 02 10

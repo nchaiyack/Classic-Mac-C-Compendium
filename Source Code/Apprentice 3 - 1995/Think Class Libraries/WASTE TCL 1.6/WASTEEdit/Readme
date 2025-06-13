@@ -1,1 +1,5 @@
-The project file here uses the C port of WASTE 1.1, but it can be easily modified to use the pascal or C versions of WASTE 1.0 or 1.1.  It also compiles with CodeWarrior with Eric Scouten's TCL port.I've included a compiled version using WASTE 1.1.  It supports drag and drop as well as embedded pictures and sounds.  If you are using System 7.5, try dragging some pictures in from the scrapbook.Dan
+The project file here uses the C port of WASTE 1.1, but it can be easily modified to use the pascal or C versions of WASTE 1.0 or 1.1.  It also compiles with CodeWarrior with Eric Scouten's TCL port.
+
+I've included a compiled version using WASTE 1.1.  It supports drag and drop as well as embedded pictures and sounds.  If you are using System 7.5, try dragging some pictures in from the scrapbook.
+
+Dan

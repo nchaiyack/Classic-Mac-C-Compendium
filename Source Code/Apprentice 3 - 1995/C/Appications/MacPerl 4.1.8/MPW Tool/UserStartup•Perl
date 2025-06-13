@@ -1,1 +1,4 @@
-# Set this path to your likingSet PERLLIB	"{MPW}Libraries:PerlLibs:"	Export PERLLIB
+# Set this path to your liking
+
+Set PERLLIB	"{MPW}Libraries:PerlLibs:"
+	Export PERLLIB

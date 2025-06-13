@@ -1,1 +1,60 @@
-Application Killer, 1.2            by   Brent Burton, 4/29/92------------------  In this directory you will find the source code and executable versionsof my "Application Killer" program.  (The name was a desparate choice.)Anyway, AK uses the new PPC features of System 7 and allows the user tokill any running application that supports the standard Apple Events.  One use that I have discovered is for killing the Finder so I can run asingle program, such as a game, on the "bare" machine.  Users of machineswith 2Mb of Ram might need to use this occasionally (maybe for a compiler?)to free up some extra memory.  A new feature is the ability to start applications also.  This is a niceaddition because it's hard to start applications once the finder is dead.The Source Code   (and Think C 5.0)--- ------ ----  Included with the code are the resource and Think C 5.0 project files.Before you recompile the application you will need to precompile theak_header.h file into "ak_headers".  The ak_headers file is about 105kin size.  Compilation with other compilers is not tested and if youare not using Think C then you may or may not be able to use precompiledheaders (see your manual).Misc----  All development was done on a Mac +, Think C 5.0, Sys 7, 4Mb ram, 5'-9.5", 130lbs, hazel eyes, Gemini, likes the outdoors.  555-1212.If the program doesn't work on your system, please let me know andI'll look into it.Enjoy.-Brent Burton brentb@math.tamu.edu---------------------------------------------------------CHANGE HISTORY------- -------Present -- let it sit12/10/92 -- repackaged for another batch mailing4/29/92 -- Change the about box picture to something less possibly   offensive to others.  Updated to version to 1.2.  No changes to the   code except for a few more comments added.3/14/92 -- Made a couple changes in the code like correcting some of   the comments.12/21 - 3/13 -- let the program stagnate.12/21/91 -- added "Launch Application" to fire up applications;  just an   easy way to do things in case the finder isn't running.  It's also quicker   navigating via the file dialogs than opening 12 finder windows...12/10/91 -- 1.0  -- initial release. Only kills applications
+Application Killer, 1.2            by   Brent Burton, 4/29/92
+------------------
+
+  In this directory you will find the source code and executable versions
+of my "Application Killer" program.  (The name was a desparate choice.)
+Anyway, AK uses the new PPC features of System 7 and allows the user to
+kill any running application that supports the standard Apple Events.
+
+  One use that I have discovered is for killing the Finder so I can run a
+single program, such as a game, on the "bare" machine.  Users of machines
+with 2Mb of Ram might need to use this occasionally (maybe for a compiler?)
+to free up some extra memory.
+
+  A new feature is the ability to start applications also.  This is a nice
+addition because it's hard to start applications once the finder is dead.
+
+The Source Code   (and Think C 5.0)
+--- ------ ----
+
+  Included with the code are the resource and Think C 5.0 project files.
+Before you recompile the application you will need to precompile the
+ak_header.h file into "ak_headers".  The ak_headers file is about 105k
+in size.  Compilation with other compilers is not tested and if you
+are not using Think C then you may or may not be able to use precompiled
+headers (see your manual).
+
+
+Misc
+----
+  All development was done on a Mac +, Think C 5.0, Sys 7, 4Mb ram, 
+5'-9.5", 130lbs, hazel eyes, Gemini, likes the outdoors.  555-1212.
+If the program doesn't work on your system, please let me know and
+I'll look into it.
+
+Enjoy.
+-Brent Burton
+ brentb@math.tamu.edu
+
+---------------------------------------------------------
+CHANGE HISTORY
+------- -------
+Present -- let it sit
+
+12/10/92 -- repackaged for another batch mailing
+
+4/29/92 -- Change the about box picture to something less possibly
+   offensive to others.  Updated to version to 1.2.  No changes to the
+   code except for a few more comments added.
+
+3/14/92 -- Made a couple changes in the code like correcting some of
+   the comments.
+
+12/21 - 3/13 -- let the program stagnate.
+
+12/21/91 -- added "Launch Application" to fire up applications;  just an
+   easy way to do things in case the finder isn't running.  It's also quicker
+   navigating via the file dialogs than opening 12 finder windows...
+
+12/10/91 -- 1.0  -- initial release. Only kills applications
+

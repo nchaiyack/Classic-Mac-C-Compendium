@@ -1,1 +1,52 @@
--------License-------Thread Library may be redistributed free of charge, subject to thefollowing terms.You may use Thread Library free of charge in your own software,provided the following notice is included either in documentationaccompanying your software or in your application's about box.	Thread Library Copyright © 1994-1995 Ari HalberstadtYou may not sell Thread Library or any derivative work thereof. Thismeans, for instance, that you cannot edit some of the files in ThreadLibrary and then try to sell the modified versions. You may, however,include the compiled binary of Thread Library with your application,whether or not your application is freeware, shareware, or commercialsoftware.Publishers of software collections who wish to include Thread Librarymust contact me for permission. Usually, I will request a free copy ofthe collection.Redistribution of Thread Library, or any part thereof, must includethis document. You do not, however, need to include this document ifyou are only distributing Thread Library as a compiled binary that ispart of a larger program.If you make any modifications to Thread Library, you must note thosemodifications so that it is clear that you made them.Thread Library is distributed as is and comes with no warranty. Use itat your own risk.-------------------Contact Information-------------------You can reach me at the following addresses, as of June 1995.Postal mail:  Ari Halberstadt  9 Whittemore Road  Newton, MA 02158-2105  USAElectronic mail (in decreasing order of preference):    ari@shore.net  ari@world.std.com
+-------
+License
+-------
+
+Thread Library may be redistributed free of charge, subject to the
+following terms.
+
+You may use Thread Library free of charge in your own software,
+provided the following notice is included either in documentation
+accompanying your software or in your application's about box.
+
+	Thread Library Copyright © 1994-1995 Ari Halberstadt
+
+You may not sell Thread Library or any derivative work thereof. This
+means, for instance, that you cannot edit some of the files in Thread
+Library and then try to sell the modified versions. You may, however,
+include the compiled binary of Thread Library with your application,
+whether or not your application is freeware, shareware, or commercial
+software.
+
+Publishers of software collections who wish to include Thread Library
+must contact me for permission. Usually, I will request a free copy of
+the collection.
+
+Redistribution of Thread Library, or any part thereof, must include
+this document. You do not, however, need to include this document if
+you are only distributing Thread Library as a compiled binary that is
+part of a larger program.
+
+If you make any modifications to Thread Library, you must note those
+modifications so that it is clear that you made them.
+
+Thread Library is distributed as is and comes with no warranty. Use it
+at your own risk.
+
+-------------------
+Contact Information
+-------------------
+
+You can reach me at the following addresses, as of June 1995.
+
+Postal mail:
+
+  Ari Halberstadt
+  9 Whittemore Road
+  Newton, MA 02158-2105
+  USA
+
+Electronic mail (in decreasing order of preference):
+  
+  ari@shore.net
+  ari@world.std.com

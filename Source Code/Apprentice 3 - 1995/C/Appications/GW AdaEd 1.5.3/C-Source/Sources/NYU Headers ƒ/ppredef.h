@@ -1,1 +1,1 @@
-int predef_code(char *);
+int predef_code(char *);

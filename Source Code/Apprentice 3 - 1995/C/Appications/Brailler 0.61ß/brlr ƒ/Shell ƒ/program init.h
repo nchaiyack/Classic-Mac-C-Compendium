@@ -1,1 +1,2 @@
-void InitTheProgram(void);Boolean ShutDownTheProgram(void);
+void InitTheProgram(void);
+Boolean ShutDownTheProgram(void);

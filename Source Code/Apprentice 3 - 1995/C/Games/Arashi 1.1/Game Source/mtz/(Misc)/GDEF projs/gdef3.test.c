@@ -1,1 +1,9 @@
-#include <stdio.h>void main(){	installASHI();		ReplaceASHI();	}
+#include <stdio.h>
+
+void main(){
+
+	installASHI();
+	
+	ReplaceASHI();
+	
+}

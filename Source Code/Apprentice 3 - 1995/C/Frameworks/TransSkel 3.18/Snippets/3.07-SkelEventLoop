@@ -1,1 +1,106 @@
-/* * The rest of this file contains SkelEventLoop() as it was before the modifications * made for 3.08.  I saved it to preserve for posterity the tortuous explanation * of the "pseudo null event" problem. *//* * Main loop. * * - Run background task if there is one. * - Take care of DA's with SystemTask(). * - Pass event to event router. * - If no event, call the "no-event" handler for the front window and for * any other windows with idle procedures that are always supposed * to run.  This is done in such a way that it is safe for idle procs * to remove the window handler for their own window if they want * (unlikely, but...)  This loop doesn't check whether the window is * really a dialog window or not, but it doesn't have to, because such * things always have a nil idle proc. *	 * doneFlag is restored to its previous value upon exit.  This allows * SkelEventLoop() to be called recursively. */voidSkelEventLoop (void){EventRecord	theEvent;WHHandle	wh, wh2;WindowPtr	w;Boolean		haveEvent;GrafPtr		tmpPort;Boolean		oldDoneFlag;long		waitTime;SkelWindIdleProcPtr	p;	oldDoneFlag = doneFlag;		/* save in case this is a recursive call */	doneFlag = false;			/* set for this call */	while (!doneFlag)	{	/*	 * Now watch carefully.  GetNextEvent() calls SystemEvent() to handle some	 * DA events, and returns false if the event was handled.  However, in	 * such cases the event record will still have the event that occurred,	 * *not* a null event.  So haveEvent == false doesn't necessarily imply a	 * null event.  You must explicitly check for it.	 *	 * Cannot ignore GetNextEvent() return value and assume the event contains	 * a null event if the return value is false.	 *	 * Previous versions figured (wrongly) that haveEvent==false meant a null	 * event had occurred, and passed it through to the event router, so	 * that caret-blinking in dialog TextEdit items would occur.  But cmd-key	 * equivalents while DA windows were in front, in particular, allowed	 * already-processed DA events to get into the event router (as a	 * presumptive null event, since haveEvent was false), and they got	 * handled again because when the event record was examined, lo and behold,	 * it had a cmd-key event!  So now this logic is used:	 *	 * If have a real event OR if the "non-event" is a true nullEvent,	 * then process it.	 */		if (hasWNE)		{			waitTime = (inForeground ? fgWaitTime : bgWaitTime);			haveEvent = WaitNextEvent (eventMask, &theEvent, waitTime, nil);		}		else		{			SystemTask ();			haveEvent = GetNextEvent (eventMask, &theEvent);		}		if (haveEvent || theEvent.what == nullEvent)			SkelRouteEvent (&theEvent);		/*		 * Run applicable window idle procs.  Make sure to save and restore		 * the port, since idle procs for the non-active window may be run.		 * None of them run when the application is suspended.		 */		if (inForeground && !haveEvent)	/* || theEvent.what == nullEvent ??? */		{			GetPort (&tmpPort);			for (wh = whList; wh != nil; wh = wh2)			{				wh2 = (**wh).whNext;				w = (**wh).whWind;				if (w == FrontWindow () || !(**wh).whFrontOnly)				{					if ((p = (**wh).whIdle) != (SkelIdleProcPtr) nil)					{						if (!hasWNE)							SystemTask ();						SetPort (w);						(*p) ();					}				}			}			SetPort (tmpPort);		}	}	doneFlag = oldDoneFlag;	/* restore in case this was a recursive call */}
+/*
+ * The rest of this file contains SkelEventLoop() as it was before the modifications
+ * made for 3.08.  I saved it to preserve for posterity the tortuous explanation
+ * of the "pseudo null event" problem.
+ */
+
+/*
+ * Main loop.
+ *
+ * - Run background task if there is one.
+ * - Take care of DA's with SystemTask().
+ * - Pass event to event router.
+ * - If no event, call the "no-event" handler for the front window and for
+ * any other windows with idle procedures that are always supposed
+ * to run.  This is done in such a way that it is safe for idle procs
+ * to remove the window handler for their own window if they want
+ * (unlikely, but...)  This loop doesn't check whether the window is
+ * really a dialog window or not, but it doesn't have to, because such
+ * things always have a nil idle proc.
+ *	
+ * doneFlag is restored to its previous value upon exit.  This allows
+ * SkelEventLoop() to be called recursively.
+ */
+
+void
+SkelEventLoop (void)
+{
+EventRecord	theEvent;
+WHHandle	wh, wh2;
+WindowPtr	w;
+Boolean		haveEvent;
+GrafPtr		tmpPort;
+Boolean		oldDoneFlag;
+long		waitTime;
+SkelWindIdleProcPtr	p;
+
+	oldDoneFlag = doneFlag;		/* save in case this is a recursive call */
+	doneFlag = false;			/* set for this call */
+	while (!doneFlag)
+	{
+	/*
+	 * Now watch carefully.  GetNextEvent() calls SystemEvent() to handle some
+	 * DA events, and returns false if the event was handled.  However, in
+	 * such cases the event record will still have the event that occurred,
+	 * *not* a null event.  So haveEvent == false doesn't necessarily imply a
+	 * null event.  You must explicitly check for it.
+	 *
+	 * Cannot ignore GetNextEvent() return value and assume the event contains
+	 * a null event if the return value is false.
+	 *
+	 * Previous versions figured (wrongly) that haveEvent==false meant a null
+	 * event had occurred, and passed it through to the event router, so
+	 * that caret-blinking in dialog TextEdit items would occur.  But cmd-key
+	 * equivalents while DA windows were in front, in particular, allowed
+	 * already-processed DA events to get into the event router (as a
+	 * presumptive null event, since haveEvent was false), and they got
+	 * handled again because when the event record was examined, lo and behold,
+	 * it had a cmd-key event!  So now this logic is used:
+	 *
+	 * If have a real event OR if the "non-event" is a true nullEvent,
+	 * then process it.
+	 */
+
+		if (hasWNE)
+		{
+			waitTime = (inForeground ? fgWaitTime : bgWaitTime);
+			haveEvent = WaitNextEvent (eventMask, &theEvent, waitTime, nil);
+		}
+		else
+		{
+			SystemTask ();
+			haveEvent = GetNextEvent (eventMask, &theEvent);
+		}
+
+		if (haveEvent || theEvent.what == nullEvent)
+			SkelRouteEvent (&theEvent);
+
+		/*
+		 * Run applicable window idle procs.  Make sure to save and restore
+		 * the port, since idle procs for the non-active window may be run.
+		 * None of them run when the application is suspended.
+		 */
+
+		if (inForeground && !haveEvent)	/* || theEvent.what == nullEvent ??? */
+		{
+			GetPort (&tmpPort);
+			for (wh = whList; wh != nil; wh = wh2)
+			{
+				wh2 = (**wh).whNext;
+				w = (**wh).whWind;
+				if (w == FrontWindow () || !(**wh).whFrontOnly)
+				{
+					if ((p = (**wh).whIdle) != (SkelIdleProcPtr) nil)
+					{
+						if (!hasWNE)
+							SystemTask ();
+						SetPort (w);
+						(*p) ();
+					}
+				}
+			}
+			SetPort (tmpPort);
+		}
+	}
+	doneFlag = oldDoneFlag;	/* restore in case this was a recursive call */
+}

@@ -1,1 +1,126 @@
-Zen and the Art of the Movable-Modal Dialog Window**********A developer asks:"I handle dragging in my ModalDialog filterProc by detecting mouse clicks,checking FindWindow=inDrag+whichWindow=myDialog, and then DragWindow.  I letModalDialog() field the update events generated when I am dragging the dialogfrom partially-offscreen to totally-onscreen.  Unfortunately, theupdate-response draws a zoom box.  If I move the initial zoomboxless window tothe point where half an imaginary zoombox would be offscreen, and then dragback, sure enough--I get the half zoombox drawn in.Am I doing something wrong with my resource numbering?I notice that this behavior also happens if I renumber it to WDEF#0, letting itbecome responsible for drawing all my window types. (I set procID to 5 in thiscase, of course.)"**********Before I explain what's wrong, I have to make something perfectly clear.  Themovable-modal dialog should NOT be used in the call to _ModalDialog.  (Note:Along with the information in this release note, you should check HumanInterface Note #4 for a discussion of the important interface issued involvedwith this new window type.)  There are two technical reasons for this.  First,and most importantly, is that calling _ModalDialog prevents switching to takeplace under MultiFinder.  This is opposed to the design of the new window,since it is designed to allow switching.  Second, a dialog filter proceduredoes not facilitate the proper usage of the new window.  Since the new windowcan be moved, the window underneath needs to be updated.  Updating windows inthe background is not easily accomplished from a dialog filter.  Furthermore,there are all the other events that need to be handled, such asactivate/deactivate, suspend/resume, drag, zoom, etc.  This is all aduplication of the standard event loop.The movable-modal dialog handler should go through the normal event loop.Before you object and say this isn't easy, I have tried to point out howdifficult it is trying to use a dialog filter, and you can get more informationabout this in Technical Note #203, Don't Abuse the Managers.  It is alsoincorrect to call _ModalDialog since this prevents switching.  Now you may bethinking that you can use a modeless dialog.  This also has a nasty problem.In the course of handling a modeless dialog, the application uses_IsDialogEvent and _DialogSelect._IsDialogEvent always returns true for any events (except for mouse down,activate and update) when a dialog is the frontmost window.  (Note that even ifyou are doing things correctly, there is a bug in _IsDialogEvent which causesit to fail if there isn't a window, i.e., FrontWind = NIL.)  Applications thatare MultiFinderAware (bit in 'SIZE' resource) need to make a fake activateevent to pass to _DialogSelect if their frontmost window is a modeless dialogwhen they get a suspend or resume event.  Since _IsDialogEvent does this, theapplication has to check for osEvents before calling _IsDialogEvent, or ignorethe result from _IsDialogEvent.  Note that if the event gets passed to_DialogSelect, it handles the event as if it is a nullEvt (it does that withevents it does not recognize), which is harmless, but if the application missesit, there could be a problem.Handling a movable-modal dialog is just like any other window.  There arereally only two differences.  If the front window is the movable-modal, thenyou ignore any click outside the window.  Also ignore menu command keys.  Thelatter is currently a subject of discussion with the Human Interface group.I've found that it's very difficult to handle the menu if the window is modal.The biggest problem is what items would be enabled?  Should a desk accessory beallowed to be opened?  Maybe the solution is to disable ALL of the menu items.That's up to the Human Interface group to come up with some guidelines.I've found that adding the movable-modal dialog support to my standard eventloop only changed a couple lines of code.  I'm working on a example thatdemonstrates how to use this new window type correctly and that covers both thetechnical and user interface issues.  It will be published from DTS as soon asit is finished.Another point that should be covered is this 'WDEF' is NOT a replacement forthe standard system 'WDEF'.  The 'WDEF' that supports the new window type willbe built into System 7.0.  Until then, applications can include a modifiedversion of the current 'WDEF'.  This modified version should only be used toobtain the movable-modal window type.  The 'WDEF' resource ID is 128, thereforethe ProcID should be (16 * 128) + 5 = 2053.  To support zooming, you add 8.  Donot use this 'WDEF' as ResID = 0.  This would override the standard 'WDEF', andthings are changing.  System Software after 6.0.4 has a very slight change inthe window's drop shadow on a multibit depth Macintosh.Furthermore, the window may change slightly in look and behavior for System7.0.  The current version of the movable-modal draws a gray frame when thewindow is deactivated.  This was done because the application can be switchedinto the background and the movable-modal should not appear as a modal dialog.You should use the standard 'WDEF' while running System 7.0.  In this case, theProcID is (16 * 0) + 5 = 5.  This is a little tricky and I'll leave theexplanation to my sample code.  I promise I'll release this very soon (I justgot the 'WDEF' finished)."What about that bug we saw?"The problem reported in the first release of the 'WDEF' has been found andsolved.  The real problem is not in the 'WDEF', but that it is being usedincorrectly.  Namely, this new window should not be used with _ModalDialog.The problem is a conflict with the Window Manager and MultiFinder's patch to_ModalDialog.  There is a field in the Window Record used by the 'WDEF'.Originally this field was named "spareFlag."  When zoomable windows wereinvented, this flag was used to determine if the window supported the zoom box.Since that time, this same field has become known as "wZoom."MultiFinder uses this field in its patch to _ModalDialog which preventsswitching to another application.  Hitherto unknown, this conflict wasn't aproblem because modal windows had no title bars.  I've made a change in the'WDEF' to ignore this field of the window record.  That solves the conflict ofMultiFinder's patch to _ModalDialog.The fixed version is a ResEdit file created:  Mar 1, 1990You can also verify you have the right WDEF resource by looking at the firstfew bytes.$600A0000    This is a JMP instruction$57444546    This is ASCII for "WDEF"$0080        This is the ResID=128$0065        This is the version number 1.01Finally, I've named this 'WDEF' resource "movable-modal 1.01."Jim Reekes E.O., Macintosh Developer Technical SupportThursday, March 1, 1990   5:08 PM
+
+Zen and the Art of the Movable-Modal Dialog Window
+
+**********
+
+A developer asks:
+
+"I handle dragging in my ModalDialog filterProc by detecting mouse clicks,
+checking FindWindow=inDrag+whichWindow=myDialog, and then DragWindow.  I let
+ModalDialog() field the update events generated when I am dragging the dialog
+from partially-offscreen to totally-onscreen.  Unfortunately, the
+update-response draws a zoom box.  If I move the initial zoomboxless window to
+the point where half an imaginary zoombox would be offscreen, and then drag
+back, sure enough--I get the half zoombox drawn in.
+
+Am I doing something wrong with my resource numbering?
+
+I notice that this behavior also happens if I renumber it to WDEF#0, letting it
+become responsible for drawing all my window types. (I set procID to 5 in this
+case, of course.)"
+
+**********
+
+Before I explain what's wrong, I have to make something perfectly clear.  The
+movable-modal dialog should NOT be used in the call to _ModalDialog.  (Note:
+Along with the information in this release note, you should check Human
+Interface Note #4 for a discussion of the important interface issued involved
+with this new window type.)  There are two technical reasons for this.  First,
+and most importantly, is that calling _ModalDialog prevents switching to take
+place under MultiFinder.  This is opposed to the design of the new window,
+since it is designed to allow switching.  Second, a dialog filter procedure
+does not facilitate the proper usage of the new window.  Since the new window
+can be moved, the window underneath needs to be updated.  Updating windows in
+the background is not easily accomplished from a dialog filter.  Furthermore,
+there are all the other events that need to be handled, such as
+activate/deactivate, suspend/resume, drag, zoom, etc.  This is all a
+duplication of the standard event loop.
+
+The movable-modal dialog handler should go through the normal event loop.
+Before you object and say this isn't easy, I have tried to point out how
+difficult it is trying to use a dialog filter, and you can get more information
+about this in Technical Note #203, Don't Abuse the Managers.  It is also
+incorrect to call _ModalDialog since this prevents switching.  Now you may be
+thinking that you can use a modeless dialog.  This also has a nasty problem.
+In the course of handling a modeless dialog, the application uses
+_IsDialogEvent and _DialogSelect.
+
+_IsDialogEvent always returns true for any events (except for mouse down,
+activate and update) when a dialog is the frontmost window.  (Note that even if
+you are doing things correctly, there is a bug in _IsDialogEvent which causes
+it to fail if there isn't a window, i.e., FrontWind = NIL.)  Applications that
+are MultiFinderAware (bit in 'SIZE' resource) need to make a fake activate
+event to pass to _DialogSelect if their frontmost window is a modeless dialog
+when they get a suspend or resume event.  Since _IsDialogEvent does this, the
+application has to check for osEvents before calling _IsDialogEvent, or ignore
+the result from _IsDialogEvent.  Note that if the event gets passed to
+_DialogSelect, it handles the event as if it is a nullEvt (it does that with
+events it does not recognize), which is harmless, but if the application misses
+it, there could be a problem.
+
+Handling a movable-modal dialog is just like any other window.  There are
+really only two differences.  If the front window is the movable-modal, then
+you ignore any click outside the window.  Also ignore menu command keys.  The
+latter is currently a subject of discussion with the Human Interface group.
+I've found that it's very difficult to handle the menu if the window is modal.
+The biggest problem is what items would be enabled?  Should a desk accessory be
+allowed to be opened?  Maybe the solution is to disable ALL of the menu items.
+That's up to the Human Interface group to come up with some guidelines.
+
+I've found that adding the movable-modal dialog support to my standard event
+loop only changed a couple lines of code.  I'm working on a example that
+demonstrates how to use this new window type correctly and that covers both the
+technical and user interface issues.  It will be published from DTS as soon as
+it is finished.
+
+Another point that should be covered is this 'WDEF' is NOT a replacement for
+the standard system 'WDEF'.  The 'WDEF' that supports the new window type will
+be built into System 7.0.  Until then, applications can include a modified
+version of the current 'WDEF'.  This modified version should only be used to
+obtain the movable-modal window type.  The 'WDEF' resource ID is 128, therefore
+the ProcID should be (16 * 128) + 5 = 2053.  To support zooming, you add 8.  Do
+not use this 'WDEF' as ResID = 0.  This would override the standard 'WDEF', and
+things are changing.  System Software after 6.0.4 has a very slight change in
+the window's drop shadow on a multibit depth Macintosh.
+
+Furthermore, the window may change slightly in look and behavior for System
+7.0.  The current version of the movable-modal draws a gray frame when the
+window is deactivated.  This was done because the application can be switched
+into the background and the movable-modal should not appear as a modal dialog.
+You should use the standard 'WDEF' while running System 7.0.  In this case, the
+ProcID is (16 * 0) + 5 = 5.  This is a little tricky and I'll leave the
+explanation to my sample code.  I promise I'll release this very soon (I just
+got the 'WDEF' finished).
+
+"What about that bug we saw?"
+
+The problem reported in the first release of the 'WDEF' has been found and
+solved.  The real problem is not in the 'WDEF', but that it is being used
+incorrectly.  Namely, this new window should not be used with _ModalDialog.
+The problem is a conflict with the Window Manager and MultiFinder's patch to
+_ModalDialog.  There is a field in the Window Record used by the 'WDEF'.
+Originally this field was named "spareFlag."  When zoomable windows were
+invented, this flag was used to determine if the window supported the zoom box.
+Since that time, this same field has become known as "wZoom."
+
+MultiFinder uses this field in its patch to _ModalDialog which prevents
+switching to another application.  Hitherto unknown, this conflict wasn't a
+problem because modal windows had no title bars.  I've made a change in the
+'WDEF' to ignore this field of the window record.  That solves the conflict of
+MultiFinder's patch to _ModalDialog.
+
+The fixed version is a ResEdit file created:  Mar 1, 1990
+
+You can also verify you have the right WDEF resource by looking at the first
+few bytes.
+
+$600A0000    This is a JMP instruction
+$57444546    This is ASCII for "WDEF"
+$0080        This is the ResID=128
+$0065        This is the version number 1.01
+
+Finally, I've named this 'WDEF' resource "movable-modal 1.01."
+
+
+Jim Reekes E.O., Macintosh Developer Technical Support
+Thursday, March 1, 1990   5:08 PM

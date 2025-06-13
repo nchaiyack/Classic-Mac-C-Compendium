@@ -1,1 +1,190 @@
-POV-Utilities for the Macintosh6/8/94, version 2.1Collected and ported to the Macintoshby Eduard [esp] Schwan==========================================================================*** IntroductionThe POV-Utilities are a rather diverse collection of programs that have beendesigned to extend or ease the use of ray tracers. They convert one file formatto another, or create intricate shapes from primitive objects.  Many of theseutilities have been around for awhile, but mostly on the IBM PC platform only.The intent of the author of a utility is usually to take care of an immediateneed, not to create a general purpose piece of source code. Therefore, theutilities have been written in everything from IBM PC batch files and Unix AWKscripts, to Microsoft QuickBASIC and C. Currently, only the C utilities have beenconverted to the Macintosh, since they are the easiest to port.  There are more Cutilities that have not yet been tackled, but that's just a challenge, I guess.To give you an idea of the variety of these utilities, here's a one-sentencesynopsis of each utility currently in the Macintosh suite:** Coil Generator - Bill KirbyGenerates intertwined coiled toruses of spheres. * Connect the Dots (CDTS) - Truman BrownTakes input text file of XYZ coordinates and writes a POV-Ray output file thatconsists of spheres and connecting cylinders between them.  * DAT2POV - Drew WellsConverts old DKBTrace version 0.5 scene source files (.DAT) into POV-Ray 1.0scene source files (.POV). * DXF2POV - Aaron A. CollinsConverts AutoCAD DXF (interchange) text files into POV-Ray source files. * "Lissa" Lissajous Generator - Eduard [esp] SchwanGenerates a CTDS file of a lissajous-style woven mesh curve of dots. * POV Suds Generator - Sam Hobbs & Dan FarmerGenerates a POV-Ray source file of "osculating spheres" of differentsizes and textures.  * Raw2POV - Steve AngerConverts a text file of raw triangle vertex coordinates into a POV-Raysource file of either regular or smooth triangles.  * Shell Generator - Dan FarmerGenerates a POV-Ray source file of a snail-shell spiral of spheres. * Sponge Generator - Stephen CoyGenerates a POV-Ray source file of a recursive cube lattice of spheres. * Swoop - Douglas OtwellConverts a "SWOOP" language input text file into a raw triangle text file.This raw file can then be run through Raw2POV to create a POV-Ray source file.The SWOOP file can describe iterative translations and rotations of 2-Dpolygons, creating a 3-D extruded surface. This object is made up of triangleson the POV-Ray side.In this release of the Macintosh POV-Utilities, all the utilities are groupedinto one large monolithic Macintosh application.  This was primarily done outof expedience for the Macintosh author, not because it was the best thing forthe user.  The next release may see these as separate applications, each witha nice System 7 drag-n-drop interface and life of its own.The latest source code for many of these MSDOS utilities can be found oneither CompuServe or America Online, or by contacting the authors.  I do nothave permission to redistribute most of the source code, and do not want to stay ontop of the constant updates.  Therefore, I have sent my Mac-port changes back to eachauthor in the hopes that they will roll them into future releases.  That way,the re-integration of their source back to the Mac will be much easier.==========================================================================** Requirements-Any Macintosh (Mac Plus to Quadra)-System 6.0.4 or better (tested mostly under System 7)-Color Monitor preferred but not required-Some utilities may require up to 2 MB of memory, but most utilities willrun in 1 MB.==========================================================================** Features-User can easily move between utilities using menus-Uses (slightly) more intuitive dialog boxes for user parameters-Supports multiple monitors (dialogs follow status window)==========================================================================** General InstructionsPOV-Utilities is your standard Macintosh application (whatever that means.)Just double-click it, check out the nifty startup graphics, and choose theutility of your choice from the "Utilities" menu.  Oh, you can peek at theAbout box too!Each utility behaves similarly.  After choosing the utility, you are presentedwith a dialog box of options to fill out. Enter the appropriate values, selectthe input or output file, and click the "OK" button.  Note that some utilitiesREQUIRE that you pick an output file.  The OK button will be dimmed until youdo so.  The utility will run, displaying progress information as it goes.Depending on the utility, it could take anywhere from seconds to minutes tocomplete. While it runs, the cursor changes to a wristwatch, reminding youthat the computer is busy pondering a way to escape its current situation.When it does complete, the cursor returns to an arrow.  If, for some reason,you wish to cancel the running utility before it completes, you may hold downthe command key and press the period key, or choose "Stop" from the File menu.Unfortunately, this will most likely leave the utility in an unstable state,possibly with files left open.  You can run other utilities without a problem,but you will probably not be able to run the stopped utility again withoutgetting spurious file errors.  It won't hurt anything, but you will find thatyou need to quit the POV-Utilities application, and restart it.  After this,all will be well again.  This is just an unfortunate side-effect of allowingthe user to exit the utility at any time, something the original authors ofeach MSDOS utility never expected. ==========================================================================** Specific InstructionsThe best information for each utility is currently provided by each author ofthat utility.  Therefore, partially out of consideration of the great talents ofthese authors, and partly as a dodge so I don't have to try to consolidate andrewrite this vast variety of documentation, I have included the originaldocuments for each utility, as-is.  This means that you will need to read overthose documents to better understand the specifics of each utility.  You won'tget it in this document.  Also, I have put the name and e-mail address (where known)for each author in each utility's dialog box.There is also a Tutorial folder in this package, which has somedocumentation and example files, made specifically to show you how to use each ofthese utilities with POV-Ray.  These were created by me, not the utilitiesauthors, and thus I (not the authors) bear full blame for any mistakes in these examples.==========================================================================** Bugs Fixed since 2.0- Bug in file output completely mangled the DAT2POV utility.  Now fixed.==========================================================================** Known BugsThe ported utilities have only been minimally tested on the Macintosh(by my standards, anyway.)  I am very interested in hearing of any problemsyou have with this.  Please try to give as much information about what hardwareand software you are running this on, what INITs/extensions you have, and whatled up to the problem.  The more information I get, the more quickly I can findand (hopefully) fix the problem. Currently, the utilities all seem to be workingwell,  I know of no nasty crashes.  Also, if it looks like a problem with the utility itself, feel free to contact the specifically author.==========================================================================** The FutureAfter 2.0, I hope to create a kind of universal kernal for Mac utilities,and release each utility as a separate application.  With AppleEvent and maybeeven AppleScript support, these utilities could become quite powerful.  I alsowish to port some other important utilities that I haven't gotten to yet.There's POVGen, FrGen, POVLathe, etc... We need some image conversion utilities(Targa/GIF/PICT), and maybe the C Beautifier that is used to help format thesource code and scene files.  Of course, if you run into (or create) utilitiesthat you would like me to know about, please let me know! =========================================================================** Additional References & InformationThe POV-Ray raytracer is an ongoing FreeWare project being developed onCompuServe.  The executable and the source code can be found there, on theGraphics Development forum (GO GRAPHDEV.)  You can also find it on AmericaOnline, on the PC Graphics (PGR:Company Support:POV Ray) forum.I've also released a Shareware utility that converts a sequence of PICT files into a QuickTime movie.  I've posted "MooVer" on the internet and on CompuServe's GRAPHDEV forum.  It was mostly developed to aid in the creation of QuickTime movies from POV-Ray.Image Lab, Tim Wegner, Waite Group Press, 1992.  This book talks about POV-Ray,and a couple of the utilities.Ray Tracing Creations, Drew Wells/Chris Young, Waite Group Press, 1993.  Thisbook talks about the IBM PC version of POV-Ray and goes in-depth into all of thegeneral POV-Ray 1.0 features.  Watch for exciting new books from this publisherin the near future!==========================================================================** CreditsThe original utility authors deserve most of the kudos for their ingenuity.Jim Nitchals began porting and enhancing many of the POV-Utilities prior to mymucking about with them.  He has also beta tested them, and insured the sourcecompiled under Think C 5.I have incorporated many of Jim's enhancements into the utilities, and have beensending the proposed updates back to the appropriate authors. I also created theTUTORIAL materials, and updated the source to Symantec 7.0.Of course, none of this could have happened if I had paid the proper amount ofattention to my wife and children.  Their infinite patience and affection havepulled me through some otherwise meaningless late nights of coding, testing anddocumenting. Therefore, all I ask is that if you find these works useful, pleaselet me (and my family!) know that my work has benefitted you as well.  And ofcourse, let the authors know that you are enjoying their tools too!Thank you,Happy Raytracing![esp]==========================================================================** Author ContactEduard [esp] SchwanCompuserve: 71513,2161Internet: 71513.2161@compuserve.com
+POV-Utilities for the Macintosh
+6/8/94, version 2.1
+Collected and ported to the Macintosh
+by Eduard [esp] Schwan
+
+==========================================================================
+*** Introduction
+The POV-Utilities are a rather diverse collection of programs that have been
+designed to extend or ease the use of ray tracers. They convert one file format
+to another, or create intricate shapes from primitive objects.  Many of these
+utilities have been around for awhile, but mostly on the IBM PC platform only.
+
+The intent of the author of a utility is usually to take care of an immediate
+need, not to create a general purpose piece of source code. Therefore, the
+utilities have been written in everything from IBM PC batch files and Unix AWK
+scripts, to Microsoft QuickBASIC and C. Currently, only the C utilities have been
+converted to the Macintosh, since they are the easiest to port.  There are more C
+utilities that have not yet been tackled, but that's just a challenge, I guess.
+
+To give you an idea of the variety of these utilities, here's a one-sentence
+synopsis of each utility currently in the Macintosh suite:
+
+** Coil Generator - Bill Kirby
+Generates intertwined coiled toruses of spheres.
+
+ * Connect the Dots (CDTS) - Truman Brown
+Takes input text file of XYZ coordinates and writes a POV-Ray output file that
+consists of spheres and connecting cylinders between them. 
+
+ * DAT2POV - Drew Wells
+Converts old DKBTrace version 0.5 scene source files (.DAT) into POV-Ray 1.0
+scene source files (.POV).
+
+ * DXF2POV - Aaron A. Collins
+Converts AutoCAD DXF (interchange) text files into POV-Ray source files.
+
+ * "Lissa" Lissajous Generator - Eduard [esp] Schwan
+Generates a CTDS file of a lissajous-style woven mesh curve of dots.
+
+ * POV Suds Generator - Sam Hobbs & Dan Farmer
+Generates a POV-Ray source file of "osculating spheres" of different
+sizes and textures. 
+
+ * Raw2POV - Steve Anger
+Converts a text file of raw triangle vertex coordinates into a POV-Ray
+source file of either regular or smooth triangles. 
+
+ * Shell Generator - Dan Farmer
+Generates a POV-Ray source file of a snail-shell spiral of spheres.
+
+ * Sponge Generator - Stephen Coy
+Generates a POV-Ray source file of a recursive cube lattice of spheres.
+
+ * Swoop - Douglas Otwell
+Converts a "SWOOP" language input text file into a raw triangle text file.
+This raw file can then be run through Raw2POV to create a POV-Ray source file.
+The SWOOP file can describe iterative translations and rotations of 2-D
+polygons, creating a 3-D extruded surface. This object is made up of triangles
+on the POV-Ray side.
+
+In this release of the Macintosh POV-Utilities, all the utilities are grouped
+into one large monolithic Macintosh application.  This was primarily done out
+of expedience for the Macintosh author, not because it was the best thing for
+the user.  The next release may see these as separate applications, each with
+a nice System 7 drag-n-drop interface and life of its own.
+
+The latest source code for many of these MSDOS utilities can be found on
+either CompuServe or America Online, or by contacting the authors.  I do not
+have permission to redistribute most of the source code, and do not want to stay on
+top of the constant updates.  Therefore, I have sent my Mac-port changes back to each
+author in the hopes that they will roll them into future releases.  That way,
+the re-integration of their source back to the Mac will be much easier.
+==========================================================================
+** Requirements
+-Any Macintosh (Mac Plus to Quadra)
+-System 6.0.4 or better (tested mostly under System 7)
+-Color Monitor preferred but not required
+-Some utilities may require up to 2 MB of memory, but most utilities will
+run in 1 MB.
+==========================================================================
+** Features
+-User can easily move between utilities using menus
+-Uses (slightly) more intuitive dialog boxes for user parameters
+-Supports multiple monitors (dialogs follow status window)
+==========================================================================
+** General Instructions
+POV-Utilities is your standard Macintosh application (whatever that means.)
+Just double-click it, check out the nifty startup graphics, and choose the
+utility of your choice from the "Utilities" menu.  Oh, you can peek at the
+About box too!
+
+Each utility behaves similarly.  After choosing the utility, you are presented
+with a dialog box of options to fill out. Enter the appropriate values, select
+the input or output file, and click the "OK" button.  Note that some utilities
+REQUIRE that you pick an output file.  The OK button will be dimmed until you
+do so.  The utility will run, displaying progress information as it goes.
+Depending on the utility, it could take anywhere from seconds to minutes to
+complete. While it runs, the cursor changes to a wristwatch, reminding you
+that the computer is busy pondering a way to escape its current situation.
+When it does complete, the cursor returns to an arrow.  If, for some reason,
+you wish to cancel the running utility before it completes, you may hold down
+the command key and press the period key, or choose "Stop" from the File menu.
+Unfortunately, this will most likely leave the utility in an unstable state,
+possibly with files left open.  You can run other utilities without a problem,
+but you will probably not be able to run the stopped utility again without
+getting spurious file errors.  It won't hurt anything, but you will find that
+you need to quit the POV-Utilities application, and restart it.  After this,
+all will be well again.  This is just an unfortunate side-effect of allowing
+the user to exit the utility at any time, something the original authors of
+each MSDOS utility never expected. 
+==========================================================================
+** Specific Instructions
+The best information for each utility is currently provided by each author of
+that utility.  Therefore, partially out of consideration of the great talents of
+these authors, and partly as a dodge so I don't have to try to consolidate and
+rewrite this vast variety of documentation, I have included the original
+documents for each utility, as-is.  This means that you will need to read over
+those documents to better understand the specifics of each utility.  You won't
+get it in this document.  Also, I have put the name and e-mail address (where known)
+for each author in each utility's dialog box.
+
+There is also a Tutorial folder in this package, which has some
+documentation and example files, made specifically to show you how to use each of
+these utilities with POV-Ray.  These were created by me, not the utilities
+authors, and thus I (not the authors) bear full blame for any mistakes in these examples.
+==========================================================================
+** Bugs Fixed since 2.0
+- Bug in file output completely mangled the DAT2POV utility.  Now fixed.
+==========================================================================
+** Known Bugs
+The ported utilities have only been minimally tested on the Macintosh
+(by my standards, anyway.)  I am very interested in hearing of any problems
+you have with this.  Please try to give as much information about what hardware
+and software you are running this on, what INITs/extensions you have, and what
+led up to the problem.  The more information I get, the more quickly I can find
+and (hopefully) fix the problem. Currently, the utilities all seem to be working
+well,  I know of no nasty crashes.  Also, if it looks like a problem with the utility itself, feel free to contact the specifically author.
+==========================================================================
+** The Future
+After 2.0, I hope to create a kind of universal kernal for Mac utilities,
+and release each utility as a separate application.  With AppleEvent and maybe
+even AppleScript support, these utilities could become quite powerful.  I also
+wish to port some other important utilities that I haven't gotten to yet.
+There's POVGen, FrGen, POVLathe, etc... We need some image conversion utilities
+(Targa/GIF/PICT), and maybe the C Beautifier that is used to help format the
+source code and scene files.  Of course, if you run into (or create) utilities
+that you would like me to know about, please let me know! 
+=========================================================================
+** Additional References & Information
+The POV-Ray raytracer is an ongoing FreeWare project being developed on
+CompuServe.  The executable and the source code can be found there, on the
+Graphics Development forum (GO GRAPHDEV.)  You can also find it on America
+Online, on the PC Graphics (PGR:Company Support:POV Ray) forum.
+
+I've also released a Shareware utility that converts a sequence of PICT files into a QuickTime movie.  I've posted "MooVer" on the internet and on CompuServe's GRAPHDEV forum.  It was mostly developed to aid in the creation of QuickTime movies from POV-Ray.
+
+Image Lab, Tim Wegner, Waite Group Press, 1992.  This book talks about POV-Ray,
+and a couple of the utilities.
+
+Ray Tracing Creations, Drew Wells/Chris Young, Waite Group Press, 1993.  This
+book talks about the IBM PC version of POV-Ray and goes in-depth into all of the
+general POV-Ray 1.0 features.  Watch for exciting new books from this publisher
+in the near future!
+==========================================================================
+** Credits
+The original utility authors deserve most of the kudos for their ingenuity.
+
+Jim Nitchals began porting and enhancing many of the POV-Utilities prior to my
+mucking about with them.  He has also beta tested them, and insured the source
+compiled under Think C 5.
+
+I have incorporated many of Jim's enhancements into the utilities, and have been
+sending the proposed updates back to the appropriate authors. I also created the
+TUTORIAL materials, and updated the source to Symantec 7.0.
+
+Of course, none of this could have happened if I had paid the proper amount of
+attention to my wife and children.  Their infinite patience and affection have
+pulled me through some otherwise meaningless late nights of coding, testing and
+documenting. Therefore, all I ask is that if you find these works useful, please
+let me (and my family!) know that my work has benefitted you as well.  And of
+course, let the authors know that you are enjoying their tools too!
+
+Thank you,
+Happy Raytracing!
+[esp]
+==========================================================================
+** Author Contact
+Eduard [esp] Schwan
+Compuserve: 71513,2161
+Internet: 71513.2161@compuserve.com

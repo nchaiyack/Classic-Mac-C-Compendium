@@ -1,1 +1,26 @@
-How to write a 16-bit blitter (by someone who has never done it!)-----------------------------------------------------------------I may show my ignorance here. I have never had a chance to test a 16-bitblitter myself, so this might be completely off-base.As far as I know, a screen in 8-bit colour mode is always an indexed device.That is, each pixel on screen has a value, which is 'looked-up' in a colourtable (CLUT) to get the actual colour to draw. In an indexed device, white is0, black is 255.In 16-bit mode, a screen is a direct device, where each pixel is representedby a RGBColour data structure. In this, white is 65535 (I think) and black is 0.The actual values aren't important. The main thing is that the sprite maskshould be inverted for use in a 16-bit blitter (sprite = black, outside = white).Using pointers to longs, you will only transfer 2 pixels per 'blit' so thereshould be twice as many 'blits' in the loop.Like I say, this is my belief, but I haven't tested it. If you try this andit works, please tell me. If it doesn't, and you figure out what is wrong, alsotell me.have funMark
+How to write a 16-bit blitter (by someone who has never done it!)
+-----------------------------------------------------------------
+
+I may show my ignorance here. I have never had a chance to test a 16-bit
+blitter myself, so this might be completely off-base.
+
+As far as I know, a screen in 8-bit colour mode is always an indexed device.
+That is, each pixel on screen has a value, which is 'looked-up' in a colour
+table (CLUT) to get the actual colour to draw. In an indexed device, white is
+0, black is 255.
+
+In 16-bit mode, a screen is a direct device, where each pixel is represented
+by a RGBColour data structure. In this, white is 65535 (I think) and black is 0.
+The actual values aren't important. The main thing is that the sprite mask
+should be inverted for use in a 16-bit blitter (sprite = black, outside = white).
+
+Using pointers to longs, you will only transfer 2 pixels per 'blit' so there
+should be twice as many 'blits' in the loop.
+
+Like I say, this is my belief, but I haven't tested it. If you try this and
+it works, please tell me. If it doesn't, and you figure out what is wrong, also
+tell me.
+
+have fun
+
+Mark

@@ -1,1 +1,455 @@
-unit ICTextWhats;interface	uses		ICWindowGlobals;	function WhatOpenText (wt: WindowType; item: integer): OSErr;	function WhatFlushText (wt: WindowType; item: integer): OSErr;	function WhatCloseText (wt: WindowType; item: integer): OSErr;	function WhatClickText (wt: WindowType; item: integer; er: eventRecord): OSErr;	function WhatKeyText (wt: WindowType; item: integer; er: EventRecord): OSErr;	(* danger, layer break! *)	function HaveTextSelection (wt: WindowType): boolean;	procedure AdjustTextMenu (wt: WindowType);	procedure DoTextMenu (wt: WindowType; menuitem: integer);	procedure SelectTextItem (wt: WindowType; item: integer);implementation	uses		ICTypes, ICAPI, 		ICGlobals, ICMiscSubs, ICSubs, ICText, ICDialogs, ICDocUtils;	const		tf_single_line = 0;		tf_pstring = 1;		tf_scrambled = 2;		tf_monospace = 3;		tf_single_line_mask = $0001;		tf_pstring_mask = $0002;		tf_scrambled_mask = $0004;		tf_monospace_mask = $0008;	procedure DrawTextProc (window: DialogPtr; item: integer);		var			r: Rect;			savefont, savemode, savesize: integer;			saveface: Style;	begin		savefont := window^.txFont;		saveface := window^.txFace;		savemode := window^.txMode;		savesize := window^.txSize;		TextDraw(windowinfo[GetWindowType(window)].items[item]^.data);		GetDItemRect(window, item, r);		InsetRect(r, -3, -3);		PenNormal;		FrameRect(r);		TextFont(savefont);		TextFace(saveface);		TextMode(savemode);		TextSize(savesize);	end;	function HaveTextSelection (wt: WindowType): boolean;		var			start_sel, end_sel: integer;	begin		HaveTextSelection := false;		if GetSelectedItem(wt) > 0 then begin			TextGetSelect(windowinfo[wt].items[GetSelectedItem(wt)]^.data, start_sel, end_sel);			HaveTextSelection := (start_sel <> end_sel);		end; (* if *)	end; (* HaveTextSelection *)	procedure AdjustTextMenu (wt: WindowType);		var			enable_cut, enable_paste, enable_select_all: boolean;			offset: longint;			mh: MenuHandle;			texth: Handle;			text_size: longint;			search_text: integer;			cr_pos: longint;			item: integer;			err: OSErr;			sel_start, sel_end: integer;	begin		item := GetSelectedItem(wt);		if (wt <> WT_None) & (item > 0) then begin			enable_cut := HaveTextSelection(wt);			offset := 0;			enable_paste := (GetScrap(nil, 'TEXT', offset) > 0);			TextGetSelect(windowinfo[wt].items[item]^.data, sel_start, sel_end);			TextGetSize(windowinfo[wt].items[item]^.data, text_size);			enable_select_all := (sel_start <> 0) or (sel_end <> text_size);		end		else begin			enable_cut := false;			enable_paste := false;			enable_select_all := false;		end; (* if *)		(* deal with the nasty paste problem, ie preventing them pasting CRs into single line fields *)		if enable_paste & btst(windowinfo[wt].items[item]^.flags, tf_single_line) then begin			texth := NewHandle(0);			err := MemError;			if err = noErr then begin				offset := 0;				text_size := GetScrap(texth, 'TEXT', offset);				if text_size > 0 then begin					search_text := $0D0D;					cr_pos := Munger(texth, 0, @search_Text, 1, nil, 0);					if cr_pos < 0 then begin						enable_paste := true;					end					else if (cr_pos = text_size - 1) then begin						enable_paste := (cr_pos > 0);					end					else begin						enable_paste := false;					end; (* if *)				end				else begin					enable_paste := false;				end; (* if *)			end; (* if *)			if texth <> nil then begin				DisposeHandle(texth);			end; (* if *)			if err <> noErr then begin				enable_paste := false;			end; (* if *)		end; (* if *)		(* deal with locked items *)		if item > 0 then begin			if IsLocked(wt, item) then begin				enable_paste := false;				enable_cut := false;			end; (* if *)		end; (* if *)		(* hit the menu items *)		mh := GetMHandle(M_Edit);		SetItemEnable(mh, EM_Undo, false);		SetItemEnable(mh, EM_Cut, enable_cut);		SetItemEnable(mh, EM_Copy, enable_cut);		SetItemEnable(mh, EM_Paste, enable_paste);		SetItemEnable(mh, EM_Clear, enable_cut);		SetItemEnable(mh, EM_SelectAll, enable_select_all);	end;	procedure JustSelectTextItem (wt: WindowType; item: integer);	begin		if GetSelectedItem(wt) > 0 then begin			TextActivate(windowinfo[wt].items[GetSelectedItem(wt)]^.data, false);		end;		TextActivate(windowinfo[wt].items[item]^.data, (FrontWindow = windowinfo[wt].window) & InForeground);		windowinfo[wt].selected_item := item;	end; (* JustSelectTextItem *)	procedure SelectTextItem (wt: WindowType; item: integer);	begin		JustSelectTextItem(wt, item);		TextSetSelect(windowinfo[wt].items[item]^.data, 0, 32767);	end;	procedure DoTextMenu (wt: WindowType; menuitem: integer);		var			data: Ptr;			texth: Handle;			offset: longint;			search_text: integer;			cr_pos: longint;			item: integer;			text_size: longint;	begin		item := GetSelectedItem(wt);		data := windowinfo[wt].items[item]^.data;		case menuitem of			EM_Cut:  begin				TextCut(data);			end;			EM_Copy:  begin				TextCopy(data);			end;			EM_Paste: 				if IsLocked(wt, item) then begin					LockedAlert(wt, item);				end				else begin					if btst(windowinfo[wt].items[item]^.flags, tf_single_line) then begin						texth := NewHandle(0);						if texth <> nil then begin							offset := 0;							text_size := GetScrap(texth, 'TEXT', offset);							if text_size > 0 then begin								search_text := $0D0D;								cr_pos := Munger(texth, 0, @search_Text, 1, nil, 0);								if cr_pos > 0 then begin									SetHandleSize(texth, cr_pos);								end; (* if *)								TextClear(data);								TextInsert(data, texth);							end; (* if *)						end; (* if *)						DisposeHandle(texth);					end					else begin						TextPaste(data);					end; (* if *)				end; (* if *)			EM_Clear:  begin				if IsLocked(wt, item) then begin					LockedAlert(wt, item);				end				else begin					TextClear(data);				end; (* if *)			end;			EM_SelectAll:  begin				TextSetSelect(data, 0, 32767);			end;			otherwise				;		end; (* case *)	end; (* DoTextMenu *)	type		memBlock = packed array[0..16000000] of byte;		memBlockPtr = ^memBlock;	function BlockCompare (lhs, rhs: univ Ptr; size: longint): boolean;		var			i: longint;			tmplhs, tmprhs: memBlockPtr;	begin		BlockCompare := false;		tmplhs := memBlockPtr(lhs);		tmprhs := memBlockPtr(rhs);		for i := 0 to size - 1 do begin			if tmplhs^[i] <> tmprhs^[i] then begin				exit(BlockCompare);			end; (* if *)		end; (* for *)		BlockCompare := true;	end; (* BlockCompare *)	procedure ScrambleHandle (texth: Handle);		var			l: longint;			tmptext: memBlockPtr;	begin		tmptext := memBlockPtr(texth^);		for l := 1 to GetHandleSize(texth) do begin			tmptext^[l - 1] := band(bxor(tmptext^[l - 1], $55 + l), $FF);		end; (* for *)	end; (* ScrambleHandle *){$PUSH}{$R-}	procedure BlockFill (p: univ ptr; len: longInt; value: integer);	begin		while (len > 0) do begin			p^ := value;			len := len - 1;			longInt(p) := longInt(p) + 1;		end;	end;{$POP}	function WhatOpenText (wt: WindowType; item: integer): OSErr;		var			err: OSErr;			key: Str31;			attr: longint;			texth: Handle;			textsize: longint;			junk: longint;			flags: longint;			pstring: boolean;			scrambled: boolean;			font, size: integer;			r: Rect;	begin		windowinfo[wt].items[item]^.data := nil;		windowinfo[wt].items[item]^.spare_data := nil;		texth := nil;		key := windowinfo[wt].items[item]^.key;		flags := windowinfo[wt].items[item]^.flags;		pstring := btst(flags, tf_pstring);		scrambled := btst(flags, tf_scrambled);		if btst(flags, tf_monospace) then begin			font := monaco;			size := 9;		end		else begin			font := systemFont;			size := 12;		end; (* if *)		err := ICMapErr(ICGetPrefHandle(GetInstance, key, attr, texth));		if err = noErr then begin			ProcessAttributes(wt, item, attr);			if pstring then begin				junk := Munger(texth, 0, nil, 1, @junk, 0);			end; (* if *)			if scrambled then begin				ScrambleHandle(texth);			end; (* if *)			err := TextCreate(windowinfo[wt].items[item]^.data, windowinfo[wt].window, item, font, size, IsLocked(wt, item));		end; (* if *)		if err = noErr then begin			SetDItemHandle(windowinfo[wt].window, item, @DrawTextProc);			TextInsert(windowinfo[wt].items[item]^.data, texth);		end; (* if *)		if (err = noErr) & scrambled then begin			windowinfo[wt].items[item]^.spare_data := windowinfo[wt].items[item]^.data;			windowinfo[wt].items[item]^.data := nil;			GetDItemRect(windowinfo[wt].window, item, r);			OffsetRect(r, 16000, 0);			TextMove(windowinfo[wt].items[item]^.spare_data, r);			BlockFill(texth^, GetHandleSize(texth), ord('¥'));			err := TextCreate(windowinfo[wt].items[item]^.data, windowinfo[wt].window, item, font, size, IsLocked(wt, item));			if err = noErr then begin				TextInsert(windowinfo[wt].items[item]^.data, texth);			end; (* if *)		end; (* if *)		if texth <> nil then begin			DisposeHandle(texth);		end; (* if *)		WhatOpenText := err;	end; (* WhatOpenText *)(* *)	function WhatFlushText (wt: WindowType; item: integer): OSErr;		var			err: OSErr;			key: Str31;			texth: Handle;			oldtexth: Handle;			attr: longint;			junk: longint;			i: integer;			flags: longint;			pstring: boolean;			scrambled: boolean;	begin		texth := nil;		oldtexth := nil;		key := windowinfo[wt].items[item]^.key;		flags := windowinfo[wt].items[item]^.flags;		pstring := btst(flags, tf_pstring);		scrambled := btst(flags, tf_scrambled);		err := ICMapErr(ICGetPrefHandle(GetInstance, key, attr, oldtexth));		if err = noErr then begin			if pstring and (GetHandleSize(oldtexth) = 0) then begin				SetHandleSize(oldtexth, 1);				err := MemError;				if err = noErr then begin					oldtexth^^ := 0;				end; (* if *)			end; (* if *)		end; (* if *)		if err = noErr then begin			texth := NewHandle(0);			err := MemError;		end; (* if *)		if err = noErr then begin			if scrambled then begin				TextGet(windowinfo[wt].items[item]^.spare_data, texth);			end			else begin				TextGet(windowinfo[wt].items[item]^.data, texth);			end; (* if *)			if scrambled then begin				ScrambleHandle(texth);			end; (* if *)			if pstring then begin				if GetHandleSize(texth) > 255 then begin					SetHandleSize(texth, 255);				end; (* if *)				i := GetHandleSize(texth) * $0101;					(* puts it into both bytes! *)				junk := Munger(texth, 0, nil, 0, @i, 1);			(* if this errors, we lose *)			end; (* if *)			if not IsLocked(wt, item) & ((GetHandleSize(texth) <> GetHandleSize(oldtexth)) | not BlockCompare(texth^, oldtexth^, GetHandleSize(texth))) then begin				err := ICMapErr(ICSetPrefHandle(GetInstance, key, ICattr_no_change, texth));				if err = noErr then begin					DirtyDocument;				end; (* if *)			end; (* if *)		end; (* if *)		if texth <> nil then begin			DisposeHandle(texth);		end; (* if *)		if oldtexth <> nil then begin			DisposeHandle(oldtexth);		end; (* if *)		WhatFlushText := err;	end; (* WhatFlushText *)(* *)	function WhatCloseText (wt: WindowType; item: integer): OSErr;		var			flags: longint;			scrambled: boolean;	begin		flags := windowinfo[wt].items[item]^.flags;		scrambled := btst(flags, tf_scrambled);		TextDestroy(windowinfo[wt].items[item]^.data);		if scrambled then begin			TextDestroy(windowinfo[wt].items[item]^.spare_data);		end; (* if *)		WhatCloseText := noErr;	end; (* WhatCloseText *)(* *)	function WhatClickText (wt: WindowType; item: integer; er: eventRecord): OSErr;	begin		JustSelectTextItem(wt, item);		TextClick(windowinfo[wt].items[item]^.data, er);		WhatClickText := noErr;	end; (* WhatClickText *)	function WhatKeyText (wt: WindowType; item: integer; er: EventRecord): OSErr;		var			flags: longint;			scrambled: boolean;			ch: char;			sel_start, sel_end: integer;	begin		flags := windowinfo[wt].items[item]^.flags;		scrambled := btst(flags, tf_scrambled);		ch := chr(BAND(er.message, charCodeMask));		if (btst(flags, tf_single_line) and (ch = chr(13))) or (scrambled and ((ch <> chr(8)) and (ch < ' '))) then begin			SysBeep(1);		end		else begin			if IsLocked(wt, item) and DirtyKey(ch) then begin				LockedAlert(wt, item);			end			else begin				if scrambled then begin					TextGetSelect(windowinfo[wt].items[item]^.data, sel_start, sel_end);					TextSetSelect(windowinfo[wt].items[item]^.spare_data, sel_start, sel_end);					TextKey(windowinfo[wt].items[item]^.spare_data, er);					if (ch <> chr(8)) & DirtyKey(ch) then begin						er.message := ord('¥');					end;					TextKey(windowinfo[wt].items[item]^.data, er);				end				else begin					TextKey(windowinfo[wt].items[item]^.data, er);				end; (* if *)			end; (* if *)		end; (* if *)		WhatKeyText := noErr;	end; (* WhatKeyText *)end. (* TextWhats *)
+unit ICTextWhats;
+
+interface
+
+	uses
+		ICWindowGlobals;
+
+	function WhatOpenText (wt: WindowType; item: integer): OSErr;
+	function WhatFlushText (wt: WindowType; item: integer): OSErr;
+	function WhatCloseText (wt: WindowType; item: integer): OSErr;
+	function WhatClickText (wt: WindowType; item: integer; er: eventRecord): OSErr;
+	function WhatKeyText (wt: WindowType; item: integer; er: EventRecord): OSErr;
+
+	(* danger, layer break! *)
+	function HaveTextSelection (wt: WindowType): boolean;
+	procedure AdjustTextMenu (wt: WindowType);
+	procedure DoTextMenu (wt: WindowType; menuitem: integer);
+	procedure SelectTextItem (wt: WindowType; item: integer);
+
+implementation
+
+	uses
+		ICTypes, ICAPI, 
+
+		ICGlobals, ICMiscSubs, ICSubs, ICText, ICDialogs, ICDocUtils;
+
+	const
+		tf_single_line = 0;
+		tf_pstring = 1;
+		tf_scrambled = 2;
+		tf_monospace = 3;
+
+		tf_single_line_mask = $0001;
+		tf_pstring_mask = $0002;
+		tf_scrambled_mask = $0004;
+		tf_monospace_mask = $0008;
+
+	procedure DrawTextProc (window: DialogPtr; item: integer);
+		var
+			r: Rect;
+			savefont, savemode, savesize: integer;
+			saveface: Style;
+	begin
+		savefont := window^.txFont;
+		saveface := window^.txFace;
+		savemode := window^.txMode;
+		savesize := window^.txSize;
+		TextDraw(windowinfo[GetWindowType(window)].items[item]^.data);
+
+		GetDItemRect(window, item, r);
+		InsetRect(r, -3, -3);
+		PenNormal;
+		FrameRect(r);
+		TextFont(savefont);
+		TextFace(saveface);
+		TextMode(savemode);
+		TextSize(savesize);
+	end;
+
+	function HaveTextSelection (wt: WindowType): boolean;
+		var
+			start_sel, end_sel: integer;
+	begin
+		HaveTextSelection := false;
+		if GetSelectedItem(wt) > 0 then begin
+			TextGetSelect(windowinfo[wt].items[GetSelectedItem(wt)]^.data, start_sel, end_sel);
+			HaveTextSelection := (start_sel <> end_sel);
+		end; (* if *)
+	end; (* HaveTextSelection *)
+
+	procedure AdjustTextMenu (wt: WindowType);
+		var
+			enable_cut, enable_paste, enable_select_all: boolean;
+			offset: longint;
+			mh: MenuHandle;
+			texth: Handle;
+			text_size: longint;
+			search_text: integer;
+			cr_pos: longint;
+			item: integer;
+			err: OSErr;
+			sel_start, sel_end: integer;
+	begin
+		item := GetSelectedItem(wt);
+		if (wt <> WT_None) & (item > 0) then begin
+			enable_cut := HaveTextSelection(wt);
+			offset := 0;
+			enable_paste := (GetScrap(nil, 'TEXT', offset) > 0);
+			TextGetSelect(windowinfo[wt].items[item]^.data, sel_start, sel_end);
+			TextGetSize(windowinfo[wt].items[item]^.data, text_size);
+			enable_select_all := (sel_start <> 0) or (sel_end <> text_size);
+		end
+		else begin
+			enable_cut := false;
+			enable_paste := false;
+			enable_select_all := false;
+		end; (* if *)
+		(* deal with the nasty paste problem, ie preventing them pasting CRs into single line fields *)
+		if enable_paste & btst(windowinfo[wt].items[item]^.flags, tf_single_line) then begin
+			texth := NewHandle(0);
+			err := MemError;
+			if err = noErr then begin
+				offset := 0;
+				text_size := GetScrap(texth, 'TEXT', offset);
+				if text_size > 0 then begin
+					search_text := $0D0D;
+					cr_pos := Munger(texth, 0, @search_Text, 1, nil, 0);
+					if cr_pos < 0 then begin
+						enable_paste := true;
+					end
+					else if (cr_pos = text_size - 1) then begin
+						enable_paste := (cr_pos > 0);
+					end
+					else begin
+						enable_paste := false;
+					end; (* if *)
+				end
+				else begin
+					enable_paste := false;
+				end; (* if *)
+			end; (* if *)
+			if texth <> nil then begin
+				DisposeHandle(texth);
+			end; (* if *)
+			if err <> noErr then begin
+				enable_paste := false;
+			end; (* if *)
+		end; (* if *)
+		(* deal with locked items *)
+		if item > 0 then begin
+			if IsLocked(wt, item) then begin
+				enable_paste := false;
+				enable_cut := false;
+			end; (* if *)
+		end; (* if *)
+		(* hit the menu items *)
+		mh := GetMHandle(M_Edit);
+		SetItemEnable(mh, EM_Undo, false);
+		SetItemEnable(mh, EM_Cut, enable_cut);
+		SetItemEnable(mh, EM_Copy, enable_cut);
+		SetItemEnable(mh, EM_Paste, enable_paste);
+		SetItemEnable(mh, EM_Clear, enable_cut);
+		SetItemEnable(mh, EM_SelectAll, enable_select_all);
+	end;
+
+	procedure JustSelectTextItem (wt: WindowType; item: integer);
+	begin
+		if GetSelectedItem(wt) > 0 then begin
+			TextActivate(windowinfo[wt].items[GetSelectedItem(wt)]^.data, false);
+		end;
+		TextActivate(windowinfo[wt].items[item]^.data, (FrontWindow = windowinfo[wt].window) & InForeground);
+		windowinfo[wt].selected_item := item;
+	end; (* JustSelectTextItem *)
+
+	procedure SelectTextItem (wt: WindowType; item: integer);
+	begin
+		JustSelectTextItem(wt, item);
+		TextSetSelect(windowinfo[wt].items[item]^.data, 0, 32767);
+	end;
+
+	procedure DoTextMenu (wt: WindowType; menuitem: integer);
+		var
+			data: Ptr;
+			texth: Handle;
+			offset: longint;
+			search_text: integer;
+			cr_pos: longint;
+			item: integer;
+			text_size: longint;
+	begin
+		item := GetSelectedItem(wt);
+		data := windowinfo[wt].items[item]^.data;
+		case menuitem of
+			EM_Cut:  begin
+				TextCut(data);
+			end;
+			EM_Copy:  begin
+				TextCopy(data);
+			end;
+			EM_Paste: 
+				if IsLocked(wt, item) then begin
+					LockedAlert(wt, item);
+				end
+				else begin
+					if btst(windowinfo[wt].items[item]^.flags, tf_single_line) then begin
+						texth := NewHandle(0);
+						if texth <> nil then begin
+							offset := 0;
+							text_size := GetScrap(texth, 'TEXT', offset);
+							if text_size > 0 then begin
+								search_text := $0D0D;
+								cr_pos := Munger(texth, 0, @search_Text, 1, nil, 0);
+								if cr_pos > 0 then begin
+									SetHandleSize(texth, cr_pos);
+								end; (* if *)
+								TextClear(data);
+								TextInsert(data, texth);
+							end; (* if *)
+						end; (* if *)
+						DisposeHandle(texth);
+					end
+					else begin
+						TextPaste(data);
+					end; (* if *)
+				end; (* if *)
+			EM_Clear:  begin
+				if IsLocked(wt, item) then begin
+					LockedAlert(wt, item);
+				end
+				else begin
+					TextClear(data);
+				end; (* if *)
+			end;
+			EM_SelectAll:  begin
+				TextSetSelect(data, 0, 32767);
+			end;
+			otherwise
+				;
+		end; (* case *)
+	end; (* DoTextMenu *)
+
+	type
+		memBlock = packed array[0..16000000] of byte;
+		memBlockPtr = ^memBlock;
+
+	function BlockCompare (lhs, rhs: univ Ptr; size: longint): boolean;
+		var
+			i: longint;
+			tmplhs, tmprhs: memBlockPtr;
+	begin
+		BlockCompare := false;
+		tmplhs := memBlockPtr(lhs);
+		tmprhs := memBlockPtr(rhs);
+		for i := 0 to size - 1 do begin
+			if tmplhs^[i] <> tmprhs^[i] then begin
+				exit(BlockCompare);
+			end; (* if *)
+		end; (* for *)
+		BlockCompare := true;
+	end; (* BlockCompare *)
+
+	procedure ScrambleHandle (texth: Handle);
+		var
+			l: longint;
+			tmptext: memBlockPtr;
+	begin
+		tmptext := memBlockPtr(texth^);
+		for l := 1 to GetHandleSize(texth) do begin
+			tmptext^[l - 1] := band(bxor(tmptext^[l - 1], $55 + l), $FF);
+		end; (* for *)
+	end; (* ScrambleHandle *)
+
+{$PUSH}
+{$R-}
+	procedure BlockFill (p: univ ptr; len: longInt; value: integer);
+	begin
+		while (len > 0) do begin
+			p^ := value;
+			len := len - 1;
+			longInt(p) := longInt(p) + 1;
+		end;
+	end;
+{$POP}
+
+	function WhatOpenText (wt: WindowType; item: integer): OSErr;
+		var
+			err: OSErr;
+			key: Str31;
+			attr: longint;
+			texth: Handle;
+			textsize: longint;
+			junk: longint;
+			flags: longint;
+			pstring: boolean;
+			scrambled: boolean;
+			font, size: integer;
+			r: Rect;
+	begin
+		windowinfo[wt].items[item]^.data := nil;
+		windowinfo[wt].items[item]^.spare_data := nil;
+		texth := nil;
+		key := windowinfo[wt].items[item]^.key;
+		flags := windowinfo[wt].items[item]^.flags;
+		pstring := btst(flags, tf_pstring);
+		scrambled := btst(flags, tf_scrambled);
+		if btst(flags, tf_monospace) then begin
+			font := monaco;
+			size := 9;
+		end
+		else begin
+			font := systemFont;
+			size := 12;
+		end; (* if *)
+		err := ICMapErr(ICGetPrefHandle(GetInstance, key, attr, texth));
+		if err = noErr then begin
+			ProcessAttributes(wt, item, attr);
+			if pstring then begin
+				junk := Munger(texth, 0, nil, 1, @junk, 0);
+			end; (* if *)
+			if scrambled then begin
+				ScrambleHandle(texth);
+			end; (* if *)
+			err := TextCreate(windowinfo[wt].items[item]^.data, windowinfo[wt].window, item, font, size, IsLocked(wt, item));
+		end; (* if *)
+		if err = noErr then begin
+			SetDItemHandle(windowinfo[wt].window, item, @DrawTextProc);
+			TextInsert(windowinfo[wt].items[item]^.data, texth);
+		end; (* if *)
+		if (err = noErr) & scrambled then begin
+			windowinfo[wt].items[item]^.spare_data := windowinfo[wt].items[item]^.data;
+			windowinfo[wt].items[item]^.data := nil;
+			GetDItemRect(windowinfo[wt].window, item, r);
+			OffsetRect(r, 16000, 0);
+			TextMove(windowinfo[wt].items[item]^.spare_data, r);
+			BlockFill(texth^, GetHandleSize(texth), ord('¥'));
+			err := TextCreate(windowinfo[wt].items[item]^.data, windowinfo[wt].window, item, font, size, IsLocked(wt, item));
+			if err = noErr then begin
+				TextInsert(windowinfo[wt].items[item]^.data, texth);
+			end; (* if *)
+		end; (* if *)
+		if texth <> nil then begin
+			DisposeHandle(texth);
+		end; (* if *)
+		WhatOpenText := err;
+	end; (* WhatOpenText *)
+
+(* *)
+
+	function WhatFlushText (wt: WindowType; item: integer): OSErr;
+		var
+			err: OSErr;
+			key: Str31;
+			texth: Handle;
+			oldtexth: Handle;
+			attr: longint;
+			junk: longint;
+			i: integer;
+			flags: longint;
+			pstring: boolean;
+			scrambled: boolean;
+	begin
+		texth := nil;
+		oldtexth := nil;
+		key := windowinfo[wt].items[item]^.key;
+		flags := windowinfo[wt].items[item]^.flags;
+		pstring := btst(flags, tf_pstring);
+		scrambled := btst(flags, tf_scrambled);
+		err := ICMapErr(ICGetPrefHandle(GetInstance, key, attr, oldtexth));
+		if err = noErr then begin
+			if pstring and (GetHandleSize(oldtexth) = 0) then begin
+				SetHandleSize(oldtexth, 1);
+				err := MemError;
+				if err = noErr then begin
+					oldtexth^^ := 0;
+				end; (* if *)
+			end; (* if *)
+		end; (* if *)
+		if err = noErr then begin
+			texth := NewHandle(0);
+			err := MemError;
+		end; (* if *)
+		if err = noErr then begin
+			if scrambled then begin
+				TextGet(windowinfo[wt].items[item]^.spare_data, texth);
+			end
+			else begin
+				TextGet(windowinfo[wt].items[item]^.data, texth);
+			end; (* if *)
+			if scrambled then begin
+				ScrambleHandle(texth);
+			end; (* if *)
+			if pstring then begin
+				if GetHandleSize(texth) > 255 then begin
+					SetHandleSize(texth, 255);
+				end; (* if *)
+				i := GetHandleSize(texth) * $0101;					(* puts it into both bytes! *)
+				junk := Munger(texth, 0, nil, 0, @i, 1);			(* if this errors, we lose *)
+			end; (* if *)
+			if not IsLocked(wt, item) & ((GetHandleSize(texth) <> GetHandleSize(oldtexth)) | not BlockCompare(texth^, oldtexth^, GetHandleSize(texth))) then begin
+				err := ICMapErr(ICSetPrefHandle(GetInstance, key, ICattr_no_change, texth));
+				if err = noErr then begin
+					DirtyDocument;
+				end; (* if *)
+			end; (* if *)
+		end; (* if *)
+		if texth <> nil then begin
+			DisposeHandle(texth);
+		end; (* if *)
+		if oldtexth <> nil then begin
+			DisposeHandle(oldtexth);
+		end; (* if *)
+		WhatFlushText := err;
+	end; (* WhatFlushText *)
+
+(* *)
+
+	function WhatCloseText (wt: WindowType; item: integer): OSErr;
+		var
+			flags: longint;
+			scrambled: boolean;
+	begin
+		flags := windowinfo[wt].items[item]^.flags;
+		scrambled := btst(flags, tf_scrambled);
+		TextDestroy(windowinfo[wt].items[item]^.data);
+		if scrambled then begin
+			TextDestroy(windowinfo[wt].items[item]^.spare_data);
+		end; (* if *)
+		WhatCloseText := noErr;
+	end; (* WhatCloseText *)
+
+(* *)
+
+	function WhatClickText (wt: WindowType; item: integer; er: eventRecord): OSErr;
+	begin
+		JustSelectTextItem(wt, item);
+		TextClick(windowinfo[wt].items[item]^.data, er);
+		WhatClickText := noErr;
+	end; (* WhatClickText *)
+
+	function WhatKeyText (wt: WindowType; item: integer; er: EventRecord): OSErr;
+		var
+			flags: longint;
+			scrambled: boolean;
+			ch: char;
+			sel_start, sel_end: integer;
+	begin
+		flags := windowinfo[wt].items[item]^.flags;
+		scrambled := btst(flags, tf_scrambled);
+		ch := chr(BAND(er.message, charCodeMask));
+		if (btst(flags, tf_single_line) and (ch = chr(13))) or (scrambled and ((ch <> chr(8)) and (ch < ' '))) then begin
+			SysBeep(1);
+		end
+		else begin
+			if IsLocked(wt, item) and DirtyKey(ch) then begin
+				LockedAlert(wt, item);
+			end
+			else begin
+				if scrambled then begin
+					TextGetSelect(windowinfo[wt].items[item]^.data, sel_start, sel_end);
+					TextSetSelect(windowinfo[wt].items[item]^.spare_data, sel_start, sel_end);
+					TextKey(windowinfo[wt].items[item]^.spare_data, er);
+					if (ch <> chr(8)) & DirtyKey(ch) then begin
+						er.message := ord('¥');
+					end;
+					TextKey(windowinfo[wt].items[item]^.data, er);
+				end
+				else begin
+					TextKey(windowinfo[wt].items[item]^.data, er);
+				end; (* if *)
+			end; (* if *)
+		end; (* if *)
+		WhatKeyText := noErr;
+	end; (* WhatKeyText *)
+
+end. (* TextWhats *)

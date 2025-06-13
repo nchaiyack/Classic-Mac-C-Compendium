@@ -1,1 +1,11 @@
-f Å.h Å.cp Å.r | ¶StreamEdit ¶	-e '/UStructureInspectors.h/ || /UStructureInspectors.cp/ delete' ¶	-e '/Threads.h/ delete' ¶	-e '/UDPPB.h/ || /TCPPB.h/ || /MiscIPPB.h/ delete' ¶	-e '/MacTCPCommonTypes.h/ || /GetMyIPAddr.h/ || /dnr.c/ delete' ¶	-e '/AddressXlation.h/ delete' ¶	-e '/UStructureInspectors/ delete' ¶	-e '/¥grouplist°/ delete' ¶	-e '/¥grouplist°/ delete' ¶	-e '/¥tools°/ || /¥dokumentation°/ || /¥.bins°/ delete'
+f Å.h Å.cp Å.r | ¶
+StreamEdit ¶
+	-e '/UStructureInspectors.h/ || /UStructureInspectors.cp/ delete' ¶
+	-e '/Threads.h/ delete' ¶
+	-e '/UDPPB.h/ || /TCPPB.h/ || /MiscIPPB.h/ delete' ¶
+	-e '/MacTCPCommonTypes.h/ || /GetMyIPAddr.h/ || /dnr.c/ delete' ¶
+	-e '/AddressXlation.h/ delete' ¶
+	-e '/UStructureInspectors/ delete' ¶
+	-e '/¥grouplist°/ delete' ¶
+	-e '/¥grouplist°/ delete' ¶
+	-e '/¥tools°/ || /¥dokumentation°/ || /¥.bins°/ delete'

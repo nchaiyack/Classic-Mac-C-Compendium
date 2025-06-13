@@ -1,1 +1,45 @@
-Name: CChore-QuartetVersion: 1.0.1Category: classesContributor: Jamie McCarthy <k044477@kzoo.edu>Date: 93-02TCL-Version: 1.1.xTCL-Language: CCopyright: UnknownThis is a quartet of tiny subclasses of CChore:                 CChore              /  |   \CCancelerChore   |    CDisposerChore                 |        CSelfCancelableChore                 |           CCommanderChore They are all very small, but are useful in a small kind of way. CCancelerChore cancels another chore;  CDisposerChore disposes ofan object;  both of these must be assigned urgently. CSelfCancelableChore (making use of CCancelerChore) is a chore thatcan cancel itself.  And CCommanderChore is a chore that sends acommand to the gGopher. What I find most useful are the convenience routines: void doCommandViaIdleChore(long theCommand);CCommanderChore *doCommandContinuouslyViaIdleChore(long theCommand);void doCommandViaUrgentChore(long theCommand);void disposeViaUrgentChore(CObject *theDisposee); Changes since the first version:  CCommanderChore now catches errors;if the command it sends invokes an error, it cancels itself.  (Not muchof a change, I know...)-- Jamie McCarthy      Internet: k044477@kzoo.edu      AppleLink: j.mccarthy  (This file must be converted with BinHex 4.0)
+Name: CChore-Quartet
+Version: 1.0.1
+Category: classes
+Contributor: Jamie McCarthy <k044477@kzoo.edu>
+Date: 93-02
+TCL-Version: 1.1.x
+TCL-Language: C
+Copyright: Unknown
+
+This is a quartet of tiny subclasses of CChore:
+ 
+ 
+               CChore
+              /  |   \
+CCancelerChore   |    CDisposerChore
+                 |
+        CSelfCancelableChore
+                 |
+           CCommanderChore
+ 
+They are all very small, but are useful in a small kind of way.
+ 
+CCancelerChore cancels another chore;  CDisposerChore disposes of
+an object;  both of these must be assigned urgently.
+ 
+CSelfCancelableChore (making use of CCancelerChore) is a chore that
+can cancel itself.  And CCommanderChore is a chore that sends a
+command to the gGopher.
+ 
+What I find most useful are the convenience routines:
+ 
+void doCommandViaIdleChore(long theCommand);
+CCommanderChore *doCommandContinuouslyViaIdleChore(long theCommand);
+void doCommandViaUrgentChore(long theCommand);
+void disposeViaUrgentChore(CObject *theDisposee);
+ 
+Changes since the first version:  CCommanderChore now catches errors;
+if the command it sends invokes an error, it cancels itself.  (Not much
+of a change, I know...)
+--
+ Jamie McCarthy      Internet: k044477@kzoo.edu      AppleLink: j.mccarthy
+ 
+ 
+(This file must be converted with BinHex 4.0)
+

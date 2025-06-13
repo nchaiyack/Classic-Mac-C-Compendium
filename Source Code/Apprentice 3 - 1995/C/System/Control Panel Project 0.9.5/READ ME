@@ -1,1 +1,116 @@
-READ ME file for the Sample Control Panel Project 0.9.5October 1994First of all, I welcome ANY comments, suggestions, error reports, instructions, expletives or even compliments concerning this project.  Send e-mail to me at AOL KNEworley or mail to Ken Worley, P.O. Box 722, Cheyenne WY 82003.  Thanks.WELCOME to the distorted little world of system level Macintosh programming (or Howdy if you're already here)!  Writing a control panel is fairly easy.  Getting it to do something useful and work along with an extension is something else altogether.  This project may not do anything REAL useful, but it goes a long ways towards that goal and does a good job of integrating an extension, a control panel, and a trap patch (code that modifies the behavior of a Toolbox routine).Since I don't know your skill level but I'm no teacher, I'll assume you have an intermediate level of knowledge about this subject.  What I've learned about this stuff has come from numerous other examples and from many osmosis sessions with Inside Macintosh.  To say the least, extracting just the information relevant to this subject from Inside Macintosh is a chore and I have yet to do it.  Some of what I know comes from there, and some (as I said) comes from what others have shared.  I'll share what I know, but don't expect it to be GOSPEL.  I had a hard time finding a lot of the information I needed in one place, so I thought I'd share much of what I've learned so far with you all in one project.WHAT I USED TO WRITE THIS PROJECTI have a Macintosh Performa 550.  I used THINK C7.0 to write this project (though it should work in earlier versions as well).  If you have an earlier version, you probably won't be able to open the project files.  There are instructions below for recreating those.  I generally don't pay as much attention to making things as System 6 compatible as I should because I use only System 7 (even on my puny old Mac Classic).  You might think that's selfish, but at least I admit I have a problem :-).I did use Apple's new Universal Headers, so if you don't have those, you may have to modify some pointer types here and there to get things to compile.WHAT THIS PROJECT DOESThis project is a simple extension, control panel combination that installs and controls a trap patch.  In its unmodified form, it patches the MenuSelect trap so that if the "About This Macintosh…" menu item is picked, a dialog comes up that the user has to dismiss before the about box appears.HOW THE PROJECT IS ORGANIZEDThere are actually three separate projects involved here:			Control Panel.π - the control panel code (includes MyControlPanel.c)			Extension.π - the extension code (includes MyExtension.c)			Patch.π - the trap patch code (includes MyPatch.c)Other files included are:			Notifier.c and Notifier.h - code included by MyPatch.c			Control Panel.π.rsrc - resources for the finished control panel			SharedData.h - info included by MyControlPanel.c, MyExtension.c, & MyPatch.c			ShowIconFamily.c - code included by MyExtension.c			SampleControlPanel - a finished control panel built using this project					Drop it into your System folder and restart to see it work.If you're building the projects from the source code only (which you'll have to do if you have anything earlier than THINK 7.0), follow these vague steps:			PUT ALL THIS STUFF IN THE SAME FOLDER			1.  Create a new project of type Code Resource.						Name the project Control Panel.π						Resource type and file type are 'cdev'						Resource ID is -4064						Make sure the locked attribute is NOT set						Make sure the purgeable attribute is set						Include "MacTraps" and "MyControlPanel.c" in the project						Make sure you have the Control Panel.π.rsrc file						Make sure you have the SharedData.h file						When you 'build' this code resource, use the name SampleControlPanel						When you 'build' this code resource, do NOT check the merge box			2.  Create a new project of type Code Resource.						Name the project Extension.π						Resource type is 'INIT'						File type is irrelevant (it goes in the cdev file)						Resource ID is zero						Include "MacTraps" and "MyExtension.c" in the project						Make sure you have the SharedData.h file						Make sure you have the ShowIconFamily.c file						Make sure the system heap attribute is set						It should NOT be locked						When you 'build' this code resource, use the name SampleControlPanel						When you 'build' this code resource, CHECK the merge box								(this will add this code to SampleControlPanel, not create a new file)			3.  Create a new project of type Code Resource.						Name the project Patch.π						Resource type is 'task' or whatever is specified in MyExtension.c						File type is irrelevant (it goes in the cdev file)						Resource ID is 128 or whatever is specified in MyExtension.c						Include "ANSI-A4," "MacTraps" and "MyPatch.c" in the project								(ANSI-A4 is only required for the code in Notifier)						Make sure you have the "Notifier.c" and "Notifier.h" files						Make sure you have the SharedData.h file						Make sure the system heap attribute is set						It should NOT be locked						When you 'build' this code resource, use the name SampleControlPanel						When you 'build' this code resource, CHECK the merge box								(this will add this code to SampleControlPanel, not create a new file)HOW THE PROJECT WORKSThis is a general, brief discussion.  Specifics are documented in the code itself.The extension allocates a memory structure that contains all the global data needed by the control panel and trap patch.  It stores the address of this memory structure in a resource for later access by the control panel.  It checks the 'pref' resource for settings retained from before the last startup, then it loads the patch code into memory, modifies it so that it knows how to access the shared memory, and installs it as a patch to a particular trap (if the control panel was set to "on").  It also displays its icon during startup.The control panel gains access to the shared memory structure by reading the address from a resource written by the extension at startup time.  The control panel turns the patch "on" or "off."  If the control panel is set to "off" when the computer starts up, the 'pref' resource will indicate that the extension should not install the trap patch.  In that case, the control panel can then be turned "on," but the patch won't be installed until a restart.  If the control panel is set to "on" when the computer starts up, the 'pref' resource will indicate that the extension should install the trap patch.  In that case, the control panel can then be turned "off" which disables the patch, but can then be turned back on to reenable the patch.  The patch knows whether the control panel is "on" or "off" through the shared memory.  The control panel not only records its settings in the shared memory, but also in the 'pref' resource so that settings are retained even through a restart.The patch intercepts a call to whichever trap it was installed for.  It can return a value of its own choosing without calling the original trap, call the original trap without modification (which is what it does when the control panel is "off"), or call the original trap and modify its return value.  The patch checks control panel settings through the memory it shares with the control panel.In this particular case, I've patched the MenuSelect trap.  The patch calls the original trap and examines the return value.  If the user selected the "About This Macintosh…" menu item, the patch puts up a Notification dialog, then allows the about box to be shown (by passing the original trap's return value back through).CAUTION - TAIL PATCH!!This project implements what is called a "tail patch."  This means that the patch code has a chance to execute both before and after the original trap code.  Apple warns that this may be dangerous to do with SOME traps.  This is more of a problem with System 6 versions and earlier than in System 7 and later.  Supposedly, however, it can still cause problems with a few traps.Here's the reason why (very briefly).  Apple installs patches itself in the system software for some things.  Some of these patches may call other traps in ROM.  These traps may look at the return address on the stack to see if they are being called from a program (somewhere in RAM), or from another trap or trap patch (in ROM) and may act differently depending on what it finds.BUG FIXED FROM v0.9.4Many thanks to Art Eschenlauer (eschen@molbio.cbs.umn.edu) who caught this bug. Once the control panel had been loaded at startup once, a resource existed in the file that specified an address for the shared data structure. If the control panel was then removed from the System folder and the Mac restarted, that address became bogus. The control panel, however, could still be opened and assumed the address was good possibly resulting in corrupt memory.Art worked around this by using a Gestalt selector.I worked around it by adding a value to the shared data called a check value. The extension inserts a certain value there when it runs. If the control panel looks at the address specified in the resource and doesn't find the check value, it will assume it was NOT loaded at startup time.ALSO in v0.9.5I also added code to show a dialog when the control panel is unavailable due to not being loaded at startup. v0.9.4 simply refused to open.UNIVERSAL HEADERSThis version (0.9.5) uses Apple's Universal Headers. If you don't have those, you may have to change a few pointer types to get everything to compile.COMMENTSThe code is heavily documented and designed to be easily changed for different purposes.  There are parts that may be difficult to understand or are sparsely documented.  These are parts which would likely remain the same in any control panel project.  Again, if you have any questions or complaints, please send me a message.  GOOD LUCK!
+READ ME file for the Sample Control Panel Project 0.9.5
+October 1994
+
+First of all, I welcome ANY comments, suggestions, error reports, instructions, expletives or even compliments concerning this project.  Send e-mail to me at AOL KNEworley or mail to Ken Worley, P.O. Box 722, Cheyenne WY 82003.  Thanks.
+
+WELCOME to the distorted little world of system level Macintosh programming (or Howdy if you're already here)!  Writing a control panel is fairly easy.  Getting it to do something useful and work along with an extension is something else altogether.  This project may not do anything REAL useful, but it goes a long ways towards that goal and does a good job of integrating an extension, a control panel, and a trap patch (code that modifies the behavior of a Toolbox routine).
+
+Since I don't know your skill level but I'm no teacher, I'll assume you have an intermediate level of knowledge about this subject.  What I've learned about this stuff has come from numerous other examples and from many osmosis sessions with Inside Macintosh.  To say the least, extracting just the information relevant to this subject from Inside Macintosh is a chore and I have yet to do it.  Some of what I know comes from there, and some (as I said) comes from what others have shared.  I'll share what I know, but don't expect it to be GOSPEL.  I had a hard time finding a lot of the information I needed in one place, so I thought I'd share much of what I've learned so far with you all in one project.
+
+WHAT I USED TO WRITE THIS PROJECT
+
+I have a Macintosh Performa 550.  I used THINK C7.0 to write this project (though it should work in earlier versions as well).  If you have an earlier version, you probably won't be able to open the project files.  There are instructions below for recreating those.  I generally don't pay as much attention to making things as System 6 compatible as I should because I use only System 7 (even on my puny old Mac Classic).  You might think that's selfish, but at least I admit I have a problem :-).
+
+I did use Apple's new Universal Headers, so if you don't have those, you may have to modify some pointer types here and there to get things to compile.
+
+WHAT THIS PROJECT DOES
+
+This project is a simple extension, control panel combination that installs and controls a trap patch.  In its unmodified form, it patches the MenuSelect trap so that if the "About This Macintosh…" menu item is picked, a dialog comes up that the user has to dismiss before the about box appears.
+
+HOW THE PROJECT IS ORGANIZED
+
+There are actually three separate projects involved here:
+			Control Panel.π - the control panel code (includes MyControlPanel.c)
+			Extension.π - the extension code (includes MyExtension.c)
+			Patch.π - the trap patch code (includes MyPatch.c)
+
+Other files included are:
+			Notifier.c and Notifier.h - code included by MyPatch.c
+			Control Panel.π.rsrc - resources for the finished control panel
+			SharedData.h - info included by MyControlPanel.c, MyExtension.c, & MyPatch.c
+			ShowIconFamily.c - code included by MyExtension.c
+			SampleControlPanel - a finished control panel built using this project
+					Drop it into your System folder and restart to see it work.
+
+If you're building the projects from the source code only (which you'll have to do if you have anything earlier than THINK 7.0), follow these vague steps:
+
+			PUT ALL THIS STUFF IN THE SAME FOLDER
+			1.  Create a new project of type Code Resource.
+						Name the project Control Panel.π
+						Resource type and file type are 'cdev'
+						Resource ID is -4064
+						Make sure the locked attribute is NOT set
+						Make sure the purgeable attribute is set
+						Include "MacTraps" and "MyControlPanel.c" in the project
+						Make sure you have the Control Panel.π.rsrc file
+						Make sure you have the SharedData.h file
+						When you 'build' this code resource, use the name SampleControlPanel
+						When you 'build' this code resource, do NOT check the merge box
+
+			2.  Create a new project of type Code Resource.
+						Name the project Extension.π
+						Resource type is 'INIT'
+						File type is irrelevant (it goes in the cdev file)
+						Resource ID is zero
+						Include "MacTraps" and "MyExtension.c" in the project
+						Make sure you have the SharedData.h file
+						Make sure you have the ShowIconFamily.c file
+						Make sure the system heap attribute is set
+						It should NOT be locked
+						When you 'build' this code resource, use the name SampleControlPanel
+						When you 'build' this code resource, CHECK the merge box
+								(this will add this code to SampleControlPanel, not create a new file)
+
+			3.  Create a new project of type Code Resource.
+						Name the project Patch.π
+						Resource type is 'task' or whatever is specified in MyExtension.c
+						File type is irrelevant (it goes in the cdev file)
+						Resource ID is 128 or whatever is specified in MyExtension.c
+						Include "ANSI-A4," "MacTraps" and "MyPatch.c" in the project
+								(ANSI-A4 is only required for the code in Notifier)
+						Make sure you have the "Notifier.c" and "Notifier.h" files
+						Make sure you have the SharedData.h file
+						Make sure the system heap attribute is set
+						It should NOT be locked
+						When you 'build' this code resource, use the name SampleControlPanel
+						When you 'build' this code resource, CHECK the merge box
+								(this will add this code to SampleControlPanel, not create a new file)
+
+HOW THE PROJECT WORKS
+
+This is a general, brief discussion.  Specifics are documented in the code itself.
+
+The extension allocates a memory structure that contains all the global data needed by the control panel and trap patch.  It stores the address of this memory structure in a resource for later access by the control panel.  It checks the 'pref' resource for settings retained from before the last startup, then it loads the patch code into memory, modifies it so that it knows how to access the shared memory, and installs it as a patch to a particular trap (if the control panel was set to "on").  It also displays its icon during startup.
+
+The control panel gains access to the shared memory structure by reading the address from a resource written by the extension at startup time.  The control panel turns the patch "on" or "off."  If the control panel is set to "off" when the computer starts up, the 'pref' resource will indicate that the extension should not install the trap patch.  In that case, the control panel can then be turned "on," but the patch won't be installed until a restart.  If the control panel is set to "on" when the computer starts up, the 'pref' resource will indicate that the extension should install the trap patch.  In that case, the control panel can then be turned "off" which disables the patch, but can then be turned back on to reenable the patch.  The patch knows whether the control panel is "on" or "off" through the shared memory.  The control panel not only records its settings in the shared memory, but also in the 'pref' resource so that settings are retained even through a restart.
+
+The patch intercepts a call to whichever trap it was installed for.  It can return a value of its own choosing without calling the original trap, call the original trap without modification (which is what it does when the control panel is "off"), or call the original trap and modify its return value.  The patch checks control panel settings through the memory it shares with the control panel.
+
+In this particular case, I've patched the MenuSelect trap.  The patch calls the original trap and examines the return value.  If the user selected the "About This Macintosh…" menu item, the patch puts up a Notification dialog, then allows the about box to be shown (by passing the original trap's return value back through).
+
+CAUTION - TAIL PATCH!!
+
+This project implements what is called a "tail patch."  This means that the patch code has a chance to execute both before and after the original trap code.  Apple warns that this may be dangerous to do with SOME traps.  This is more of a problem with System 6 versions and earlier than in System 7 and later.  Supposedly, however, it can still cause problems with a few traps.
+
+Here's the reason why (very briefly).  Apple installs patches itself in the system software for some things.  Some of these patches may call other traps in ROM.  These traps may look at the return address on the stack to see if they are being called from a program (somewhere in RAM), or from another trap or trap patch (in ROM) and may act differently depending on what it finds.
+
+BUG FIXED FROM v0.9.4
+
+Many thanks to Art Eschenlauer (eschen@molbio.cbs.umn.edu) who caught this bug. Once the control panel had been loaded at startup once, a resource existed in the file that specified an address for the shared data structure. If the control panel was then removed from the System folder and the Mac restarted, that address became bogus. The control panel, however, could still be opened and assumed the address was good possibly resulting in corrupt memory.
+
+Art worked around this by using a Gestalt selector.
+
+I worked around it by adding a value to the shared data called a check value. The extension inserts a certain value there when it runs. If the control panel looks at the address specified in the resource and doesn't find the check value, it will assume it was NOT loaded at startup time.
+
+ALSO in v0.9.5
+
+I also added code to show a dialog when the control panel is unavailable due to not being loaded at startup. v0.9.4 simply refused to open.
+
+UNIVERSAL HEADERS
+
+This version (0.9.5) uses Apple's Universal Headers. If you don't have those, you may have to change a few pointer types to get everything to compile.
+
+COMMENTS
+
+The code is heavily documented and designed to be easily changed for different purposes.  There are parts that may be difficult to understand or are sparsely documented.  These are parts which would likely remain the same in any control panel project.  Again, if you have any questions or complaints, please send me a message.  GOOD LUCK!
+

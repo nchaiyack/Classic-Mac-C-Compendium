@@ -1,1 +1,18 @@
-/****************************************************************************** CVoice.cp		Version1.2  Written by Brian Stern  <BrianS@pbcomputing.com>  Written to work with TCL 2.x  	A voice class that implements a speech manager voice.  To use this class 	most simply, call the constructor with a known voice.  To speak call SpeakTheText. 	 	Str255	someText = {"\pHello from planet Zircon."}; 	CVoice *theVoice = new CVoice( "\pBoris"); 	theVoice->SpeakTheText( someText, Length(someText) );	This class is Copyright © 1994, Brian Stern.  It may be used freely in 	any projects.  If you do anything interesting with it send me email.******************************************************************************/
+/******************************************************************************
+ CVoice.cp		Version1.2
+ 
+ Written by Brian Stern  <BrianS@pbcomputing.com>
+ 
+ Written to work with TCL 2.x
+ 
+ 	A voice class that implements a speech manager voice.  To use this class
+ 	most simply, call the constructor with a known voice.  To speak call SpeakTheText.
+ 	
+ 	Str255	someText = {"\pHello from planet Zircon."};
+ 	CVoice *theVoice = new CVoice( "\pBoris");
+ 	theVoice->SpeakTheText( someText, Length(someText) );
+
+	This class is Copyright © 1994, Brian Stern.  It may be used freely in 
+	any projects.  If you do anything interesting with it send me email.
+
+******************************************************************************/

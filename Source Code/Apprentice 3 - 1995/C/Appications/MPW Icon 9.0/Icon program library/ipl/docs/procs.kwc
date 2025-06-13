@@ -1,1 +1,514 @@
-statemap.icn          table of states and abbreviationscommaize.icn                              add commas to real or integersadlutils.icn                      process address listsrewrap.icn                                advanced line rewrap utilitysoundex1.icn                      Soundex algorithmansi.icn                                  ANSI-based terminal controlpdae.icn               programmer-defined argument evaluationcomplex.icn               perform complex arithmeticlargint.icn                 large integer arithmeticrational.icn                              arithmetic on rational numberscolmize.icn                               arrange data into columnsprogary.icn            place program in a arrayarray.icn                   n-dimensional arraysasciinam.icn                              ASCII name of unprintable characterebcdic.icn                convert between ASCII and EBCDICtclass.icn             classify values as atomic or compositeslashbal.icn                   bal() with backslash escapingslshupto.icn           upto scanning with backslash escapingslashbal.icn                              bal() with backslash escapinggettext.icn          gettext (simple text-base routines)ansi.icn                             ANSI-based terminal controlibench.icn                   support Icon benchmarkingebcdic.icn                        convert between ASCII and EBCDICispf.icn                      communicate between Icon and ISPFrexx.icn                      communicate between Icon and Rexxbincvt.icn                        convert binary databinocoef.icn                              binomial coefficientmapbit.icn                map string into bit representationintstr.icn             create string from bitssigned.icn                            put bits into signed integerunsigned.icn                          put bits unsigned integerbuffer.icn                                buffered input and outputinserts.icn                               build tables with duplicate keysfeval.icn     evaluate string as function calliftrace.icn           trace Icon function callswildcard.icn               UNIX-like wild-card pattern matchingasciinam.icn    ASCII name of unprintable characterinbits.icn           read variable-length charactersoutbits.icn         write variable-length charactersstrip.icn                           strip characters from a stringichartp.icn                      a simple chart parserdif.icn                                   check for differencestclass.icn                                classify values as atomic or compositemorse.icn         convert string to Morse codeprockind.icn                      produce code for kind of proceduresoundex.icn               produce Soundex code for nametypecode.icn               produce letter code for Icon typehuffstuf.icn                      huffman codingbinocoef.icn                     binomial coefficientcollate.icn                               collate and decollate stringsprintcol.icn                       format columnar datacolmize.icn             arrange data into columnslcomb.icn               generate lists of combinationspermute.icn                 permutations, combinations, and suchargparse.icn                 parse pseudo-command-lineoptions.icn                           get command-line optionscommaize.icn                          add commas to real or integersstripcom.icn                        strip comments out of Icon linegcd.icn                  compute greatest common denominatorispf.icn                                  communicate between Icon and ISPFrexx.icn                                  communicate between Icon and Rexxcomplete.icn                              complete partial input stringfullimag.icn                      produce complete image of structured datacomplex.icn                       perform complex arithmetictclass.icn   classify values as atomic or compositemath.icn             perform mathematical computationsfactorl.icn                               computing factorialseverycat.icn               generating all concatenationsparscond.icn                              condense parse treeallof.icn                                 conjunction control operationallof.icn                     conjunction control operationansi.icn              ANSI-based terminal controlpdco.icn               programmer-defined control operationshexcvt.icn                    hexadecimal conversionradcon.icn                          radix conversionreal2int.icn      various real-to-integer conversionsbincvt.icn                                convert binary dataebcdic.icn                                convert between ASCII and EBCDICivalue.icn                                convert string to Icon valuemorse.icn                                 convert string to Morse codenumbers.icn                    format and convert numbersfcopy.icn                                 copy a fileintstr.icn                                create string from bitstwt.icn                                   create two-way tablereadtbl.icn                     read user-created stripsgml tablecurrency.icn                       format currencyisort.icn                                 customizable sortingbincvt.icn                 convert binary datacodeobj.icn        encode and decode Icon datacolmize.icn                       arrange data into columnsfullimag.icn complete image of structured dataprintcol.icn              format columnar dataximage.icn        produce string image of datacalendat.icn                          get date from Julian Day Numberdate.icn                          produce datedatetime.icn                              date manipulationcalendat.icn         get date from Julian Day Numberjulian.icn                 produce Julian Day Numberfull13th.icn                         give days when a full moon occurs onpackunpk.icn              pack and unpack decimal stringscodeobj.icn                    encode and decode Icon dataobject.icn                     encode and decode Icon valuescollate.icn                   collate and decollate stringspdae.icn                       programmer-defined argument evaluationpdco.icn                       programmer-defined control operationsgcd.icn           compute greatest common denominatordif.icn                         check for differencesarray.icn                               n-dimensional arraysfiledim.icn                  compute file dimensionsgdl.icn                               get directory list distance.icn                      compute distance in n-spacegauss.icn                compute Gaussian distributionsdosfiles.icn                       get MS-DOS file namesiolib.icn       termlib-type tools for MS-DOS and UNIXitlibdos.icn       termlib-type tools (MS-DOS version)inserts.icn             build tables with duplicate keysebcdic.icn      convert between ASCII and EBCDICjumpque.icn                          jump element to head of queuegetpaths.icn                     generate elements in PATHlmap.icn                         map list elementslpermute.icn                      permute elements in a listbold.icn                                  enbolden and underscore textcodeobj.icn                               encode and decode Icon dataobject.icn                                encode and decode Icon valuesplural.icn              produce plural of English nounsaytime.icn           produce the time in Englishescape.icn         interpret Icon literal escapesslashbal.icn         bal() with backslash escapingslshupto.icn upto scanning with backslash escapingfeval.icn                                 evaluate string as function callpdae.icn      programmer-defined argument evaluationfindre.icn                   find regular expressionregexp.icn                        regular expression pattern matchingfactorl.icn                     computing factorialsdosfiles.icn                   get MS-DOS file namesfcopy.icn                          copy a filefiledim.icn                       compute file dimensionsfilename.icn                        parse file namesfiletext.icn                    read text file into a listgetkeys.icn        get keys for a gettext filesentence.icn        generate sentences in filetempname.icn                get temporary file namefindre.icn                                find regular expressionnxtprime.icn                              find the next primepatword.icn                               find letter patternscurrency.icn                              format currencynumbers.icn                               format and convert numbersprintcol.icn                              format columnar dataprintf.icn                   printf-style formattingfull13th.icn             give days when a full moon occurs onfeval.icn              evaluate string as function callifncs.icn                    wrappers for function tracingiftrace.icn                    trace Icon function callshyperbol.icn                   hyperbolic functionsiscreen.icn                        screen functionsusage.icn                         service functionsgauss.icn                         compute Gaussian distributionsgener.icn                                 generate miscellaneous sequencesgetpaths.icn                              generate elements in PATHlcomb.icn                                 generate lists of combinationsngrams.icn                                generate n-gramsphoname.icn                               generate letters for phone numbersranseq.icn                                generate random integers over a rangesenten1.icn                               generate sentencessentence.icn                              generate sentences in fileeverycat.icn                              generating all concatenationsirandom.icn   randomize the random number generatorgmean.icn                         compute geometric meangetchlib.icn                              getch for Unixadjuncts.icn                              gettext and idxtextgetkeys.icn                get keys for a gettext filegettext.icn                               gettext (simple text-base routines)full13th.icn                              give days when a full moon occurs onngrams.icn                     generate n-gramsglabels.icn                       produce graph ticksgcd.icn                           compute greatest common denominatorjumpque.icn               jump element to head of queuehexcvt.icn                                hexadecimal conversionhostname.icn                      produce host namehuffstuf.icn                              huffman codinghyperbol.icn                              hyperbolic functionscodeobj.icn             encode and decode Icon dataescape.icn                      interpret Icon literal escapesibench.icn                        support Icon benchmarkingidentity.icn       produce identities for Icon typesiftrace.icn                         trace Icon function callsimage.icn               produce images of Icon valuesipause.icn                pause within an Icon programispf.icn              communicate between Icon and ISPFivalue.icn              convert string to Icon valueobject.icn              encode and decode Icon valuesrexx.icn              communicate between Icon and Rexxseqimage.icn      produce string image of Icon result sequencesnapshot.icn             show snapshot of Icon string scanningstripcom.icn        strip comments out of Icon linetypecode.icn      produce letter code for Icon typeversion.icn                       produce Icon version numberidentity.icn                      produce identities for Icon typesadjuncts.icn                  gettext and idxtextfullimag.icn             produce complete image of structured dataseqimage.icn               produce string image of Icon result sequenceximage.icn                 produce string image of dataimage.icn                         produce images of Icon valuesbuffer.icn                       buffered input and outputcomplete.icn             complete partial input stringtab2list.icn                              insert tab-separated strings in listlargint.icn                         large integer arithmeticreal2int.icn              various real-to-integer conversionssigned.icn           put bits into signed integerunsigned.icn            put bits unsigned integercommaize.icn        add commas to real or integersranseq.icn                generate random integers over a rangeescape.icn                                interpret Icon literal escapesispf.icn     communicate between Icon and ISPFcalendat.icn                get date from Julian Day Numberjulian.icn                        produce Julian Day Numberjumpque.icn                               jump element to head of queuegetkeys.icn                           get keys for a gettext fileinserts.icn   build tables with duplicate keysprockind.icn             produce code for kind of procedurelargint.icn                               large integer arithmeticlastname.icn                      produce last nameinbits.icn                  read variable-length charactersoutbits.icn                write variable-length characterspatword.icn                          find letter patternstypecode.icn                      produce letter code for Icon typephoname.icn                      generate letters for phone numbersmatchlib.icn                              lexical matchingpatch.icn                            UNIX-like patch(1)shquote.icn           quote word for UNIX-like shellswildcard.icn                         UNIX-like wild-card pattern matchingargparse.icn         parse pseudo-command-lineoptions.icn                   get command-line optionsrewrap.icn                       advanced line rewrap utilitystripcom.icn   strip comments out of Icon linereadline.icn               read and write lines in pieceswrap.icn                      wrap output linesfiletext.icn        read text file into a listgdl.icn                     get directory list list2tab.icn                        write list as tab-separated stringlmap.icn                              map list elementslpermute.icn        permute elements in a listtab2list.icn ert tab-separated strings in listxrotate.icn              rotate values in list or recordadlutils.icn              process address listslcomb.icn                        generate lists of combinationslscan.icn     quasi scanning routines for listsescape.icn                 interpret Icon literal escapeslongstr.icn                         match longest stringdatetime.icn                         date manipulationmatrix.icn                         matrix manipulationtblset.icn            set-theoretic table manipulationtblutil.icn                         table manipulationlmap.icn                                  map list elementsmapbit.icn                                map string into bit representationlongstr.icn                               match longest stringmatchlib.icn                      lexical matchingpatterns.icn        SNOBOL4-style pattern matchingregexp.icn     regular expression pattern matchingwildcard.icn  UNIX-like wild-card pattern matchingstripunb.icn             strip unbalanced materialmath.icn                          perform mathematical computationsmatrix.icn                                matrix manipulationgmean.icn               compute geometric meangener.icn                        generate miscellaneous sequencesfull13th.icn        give days when a full moon occurs onpom.icn              compute phase of the moonmorse.icn               convert string to Morse codedosfiles.icn                          get MS-DOS file namesiolib.icn          termlib-type tools for MS-DOS and UNIXitlibdos.icn          termlib-type tools (MS-DOS version)array.icn                                 n-dimensional arraysdistance.icn          compute distance in n-spacengrams.icn                       generate n-gramstuple.icn                         process n-tuplesasciinam.icn                        ASCII name of unprintable characterhostname.icn                 produce host namelastname.icn                 produce last namenamepfx.icn     produce prefix portion of nameprocname.icn                      produce name of proceduresoundex.icn      produce Soundex code for nametempname.icn           get temporary file nametitle.icn        produce title portion of namedosfiles.icn              get MS-DOS file namesfilename.icn                   parse file namesnxtprime.icn                     find the next primepopen.icn              pipes for Unix and non-Unix systemsplural.icn      produce plural of English nouncalendat.icn     get date from Julian Day Numberirandom.icn          randomize the random number generatorjulian.icn             produce Julian Day Numberrandreal.icn              get random real number in rangeversion.icn          produce Icon version numbernumbers.icn            format and convert numbersphoname.icn    generate letters for phone numbersrational.icn       arithmetic on rational numbersfull13th.icn   give days when a full moon occurs onallof.icn             conjunction control operationpdco.icn       programmer-defined control operationsstructs.icn                     structure operationsoptions.icn              get command-line optionsbuffer.icn             buffered input and outputwrap.icn                             wrap output linesranseq.icn       generate random integers over a rangepackunpk.icn                              pack and unpack decimal stringsargparse.icn                              parse pseudo-command-linefilename.icn                              parse file namesparscond.icn                     condense parse treeichartp.icn                a simple chart parsercomplete.icn                     complete partial input stringpatch.icn                       UNIX-like patch(1)getpaths.icn         generate elements in PATHpatterns.icn                SNOBOL4-style pattern matchingregexp.icn             regular expression pattern matchingwildcard.icn          UNIX-like wild-card pattern matchingpatword.icn                   find letter patternsipause.icn                                pause within an Icon programpermute.icn                               permutations, combinations, and suchlpermute.icn                              permute elements in a listpom.icn                           compute phase of the moonphoname.icn          generate letters for phone numbersreadline.icn      read and write lines in piecespopen.icn                                 pipes for Unix and non-Unix systemsprogary.icn                               place program in a arrayplural.icn                        produce plural of English nounnamepfx.icn                produce prefix portion of nametitle.icn                   produce title portion of namenamepfx.icn                       produce prefix portion of namenxtprime.icn                find the next primeprintf.icn                                printf-style formattingprockind.icn     produce code for kind of procedureprocname.icn              produce name of procedurescanset.icn        set up string scanning proceduresadlutils.icn                              process address liststuple.icn                                 process n-tuplesipause.icn           pause within an Icon programprogary.icn                         place program in a arraypdae.icn                                  programmer-defined argument evaluationpdco.icn                                  programmer-defined control operationsargparse.icn                        parse pseudo-command-linelscan.icn                                 quasi scanning routines for listsjumpque.icn       jump element to head of queueshquote.icn                               quote word for UNIX-like shellsradcon.icn                                radix conversionirandom.icn                 randomize the random number generatorrandreal.icn                          get random real number in rangeranseq.icn                       generate random integers over a rangeirandom.icn                               randomize the random number generatorrandreal.icn    get random real number in rangeranseq.icn   erate random integers over a rangerational.icn                arithmetic on rational numbersfiletext.icn                              read text file into a listinbits.icn                                read variable-length charactersreadline.icn                              read and write lines in piecesreadtbl.icn                               read user-created stripsgml tablecommaize.icn                add commas to real or integersrandreal.icn                   get random real number in rangereal2int.icn                      various real-to-integer conversionsrecog.icn                                 recognitionrec2tab.icn                         write record as tab-separated stringxrotate.icn      rotate values in list or recordtab2rec.icn  put tab-separated strings in recordsfindre.icn                           find regular expressionregexp.icn                                regular expression pattern matchingmapbit.icn            map string into bit representationseqimage.icn produce string image of Icon result sequencerewrap.icn                  advanced line rewrap utilityrexx.icn     communicate between Icon and Rexxxrotate.icn                               rotate values in list or recordgettext.icn     gettext (simple text-base routines)lscan.icn                  quasi scanning routines for listslscan.icn                           quasi scanning routines for listsscanset.icn                 set up string scanning proceduresslshupto.icn                         upto scanning with backslash escapingsnapshot.icn show snapshot of Icon string scanningiscreen.icn                               screen functionssegment.icn                               segment stringsenten1.icn                      generate sentencessentence.icn                     generate sentences in filelist2tab.icn            write list as tab-separated stringrec2tab.icn           write record as tab-separated stringtab2list.icn                   insert tab-separated strings in listtab2rec.icn                       put tab-separated strings in recordsseqimage.icn  string image of Icon result sequencegener.icn          generate miscellaneous sequencesusage.icn                                 service functionsscanset.icn                               set up string scanning procedurestblset.icn                                set-theoretic table manipulationtitleset.icn                      produce set of titlesvarsub.icn                   perform UNIX-shell variable substitutionshquote.icn      quote word for UNIX-like shellssnapshot.icn                              show snapshot of Icon string scanningshuffle.icn                               shuffle valuessigned.icn                  put bits into signed integergettext.icn                      gettext (simple text-base routines)ichartp.icn                             a simple chart parsersnapshot.icn                         show snapshot of Icon string scanningpatterns.icn                              SNOBOL4-style pattern matchingisort.icn                    customizable sortingsoundex.icn                       produce Soundex code for namesoundex1.icn                              Soundex algorithmdistance.icn        compute distance in n-spacestatemap.icn                     table of states and abbreviationscomplete.icn       complete partial input stringfeval.icn                        evaluate string as function callintstr.icn                         create string from bitsivalue.icn                        convert string to Icon valuelist2tab.icn  write list as tab-separated stringlongstr.icn                 match longest stringmapbit.icn                            map string into bit representationmorse.icn                         convert string to Morse coderec2tab.icn  rite record as tab-separated stringscanset.icn                        set up string scanning proceduressegment.icn                       segment stringseqimage.icn                      produce string image of Icon result sequencesnapshot.icn        show snapshot of Icon string scanningstrings.icn                               string utilitiesstrip.icn         strip characters from a stringximage.icn                        produce string image of datacollate.icn         collate and decollate stringspackunpk.icn      pack and unpack decimal stringstab2list.icn         insert tab-separated strings in listtab2rec.icn             put tab-separated strings in recordsstrip.icn                                 strip characters from a stringstripcom.icn                              strip comments out of Icon linestripunb.icn                              strip unbalanced materialreadtbl.icn             read user-created stripsgml tablestructs.icn                               structure operationsfullimag.icn    produce complete image of structured datapatterns.icn                      SNOBOL4-style pattern matchingprintf.icn                         printf-style formattingvarsub.icn    perform UNIX-shell variable substitutionibench.icn                                support Icon benchmarkingpopen.icn     pipes for Unix and non-Unix systemslist2tab.icn                write list as tab-separated stringrec2tab.icn               write record as tab-separated stringtab2list.icn                       insert tab-separated strings in listtab2rec.icn                           put tab-separated strings in recordsreadtbl.icn   read user-created stripsgml tablestatemap.icn                              table of states and abbreviationstblset.icn                  set-theoretic table manipulationtblutil.icn                               table manipulationtwt.icn                    create two-way tableinserts.icn                         build tables with duplicate keystempname.icn                          get temporary file nameansi.icn                       ANSI-based terminal controliolib.icn                                 termlib-type tools for MS-DOS and UNIXitlib.icn                                 termlib-type toolsitlibdos.icn                              termlib-type tools (MS-DOS version)bold.icn          enbolden and underscore textfiletext.icn                         read text file into a listgettext.icn               gettext (simple text-base routines)tblset.icn                            set-theoretic table manipulationglabels.icn                 produce graph tickssaytime.icn                   produce the time in Englishtitle.icn                         produce title portion of nametitleset.icn               produce set of titlesiolib.icn                    termlib-type tools for MS-DOS and UNIXitlib.icn                    termlib-type toolsitlibdos.icn                 termlib-type tools (MS-DOS version)iftrace.icn                               trace Icon function callsifncs.icn           wrappers for function tracingparscond.icn               condense parse treetuple.icn                       process n-tuplestwt.icn                            create two-way tableiolib.icn                         termlib-type tools for MS-DOS and UNIXitlib.icn                         termlib-type toolsitlibdos.icn                      termlib-type tools (MS-DOS version)typecode.icn produce letter code for Icon typeidentity.icn  produce identities for Icon typesstripunb.icn                        strip unbalanced materialbold.icn                     enbolden and underscore textgetchlib.icn                    getch for Unixiolib.icn    ib-type tools for MS-DOS and UNIXpatch.icn                                 UNIX-like patch(1)popen.icn                       pipes for Unix and non-Unix systemspopen.icn          pipes for Unix and non-Unix systemsshquote.icn                quote word for UNIX-like shellsvarsub.icn                        perform UNIX-shell variable substitutionwildcard.icn                              UNIX-like wild-card pattern matchingpackunpk.icn                     pack and unpack decimal stringsasciinam.icn                ASCII name of unprintable characterunsigned.icn                     put bits unsigned integerscanset.icn                           set up string scanning proceduresslshupto.icn                              upto scanning with backslash escapingreadtbl.icn                          read user-created stripsgml tablestrings.icn                        string utilitiesrewrap.icn           advanced line rewrap utilityivalue.icn         convert string to Icon valueimage.icn          produce images of Icon valuesobject.icn         encode and decode Icon valuesshuffle.icn                       shuffle valuestclass.icn                       classify values as atomic or compositexrotate.icn                        rotate values in list or recordinbits.icn                           read variable-length charactersoutbits.icn                         write variable-length charactersvarsub.icn             perform UNIX-shell variable substitutionreal2int.icn                              various real-to-integer conversionsitlibdos.icn   termlib-type tools (MS-DOS version)version.icn                  produce Icon version numbertwt.icn                        create two-way tablefull13th.icn                    give days when a full moon occurs onwildcard.icn                    UNIX-like wild-card pattern matchinginserts.icn                  build tables with duplicate keysslashbal.icn                        bal() with backslash escapingslshupto.icn                upto scanning with backslash escapingipause.icn                          pause within an Icon programshquote.icn                         quote word for UNIX-like shellswrap.icn                                  wrap output linesifncs.icn                                 wrappers for function tracinglist2tab.icn                              write list as tab-separated stringoutbits.icn                               write variable-length charactersreadline.icn                     read and write lines in piecesrec2tab.icn                               write record as tab-separated string
+statemap.icn          table of states and abbreviations
+commaize.icn                              add commas to real or integers
+adlutils.icn                      process address lists
+rewrap.icn                                advanced line rewrap utility
+soundex1.icn                      Soundex algorithm
+ansi.icn                                  ANSI-based terminal control
+pdae.icn               programmer-defined argument evaluation
+complex.icn               perform complex arithmetic
+largint.icn                 large integer arithmetic
+rational.icn                              arithmetic on rational numbers
+colmize.icn                               arrange data into columns
+progary.icn            place program in a array
+array.icn                   n-dimensional arrays
+asciinam.icn                              ASCII name of unprintable character
+ebcdic.icn                convert between ASCII and EBCDIC
+tclass.icn             classify values as atomic or composite
+slashbal.icn                   bal() with backslash escaping
+slshupto.icn           upto scanning with backslash escaping
+slashbal.icn                              bal() with backslash escaping
+gettext.icn          gettext (simple text-base routines)
+ansi.icn                             ANSI-based terminal control
+ibench.icn                   support Icon benchmarking
+ebcdic.icn                        convert between ASCII and EBCDIC
+ispf.icn                      communicate between Icon and ISPF
+rexx.icn                      communicate between Icon and Rexx
+bincvt.icn                        convert binary data
+binocoef.icn                              binomial coefficient
+mapbit.icn                map string into bit representation
+intstr.icn             create string from bits
+signed.icn                            put bits into signed integer
+unsigned.icn                          put bits unsigned integer
+buffer.icn                                buffered input and output
+inserts.icn                               build tables with duplicate keys
+feval.icn     evaluate string as function call
+iftrace.icn           trace Icon function calls
+wildcard.icn               UNIX-like wild-card pattern matching
+asciinam.icn    ASCII name of unprintable character
+inbits.icn           read variable-length characters
+outbits.icn         write variable-length characters
+strip.icn                           strip characters from a string
+ichartp.icn                      a simple chart parser
+dif.icn                                   check for differences
+tclass.icn                                classify values as atomic or composite
+morse.icn         convert string to Morse code
+prockind.icn                      produce code for kind of procedure
+soundex.icn               produce Soundex code for name
+typecode.icn               produce letter code for Icon type
+huffstuf.icn                      huffman coding
+binocoef.icn                     binomial coefficient
+collate.icn                               collate and decollate strings
+printcol.icn                       format columnar data
+colmize.icn             arrange data into columns
+lcomb.icn               generate lists of combinations
+permute.icn                 permutations, combinations, and such
+argparse.icn                 parse pseudo-command-line
+options.icn                           get command-line options
+commaize.icn                          add commas to real or integers
+stripcom.icn                        strip comments out of Icon line
+gcd.icn                  compute greatest common denominator
+ispf.icn                                  communicate between Icon and ISPF
+rexx.icn                                  communicate between Icon and Rexx
+complete.icn                              complete partial input string
+fullimag.icn                      produce complete image of structured data
+complex.icn                       perform complex arithmetic
+tclass.icn   classify values as atomic or composite
+math.icn             perform mathematical computations
+factorl.icn                               computing factorials
+everycat.icn               generating all concatenations
+parscond.icn                              condense parse tree
+allof.icn                                 conjunction control operation
+allof.icn                     conjunction control operation
+ansi.icn              ANSI-based terminal control
+pdco.icn               programmer-defined control operations
+hexcvt.icn                    hexadecimal conversion
+radcon.icn                          radix conversion
+real2int.icn      various real-to-integer conversions
+bincvt.icn                                convert binary data
+ebcdic.icn                                convert between ASCII and EBCDIC
+ivalue.icn                                convert string to Icon value
+morse.icn                                 convert string to Morse code
+numbers.icn                    format and convert numbers
+fcopy.icn                                 copy a file
+intstr.icn                                create string from bits
+twt.icn                                   create two-way table
+readtbl.icn                     read user-created stripsgml table
+currency.icn                       format currency
+isort.icn                                 customizable sorting
+bincvt.icn                 convert binary data
+codeobj.icn        encode and decode Icon data
+colmize.icn                       arrange data into columns
+fullimag.icn complete image of structured data
+printcol.icn              format columnar data
+ximage.icn        produce string image of data
+calendat.icn                          get date from Julian Day Number
+date.icn                          produce date
+datetime.icn                              date manipulation
+calendat.icn         get date from Julian Day Number
+julian.icn                 produce Julian Day Number
+full13th.icn                         give days when a full moon occurs on
+packunpk.icn              pack and unpack decimal strings
+codeobj.icn                    encode and decode Icon data
+object.icn                     encode and decode Icon values
+collate.icn                   collate and decollate strings
+pdae.icn                       programmer-defined argument evaluation
+pdco.icn                       programmer-defined control operations
+gcd.icn           compute greatest common denominator
+dif.icn                         check for differences
+array.icn                               n-dimensional arrays
+filedim.icn                  compute file dimensions
+gdl.icn                               get directory list 
+distance.icn                      compute distance in n-space
+gauss.icn                compute Gaussian distributions
+dosfiles.icn                       get MS-DOS file names
+iolib.icn       termlib-type tools for MS-DOS and UNIX
+itlibdos.icn       termlib-type tools (MS-DOS version)
+inserts.icn             build tables with duplicate keys
+ebcdic.icn      convert between ASCII and EBCDIC
+jumpque.icn                          jump element to head of queue
+getpaths.icn                     generate elements in PATH
+lmap.icn                         map list elements
+lpermute.icn                      permute elements in a list
+bold.icn                                  enbolden and underscore text
+codeobj.icn                               encode and decode Icon data
+object.icn                                encode and decode Icon values
+plural.icn              produce plural of English noun
+saytime.icn           produce the time in English
+escape.icn         interpret Icon literal escapes
+slashbal.icn         bal() with backslash escaping
+slshupto.icn upto scanning with backslash escaping
+feval.icn                                 evaluate string as function call
+pdae.icn      programmer-defined argument evaluation
+findre.icn                   find regular expression
+regexp.icn                        regular expression pattern matching
+factorl.icn                     computing factorials
+dosfiles.icn                   get MS-DOS file names
+fcopy.icn                          copy a file
+filedim.icn                       compute file dimensions
+filename.icn                        parse file names
+filetext.icn                    read text file into a list
+getkeys.icn        get keys for a gettext file
+sentence.icn        generate sentences in file
+tempname.icn                get temporary file name
+findre.icn                                find regular expression
+nxtprime.icn                              find the next prime
+patword.icn                               find letter patterns
+currency.icn                              format currency
+numbers.icn                               format and convert numbers
+printcol.icn                              format columnar data
+printf.icn                   printf-style formatting
+full13th.icn             give days when a full moon occurs on
+feval.icn              evaluate string as function call
+ifncs.icn                    wrappers for function tracing
+iftrace.icn                    trace Icon function calls
+hyperbol.icn                   hyperbolic functions
+iscreen.icn                        screen functions
+usage.icn                         service functions
+gauss.icn                         compute Gaussian distributions
+gener.icn                                 generate miscellaneous sequences
+getpaths.icn                              generate elements in PATH
+lcomb.icn                                 generate lists of combinations
+ngrams.icn                                generate n-grams
+phoname.icn                               generate letters for phone numbers
+ranseq.icn                                generate random integers over a range
+senten1.icn                               generate sentences
+sentence.icn                              generate sentences in file
+everycat.icn                              generating all concatenations
+irandom.icn   randomize the random number generator
+gmean.icn                         compute geometric mean
+getchlib.icn                              getch for Unix
+adjuncts.icn                              gettext and idxtext
+getkeys.icn                get keys for a gettext file
+gettext.icn                               gettext (simple text-base routines)
+full13th.icn                              give days when a full moon occurs on
+ngrams.icn                     generate n-grams
+glabels.icn                       produce graph ticks
+gcd.icn                           compute greatest common denominator
+jumpque.icn               jump element to head of queue
+hexcvt.icn                                hexadecimal conversion
+hostname.icn                      produce host name
+huffstuf.icn                              huffman coding
+hyperbol.icn                              hyperbolic functions
+codeobj.icn             encode and decode Icon data
+escape.icn                      interpret Icon literal escapes
+ibench.icn                        support Icon benchmarking
+identity.icn       produce identities for Icon types
+iftrace.icn                         trace Icon function calls
+image.icn               produce images of Icon values
+ipause.icn                pause within an Icon program
+ispf.icn              communicate between Icon and ISPF
+ivalue.icn              convert string to Icon value
+object.icn              encode and decode Icon values
+rexx.icn              communicate between Icon and Rexx
+seqimage.icn      produce string image of Icon result sequence
+snapshot.icn             show snapshot of Icon string scanning
+stripcom.icn        strip comments out of Icon line
+typecode.icn      produce letter code for Icon type
+version.icn                       produce Icon version number
+identity.icn                      produce identities for Icon types
+adjuncts.icn                  gettext and idxtext
+fullimag.icn             produce complete image of structured data
+seqimage.icn               produce string image of Icon result sequence
+ximage.icn                 produce string image of data
+image.icn                         produce images of Icon values
+buffer.icn                       buffered input and output
+complete.icn             complete partial input string
+tab2list.icn                              insert tab-separated strings in list
+largint.icn                         large integer arithmetic
+real2int.icn              various real-to-integer conversions
+signed.icn           put bits into signed integer
+unsigned.icn            put bits unsigned integer
+commaize.icn        add commas to real or integers
+ranseq.icn                generate random integers over a range
+escape.icn                                interpret Icon literal escapes
+ispf.icn     communicate between Icon and ISPF
+calendat.icn                get date from Julian Day Number
+julian.icn                        produce Julian Day Number
+jumpque.icn                               jump element to head of queue
+getkeys.icn                           get keys for a gettext file
+inserts.icn   build tables with duplicate keys
+prockind.icn             produce code for kind of procedure
+largint.icn                               large integer arithmetic
+lastname.icn                      produce last name
+inbits.icn                  read variable-length characters
+outbits.icn                write variable-length characters
+patword.icn                          find letter patterns
+typecode.icn                      produce letter code for Icon type
+phoname.icn                      generate letters for phone numbers
+matchlib.icn                              lexical matching
+patch.icn                            UNIX-like patch(1)
+shquote.icn           quote word for UNIX-like shells
+wildcard.icn                         UNIX-like wild-card pattern matching
+argparse.icn         parse pseudo-command-line
+options.icn                   get command-line options
+rewrap.icn                       advanced line rewrap utility
+stripcom.icn   strip comments out of Icon line
+readline.icn               read and write lines in pieces
+wrap.icn                      wrap output lines
+filetext.icn        read text file into a list
+gdl.icn                     get directory list 
+list2tab.icn                        write list as tab-separated string
+lmap.icn                              map list elements
+lpermute.icn        permute elements in a list
+tab2list.icn ert tab-separated strings in list
+xrotate.icn              rotate values in list or record
+adlutils.icn              process address lists
+lcomb.icn                        generate lists of combinations
+lscan.icn     quasi scanning routines for lists
+escape.icn                 interpret Icon literal escapes
+longstr.icn                         match longest string
+datetime.icn                         date manipulation
+matrix.icn                         matrix manipulation
+tblset.icn            set-theoretic table manipulation
+tblutil.icn                         table manipulation
+lmap.icn                                  map list elements
+mapbit.icn                                map string into bit representation
+longstr.icn                               match longest string
+matchlib.icn                      lexical matching
+patterns.icn        SNOBOL4-style pattern matching
+regexp.icn     regular expression pattern matching
+wildcard.icn  UNIX-like wild-card pattern matching
+stripunb.icn             strip unbalanced material
+math.icn                          perform mathematical computations
+matrix.icn                                matrix manipulation
+gmean.icn               compute geometric mean
+gener.icn                        generate miscellaneous sequences
+full13th.icn        give days when a full moon occurs on
+pom.icn              compute phase of the moon
+morse.icn               convert string to Morse code
+dosfiles.icn                          get MS-DOS file names
+iolib.icn          termlib-type tools for MS-DOS and UNIX
+itlibdos.icn          termlib-type tools (MS-DOS version)
+array.icn                                 n-dimensional arrays
+distance.icn          compute distance in n-space
+ngrams.icn                       generate n-grams
+tuple.icn                         process n-tuples
+asciinam.icn                        ASCII name of unprintable character
+hostname.icn                 produce host name
+lastname.icn                 produce last name
+namepfx.icn     produce prefix portion of name
+procname.icn                      produce name of procedure
+soundex.icn      produce Soundex code for name
+tempname.icn           get temporary file name
+title.icn        produce title portion of name
+dosfiles.icn              get MS-DOS file names
+filename.icn                   parse file names
+nxtprime.icn                     find the next prime
+popen.icn              pipes for Unix and non-Unix systems
+plural.icn      produce plural of English noun
+calendat.icn     get date from Julian Day Number
+irandom.icn          randomize the random number generator
+julian.icn             produce Julian Day Number
+randreal.icn              get random real number in range
+version.icn          produce Icon version number
+numbers.icn            format and convert numbers
+phoname.icn    generate letters for phone numbers
+rational.icn       arithmetic on rational numbers
+full13th.icn   give days when a full moon occurs on
+allof.icn             conjunction control operation
+pdco.icn       programmer-defined control operations
+structs.icn                     structure operations
+options.icn              get command-line options
+buffer.icn             buffered input and output
+wrap.icn                             wrap output lines
+ranseq.icn       generate random integers over a range
+packunpk.icn                              pack and unpack decimal strings
+argparse.icn                              parse pseudo-command-line
+filename.icn                              parse file names
+parscond.icn                     condense parse tree
+ichartp.icn                a simple chart parser
+complete.icn                     complete partial input string
+patch.icn                       UNIX-like patch(1)
+getpaths.icn         generate elements in PATH
+patterns.icn                SNOBOL4-style pattern matching
+regexp.icn             regular expression pattern matching
+wildcard.icn          UNIX-like wild-card pattern matching
+patword.icn                   find letter patterns
+ipause.icn                                pause within an Icon program
+permute.icn                               permutations, combinations, and such
+lpermute.icn                              permute elements in a list
+pom.icn                           compute phase of the moon
+phoname.icn          generate letters for phone numbers
+readline.icn      read and write lines in pieces
+popen.icn                                 pipes for Unix and non-Unix systems
+progary.icn                               place program in a array
+plural.icn                        produce plural of English noun
+namepfx.icn                produce prefix portion of name
+title.icn                   produce title portion of name
+namepfx.icn                       produce prefix portion of name
+nxtprime.icn                find the next prime
+printf.icn                                printf-style formatting
+prockind.icn     produce code for kind of procedure
+procname.icn              produce name of procedure
+scanset.icn        set up string scanning procedures
+adlutils.icn                              process address lists
+tuple.icn                                 process n-tuples
+ipause.icn           pause within an Icon program
+progary.icn                         place program in a array
+pdae.icn                                  programmer-defined argument evaluation
+pdco.icn                                  programmer-defined control operations
+argparse.icn                        parse pseudo-command-line
+lscan.icn                                 quasi scanning routines for lists
+jumpque.icn       jump element to head of queue
+shquote.icn                               quote word for UNIX-like shells
+radcon.icn                                radix conversion
+irandom.icn                 randomize the random number generator
+randreal.icn                          get random real number in range
+ranseq.icn                       generate random integers over a range
+irandom.icn                               randomize the random number generator
+randreal.icn    get random real number in range
+ranseq.icn   erate random integers over a range
+rational.icn                arithmetic on rational numbers
+filetext.icn                              read text file into a list
+inbits.icn                                read variable-length characters
+readline.icn                              read and write lines in pieces
+readtbl.icn                               read user-created stripsgml table
+commaize.icn                add commas to real or integers
+randreal.icn                   get random real number in range
+real2int.icn                      various real-to-integer conversions
+recog.icn                                 recognition
+rec2tab.icn                         write record as tab-separated string
+xrotate.icn      rotate values in list or record
+tab2rec.icn  put tab-separated strings in records
+findre.icn                           find regular expression
+regexp.icn                                regular expression pattern matching
+mapbit.icn            map string into bit representation
+seqimage.icn produce string image of Icon result sequence
+rewrap.icn                  advanced line rewrap utility
+rexx.icn     communicate between Icon and Rexx
+xrotate.icn                               rotate values in list or record
+gettext.icn     gettext (simple text-base routines)
+lscan.icn                  quasi scanning routines for lists
+lscan.icn                           quasi scanning routines for lists
+scanset.icn                 set up string scanning procedures
+slshupto.icn                         upto scanning with backslash escaping
+snapshot.icn show snapshot of Icon string scanning
+iscreen.icn                               screen functions
+segment.icn                               segment string
+senten1.icn                      generate sentences
+sentence.icn                     generate sentences in file
+list2tab.icn            write list as tab-separated string
+rec2tab.icn           write record as tab-separated string
+tab2list.icn                   insert tab-separated strings in list
+tab2rec.icn                       put tab-separated strings in records
+seqimage.icn  string image of Icon result sequence
+gener.icn          generate miscellaneous sequences
+usage.icn                                 service functions
+scanset.icn                               set up string scanning procedures
+tblset.icn                                set-theoretic table manipulation
+titleset.icn                      produce set of titles
+varsub.icn                   perform UNIX-shell variable substitution
+shquote.icn      quote word for UNIX-like shells
+snapshot.icn                              show snapshot of Icon string scanning
+shuffle.icn                               shuffle values
+signed.icn                  put bits into signed integer
+gettext.icn                      gettext (simple text-base routines)
+ichartp.icn                             a simple chart parser
+snapshot.icn                         show snapshot of Icon string scanning
+patterns.icn                              SNOBOL4-style pattern matching
+isort.icn                    customizable sorting
+soundex.icn                       produce Soundex code for name
+soundex1.icn                              Soundex algorithm
+distance.icn        compute distance in n-space
+statemap.icn                     table of states and abbreviations
+complete.icn       complete partial input string
+feval.icn                        evaluate string as function call
+intstr.icn                         create string from bits
+ivalue.icn                        convert string to Icon value
+list2tab.icn  write list as tab-separated string
+longstr.icn                 match longest string
+mapbit.icn                            map string into bit representation
+morse.icn                         convert string to Morse code
+rec2tab.icn  rite record as tab-separated string
+scanset.icn                        set up string scanning procedures
+segment.icn                       segment string
+seqimage.icn                      produce string image of Icon result sequence
+snapshot.icn        show snapshot of Icon string scanning
+strings.icn                               string utilities
+strip.icn         strip characters from a string
+ximage.icn                        produce string image of data
+collate.icn         collate and decollate strings
+packunpk.icn      pack and unpack decimal strings
+tab2list.icn         insert tab-separated strings in list
+tab2rec.icn             put tab-separated strings in records
+strip.icn                                 strip characters from a string
+stripcom.icn                              strip comments out of Icon line
+stripunb.icn                              strip unbalanced material
+readtbl.icn             read user-created stripsgml table
+structs.icn                               structure operations
+fullimag.icn    produce complete image of structured data
+patterns.icn                      SNOBOL4-style pattern matching
+printf.icn                         printf-style formatting
+varsub.icn    perform UNIX-shell variable substitution
+ibench.icn                                support Icon benchmarking
+popen.icn     pipes for Unix and non-Unix systems
+list2tab.icn                write list as tab-separated string
+rec2tab.icn               write record as tab-separated string
+tab2list.icn                       insert tab-separated strings in list
+tab2rec.icn                           put tab-separated strings in records
+readtbl.icn   read user-created stripsgml table
+statemap.icn                              table of states and abbreviations
+tblset.icn                  set-theoretic table manipulation
+tblutil.icn                               table manipulation
+twt.icn                    create two-way table
+inserts.icn                         build tables with duplicate keys
+tempname.icn                          get temporary file name
+ansi.icn                       ANSI-based terminal control
+iolib.icn                                 termlib-type tools for MS-DOS and UNIX
+itlib.icn                                 termlib-type tools
+itlibdos.icn                              termlib-type tools (MS-DOS version)
+bold.icn          enbolden and underscore text
+filetext.icn                         read text file into a list
+gettext.icn               gettext (simple text-base routines)
+tblset.icn                            set-theoretic table manipulation
+glabels.icn                 produce graph ticks
+saytime.icn                   produce the time in English
+title.icn                         produce title portion of name
+titleset.icn               produce set of titles
+iolib.icn                    termlib-type tools for MS-DOS and UNIX
+itlib.icn                    termlib-type tools
+itlibdos.icn                 termlib-type tools (MS-DOS version)
+iftrace.icn                               trace Icon function calls
+ifncs.icn           wrappers for function tracing
+parscond.icn               condense parse tree
+tuple.icn                       process n-tuples
+twt.icn                            create two-way table
+iolib.icn                         termlib-type tools for MS-DOS and UNIX
+itlib.icn                         termlib-type tools
+itlibdos.icn                      termlib-type tools (MS-DOS version)
+typecode.icn produce letter code for Icon type
+identity.icn  produce identities for Icon types
+stripunb.icn                        strip unbalanced material
+bold.icn                     enbolden and underscore text
+getchlib.icn                    getch for Unix
+iolib.icn    ib-type tools for MS-DOS and UNIX
+patch.icn                                 UNIX-like patch(1)
+popen.icn                       pipes for Unix and non-Unix systems
+popen.icn          pipes for Unix and non-Unix systems
+shquote.icn                quote word for UNIX-like shells
+varsub.icn                        perform UNIX-shell variable substitution
+wildcard.icn                              UNIX-like wild-card pattern matching
+packunpk.icn                     pack and unpack decimal strings
+asciinam.icn                ASCII name of unprintable character
+unsigned.icn                     put bits unsigned integer
+scanset.icn                           set up string scanning procedures
+slshupto.icn                              upto scanning with backslash escaping
+readtbl.icn                          read user-created stripsgml table
+strings.icn                        string utilities
+rewrap.icn           advanced line rewrap utility
+ivalue.icn         convert string to Icon value
+image.icn          produce images of Icon values
+object.icn         encode and decode Icon values
+shuffle.icn                       shuffle values
+tclass.icn                       classify values as atomic or composite
+xrotate.icn                        rotate values in list or record
+inbits.icn                           read variable-length characters
+outbits.icn                         write variable-length characters
+varsub.icn             perform UNIX-shell variable substitution
+real2int.icn                              various real-to-integer conversions
+itlibdos.icn   termlib-type tools (MS-DOS version)
+version.icn                  produce Icon version number
+twt.icn                        create two-way table
+full13th.icn                    give days when a full moon occurs on
+wildcard.icn                    UNIX-like wild-card pattern matching
+inserts.icn                  build tables with duplicate keys
+slashbal.icn                        bal() with backslash escaping
+slshupto.icn                upto scanning with backslash escaping
+ipause.icn                          pause within an Icon program
+shquote.icn                         quote word for UNIX-like shells
+wrap.icn                                  wrap output lines
+ifncs.icn                                 wrappers for function tracing
+list2tab.icn                              write list as tab-separated string
+outbits.icn                               write variable-length characters
+readline.icn                     read and write lines in pieces
+rec2tab.icn                               write record as tab-separated string

@@ -1,1 +1,59 @@
-##	MacGzip.03b3 - README#This version of MacGzip is  identical to 03b2 by SPDsoft, except that this versioncan:- run native on both 68k and PPC.- be built right out of the box by CodeWarrior, MPW and THINK C. THINK C notes-------------THINK C version 8.0 was used to build, no other version has been tested.To build:1) Place an alias to the Mac folder inside this directory in the Aliases folderin the THINK tree.2) Double click MacGzip.project to open the THINK project. 3) Choose Build Application... from the Project menu, and click the Update button.THINK C can only build 68k native.CodeWarrior notes----------------CW6 was used to build this version. CW5 has also been tested and should workwithout problems. CW has problems when using 2-byte ints, so we use 4-byteints. To build:1) Double click MacGzip.68k.prj to open the 68k CW project.2) Choose Make from the Project menu. This builds a file (application) namedMacGzip.68k.prj.rsrc, which is the resource file for the PPC version.3) Quit 68k CW (if low on memory).4) Double click MacGzip.ppc.prj to open the PPC CW project.5) Choose Make from the Project menu. This builds MacGzip.fat which contain68k and PPC code.MPW notes----------ETO #16  Prerelease MPW was used to build this version. To build:1) Make a folder inside "MPW Build Area" named obj (if not already there).2) Double click the Makefile inside "MPW Build Area" to launch MPW.3) Choose Build... from the Build menu. Answer all to Program Name? dialog.This will build a native 68k, PPC and fat version.Thanks to SPDsoft for previous versions. See the 'Readme (SPDsoft) file for more info. Erling Johansen (ejo@vingmed.no)
+#
+#	MacGzip.03b3 - README
+#
+
+This version of MacGzip is  identical to 03b2 by SPDsoft, except that this version
+can:
+
+- run native on both 68k and PPC.
+- be built right out of the box by CodeWarrior, MPW and THINK C. 
+
+THINK C notes
+-------------
+THINK C version 8.0 was used to build, no other version has been tested.
+To build:
+
+1) Place an alias to the Mac folder inside this directory in the Aliases folder
+in the THINK tree.
+
+2) Double click MacGzip.project to open the THINK project. 
+
+3) Choose Build Application... from the Project menu, and click the Update button.
+
+THINK C can only build 68k native.
+
+CodeWarrior notes
+----------------
+CW6 was used to build this version. CW5 has also been tested and should work
+without problems. CW has problems when using 2-byte ints, so we use 4-byte
+ints. To build:
+
+1) Double click MacGzip.68k.prj to open the 68k CW project.
+
+2) Choose Make from the Project menu. This builds a file (application) named
+MacGzip.68k.prj.rsrc, which is the resource file for the PPC version.
+
+3) Quit 68k CW (if low on memory).
+
+4) Double click MacGzip.ppc.prj to open the PPC CW project.
+
+5) Choose Make from the Project menu. This builds MacGzip.fat which contain
+68k and PPC code.
+
+MPW notes
+----------
+ETO #16  Prerelease MPW was used to build this version. To build:
+
+1) Make a folder inside "MPW Build Area" named obj (if not already there).
+
+2) Double click the Makefile inside "MPW Build Area" to launch MPW.
+
+3) Choose Build... from the Build menu. Answer all to Program Name? dialog.
+
+This will build a native 68k, PPC and fat version.
+
+
+Thanks to SPDsoft for previous versions. See the 'Readme (SPDsoft) file for more info.
+
+ 
+Erling Johansen (ejo@vingmed.no)

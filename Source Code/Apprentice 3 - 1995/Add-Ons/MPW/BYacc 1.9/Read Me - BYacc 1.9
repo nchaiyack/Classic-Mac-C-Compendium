@@ -1,1 +1,50 @@
-             BYacc 1.9 for MPW Release 1                                                      30 June, 1995Ported by:   Christopher E. HydeEmail:       drjekyll@hylight.demon.co.ukAddress:     HyLight Limited          25 Carson Road          London  E16 4BD          England (UK)Berkeley Yacc (BYacc) is an LALR(1) parser generator for C and C++.  Is copyright the Regents of the University of California.  This is free-ware.Pursuant with the rules on copying: This product includes software developed by the University of California, Berkeley and its contributors.THIS SOFTWARE IS PROVIDED “AS IS” AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.Please send all comments, queries, suggestions, offers of work and contributions (monetary or otherwise) to me at either of the above addresses.  Cash or work from any commercial users would be especially appreciated, as I have to make a living from writing software as I am self employed.This release contains all the original source files modified where necessary to build BYacc for the Mac and MPW.  The original source is available from many ftp sites.The binary version of BYacc was created using MPW 3.4b4 and Symantec C 8.0.1c11 and the 2.0a3 universal headers, all from ETO #17. (It does not use the new runtime libraries).  Although it will work with earlier version of any of these it may well require additional changes to the source code.RecompilingTo recompile the source code enter the following lines into an MPW worksheet:      Set CDebugOpts '-opt off -mbg on -d DEBUG'if you want the ‘debug’ version, or      Set CDebugOpts '-opt all -mbg off'if you want the ‘no debug’ version.  Then, assuming the source files are in the folder ‘byacc-1.9’ on a disc called ‘Ram’, enter:      Directory 'Ram:byacc-1.9:'      BuildProgram BYacc -d Prog='Ram:BYacc' -d S=`Directory` ∂                         -d O='Ram:Obj:' -d CDebugOpts="{CDebugOpts}"The ‘Prog=’ specifies the target binary file,   ‘S=’ specifies the source directory (which should be the current directory),   ‘O=’ specifies the object files’ directory, and   ‘CDebugOpts=’ specifies any extra options for the C compiler.You may ignore all the ‘possible unintended assignment’ warnings while compiling ‘parse.c’.To Do:      • Auto generation of resource files      • Build a PowerPC version (unfortunately I only have a Powerless™ Macintosh ;-()      • Change to GNU’s getopt for greater consistency      • Provide a commando interface      • Find some sort of manual
+             BYacc 1.9 for MPW Release 1
+                                                      30 June, 1995
+
+Ported by:   Christopher E. Hyde
+Email:       drjekyll@hylight.demon.co.uk
+Address:     HyLight Limited
+          25 Carson Road
+          London  E16 4BD
+          England (UK)
+
+Berkeley Yacc (BYacc) is an LALR(1) parser generator for C and C++.  Is copyright the Regents of the University of California.  This is free-ware.
+
+Pursuant with the rules on copying: This product includes software developed by the University of California, Berkeley and its contributors.
+
+THIS SOFTWARE IS PROVIDED “AS IS” AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+Please send all comments, queries, suggestions, offers of work and contributions (monetary or otherwise) to me at either of the above addresses.  Cash or work from any commercial users would be especially appreciated, as I have to make a living from writing software as I am self employed.
+
+This release contains all the original source files modified where necessary to build BYacc for the Mac and MPW.  The original source is available from many ftp sites.
+
+The binary version of BYacc was created using MPW 3.4b4 and Symantec C 8.0.1c11 and the 2.0a3 universal headers, all from ETO #17. (It does not use the new runtime libraries).  Although it will work with earlier version of any of these it may well require additional changes to the source code.
+
+Recompiling
+To recompile the source code enter the following lines into an MPW worksheet:
+
+      Set CDebugOpts '-opt off -mbg on -d DEBUG'
+
+if you want the ‘debug’ version, or
+
+      Set CDebugOpts '-opt all -mbg off'
+
+if you want the ‘no debug’ version.  Then, assuming the source files are in the folder ‘byacc-1.9’ on a disc called ‘Ram’, enter:
+
+      Directory 'Ram:byacc-1.9:'
+      BuildProgram BYacc -d Prog='Ram:BYacc' -d S=`Directory` ∂
+                         -d O='Ram:Obj:' -d CDebugOpts="{CDebugOpts}"
+
+The ‘Prog=’ specifies the target binary file,
+   ‘S=’ specifies the source directory (which should be the current directory),
+   ‘O=’ specifies the object files’ directory, and
+   ‘CDebugOpts=’ specifies any extra options for the C compiler.
+
+You may ignore all the ‘possible unintended assignment’ warnings while compiling ‘parse.c’.
+
+To Do:
+      • Auto generation of resource files
+      • Build a PowerPC version (unfortunately I only have a Powerless™ Macintosh ;-()
+      • Change to GNU’s getopt for greater consistency
+      • Provide a commando interface
+      • Find some sort of manual

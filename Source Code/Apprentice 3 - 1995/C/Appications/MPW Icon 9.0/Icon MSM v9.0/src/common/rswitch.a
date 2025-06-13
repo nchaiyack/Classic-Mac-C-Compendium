@@ -1,1 +1,62 @@
-**  Co-expression context switch for Macintosh MPW Icon*	STRING	C	PRINT	LITS	CASE	OBJ	PRINT	OFF	INCLUDE	'SysEqu.a'	PRINT	ON		IMPORT	interp,syserr	SEG	'rswitch'coswitch PROC	EXPORTcs_regs	REG	D2-D7/A2-A7	;These 12 registers get saved				;  on co-expression switchcs_nregs EQU	12		;Number of registers saved;;  Save registers of the co-expression being deactivated.;	MOVE.L	4(SP),A0	;Get address of old task's registers	MOVE.L	8(SP),A1	;Get address of new task's registers	ADD.L	#cs_nregs*4,A0	;Bump to end of area for backward move	MOVEM.L	cs_regs,-(A0)	;Save registers	TST.L	12(SP)		;Check whether this is first activation	BNE.S	not_first	;Jump if not first;;  Come here for co-expression's first activation.  Set the stack;  pointer to its stack and call interp.first	MOVE.L	#0,StkLowPt	;Disable Mac's "stack sniffer"	MOVE.L	(A1),SP		;Get new stack pointer	MOVE.L	#0,-(SP)	;Set up args for interp	MOVE.L	#0,-(SP)	; ...	JSR	interp		;Call interp	ADD.L	#8,SP		;Pop args off stack;;  We should never get here, but just in case ...;	PEA	#'interp() returned in coswitch'	JSR	syserr		;System error;; Come here if not the first activation.  Restore registers and return.;not_first	MOVEM.L	(A1)+,cs_regs	;Restore registers	RTS			;Return;;  This routine is called at the end of an Icon run.  It re-enables;  the "stack sniffer".;ResetStack PROC	EXPORT	MOVE.L	SP,StkLowPt	RTS	END
+*
+*  Co-expression context switch for Macintosh MPW Icon
+*
+	STRING	C
+	PRINT	LITS
+	CASE	OBJ
+
+	PRINT	OFF
+	INCLUDE	'SysEqu.a'
+	PRINT	ON
+	
+	IMPORT	interp,syserr
+
+	SEG	'rswitch'
+
+coswitch PROC	EXPORT
+
+cs_regs	REG	D2-D7/A2-A7	;These 12 registers get saved
+				;  on co-expression switch
+cs_nregs EQU	12		;Number of registers saved
+
+;
+;  Save registers of the co-expression being deactivated.
+;
+	MOVE.L	4(SP),A0	;Get address of old task's registers
+	MOVE.L	8(SP),A1	;Get address of new task's registers
+	ADD.L	#cs_nregs*4,A0	;Bump to end of area for backward move
+	MOVEM.L	cs_regs,-(A0)	;Save registers
+	TST.L	12(SP)		;Check whether this is first activation
+	BNE.S	not_first	;Jump if not first
+;
+;  Come here for co-expression's first activation.  Set the stack
+;  pointer to its stack and call interp.
+first
+	MOVE.L	#0,StkLowPt	;Disable Mac's "stack sniffer"
+	MOVE.L	(A1),SP		;Get new stack pointer
+	MOVE.L	#0,-(SP)	;Set up args for interp
+	MOVE.L	#0,-(SP)	; ...
+	JSR	interp		;Call interp
+	ADD.L	#8,SP		;Pop args off stack
+;
+;  We should never get here, but just in case ...
+;
+	PEA	#'interp() returned in coswitch'
+	JSR	syserr		;System error
+;
+; Come here if not the first activation.  Restore registers and return.
+;
+not_first
+	MOVEM.L	(A1)+,cs_regs	;Restore registers
+	RTS			;Return
+
+;
+;  This routine is called at the end of an Icon run.  It re-enables
+;  the "stack sniffer".
+;
+ResetStack PROC	EXPORT
+
+	MOVE.L	SP,StkLowPt
+	RTS
+
+	END

@@ -1,1 +1,4 @@
-extern UniversalProcPtr	gOldAppleEvent;void					MyAppleEvent(void);
+
+extern UniversalProcPtr	gOldAppleEvent;
+
+void					MyAppleEvent(void);

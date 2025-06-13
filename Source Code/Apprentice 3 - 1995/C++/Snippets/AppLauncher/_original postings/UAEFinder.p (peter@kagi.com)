@@ -1,1 +1,382 @@
-In article <reter-1402950852190001@bedrock.med.unc.edu>, reter@med.unc.edu(Roy W. Reter) wrote:>I need some help.  I am writing an app that I am getting the passed the>path information of an application I need to launch in a string and need>then to launch that application and terminate the one that read in the>file.  Is there a way to do this (I am writing this in CodeWarrior)?This is a generic programming question, you should post it tocomp.sys.mac.programmer.help, not csmp.codewarrior just because you areusing CodeWarrior.  I'm posting this to those two and alt.sources.mac. Followups are redirected to csmph.Here is some Pascal source code for launching applications, amoungst otherthings.Enjoy,   Peter.unit MyProcesses;interface   uses      Files, Memory, Processes;   const      application = 'APPL';   function FindApplication (creator: OSType; var fs: FSSpec): OSErr;   function FindProcess (creator, typ: OSType; var process:ProcessSerialNumber; var fs: FSSpec): boolean;   procedure LaunchWithDocument (creator, typ: OSType; fs: FSSpec; tofront: boolean);   procedure LaunchApp (creator, typ: OSType; tofront: boolean);   procedure QuitApplication (creator, typ: OSType);   procedure LaunchFSSpec (var fs: FSSpec; tofront: boolean);   function FindControlPanel (fcreator: OSType; var fs: FSSpec): OSErr;   function TellFinderToLaunch (fs: FSSpec; tofront: boolean): boolean;   function OpenControlPanel (fcreator: OSType): boolean;implementation   uses      AppleEvents, Aliases, MySystemGlobals, MyUtils, MyAEUtils, Folders,GestaltEqu;   procedure AddFSSToAEList (var list: AEDescList; row: integer; var fs: FSSpec);      var         fileAlias: AliasHandle;         err: OSErr;   begin      err := NewAlias(nil, fs, fileAlias);      if err = noErr then begin         HLock(handle(fileAlias));         err := AEPutPtr(list, row, typeAlias, ptr(fileAlias^), fileAlias^^.aliasSize);         DisposeHandle(handle(fileAlias));      end;   end;   function FindControlPanel (fcreator: OSType; var fs: FSSpec): OSErr;      var         pb: HParamBlockRec;         filename: Str63;         i: integer;         err: OSErr;         vrn: integer;         dirID: longInt;   begin      err := FindFolder(kOnSystemDisk, kControlPanelFolderType, false, fs.vRefNum, fs.parID);      if err = noErr then begin         i := 1;         repeat            pb.ioNamePtr := @fs.name;            pb.ioVRefNum := fs.vRefNum;            pb.ioDirID := fs.parID;            pb.ioFDirIndex := i;            i := i + 1;            err := PBHGetFInfoSync(@pb);            if err = noErr then begin               if (pb.ioFlFndrInfo.fdType = 'cdev') & (pb.ioFlFndrInfo.fdCreator = fcreator) then begin                  leave;               end;            end;         until (err <> noErr);      end;      FindControlPanel := err;   end;   function TellFinderToLaunch (fs: FSSpec; tofront: boolean): boolean;      var         process: ProcessSerialNumber;         err, junk: OSErr;         targetAddress: AEDesc;         fileList: AEDescList;         theEvent, theReply: AppleEvent;         sendmode: AESendMode;         gv: longInt;         finder_fs: FSSpec;   begin      err := -1;      if (Gestalt(gestaltFinderAttr, gv) = noErr) & BTST(gv,gestaltOSLCompliantFinder) then begin         if FindProcess('MACS', 'FNDR', process, finder_fs) then begin            AECreate(theEvent);            AECreate(theReply);            AECreate(fileList);            AECreate(targetAddress);            err := AECreateDesc(typeProcessSerialNumber, @process, sizeof(process), targetAddress);            if err = noErr then               err := AECreateAppleEvent(kCoreEventClass, kAEOpenDocuments, targetAddress, kAutoGenerateReturnID, kAnyTransactionID, theEvent);            AEDestroy(targetAddress);            if err = noErr then               err := AECreateList(nil, 0, false, fileList);            if err = noErr then               AddFSSToAEList(fileList, 1, fs);            if err = noErr then               err := AEPutParamDesc(theEvent, keyDirectObject, fileList);            if err = noErr then begin               sendmode := kAENoReply;               if not tofront then begin                  sendmode := sendmode + kAENeverInteract;               end;               err := AESend(theEvent, theReply, sendmode, kAEHighPriority, kNoTimeOut, nil, nil);            end;            AEDestroy(theEvent);            AEDestroy(theReply);            AEDestroy(fileList);            if (err = noErr) & tofront then begin               junk := SetFrontProcess(process);            end;         end;      end;      TellFinderToLaunch := err = noErr;   end;   function OpenControlPanel (fcreator: OSType): boolean;      var         fs: FSSpec;   begin      OpenControlPanel := false;      if FindControlPanel(fcreator, fs) = noErr then begin         OpenControlPanel := TellFinderToLaunch(fs, true);      end;   end;   function FindApplication (creator: OSType; var fs: FSSpec): OSErr;      var         i: integer;         pbdt: DTPBRec;         crdate: longInt;         oe: OSErr;         found: boolean;   begin      found := false;      if system7 then begin         i := 1;         repeat            fs.vRefNum := 0;            oe := GetVolInfo(fs.name, fs.vRefNum, i, crdate);            i := i + 1;            if oe = noErr then begin               with pbdt do begin                  fs.name := '';                  ioNamePtr := @fs.name;                  ioVRefNum := fs.vRefNum;                  oe := PBDTGetPath(@pbdt);                  if oe = noErr then begin                     ioIndex := 0;                     ioFileCreator := creator;                     oe := PBDTGetAPPLSync(@pbdt);                     if oe = noErr then                        found := true;                  end;               end;               oe := noErr;            end;         until found or (oe <> noErr);      end;      if found then begin         oe := noErr;         fs.parID := pbdt.ioAPPLParID;      end      else begin         oe := afpItemNotFound;         fs.vRefNum := 0;         fs.parID := 2;         fs.name := '';      end;      FindApplication := oe;   end;   function FindProcess (creator, typ: OSType; var process: ProcessSerialNumber; var fs: FSSpec): boolean;      var         info: ProcessInfoRec;         oe: OSErr;         gv: longInt;   begin      FindProcess := false;      if (Gestalt(gestaltOSAttr, gv) = noErr) & (BTST(gv, gestaltLaunchControl)) then begin         process.highLongOfPSN := 0;         process.lowLongOfPSN := kNoProcess;         info.processInfoLength := sizeof(ProcessInfoRec);         info.processName := nil;         info.processAppSpec := @fs;         while GetNextProcess(process) = noErr do begin            if GetProcessInformation(process, info) = noErr then begin               if (info.processType = longInt(typ)) and (info.processSignature = creator) then begin                  FindProcess := true;                  leave;               end;            end;         end;      end;   end;   procedure PrepareToLaunch (var theEvent: AppleEvent; tofront: boolean; var launchDesc: AEDesc; var launchThis: LaunchParamBlockRec);      var         oe: OSErr;   begin      oe := AECoerceDesc(theEvent, typeAppParameters, launchDesc);      HLock(handle(theEvent.dataHandle));      launchThis.launchAppParameters := AppParametersPtr(launchDesc.dataHandle^);      launchThis.launchBlockID := extendedBlock;      launchThis.launchEPBLength := extendedBlockLen;      launchThis.launchFileFlags := 0;      launchThis.launchControlFlags := launchContinue + launchNoFileFlags;      if not tofront then         launchThis.launchControlFlags := launchThis.launchControlFlags + launchDontSwitch;   end;   procedure LaunchWithDocument (creator, typ: OSType; fs: FSSpec; tofront: boolean);      var         psn: ProcessSerialNumber;         targetAddress: AEDesc;         theEvent, theReply: AppleEvent;         fileList: AEDescList;         launchDesc: AEDesc;         app_fs: FSSpec;         launchThis: LaunchParamBlockRec;         oe: OSErr;         gv: longInt;         sendmode: AESendMode;         t, c: longInt;   begin      PurgeSpace(t, c);      if (Gestalt(gestaltOSAttr, gv) = noErr) & (BTST(gv, gestaltLaunchControl)) & (c > 4096) then begin         if FindProcess(creator, typ, psn, app_fs) then begin            oe := AECreateDesc(typeProcessSerialNumber, @psn, sizeof(psn), targetAddress);            oe := AECreateAppleEvent(kCoreEventClass, kAEOpenDocuments,targetAddress, kAutoGenerateReturnID, kAnyTransactionID, theEvent);            oe := AEDisposeDesc(targetAddress);            oe := AECreateList(nil, 0, false, fileList);            AddFSSToAEList(fileList, 1, fs);            oe := AEPutParamDesc(theEvent, keyDirectObject, fileList);            sendmode := kAENoReply;            if not tofront then               sendmode := sendmode + kAENeverInteract;            oe := AESend(theEvent, theReply, sendmode, kAEHighPriority, kNoTimeOut, nil, nil);            oe := AEDisposeDesc(theEvent);            oe := AEDisposeDesc(theReply);            oe := AEDisposeDesc(fileList);            if tofront then               oe := SetFrontProcess(psn);         end         else begin            if FindApplication(creator, app_fs) = noErr then begin               oe := AECreateDesc(typeApplSignature, @creator, sizeof(creator), targetAddress);               oe := AECreateAppleEvent(kCoreEventClass, kAEOpenDocuments, targetAddress, kAutoGenerateReturnID, kAnyTransactionID, theEvent);               oe := AEDisposeDesc(targetAddress);               oe := AECreateList(nil, 0, false, fileList);               AddFSSToAEList(fileList, 1, fs);               oe := AEPutParamDesc(theEvent, keyDirectObject, fileList);               launchThis.launchAppSpec := @app_fs;               PrepareToLaunch(theEvent, tofront, launchDesc, launchThis);               oe := LaunchApplication(@launchThis);               oe := AEDisposeDesc(theEvent);               oe := AEDisposeDesc(fileList);            end;         end;      end;   end;   procedure LaunchFSSpec (var fs: FSSpec; tofront: boolean);      var         oe: OSErr;         fi: FInfo;         targetAddress: AEDesc;         theEvent: AppleEvent;         gv: longInt;         launchThis: LaunchParamBlockRec;         launchDesc: AEDesc;   begin      if (Gestalt(gestaltOSAttr, gv) = noErr) & (BTST(gv, gestaltLaunchControl)) then begin         oe := FSpGetFInfo(fs, fi);         oe := AECreateDesc(typeApplSignature, @fi.fdCreator, sizeof(fi.fdCreator), targetAddress);         oe := AECreateAppleEvent(kCoreEventClass, kAEOpenApplication, targetAddress, kAutoGenerateReturnID, kAnyTransactionID, theEvent);         oe := AEDisposeDesc(targetAddress);         launchThis.launchAppSpec := @fs;         PrepareToLaunch(theEvent, tofront, launchDesc, launchThis);         oe := LaunchApplication(@launchThis);         oe := AEDisposeDesc(theEvent);      end;   end;   procedure LaunchApp (creator, typ: OSType; tofront: boolean);      var         psn: ProcessSerialNumber;         fileList: AEDescList;         app_fs: FSSpec;         oe: OSErr;         gv: longInt;         sendmode: AESendMode;   begin      if (Gestalt(gestaltOSAttr, gv) = noErr) & (BTST(gv, gestaltLaunchControl)) then begin         if FindProcess(creator, typ, psn, app_fs) then begin            if tofront then begin               oe := SetFrontProcess(psn);            end;         end         else begin            if FindApplication(creator, app_fs) = noErr then begin               LaunchFSSpec(app_fs, tofront);            end;         end;      end;   end;   procedure QuitApplication (creator, typ: OSType);      var         process: processSerialNumber;         infoRec: processInfoRec;         targetAddress: AEAddressDesc;         AEvent, AReply: AppleEvent;         fs: FSSpec;         oe: OSErr;   begin      if FindProcess(creator, typ, process, fs) then begin         oe := AECreateDesc(typeProcessSerialNumber, @process, SizeOf(process), targetAddress);         oe := AECreateAppleEvent(kCoreEventClass, kAEQuitApplication, targetAddress, kAutoGenerateReturnID, kAnyTransactionID, AEvent);         oe := AEDisposeDesc(targetAddress);         oe := AESend(AEvent, AReply, kAENoReply, kAEHighPriority, 5 * 60, nil, nil);         oe := AEDisposeDesc(AEvent);         oe := AEDisposeDesc(AReply);      end;   end;end.-- Never use the same Email address twice :-)  No, seriously, my Email address is <mailto:peter@kagi.com> for questions about my programs, and <mailto:peter@mail.peter.com.au> for any other mail.  They both go to the same place currently, so it doesn't make much difference.
+
+In article <reter-1402950852190001@bedrock.med.unc.edu>, reter@med.unc.edu
+(Roy W. Reter) wrote:
+
+>I need some help.  I am writing an app that I am getting the passed the
+>path information of an application I need to launch in a string and need
+>then to launch that application and terminate the one that read in the
+>file.  Is there a way to do this (I am writing this in CodeWarrior)?
+
+This is a generic programming question, you should post it to
+comp.sys.mac.programmer.help, not csmp.codewarrior just because you are
+using CodeWarrior.  I'm posting this to those two and alt.sources.mac. 
+Followups are redirected to csmph.
+
+Here is some Pascal source code for launching applications, amoungst other
+things.
+
+Enjoy,
+   Peter.
+
+unit MyProcesses;
+
+interface
+
+   uses
+      Files, Memory, Processes;
+
+   const
+      application = 'APPL';
+
+   function FindApplication (creator: OSType; var fs: FSSpec): OSErr;
+   function FindProcess (creator, typ: OSType; var process:ProcessSerialNumber; var fs: FSSpec): boolean;
+   procedure LaunchWithDocument (creator, typ: OSType; fs: FSSpec; tofront: boolean);
+   procedure LaunchApp (creator, typ: OSType; tofront: boolean);
+   procedure QuitApplication (creator, typ: OSType);
+   procedure LaunchFSSpec (var fs: FSSpec; tofront: boolean);
+   function FindControlPanel (fcreator: OSType; var fs: FSSpec): OSErr;
+   function TellFinderToLaunch (fs: FSSpec; tofront: boolean): boolean;
+   function OpenControlPanel (fcreator: OSType): boolean;
+
+implementation
+
+   uses
+      AppleEvents, Aliases, MySystemGlobals, MyUtils, MyAEUtils, Folders,
+GestaltEqu;
+
+
+
+   procedure AddFSSToAEList (var list: AEDescList; row: integer; var fs: FSSpec);
+      var
+         fileAlias: AliasHandle;
+         err: OSErr;
+   begin
+      err := NewAlias(nil, fs, fileAlias);
+      if err = noErr then begin
+         HLock(handle(fileAlias));
+         err := AEPutPtr(list, row, typeAlias, ptr(fileAlias^), fileAlias^^.aliasSize);
+         DisposeHandle(handle(fileAlias));
+      end;
+   end;
+
+
+
+   function FindControlPanel (fcreator: OSType; var fs: FSSpec): OSErr;
+      var
+         pb: HParamBlockRec;
+         filename: Str63;
+         i: integer;
+         err: OSErr;
+         vrn: integer;
+         dirID: longInt;
+   begin
+      err := FindFolder(kOnSystemDisk, kControlPanelFolderType, false, fs.vRefNum, fs.parID);
+      if err = noErr then begin
+         i := 1;
+         repeat
+            pb.ioNamePtr := @fs.name;
+            pb.ioVRefNum := fs.vRefNum;
+            pb.ioDirID := fs.parID;
+            pb.ioFDirIndex := i;
+            i := i + 1;
+            err := PBHGetFInfoSync(@pb);
+            if err = noErr then begin
+               if (pb.ioFlFndrInfo.fdType = 'cdev') & (pb.ioFlFndrInfo.fdCreator = fcreator) then begin
+                  leave;
+               end;
+            end;
+         until (err <> noErr);
+      end;
+      FindControlPanel := err;
+   end;
+
+
+
+
+   function TellFinderToLaunch (fs: FSSpec; tofront: boolean): boolean;
+      var
+         process: ProcessSerialNumber;
+         err, junk: OSErr;
+         targetAddress: AEDesc;
+         fileList: AEDescList;
+         theEvent, theReply: AppleEvent;
+         sendmode: AESendMode;
+         gv: longInt;
+         finder_fs: FSSpec;
+   begin
+      err := -1;
+      if (Gestalt(gestaltFinderAttr, gv) = noErr) & BTST(gv,gestaltOSLCompliantFinder) then begin
+         if FindProcess('MACS', 'FNDR', process, finder_fs) then begin
+            AECreate(theEvent);
+            AECreate(theReply);
+            AECreate(fileList);
+            AECreate(targetAddress);
+            err := AECreateDesc(typeProcessSerialNumber, @process, sizeof(process), targetAddress);
+            if err = noErr then
+               err := AECreateAppleEvent(kCoreEventClass, kAEOpenDocuments, targetAddress, kAutoGenerateReturnID, kAnyTransactionID, theEvent);
+            AEDestroy(targetAddress);
+            if err = noErr then
+               err := AECreateList(nil, 0, false, fileList);
+            if err = noErr then
+               AddFSSToAEList(fileList, 1, fs);
+            if err = noErr then
+               err := AEPutParamDesc(theEvent, keyDirectObject, fileList);
+            if err = noErr then begin
+               sendmode := kAENoReply;
+               if not tofront then begin
+                  sendmode := sendmode + kAENeverInteract;
+               end;
+               err := AESend(theEvent, theReply, sendmode, kAEHighPriority, kNoTimeOut, nil, nil);
+            end;
+            AEDestroy(theEvent);
+            AEDestroy(theReply);
+            AEDestroy(fileList);
+            if (err = noErr) & tofront then begin
+               junk := SetFrontProcess(process);
+            end;
+         end;
+      end;
+      TellFinderToLaunch := err = noErr;
+   end;
+
+
+
+   function OpenControlPanel (fcreator: OSType): boolean;
+      var
+         fs: FSSpec;
+   begin
+      OpenControlPanel := false;
+      if FindControlPanel(fcreator, fs) = noErr then begin
+         OpenControlPanel := TellFinderToLaunch(fs, true);
+      end;
+   end;
+
+
+
+   function FindApplication (creator: OSType; var fs: FSSpec): OSErr;
+      var
+         i: integer;
+         pbdt: DTPBRec;
+         crdate: longInt;
+         oe: OSErr;
+         found: boolean;
+   begin
+      found := false;
+      if system7 then begin
+         i := 1;
+         repeat
+            fs.vRefNum := 0;
+            oe := GetVolInfo(fs.name, fs.vRefNum, i, crdate);
+            i := i + 1;
+            if oe = noErr then begin
+               with pbdt do begin
+                  fs.name := '';
+                  ioNamePtr := @fs.name;
+                  ioVRefNum := fs.vRefNum;
+                  oe := PBDTGetPath(@pbdt);
+                  if oe = noErr then begin
+                     ioIndex := 0;
+                     ioFileCreator := creator;
+                     oe := PBDTGetAPPLSync(@pbdt);
+                     if oe = noErr then
+                        found := true;
+                  end;
+               end;
+               oe := noErr;
+            end;
+         until found or (oe <> noErr);
+      end;
+      if found then begin
+         oe := noErr;
+         fs.parID := pbdt.ioAPPLParID;
+      end
+      else begin
+         oe := afpItemNotFound;
+         fs.vRefNum := 0;
+         fs.parID := 2;
+         fs.name := '';
+      end;
+      FindApplication := oe;
+   end;
+
+
+
+
+   function FindProcess (creator, typ: OSType; var process: ProcessSerialNumber; var fs: FSSpec): boolean;
+      var
+         info: ProcessInfoRec;
+         oe: OSErr;
+         gv: longInt;
+   begin
+      FindProcess := false;
+      if (Gestalt(gestaltOSAttr, gv) = noErr) & (BTST(gv, gestaltLaunchControl)) then begin
+         process.highLongOfPSN := 0;
+         process.lowLongOfPSN := kNoProcess;
+         info.processInfoLength := sizeof(ProcessInfoRec);
+         info.processName := nil;
+         info.processAppSpec := @fs;
+         while GetNextProcess(process) = noErr do begin
+            if GetProcessInformation(process, info) = noErr then begin
+               if (info.processType = longInt(typ)) and (info.processSignature = creator) then begin
+                  FindProcess := true;
+                  leave;
+               end;
+            end;
+         end;
+      end;
+   end;
+
+
+
+
+   procedure PrepareToLaunch (var theEvent: AppleEvent; tofront: boolean; var launchDesc: AEDesc; var launchThis: LaunchParamBlockRec);
+      var
+         oe: OSErr;
+   begin
+      oe := AECoerceDesc(theEvent, typeAppParameters, launchDesc);
+      HLock(handle(theEvent.dataHandle));
+      launchThis.launchAppParameters := AppParametersPtr(launchDesc.dataHandle^);
+      launchThis.launchBlockID := extendedBlock;
+      launchThis.launchEPBLength := extendedBlockLen;
+      launchThis.launchFileFlags := 0;
+      launchThis.launchControlFlags := launchContinue + launchNoFileFlags;
+      if not tofront then
+         launchThis.launchControlFlags := launchThis.launchControlFlags + launchDontSwitch;
+   end;
+
+
+
+
+   procedure LaunchWithDocument (creator, typ: OSType; fs: FSSpec; tofront: boolean);
+      var
+         psn: ProcessSerialNumber;
+         targetAddress: AEDesc;
+         theEvent, theReply: AppleEvent;
+         fileList: AEDescList;
+         launchDesc: AEDesc;
+         app_fs: FSSpec;
+         launchThis: LaunchParamBlockRec;
+         oe: OSErr;
+         gv: longInt;
+         sendmode: AESendMode;
+         t, c: longInt;
+   begin
+      PurgeSpace(t, c);
+      if (Gestalt(gestaltOSAttr, gv) = noErr) & (BTST(gv, gestaltLaunchControl)) & (c > 4096) then begin
+         if FindProcess(creator, typ, psn, app_fs) then begin
+            oe := AECreateDesc(typeProcessSerialNumber, @psn, sizeof(psn), targetAddress);
+            oe := AECreateAppleEvent(kCoreEventClass, kAEOpenDocuments,targetAddress, kAutoGenerateReturnID, kAnyTransactionID, theEvent);
+            oe := AEDisposeDesc(targetAddress);
+            oe := AECreateList(nil, 0, false, fileList);
+            AddFSSToAEList(fileList, 1, fs);
+            oe := AEPutParamDesc(theEvent, keyDirectObject, fileList);
+            sendmode := kAENoReply;
+            if not tofront then
+               sendmode := sendmode + kAENeverInteract;
+            oe := AESend(theEvent, theReply, sendmode, kAEHighPriority, kNoTimeOut, nil, nil);
+            oe := AEDisposeDesc(theEvent);
+            oe := AEDisposeDesc(theReply);
+            oe := AEDisposeDesc(fileList);
+            if tofront then
+               oe := SetFrontProcess(psn);
+         end
+         else begin
+            if FindApplication(creator, app_fs) = noErr then begin
+               oe := AECreateDesc(typeApplSignature, @creator, sizeof(creator), targetAddress);
+               oe := AECreateAppleEvent(kCoreEventClass, kAEOpenDocuments, targetAddress, kAutoGenerateReturnID, kAnyTransactionID, theEvent);
+               oe := AEDisposeDesc(targetAddress);
+               oe := AECreateList(nil, 0, false, fileList);
+               AddFSSToAEList(fileList, 1, fs);
+               oe := AEPutParamDesc(theEvent, keyDirectObject, fileList);
+               launchThis.launchAppSpec := @app_fs;
+               PrepareToLaunch(theEvent, tofront, launchDesc, launchThis);
+               oe := LaunchApplication(@launchThis);
+               oe := AEDisposeDesc(theEvent);
+               oe := AEDisposeDesc(fileList);
+            end;
+         end;
+      end;
+   end;
+
+
+
+
+   procedure LaunchFSSpec (var fs: FSSpec; tofront: boolean);
+      var
+         oe: OSErr;
+         fi: FInfo;
+         targetAddress: AEDesc;
+         theEvent: AppleEvent;
+         gv: longInt;
+         launchThis: LaunchParamBlockRec;
+         launchDesc: AEDesc;
+   begin
+      if (Gestalt(gestaltOSAttr, gv) = noErr) & (BTST(gv, gestaltLaunchControl)) then begin
+         oe := FSpGetFInfo(fs, fi);
+         oe := AECreateDesc(typeApplSignature, @fi.fdCreator, sizeof(fi.fdCreator), targetAddress);
+         oe := AECreateAppleEvent(kCoreEventClass, kAEOpenApplication, targetAddress, kAutoGenerateReturnID, kAnyTransactionID, theEvent);
+         oe := AEDisposeDesc(targetAddress);
+         launchThis.launchAppSpec := @fs;
+         PrepareToLaunch(theEvent, tofront, launchDesc, launchThis);
+         oe := LaunchApplication(@launchThis);
+         oe := AEDisposeDesc(theEvent);
+      end;
+   end;
+
+
+
+
+   procedure LaunchApp (creator, typ: OSType; tofront: boolean);
+      var
+         psn: ProcessSerialNumber;
+         fileList: AEDescList;
+         app_fs: FSSpec;
+         oe: OSErr;
+         gv: longInt;
+         sendmode: AESendMode;
+   begin
+      if (Gestalt(gestaltOSAttr, gv) = noErr) & (BTST(gv, gestaltLaunchControl)) then begin
+         if FindProcess(creator, typ, psn, app_fs) then begin
+            if tofront then begin
+               oe := SetFrontProcess(psn);
+            end;
+         end
+         else begin
+            if FindApplication(creator, app_fs) = noErr then begin
+               LaunchFSSpec(app_fs, tofront);
+            end;
+         end;
+      end;
+   end;
+
+
+
+
+   procedure QuitApplication (creator, typ: OSType);
+      var
+         process: processSerialNumber;
+         infoRec: processInfoRec;
+         targetAddress: AEAddressDesc;
+         AEvent, AReply: AppleEvent;
+         fs: FSSpec;
+         oe: OSErr;
+   begin
+      if FindProcess(creator, typ, process, fs) then begin
+         oe := AECreateDesc(typeProcessSerialNumber, @process, SizeOf(process), targetAddress);
+         oe := AECreateAppleEvent(kCoreEventClass, kAEQuitApplication, targetAddress, kAutoGenerateReturnID, kAnyTransactionID, AEvent);
+         oe := AEDisposeDesc(targetAddress);
+         oe := AESend(AEvent, AReply, kAENoReply, kAEHighPriority, 5 * 60, nil, nil);
+         oe := AEDisposeDesc(AEvent);
+         oe := AEDisposeDesc(AReply);
+      end;
+   end;
+
+end.
+
+
+
+-- 
+Never use the same Email address twice :-)  No, seriously, my Email 
+address is <mailto:peter@kagi.com> for questions about my programs, 
+and <mailto:peter@mail.peter.com.au> for any other mail.  They both 
+go to the same place currently, so it doesn't make much difference.

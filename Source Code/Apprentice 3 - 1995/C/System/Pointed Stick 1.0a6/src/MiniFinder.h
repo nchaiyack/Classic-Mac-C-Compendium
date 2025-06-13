@@ -1,1 +1,5 @@
-#include "CEToolBox.h"extern HBQRec		gHotRecord;void				InstallMiniFinder(void);
+#include "CEToolBox.h"
+
+extern HBQRec		gHotRecord;
+
+void				InstallMiniFinder(void);

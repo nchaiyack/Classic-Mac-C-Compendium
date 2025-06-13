@@ -1,1 +1,6 @@
-Function                          Minimum  Maximum  Average    %   Entriesdo_menu                                0        0        0     0        1handle_key_down                        0        0        0     0        1event_loop                             0        0        0     0        1
+
+Function                          Minimum  Maximum  Average    %   Entries
+
+do_menu                                0        0        0     0        1
+handle_key_down                        0        0        0     0        1
+event_loop                             0        0        0     0        1

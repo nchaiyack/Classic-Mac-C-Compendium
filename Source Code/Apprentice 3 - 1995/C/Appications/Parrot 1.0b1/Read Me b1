@@ -1,1 +1,58 @@
-Parrot 1.0b19/10/93by Bernard Bernsteinbernard@cs.colorado.eduBERNARDB@applelinkI wrote this hack for a Halloween party. This was in the "confusion" room. A microphone picked up sounds that guests made, and at random intervals, they heard their own voices played at other parts of the room.The hack listens to the sound input device and remembers everything it hears (that is loud enough) and then plays those things back in a random order. If your Mac has stereo capability, then it also randomly chooses a speaker to play each sound. The more memory the program has allocated, the more sounds it remembers.The program creates as many buffers as it can fit in its memory partition. You can see how many buffers were created by choosing "About Confusion…" from the Apple menu. If you want the program to make more buffers, just increase the memory partition for the program with "Get Info…" from the finder.It first fills each buffer in order until they are all filled with sounds. Then it randomly picks buffers to fill by overwriting old ones.It randomly chooses a buffer to play back from the ones that are already filled.On many machines, it will be simultaneously recording sounds while it is playing back other sounds. On Macs that don't allow simultaneous sound input and output (Mac LC and Classic), it is either recording or playing at any given time, it does not attempt to do both.••• There are two settings which you can change with ResEdit •••In the STR# resource, the id 129 contains two strings.The first one (default 80) is the threshold for sounds being "loud enough". This number must be between 0 and 255. If you want a low threshold (records just about any ambiant sound), then give it a low number. If you only want the loudest sounds to be recorded, then make the number higher.The program only records sounds above the threshold. In a single buffer, if the sound level goes up and down, only the sections that are above the threshold are remembered and the extra space it trimmed out. So if you tap the mic slowly within a single buffer record, then the playback will sound like you tapped the mic faster. Some extra quiet space is remembered around the loud sections so that there is some continuity.The second string in STR# 129 is the buffer size (default 65536). The default buffer size records a few seconds in each buffer. If you make this buffer size much bigger, then you should make the memory partition for the program larger. You should always have enough memory to record at least two buffers. If you only have space for one, then it will always be recording to it and never playing it.••• Freeware notice •••This software is freeware. If you like it, send me some email saying "cool hack". If you don't like it, then use the source code to make it better.This program is guaranteed bug free :-). If you find any bugs or incompatibilities, then should send me email about them. Please let me know what the error dialog said along with the error number that was reported.••• Release notes •••1.0a1:Original release1.0a2:Changed name to "Parrot". I liked it better and it gives a better feel for what the program does.On machines that are unable to play and record simultaneously (Mac LC and Classic), it now takes turns playing and recording, but it is never recording while it is playing.1.0a3:Fixed up source code so that it is almost readable.Made the playing and recording intervals independent of each other.Changed icon to Parrot.1.0a4:It was failing after about 10 minutes on an SE30 (and probably other macs), so now the sound channels are reset every 30 seconds. This fixed the problem, but I never knew exactly what the problem was.1.0a5:Added the fashionable "Fowl" icon by Marge Boots. Thanks Marge.1.0b1:Made it work with the Mac LC, Classic and Performa 450. I hope this doesn't hurt compatability with any other machines.
+Parrot 1.0b1
+9/10/93
+by Bernard Bernstein
+bernard@cs.colorado.edu
+BERNARDB@applelink
+
+I wrote this hack for a Halloween party. This was in the "confusion" room. A microphone picked up sounds that guests made, and at random intervals, they heard their own voices played at other parts of the room.
+
+The hack listens to the sound input device and remembers everything it hears (that is loud enough) and then plays those things back in a random order. If your Mac has stereo capability, then it also randomly chooses a speaker to play each sound. The more memory the program has allocated, the more sounds it remembers.
+
+The program creates as many buffers as it can fit in its memory partition. You can see how many buffers were created by choosing "About Confusion…" from the Apple menu. If you want the program to make more buffers, just increase the memory partition for the program with "Get Info…" from the finder.
+
+It first fills each buffer in order until they are all filled with sounds. Then it randomly picks buffers to fill by overwriting old ones.
+
+It randomly chooses a buffer to play back from the ones that are already filled.
+
+On many machines, it will be simultaneously recording sounds while it is playing back other sounds. On Macs that don't allow simultaneous sound input and output (Mac LC and Classic), it is either recording or playing at any given time, it does not attempt to do both.
+
+
+••• There are two settings which you can change with ResEdit •••
+
+In the STR# resource, the id 129 contains two strings.
+
+The first one (default 80) is the threshold for sounds being "loud enough". This number must be between 0 and 255. If you want a low threshold (records just about any ambiant sound), then give it a low number. If you only want the loudest sounds to be recorded, then make the number higher.
+
+The program only records sounds above the threshold. In a single buffer, if the sound level goes up and down, only the sections that are above the threshold are remembered and the extra space it trimmed out. So if you tap the mic slowly within a single buffer record, then the playback will sound like you tapped the mic faster. Some extra quiet space is remembered around the loud sections so that there is some continuity.
+
+The second string in STR# 129 is the buffer size (default 65536). The default buffer size records a few seconds in each buffer. If you make this buffer size much bigger, then you should make the memory partition for the program larger. You should always have enough memory to record at least two buffers. If you only have space for one, then it will always be recording to it and never playing it.
+
+••• Freeware notice •••
+
+This software is freeware. If you like it, send me some email saying "cool hack". If you don't like it, then use the source code to make it better.
+
+This program is guaranteed bug free :-). If you find any bugs or incompatibilities, then should send me email about them. Please let me know what the error dialog said along with the error number that was reported.
+
+
+••• Release notes •••
+
+1.0a1:
+Original release
+
+1.0a2:
+Changed name to "Parrot". I liked it better and it gives a better feel for what the program does.
+On machines that are unable to play and record simultaneously (Mac LC and Classic), it now takes turns playing and recording, but it is never recording while it is playing.
+
+1.0a3:
+Fixed up source code so that it is almost readable.
+Made the playing and recording intervals independent of each other.
+Changed icon to Parrot.
+
+1.0a4:
+It was failing after about 10 minutes on an SE30 (and probably other macs), so now the sound channels are reset every 30 seconds. This fixed the problem, but I never knew exactly what the problem was.
+
+1.0a5:
+Added the fashionable "Fowl" icon by Marge Boots. Thanks Marge.
+
+1.0b1:
+Made it work with the Mac LC, Classic and Performa 450. I hope this doesn't hurt compatability with any other machines.

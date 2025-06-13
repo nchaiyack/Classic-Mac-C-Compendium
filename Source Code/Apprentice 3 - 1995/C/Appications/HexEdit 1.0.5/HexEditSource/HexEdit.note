@@ -1,1 +1,135 @@
-HexEdit v 1.0.5Copyright © 1993 Jim BumgardnerInternet Address: jbum@netcom.comHexEdit is a hexdump viewer and editor that works similarly to the hex editor provided with Apple's ResEdit.  It allows you to edit either the data fork or the resource fork of a file.I wrote HexEdit because I needed to be able to insert/delete bytes from the data fork of files I was testing, and tools like FEdit don't have insert/deletion.HexEdit is freeware.  The author retains the copyright, including the right to alter or sell the program.  You may use and copy HexEdit only on a non-commercial basis.  You may not sell this program without the author's permission.About this Document-------------------In order to be brief, I will avoid describing features which are similar to the ResEdit hex editor (If you aren't familiar with this tool, you probably shouldn't be using HexEdit).  I will only describe features which are unique to this program.System Requirements-------------------HexEdit can edit very large files (they don't need to fit into memory).  At it's current memory setting of 600k, it should be able to handle files of up to 230 megs.  If you need to edit a larger file (!), increase it's memory partition.  Note that when HexEdit saves a file, it will (temporarily) need twice the disc space of the original file, plus a little extra for storing the changes you have made.Opening a File--------------HexEdit supports drag and drop, automatically opening files in "Auto" mode.  You may find it useful to keep an alias to HexEdit on your desktop for this purpose.When you use the Open command, HexEdit presents a standard file dialog with three radio buttons, labeled "Data" "Resource" and "Auto"."Data" opens the data fork."Resource" opens the resource fork."Auto" opens the data fork, if there is any data in it, otherwise it opens the resource fork.Saving a File-------------When you save a file with HexEdit, it automatically backs up the last version of the file, renaming it to OriginalName~  (the original name with a tilde after it).The Find Menu------------FindThis brings up a dialog box allowing you to search for a sequence of hex bytes, or asciitext.Search ForwardThis searches for  the last search string, forward until the end of the file.Search BackwardThis searches for the last search string, backward until the beginning of the file.Goto AddressThis allows you to specify an address, either in hex or in decimal, and scroll to thataddress.The Options Menu----------------There are two checkmark options on the Options menu, both of which are turned off by default.Hi Order AsciiThis displays ascii values in the ascii part of the dump which are higher than 80h - you will see the accents, diacriticals and symbols that are in the monaco font that HexEdit uses.  This also makes it a little harder to pick out English text if you are searching for it in a large binary.Decimal AddressesThis causes the addresses to be displayed in decimal, rather than hex.OverwriteThis toggles between insert mode (the default) and overwrite mode.  Overwrite modeallows you to replace a sequence of bytes without affecting the offset of the subsequentbytes.Revision History12/14/93Version 1.0.5		Fixed editing bug that occured when you typed in some chars, then positioned    the insertion point to the beginning or the middle of those chars and deleted a char.12/13/93Version 1.0.4    Fixed bug that caused HexEdit to crash on SEs, Portables, and other       Black and White macs.    Fixed scrolling bug that occurred on very large files.    Improved redrawing speed on very large files.    Eliminated cursor flashing when HexEdit is in background.    Greys out menus when windows are closed.    Added Freeware message to about box.9/10/93Version 1.0.3		Fixed a couple nasty bugs that caused HexEdit to behave erratically on files     that couldn't fit in memory.  The bug caused HexEdit to crash and not save    these files properly.8/30/93    Cmd-W Closes Find Window    Removed ellipses from New menu item    Edit+Find menus dim appropriately8/23/93		Changed ok button to say "Goto" instead of "Search" on goto dialog.		Changed Cmd-Key shortcuts to be more MPW compatible		Fixed some menu items to disable when windows are closed		Added Select All		Added better About Box	  Fixed Cursor I-Beam problem.7/8/93Version 1.0.2	 Changed length display to decimal when appropriate   Fixed resizing window bug   Removed "preferences" from edit menu   Made checkmark preferences permanent   Added Backup File toggle   Added support for Zoom Box.   Windows can be resized up to max size.7/6/93Version 1.0.1  Removed dependence on system 7, 32-bit quickdraw.  Fixed bug with radio buttons on open file dialog.  Sped up display for selecting.7/4/93  Added Overwrite toggle switch	Added Goto Address7/2/93	Added Ascii/Hex Search7/23/93	Version 1.0 Released
+HexEdit v 1.0.5
+
+Copyright © 1993 Jim Bumgardner
+
+Internet Address: jbum@netcom.com
+
+
+HexEdit is a hexdump viewer and editor that works similarly to the hex editor provided with Apple's ResEdit.  It allows you to edit either the data fork or the resource fork of a file.
+
+I wrote HexEdit because I needed to be able to insert/delete bytes from the data fork of files I was testing, and tools like FEdit don't have insert/deletion.
+
+HexEdit is freeware.  The author retains the copyright, including the right to alter or sell the program.  You may use and copy HexEdit only on a non-commercial basis.  You may not sell this program without the author's permission.
+
+
+About this Document
+-------------------
+In order to be brief, I will avoid describing features which are similar to the ResEdit hex editor (If you aren't familiar with this tool, you probably shouldn't be using HexEdit).  I will only describe features which are unique to this program.
+
+
+System Requirements
+-------------------
+HexEdit can edit very large files (they don't need to fit into memory).  At it's current memory setting of 600k, it should be able to handle files of up to 230 megs.  If you need to edit a larger file (!), increase it's memory partition.  
+
+Note that when HexEdit saves a file, it will (temporarily) need twice the disc space of the original file, plus a little extra for storing the changes you have made.
+
+Opening a File
+--------------
+HexEdit supports drag and drop, automatically opening files in "Auto" mode.  You may find it useful to keep an alias to HexEdit on your desktop for this purpose.
+
+When you use the Open command, HexEdit presents a standard file dialog with three radio buttons, labeled "Data" "Resource" and "Auto".
+
+"Data" opens the data fork.
+
+"Resource" opens the resource fork.
+
+"Auto" opens the data fork, if there is any data in it, otherwise it opens the resource fork.
+
+
+Saving a File
+-------------
+When you save a file with HexEdit, it automatically backs up the last version of the file, renaming it to OriginalName~  (the original name with a tilde after it).
+
+The Find Menu
+------------
+Find
+This brings up a dialog box allowing you to search for a sequence of hex bytes, or ascii
+text.
+
+Search Forward
+This searches for  the last search string, forward until the end of the file.
+
+Search Backward
+This searches for the last search string, backward until the beginning of the file.
+
+Goto Address
+This allows you to specify an address, either in hex or in decimal, and scroll to that
+address.
+
+The Options Menu
+----------------
+There are two checkmark options on the Options menu, both of which are turned off by default.
+
+Hi Order Ascii
+This displays ascii values in the ascii part of the dump which are higher than 80h - you will see the accents, diacriticals and symbols that are in the monaco font that HexEdit uses.  This also makes it a little harder to pick out English text if you are searching for it in a large binary.
+
+Decimal Addresses
+This causes the addresses to be displayed in decimal, rather than hex.
+
+Overwrite
+This toggles between insert mode (the default) and overwrite mode.  Overwrite mode
+allows you to replace a sequence of bytes without affecting the offset of the subsequent
+bytes.
+
+Revision History
+12/14/93
+Version 1.0.5
+		Fixed editing bug that occured when you typed in some chars, then positioned
+    the insertion point to the beginning or the middle of those chars and deleted a char.
+
+12/13/93
+Version 1.0.4
+    Fixed bug that caused HexEdit to crash on SEs, Portables, and other
+       Black and White macs.
+    Fixed scrolling bug that occurred on very large files.
+    Improved redrawing speed on very large files.
+    Eliminated cursor flashing when HexEdit is in background.
+    Greys out menus when windows are closed.
+    Added Freeware message to about box.
+
+9/10/93
+Version 1.0.3
+		Fixed a couple nasty bugs that caused HexEdit to behave erratically on files 
+    that couldn't fit in memory.  The bug caused HexEdit to crash and not save
+    these files properly.
+
+8/30/93
+    Cmd-W Closes Find Window
+    Removed ellipses from New menu item
+    Edit+Find menus dim appropriately
+
+8/23/93
+		Changed ok button to say "Goto" instead of "Search" on goto dialog.
+		Changed Cmd-Key shortcuts to be more MPW compatible
+		Fixed some menu items to disable when windows are closed
+		Added Select All
+		Added better About Box
+	  Fixed Cursor I-Beam problem.
+
+7/8/93
+Version 1.0.2
+	 Changed length display to decimal when appropriate
+   Fixed resizing window bug
+   Removed "preferences" from edit menu
+   Made checkmark preferences permanent
+   Added Backup File toggle
+   Added support for Zoom Box.
+   Windows can be resized up to max size.
+
+
+7/6/93
+Version 1.0.1
+  Removed dependence on system 7, 32-bit quickdraw.
+  Fixed bug with radio buttons on open file dialog.
+  Sped up display for selecting.
+
+
+7/4/93
+  Added Overwrite toggle switch
+	Added Goto Address
+
+7/2/93
+	Added Ascii/Hex Search
+
+7/23/93
+	Version 1.0 Released

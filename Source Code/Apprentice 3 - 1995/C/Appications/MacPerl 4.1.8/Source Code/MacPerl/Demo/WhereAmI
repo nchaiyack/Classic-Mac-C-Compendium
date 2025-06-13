@@ -1,1 +1,4 @@
-#!perlprint `pwd`, "\n";
+#!perl
+
+print `pwd`, "\n";
+

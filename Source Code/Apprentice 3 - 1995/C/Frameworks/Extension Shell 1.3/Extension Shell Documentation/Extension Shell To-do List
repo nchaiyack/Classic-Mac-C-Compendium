@@ -1,1 +1,27 @@
-Extension Shell To-do List--------------------------This file is a list of what needs to be done to Extension Shell. If you have a spare weekened, feelfree to try your hand at working on some of this stuff. If you don’t have time to do it, but stillthink it’s a good idea, it will get added here for somebody else to try.	• More support for Control Panels. There are a couple of Control Panel skeletons floating	  around out there, but it would be good if there could be one closely integrated with	  Extension Shell. There's no code for reading/writing preferences in Extension Shell,	  which a Control Panel would obviously need.	• Some (clean) way to remove Gestalt selector functions after they've been installed. As	  far as I know, you can't - but, if you know...	  	• Some high level glue to patch traps accessed through selectors.	• Bring it up to speed on PPC... I don't have access to any PPC docs/compilers/machines	  right now, and probably won't until after I graduate.		• Versions of the THINK C 6.0 project files for THINK C 5.0, CodeWarrior, and MPW	  environments. The file “If you don’t have THINK...” has the exact details of what the	  settings are for the 6.0 projects. One problem for MPW users will be using A4 for	  accessing global variables. The two Keith Rollin articles on stand-alone code (see	  “Extension Shell 1.3 ReadMe”) may help you get things running.
+Extension Shell To-do List
+--------------------------
+
+
+This file is a list of what needs to be done to Extension Shell. If you have a spare weekened, feel
+free to try your hand at working on some of this stuff. If you don’t have time to do it, but still
+think it’s a good idea, it will get added here for somebody else to try.
+
+
+	• More support for Control Panels. There are a couple of Control Panel skeletons floating
+	  around out there, but it would be good if there could be one closely integrated with
+	  Extension Shell. There's no code for reading/writing preferences in Extension Shell,
+	  which a Control Panel would obviously need.
+
+	• Some (clean) way to remove Gestalt selector functions after they've been installed. As
+	  far as I know, you can't - but, if you know...
+	  
+	• Some high level glue to patch traps accessed through selectors.
+
+	• Bring it up to speed on PPC... I don't have access to any PPC docs/compilers/machines
+	  right now, and probably won't until after I graduate.
+	
+	• Versions of the THINK C 6.0 project files for THINK C 5.0, CodeWarrior, and MPW
+	  environments. The file “If you don’t have THINK...” has the exact details of what the
+	  settings are for the 6.0 projects. One problem for MPW users will be using A4 for
+	  accessing global variables. The two Keith Rollin articles on stand-alone code (see
+	  “Extension Shell 1.3 ReadMe”) may help you get things running.

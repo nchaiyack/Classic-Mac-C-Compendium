@@ -1,1 +1,42 @@
-INSTALLING XCONQ1. Decide which versions you want.  For non-Unix systems, you will needto go to the appropriate subdirectory, and read the instructions there onhow to configure and compile the sources for the desired system.Some systems (such as the Mac) may have an already-built executable available.For Unix (and VMS) systems, keep reading here.2. Decide on the user interface(s) you would like to use.  The cursesinterface uses only terminal graphics and will therefore work almostanywhere, but the X11 interface both looks better and is easier to play.Currently, only the X11 version allows multiple human players.3. Decide whether to use "configure" or "imake".  If you don't knowwhich to choose, choose the "configure" way and go to 3a.  If youprefer the "imake" way, go to 3b.3a. Type "./configure".If you want to be able to read xpm files, add the argument "--with-xpm".3b. Type "xmkmf".4. Type "make".5. If you set things to run in the current directory (which is the default),just cd to "curses" and say "cconq" or cd to "x11" and say "xconq".6. If you want the executables in standard places, type "make install"(this action may need modification, depending on which interfaces arein use).[installation probably doesn't work]7. The man pages just tell how to start up the programs; the full Xconqmanual has complete details on everything.  A lot of behavior can be figuredout by experimentation and by using the extensive online help; you canalways get to it by typing '?'.8. If installed in a public place, announce availability.  The libraryfile "lib/news.txt" provides a convenient place to put in any notes aboutchanges, new games/scenarios, and so forth.
+INSTALLING XCONQ
+
+1. Decide which versions you want.  For non-Unix systems, you will need
+to go to the appropriate subdirectory, and read the instructions there on
+how to configure and compile the sources for the desired system.
+Some systems (such as the Mac) may have an already-built executable available.
+For Unix (and VMS) systems, keep reading here.
+
+2. Decide on the user interface(s) you would like to use.  The curses
+interface uses only terminal graphics and will therefore work almost
+anywhere, but the X11 interface both looks better and is easier to play.
+Currently, only the X11 version allows multiple human players.
+
+3. Decide whether to use "configure" or "imake".  If you don't know
+which to choose, choose the "configure" way and go to 3a.  If you
+prefer the "imake" way, go to 3b.
+
+3a. Type "./configure".
+
+If you want to be able to read xpm files, add the argument "--with-xpm".
+
+3b. Type "xmkmf".
+
+4. Type "make".
+
+5. If you set things to run in the current directory (which is the default),
+just cd to "curses" and say "cconq" or cd to "x11" and say "xconq".
+
+6. If you want the executables in standard places, type "make install"
+(this action may need modification, depending on which interfaces are
+in use).
+
+[installation probably doesn't work]
+
+7. The man pages just tell how to start up the programs; the full Xconq
+manual has complete details on everything.  A lot of behavior can be figured
+out by experimentation and by using the extensive online help; you can
+always get to it by typing '?'.
+
+8. If installed in a public place, announce availability.  The library
+file "lib/news.txt" provides a convenient place to put in any notes about
+changes, new games/scenarios, and so forth.

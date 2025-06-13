@@ -1,1 +1,232 @@
-# Copyright © 1984-1988 by Apple Computer Inc.  All rights reserved.#	The user Make file. Customize this file to suit your particular application.#	Remember, an MAMake file is not needed if you have a single file application#	or the classic, magic 5 files application.##	Look at the sample MAMake files as a guide.#	Open Basic Definitions to see what other Make variables exist.#-------------------------------------------------------------------------------#	List here the Application's NameAppName = MUDDwellerCreator = ' %|g'#-------------------------------------------------------------------------------#	List the system libraries that your application needs to link with if the#	set that MABuild dynamically computes is not sufficient (it should be)#NeededSysLibs = #-------------------------------------------------------------------------------#	List any additional interfaces that your application is dependent on#	If they change, your ( magic 1 or 5 ) sources recompileOtherInterfaces =#-------------------------------------------------------------------------------#	By default MABuild links the above libraries, the necessary #	MacApp files, and the files UAppName.p.o and MAppName.p.o.#	List any additional files that your program links with:MyLinkFiles = ¶	"{ObjApp}Main:MUDDoc.cp.o" ¶	"{ObjApp}Main:CommandView.cp.o" ¶	"{ObjApp}Main:LogView.cp.o" ¶	"{ObjApp}Main:LogWindow.cp.o" ¶	"{ObjApp}Main:DocDialogs.cp.o" ¶	"{ObjApp}Main:EDStuff.cp.o" ¶	"{ObjApp}Main:MTPStuff.cp.o" ¶	"{ObjApp}Main:Filters.cp.o" ¶	"{ObjApp}Main:Macros.cp.o" ¶	"{ObjApp}Main:NoTrace.cp.o"OtherLinkFiles = ¶	"{ObjApp}Externals:BigText.cp.o" ¶	"{ObjApp}Externals:UArray.p.o" ¶	"{ObjApp}Externals:USizerView.p.o" ¶	"{ObjApp}Externals:dnr.c.o" ¶	{MyLinkFiles}#-------------------------------------------------------------------------------#	Specify any -sn (segment alias) linker options that you want included.#	(Or to override MacApp's default mapping (in Basic Definitions))OtherSegMappings = ¶	-sn %_Static_Constructor_Destructor_Pointers=Main ¶	-sn Static_Constructors=Main ¶	-sn Static_Destructors=Main ¶	-sn STEClose=GClose ¶	-sn STESelCommand=GSelCommand ¶	-sn STEFields=GFields ¶	-sn STERes=SMUDDocRes ¶	-sn STENonRes=GNonRes ¶	-sn STEOpen=GOpen ¶	-sn STEClipboard=GClipboard ¶	-sn STEDebug=GDebug ¶	-sn STEDoCommand=GDoCommand ¶	-sn SANELib=GRes ¶	-sn SANELIB=GRes ¶	-sn ARes=GRes ¶	-sn ANever=MANever ¶	-sn APane=SMUDDocRes ¶	-sn Array=SMUDDocRes#-------------------------------------------------------------------------------#	List separately compiled resource files that the Rez file includes if you#	want to include more or less than the standard set.  Remember to "include"#	them.OtherRsrcFiles = ¶	{BuildingBlocksResources} ¶	"{SrcApp}Main:Views.rsrc" ¶	"{ObjApp}Main:Alerts.rsrc" ¶	"{ObjApp}Main:Finder.rsrc" ¶	"{ObjApp}Main:Strings.rsrc" ¶	"{ObjApp}Main:Menus.rsrc" ¶	"{ObjApp}Externals:USizerView.rsrc"#-------------------------------------------------------------------------------#	List here any other options that you want passed to the appropriate tool.OtherAsmOptions = OtherCOptions = 			-i "{SrcApp}Main:" -i "{SrcApp}Externals:"OtherCPlusOptions = 		-i "{SrcApp}Main:" -i "{SrcApp}Externals:"OtherLibOptions = OtherLinkOptions = OtherPascalOptions = OtherPostRezOptions = OtherRezOptions = 			-s "{ObjApp}Main:" -s "{ObjApp}Externals:" ¶							-s "{SrcApp}Main:"#-------------------------------------------------------------------------------#	If you extend the view types template, list here the .r file containing the#	extension.#OtherViewTypesSrc = #-------------------------------------------------------------------------------#	Mappings for subdirectories."{ObjApp}Main:"			Ä "{SrcApp}Main:""{ObjApp}Externals:"	Ä "{SrcApp}Externals:"#-------------------------------------------------------------------------------#	List the dependencies of the additional files (not covered by the #	default rules) and special build rules, if any:"{ObjApp}Main:"NoTrace.cp.o		Ä	"{SrcApp}Main:"NoTrace.cp	{MAEcho} {EchoOptions} "Compiling:     NoTrace.cp"	{MACPlus} ¶		{CPlusOptions} ¶		{OtherCPlusOptions} -trace off ¶		{CPlusLoadOptions} ¶		-i "{SrcApp}" ¶		-i "{MACIncludes}" ¶		-o "{ObjApp}Main:"NoTrace.cp.o ¶		"{SrcApp}Main:"NoTrace.cp### MakeMake dependencies ###"{ObjApp}MMUDDweller.cp.o" Ä ¶		"{SrcApp}Main:CommandView.h" "{SrcApp}Main:DocDialogs.h" ¶		"{SrcApp}Main:MUDDoc.h" "{SrcApp}Main:Filters.h" ¶		"{SrcApp}Main:LogWindow.h" "{SrcApp}Main:LogView.h" ¶		"{SrcApp}Externals:BigText.h" "{SrcApp}Main:Macros.h" ¶		"{SrcApp}Main:Globals.h" "{SrcApp}UMUDDweller.h" ¶		"{SrcApp}Main:NoTrace.h" "{SrcApp}Externals:USizerView.h" ¶		"{SrcApp}Externals:UArray.h""{ObjApp}UMUDDweller.cp.o" Ä ¶		"{SrcApp}UMUDDweller.h" "{SrcApp}Main:Globals.h" "{SrcApp}Main:MUDDoc.h" ¶		"{SrcApp}Main:Filters.h" "{SrcApp}Main:LogWindow.h" ¶		"{SrcApp}Main:CommandView.h" "{SrcApp}Main:LogView.h" ¶		"{SrcApp}Externals:BigText.h" "{SrcApp}Main:Macros.h" ¶		"{SrcApp}Main:NoTrace.h""{ObjApp}Main:CommandView.cp.o" Ä ¶		"{SrcApp}Main:CommandView.h" "{SrcApp}Main:Globals.h" ¶		"{SrcApp}Main:MUDDoc.h" "{SrcApp}Main:Filters.h" ¶		"{SrcApp}Main:LogWindow.h" "{SrcApp}Main:LogView.h" ¶		"{SrcApp}Externals:BigText.h" "{SrcApp}Main:Macros.h" ¶		"{SrcApp}Externals:USizerView.h" "{SrcApp}Externals:UArray.h""{ObjApp}Main:DocDialogs.cp.o" Ä ¶		"{SrcApp}Main:DocDialogs.h" "{SrcApp}Main:MUDDoc.h" ¶		"{SrcApp}Main:Filters.h" "{SrcApp}Main:LogWindow.h" ¶		"{SrcApp}Main:CommandView.h" "{SrcApp}Main:LogView.h" ¶		"{SrcApp}Externals:BigText.h" "{SrcApp}Main:Macros.h" ¶		"{SrcApp}Main:Globals.h" "{SrcApp}Main:MTPStuff.h""{ObjApp}Main:EDStuff.cp.o" Ä ¶		"{SrcApp}Main:EDStuff.h" "{SrcApp}Main:MUDDoc.h" ¶		"{SrcApp}Main:Filters.h" "{SrcApp}Main:LogWindow.h" ¶		"{SrcApp}Main:CommandView.h" "{SrcApp}Main:LogView.h" ¶		"{SrcApp}Externals:BigText.h" "{SrcApp}Main:Macros.h" ¶		"{SrcApp}Main:Globals.h" "{SrcApp}Main:MTPStuff.h""{ObjApp}Main:Filters.cp.o" Ä ¶		"{SrcApp}Main:Filters.h" "{SrcApp}Main:Globals.h" ¶		"{SrcApp}Main:MUDDoc.h" "{SrcApp}Main:LogWindow.h" ¶		"{SrcApp}Main:CommandView.h" "{SrcApp}Main:LogView.h" ¶		"{SrcApp}Externals:BigText.h" "{SrcApp}Main:Macros.h""{ObjApp}Main:LogView.cp.o" Ä ¶		"{SrcApp}Main:LogView.h" "{SrcApp}Externals:BigText.h" ¶		"{SrcApp}Main:Globals.h" "{SrcApp}Main:LogWindow.h" ¶		"{SrcApp}Main:CommandView.h" "{SrcApp}Main:MUDDoc.h" ¶		"{SrcApp}Main:Filters.h" "{SrcApp}Main:Macros.h" "{SrcApp}UMUDDweller.h""{ObjApp}Main:LogWindow.cp.o" Ä ¶		"{SrcApp}Main:LogWindow.h" "{SrcApp}Main:CommandView.h" ¶		"{SrcApp}Main:LogView.h" "{SrcApp}Externals:BigText.h" ¶		"{SrcApp}Main:MUDDoc.h" "{SrcApp}Main:Filters.h" "{SrcApp}Main:Macros.h" ¶		"{SrcApp}Externals:USizerView.h" "{SrcApp}Externals:UArray.h""{ObjApp}Main:Macros.cp.o" Ä ¶		"{SrcApp}Main:Macros.h" "{SrcApp}Main:Globals.h" "{SrcApp}Main:MUDDoc.h" ¶		"{SrcApp}Main:Filters.h" "{SrcApp}Main:LogWindow.h" ¶		"{SrcApp}Main:CommandView.h" "{SrcApp}Main:LogView.h" ¶		"{SrcApp}Externals:BigText.h""{ObjApp}Main:MTPStuff.cp.o" Ä ¶		"{SrcApp}Main:MTPStuff.h" "{SrcApp}Main:MUDDoc.h" ¶		"{SrcApp}Main:Filters.h" "{SrcApp}Main:LogWindow.h" ¶		"{SrcApp}Main:CommandView.h" "{SrcApp}Main:LogView.h" ¶		"{SrcApp}Externals:BigText.h" "{SrcApp}Main:Macros.h" ¶		"{SrcApp}Main:Globals.h""{ObjApp}Main:MUDDoc.cp.o" Ä ¶		"{SrcApp}Main:MUDDoc.h" "{SrcApp}Main:Filters.h" ¶		"{SrcApp}Main:LogWindow.h" "{SrcApp}Main:CommandView.h" ¶		"{SrcApp}Main:LogView.h" "{SrcApp}Externals:BigText.h" ¶		"{SrcApp}Main:Macros.h" "{SrcApp}Main:DocDialogs.h" ¶		"{SrcApp}Main:EDStuff.h" "{SrcApp}Main:Globals.h" ¶		"{SrcApp}Main:MTPStuff.h" "{SrcApp}Main:NoTrace.h" ¶		"{SrcApp}Externals:USizerView.h" "{SrcApp}Externals:UArray.h""{ObjApp}Main:NoTrace.cp.o" Ä ¶		"{SrcApp}Main:NoTrace.h" "{SrcApp}Main:Globals.h" ¶		"{SrcApp}Main:MUDDoc.h" "{SrcApp}Main:Filters.h" ¶		"{SrcApp}Main:LogWindow.h" "{SrcApp}Main:CommandView.h" ¶		"{SrcApp}Main:LogView.h" "{SrcApp}Externals:BigText.h" ¶		"{SrcApp}Main:Macros.h" "{SrcApp}UMUDDweller.h""{ObjApp}Externals:BigText.cp.o" Ä ¶		"{SrcApp}Externals:BigText.h" "{SrcApp}Main:LogView.h" ¶		"{SrcApp}Main:NoTrace.h""{ObjApp}Externals:USizerView.p.o" Ä ¶		"{SrcApp}Externals:UArray.p" "{SrcApp}Externals:USizerView.impl.p"
+# Copyright © 1984-1988 by Apple Computer Inc.  All rights reserved.
+
+#	The user Make file. Customize this file to suit your particular application.
+#	Remember, an MAMake file is not needed if you have a single file application
+#	or the classic, magic 5 files application.
+#
+#	Look at the sample MAMake files as a guide.
+#	Open Basic Definitions to see what other Make variables exist.
+
+#-------------------------------------------------------------------------------
+#	List here the Application's Name
+
+AppName = MUDDweller
+Creator = ' %|g'
+
+
+#-------------------------------------------------------------------------------
+#	List the system libraries that your application needs to link with if the
+#	set that MABuild dynamically computes is not sufficient (it should be)
+
+#NeededSysLibs = 
+
+
+#-------------------------------------------------------------------------------
+#	List any additional interfaces that your application is dependent on
+#	If they change, your ( magic 1 or 5 ) sources recompile
+
+OtherInterfaces =
+
+
+#-------------------------------------------------------------------------------
+#	By default MABuild links the above libraries, the necessary 
+#	MacApp files, and the files UAppName.p.o and MAppName.p.o.
+#	List any additional files that your program links with:
+
+MyLinkFiles = ¶
+	"{ObjApp}Main:MUDDoc.cp.o" ¶
+	"{ObjApp}Main:CommandView.cp.o" ¶
+	"{ObjApp}Main:LogView.cp.o" ¶
+	"{ObjApp}Main:LogWindow.cp.o" ¶
+	"{ObjApp}Main:DocDialogs.cp.o" ¶
+	"{ObjApp}Main:EDStuff.cp.o" ¶
+	"{ObjApp}Main:MTPStuff.cp.o" ¶
+	"{ObjApp}Main:Filters.cp.o" ¶
+	"{ObjApp}Main:Macros.cp.o" ¶
+	"{ObjApp}Main:NoTrace.cp.o"
+
+OtherLinkFiles = ¶
+	"{ObjApp}Externals:BigText.cp.o" ¶
+	"{ObjApp}Externals:UArray.p.o" ¶
+	"{ObjApp}Externals:USizerView.p.o" ¶
+	"{ObjApp}Externals:dnr.c.o" ¶
+	{MyLinkFiles}
+
+
+#-------------------------------------------------------------------------------
+#	Specify any -sn (segment alias) linker options that you want included.
+#	(Or to override MacApp's default mapping (in Basic Definitions))
+
+OtherSegMappings = ¶
+	-sn %_Static_Constructor_Destructor_Pointers=Main ¶
+	-sn Static_Constructors=Main ¶
+	-sn Static_Destructors=Main ¶
+	-sn STEClose=GClose ¶
+	-sn STESelCommand=GSelCommand ¶
+	-sn STEFields=GFields ¶
+	-sn STERes=SMUDDocRes ¶
+	-sn STENonRes=GNonRes ¶
+	-sn STEOpen=GOpen ¶
+	-sn STEClipboard=GClipboard ¶
+	-sn STEDebug=GDebug ¶
+	-sn STEDoCommand=GDoCommand ¶
+	-sn SANELib=GRes ¶
+	-sn SANELIB=GRes ¶
+	-sn ARes=GRes ¶
+	-sn ANever=MANever ¶
+	-sn APane=SMUDDocRes ¶
+	-sn Array=SMUDDocRes
+
+
+#-------------------------------------------------------------------------------
+#	List separately compiled resource files that the Rez file includes if you
+#	want to include more or less than the standard set.  Remember to "include"
+#	them.
+
+OtherRsrcFiles = ¶
+	{BuildingBlocksResources} ¶
+	"{SrcApp}Main:Views.rsrc" ¶
+	"{ObjApp}Main:Alerts.rsrc" ¶
+	"{ObjApp}Main:Finder.rsrc" ¶
+	"{ObjApp}Main:Strings.rsrc" ¶
+	"{ObjApp}Main:Menus.rsrc" ¶
+	"{ObjApp}Externals:USizerView.rsrc"
+
+
+#-------------------------------------------------------------------------------
+#	List here any other options that you want passed to the appropriate tool.
+
+OtherAsmOptions = 
+OtherCOptions = 			-i "{SrcApp}Main:" -i "{SrcApp}Externals:"
+OtherCPlusOptions = 		-i "{SrcApp}Main:" -i "{SrcApp}Externals:"
+OtherLibOptions = 
+OtherLinkOptions = 
+OtherPascalOptions = 
+OtherPostRezOptions = 
+OtherRezOptions = 			-s "{ObjApp}Main:" -s "{ObjApp}Externals:" ¶
+							-s "{SrcApp}Main:"
+
+
+#-------------------------------------------------------------------------------
+#	If you extend the view types template, list here the .r file containing the
+#	extension.
+
+#OtherViewTypesSrc = 
+
+
+#-------------------------------------------------------------------------------
+#	Mappings for subdirectories.
+
+"{ObjApp}Main:"			Ä "{SrcApp}Main:"
+"{ObjApp}Externals:"	Ä "{SrcApp}Externals:"
+
+
+#-------------------------------------------------------------------------------
+#	List the dependencies of the additional files (not covered by the 
+#	default rules) and special build rules, if any:
+
+"{ObjApp}Main:"NoTrace.cp.o		Ä	"{SrcApp}Main:"NoTrace.cp
+	{MAEcho} {EchoOptions} "Compiling:     NoTrace.cp"
+	{MACPlus} ¶
+		{CPlusOptions} ¶
+		{OtherCPlusOptions} -trace off ¶
+		{CPlusLoadOptions} ¶
+		-i "{SrcApp}" ¶
+		-i "{MACIncludes}" ¶
+		-o "{ObjApp}Main:"NoTrace.cp.o ¶
+		"{SrcApp}Main:"NoTrace.cp
+
+
+### MakeMake dependencies ###
+
+"{ObjApp}MMUDDweller.cp.o" Ä ¶
+		"{SrcApp}Main:CommandView.h" "{SrcApp}Main:DocDialogs.h" ¶
+		"{SrcApp}Main:MUDDoc.h" "{SrcApp}Main:Filters.h" ¶
+		"{SrcApp}Main:LogWindow.h" "{SrcApp}Main:LogView.h" ¶
+		"{SrcApp}Externals:BigText.h" "{SrcApp}Main:Macros.h" ¶
+		"{SrcApp}Main:Globals.h" "{SrcApp}UMUDDweller.h" ¶
+		"{SrcApp}Main:NoTrace.h" "{SrcApp}Externals:USizerView.h" ¶
+		"{SrcApp}Externals:UArray.h"
+
+"{ObjApp}UMUDDweller.cp.o" Ä ¶
+		"{SrcApp}UMUDDweller.h" "{SrcApp}Main:Globals.h" "{SrcApp}Main:MUDDoc.h" ¶
+		"{SrcApp}Main:Filters.h" "{SrcApp}Main:LogWindow.h" ¶
+		"{SrcApp}Main:CommandView.h" "{SrcApp}Main:LogView.h" ¶
+		"{SrcApp}Externals:BigText.h" "{SrcApp}Main:Macros.h" ¶
+		"{SrcApp}Main:NoTrace.h"
+
+"{ObjApp}Main:CommandView.cp.o" Ä ¶
+		"{SrcApp}Main:CommandView.h" "{SrcApp}Main:Globals.h" ¶
+		"{SrcApp}Main:MUDDoc.h" "{SrcApp}Main:Filters.h" ¶
+		"{SrcApp}Main:LogWindow.h" "{SrcApp}Main:LogView.h" ¶
+		"{SrcApp}Externals:BigText.h" "{SrcApp}Main:Macros.h" ¶
+		"{SrcApp}Externals:USizerView.h" "{SrcApp}Externals:UArray.h"
+
+"{ObjApp}Main:DocDialogs.cp.o" Ä ¶
+		"{SrcApp}Main:DocDialogs.h" "{SrcApp}Main:MUDDoc.h" ¶
+		"{SrcApp}Main:Filters.h" "{SrcApp}Main:LogWindow.h" ¶
+		"{SrcApp}Main:CommandView.h" "{SrcApp}Main:LogView.h" ¶
+		"{SrcApp}Externals:BigText.h" "{SrcApp}Main:Macros.h" ¶
+		"{SrcApp}Main:Globals.h" "{SrcApp}Main:MTPStuff.h"
+
+"{ObjApp}Main:EDStuff.cp.o" Ä ¶
+		"{SrcApp}Main:EDStuff.h" "{SrcApp}Main:MUDDoc.h" ¶
+		"{SrcApp}Main:Filters.h" "{SrcApp}Main:LogWindow.h" ¶
+		"{SrcApp}Main:CommandView.h" "{SrcApp}Main:LogView.h" ¶
+		"{SrcApp}Externals:BigText.h" "{SrcApp}Main:Macros.h" ¶
+		"{SrcApp}Main:Globals.h" "{SrcApp}Main:MTPStuff.h"
+
+"{ObjApp}Main:Filters.cp.o" Ä ¶
+		"{SrcApp}Main:Filters.h" "{SrcApp}Main:Globals.h" ¶
+		"{SrcApp}Main:MUDDoc.h" "{SrcApp}Main:LogWindow.h" ¶
+		"{SrcApp}Main:CommandView.h" "{SrcApp}Main:LogView.h" ¶
+		"{SrcApp}Externals:BigText.h" "{SrcApp}Main:Macros.h"
+
+"{ObjApp}Main:LogView.cp.o" Ä ¶
+		"{SrcApp}Main:LogView.h" "{SrcApp}Externals:BigText.h" ¶
+		"{SrcApp}Main:Globals.h" "{SrcApp}Main:LogWindow.h" ¶
+		"{SrcApp}Main:CommandView.h" "{SrcApp}Main:MUDDoc.h" ¶
+		"{SrcApp}Main:Filters.h" "{SrcApp}Main:Macros.h" "{SrcApp}UMUDDweller.h"
+
+"{ObjApp}Main:LogWindow.cp.o" Ä ¶
+		"{SrcApp}Main:LogWindow.h" "{SrcApp}Main:CommandView.h" ¶
+		"{SrcApp}Main:LogView.h" "{SrcApp}Externals:BigText.h" ¶
+		"{SrcApp}Main:MUDDoc.h" "{SrcApp}Main:Filters.h" "{SrcApp}Main:Macros.h" ¶
+		"{SrcApp}Externals:USizerView.h" "{SrcApp}Externals:UArray.h"
+
+"{ObjApp}Main:Macros.cp.o" Ä ¶
+		"{SrcApp}Main:Macros.h" "{SrcApp}Main:Globals.h" "{SrcApp}Main:MUDDoc.h" ¶
+		"{SrcApp}Main:Filters.h" "{SrcApp}Main:LogWindow.h" ¶
+		"{SrcApp}Main:CommandView.h" "{SrcApp}Main:LogView.h" ¶
+		"{SrcApp}Externals:BigText.h"
+
+"{ObjApp}Main:MTPStuff.cp.o" Ä ¶
+		"{SrcApp}Main:MTPStuff.h" "{SrcApp}Main:MUDDoc.h" ¶
+		"{SrcApp}Main:Filters.h" "{SrcApp}Main:LogWindow.h" ¶
+		"{SrcApp}Main:CommandView.h" "{SrcApp}Main:LogView.h" ¶
+		"{SrcApp}Externals:BigText.h" "{SrcApp}Main:Macros.h" ¶
+		"{SrcApp}Main:Globals.h"
+
+"{ObjApp}Main:MUDDoc.cp.o" Ä ¶
+		"{SrcApp}Main:MUDDoc.h" "{SrcApp}Main:Filters.h" ¶
+		"{SrcApp}Main:LogWindow.h" "{SrcApp}Main:CommandView.h" ¶
+		"{SrcApp}Main:LogView.h" "{SrcApp}Externals:BigText.h" ¶
+		"{SrcApp}Main:Macros.h" "{SrcApp}Main:DocDialogs.h" ¶
+		"{SrcApp}Main:EDStuff.h" "{SrcApp}Main:Globals.h" ¶
+		"{SrcApp}Main:MTPStuff.h" "{SrcApp}Main:NoTrace.h" ¶
+		"{SrcApp}Externals:USizerView.h" "{SrcApp}Externals:UArray.h"
+
+"{ObjApp}Main:NoTrace.cp.o" Ä ¶
+		"{SrcApp}Main:NoTrace.h" "{SrcApp}Main:Globals.h" ¶
+		"{SrcApp}Main:MUDDoc.h" "{SrcApp}Main:Filters.h" ¶
+		"{SrcApp}Main:LogWindow.h" "{SrcApp}Main:CommandView.h" ¶
+		"{SrcApp}Main:LogView.h" "{SrcApp}Externals:BigText.h" ¶
+		"{SrcApp}Main:Macros.h" "{SrcApp}UMUDDweller.h"
+
+
+"{ObjApp}Externals:BigText.cp.o" Ä ¶
+		"{SrcApp}Externals:BigText.h" "{SrcApp}Main:LogView.h" ¶
+		"{SrcApp}Main:NoTrace.h"
+
+"{ObjApp}Externals:USizerView.p.o" Ä ¶
+		"{SrcApp}Externals:UArray.p" "{SrcApp}Externals:USizerView.impl.p"

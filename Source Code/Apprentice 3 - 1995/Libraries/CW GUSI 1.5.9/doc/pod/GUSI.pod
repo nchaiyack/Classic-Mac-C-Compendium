@@ -1,1 +1,189 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Project  :  GUSI        -  Grand Unified Socket Interface%  File     :  GUSI.web    -  Documentation%  Author   :  Matthias Neeracher%  Language :  C SpiderWeb%  %  $Log: GUSI.web,v $%  Revision 1.4  1994/12/31  03:30:13  neeri%  PS: Document TFileSpec.h%%  Revision 1.3  1994/12/30  19:35:58  neeri%  Update for 1.5.0%%  Revision 1.2  1994/05/01  23:28:39  neeri%  Added utime().%%  Revision 1.1  1994/02/25  02:44:55  neeri%  Initial revision%%  Revision 0.9  1993/07/30  00:00:00  neeri%  Update for 1.3.0%  %  Revision 0.8  1993/06/20  00:00:00  neeri%  Last minute changes for 1.2.0%  %  Revision 0.7  1993/06/20  00:00:00  neeri%  Update for 1.2.0%  %  Revision 0.6  1993/06/06  00:00:00  neeri%  Expurgate docu%  %  Revision 0.5  1993/02/22  00:00:00  neeri%  Update for 1.1.0%  %  Revision 0.4  1993/01/09  00:00:00  neeri%  Update for 1.0.1%  %  Revision 0.3  1992/12/13  00:00:00  neeri%  Brush it up for release%  %  Revision 0.2  1992/10/05  00:00:00  neeri%  More or less complete now%  %  Revision 0.1  1992/09/08  00:00:00  neeri%  It's beginning to take shape%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%=head1 IntroductionC<GUSI> is an extension and partial replacement of theC<MPW> runtime library. Its main objective is to provide a more or less simpleand consistent interface across the following I<communication domains>:=over 4=item FilesOrdinary Macintosh files and C<MPW> pseudo devices.=item UnixMemory based communication within a single machine (This name exists forhistorical reasons).=item AppletalkC<ADSP> (and possibly in the future C<DDP>) communication over anetwork.=item PPCLocal and remote connections with the System 7 C<PPC Toolbox>=item InternetC<TCP> and C<UDP> connections over C<MacTCP>.=item PAPConnections with the C<Printer Access Protocol>, typically to a networked PostScript printer.=backAdditionally, C<GUSI> adds some C<UNIX> library calls dealing with files whichwere missing, like C<chdir()>, C<getcwd()>, C<symlink()>, and C<readlink()>, and changes a few other library calls to behave more like their C<UNIX> counterparts.The most recent version of C<GUSI> may be obtained by anonymous ftp from C<ftp.switch.ch> in the directory C<software/mac/src/mpw_c>.There is also a mailing list devoted to discussions about C<GUSI>. You can join thelist by sending email to <F<gusi-request@iis.ee.ethz.ch>>.=head2 User's ManualFor ease of access, the manual has been split up into a number of sections:	GUSI_Install	Installing and using the GUSI headers and libraries	GUSI_Common		Routines common to all GUSI socket families	GUSI_Files		Routines specific to the file system	GUSI_Unix		Routines specific to memory based (UNIX) sockets	GUSI_Appletalk	Routines specific to AppleTalk sockets	GUSI_PPC			Routines specific to PPC Toolbox sockets	GUSI_INET		Routines specific to internet sockets	GUSI_PAP			Routines specific to PAP sockets	GUSI_Misc		Miscellaneous routines	GUSI_Advanced	Advanced techniques  =head2 CopyingCopyright (C) 1992-1995 Matthias NeeracherPermission is granted to anyone to use this software for anypurpose on any computer system, and to redistribute it freely,subject to the following restrictions:=over 4=item *The author is not responsible for the consequences of use ofthis software, no matter how awful, even if they arisefrom defects in it.=item *The origin of this software must not be misrepresented, eitherby explicit claim or by omission.=item *Altered versions must be plainly marked as such, and must notbe misrepresented as being the original software.=back=head2 Design ObjectivesC<GUSI> was developed according to at least threemutually conflicting standards:=over 4=item *The definition of the existing C library.=item *The behavior of the corresponding UNIX calls. While my original guideline was a setof discarded SunOS manuals, my current reference point is the ANSI/IEEE POSIX standard (A borrowed copy of the 1988 edition, if you really want to know; feel free to donate me a copy of the 1992 edition).The behaviour of the socket calls is, of course, modeled after their BSD implementation.=item *The author's judgement, prejudices, laziness, and limited resources.=backIn general, the behavior of the corresponding POSIX/BSD library call was implemented,since this faciliates porting UNIXish utilities to the Macintosh. =head2 AcknowledgementsI would like to thank all who have agreed to beta test this code and who have provided feedback.The TCP/IP code in C<GUSIINET.cp>, C<GUSITCP.cp>, and C<GUSIUDP.cp> is derived from a socket library written by Charlie Reiman <F<reiman@talisman.kaleida.com>>, which in turn is based on code written by Tom Milligan <F<milligan@madhaus.utcs.utoronto.ca>>.The PAP code in C<GUSIPAP.cp> is derived from code written by Sak Wathanasin <F<sw@nan.co.uk>>.Martin Heller <F<heller@gis.geogr.unizh.ch>> suggested to move the documentationto HTML and wrote the HTML to RTF converter. Ed Draper <F<draper@usis.com>> provided the PDF translation.Many of the header files in the C<:include:> subdirectory are borrowed from BSD 4.4-lite, therefore: This product includes software developed by the University of California, Berkeley and its contributors.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Project  :  GUSI        -  Grand Unified Socket Interface
+%  File     :  GUSI.web    -  Documentation
+%  Author   :  Matthias Neeracher
+%  Language :  C SpiderWeb
+%  
+%  $Log: GUSI.web,v $
+%  Revision 1.4  1994/12/31  03:30:13  neeri
+%  PS: Document TFileSpec.h
+%
+%  Revision 1.3  1994/12/30  19:35:58  neeri
+%  Update for 1.5.0
+%
+%  Revision 1.2  1994/05/01  23:28:39  neeri
+%  Added utime().
+%
+%  Revision 1.1  1994/02/25  02:44:55  neeri
+%  Initial revision
+%
+%  Revision 0.9  1993/07/30  00:00:00  neeri
+%  Update for 1.3.0
+%  
+%  Revision 0.8  1993/06/20  00:00:00  neeri
+%  Last minute changes for 1.2.0
+%  
+%  Revision 0.7  1993/06/20  00:00:00  neeri
+%  Update for 1.2.0
+%  
+%  Revision 0.6  1993/06/06  00:00:00  neeri
+%  Expurgate docu
+%  
+%  Revision 0.5  1993/02/22  00:00:00  neeri
+%  Update for 1.1.0
+%  
+%  Revision 0.4  1993/01/09  00:00:00  neeri
+%  Update for 1.0.1
+%  
+%  Revision 0.3  1992/12/13  00:00:00  neeri
+%  Brush it up for release
+%  
+%  Revision 0.2  1992/10/05  00:00:00  neeri
+%  More or less complete now
+%  
+%  Revision 0.1  1992/09/08  00:00:00  neeri
+%  It's beginning to take shape
+%  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+=head1 Introduction
+
+C<GUSI> is an extension and partial replacement of the
+C<MPW> runtime library. Its main objective is to provide a more or less simple
+and consistent interface across the following I<communication domains>:
+
+=over 4
+
+=item Files
+
+Ordinary Macintosh files and C<MPW> pseudo devices.
+
+=item Unix
+
+Memory based communication within a single machine (This name exists for
+historical reasons).
+
+=item Appletalk
+
+C<ADSP> (and possibly in the future C<DDP>) communication over a
+network.
+
+=item PPC
+
+Local and remote connections with the System 7 C<PPC Toolbox>
+
+=item Internet
+
+C<TCP> and C<UDP> connections over C<MacTCP>.
+
+=item PAP
+
+Connections with the C<Printer Access Protocol>, typically to a networked 
+PostScript printer.
+
+=back
+
+Additionally, C<GUSI> adds some C<UNIX> library calls dealing with files which
+were missing, like C<chdir()>, C<getcwd()>, C<symlink()>, and C<readlink()>, and 
+changes a few other library calls to behave more like their C<UNIX> counterparts.
+
+The most recent version of C<GUSI> may be obtained by anonymous ftp from 
+C<ftp.switch.ch> in the directory C<software/mac/src/mpw_c>.
+
+There is also a mailing list devoted to discussions about C<GUSI>. You can join the
+list by sending email to <F<gusi-request@iis.ee.ethz.ch>>.
+
+=head2 User's Manual
+
+For ease of access, the manual has been split up into a number of sections:
+
+	GUSI_Install	Installing and using the GUSI headers and libraries
+	GUSI_Common		Routines common to all GUSI socket families
+	GUSI_Files		Routines specific to the file system
+	GUSI_Unix		Routines specific to memory based (UNIX) sockets
+	GUSI_Appletalk	Routines specific to AppleTalk sockets
+	GUSI_PPC			Routines specific to PPC Toolbox sockets
+	GUSI_INET		Routines specific to internet sockets
+	GUSI_PAP			Routines specific to PAP sockets
+	GUSI_Misc		Miscellaneous routines
+	GUSI_Advanced	Advanced techniques  
+
+=head2 Copying
+
+Copyright (C) 1992-1995 Matthias Neeracher
+
+Permission is granted to anyone to use this software for any
+purpose on any computer system, and to redistribute it freely,
+subject to the following restrictions:
+
+=over 4
+
+=item *
+
+The author is not responsible for the consequences of use of
+this software, no matter how awful, even if they arise
+from defects in it.
+
+=item *
+
+The origin of this software must not be misrepresented, either
+by explicit claim or by omission.
+
+=item *
+
+Altered versions must be plainly marked as such, and must not
+be misrepresented as being the original software.
+
+=back
+
+=head2 Design Objectives
+
+C<GUSI> was developed according to at least three
+mutually conflicting standards:
+
+=over 4
+
+=item *
+
+The definition of the existing C library.
+
+=item *
+
+The behavior of the corresponding UNIX calls. While my original guideline was a set
+of discarded SunOS manuals, my current reference point is the ANSI/IEEE POSIX 
+standard (A borrowed copy of the 1988 edition, if you really want to know; feel 
+free to donate me a copy of the 1992 edition).
+
+The behaviour of the socket calls is, of course, modeled after their BSD 
+implementation.
+
+=item *
+
+The author's judgement, prejudices, laziness, and limited resources.
+
+=back
+
+In general, the behavior of the corresponding POSIX/BSD library call was implemented,
+since this faciliates porting UNIXish utilities to the Macintosh. 
+
+=head2 Acknowledgements
+
+I would like to thank all who have agreed to beta test this code and who have 
+provided feedback.
+
+The TCP/IP code in C<GUSIINET.cp>, C<GUSITCP.cp>, and C<GUSIUDP.cp> is 
+derived from a socket library written by Charlie Reiman 
+<F<reiman@talisman.kaleida.com>>, 
+which in turn is based on code written by Tom Milligan 
+<F<milligan@madhaus.utcs.utoronto.ca>>.
+
+The PAP code in C<GUSIPAP.cp> is derived from code written by Sak Wathanasin 
+<F<sw@nan.co.uk>>.
+
+Martin Heller <F<heller@gis.geogr.unizh.ch>> suggested to move the documentation
+to HTML and wrote the HTML to RTF converter. Ed Draper <F<draper@usis.com>> 
+provided the PDF translation.
+
+Many of the header files in the C<:include:> subdirectory are borrowed from BSD 
+4.4-lite, therefore: This product includes software developed by the University of 
+California, Berkeley and its contributors.

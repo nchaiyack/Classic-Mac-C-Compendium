@@ -1,1 +1,1 @@
-Boolean DoIntegrityCheck(Boolean *programIntegritySet);
+Boolean DoIntegrityCheck(Boolean *programIntegritySet);

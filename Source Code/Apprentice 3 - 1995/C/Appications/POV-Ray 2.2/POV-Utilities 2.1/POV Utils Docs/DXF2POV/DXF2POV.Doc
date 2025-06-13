@@ -1,1 +1,26 @@
-/* AutoCAD DXF file to POV Data File Converter                        *//* Version 1.0 By Aaron A. Collins.  Written 8/13/90                  *//* Version 1.01 Modified to work with POV 2.10 By Drew Wells 3/20/91  *//* Version 1.04 Modified to work with PoV 1.0 By Dan Farmer 3/15/92  *//* This program is released to the public domain.                     *//*--------------------------------------------------------------------*//* Version History                                                    */	/*--------------------------------------------------------------------*/ /*  8/19/90 AC Wrote original program. *  3/20/91 DW Put colors inside texture block for POV 2.10. *          DW Removed line INCLUDE "Basicshapes.dat". *          DW Added additional comment docs at top of POV outfile. *          DW Added additional stats as to what DXF types were found. *  4/29/91 AC Modified usage message and header semantics a bit. *  5/15/91 AC Removed IBM-ness of filenames/extensions *  3/25/92 DF Change bounding shape to use new box primitive. *  5/?/92  JN First port to the Macintosh, some source cleanup & extensions. *  10/13/92 esp 2nd port to the Macintosh *               - remove Mac stuff to other files so as to leave this file generic. *               - Added argv[3] = ObjectName *               - Added warnings if unrecognized statement was skipped * 11/28/92 LG Corrected string conversion of x, y, z coordinates. *          LG Corrected box primitive format. *          LG Added object {} to 3DLINE/3DFACE output *          LG Added camera/light_source placement comments *  12/13/92 esp Merged LG's 11/28/92 changes
+/* AutoCAD DXF file to POV Data File Converter                        */
+/* Version 1.0 By Aaron A. Collins.  Written 8/13/90                  */
+/* Version 1.01 Modified to work with POV 2.10 By Drew Wells 3/20/91  */
+/* Version 1.04 Modified to work with PoV 1.0 By Dan Farmer 3/15/92  */
+/* This program is released to the public domain.                     */
+/*--------------------------------------------------------------------*/
+/* Version History                                                    */	
+/*--------------------------------------------------------------------*/ 
+/*  8/19/90 AC Wrote original program.
+ *  3/20/91 DW Put colors inside texture block for POV 2.10.
+ *          DW Removed line INCLUDE "Basicshapes.dat".
+ *          DW Added additional comment docs at top of POV outfile.
+ *          DW Added additional stats as to what DXF types were found.
+ *  4/29/91 AC Modified usage message and header semantics a bit.
+ *  5/15/91 AC Removed IBM-ness of filenames/extensions
+ *  3/25/92 DF Change bounding shape to use new box primitive.
+ *  5/?/92  JN First port to the Macintosh, some source cleanup & extensions.
+ *  10/13/92 esp 2nd port to the Macintosh
+ *               - remove Mac stuff to other files so as to leave this file generic.
+ *               - Added argv[3] = ObjectName
+ *               - Added warnings if unrecognized statement was skipped
+ * 11/28/92 LG Corrected string conversion of x, y, z coordinates.
+ *          LG Corrected box primitive format.
+ *          LG Added object {} to 3DLINE/3DFACE output
+ *          LG Added camera/light_source placement comments
+ *  12/13/92 esp Merged LG's 11/28/92 changes

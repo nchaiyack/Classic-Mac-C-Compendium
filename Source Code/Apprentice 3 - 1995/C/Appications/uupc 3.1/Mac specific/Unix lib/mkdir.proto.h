@@ -1,1 +1,3 @@
-/* mkdir.c */OSErr mkdir(char *path);
+
+/* mkdir.c */
+OSErr mkdir(char *path);

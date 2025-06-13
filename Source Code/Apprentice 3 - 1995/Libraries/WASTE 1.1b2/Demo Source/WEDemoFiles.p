@@ -1,1 +1,299 @@
-unit WEDemoFiles;{ WASTE DEMO PROJECT: }{ File Handling }{ Copyright © 1993-1995 Marco Piovanelli }{ All Rights Reserved }interface	uses		WEDemoIntf;	function ReadTextFile (pFileSpec: FSSpecPtr;									hWE: WEHandle): OSErr;	function WriteTextFile (pFileSpec: FSSpecPtr;									hWE: WEHandle): OSErr;	function TranslateDrag (theDrag: DragReference;									theItem: ItemReference;									requestedType: FlavorType;									dataHandle: Handle): OSErr;implementation	function ReadTextFile (pFileSpec: FSSpecPtr;									hWE: WEHandle): OSErr;		var			dataForkRefNum, resForkRefNum: Integer;			hText, hStyles, hSoup: Handle;			textSize: Size;		procedure CleanUp;		begin			ForgetHandle(hText);			ForgetHandle(hStyles);			ForgetHandle(hSoup);			if (dataForkRefNum > 0) then				begin					if (FSClose(dataForkRefNum) <> noErr) then						;					dataForkRefNum := 0;				end;			if (resForkRefNum > 0) then				begin					CloseResFile(resForkRefNum);					resForkRefNum := 0;				end;		end;  { CleanUp }		procedure CheckErr (err: OSErr);		begin			if (err <> noErr) then				begin					ReadTextFile := err;					CleanUp;					Exit(ReadTextFile);				end;		end;  { CheckErr }	begin		ReadTextFile := noErr;		dataForkRefNum := 0;		resForkRefNum := 0;		hText := nil;		hStyles := nil;		hSoup := nil;{ open the data fork with read-only permission }		CheckErr(FSpOpenDF(pFileSpec^, fsRdPerm, dataForkRefNum));{ get data fork size }		CheckErr(GetEOF(dataForkRefNum, textSize));{ try to allocate a handle that large; use temporary memory if available }		CheckErr(NewHandleTemp(textSize, hText));{ read in the text }		CheckErr(FSRead(dataForkRefNum, textSize, hText^));{ see if the file has a resource fork }		resForkRefNum := FSpOpenResFile(pFileSpec^, fsRdPerm);		if (resForkRefNum > 0) then			begin{ look for a style scrap resource (get the first one; the resource ID doesn't matter) }				hStyles := Get1IndResource(kTypeStyles, 1);{ look for a soup resource as well }				hSoup := Get1IndResource(kTypeSoup, 1);			end;{ insert the text into the WE record }		HLock(hText);		CheckErr(WEInsert(hText^, textSize, StScrpHandle(hStyles), hSoup, hWE));{ set the insertion point at the beginning of the text }		WESetSelection(0, 0, hWE);{ reset the WE instance modification count }		WEResetModCount(hWE);{ clean up and exit }		CleanUp;	end;  { ReadTextFile }	function WriteTextFile (pFileSpec: FSSpecPtr;									hWE: WEHandle): OSErr;		var			dataForkRefNum, resForkRefNum: Integer;			hText, hStyles, hSoup: Handle;			fileInfo: FInfo;			textSize: Size;			replacing: Boolean;			err: OSErr;		procedure CleanUp;		begin			ForgetResource(hStyles);			ForgetResource(hSoup);			if (dataForkRefNum > 0) then				begin					if (FSClose(dataForkRefNum) <> noErr) then						;					dataForkRefNum := 0;				end;			if (resForkRefNum > 0) then				begin					CloseResFile(resForkRefNum);					resForkRefNum := 0;				end;		end;  { CleanUp }		procedure CheckErr (err: OSErr);		begin			if (err <> noErr) then				begin					WriteTextFile := err;					ErrorAlert(err);					CleanUp;					Exit(WriteTextFile);				end;		end;  { CheckErr }	begin		WriteTextFile := noErr;		dataForkRefNum := 0;		resForkRefNum := 0;		hText := nil;		hStyles := nil;		hSoup := nil;{ are we replacing an existing file? }		err := FSpGetFInfo(pFileSpec^, fileInfo);		if (err = noErr) then			replacing := true		else if (err = fnfErr) then			replacing := false		else			CheckErr(err);{ delete existing file, if any }		if (replacing) then			CheckErr(FSpDelete(pFileSpec^));{ create a new file }		FSpCreateResFile(pFileSpec^, kAppSignature, kTypeText, 0);		CheckErr(ResError);{ if replacing an old file, copy the old file information }		if (replacing) then			CheckErr(FSpSetFInfo(pFileSpec^, fileInfo));{ open the data fork for writing }		CheckErr(FSpOpenDF(pFileSpec^, fsRdWrPerm, dataForkRefNum));{ get the text handle from the WE instance }{ WEGetText returns the original handle, not a copy, so don't dispose of it! }		hText := WEGetText(hWE);		textSize := GetHandleSize(hText);{ write the text }		CheckErr(FSWrite(dataForkRefNum, textSize, hText^));{ open the resource file for writing }		resForkRefNum := FSpOpenResFile(pFileSpec^, fsRdWrPerm);		CheckErr(ResError);{ allocate temporary handles to hold the style scrap and the soup }		CheckErr(NewHandleTemp(0, hStyles));		CheckErr(NewHandleTemp(0, hSoup));{ create the style scrap and the soup }		CheckErr(WECopyRange(0, maxLongInt, nil, StScrpHandle(hStyles), hSoup, hWE));{ make them resource handles }		AddResource(hStyles, kTypeStyles, 128, '');		CheckErr(ResError);		AddResource(hSoup, kTypeSoup, 128, '');		CheckErr(ResError);{ write them to the resource file }		WriteResource(hStyles);		CheckErr(ResError);		WriteResource(hSoup);		CheckErr(ResError);{ "clean" this document by resetting the WE instance modification count }		WEResetModCount(hWE);{ clean up }		CleanUp;	end;  { WriteTextFile }	function TranslateDrag (theDrag: DragReference;									theItem: ItemReference;									requestedType: FlavorType;									dataHandle: Handle): OSErr;{ this simple routine is meant to give an idea of how the drag translation hook ('xdrg') }{ is supposed to work -- in the real world I should probably handle styled text files, }{ PICT files and maybe other fancier file types here: }{ that is left as an exercise for the reader }		var			numFlavors: Integer;			theType: FlavorType;			hfs: HFSFlavor;			refNum: Integer;			dataSize: Size;		procedure CleanUp;		begin			if (refNum <> 0) then				begin					if (FSClose(refNum) <> noErr) then						;					refNum := 0;				end;		end;  { CleanUp }		procedure CheckErr (err: OSErr);		begin			if (err <> noErr) then				begin					TranslateDrag := err;					CleanUp;					Exit(TranslateDrag);				end;		end;  { CheckErr }	begin		TranslateDrag := badDragFlavorErr;		{ assume failure }		refNum := 0;{ we'll try to translate HFS objects to TEXT, so make sure that is the requested type }		if (requestedType <> kTypeText) then			Exit(TranslateDrag);{ see if this drag item is a TEXT file }		dataSize := SizeOf(hfs);		if (CountDragItemFlavors(theDrag, theItem, numFlavors) = noErr) then			if (numFlavors = 1) then				if (GetFlavorType(theDrag, theItem, 1, theType) = noErr) then					if (theType = flavorTypeHFS) then						if (GetFlavorData(theDrag, theItem, theType, @hfs, dataSize, 0) = noErr) then							if (hfs.fileType = kTypeText) then								begin									TranslateDrag := noErr;		{ assume success }{ if dataHandle is NIL, we're finished }									if (dataHandle = nil) then										Exit(TranslateDrag);{ open the file for reading }									CheckErr(FSpOpenDF(hfs.fileSpec, fsRdPerm, refNum));{ get file size }									CheckErr(GetEOF(refNum, dataSize));{ resize the data handle }									SetHandleSize(dataHandle, dataSize);									CheckErr(MemError);{ read the file }									CheckErr(FSRead(refNum, dataSize, dataHandle^));								end;{ clean up }		CleanUp;	end;  { TranslateDrag }end.
+unit WEDemoFiles;
+
+{ WASTE DEMO PROJECT: }
+{ File Handling }
+
+{ Copyright © 1993-1995 Marco Piovanelli }
+{ All Rights Reserved }
+
+interface
+	uses
+		WEDemoIntf;
+
+	function ReadTextFile (pFileSpec: FSSpecPtr;
+									hWE: WEHandle): OSErr;
+	function WriteTextFile (pFileSpec: FSSpecPtr;
+									hWE: WEHandle): OSErr;
+	function TranslateDrag (theDrag: DragReference;
+									theItem: ItemReference;
+									requestedType: FlavorType;
+									dataHandle: Handle): OSErr;
+
+implementation
+
+	function ReadTextFile (pFileSpec: FSSpecPtr;
+									hWE: WEHandle): OSErr;
+		var
+			dataForkRefNum, resForkRefNum: Integer;
+			hText, hStyles, hSoup: Handle;
+			textSize: Size;
+
+		procedure CleanUp;
+		begin
+			ForgetHandle(hText);
+			ForgetHandle(hStyles);
+			ForgetHandle(hSoup);
+
+			if (dataForkRefNum > 0) then
+				begin
+					if (FSClose(dataForkRefNum) <> noErr) then
+						;
+					dataForkRefNum := 0;
+				end;
+
+			if (resForkRefNum > 0) then
+				begin
+					CloseResFile(resForkRefNum);
+					resForkRefNum := 0;
+				end;
+		end;  { CleanUp }
+
+		procedure CheckErr (err: OSErr);
+		begin
+			if (err <> noErr) then
+				begin
+					ReadTextFile := err;
+					CleanUp;
+					Exit(ReadTextFile);
+				end;
+		end;  { CheckErr }
+
+	begin
+		ReadTextFile := noErr;
+		dataForkRefNum := 0;
+		resForkRefNum := 0;
+		hText := nil;
+		hStyles := nil;
+		hSoup := nil;
+
+{ open the data fork with read-only permission }
+		CheckErr(FSpOpenDF(pFileSpec^, fsRdPerm, dataForkRefNum));
+
+{ get data fork size }
+		CheckErr(GetEOF(dataForkRefNum, textSize));
+
+{ try to allocate a handle that large; use temporary memory if available }
+		CheckErr(NewHandleTemp(textSize, hText));
+
+{ read in the text }
+		CheckErr(FSRead(dataForkRefNum, textSize, hText^));
+
+{ see if the file has a resource fork }
+		resForkRefNum := FSpOpenResFile(pFileSpec^, fsRdPerm);
+		if (resForkRefNum > 0) then
+			begin
+
+{ look for a style scrap resource (get the first one; the resource ID doesn't matter) }
+				hStyles := Get1IndResource(kTypeStyles, 1);
+
+{ look for a soup resource as well }
+				hSoup := Get1IndResource(kTypeSoup, 1);
+			end;
+
+{ insert the text into the WE record }
+		HLock(hText);
+		CheckErr(WEInsert(hText^, textSize, StScrpHandle(hStyles), hSoup, hWE));
+
+{ set the insertion point at the beginning of the text }
+		WESetSelection(0, 0, hWE);
+
+{ reset the WE instance modification count }
+		WEResetModCount(hWE);
+
+{ clean up and exit }
+		CleanUp;
+
+	end;  { ReadTextFile }
+
+	function WriteTextFile (pFileSpec: FSSpecPtr;
+									hWE: WEHandle): OSErr;
+		var
+			dataForkRefNum, resForkRefNum: Integer;
+			hText, hStyles, hSoup: Handle;
+			fileInfo: FInfo;
+			textSize: Size;
+			replacing: Boolean;
+			err: OSErr;
+
+		procedure CleanUp;
+		begin
+			ForgetResource(hStyles);
+			ForgetResource(hSoup);
+
+			if (dataForkRefNum > 0) then
+				begin
+					if (FSClose(dataForkRefNum) <> noErr) then
+						;
+					dataForkRefNum := 0;
+				end;
+
+			if (resForkRefNum > 0) then
+				begin
+					CloseResFile(resForkRefNum);
+					resForkRefNum := 0;
+				end;
+
+		end;  { CleanUp }
+
+		procedure CheckErr (err: OSErr);
+		begin
+			if (err <> noErr) then
+				begin
+					WriteTextFile := err;
+					ErrorAlert(err);
+					CleanUp;
+					Exit(WriteTextFile);
+				end;
+		end;  { CheckErr }
+
+	begin
+		WriteTextFile := noErr;
+		dataForkRefNum := 0;
+		resForkRefNum := 0;
+		hText := nil;
+		hStyles := nil;
+		hSoup := nil;
+
+{ are we replacing an existing file? }
+		err := FSpGetFInfo(pFileSpec^, fileInfo);
+		if (err = noErr) then
+			replacing := true
+		else if (err = fnfErr) then
+			replacing := false
+		else
+			CheckErr(err);
+
+{ delete existing file, if any }
+		if (replacing) then
+			CheckErr(FSpDelete(pFileSpec^));
+
+{ create a new file }
+		FSpCreateResFile(pFileSpec^, kAppSignature, kTypeText, 0);
+		CheckErr(ResError);
+
+{ if replacing an old file, copy the old file information }
+		if (replacing) then
+			CheckErr(FSpSetFInfo(pFileSpec^, fileInfo));
+
+{ open the data fork for writing }
+		CheckErr(FSpOpenDF(pFileSpec^, fsRdWrPerm, dataForkRefNum));
+
+{ get the text handle from the WE instance }
+{ WEGetText returns the original handle, not a copy, so don't dispose of it! }
+		hText := WEGetText(hWE);
+		textSize := GetHandleSize(hText);
+
+{ write the text }
+		CheckErr(FSWrite(dataForkRefNum, textSize, hText^));
+
+{ open the resource file for writing }
+		resForkRefNum := FSpOpenResFile(pFileSpec^, fsRdWrPerm);
+		CheckErr(ResError);
+
+{ allocate temporary handles to hold the style scrap and the soup }
+		CheckErr(NewHandleTemp(0, hStyles));
+		CheckErr(NewHandleTemp(0, hSoup));
+
+{ create the style scrap and the soup }
+		CheckErr(WECopyRange(0, maxLongInt, nil, StScrpHandle(hStyles), hSoup, hWE));
+
+{ make them resource handles }
+		AddResource(hStyles, kTypeStyles, 128, '');
+		CheckErr(ResError);
+		AddResource(hSoup, kTypeSoup, 128, '');
+		CheckErr(ResError);
+
+{ write them to the resource file }
+		WriteResource(hStyles);
+		CheckErr(ResError);
+		WriteResource(hSoup);
+		CheckErr(ResError);
+
+{ "clean" this document by resetting the WE instance modification count }
+		WEResetModCount(hWE);
+
+{ clean up }
+		CleanUp;
+
+	end;  { WriteTextFile }
+
+	function TranslateDrag (theDrag: DragReference;
+									theItem: ItemReference;
+									requestedType: FlavorType;
+									dataHandle: Handle): OSErr;
+
+{ this simple routine is meant to give an idea of how the drag translation hook ('xdrg') }
+{ is supposed to work -- in the real world I should probably handle styled text files, }
+{ PICT files and maybe other fancier file types here: }
+{ that is left as an exercise for the reader }
+
+		var
+			numFlavors: Integer;
+			theType: FlavorType;
+			hfs: HFSFlavor;
+			refNum: Integer;
+			dataSize: Size;
+
+		procedure CleanUp;
+		begin
+			if (refNum <> 0) then
+				begin
+					if (FSClose(refNum) <> noErr) then
+						;
+					refNum := 0;
+				end;
+		end;  { CleanUp }
+
+		procedure CheckErr (err: OSErr);
+		begin
+			if (err <> noErr) then
+				begin
+					TranslateDrag := err;
+					CleanUp;
+					Exit(TranslateDrag);
+				end;
+		end;  { CheckErr }
+
+	begin
+		TranslateDrag := badDragFlavorErr;		{ assume failure }
+		refNum := 0;
+
+{ we'll try to translate HFS objects to TEXT, so make sure that is the requested type }
+		if (requestedType <> kTypeText) then
+			Exit(TranslateDrag);
+
+{ see if this drag item is a TEXT file }
+		dataSize := SizeOf(hfs);
+		if (CountDragItemFlavors(theDrag, theItem, numFlavors) = noErr) then
+			if (numFlavors = 1) then
+				if (GetFlavorType(theDrag, theItem, 1, theType) = noErr) then
+					if (theType = flavorTypeHFS) then
+						if (GetFlavorData(theDrag, theItem, theType, @hfs, dataSize, 0) = noErr) then
+							if (hfs.fileType = kTypeText) then
+								begin
+									TranslateDrag := noErr;		{ assume success }
+
+{ if dataHandle is NIL, we're finished }
+									if (dataHandle = nil) then
+										Exit(TranslateDrag);
+
+{ open the file for reading }
+									CheckErr(FSpOpenDF(hfs.fileSpec, fsRdPerm, refNum));
+
+{ get file size }
+									CheckErr(GetEOF(refNum, dataSize));
+
+{ resize the data handle }
+									SetHandleSize(dataHandle, dataSize);
+									CheckErr(MemError);
+
+{ read the file }
+									CheckErr(FSRead(refNum, dataSize, dataHandle^));
+								end;
+
+{ clean up }
+		CleanUp;
+
+	end;  { TranslateDrag }
+
+end.

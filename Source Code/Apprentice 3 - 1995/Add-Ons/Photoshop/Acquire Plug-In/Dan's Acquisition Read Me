@@ -1,1 +1,13 @@
-Dan's Example Plug-In1994-04-27Enclosed is example source code for a Photoshop acquisition Plug-In.  The example is written i n Think Pascal 4 and should be easy to port to the Metrowerks compiler (when it is ready).  One should read over the documentation that comes with the Photoshop Plug-Ins development kit before mucking about with this example.  If you have any comments, suggestions, or bug fixes concerning this Plug-In example, please Email me at:drickey@irus.rri.uwo.caHave fun.Daniel W. RickeyLondon, OntarioCANADA
+Dan's Example Plug-In
+1994-04-27
+
+Enclosed is example source code for a Photoshop acquisition Plug-In.  The example is written i n Think Pascal 4 and should be easy to port to the Metrowerks compiler (when it is ready).  One should read over the documentation that comes with the Photoshop Plug-Ins development kit before mucking about with this example.  
+
+If you have any comments, suggestions, or bug fixes concerning this Plug-In example, please Email me at:
+
+drickey@irus.rri.uwo.ca
+
+Have fun.
+Daniel W. Rickey
+London, Ontario
+CANADA

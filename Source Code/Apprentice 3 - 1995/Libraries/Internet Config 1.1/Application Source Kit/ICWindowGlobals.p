@@ -1,1 +1,128 @@
-unit ICWindowGlobals;interface	type		WindowType = (WT_None, WT_About, WT_Main, WT_Personal, WT_Email, WT_News,{}			WT_FileTransfer, WT_OtherServices, WT_Font, WT_FileMapping, WT_Helper, WT_Last);	const		item_max = 10;		whats_max = 11;	type		WhatRecord = record				key: str31;				typ: OSType;				flags: longInt;				data: ptr;				spare_data: Ptr;				fss: FSSpec;				modified: boolean;			end;		WhatRecordPtr = ^WhatRecord;	var		windowinfo: array[WindowType] of record				window: WindowPtr;				items: array[1..item_max] of WhatRecordPtr;				selected_item: integer;				id: integer;				position: Point;			end;		whatinfo: array[1..whats_max] of record				typ: OSType;				open: ProcPtr;				key: ProcPtr;				click: ProcPtr;				activate: ProcPtr;				idle: ProcPtr;				flush: ProcPtr;				close: ProcPtr;		(* must be able to call close after successful *or* failed open *)				cursor: ProcPtr;				cursorid: integer;			end;	const		wf_locked = 31;		wf_locked_mask = $80000000;	function GetSelectedItem (wt: WindowType): integer;	function GetWindowType (wp: WindowPtr): WindowType;	procedure ProcessAttributes (wt: WindowType; item: integer; attr: longint);	function IsLocked (wt: WindowType; item: integer): boolean;	procedure LockedAlert (wt: WindowType; item: integer);	procedure InitICWindowGlobals;implementation	uses		ICTypes, 		ICDocUtils;	function GetSelectedItem (wt: WindowType): integer;		var			selected_item: integer;	begin		selected_item := windowinfo[wt].selected_item;		if (selected_item > 0) & (windowinfo[wt].items[selected_item] <> nil) & (windowinfo[wt].items[selected_item]^.typ = 'TEXT') then begin			GetSelectedItem := selected_item;		end		else begin			GetSelectedItem := -1;		end; (* if *)	end; (* GetSelectedItem *)	function GetWindowType (wp: WindowPtr): WindowType;		var			i: WindowType;	begin		GetWindowType := WT_None;		if wp <> nil then begin			for i := WT_None to WT_Last do begin				if windowinfo[i].window = wp then begin					GetWindowType := i;					leave;				end;			end;		end;	end;	procedure ProcessAttributes (wt: WindowType; item: integer; attr: longint);	begin		if (attr <> ICattr_no_change) & btst(attr, ICattr_locked_bit) then begin			bset(windowinfo[wt].items[item]^.flags, wf_locked);		end; (* if *)	end; (* ProcessAttributes *)	function IsLocked (wt: WindowType; item: integer): boolean;	begin		IsLocked := btst(windowinfo[wt].items[item]^.flags, wf_locked) | IsDocLocked;	end; (* IsLocked *)	var		last_alert_wt: WindowType;		last_alert_item: integer;	procedure LockedAlert (wt: WindowType; item: integer);		var			junk: integer;	begin		if (wt <> last_alert_wt) or (item <> last_alert_item) then begin			ResetAlrtStage;			last_alert_wt := wt;			last_alert_item := item;		end; (* if *)		InitCursor;		junk := StopAlert(143, nil);	end; (* LockedAlert *)	procedure InitICWindowGlobals;	begin		last_alert_wt := WT_None;		last_alert_item := -1;	end; (* InitICWindowGlobals *)end.
+unit ICWindowGlobals;
+
+interface
+
+	type
+		WindowType = (WT_None, WT_About, WT_Main, WT_Personal, WT_Email, WT_News,{}
+			WT_FileTransfer, WT_OtherServices, WT_Font, WT_FileMapping, WT_Helper, WT_Last);
+
+	const
+		item_max = 10;
+		whats_max = 11;
+
+	type
+		WhatRecord = record
+				key: str31;
+				typ: OSType;
+				flags: longInt;
+				data: ptr;
+				spare_data: Ptr;
+				fss: FSSpec;
+				modified: boolean;
+			end;
+		WhatRecordPtr = ^WhatRecord;
+	var
+		windowinfo: array[WindowType] of record
+				window: WindowPtr;
+				items: array[1..item_max] of WhatRecordPtr;
+				selected_item: integer;
+				id: integer;
+				position: Point;
+			end;
+		whatinfo: array[1..whats_max] of record
+				typ: OSType;
+				open: ProcPtr;
+				key: ProcPtr;
+				click: ProcPtr;
+				activate: ProcPtr;
+				idle: ProcPtr;
+				flush: ProcPtr;
+				close: ProcPtr;		(* must be able to call close after successful *or* failed open *)
+				cursor: ProcPtr;
+				cursorid: integer;
+			end;
+
+	const
+		wf_locked = 31;
+		wf_locked_mask = $80000000;
+
+	function GetSelectedItem (wt: WindowType): integer;
+	function GetWindowType (wp: WindowPtr): WindowType;
+
+	procedure ProcessAttributes (wt: WindowType; item: integer; attr: longint);
+	function IsLocked (wt: WindowType; item: integer): boolean;
+	procedure LockedAlert (wt: WindowType; item: integer);
+
+	procedure InitICWindowGlobals;
+
+implementation
+
+	uses
+		ICTypes, 
+
+		ICDocUtils;
+
+	function GetSelectedItem (wt: WindowType): integer;
+		var
+			selected_item: integer;
+	begin
+		selected_item := windowinfo[wt].selected_item;
+		if (selected_item > 0) & (windowinfo[wt].items[selected_item] <> nil) & (windowinfo[wt].items[selected_item]^.typ = 'TEXT') then begin
+			GetSelectedItem := selected_item;
+		end
+		else begin
+			GetSelectedItem := -1;
+		end; (* if *)
+	end; (* GetSelectedItem *)
+
+	function GetWindowType (wp: WindowPtr): WindowType;
+		var
+			i: WindowType;
+	begin
+		GetWindowType := WT_None;
+		if wp <> nil then begin
+			for i := WT_None to WT_Last do begin
+				if windowinfo[i].window = wp then begin
+					GetWindowType := i;
+					leave;
+				end;
+			end;
+		end;
+	end;
+
+	procedure ProcessAttributes (wt: WindowType; item: integer; attr: longint);
+	begin
+		if (attr <> ICattr_no_change) & btst(attr, ICattr_locked_bit) then begin
+			bset(windowinfo[wt].items[item]^.flags, wf_locked);
+		end; (* if *)
+	end; (* ProcessAttributes *)
+
+	function IsLocked (wt: WindowType; item: integer): boolean;
+	begin
+		IsLocked := btst(windowinfo[wt].items[item]^.flags, wf_locked) | IsDocLocked;
+	end; (* IsLocked *)
+
+	var
+		last_alert_wt: WindowType;
+		last_alert_item: integer;
+
+	procedure LockedAlert (wt: WindowType; item: integer);
+		var
+			junk: integer;
+	begin
+		if (wt <> last_alert_wt) or (item <> last_alert_item) then begin
+			ResetAlrtStage;
+			last_alert_wt := wt;
+			last_alert_item := item;
+		end; (* if *)
+		InitCursor;
+		junk := StopAlert(143, nil);
+	end; (* LockedAlert *)
+
+	procedure InitICWindowGlobals;
+	begin
+		last_alert_wt := WT_None;
+		last_alert_item := -1;
+	end; (* InitICWindowGlobals *)
+
+end.

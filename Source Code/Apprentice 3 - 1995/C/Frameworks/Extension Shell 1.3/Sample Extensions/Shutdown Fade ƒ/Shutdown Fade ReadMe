@@ -1,1 +1,9 @@
-Shutdown Fade-------------Shutdown Fade is an example of using Extension Shell to install a Shutdown task, and animating a series oficons at startup.The task causes all monitors to fade slowly to black when the Mac shuts down. It uses Matt Slot's GammaTable library code to do the actual fade. Be warned - there's a conflict between this code and the Radiusdrivers for their pivoting monitors. On these monitors, nothing will happen.
+Shutdown Fade
+-------------
+
+Shutdown Fade is an example of using Extension Shell to install a Shutdown task, and animating a series of
+icons at startup.
+
+The task causes all monitors to fade slowly to black when the Mac shuts down. It uses Matt Slot's Gamma
+Table library code to do the actual fade. Be warned - there's a conflict between this code and the Radius
+drivers for their pivoting monitors. On these monitors, nothing will happen.

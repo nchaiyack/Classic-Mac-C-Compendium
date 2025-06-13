@@ -1,1 +1,22 @@
-GlueWindow4.2.1(source) Read Me.--------------------------------*This set includes source codes of GlueWindow4.2.1. The explanations for GlueWindow4.2.1 itself is written in its Read Me file.*These source codes are developed on Metrowerks CodeWarrior 5.*GlueWindow is developed by Takenori Kabeya, based on the freeware "GlueWindowINIT2" by Takuji Matsubara. The explanation for GlueWindowINIT2("Kyobi no programer wa sonna monsuka?" by Takuji Matsbara) was printed in the Feburuary(1993) issue of MacPower(Japan).*GlueWindow4.2.1 itself is a donation-ware, but this set is a freeware. You can distribute/use/remake freely. But even if you receive any damages or loss as a result of using these codes or GlueWindow itself, Takenori Kabeya and Takuji Matsubara will accept no responsibilty. Please use these codes and GlueWindow at your own risk.-- To make GlueWindow*At first, open GW-cdev4.2.1.prj and Make.*Next, open GW-INIT4.2.1.prj and Make.*That's all. Then you can get GlueWindow control panel file.-- Bug reports or suggestions to...Takenori Kabeya,E-mail: kabeya@atlas10.kuic.kyoto-u.ac.jp
+GlueWindow4.2.1(source) Read Me.
+--------------------------------
+*This set includes source codes of GlueWindow4.2.1. The explanations for GlueWindow4.2.1 itself is written in its Read Me file.
+
+*These source codes are developed on Metrowerks CodeWarrior 5.
+
+*GlueWindow is developed by Takenori Kabeya, based on the freeware "GlueWindowINIT2" by Takuji Matsubara. The explanation for GlueWindowINIT2("Kyobi no programer wa sonna monsuka?" by Takuji Matsbara) was printed in the Feburuary(1993) issue of MacPower(Japan).
+
+*GlueWindow4.2.1 itself is a donation-ware, but this set is a freeware. You can distribute/use/remake freely. But even if you receive any damages or loss as a result of using these codes or GlueWindow itself, Takenori Kabeya and Takuji Matsubara will accept no responsibilty. Please use these codes and GlueWindow at your own risk.
+
+-- To make GlueWindow
+
+*At first, open GW-cdev4.2.1.prj and Make.
+
+*Next, open GW-INIT4.2.1.prj and Make.
+
+*That's all. Then you can get GlueWindow control panel file.
+
+-- Bug reports or suggestions to...
+
+Takenori Kabeya,
+E-mail: kabeya@atlas10.kuic.kyoto-u.ac.jp

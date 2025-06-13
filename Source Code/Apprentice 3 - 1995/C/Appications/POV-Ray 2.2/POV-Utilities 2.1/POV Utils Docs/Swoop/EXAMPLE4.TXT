@@ -1,1 +1,16 @@
-outfile test.inc   name testoutput_type 1segments 120vertex 1.732 -1 0vertex 0 2 0vertex -1.732 -1 0var 1 0 360var 1 0 1800translate 0 4 0rotate 0 0 &2 translate 12 0 0rotate 0 &1 0 
+outfile test.inc   
+name test
+output_type 1
+segments 120
+
+vertex 1.732 -1 0
+vertex 0 2 0
+vertex -1.732 -1 0
+
+var 1 0 360
+var 1 0 1800
+
+translate 0 4 0
+rotate 0 0 &2 
+translate 12 0 0
+rotate 0 &1 0 

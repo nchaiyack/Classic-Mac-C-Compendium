@@ -1,1 +1,17 @@
-Bell Test---------Bell Test is one of the sample INITs from Eric Shapiro's July 1993 BYTE Article. It's available in itsoriginal form as:			ftp.uu.net::/published/byte/93jul/belltest.seaIt is an example of using Extension Shell to install a trap patch, extend the address table, and load andcall a block of code in the System Heap. The net effect is to make the Mac play a sound when About... isselected from the Apple menu. While it might look more complex than the other extensions, there'snot a lot different. It installs _two_ code resources, not one, and it uses a custom version of theCODE 5002 resource (i.e., the Address table).The trap patch is a tail patch to MenuSelect. Read ÔTail-patching under System 7Õ to see why this is OKunder System 7.
+Bell Test
+---------
+
+Bell Test is one of the sample INITs from Eric Shapiro's July 1993 BYTE Article. It's available in its
+original form as:
+
+			ftp.uu.net::/published/byte/93jul/belltest.sea
+
+
+It is an example of using Extension Shell to install a trap patch, extend the address table, and load and
+call a block of code in the System Heap. The net effect is to make the Mac play a sound when About... is
+selected from the Apple menu. While it might look more complex than the other extensions, there's
+not a lot different. It installs _two_ code resources, not one, and it uses a custom version of the
+CODE 5002 resource (i.e., the Address table).
+
+The trap patch is a tail patch to MenuSelect. Read ÔTail-patching under System 7Õ to see why this is OK
+under System 7.

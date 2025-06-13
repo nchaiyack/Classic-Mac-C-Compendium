@@ -1,1 +1,51 @@
-Lissa, version 1.0Copyright 1992, esp Software, All Rights ReservedThis software is FreeWare, not Public Domain.Lissa is a special curve generator for the POV-RayUtilities.  Lissajous curves are oscillating sine curvesthat generate interesting "basket-weave" patterns.   Thisprogram accepts command line parameters to customize someof its calculations, then generates a text file as outputthat contains a sequence of points along a 3-D lissajoustrail.  The lissajous pattern is scaled to unit size, i.e.within the box from -1,-1,-1 to 1,1,1.  The output fileformat is for the Connect-the-Dots Smoother POV-Utility(CTDS).  This lissajous output file is intended to be runthrough the CTDS program, which will emit a POV-Ray scenedata file for a continuous "tube" that describes thelissajous curve. This can then be rendered by POV-Ray.The command line parameters are:lissajous -xX_FACTOR -yY_FACTOR -zZ_FACTOR -pMAX_POINTS -dCTDS_DIAM -tMAX_THETA -fOUTNAMEWhere:Name        Type    DefaultVal  Description---------   ------  ----------  ----------------------X_FACTOR    int       3         X-Theta multiplier (-100 to 100)Y_FACTOR    int       5         Y-Theta multiplier (-100 to 100)Z_FACTOR    int       7         Z-Theta multiplier (-100 to 100)MAX_POINTS  int     100         total # of points to generate (2 to 1000)CTDS_DIAM   fp        0.1       diameter of tubes (0.001 to 1.0)*MAX_THETA   fp        1.0       scale factor of 2*pi to iterate to (0.1 to 10.0)**OUTNAME     str     stdout      text file name to create & write to (stdout if none)*   Remember the Lissajous curve is within the bounds -1,-1,-1 to 1,1,1,	so a tube diameter of 0.1 is 1/10th the size of the curve area.**  The curve is usually traced through a single 360 degree sweep.  This	scale factor lets you change how far to go, by multiplying by	2*pi (or 360 degrees.)  So 0.5 would be 180 degrees, 1.0 is 360.This program was originally written for the Macintosh under MPW C 3.2, butwas intended to be very portable to other compilers and hardware platforms.The source code is available from the author, and may be already posted onCompuServe and America Online.For more information on this program, or if you have suggestions, bug-fixes,or porting fixes, please contact the author:Eduard [esp] SchwanCompuServe: 71513,2161Internet:   71513.2161@compuserve.comUSMail:     1112 Oceanic Drive, Encinitas, Calif. 92024-4007Have fun with it!  [esp]
+Lissa, version 1.0
+Copyright 1992, esp Software, All Rights Reserved
+This software is FreeWare, not Public Domain.
+
+Lissa is a special curve generator for the POV-Ray
+Utilities.  Lissajous curves are oscillating sine curves
+that generate interesting "basket-weave" patterns.   This
+program accepts command line parameters to customize some
+of its calculations, then generates a text file as output
+that contains a sequence of points along a 3-D lissajous
+trail.  The lissajous pattern is scaled to unit size, i.e.
+within the box from -1,-1,-1 to 1,1,1.  The output file
+format is for the Connect-the-Dots Smoother POV-Utility
+(CTDS).  This lissajous output file is intended to be run
+through the CTDS program, which will emit a POV-Ray scene
+data file for a continuous "tube" that describes the
+lissajous curve. This can then be rendered by POV-Ray.
+
+The command line parameters are:
+lissajous -xX_FACTOR -yY_FACTOR -zZ_FACTOR -pMAX_POINTS -dCTDS_DIAM -tMAX_THETA -fOUTNAME
+Where:
+Name        Type    DefaultVal  Description
+---------   ------  ----------  ----------------------
+X_FACTOR    int       3         X-Theta multiplier (-100 to 100)
+Y_FACTOR    int       5         Y-Theta multiplier (-100 to 100)
+Z_FACTOR    int       7         Z-Theta multiplier (-100 to 100)
+MAX_POINTS  int     100         total # of points to generate (2 to 1000)
+CTDS_DIAM   fp        0.1       diameter of tubes (0.001 to 1.0)*
+MAX_THETA   fp        1.0       scale factor of 2*pi to iterate to (0.1 to 10.0)**
+OUTNAME     str     stdout      text file name to create & write to (stdout if none)
+
+*   Remember the Lissajous curve is within the bounds -1,-1,-1 to 1,1,1,
+	so a tube diameter of 0.1 is 1/10th the size of the curve area.
+**  The curve is usually traced through a single 360 degree sweep.  This
+	scale factor lets you change how far to go, by multiplying by
+	2*pi (or 360 degrees.)  So 0.5 would be 180 degrees, 1.0 is 360.
+
+This program was originally written for the Macintosh under MPW C 3.2, but
+was intended to be very portable to other compilers and hardware platforms.
+
+The source code is available from the author, and may be already posted on
+CompuServe and America Online.
+
+For more information on this program, or if you have suggestions, bug-fixes,
+or porting fixes, please contact the author:
+Eduard [esp] Schwan
+CompuServe: 71513,2161
+Internet:   71513.2161@compuserve.com
+USMail:     1112 Oceanic Drive, Encinitas, Calif. 92024-4007
+
+Have fun with it!  [esp]

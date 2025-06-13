@@ -1,1 +1,18 @@
-#Shapes7#an Octahedron##by Elliott Manley <tesseract@andyclin.exnet.com>0 0 -1 01 0 0 40 -1 0 40 0 1 41 0 0 40 1 0 40 0 1 4-1 0 0 40 -1 0 40 0 -1 4-1 0 0 40 1 0 40 0 -1 4
+#Shapes7
+#an Octahedron
+#
+#by Elliott Manley <tesseract@andyclin.exnet.com>
+
+0 0 -1 0
+1 0 0 4
+0 -1 0 4
+0 0 1 4
+1 0 0 4
+0 1 0 4
+0 0 1 4
+-1 0 0 4
+0 -1 0 4
+0 0 -1 4
+-1 0 0 4
+0 1 0 4
+0 0 -1 4

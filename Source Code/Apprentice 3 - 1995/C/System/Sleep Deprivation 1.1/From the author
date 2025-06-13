@@ -1,1 +1,22 @@
-Sleep Deprivation will cause your Macintosh to clear the screen with a cool graphic effect when it goes to sleep.  Obviously, this requires that you have a Macintosh that can sleep in the first place, like a Powerbook or a Duo or the like.  If you do, just throw this INIT into your system folder and restart.Changes in version 1.1:- added 42 new effects, for a total of 50- fixed an obscure incompatibility problem on 68000 machinesCOPYRIGHT NOTICES:Sleep Deprivation is copyright ©1993-4 Mark Pilgrim.  This program is free; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.Sleep Deprivation is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave., Cambridge, MA, 02139, USA.CONTACTING THE AUTHOR:All Macintosh users should feel free to contact me for any of the following reasons: reporting bugs or suggestions about Sleep Deprivation or any other program IÕve written; discussing the possibility of collaborating on future programming projects; discussing the virus I wrote and released (MBDF-A); discussing ways to keep potential virus-writers from becoming actual virus-writers; discussing techniques for really good backrubs.My e-mail address is f8dy@netaxs.com.  To send me e-mail anonymously, mail to an48382@anon.penet.fi.  (Due to the double-blind system, you will be allocated an anonymous I.D. which will keep your identity hidden.)  To send me encrypted mail, e-mail me requesting my PGP 2.3 public key.  If you do not have e-mail access, my home address is 1130 Radnor Hill Road, Wayne PA, 19087-2203, USA.  Obviously, it will take me much longer to reply to snail-mail; use it as a last resort.Mark PilgrimApril 19, 1994
+Sleep Deprivation will cause your Macintosh to clear the screen with a cool graphic effect when it goes to sleep.  Obviously, this requires that you have a Macintosh that can sleep in the first place, like a Powerbook or a Duo or the like.  If you do, just throw this INIT into your system folder and restart.
+
+Changes in version 1.1:
+- added 42 new effects, for a total of 50
+- fixed an obscure incompatibility problem on 68000 machines
+
+COPYRIGHT NOTICES:
+Sleep Deprivation is copyright ©1993-4 Mark Pilgrim.  This program is free; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+
+Sleep Deprivation is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave., Cambridge, MA, 02139, USA.
+
+
+CONTACTING THE AUTHOR:
+All Macintosh users should feel free to contact me for any of the following reasons: reporting bugs or suggestions about Sleep Deprivation or any other program IÕve written; discussing the possibility of collaborating on future programming projects; discussing the virus I wrote and released (MBDF-A); discussing ways to keep potential virus-writers from becoming actual virus-writers; discussing techniques for really good backrubs.
+
+My e-mail address is f8dy@netaxs.com.  To send me e-mail anonymously, mail to an48382@anon.penet.fi.  (Due to the double-blind system, you will be allocated an anonymous I.D. which will keep your identity hidden.)  To send me encrypted mail, e-mail me requesting my PGP 2.3 public key.  If you do not have e-mail access, my home address is 1130 Radnor Hill Road, Wayne PA, 19087-2203, USA.  Obviously, it will take me much longer to reply to snail-mail; use it as a last resort.
+
+
+Mark Pilgrim
+April 19, 1994

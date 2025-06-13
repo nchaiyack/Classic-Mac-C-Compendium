@@ -1,1 +1,10 @@
-/*	This is a dummy file to warn programmers that my code uses	precompiled TCL headers. You can pick up the precompiled	header from the TCL archive at			ftp.brown.edu		/pub/tcl/misc/TCLDebugHeaders-1.0-C-misc			Andrew_Gilmartin@Brown.Edu*/
+/*
+	This is a dummy file to warn programmers that my code uses
+	precompiled TCL headers. You can pick up the precompiled
+	header from the TCL archive at
+	
+		ftp.brown.edu
+		/pub/tcl/misc/TCLDebugHeaders-1.0-C-misc
+		
+	Andrew_Gilmartin@Brown.Edu
+*/

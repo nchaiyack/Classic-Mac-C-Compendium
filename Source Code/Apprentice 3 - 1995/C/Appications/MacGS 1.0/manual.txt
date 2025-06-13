@@ -1,1 +1,457 @@
-Mac GS ViewerA port of Aladdin Ghostscript to the MacintoshVersion 1.0 - May 6th, 1995Ghostscript by L. Peter DeutschMac GS Viewer & Macintosh drivers byMark LentcznerCopyright (c) 1988-1995 Aladdin Enterprises, Menlo Park, CA.  All rightsreserved.Very Quick Introduction to GhostscriptGhostscript is a PostScript interpreter.  PostScript is a language, nota graphic file format.  A PostScript file is really a program, notgraphical data.  The difference is that by looking at a PostScript fileyou (or an application) cannot easily tell what the file represents. Instead, you must run the file to see what it does.  Generally, theresult of running a PostScript program is to draw marks on a graphicalpage.  (There are PostScript programs that don't draw anything at all!  Some are even distributed as test files with Ghostscript.)  This workswell for printers but is a bit odd for interactive window systems.Think of Mac GS Viewer as a virtual printer:  Every time you open afile, asking Ghostscript to run it as a PostScript program, theapplication creates a new sheet of 'paper' and displays it in a window. You can see the program execute as it places marks on the 'paper' inthe window (unless your computer is much faster than mine!)  Once theprogram is done, the page is 'ejected' from the printer.  However, theapplication leaves the window on the screen so you can continue to lookat it (and scroll it, save it, etc.).  But remember, at this point, thepage is out of the printer and Ghostscript can no longer change it.  Ifyou want to change some parameter (such as scaling), you must changethe parameter and then re-open, and thus re-run, the PostScript file.Please see the file 'readme' and the files that end in '.doc' in the'files' folder for more information.UnpackingThe release consists of the following files:macgs-v1.0-files.sit  - Ghostscript files and documentationmacgs-v1.0-68k.sit    - the application compiled for 68020 or bettermacgs-v1.0-ppc.sit    - the application compiled for PPC machinesmacgs-v1.0-fonts.sit  - the standard Ghostscript 3.0 fontsmacgs-v1.0-src.sit    - the source filesThese files are StuffIt archives.  If you do not have a program toexpand these, you should get the free StuffIt Expander program fromyour favorite Macintosh archive.[ 1 ] Unstuff macgs-v1.0-files.sit.  It will create a folder namedGhostscript on your disk.[ 2 ] Unstuff one of the two application files, macgs-v1.0-68k.sit ormacgs-v1.0-ppc.sit into the Ghostscript folder.  Remember to onlyunstuff one of them!  The Finder gets confused if you have more thanone version of an application on a disk.[ 3 ] Unstuff macgs-v1.0-fonts.sit into the Ghostscript folder as well. This exactly the same collection of fonts asghostscript-fonts-std-3.0.tar.gz, just in a format most Macintosh userscan handle.You will only need macgs-v1.0-src.sit if you are planning on compilingthe program yourself.  See the chapter "Building It" for more details.StartingLaunch the application.  By default, it will show you the Ghostscriptconsole window, where you can see messages to and from Ghostscript. After a few seconds, all initialization will be done and you will seethe 'GS>' prompt in the console window.  You don't actually have towait for the prompt to begin using the program, anything that needs towait for the prompt will do so automatically if you do it too early.Getting HelpThe program makes extensive use of Balloon Help.  Turn it on andexplore!Rendering a PostScript FileChoosing 'Open' from the 'File' menu lets you choose any TEXT or EPSFfile.  When you open a file this way, a new window is created, it ispresented to Ghostscript for interpretation.  This (usually) results inrendering the first page of the file into the window.If there are more pages in the file, you will see a small alert boxwith two buttons: 'Next Page' and 'Interrupt'.  Clicking the first willclear the window and let Ghostscript continue on with the next page inthe file.  Clicking the second asks Ghostscript to cancel processingthe rest of the file.Once a file has been rendered, it stays on the screen.  You can resize,scroll it, save it (as a PICT file), copy it (to the clipboard).  Youcan have as many windows open as memory allows.SettingsYou can change the settings of output media with the "Settings" dialog.Open this dialog by choosing "Settings..." from the "Edit" menu. There are three major sections:Page Size lets you set the size of the 'logical' page.  This is thesize that the PostScript file works with.Scaling lets you enlarge or reduce the 'logical' page to produce theactual output you see.  This scaling happens conceptually after thepage is printed.  However, Ghostscript is aware of this final scalingand will adjust some parameters accordingly (such as halftone screen,or any other parameters that are in 'device coordinates').Image Options let you select options that pertain to how the image isrendered and recorded.For example, if you want to render a document that was designed for aLetter size paper, but you want the output to be reduced to half size,then choose "US Letter" for the Page Size and "Half" for the Scaling.There are too many controls and options in this dialog to discuss here:Turn on balloon help and explore it!The options apply to all devices (see below), except Image Optionswhich only apply to the 'mac' device.Using Mac GS Viewer as a Web Helper ApplicationYou can use Mac GS Viewer as a helper application for your web browser. The following steps show how to configure the Netscape browser.  If youare using a different browser, the configuration will be similar:[1] In the Preferences section called Helper Applications, check tosee if there is a Mime type application/postscript.  If there isn't,then click New... and create one:  In the dialog that appears, set thetype to application, and the subtype to postscript, then click OK.[2] Select the application/postscript Mime type by clicking on it.[3] Set the extensions by typing ai,eps,ps into the Extensions field.[4] Set the application by clicking the Browse... button.  In thedialog that appears, choose the Mac GS Viewer application and click OK. Then choose the File type TEXT from the pop-up menu.[5] Set the action to Launch Application.[6] Click OK in the Preferences window to save the changes.Some browsers, though not Netscape, may need to be restarted before thechange will take effect.IMPORTANT: Postscript includes operators for manipluating files.  Abuggy or malicious postscript file could damage the files on yourharddisk.  To minimize this risk, you should start Mac GS Viewer andset the command line in the Preferences to:    -dSAFERThis disable a number of file operations in Ghostscript.  Note thatthere are two problems with this: (a) This option does not claim to befool proof - Postscript is very powerful and this option can't guardagainst all possible problems.  (b) You will be unable to render to anyof the file devices when this is set.  However, you still be able tosave what you render to the screen as PICT files.To turn off this feature, you need to remove -dSAFER from the commandline in the Preferences dialog, then quit and restart Mac GS Viewer.Rendering to a FileGhostscript supports a large number of graphic output formats. Ghostscript calls these devices.  When your copy of the Macintosh portof Ghostscript was built, some devices were chosen to be included. Since there are over a hundred devices, generally not all wereincluded.  When you run the application, the devices that are includedare listed in the 'Devices' menu.  The first one is always 'mac', whichis the device for rendering into a Macintosh window.To use another device, and cause Ghostscript to render into a graphicfile, choose the device from the Device menu, and then open the file asnormal.  This time, instead of a new window appearing, you will beasked to named a file to hold the output.  The settings dialog can beused to set the page size and scaling options.  Note that the imageoptions have no effect on other devices.  To switch back to renderinginto a window, just choose 'mac' from the 'Devices' menu.Stopping the ApplicationYou can attempt to interrupt Ghostscript from whatever it is doing withthe <command><period> key sequence (it is also available as 'Interrupt'in the 'Ghostscript' menu).  Interrupting a PostScript program isinherently unpredictable.  This is because a PostScript file can trapthe user-interrupt and refuse to stop!  Interrupt is implemented sothat it should work smoothly in most cases, but you can't be sure.  Ifit doesn't work, hit it a few more times.Similarly, Quit is also something that a PostScript program can refuseto do!  Sometimes, Ghostscript may not appear not to quit.  Always giveit a few seconds to try.  If it just won't quit, the work around is totype: <option><command><escape> (all at once) to invoke the System 7Forced Quit dialog.About RenderingGhostscript interprets PostScript programs and renders the graphicsthat they output.  The resulting output image is invariably devicedependent.  Indeed, the original PostScript file is the deviceindependent form of the image.Even though the images that Ghostscript renders can be saved in PICTfiles or on the clipboard in PICT format, these are still devicedependent versions of the image: they will not scale well, nor willthey display well with different numbers of available colors.  ThesePICT images are simply pixel graphics, not object-oriented graphics. (If you examine these PICT files in a graphics program, you will noticethat they are just a single large pixel map.)The Macintosh device currently renders to any of the followingcharacteristics (which you control in the Settings dialog): 72 dpi 1,4, or 8 bits per pixel standard Macintosh palettes for 4-bit gray, or8-bit colorThese choices must be made at the time Ghostscript renders an image sothat Ghostscript can do its best.  For example, Ghostscript will usehalftone screens to achieve colors not in the palette.Though the scaling options may change the dpi from the point of view ofthe PostScript program, the resulting image on the screen (obviously,as we can't change your hardware on the fly!) and as saved in a PICTfile, is 72dpi.  For example:  If you choose a scaling option of a"Third", the PostScript program appears to render on a 24dpi device, as24 pixels make up an inch.  On the screen, however, 24 pixels make up athird of an inch at 72dpi, thus achieving the 'Third' scaling factor.The standard Macintosh 8-bit palette is a color cube of 6x6x6 values inRGB space.  In addition, it adds evenly spaced ramps of 16 values eachof red, green, blue, and gray.  Using this palette allows Ghostscriptto render with out having the change the palette of a normal 8-bitdisplay system.PreferencesThere are a number of application settings that can be set with"Preferences" dialog.  Open this dialog by choosing "Preferences..."from the "File" menu.  There are three major sections:Command Line lets you choose what the command line is for startingGhostscript.  Generally leaving it empty is fine.  You can also chooseto have the program ask you each time the program starts.Windows and Dialogs let you set which windows are shown at start up,and how to handle the Next Page condition.  You can choose to haveeither a sound play or a small dialog appear, or both, when Ghostscriptis waiting to display another page.Remember lets you choose what information is remembered from oneinvocation of the application to the next.Command LineBy default, Ghostscript is started with a blank command line.  This canbe changed in two ways.  First, you can set the command line in thepreferences.  Second, you can set the preferences to ask you each timethe application starts.  In this mode, when you start the program, youwill see a prompt for command line options in the console window.Almost everything that can be set on a command line can be set afterGhostscript is running either through the Settings dialog, or by typinginto the console window.  However, there are few command line optionsthat can be useful: -v      prints version information and then quits-?      prints help information and then quits -dDEBUG turns ondebugging during initialization Do not set either of the first two aspart of a default command line in the Preferences dialog, or each timeyou start it, Mac GS will display the information and quit.Building Mac GS ViewerIf you want to build the release (so you can configure Ghostscript toyour liking), you will need the current Ghostscript release and themacintosh specific files.From the standard Ghostscript ftp site, obtain the following files:in directory /ghost/aladdin:    gs3xxlib.tar.gz - .ps and .doc files    gs3xxsr1.tar.gz - headers and make files    gs3xxsr2.tar.gz - source files    ghostscript-fonts-std-3.0.tar.gz - the fontswhere xx is the latest version of Ghostscript.  The fonts listed aboveare identical to the ones in the Macintosh distribution.in directory /ghost/aladdin/mac:    macgs-v1.0-src.sit - source filesin directory /ghost:    jpegsrc.v5a.tar.gz - the jpeg libraryIn the standard method of building Ghostscript, all of these files(except the jpeg) get unpacked into one big directory.  The jpeg stuffgets unpacked into a directory called jpeg-5a in the main directory.  The macintosh stuff also gets unpacked into its own directory, called'Mac Specific'.  However, if you like (and I do) you can divide up allthese files into the following hierarchy:Ghost Dev files -- all *.ps, *.doc, and other non-build files fonts --all the fonts src -- *.c, *.h, *.mak jpeg-5a -- the jpeg files MacSpecific -- the mac files MPW Build -- empty directory used forbuilding under MPWOnce you get everything laid out, take a look at the file Worksheet inthe mac specific folder for steps to build the system.Known Bugs- If a PostScript redefines 'quit' or if Ghostscript is seriously lockedin an infinite loop you won't be able to quit.- Preferences files moved to a machine with a smaller screen may haveproblems if window positions were remembered- Open AppleEvent doesn't do a sanity check on file type- Quit AppleEvent processing should be more intelligent- The font and file directories can't be aliases- Low-memory situations are not always handled gracefully.  Avoidsettings that require more memory than you have allocated to theapplication.- There is a rare symptom whereby the windows of the Finder redraw intothe graphic windows.  A crash often follows.Coming EnhancementsFeatures for future releases that I'm considering (these are in noparticular order):- Handling of Macintosh installed Type 1 Fonts- Using QuickDraw to render TrueType fonts- Better handling of file include search path- Printing (by sending the PostScript source)- Printing (by sending the GS rendered version)- Parse DSC comments & Offer a Page menu- Offer Page menu on PDF files- Scrolling the image via the HyperCard/MacPaint hand user interface- Console scroll back- Console cut & paste and text file read & write- Drivers and plug-in resources (would need support in GS)- 'nn' style user interface for multi-page documents- Page settings as a 'windoid' palette- Better dialog box look and layout for all dialogs- Option key on Open AppleEvent to mean ask for settings first- Rotation and Cropping as device settings- AppleEvents for controling settings and sending PostScript- Command files (non-rendering script files)- Mac device image options: 8bit gray scale and 4bit & 24bit colorCreditsMac GS Viewer was written by Mark Lentczner of Glyphic Technology. While it is a substantially a new port of Ghostscript to the Macintosh,the previous port by Martin Fong served as inspiration and a startingpoint.Ghostscript was created by L. Peter Deutsch of Aladdin Enterprises. Please see the document README in the files directory of the releasefor more information.Mac GS Viewer could not have happend without the faithful help of overfifty beta testers.  A tip'o'the mouse to them (I appologize if Imissed anyone, let me know and I'll fix it!):Aaron Tse, Al Lilianstrom, Al Walkington, Alan Johnson, AndrewChilvers, Anthony Berno, Bebo White, Bruno Noel, Charles A. Poynton,Chris Goedde, Craig Moore, David A. Wright, David D. Kilzer, David K.Dean, David P. Goldenberg, David Williams, Dmitry Novikov, DylanMcNamee, Ernst U. Wallenborn, Fred W. Umminger, Gary Embler, Henry G.Baker, Hitoshi Murayama, Ian Storr, James F. Amundson, Jan van der Ven,Jerry Black, John D. Lewis, John Luiten, John Platten, Kevin Killion,Luca Cardelli, Marc Goodman, Martin Fong, Michael R. Roman, Mike Hill,Morris Meyer, Olof Backing, Paul Rauschelbach, Per Mildner, PeterDavis, Peter Mayers, Peter Vollenweider, Ray J. Gomez, Rob Brennan, RobTrevor, Roger Wenklo, Scott Marjason, Simon Kershaw, Sly Upah, StephanEggermont, Taylor Leaming, Timothy L D Collins.SupportMac GS Viewer is distributed under the Aladdin Ghostscript Free PublicLicense.  See the file PUBLIC in the files directory of the relase forthe full text.  As a piece of free software, neither AladdinEnterprises nor Glyphic Technology can offer any direct support for it. If you have questions please try the news group comp.lang.postscript,where Ghostscript is discussed.If you are interested in licensing all or any part of the Ghostscriptsystem, including Mac GS Viewer, please the information in the fileREADME in the files directory of the release.ContactsMac GS Viewer is part of the Ghostscript system which is discussed onthe Internet news group:    comp.lang.postscriptGhostscript's public FTP site is:    ftp.cs.wisc.eduin the directory:    /pub/ghostInformation on Ghostscript can be found on-line at:    http://www.cs.wisc.edu/~ghost/index.htmlAladdin Systems can be reached at:    ghost@aladdin.comGlyphic Technology can be reached at:    mac-gs@glyphic.com    http://www.webcom.com/~glyphic/    http://www.glyphic.com/           - after mid-June, 1995
+Mac GS Viewer
+A port of Aladdin Ghostscript to the Macintosh
+
+Version 1.0 - May 6th, 1995
+
+Ghostscript by L. Peter Deutsch
+Mac GS Viewer & Macintosh drivers by
+Mark Lentczner
+
+Copyright (c) 1988-1995 Aladdin Enterprises, Menlo Park, CA.  All rights
+reserved.
+
+
+
+
+Very Quick Introduction to Ghostscript
+
+Ghostscript is a PostScript interpreter.  PostScript is a language, not
+a graphic file format.  A PostScript file is really a program, not
+graphical data.  The difference is that by looking at a PostScript file
+you (or an application) cannot easily tell what the file represents. 
+Instead, you must run the file to see what it does.  Generally, the
+result of running a PostScript program is to draw marks on a graphical
+page.  (There are PostScript programs that don't draw anything at all! 
+ Some are even distributed as test files with Ghostscript.)  This works
+well for printers but is a bit odd for interactive window systems.
+
+Think of Mac GS Viewer as a virtual printer:  Every time you open a
+file, asking Ghostscript to run it as a PostScript program, the
+application creates a new sheet of 'paper' and displays it in a window.
+ You can see the program execute as it places marks on the 'paper' in
+the window (unless your computer is much faster than mine!)  Once the
+program is done, the page is 'ejected' from the printer.  However, the
+application leaves the window on the screen so you can continue to look
+at it (and scroll it, save it, etc.).  But remember, at this point, the
+page is out of the printer and Ghostscript can no longer change it.  If
+you want to change some parameter (such as scaling), you must change
+the parameter and then re-open, and thus re-run, the PostScript file.
+
+Please see the file 'readme' and the files that end in '.doc' in the
+'files' folder for more information.
+
+
+
+Unpacking
+
+The release consists of the following files:
+
+macgs-v1.0-files.sit  - Ghostscript files and documentation
+macgs-v1.0-68k.sit    - the application compiled for 68020 or better
+macgs-v1.0-ppc.sit    - the application compiled for PPC machines
+macgs-v1.0-fonts.sit  - the standard Ghostscript 3.0 fonts
+macgs-v1.0-src.sit    - the source files
+
+These files are StuffIt archives.  If you do not have a program to
+expand these, you should get the free StuffIt Expander program from
+your favorite Macintosh archive.
+
+[ 1 ] Unstuff macgs-v1.0-files.sit.  It will create a folder named
+Ghostscript on your disk.
+
+[ 2 ] Unstuff one of the two application files, macgs-v1.0-68k.sit or
+macgs-v1.0-ppc.sit into the Ghostscript folder.  Remember to only
+unstuff one of them!  The Finder gets confused if you have more than
+one version of an application on a disk.
+
+[ 3 ] Unstuff macgs-v1.0-fonts.sit into the Ghostscript folder as well.
+ This exactly the same collection of fonts as
+ghostscript-fonts-std-3.0.tar.gz, just in a format most Macintosh users
+can handle.
+
+You will only need macgs-v1.0-src.sit if you are planning on compiling
+the program yourself.  See the chapter "Building It" for more details.
+
+
+
+Starting
+
+Launch the application.  By default, it will show you the Ghostscript
+console window, where you can see messages to and from Ghostscript. 
+After a few seconds, all initialization will be done and you will see
+the 'GS>' prompt in the console window.  You don't actually have to
+wait for the prompt to begin using the program, anything that needs to
+wait for the prompt will do so automatically if you do it too early.
+
+
+
+Getting Help
+
+The program makes extensive use of Balloon Help.  Turn it on and
+explore!
+
+
+
+Rendering a PostScript File
+
+Choosing 'Open' from the 'File' menu lets you choose any TEXT or EPSF
+file.  When you open a file this way, a new window is created, it is
+presented to Ghostscript for interpretation.  This (usually) results in
+rendering the first page of the file into the window.
+
+If there are more pages in the file, you will see a small alert box
+with two buttons: 'Next Page' and 'Interrupt'.  Clicking the first will
+clear the window and let Ghostscript continue on with the next page in
+the file.  Clicking the second asks Ghostscript to cancel processing
+the rest of the file.
+
+Once a file has been rendered, it stays on the screen.  You can resize,
+scroll it, save it (as a PICT file), copy it (to the clipboard).  You
+can have as many windows open as memory allows.
+
+
+
+Settings
+
+You can change the settings of output media with the "Settings" dialog.
+Open this dialog by choosing "Settings..." from the "Edit" menu. 
+There are three major sections:
+
+Page Size lets you set the size of the 'logical' page.  This is the
+size that the PostScript file works with.
+
+Scaling lets you enlarge or reduce the 'logical' page to produce the
+actual output you see.  This scaling happens conceptually after the
+page is printed.  However, Ghostscript is aware of this final scaling
+and will adjust some parameters accordingly (such as halftone screen,
+or any other parameters that are in 'device coordinates').
+
+Image Options let you select options that pertain to how the image is
+rendered and recorded.
+
+For example, if you want to render a document that was designed for a
+Letter size paper, but you want the output to be reduced to half size,
+then choose "US Letter" for the Page Size and "Half" for the Scaling.
+
+There are too many controls and options in this dialog to discuss here:
+Turn on balloon help and explore it!
+
+The options apply to all devices (see below), except Image Options
+which only apply to the 'mac' device.
+
+
+
+
+Using Mac GS Viewer as a Web Helper Application
+
+You can use Mac GS Viewer as a helper application for your web browser. 
+The following steps show how to configure the Netscape browser.  If you
+are using a different browser, the configuration will be similar:
+
+[1] In the Preferences section called Helper Applications, check to
+see if there is a Mime type application/postscript.  If there isn't,
+then click New... and create one:  In the dialog that appears, set the
+type to application, and the subtype to postscript, then click OK.
+
+[2] Select the application/postscript Mime type by clicking on it.
+
+[3] Set the extensions by typing ai,eps,ps into the Extensions field.
+
+[4] Set the application by clicking the Browse... button.  In the
+dialog that appears, choose the Mac GS Viewer application and click OK.
+ Then choose the File type TEXT from the pop-up menu.
+
+[5] Set the action to Launch Application.
+
+[6] Click OK in the Preferences window to save the changes.
+
+Some browsers, though not Netscape, may need to be restarted before the
+change will take effect.
+
+IMPORTANT: Postscript includes operators for manipluating files.  A
+buggy or malicious postscript file could damage the files on your
+harddisk.  To minimize this risk, you should start Mac GS Viewer and
+set the command line in the Preferences to:
+    -dSAFER
+
+This disable a number of file operations in Ghostscript.  Note that
+there are two problems with this: (a) This option does not claim to be
+fool proof - Postscript is very powerful and this option can't guard
+against all possible problems.  (b) You will be unable to render to any
+of the file devices when this is set.  However, you still be able to
+save what you render to the screen as PICT files.
+
+To turn off this feature, you need to remove -dSAFER from the command
+line in the Preferences dialog, then quit and restart Mac GS Viewer.
+
+
+
+Rendering to a File
+
+Ghostscript supports a large number of graphic output formats. 
+Ghostscript calls these devices.  When your copy of the Macintosh port
+of Ghostscript was built, some devices were chosen to be included. 
+Since there are over a hundred devices, generally not all were
+included.  When you run the application, the devices that are included
+are listed in the 'Devices' menu.  The first one is always 'mac', which
+is the device for rendering into a Macintosh window.
+
+To use another device, and cause Ghostscript to render into a graphic
+file, choose the device from the Device menu, and then open the file as
+normal.  This time, instead of a new window appearing, you will be
+asked to named a file to hold the output.  The settings dialog can be
+used to set the page size and scaling options.  Note that the image
+options have no effect on other devices.  To switch back to rendering
+into a window, just choose 'mac' from the 'Devices' menu.
+
+
+
+Stopping the Application
+
+You can attempt to interrupt Ghostscript from whatever it is doing with
+the <command><period> key sequence (it is also available as 'Interrupt'
+in the 'Ghostscript' menu).  Interrupting a PostScript program is
+inherently unpredictable.  This is because a PostScript file can trap
+the user-interrupt and refuse to stop!  Interrupt is implemented so
+that it should work smoothly in most cases, but you can't be sure.  If
+it doesn't work, hit it a few more times.
+
+Similarly, Quit is also something that a PostScript program can refuse
+to do!  Sometimes, Ghostscript may not appear not to quit.  Always give
+it a few seconds to try.  If it just won't quit, the work around is to
+type: <option><command><escape> (all at once) to invoke the System 7
+Forced Quit dialog.
+
+
+
+About Rendering
+
+Ghostscript interprets PostScript programs and renders the graphics
+that they output.  The resulting output image is invariably device
+dependent.  Indeed, the original PostScript file is the device
+independent form of the image.
+
+Even though the images that Ghostscript renders can be saved in PICT
+files or on the clipboard in PICT format, these are still device
+dependent versions of the image: they will not scale well, nor will
+they display well with different numbers of available colors.  These
+PICT images are simply pixel graphics, not object-oriented graphics. 
+(If you examine these PICT files in a graphics program, you will notice
+that they are just a single large pixel map.)
+
+The Macintosh device currently renders to any of the following
+characteristics (which you control in the Settings dialog): 72 dpi 1,
+4, or 8 bits per pixel standard Macintosh palettes for 4-bit gray, or
+8-bit color
+
+These choices must be made at the time Ghostscript renders an image so
+that Ghostscript can do its best.  For example, Ghostscript will use
+halftone screens to achieve colors not in the palette.
+
+Though the scaling options may change the dpi from the point of view of
+the PostScript program, the resulting image on the screen (obviously,
+as we can't change your hardware on the fly!) and as saved in a PICT
+file, is 72dpi.  For example:  If you choose a scaling option of a
+"Third", the PostScript program appears to render on a 24dpi device, as
+24 pixels make up an inch.  On the screen, however, 24 pixels make up a
+third of an inch at 72dpi, thus achieving the 'Third' scaling factor.
+
+The standard Macintosh 8-bit palette is a color cube of 6x6x6 values in
+RGB space.  In addition, it adds evenly spaced ramps of 16 values each
+of red, green, blue, and gray.  Using this palette allows Ghostscript
+to render with out having the change the palette of a normal 8-bit
+display system.
+
+
+
+Preferences
+
+There are a number of application settings that can be set with
+"Preferences" dialog.  Open this dialog by choosing "Preferences..."
+from the "File" menu.  There are three major sections:
+
+Command Line lets you choose what the command line is for starting
+Ghostscript.  Generally leaving it empty is fine.  You can also choose
+to have the program ask you each time the program starts.
+
+Windows and Dialogs let you set which windows are shown at start up,
+and how to handle the Next Page condition.  You can choose to have
+either a sound play or a small dialog appear, or both, when Ghostscript
+is waiting to display another page.
+
+Remember lets you choose what information is remembered from one
+invocation of the application to the next.
+
+
+
+Command Line
+
+By default, Ghostscript is started with a blank command line.  This can
+be changed in two ways.  First, you can set the command line in the
+preferences.  Second, you can set the preferences to ask you each time
+the application starts.  In this mode, when you start the program, you
+will see a prompt for command line options in the console window.
+
+Almost everything that can be set on a command line can be set after
+Ghostscript is running either through the Settings dialog, or by typing
+into the console window.  However, there are few command line options
+that can be useful: -v      prints version information and then quits
+-?      prints help information and then quits -dDEBUG turns on
+debugging during initialization Do not set either of the first two as
+part of a default command line in the Preferences dialog, or each time
+you start it, Mac GS will display the information and quit.
+
+
+
+Building Mac GS Viewer
+
+If you want to build the release (so you can configure Ghostscript to
+your liking), you will need the current Ghostscript release and the
+macintosh specific files.
+
+From the standard Ghostscript ftp site, obtain the following files:
+
+in directory /ghost/aladdin:
+
+    gs3xxlib.tar.gz - .ps and .doc files
+    gs3xxsr1.tar.gz - headers and make files
+    gs3xxsr2.tar.gz - source files
+    ghostscript-fonts-std-3.0.tar.gz - the fonts
+
+where xx is the latest version of Ghostscript.  The fonts listed above
+are identical to the ones in the Macintosh distribution.
+
+in directory /ghost/aladdin/mac:
+
+    macgs-v1.0-src.sit - source files
+
+in directory /ghost:
+
+    jpegsrc.v5a.tar.gz - the jpeg library
+
+
+In the standard method of building Ghostscript, all of these files
+(except the jpeg) get unpacked into one big directory.  The jpeg stuff
+gets unpacked into a directory called jpeg-5a in the main directory.  
+The macintosh stuff also gets unpacked into its own directory, called
+'Mac Specific'.  However, if you like (and I do) you can divide up all
+these files into the following hierarchy:
+
+Ghost Dev files -- all *.ps, *.doc, and other non-build files fonts --
+all the fonts src -- *.c, *.h, *.mak jpeg-5a -- the jpeg files Mac
+Specific -- the mac files MPW Build -- empty directory used for
+building under MPW
+
+Once you get everything laid out, take a look at the file Worksheet in
+the mac specific folder for steps to build the system.
+
+
+
+Known Bugs
+
+- If a PostScript redefines 'quit' or if Ghostscript is seriously locked
+in an infinite loop you won't be able to quit.
+- Preferences files moved to a machine with a smaller screen may have
+problems if window positions were remembered
+- Open AppleEvent doesn't do a sanity check on file type
+- Quit AppleEvent processing should be more intelligent
+- The font and file directories can't be aliases
+- Low-memory situations are not always handled gracefully.  Avoid
+settings that require more memory than you have allocated to the
+application.
+- There is a rare symptom whereby the windows of the Finder redraw into
+the graphic windows.  A crash often follows.
+
+Coming Enhancements
+
+Features for future releases that I'm considering (these are in no
+particular order):
+
+- Handling of Macintosh installed Type 1 Fonts
+- Using QuickDraw to render TrueType fonts
+- Better handling of file include search path
+- Printing (by sending the PostScript source)
+- Printing (by sending the GS rendered version)
+- Parse DSC comments & Offer a Page menu
+- Offer Page menu on PDF files
+- Scrolling the image via the HyperCard/MacPaint hand user interface
+- Console scroll back
+- Console cut & paste and text file read & write
+- Drivers and plug-in resources (would need support in GS)
+- 'nn' style user interface for multi-page documents
+- Page settings as a 'windoid' palette
+- Better dialog box look and layout for all dialogs
+- Option key on Open AppleEvent to mean ask for settings first
+- Rotation and Cropping as device settings
+- AppleEvents for controling settings and sending PostScript
+- Command files (non-rendering script files)
+- Mac device image options: 8bit gray scale and 4bit & 24bit color
+
+
+
+Credits
+
+Mac GS Viewer was written by Mark Lentczner of Glyphic Technology. 
+While it is a substantially a new port of Ghostscript to the Macintosh,
+the previous port by Martin Fong served as inspiration and a starting
+point.
+
+Ghostscript was created by L. Peter Deutsch of Aladdin Enterprises. 
+Please see the document README in the files directory of the release
+for more information.
+
+Mac GS Viewer could not have happend without the faithful help of over
+fifty beta testers.  A tip'o'the mouse to them (I appologize if I
+missed anyone, let me know and I'll fix it!):
+
+Aaron Tse, Al Lilianstrom, Al Walkington, Alan Johnson, Andrew
+Chilvers, Anthony Berno, Bebo White, Bruno Noel, Charles A. Poynton,
+Chris Goedde, Craig Moore, David A. Wright, David D. Kilzer, David K.
+Dean, David P. Goldenberg, David Williams, Dmitry Novikov, Dylan
+McNamee, Ernst U. Wallenborn, Fred W. Umminger, Gary Embler, Henry G.
+Baker, Hitoshi Murayama, Ian Storr, James F. Amundson, Jan van der Ven,
+Jerry Black, John D. Lewis, John Luiten, John Platten, Kevin Killion,
+Luca Cardelli, Marc Goodman, Martin Fong, Michael R. Roman, Mike Hill,
+Morris Meyer, Olof Backing, Paul Rauschelbach, Per Mildner, Peter
+Davis, Peter Mayers, Peter Vollenweider, Ray J. Gomez, Rob Brennan, Rob
+Trevor, Roger Wenklo, Scott Marjason, Simon Kershaw, Sly Upah, Stephan
+Eggermont, Taylor Leaming, Timothy L D Collins.
+
+
+
+Support
+
+Mac GS Viewer is distributed under the Aladdin Ghostscript Free Public
+License.  See the file PUBLIC in the files directory of the relase for
+the full text.  As a piece of free software, neither Aladdin
+Enterprises nor Glyphic Technology can offer any direct support for it.
+ If you have questions please try the news group comp.lang.postscript,
+where Ghostscript is discussed.
+
+If you are interested in licensing all or any part of the Ghostscript
+system, including Mac GS Viewer, please the information in the file
+README in the files directory of the release.
+
+
+
+Contacts
+
+Mac GS Viewer is part of the Ghostscript system which is discussed on
+the Internet news group:
+    comp.lang.postscript
+
+Ghostscript's public FTP site is:
+    ftp.cs.wisc.edu
+in the directory:
+    /pub/ghost
+
+Information on Ghostscript can be found on-line at:
+    http://www.cs.wisc.edu/~ghost/index.html
+
+Aladdin Systems can be reached at:
+    ghost@aladdin.com
+
+Glyphic Technology can be reached at:
+    mac-gs@glyphic.com
+    http://www.webcom.com/~glyphic/
+    http://www.glyphic.com/           - after mid-June, 1995

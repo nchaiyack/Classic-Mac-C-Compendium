@@ -1,1 +1,38 @@
-¥ MacDP 1.1An application which displays pictures on the screen.MacDP will display Macintosh PICT files, and standard JFIF/JPEG documents using QuickTime.You will need QuickTime if you want to display JPEG and QuickTime compressed PICT files.  (MacDP was developed under QuickTime 2.0, but it could probably work with any previous version of QuickTime.)¥ Features:	Â Requires only 18 KB on disk	Â High Level Events aware:				-Open Application				-Open Document (MacDP will open the last in the list)				-Print Document (Not completely tested!)				-Quit Application	Â Uses as much RAM as the largest file you open (file size in disk!)  plus about 64 KB	Â Requires System 7.0 or later	Â Slide Show mode (Using the included AppleScript Droplet)	Â Full Screen mode (Push tab key)	Â Images larger than current monitor are scaled	Â Multiple Screens (Up to 7)	Â TWO different backgrounds!!! (Push space key to toggle between black and white)	Â The best price to quality ratio (Freeware)¥ Bugs and Caveats	I don't care.¥ Credits:	JPEG/JFIF to QuickTime decoder: JPEGtoPICT.c, written by: Mark Krueger, Apple Computer, Inc.	The rest: © MacSPD@ivo.cps.unizar.es	Thanks to Wayne '404' Chang <wchang@chs.claremont.edu> for helping with the documentation.(Source code in C -Symantec C/C++ 7.0.3 and Metrowerks C/C++ 1.0a1s- available under request)
+¥ MacDP 1.1
+
+An application which displays pictures on the screen.
+
+MacDP will display Macintosh PICT files, and standard JFIF/JPEG documents using QuickTime.
+
+You will need QuickTime if you want to display JPEG and QuickTime compressed PICT files.  (MacDP was developed under QuickTime 2.0, but it could probably work with any previous version of QuickTime.)
+
+¥ Features:
+
+	Â Requires only 18 KB on disk
+	Â High Level Events aware:
+				-Open Application
+				-Open Document (MacDP will open the last in the list)
+				-Print Document (Not completely tested!)
+				-Quit Application
+	Â Uses as much RAM as the largest file you open (file size in disk!)  plus about 64 KB
+	Â Requires System 7.0 or later
+	Â Slide Show mode (Using the included AppleScript Droplet)
+	Â Full Screen mode (Push tab key)
+	Â Images larger than current monitor are scaled
+	Â Multiple Screens (Up to 7)
+	Â TWO different backgrounds!!! (Push space key to toggle between black and white)
+	Â The best price to quality ratio (Freeware)
+
+¥ Bugs and Caveats
+
+	I don't care.
+
+¥ Credits:
+
+	JPEG/JFIF to QuickTime decoder: JPEGtoPICT.c, written by: Mark Krueger, Apple Computer, Inc.
+
+	The rest: © MacSPD@ivo.cps.unizar.es
+
+	Thanks to Wayne '404' Chang <wchang@chs.claremont.edu> for helping with the documentation.
+
+(Source code in C -Symantec C/C++ 7.0.3 and Metrowerks C/C++ 1.0a1s- available under request)

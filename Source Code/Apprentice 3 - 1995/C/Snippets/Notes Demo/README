@@ -1,1 +1,41 @@
-6/29/95 - Updated to CodeWarrior 6 by Paul Celestin11/4/94 - Converted to Metrowerks CodeWarrior by Paul CelestinFrom the original README:This is a small stupid demo of the sampled-note synthesizer.Compile and link in the ANSI library. Run it. Hit RETURN to start playing, and RETURNagain to stop playing and quit the program.(This was done in Think C 5.0.4. I don't knowwhat the appropriate magic is in other environments to get ANSI-style IO; at worst,you can get rid of the printf() and gets() statements in main.c. Make sure you putin a long delay at the end, or some kind of wait-until-user-quits command; otherwisethe program will start up and quit immediately, without enough time to play the(asynchronous) music.)SND resources 9000-9003 are sampled sounds; each has a loopback interval set, so theycan be stretched to any length. (Any SND editor, such as SoundEdit, should have anoption to set the loopback.) SND resources 9008-9011 are the notes definitions. Each is a list of freqDurationCmds, nothing more. (A rest is indicated by a quietCmd followedby a restCmd. I'm not certain whether the quietCmd is necessary; I haven't triedit without it.)The program flow is pretty simple. It allocates four channels; it sets a sampledsound on each, by sending a soundCmd; then it sends the sequences of notes toeach, using the SndPlay function to send the freqDurationCmds in the SND resources9008-9011. Then it sits and waits for the user to hit RETURN. (Once started, thesounds play asynchronously.)This code is badly documented, probably leaks memory, and is certainly confusing.It's from a project which is about one tenth completed. Don't you dare blame mefor anything.The musAnalyzeSnd function is a direct C translation of GetSndDataOffset inJim Reekes's SoundApp program. SNDs 9008-9011 are also copied from SoundApp.The four sampled sounds are my voice, mangled. Written by Andrew Plotkin (erkyrath@cmu.edu)
+6/29/95 - Updated to CodeWarrior 6 by Paul Celestin
+11/4/94 - Converted to Metrowerks CodeWarrior by Paul Celestin
+
+From the original README:
+
+This is a small stupid demo of the sampled-note synthesizer.
+
+Compile and link in the ANSI library. Run it. Hit RETURN to start playing, and RETURN
+again to stop playing and quit the program.
+
+(This was done in Think C 5.0.4. I don't know
+what the appropriate magic is in other environments to get ANSI-style IO; at worst,
+you can get rid of the printf() and gets() statements in main.c. Make sure you put
+in a long delay at the end, or some kind of wait-until-user-quits command; otherwise
+the program will start up and quit immediately, without enough time to play the
+(asynchronous) music.)
+
+SND resources 9000-9003 are sampled sounds; each has a loopback interval set, so they
+can be stretched to any length. (Any SND editor, such as SoundEdit, should have an
+option to set the loopback.) 
+
+SND resources 9008-9011 are the notes definitions. Each is a list of 
+freqDurationCmds, nothing more. (A rest is indicated by a quietCmd followed
+by a restCmd. I'm not certain whether the quietCmd is necessary; I haven't tried
+it without it.)
+
+The program flow is pretty simple. It allocates four channels; it sets a sampled
+sound on each, by sending a soundCmd; then it sends the sequences of notes to
+each, using the SndPlay function to send the freqDurationCmds in the SND resources
+9008-9011. Then it sits and waits for the user to hit RETURN. (Once started, the
+sounds play asynchronously.)
+
+This code is badly documented, probably leaks memory, and is certainly confusing.
+It's from a project which is about one tenth completed. Don't you dare blame me
+for anything.
+
+The musAnalyzeSnd function is a direct C translation of GetSndDataOffset in
+Jim Reekes's SoundApp program. SNDs 9008-9011 are also copied from SoundApp.
+The four sampled sounds are my voice, mangled. 
+
+Written by Andrew Plotkin (erkyrath@cmu.edu)

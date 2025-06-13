@@ -1,1 +1,42 @@
-set exit 0set SrcApp ":"export SrcAppset ObjApp ":"export ObjAppmakemake -nosys -t MUDDweller ¶	-i '{SrcApp}' -i '{SrcApp}Main' -i '{SrcApp}Externals' ¶	'{ObjApp}'MMUDDweller.cp ¶	'{ObjApp}'UMUDDweller.cp ¶	'{ObjApp}'MUDDweller.r ¶	'{ObjApp}'Main:CommandView.cp ¶	'{ObjApp}'Main:DocDialogs.cp ¶	'{ObjApp}'Main:EDStuff.cp ¶	'{ObjApp}'Main:Filters.cp ¶	'{ObjApp}'Main:LogView.cp ¶	'{ObjApp}'Main:LogWindow.cp ¶	'{ObjApp}'Main:Macros.cp ¶	'{ObjApp}'Main:MTPStuff.cp ¶	'{ObjApp}'Main:MUDDoc.cp ¶	'{ObjApp}'Main:NoTrace.cp ¶	'{ObjApp}'Main:Alerts.r ¶	'{ObjApp}'Main:Finder.r ¶	'{ObjApp}'Main:Menus.r ¶	'{ObjApp}'Main:Strings.r ¶	'{ObjApp}'Externals:dnr.c ¶	'{ObjApp}'Externals:BigText.cp ¶	'{ObjApp}'Externals:UArray.h ¶	'{ObjApp}'Externals:USizerView.h ¶	'{ObjApp}'Externals:USizerView.r ¶	'{ObjApp}'Externals:USizerView.p ¶	³ dev:nulltarget Makefileclear ¥:Æ/'"{ObjApp}MMUDDweller.cp.o" Ä'/replace -c ° /ObjApp(¶}[Â¶"]+[Âo]¶")¨1/ "SrcApp¨1"close -y Makefiletarget MUDDweller.MAMakefind ¥replace /### MakeMake dependencies ###/Æ:° "¶n¶n"find ¥close -y MUDDweller.MAMakecatenate Makefile >> MUDDweller.MAMakedelete -y Makefile
+set exit 0
+set SrcApp ":"
+export SrcApp
+set ObjApp ":"
+export ObjApp
+makemake -nosys -t MUDDweller ¶
+	-i '{SrcApp}' -i '{SrcApp}Main' -i '{SrcApp}Externals' ¶
+	'{ObjApp}'MMUDDweller.cp ¶
+	'{ObjApp}'UMUDDweller.cp ¶
+	'{ObjApp}'MUDDweller.r ¶
+	'{ObjApp}'Main:CommandView.cp ¶
+	'{ObjApp}'Main:DocDialogs.cp ¶
+	'{ObjApp}'Main:EDStuff.cp ¶
+	'{ObjApp}'Main:Filters.cp ¶
+	'{ObjApp}'Main:LogView.cp ¶
+	'{ObjApp}'Main:LogWindow.cp ¶
+	'{ObjApp}'Main:Macros.cp ¶
+	'{ObjApp}'Main:MTPStuff.cp ¶
+	'{ObjApp}'Main:MUDDoc.cp ¶
+	'{ObjApp}'Main:NoTrace.cp ¶
+	'{ObjApp}'Main:Alerts.r ¶
+	'{ObjApp}'Main:Finder.r ¶
+	'{ObjApp}'Main:Menus.r ¶
+	'{ObjApp}'Main:Strings.r ¶
+	'{ObjApp}'Externals:dnr.c ¶
+	'{ObjApp}'Externals:BigText.cp ¶
+	'{ObjApp}'Externals:UArray.h ¶
+	'{ObjApp}'Externals:USizerView.h ¶
+	'{ObjApp}'Externals:USizerView.r ¶
+	'{ObjApp}'Externals:USizerView.p ¶
+	³ dev:null
+target Makefile
+clear ¥:Æ/'"{ObjApp}MMUDDweller.cp.o" Ä'/
+replace -c ° /ObjApp(¶}[Â¶"]+[Âo]¶")¨1/ "SrcApp¨1"
+close -y Makefile
+target MUDDweller.MAMake
+find ¥
+replace /### MakeMake dependencies ###/Æ:° "¶n¶n"
+find ¥
+close -y MUDDweller.MAMake
+catenate Makefile >> MUDDweller.MAMake
+delete -y Makefile

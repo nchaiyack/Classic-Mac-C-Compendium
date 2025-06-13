@@ -1,1 +1,28 @@
-PixMapWindow	This class is most useful to me in debugging.  Pass it an offscreen LGWorld, and it willbring up a window containing the graphic.  I haven't added support for a Scroller... if someoneelse is interested in that, I'll incorporate it and give them credit.  I think everything init is pretty self explanatory.  If not, my email address is below.example usage:voidBooga::Wooga(Rect Ooga){	LGWorld	Fooga;	Rect	Mooga;		SetRect(Mooga, 0, 5, 17, 23);	Fooga = new LGWorld(Mooga, 0);	Fooga->BeginDrawing();	PaintRect(Ooga);	Fooga->EndDrawing();	new PixMapWindow(Fooga, false);}	Please feel free to use the code contained in this package in whatever manner you please,free of charge.	--Sam Kass, Carnegie Mellon University Robotics Institute		sam@cs.cmu.edu
+PixMapWindow
+
+	This class is most useful to me in debugging.  Pass it an offscreen LGWorld, and it will
+bring up a window containing the graphic.  I haven't added support for a Scroller... if someone
+else is interested in that, I'll incorporate it and give them credit.  I think everything in
+it is pretty self explanatory.  If not, my email address is below.
+
+example usage:
+
+void
+Booga::Wooga(Rect Ooga)
+{
+	LGWorld	Fooga;
+	Rect	Mooga;
+	
+	SetRect(Mooga, 0, 5, 17, 23);
+	Fooga = new LGWorld(Mooga, 0);
+	Fooga->BeginDrawing();
+	PaintRect(Ooga);
+	Fooga->EndDrawing();
+	new PixMapWindow(Fooga, false);
+}
+
+	Please feel free to use the code contained in this package in whatever manner you please,
+free of charge.
+
+	--Sam Kass, Carnegie Mellon University Robotics Institute
+		sam@cs.cmu.edu

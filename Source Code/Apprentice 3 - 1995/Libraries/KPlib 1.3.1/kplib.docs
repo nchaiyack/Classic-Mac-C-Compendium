@@ -1,1 +1,253 @@
-   *************************************************************************   *************************************************************************   **                                                                     **   **                   ----====  KPlib v1.3.1 ====----                   **   **                                                                     **   **                         a C++ Class Library                         **   **                                                                     **   **                          by Keith Pomakis                           **   **                     kppomaki@jeeves.uwaterloo.ca                    **   **                                                                     **   **                            Summer, 1994                             **   **          Released to the public domain on October 10, 1994          **   **                                                                     **   *************************************************************************   *************************************************************************                           ****  Documentation  ********************************************************************************PURPOSE AND HISTORY****************************************************************************I know what you're saying to yourself:  "What, another class library?".Yup, that's exactly what this is.  My thesis work requires me to do a lotof C++ programming.  The availability of a good class library isessential to my work.  However, I didn't want to use any compiler-specificclass libraries because I wanted to insure that my code was portable.  Ididn't want to use a third-party class library for two reasons.  First,  Icouldn't find anything out there that satisfied me, and second, even if Idid, I'd hate the prospect of having to drag around third-party softwarewith me wherever I went.  I'd rather be my own technical support.  So Iwrote this class library.  So far it has served me very well.  I don't knowhow I would survive without it.  It is my hope that, in distributing thislibrary, others will be able to use what I've put together to increasetheir own programming productivity.Unfortunately, I have had no time to develop a good user's manual for thelibrary.  Furthermore, I haven't had the opportunity to test the library ona compiler other than g++ 2.6.x.  Since C++ is still in it's pre-standarddays and every compiler tends to be different, it wouldn't surprise me ifmany C++ compilers fail to compile the library.As far as the user's manual goes, I believe that the library is fairlyintuitive and self-explanatory.  A programmer should be able to understandhow to use the library merely by perusing the "*.h" files.Perhaps a good user's manual will be a future project of mine.Version 1.0: October 10, 1994    - first release into the public domain    - not actually labelled with a version numberVersion 1.1: October 12, 1994    - appended prefix "KP" to class and file names to avoid name clashes      with existing libraries    - fleshed document out a little moreVersion 1.2: October 21, 1994:    - modified inline max and min functions in KPbasic.h to make them more      general    - made several KPSet functions "const" correctVersion 1.2.1: November 7, 1994:    - fixed a couple of non-g++ incompatibilities, bringing the library      a little closer to be compilable on other compilersVersion 1.2.2: January 6, 1995:    - fixed bug in KPQueue<T>::clear() function    - removed problematic operator<<(KPString&, const T&) function    - added discussion of explicit template instantiation to documentationVersion 1.3.0: April 22, 1995:    - sealed a memory leak in KPIterator<T>::remove_current()    - changed the return type of KPIterator<T>::remove_current() to void    - added KPSet<T>::operator<() so that sets of sets are possible    - added KPBag<T> classVersion 1.3.1: April 25, 1995:    - made various minor changes to increase compiler compatibility and      improve efficiency****************************************************************************DISCLAIMER****************************************************************************I am releasing this library to the public domain.  Therefore, people can useit, copy it, distribute it, modify it, and do whatever they want with it.Although this library has been well thought out, tested, and used in realapplications, it is not guaranteed to be bug-free.  Therefore, I am notresponsible for anything that happens, either directly or indirectly, due tothe usage of this library.If you modify or add to this library in any way, I'd appreciate it if youdropped me a line (or Internet packet, whatever) telling me what you did.I'm always interested in potential improvements to my work!Also, if you find any bugs (gasp!) or have any questions or comments aboutthe library, you can contact me as well.  My e-mail address, at least untilApril, is "kppomaki@jeeves.uwaterloo.ca".  I'd be interested in hearingwhat you think!Oh, one other thing... I've put a lot of work into this library, so I'dappreciate it if you kept my name attached to it when distributing ormodifying it.****************************************************************************REQUIREMENTS AND COMPATIBILITY****************************************************************************This library has not been tested on a compiler other than GNU g++ version2.6.x (a Free Software Foundation project).  I cannot guarantee that it willcompile on other C++ compilers.  However, I tried to keep it as "standard"as possible, so I am hopeful.The library uses templates quite heavily, but does not make use of exceptionhandling.In order for the template classes in this library to successfully link withyour projects using g++ 2.6.x, the command-line option"-fno-implicit-templates" should be used, and all required template classesand functions should be explicitly instantiated.  Unfortunately, this mayalso require the instantiations of templates that are indirectly used, suchas the base classes of the classes being used.  Fortunately, the list ofundefined symbols at link time will provide you with the names of thetemplates that need instantiations.  Unfortunately, this list is mangled.Fortunately, there are demanglers out there.  Unfortunately, I'm not goingto tell you where.  Fortunately, this entire problem should go away ing++ 2.7.x.****************************************************************************CONTENTS****************************************************************************The library consists of the following classes:    KPList<T>        A two-way list that assumes nothing about its elements except they        correctly implement a default constructor and operator=().    KPComparableList<T>        A subclass of KPList<T> which also assumes its elements can be        compared with operator==(), thus providing more powerful methods.    KPSortableList<T>        A subclass of KPComparableList<T> which also assumes its elements        can be compared with operator<(), thus providing more powerful        methods.    KPReadOnlyIterator<T>        An iterator with pointer-like semantics which can iterate over any        of the above lists for reading purposes only.    KPIterator<T>        An iterator with pointer-like semantics which can iterate over any        of the above lists for the purpose of reading, modifying, deleting,        or adding elements to or from arbitrary locations in the list.    KPArray<T>        A dynamically-sizable array that assumes nothing about its        elements except they correctly implement a default constructor        and operator=().    KPComparableArray<T>        A subclass of KPArray<T> which also assumes its elements can be        compared with operator==(), thus providing more powerful methods.    KPSortableArray<T>        A subclass of KPComparableArray<T> which also assumes its elements        can be compared with operator<(), thus providing more powerful        methods.    KPQueue<T>        A queue that assumes nothing about its elements except they        correctly implement a default constructor and operator=().    KPPriorityQueue<T>        A priority queue that assumes its elements correctly implement        a default constructor, operator=(), operator==() and operator<().    KPStack<T>        A stack that assumes nothing about its elements except they        correctly implement a default constructor and operator=().    KPSet<T>        A set that assumes its elements correctly implement a default        constructor, operator=(), operator==() and operator<().  All        union, intersection and difference operations are of order O(n).    KPString        A string class which implements basic string functions and more        (such as tokenizing methods which return List<String>).  This        class uses reference counting and copy-on-write semantics to        insure that it as efficient as possible.    KPBag<T>        A bag that assumes its elements correctly implement a default        constructor, operator=(), operator==() and operator<().****************************************************************************USAGE****************************************************************************The library consists of the following files:        KPArray.h        KPBag.h        KPList.h        KPPriorityQueue.h        KPQueue.h        KPSet.h        KPStack.h        KPString.cxx        KPString.h        KPbasic.hThese files should be kept together in a single directory.  The name of eachfile directly represents what one would expect of its contents.  The file"KPbasic.h" contains a few basic functions and definitions that you mightfind convenient.All of the classes in this library, except for KPString, are templateclasses.  Therefore, it easy to use these classes with your own classes aswell as with all of the predefined data types.  The classes were not writtento be easily derived from."KPString.cxx" is the only source file of the library.  In order to use thisclass it will have to be compiled with the rest of your code.  See thefiles in the accompanying "sample_progs" directory to see how this can bedone conveniently.  Alternatively, "KPString.cxx" can be precompiled andconverted to a library archive for standard linking.See section "REQUIREMENTS AND COMPATIBILITY" for a discussion of explicittemplate instantiation and the g++ "-fno-implicit-templates" option.Since I haven't actually written a user's guide for this library, the "*.h"files will have to suffice as documentation.That's about it.  Enjoy!.------------------------------+--------------------------------------------.| Keith Pomakis                | Don't take life too seriously.             || kppomaki@jeeves.uwaterloo.ca | After all, you'll never make it out alive. |+------------------------------+--------------------------------------------+|          WWW home page: "http://csclub.uwaterloo.ca/u/kppomaki/"          |`---------------------------------------------------------------------------'
+   *************************************************************************
+   *************************************************************************
+   **                                                                     **
+   **                   ----====  KPlib v1.3.1 ====----                   **
+   **                                                                     **
+   **                         a C++ Class Library                         **
+   **                                                                     **
+   **                          by Keith Pomakis                           **
+   **                     kppomaki@jeeves.uwaterloo.ca                    **
+   **                                                                     **
+   **                            Summer, 1994                             **
+   **          Released to the public domain on October 10, 1994          **
+   **                                                                     **
+   *************************************************************************
+   *************************************************************************
+
+                           ****  Documentation  ****
+
+
+****************************************************************************
+PURPOSE AND HISTORY
+****************************************************************************
+
+I know what you're saying to yourself:  "What, another class library?".
+Yup, that's exactly what this is.  My thesis work requires me to do a lot
+of C++ programming.  The availability of a good class library is
+essential to my work.  However, I didn't want to use any compiler-specific
+class libraries because I wanted to insure that my code was portable.  I
+didn't want to use a third-party class library for two reasons.  First,  I
+couldn't find anything out there that satisfied me, and second, even if I
+did, I'd hate the prospect of having to drag around third-party software
+with me wherever I went.  I'd rather be my own technical support.  So I
+wrote this class library.  So far it has served me very well.  I don't know
+how I would survive without it.  It is my hope that, in distributing this
+library, others will be able to use what I've put together to increase
+their own programming productivity.
+
+Unfortunately, I have had no time to develop a good user's manual for the
+library.  Furthermore, I haven't had the opportunity to test the library on
+a compiler other than g++ 2.6.x.  Since C++ is still in it's pre-standard
+days and every compiler tends to be different, it wouldn't surprise me if
+many C++ compilers fail to compile the library.
+
+As far as the user's manual goes, I believe that the library is fairly
+intuitive and self-explanatory.  A programmer should be able to understand
+how to use the library merely by perusing the "*.h" files.
+
+Perhaps a good user's manual will be a future project of mine.
+
+Version 1.0: October 10, 1994
+    - first release into the public domain
+    - not actually labelled with a version number
+
+Version 1.1: October 12, 1994
+    - appended prefix "KP" to class and file names to avoid name clashes
+      with existing libraries
+    - fleshed document out a little more
+
+Version 1.2: October 21, 1994:
+    - modified inline max and min functions in KPbasic.h to make them more
+      general
+    - made several KPSet functions "const" correct
+
+Version 1.2.1: November 7, 1994:
+    - fixed a couple of non-g++ incompatibilities, bringing the library
+      a little closer to be compilable on other compilers
+
+Version 1.2.2: January 6, 1995:
+    - fixed bug in KPQueue<T>::clear() function
+    - removed problematic operator<<(KPString&, const T&) function
+    - added discussion of explicit template instantiation to documentation
+
+Version 1.3.0: April 22, 1995:
+    - sealed a memory leak in KPIterator<T>::remove_current()
+    - changed the return type of KPIterator<T>::remove_current() to void
+    - added KPSet<T>::operator<() so that sets of sets are possible
+    - added KPBag<T> class
+
+Version 1.3.1: April 25, 1995:
+    - made various minor changes to increase compiler compatibility and
+      improve efficiency
+
+
+****************************************************************************
+DISCLAIMER
+****************************************************************************
+
+I am releasing this library to the public domain.  Therefore, people can use
+it, copy it, distribute it, modify it, and do whatever they want with it.
+
+Although this library has been well thought out, tested, and used in real
+applications, it is not guaranteed to be bug-free.  Therefore, I am not
+responsible for anything that happens, either directly or indirectly, due to
+the usage of this library.
+
+If you modify or add to this library in any way, I'd appreciate it if you
+dropped me a line (or Internet packet, whatever) telling me what you did.
+I'm always interested in potential improvements to my work!
+
+Also, if you find any bugs (gasp!) or have any questions or comments about
+the library, you can contact me as well.  My e-mail address, at least until
+April, is "kppomaki@jeeves.uwaterloo.ca".  I'd be interested in hearing
+what you think!
+
+Oh, one other thing... I've put a lot of work into this library, so I'd
+appreciate it if you kept my name attached to it when distributing or
+modifying it.
+
+
+****************************************************************************
+REQUIREMENTS AND COMPATIBILITY
+****************************************************************************
+
+This library has not been tested on a compiler other than GNU g++ version
+2.6.x (a Free Software Foundation project).  I cannot guarantee that it will
+compile on other C++ compilers.  However, I tried to keep it as "standard"
+as possible, so I am hopeful.
+
+The library uses templates quite heavily, but does not make use of exception
+handling.
+
+In order for the template classes in this library to successfully link with
+your projects using g++ 2.6.x, the command-line option
+"-fno-implicit-templates" should be used, and all required template classes
+and functions should be explicitly instantiated.  Unfortunately, this may
+also require the instantiations of templates that are indirectly used, such
+as the base classes of the classes being used.  Fortunately, the list of
+undefined symbols at link time will provide you with the names of the
+templates that need instantiations.  Unfortunately, this list is mangled.
+Fortunately, there are demanglers out there.  Unfortunately, I'm not going
+to tell you where.  Fortunately, this entire problem should go away in
+g++ 2.7.x.
+
+
+****************************************************************************
+CONTENTS
+****************************************************************************
+
+The library consists of the following classes:
+
+    KPList<T>
+        A two-way list that assumes nothing about its elements except they
+        correctly implement a default constructor and operator=().
+
+    KPComparableList<T>
+        A subclass of KPList<T> which also assumes its elements can be
+        compared with operator==(), thus providing more powerful methods.
+
+    KPSortableList<T>
+        A subclass of KPComparableList<T> which also assumes its elements
+        can be compared with operator<(), thus providing more powerful
+        methods.
+
+    KPReadOnlyIterator<T>
+        An iterator with pointer-like semantics which can iterate over any
+        of the above lists for reading purposes only.
+
+    KPIterator<T>
+        An iterator with pointer-like semantics which can iterate over any
+        of the above lists for the purpose of reading, modifying, deleting,
+        or adding elements to or from arbitrary locations in the list.
+
+    KPArray<T>
+        A dynamically-sizable array that assumes nothing about its
+        elements except they correctly implement a default constructor
+        and operator=().
+
+    KPComparableArray<T>
+        A subclass of KPArray<T> which also assumes its elements can be
+        compared with operator==(), thus providing more powerful methods.
+
+    KPSortableArray<T>
+        A subclass of KPComparableArray<T> which also assumes its elements
+        can be compared with operator<(), thus providing more powerful
+        methods.
+
+    KPQueue<T>
+        A queue that assumes nothing about its elements except they
+        correctly implement a default constructor and operator=().
+
+    KPPriorityQueue<T>
+        A priority queue that assumes its elements correctly implement
+        a default constructor, operator=(), operator==() and operator<().
+
+    KPStack<T>
+        A stack that assumes nothing about its elements except they
+        correctly implement a default constructor and operator=().
+
+    KPSet<T>
+        A set that assumes its elements correctly implement a default
+        constructor, operator=(), operator==() and operator<().  All
+        union, intersection and difference operations are of order O(n).
+
+    KPString
+        A string class which implements basic string functions and more
+        (such as tokenizing methods which return List<String>).  This
+        class uses reference counting and copy-on-write semantics to
+        insure that it as efficient as possible.
+
+    KPBag<T>
+        A bag that assumes its elements correctly implement a default
+        constructor, operator=(), operator==() and operator<().
+
+
+****************************************************************************
+USAGE
+****************************************************************************
+
+The library consists of the following files:
+
+        KPArray.h
+        KPBag.h
+        KPList.h
+        KPPriorityQueue.h
+        KPQueue.h
+        KPSet.h
+        KPStack.h
+        KPString.cxx
+        KPString.h
+        KPbasic.h
+
+These files should be kept together in a single directory.  The name of each
+file directly represents what one would expect of its contents.  The file
+"KPbasic.h" contains a few basic functions and definitions that you might
+find convenient.
+
+All of the classes in this library, except for KPString, are template
+classes.  Therefore, it easy to use these classes with your own classes as
+well as with all of the predefined data types.  The classes were not written
+to be easily derived from.
+
+"KPString.cxx" is the only source file of the library.  In order to use this
+class it will have to be compiled with the rest of your code.  See the
+files in the accompanying "sample_progs" directory to see how this can be
+done conveniently.  Alternatively, "KPString.cxx" can be precompiled and
+converted to a library archive for standard linking.
+
+See section "REQUIREMENTS AND COMPATIBILITY" for a discussion of explicit
+template instantiation and the g++ "-fno-implicit-templates" option.
+
+Since I haven't actually written a user's guide for this library, the "*.h"
+files will have to suffice as documentation.
+
+That's about it.  Enjoy!
+
+
+.------------------------------+--------------------------------------------.
+| Keith Pomakis                | Don't take life too seriously.             |
+| kppomaki@jeeves.uwaterloo.ca | After all, you'll never make it out alive. |
++------------------------------+--------------------------------------------+
+|          WWW home page: "http://csclub.uwaterloo.ca/u/kppomaki/"          |
+`---------------------------------------------------------------------------'
+

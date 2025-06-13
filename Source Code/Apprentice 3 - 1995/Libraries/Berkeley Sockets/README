@@ -1,1 +1,35 @@
-macsockets.hqx is Macintosh MPW C source code for a Berkeley compatible sockets librarysix folders are included....socketsunixincludes - unix header files necessary to compile or use socketsunixlib - C library or Unix system calls not provided in the MPW libraries          most are just dummies.resolver - the Berkeley Bind name server code ported to work with this           socket libraryrpc - an old version of the sun rpc library. at least some of which has      been ported to work with this socket library. According to the      Copyright headers, it seems to be OK to redistribute this stuff with      this package.ftp - Berkeley ftp client ported to work with this library.--------------------------------------------------------------------------Please don't ask for support. There isn't any.========================================================================================================================Update December 1994by Mark Sproulsproul@eos.ap.orgThis version was updated to run with ThinkC 6 and MPW.  There is still no support but thisis an updated version.  Much of the changes delt with the new headers and int/long/short problems.
+macsockets.hqx is Macintosh MPW C source code for a Berkeley compatible sockets library
+
+six folders are included....
+
+sockets
+
+unixincludes - unix header files necessary to compile or use sockets
+
+unixlib - C library or Unix system calls not provided in the MPW libraries
+          most are just dummies.
+
+resolver - the Berkeley Bind name server code ported to work with this
+           socket library
+
+rpc - an old version of the sun rpc library. at least some of which has
+      been ported to work with this socket library. According to the
+      Copyright headers, it seems to be OK to redistribute this stuff with
+      this package.
+
+ftp - Berkeley ftp client ported to work with this library.
+
+--------------------------------------------------------------------------
+
+Please don't ask for support. There isn't any.
+
+
+============================================================
+============================================================
+Update December 1994
+by Mark Sproul
+sproul@eos.ap.org
+
+This version was updated to run with ThinkC 6 and MPW.  There is still no support but this
+is an updated version.  Much of the changes delt with the new headers and int/long/short problems.
+

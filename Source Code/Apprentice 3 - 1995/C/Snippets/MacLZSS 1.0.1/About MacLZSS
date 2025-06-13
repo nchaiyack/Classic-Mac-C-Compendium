@@ -1,1 +1,89 @@
-Ported to Metrowerks CodeWarrior by Paul Celestin3 November 1994the original read me file:This archive should contain a subfolder with 3 'C' programs and one text file; this file; lzss.c; and unix_main.c.Intro-----Several months ago, about the only file compression techniques used were simple variations of Huffman "squeezing" and Lempel-Ziv-Welch "crunching," popularized by the MS-DOS 'arc' utility.Recently new techniques have been devised, implemented in programs such as PKZIP, PAK, and LHARC.  The latest to arrive, LHARC, routinely compressed better any other program, and interested parties soon made available 'C' source code to three programs:LZSS	modified Lempel-ZivLZARI	modified Lempel-Ziv combined with Arithmetic CompressionLZHUF	modified Lempel-Ziv combined with Huffman CompressionLZSS is the simplest algorithm.  LZARI probably compresses best, but is the slowest.  LZHUF has nearly as good compression as LZARI but is faster (LHARC uses this algorithm).See CMPRSN.DOC for more detailed history and technical information.LZSS vs. StuffIt----------------StuffIt uses either the LZW or Huffman algorithm (whichever compresses better).  LZSS uses its modified LZ algorithm on all files.Adobe Separator 2.0 application	    	53010 bytes with StuffIt(Binhexed) 90808 bytes				           40979 bytes with LZSS13% improvement									StuffIt 1.5.1 application	           87056 bytes with StuffIt(Binhexed) 117410 bytes		            64861 bytes with LZSS19% improvement							Text (US Constitution) 		            24327 bytes with StuffIt62243 bytes					                     24975 bytes with LZSS0% improvement							Apple Outline Fonts HyperCard stack		57270 with StuffIt(Binhexed)	105472 bytes				          38406 with LZSS18% improvement(also, LZSS compressed this SIT file down to 54252 bytes!)			Other tests showed:							Sound files - no compression from either utilityMacPaint Bitmaps - SI's Huffman beats LZSS, which beats SI's LZWText (PostScript) - SI's LZW beats LZSS soundlyMixes of binary and text, such as applications, seem to compress best with LZSS.Mac version-----------Create a THINK C v3 project withsegment 1: MacTraps, stdio, stringssegment 2: lzss.c unix_main.cThis Mac "port" is extremely simplistic. THINK C's UNIX-like interface is used.  Some consequences:- Lack of Mac interface. You have to know the filename and type it in.- Only data fork is used. Resource forks of files are completely ignored.- No Finder information saved anywhere. Creation dates, original filenames, etc. are not stored anywhere in the compressed file.  To circumvent these last two problems, use Binhex 5.0, StuffIt (with no compression), or a similar program to get all the file's information saved into a data fork.  Then compress that file.Example: to compress "StuffIt 1.5.1"- Use Binhex 5.0 to put the application in Macbinary format (100% data fork), yielding "Stuff.Bin" (keep spaces out of the filename!)- run LZSS with "e Stuff.Bin Stuff.Bin.S" (the S extension makes sense for LZSS files)Then to unpack it:- run LZSS with "d Stuff.Bin.S Stuff.Bin"- Use Binhex to reconvert to an applicationHelp Wanted-----------The original source code for LZSS says "Use, distribute, and modify this program freely."Mac LZSS obviously needs some work to become a REAL Macintosh program, using SF dialogs to process filenames, and handling the Binhex step internally.  Assembly language speedup (or any other optimizations for the Mac) would be nice as well!Also useful would be ports of LZARI and LZHUF. These algorithms may compress better or be faster.Most desirable would be incorporation of these new techniques in a *non-commercial* version of StuffIt, or perhaps development of a free Macintosh archive utility like LHARC for DOS.27 May 1989Rob ElliottCIS: 70675,1204rob@embossed.com
+Ported to Metrowerks CodeWarrior by Paul Celestin
+3 November 1994
+
+the original read me file:
+
+
+This archive should contain a subfolder with 3 'C' programs and one text file; this file; lzss.c; and unix_main.c.
+
+Intro
+-----
+Several months ago, about the only file compression techniques used were simple variations of Huffman "squeezing" and Lempel-Ziv-Welch "crunching," popularized by the MS-DOS 'arc' utility.
+
+Recently new techniques have been devised, implemented in programs such as PKZIP, PAK, and LHARC.  The latest to arrive, LHARC, routinely compressed better any other program, and interested parties soon made available 'C' source code to three programs:
+
+LZSS	modified Lempel-Ziv
+LZARI	modified Lempel-Ziv combined with Arithmetic Compression
+LZHUF	modified Lempel-Ziv combined with Huffman Compression
+
+LZSS is the simplest algorithm.  LZARI probably compresses best, but is the slowest.  LZHUF has nearly as good compression as LZARI but is faster (LHARC uses this algorithm).
+
+See CMPRSN.DOC for more detailed history and technical information.
+
+LZSS vs. StuffIt
+----------------
+StuffIt uses either the LZW or Huffman algorithm (whichever compresses better).  LZSS uses its modified LZ algorithm on all files.
+
+Adobe Separator 2.0 application	    	53010 bytes with StuffIt
+(Binhexed) 90808 bytes				           40979 bytes with LZSS
+13% improvement
+									
+StuffIt 1.5.1 application	           87056 bytes with StuffIt
+(Binhexed) 117410 bytes		            64861 bytes with LZSS
+19% improvement
+							
+Text (US Constitution) 		            24327 bytes with StuffIt
+62243 bytes					                     24975 bytes with LZSS
+0% improvement
+							
+Apple Outline Fonts HyperCard stack		57270 with StuffIt
+(Binhexed)	105472 bytes				          38406 with LZSS
+18% improvement
+(also, LZSS compressed this SIT file down to 54252 bytes!)
+			
+Other tests showed:							
+Sound files - no compression from either utility
+MacPaint Bitmaps - SI's Huffman beats LZSS, which beats SI's LZW
+Text (PostScript) - SI's LZW beats LZSS soundly
+
+Mixes of binary and text, such as applications, seem to compress best with LZSS.
+
+
+Mac version
+-----------
+Create a THINK C v3 project with
+segment 1: MacTraps, stdio, strings
+segment 2: lzss.c unix_main.c
+
+This Mac "port" is extremely simplistic. THINK C's UNIX-like interface is used.  Some consequences:
+
+- Lack of Mac interface. You have to know the filename and type it in.
+- Only data fork is used. Resource forks of files are completely ignored.
+- No Finder information saved anywhere. Creation dates, original filenames, etc. are not stored anywhere in the compressed file.
+  
+To circumvent these last two problems, use Binhex 5.0, StuffIt (with no compression), or a similar program to get all the file's information saved into a data fork.  Then compress that file.
+
+Example: to compress "StuffIt 1.5.1"
+- Use Binhex 5.0 to put the application in Macbinary format (100% data fork), yielding "Stuff.Bin" (keep spaces out of the filename!)
+- run LZSS with "e Stuff.Bin Stuff.Bin.S" (the S extension makes sense for LZSS files)
+
+Then to unpack it:
+- run LZSS with "d Stuff.Bin.S Stuff.Bin"
+- Use Binhex to reconvert to an application
+
+Help Wanted
+-----------
+The original source code for LZSS says "Use, distribute, and modify this program freely."
+
+Mac LZSS obviously needs some work to become a REAL Macintosh program, using SF dialogs to process filenames, and handling the Binhex step internally.  Assembly language speedup (or any other optimizations for the Mac) would be nice as well!
+
+Also useful would be ports of LZARI and LZHUF. These algorithms may compress better or be faster.
+
+Most desirable would be incorporation of these new techniques in a *non-commercial* version of StuffIt, or perhaps development of a free Macintosh archive utility like LHARC for DOS.
+
+
+
+27 May 1989
+Rob Elliott
+CIS: 70675,1204
+rob@embossed.com

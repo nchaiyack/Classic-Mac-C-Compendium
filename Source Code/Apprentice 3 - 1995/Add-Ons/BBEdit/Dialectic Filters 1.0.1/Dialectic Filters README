@@ -1,1 +1,127 @@
-_______________________________________________________________DIALECTIC FILTERS 1.0.1  —  A freeware BBEdit ExtensionBy Leo Breebaart, Copyright © 1994 Kronto SoftwareInternet e-mail: leo@cp.tn.tudelft.nl            _______________________________________________________________Description	In 1994 Mark Pilgrim released version 1.2 of his application Dialectic, which	transmogrifies English text in various entertaining ways. I have used his	source code to implement the same set of filters as an extension for	BBEdit and BBEdit Lite, the Macintosh text editors from Bare Bones Software.	Or perhaps I should rather say:	In 1994 Merk Peelgrim releesed ferseeun 1.2 ooff hees eppleeceshun Deeelectic,	vheech trunsmugreeffies Ingleesh text in fereeuoos interteeening veys. I	hefe-a used hees suoorce-a cude-a tu implement zee seme-a set ooff feelters	es an ixtenseeun fur BBEdeet und BBEdeet Leete-a, zee Meceentush text ideeturs	frum Bere-a Bunes Sufftvere-a. Bork Bork Bork!Remarks	•  The Dialectic Filters are compatible with both BBEdit and BBEdit Lite, but need	version 2.0 or later to run. Undo-functionality is available with version 3.0 and later.	•	Using radio buttons as a means to choose among dialects is only a temporary solution. 	A scrollable list would be much more compliant with the Human Interface guidelines (not	to mention better suited to future expansions of the filter set), but is also a bit more	difficult to program, so I decided to use the less perfect but easier solution for this first	version of the extension.	•  Rather than adapting or rewriting the original filters and then having to debug	them all over again, I decided to make the Dialectic Filters source code plug-in compatible 	with the original filters. This has the additional advantage that if Mark ever updates 	his filters or writes new ones, all I have to do is recompile in order to incorporate	them in the extension.	•  The source code to the Dialectic Filters extension is free, and should be available	from the same software repositories that carry the extension itself. If you can’t find	it you can always get the source from me through e-mail. See also the URLs section	below.	•  This extension is released to the public under the GNU General Public License	(see below) because the original Dialectic code was released that way (and hence my  adaptation has to be as well), not because I am personally a supporter of the Free  Software Foundation’s approach to software licensing.Version history	1.0  		21 Nov 1994							—	Initial release.	1.0.1 	30 Nov 1994							—	Fixed a bug in the Pig Latin filter (apostrophes yielded garbage in the output).							—	Minor cosmetic bug fixes and improvements.Distribution		This extension is free software. You may redistribute it under the terms	of the GNU General Public License as published by the Free Software	Foundation; either version 2 of the License, or (at your option) any	later version.		This program is distributed in the hope that it will be useful, but	WITHOUT ANY WARRANTY; without even the implied warranty of	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU	General Public License for more details.		For a copy of the GNU General Public License, write to the Free	Software Foundation, Inc., 675 Massachusetts Ave, Cambridge, MA 02139,	USA, or get it from the Dialectic Filters source code package.Credits & Acknowledgments	The biggest thank you goes of course to Mark Pilgrim for writing Dialectic, for 	allowing me to use his source code, and for his general enthousiasm about this project.  Also thanks to Rich Siegel and Bare Bones Software for BBEdit, for providing 	such a great development environment, and for patiently answering my programming 	questions.	I learned a lot by studying the source code to Craig H. Maynard’s excellent  BBEdit extension LineSort.		As always, thanks to Lloyd “Screensaver FAQ” Wood for feedback and	beta-testing.	The Dialectic Filters were programmed using THINK C 7.0.4,  Think Reference 2.0.1,	ResEdit 2.1.3 and BBEdit 3.0.1.All comments, questions, and bug reports concerning this extension will bemore than welcome. I look forward to receiving your feedback.Enjoy,--Leo Breebaart (leo@cp.tn.tudelft.nl)_______________________________________________________________Appendix: URLs	Here are URLs for the Internet resources mentioned in this document. Newer	versions of these files may of course have been released by the time	you read this. Most of the files are available from many other sites as well.	BBEdit Lite 3.0:						ftp://ftp.std.com:/pub/bbedit/bbedit-lite-30.hqx	BBEdit 3.0 Demo:						ftp://ftp.std.com:/pub/bbedit/bbedit-30-demo.hqx	BBEdit 3.0 Extension Development Kit						ftp:// ftp.std.com:/pub/bbedit/bbedit-30-dev-kit.hqx	Dialectic 1.2:						ftp://sumex.stanford.edu/info-mac/text/dialectic-12.hqx	Dialectic 1.2 Source Code:						ftp://sumex.stanford.edu/info-mac/dev/src/dialectic-12-c.hqx	LineSort 1.2b1:						ftp://mac.archive.umich.edu/mac/util/text/bbeditlinesort1.2b1.cpt.hqx_______________________________________________________________
+_______________________________________________________________
+DIALECTIC FILTERS 1.0.1  —  A freeware BBEdit Extension
+
+By Leo Breebaart, Copyright © 1994 Kronto Software
+Internet e-mail: leo@cp.tn.tudelft.nl            
+_______________________________________________________________
+
+
+Description
+
+	In 1994 Mark Pilgrim released version 1.2 of his application Dialectic, which
+	transmogrifies English text in various entertaining ways. I have used his
+	source code to implement the same set of filters as an extension for
+	BBEdit and BBEdit Lite, the Macintosh text editors from Bare Bones Software.
+
+	Or perhaps I should rather say:
+
+	In 1994 Merk Peelgrim releesed ferseeun 1.2 ooff hees eppleeceshun Deeelectic,
+	vheech trunsmugreeffies Ingleesh text in fereeuoos interteeening veys. I
+	hefe-a used hees suoorce-a cude-a tu implement zee seme-a set ooff feelters
+	es an ixtenseeun fur BBEdeet und BBEdeet Leete-a, zee Meceentush text ideeturs
+	frum Bere-a Bunes Sufftvere-a. Bork Bork Bork!
+
+
+Remarks
+
+	•  The Dialectic Filters are compatible with both BBEdit and BBEdit Lite, but need
+	version 2.0 or later to run. Undo-functionality is available with version 3.0 and later.
+
+	•	Using radio buttons as a means to choose among dialects is only a temporary solution. 
+	A scrollable list would be much more compliant with the Human Interface guidelines (not
+	to mention better suited to future expansions of the filter set), but is also a bit more
+	difficult to program, so I decided to use the less perfect but easier solution for this first
+	version of the extension.
+
+	•  Rather than adapting or rewriting the original filters and then having to debug
+	them all over again, I decided to make the Dialectic Filters source code plug-in compatible 
+	with the original filters. This has the additional advantage that if Mark ever updates 
+	his filters or writes new ones, all I have to do is recompile in order to incorporate
+	them in the extension.
+
+	•  The source code to the Dialectic Filters extension is free, and should be available
+	from the same software repositories that carry the extension itself. If you can’t find
+	it you can always get the source from me through e-mail. See also the URLs section
+	below.
+
+	•  This extension is released to the public under the GNU General Public License
+	(see below) because the original Dialectic code was released that way (and hence my
+  adaptation has to be as well), not because I am personally a supporter of the Free
+  Software Foundation’s approach to software licensing.
+
+
+Version history
+
+	1.0  		21 Nov 1994
+							—	Initial release.
+
+	1.0.1 	30 Nov 1994
+							—	Fixed a bug in the Pig Latin filter (apostrophes yielded garbage in the output).
+							—	Minor cosmetic bug fixes and improvements.
+
+
+Distribution
+	
+	This extension is free software. You may redistribute it under the terms
+	of the GNU General Public License as published by the Free Software
+	Foundation; either version 2 of the License, or (at your option) any
+	later version.
+	
+	This program is distributed in the hope that it will be useful, but
+	WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+	General Public License for more details.
+	
+	For a copy of the GNU General Public License, write to the Free
+	Software Foundation, Inc., 675 Massachusetts Ave, Cambridge, MA 02139,
+	USA, or get it from the Dialectic Filters source code package.
+
+
+Credits & Acknowledgments
+
+	The biggest thank you goes of course to Mark Pilgrim for writing Dialectic, for 
+	allowing me to use his source code, and for his general enthousiasm about this project.
+
+  Also thanks to Rich Siegel and Bare Bones Software for BBEdit, for providing 
+	such a great development environment, and for patiently answering my programming 
+	questions.
+
+	I learned a lot by studying the source code to Craig H. Maynard’s excellent
+  BBEdit extension LineSort.
+	
+	As always, thanks to Lloyd “Screensaver FAQ” Wood for feedback and
+	beta-testing.
+
+	The Dialectic Filters were programmed using THINK C 7.0.4,  Think Reference 2.0.1,
+	ResEdit 2.1.3 and BBEdit 3.0.1.
+
+
+All comments, questions, and bug reports concerning this extension will be
+more than welcome. I look forward to receiving your feedback.
+
+Enjoy,
+
+--
+Leo Breebaart (leo@cp.tn.tudelft.nl)
+
+_______________________________________________________________
+
+Appendix: URLs
+
+	Here are URLs for the Internet resources mentioned in this document. Newer
+	versions of these files may of course have been released by the time
+	you read this. Most of the files are available from many other sites as well.
+
+	BBEdit Lite 3.0:
+						ftp://ftp.std.com:/pub/bbedit/bbedit-lite-30.hqx
+	BBEdit 3.0 Demo:
+						ftp://ftp.std.com:/pub/bbedit/bbedit-30-demo.hqx
+	BBEdit 3.0 Extension Development Kit
+						ftp:// ftp.std.com:/pub/bbedit/bbedit-30-dev-kit.hqx
+	Dialectic 1.2:
+						ftp://sumex.stanford.edu/info-mac/text/dialectic-12.hqx
+	Dialectic 1.2 Source Code:
+						ftp://sumex.stanford.edu/info-mac/dev/src/dialectic-12-c.hqx
+	LineSort 1.2b1:
+						ftp://mac.archive.umich.edu/mac/util/text/bbeditlinesort1.2b1.cpt.hqx
+_______________________________________________________________

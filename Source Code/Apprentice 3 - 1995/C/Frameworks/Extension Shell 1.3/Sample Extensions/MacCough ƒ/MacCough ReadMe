@@ -1,1 +1,10 @@
-MacCough--------The coughing noise (and the icon) of MacCough was taken from Timothy Miller's ÒSniffªÓ INIT.It is an example of using Extension Shell to install a Time Manager task, and extend the address table.The net effect is to make your Mac cough every 10 seconds after startup. Since Time Managertasks are't allowed to move memory, we install a Notification Manager request that plays thesound for us. NM requests don't execute at interrupt time, so we're safe. Of course, this means thatthe sound won't be played *exactly* at 10 second intervals, but it's close enough.
+MacCough
+--------
+
+The coughing noise (and the icon) of MacCough was taken from Timothy Miller's ÒSniffªÓ INIT.
+
+It is an example of using Extension Shell to install a Time Manager task, and extend the address table.
+The net effect is to make your Mac cough every 10 seconds after startup. Since Time Manager
+tasks are't allowed to move memory, we install a Notification Manager request that plays the
+sound for us. NM requests don't execute at interrupt time, so we're safe. Of course, this means that
+the sound won't be played *exactly* at 10 second intervals, but it's close enough.

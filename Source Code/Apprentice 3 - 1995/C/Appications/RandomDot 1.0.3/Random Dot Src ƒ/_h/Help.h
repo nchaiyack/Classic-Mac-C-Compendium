@@ -1,1 +1,4 @@
-/* Help.h */void DoHelp(void);
+/* Help.h
+ */
+
+void DoHelp(void);

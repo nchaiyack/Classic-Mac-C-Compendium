@@ -1,1 +1,188 @@
-########################################################################	Project	:	MacPerl				-	Pretty Perl#	File		:	MacPerl.distr		-	Distribution#	Author	:	Matthias Neeracher#	Started	:	17Aug93								Language	:	Distribute#	Modified	:	11Oct93	MN	§4#					13Oct93	MN	§5#					18Oct93	MN	§6#					25Oct93	MN	4.1.0#					15Dec93	MN	4.1.1b1#					16Nov94	MN	4.1.4b4#					27Dec94	MN	4.1.4b7#					31Dec94	MN	4.1.4#	Last		:	31Dec94#######################################################################STUFFIT OFFCREATOR TEXT McPLTARGET "MacPerl Ä"	Icon¶n	MacPerl									MacPerl.Specifics					MacPerl.Frontend		"MacPerl Help"						"MacPerl Runtime"					MacPerlTest.Script	README.MPW							README.APPL	README								Wishlist								Wishlist.MPW						"Perl Artistic License"		TARGET "MacPerl Ä:MacPerl Extensions"	":MacPerl Extensions:Droplet"TARGET "MacPerl Ä:macscripts"			:macscripts:Å	:Demo:PlainPerl	:Demo:PerlFromAppleScript	:Demo:AppleScriptFromPerl	:Demo:RinaldisTARGET "MacPerl Ä:lib"				AT   0,  50	:lib:macperldb.pl	:lib:abbrev.pl	:lib:assert.pl	:lib:bigfloat.pl	:lib:bigint.pl	:lib:bigrat.pl	:lib:cacheout.pl	:lib:chat2.pl	:lib:CommConnect.pl	:lib:complete.pl	:lib:ctime.pl	:lib:dumpvar.pl	:lib:exceptions.pl	:lib:FAccess.ph	:lib:fastcwd.pl	:lib:FileCopy.pl	:lib:find.pl	:lib:finddepth.pl	:lib:FindFolder.pl	:lib:flush.pl	:lib:getcwd.pl	:lib:getopt.pl	:lib:getopts.pl	:lib:GUSI.ph	:lib:importenv.pl	:lib:look.pl	:lib:macchat.pl	:lib:macftp.pl	:lib:newfind.pl	:lib:newgetopt.pl	:lib:pwd.pl	:lib:shellwords.pl	:lib:StandardFile.pl	:lib:stat.pl	:lib:syslog.pl	:lib:termcap.pl	:lib:timelocal.pl	:lib:validate.plTARGET "MacPerl Ä:t"					AT  0, 100	:t:MacPerlTest	:t:MacPerlTest.Result	:t:MacPerlTest.Out	TARGET "MacPerl Ä:t:base"	:t:base:cond.t	:t:base:if.t	:t:base:lex.t	:t:base:pat.t	:t:base:term.t	TARGET "MacPerl Ä:t:cmd"	:t:cmd:elsif.t	:t:cmd:for.t	:t:cmd:mod.t	:t:cmd:subval.t	:t:cmd:switch.t	:t:cmd:while.t	TARGET "MacPerl Ä:t:comp"	:t:comp:cmdopt.t	:t:comp:cpp.t	:t:comp:decl.t	:t:comp:multiline.t	:t:comp:package.t	:t:comp:script.t	:t:comp:term.t	TARGET "MacPerl Ä:t:io"	:t:io:argv.t	:t:io:dup.t	:t:io:fs.t	:t:io:inplace.t	:t:io:pipe.t	:t:io:print.t	:t:io:tell.t	TARGET "MacPerl Ä:t:lib"	:t:lib:big.t	TARGET "MacPerl Ä:t:mac"	:t:mac:Answer.t	:t:mac:Ask.t	:t:mac:Chat.t	:t:mac:Choose.t	:t:mac:Pick.t	:t:mac:FAccess.t	:t:mac:FindFolder.t	:t:mac:StandardFile.t	:t:mac:CommConnect.t	:t:mac:FileCopy.t	:t:mac:FSSpec.t	TARGET "MacPerl Ä:t:op"	:t:op:append.t	:t:op:array.t	:t:op:auto.t	:t:op:chop.t	:t:op:cond.t	:t:op:dbm.t	:t:op:delete.t	:t:op:do.t	:t:op:each.t	:t:op:eval.t	:t:op:exec.t	:t:op:exp.t	:t:op:flip.t	:t:op:fork.t	:t:op:glob.t	:t:op:goto.t	:t:op:groups.t	:t:op:index.t	:t:op:int.t	:t:op:join.t	:t:op:list.t	:t:op:local.t	:t:op:magic.t	:t:op:mkdir.t	:t:op:oct.t	:t:op:ord.t	:t:op:pack.t	:t:op:pat.t	:t:op:push.t	:t:op:range.t	:t:op:re_tests	:t:op:read.t	:t:op:readdir.t	:t:op:regexp.t	:t:op:repeat.t	:t:op:s.t	:t:op:sleep.t	:t:op:sort.t	:t:op:split.t	:t:op:sprintf.t	:t:op:stat.t	:t:op:study.t	:t:op:substr.t	:t:op:time.t	:t:op:undef.t	:t:op:unshift.t	:t:op:vec.t	:t:op:write.t
+#######################################################################
+#	Project	:	MacPerl				-	Pretty Perl
+#	File		:	MacPerl.distr		-	Distribution
+#	Author	:	Matthias Neeracher
+#	Started	:	17Aug93								Language	:	Distribute
+#	Modified	:	11Oct93	MN	§4
+#					13Oct93	MN	§5
+#					18Oct93	MN	§6
+#					25Oct93	MN	4.1.0
+#					15Dec93	MN	4.1.1b1
+#					16Nov94	MN	4.1.4b4
+#					27Dec94	MN	4.1.4b7
+#					31Dec94	MN	4.1.4
+#	Last		:	31Dec94
+#######################################################################
+
+STUFFIT OFF
+
+CREATOR TEXT McPL
+
+TARGET "MacPerl Ä"
+	Icon¶n
+	MacPerl								
+	MacPerl.Specifics				
+	MacPerl.Frontend	
+	"MacPerl Help"					
+	"MacPerl Runtime"				
+	MacPerlTest.Script
+	README.MPW						
+	README.APPL
+	README							
+	Wishlist							
+	Wishlist.MPW					
+	"Perl Artistic License"		
+
+TARGET "MacPerl Ä:MacPerl Extensions"
+	":MacPerl Extensions:Droplet"
+
+TARGET "MacPerl Ä:macscripts"		
+	:macscripts:Å
+	:Demo:PlainPerl
+	:Demo:PerlFromAppleScript
+	:Demo:AppleScriptFromPerl
+	:Demo:Rinaldis
+
+TARGET "MacPerl Ä:lib"				AT   0,  50
+	:lib:macperldb.pl
+	:lib:abbrev.pl
+	:lib:assert.pl
+	:lib:bigfloat.pl
+	:lib:bigint.pl
+	:lib:bigrat.pl
+	:lib:cacheout.pl
+	:lib:chat2.pl
+	:lib:CommConnect.pl
+	:lib:complete.pl
+	:lib:ctime.pl
+	:lib:dumpvar.pl
+	:lib:exceptions.pl
+	:lib:FAccess.ph
+	:lib:fastcwd.pl
+	:lib:FileCopy.pl
+	:lib:find.pl
+	:lib:finddepth.pl
+	:lib:FindFolder.pl
+	:lib:flush.pl
+	:lib:getcwd.pl
+	:lib:getopt.pl
+	:lib:getopts.pl
+	:lib:GUSI.ph
+	:lib:importenv.pl
+	:lib:look.pl
+	:lib:macchat.pl
+	:lib:macftp.pl
+	:lib:newfind.pl
+	:lib:newgetopt.pl
+	:lib:pwd.pl
+	:lib:shellwords.pl
+	:lib:StandardFile.pl
+	:lib:stat.pl
+	:lib:syslog.pl
+	:lib:termcap.pl
+	:lib:timelocal.pl
+	:lib:validate.pl
+
+TARGET "MacPerl Ä:t"					AT  0, 100
+	:t:MacPerlTest
+	:t:MacPerlTest.Result
+	:t:MacPerlTest.Out
+	
+TARGET "MacPerl Ä:t:base"
+	:t:base:cond.t
+	:t:base:if.t
+	:t:base:lex.t
+	:t:base:pat.t
+	:t:base:term.t
+	
+TARGET "MacPerl Ä:t:cmd"
+	:t:cmd:elsif.t
+	:t:cmd:for.t
+	:t:cmd:mod.t
+	:t:cmd:subval.t
+	:t:cmd:switch.t
+	:t:cmd:while.t
+	
+TARGET "MacPerl Ä:t:comp"
+	:t:comp:cmdopt.t
+	:t:comp:cpp.t
+	:t:comp:decl.t
+	:t:comp:multiline.t
+	:t:comp:package.t
+	:t:comp:script.t
+	:t:comp:term.t
+	
+TARGET "MacPerl Ä:t:io"
+	:t:io:argv.t
+	:t:io:dup.t
+	:t:io:fs.t
+	:t:io:inplace.t
+	:t:io:pipe.t
+	:t:io:print.t
+	:t:io:tell.t
+	
+TARGET "MacPerl Ä:t:lib"
+	:t:lib:big.t
+	
+TARGET "MacPerl Ä:t:mac"
+	:t:mac:Answer.t
+	:t:mac:Ask.t
+	:t:mac:Chat.t
+	:t:mac:Choose.t
+	:t:mac:Pick.t
+	:t:mac:FAccess.t
+	:t:mac:FindFolder.t
+	:t:mac:StandardFile.t
+	:t:mac:CommConnect.t
+	:t:mac:FileCopy.t
+	:t:mac:FSSpec.t
+	
+TARGET "MacPerl Ä:t:op"
+	:t:op:append.t
+	:t:op:array.t
+	:t:op:auto.t
+	:t:op:chop.t
+	:t:op:cond.t
+	:t:op:dbm.t
+	:t:op:delete.t
+	:t:op:do.t
+	:t:op:each.t
+	:t:op:eval.t
+	:t:op:exec.t
+	:t:op:exp.t
+	:t:op:flip.t
+	:t:op:fork.t
+	:t:op:glob.t
+	:t:op:goto.t
+	:t:op:groups.t
+	:t:op:index.t
+	:t:op:int.t
+	:t:op:join.t
+	:t:op:list.t
+	:t:op:local.t
+	:t:op:magic.t
+	:t:op:mkdir.t
+	:t:op:oct.t
+	:t:op:ord.t
+	:t:op:pack.t
+	:t:op:pat.t
+	:t:op:push.t
+	:t:op:range.t
+	:t:op:re_tests
+	:t:op:read.t
+	:t:op:readdir.t
+	:t:op:regexp.t
+	:t:op:repeat.t
+	:t:op:s.t
+	:t:op:sleep.t
+	:t:op:sort.t
+	:t:op:split.t
+	:t:op:sprintf.t
+	:t:op:stat.t
+	:t:op:study.t
+	:t:op:substr.t
+	:t:op:time.t
+	:t:op:undef.t
+	:t:op:unshift.t
+	:t:op:vec.t
+	:t:op:write.t

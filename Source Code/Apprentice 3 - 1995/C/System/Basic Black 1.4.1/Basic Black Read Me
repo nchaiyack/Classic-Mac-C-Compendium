@@ -1,1 +1,194 @@
-Ê*** What's it cost? ***Basic Black is not in the Public Domain, but it is free of charge. Please read the file "Basic Black License" for licensing and distribution information.Basic Black is provided Òas isÓ and without any express or implied warranties, including, without limitation, the implied warranties of merchantability or fitness for a particular purpose. I shall not be held liable for any damages whatsoever arising from the use, mis-use, or inability to use this Package.*** What is Basic Black? ***Basic Black is a simple, incredibly efficient screen saver. It doesn't have whizbang graphics, and thus lets everything blast along at full speed. It's incredibly small - it takes up only four kilobytes of memory after it's loaded.If you want, Basic Black will bounce an analog clock around your main screen so you'll know your machine is still on. By default, Basic Black simply blacks out your screen. A lot of people like it this way.If your monitor is Energy-Star compatible, then I recommend that you run Apple's Monitor Energy Saver alongside Basic Black. Eventually, I hope to have Basic Black support EnergyStar monitors directly, but right now they work fine alongside each other.*** How does Basic Black work? ***If you don't type anything or move your mouse for a period of time, your screen will black out, saving wear and tear on your monitor. Also, if you move your mouse to the upper- right corner of your main screen (or whatever corner you have defined), the screen will black out almost immediately.To wake up your screen, tap a key or move the mouse. Key presses and mouse clicks are NOT passed through to the frontmost application.If you're doing something that requires staring at the screen for long periods of time, and you don't want the screen to black out at all, just keep the mouse in the bottom-right corner of your main screen (or, again, whatever corner you've defined).*** How do I install Basic Black? ***Just drag the Basic Black file to your system folder, and reboot.ÊIf your Mac is equipped with a 68020 or newer CPU, then use the control panel "Basic Black/020". Otherwise, use the control panel "Basic Black". They are identical, except that "Basic Black/020" has been recompiled to make use of 68020 instructions. Don't use both together. When in doubt, use the regular version.Make sure to disable screen savers like "Darkside of the Mac" or "After Dark", as running either alongside Basic Black will cause problems and waste processing power. (Don't disable EnergySaver, though - we still want that running!)*** Configuration ***Basic Black is easily configurable. Just open the Basic Black control panel that lives in your Control Panels folder. It looks something like this:ÊSet it up to your liking. There are several things you can change:You can set your Sleep Now and Stay Awake corners to your liking by clicking on the appropriate corners of the small boxes on the right side of the control panel window.You can set the amount of idle time that Basic Black will wait before kicking in, and you can set the number of seconds between screen refreshes. (Seconds Between Refreshes is the interval between the times when Basic Black blacks out the screen, which it does periodically when the screen is asleep. If the analog clock is turned on, it redraws in a different place every time the screen is refreshed.)The "Basic Black On" check box controls whether Basic Black will make the screen fall asleep or not.The "Startup Icon" check box controls whether or not Basic Black will show it's startup icon when we boot up.The "Bouncing Clock" check box determines whether or not a bouncing analog clock will appear when the screen falls asleep.The "Fade To White" checkbox is mainly for Powerbook users, who need to have their screens fade to white, rather than black.The "Zero Menubar" check box should normally be off. Use it only if you have an older System Extension or Control Panel that doesn't respect the 'SAVR' Gestalt selector. Basically, you only need to use this if Basic Black doesn't stop another extension from drawing in your menu bar. It will be obvious to you if you need it.The "Patches in effect after restart" area controls what patches load during startup. You really only need to check these boxes if you find things consistently drawing on your screen, even when it's asleep. The various erase patches forcably stop things from erasing portions of the screen. The DrawMenuBar patch keeps things from drawing the menu bar while we're asleep. The InitCursor patch keeps things from showing their cursors while we're asleep. It will probably be obvious to you if you need any of these.It's likely that you'll need the InitCursor patch, but use the others only as necessary.When you change a setting (other than one of the optional patches), it goes into effect immediately. Note, however, that under systems 6.0.3 or earlier, you must reboot for any changes to take effect.*** There's stuff drawing on the screen! What's the deal? ***Basic Black operates with one goal, which is to save your screen from burn-in. Some things will inevitably come through. The only way around this is for me to patch half the world, and that 1) slows things down and 2) makes us less compatible with everything else. The idea here is to keep the screen mostly black, most of the time. This prevents burn-in, and keeps things simple enough so that we have a truly tiny memory footprint and take a bare minimum of processor time.*** Why bother with this? ***There are lots of screen savers out there. Is this one any different?What makes Basic Black unique are its small size and simplicity. Basic Black takes up next to no CPU time when it runs, and it only runs during your machine's idle time. Also, Basic Black will work on any Macintosh, and will run under both System 6 and System 7. (Probably earlier versions of the system software, too, but I haven't tested this. Thoeretically it will run on a Mac 128.) It also runs on PowerMacs, although it is not a native PowerMac system extension. I hope to make Basic Black PPC-native at some point, but in the event that someone else makes a free PowerMac-native screen saver before Basic Black is ported, I would recommend that you run it instead of Basic Black. In any event, I've heard from users running Basic Black on their PowerMacs who have had no problems at all.My view of screensavers is that they should be small, unobtrusive, and responsive. Basic Black is all three. If you MUST have flying toasters and QuickTimeª movies available as a part of your screen saver, then there are other free screen savers out there that will better satisfy your requirements.If you want a full-featured application-based screen saver (that requires System 7), try out Darkside of the Mac. It's free and, as of version 4.0, it will run After Darkª modules. (The Flying Toasters don't come with it, however.)For myself, I prefer Basic Black, because it's simply more responsive and less of a drain on system resources. Of course, I also wrote it, which has a lot to do with it... Probably a whole lot to do with it, as a matter of fact. Don't take my word for it, though. Try it. Use it for a while. It may grow on you.*** Use the Source, Luke! ***The source code to Basic Black is now included with the package once more. As long as you follow the Basic Black license agreement included with this package, do what you like. Learn and enjoy!Note that to build the cdev project, you will need to supply the object-oriented cdev files provided with Symantec's Think C compiler, or a suitable equivalent.*** For more info or to report bugs... ***If you come across any bugs, you can get to me at:Internet:  mason@acheron.middleboro.ma.us (preferred)  mason@cis.umassd.edu  (next preferred)FidoNet:  1:109/370.6U.S. Mail:  Mason L. Bliss  18 Beach st.  Middleboro MA 02346  USAIf you email me about Basic Black, I'll put you on my mailing list, so you'll receive new versions as they come out, and stuff like that. I occasionally poll my mailing list for new ideas and suggestions for how they'd like to see me implement things in new versions of Basic Black.If you have any questions, and you email me, expect a response back within (at the most) two days.If you want to beta test new versions of Basic Black, and thus get the new stuff before anyone else, then email me.If you don't have net access, but you want the latest version, send me a self-addressed stamped envelope and a disk, and I'll send you the latest version of Basic Black.Enjoy it, and send me any suggestions you have for improvements.  - Mason*** Beta Tester Appreciation Section ***Many thanks to my beta testers, who never cease in their unending quest to find obscure and bizarre bugs. Basic Black wouldn't be what it is without them.Currently, they are: rickard@softlab.se, cscpsc@lux.latrobe.edu.au, icrew@cory.eecs.berkeley.edu, tony_doan@macmail.ucsc.edu, jgarner@seattleu.edu, keens@pitvax.xx.rmit.edu.au, brendan@dorbooks.demon.co.uk, logo@mailhost.uni-koblenz.de, jpk@pop.knoware.nl, nassy@umich.edu, oberst@gov.nt.ca, robert@rp.cam.org, lottsim@aol.com, etolks@hisoy.etn.ericsson.se, jeff@trg.saic.com.If you should be on the list and aren't, mail me. If I've got your address wrong, mail me. (I'll include names shortly. I lost my mailing list database, so all I have right at the moment are raw addresses. This will change shortly.)*** Coming Next... ***Balloon help... Native PowerMac support... EnergyStar support... Still more efficiency...Notes:	After Dark is a trademark of Berkeley Systems, Inc.	Darkside of the Mac is ©1993 by Tom Dowdy. QuickTime is a trademark of Apple Computer, Inc.
+
+Ê
+
+
+
+
+
+
+
+*** What's it cost? ***
+
+Basic Black is not in the Public Domain, but it is free of charge. Please read the file "Basic Black License" for licensing and distribution information.
+
+Basic Black is provided Òas isÓ and without any express or implied warranties, including, without limitation, the implied warranties of merchantability or fitness for a particular purpose. I shall not be held liable for any damages whatsoever arising from the use, mis-use, or inability to use this Package.
+
+
+
+*** What is Basic Black? ***
+
+Basic Black is a simple, incredibly efficient screen saver. It doesn't have whizbang graphics, and thus lets everything blast along at full speed. It's incredibly small - it takes up only four kilobytes of memory after it's loaded.
+
+If you want, Basic Black will bounce an analog clock around your main screen so you'll know your machine is still on. By default, Basic Black simply blacks out your screen. A lot of people like it this way.
+
+If your monitor is Energy-Star compatible, then I recommend that you run Apple's Monitor Energy Saver alongside Basic Black. Eventually, I hope to have Basic Black support EnergyStar monitors directly, but right now they work fine alongside each other.
+
+
+
+*** How does Basic Black work? ***
+
+If you don't type anything or move your mouse for a period of time, your screen will black out, saving wear and tear on your monitor. Also, if you move your mouse to the upper- right corner of your main screen (or whatever corner you have defined), the screen will black out almost immediately.
+
+To wake up your screen, tap a key or move the mouse. Key presses and mouse clicks are NOT passed through to the frontmost application.
+
+If you're doing something that requires staring at the screen for long periods of time, and you don't want the screen to black out at all, just keep the mouse in the bottom-right corner of your main screen (or, again, whatever corner you've defined).
+
+
+
+*** How do I install Basic Black? ***
+
+Just drag the Basic Black file to your system folder, and reboot.
+
+Ê
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+If your Mac is equipped with a 68020 or newer CPU, then use the control panel "Basic Black/020". Otherwise, use the control panel "Basic Black". They are identical, except that "Basic Black/020" has been recompiled to make use of 68020 instructions. Don't use both together. When in doubt, use the regular version.
+
+Make sure to disable screen savers like "Darkside of the Mac" or "After Dark", as running either alongside Basic Black will cause problems and waste processing power. (Don't disable EnergySaver, though - we still want that running!)
+
+
+
+*** Configuration ***
+
+Basic Black is easily configurable. Just open the Basic Black control panel that lives in your Control Panels folder. It looks something like this:
+
+Ê
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Set it up to your liking. There are several things you can change:
+
+You can set your Sleep Now and Stay Awake corners to your liking by clicking on the appropriate corners of the small boxes on the right side of the control panel window.
+
+You can set the amount of idle time that Basic Black will wait before kicking in, and you can set the number of seconds between screen refreshes. (Seconds Between Refreshes is the interval between the times when Basic Black blacks out the screen, which it does periodically when the screen is asleep. If the analog clock is turned on, it redraws in a different place every time the screen is refreshed.)
+
+The "Basic Black On" check box controls whether Basic Black will make the screen fall asleep or not.
+
+The "Startup Icon" check box controls whether or not Basic Black will show it's startup icon when we boot up.
+
+The "Bouncing Clock" check box determines whether or not a bouncing analog clock will appear when the screen falls asleep.
+
+The "Fade To White" checkbox is mainly for Powerbook users, who need to have their screens fade to white, rather than black.
+
+The "Zero Menubar" check box should normally be off. Use it only if you have an older System Extension or Control Panel that doesn't respect the 'SAVR' Gestalt selector. Basically, you only need to use this if Basic Black doesn't stop another extension from drawing in your menu bar. It will be obvious to you if you need it.
+
+The "Patches in effect after restart" area controls what patches load during startup. You really only need to check these boxes if you find things consistently drawing on your screen, even when it's asleep. The various erase patches forcably stop things from erasing portions of the screen. The DrawMenuBar patch keeps things from drawing the menu bar while we're asleep. The InitCursor patch keeps things from showing their cursors while we're asleep. It will probably be obvious to you if you need any of these.
+
+It's likely that you'll need the InitCursor patch, but use the others only as necessary.
+
+When you change a setting (other than one of the optional patches), it goes into effect immediately. Note, however, that under systems 6.0.3 or earlier, you must reboot for any changes to take effect.
+
+
+
+*** There's stuff drawing on the screen! What's the deal? ***
+
+Basic Black operates with one goal, which is to save your screen from burn-in. Some things will inevitably come through. The only way around this is for me to patch half the world, and that 1) slows things down and 2) makes us less compatible with everything else. The idea here is to keep the screen mostly black, most of the time. This prevents burn-in, and keeps things simple enough so that we have a truly tiny memory footprint and take a bare minimum of processor time.
+
+
+
+*** Why bother with this? ***
+
+There are lots of screen savers out there. Is this one any different?
+
+What makes Basic Black unique are its small size and simplicity. Basic Black takes up next to no CPU time when it runs, and it only runs during your machine's idle time. Also, Basic Black will work on any Macintosh, and will run under both System 6 and System 7. (Probably earlier versions of the system software, too, but I haven't tested this. Thoeretically it will run on a Mac 128.) It also runs on PowerMacs, although it is not a native PowerMac system extension. I hope to make Basic Black PPC-native at some point, but in the event that someone else makes a free PowerMac-native screen saver before Basic Black is ported, I would recommend that you run it instead of Basic Black. In any event, I've heard from users running Basic Black on their PowerMacs who have had no problems at all.
+
+My view of screensavers is that they should be small, unobtrusive, and responsive. Basic Black is all three. If you MUST have flying toasters and QuickTimeª movies available as a part of your screen saver, then there are other free screen savers out there that will better satisfy your requirements.
+
+If you want a full-featured application-based screen saver (that requires System 7), try out Darkside of the Mac. It's free and, as of version 4.0, it will run After Darkª modules. (The Flying Toasters don't come with it, however.)
+
+For myself, I prefer Basic Black, because it's simply more responsive and less of a drain on system resources. Of course, I also wrote it, which has a lot to do with it... Probably a whole lot to do with it, as a matter of fact. Don't take my word for it, though. Try it. Use it for a while. It may grow on you.
+
+
+
+*** Use the Source, Luke! ***
+
+The source code to Basic Black is now included with the package once more. As long as you follow the Basic Black license agreement included with this package, do what you like. Learn and enjoy!
+
+Note that to build the cdev project, you will need to supply the object-oriented cdev files provided with Symantec's Think C compiler, or a suitable equivalent.
+
+
+
+*** For more info or to report bugs... ***
+
+If you come across any bugs, you can get to me at:
+
+Internet:
+  mason@acheron.middleboro.ma.us (preferred)
+  mason@cis.umassd.edu  (next preferred)
+
+FidoNet:
+  1:109/370.6
+
+U.S. Mail:
+  Mason L. Bliss
+  18 Beach st.
+  Middleboro MA 02346
+  USA
+
+If you email me about Basic Black, I'll put you on my mailing list, so you'll receive new versions as they come out, and stuff like that. I occasionally poll my mailing list for new ideas and suggestions for how they'd like to see me implement things in new versions of Basic Black.
+
+If you have any questions, and you email me, expect a response back within (at the most) two days.
+
+If you want to beta test new versions of Basic Black, and thus get the new stuff before anyone else, then email me.
+
+If you don't have net access, but you want the latest version, send me a self-addressed stamped envelope and a disk, and I'll send you the latest version of Basic Black.
+
+Enjoy it, and send me any suggestions you have for improvements.
+
+  - Mason
+
+
+
+*** Beta Tester Appreciation Section ***
+
+Many thanks to my beta testers, who never cease in their unending quest to find obscure and bizarre bugs. Basic Black wouldn't be what it is without them.
+
+Currently, they are: rickard@softlab.se, cscpsc@lux.latrobe.edu.au, icrew@cory.eecs.berkeley.edu, tony_doan@macmail.ucsc.edu, jgarner@seattleu.edu, keens@pitvax.xx.rmit.edu.au, brendan@dorbooks.demon.co.uk, logo@mailhost.uni-koblenz.de, jpk@pop.knoware.nl, nassy@umich.edu, oberst@gov.nt.ca, robert@rp.cam.org, lottsim@aol.com, etolks@hisoy.etn.ericsson.se, jeff@trg.saic.com.
+
+If you should be on the list and aren't, mail me. If I've got your address wrong, mail me. (I'll include names shortly. I lost my mailing list database, so all I have right at the moment are raw addresses. This will change shortly.)
+
+
+
+*** Coming Next... ***
+
+Balloon help... Native PowerMac support... EnergyStar support... Still more efficiency...
+
+
+
+Notes:
+	After Dark is a trademark of Berkeley Systems, Inc.
+	Darkside of the Mac is ©1993 by Tom Dowdy.
+ QuickTime is a trademark of Apple Computer, Inc.

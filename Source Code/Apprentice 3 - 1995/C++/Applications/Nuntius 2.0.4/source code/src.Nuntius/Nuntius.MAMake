@@ -1,1 +1,1268 @@
-#********************************************************************************#																																								*#	File:			Nuntius.MAMake																			 								*#																																								*#	Description:	Makefile for Nuntius.																						*#																																								*#																																								*#********************************************************************************# Taget fra DrawShapes.MAMake#---------------------------------------------------------------------------------------------------#	List here the Application's NameAppName = NuntiusOtherCPlusOptions = -i {SrcApp}MacTCP_Stuff:#---------------------------------------------------------------------------------------------------#	Name any other object files to link in# OtherLinkFiles = ¶#	"{ObjApp}UBetterFeedbackCmd.p.o"OtherLinkFiles = ¶		"{ObjApp}UThread.a.o" ¶		"{ObjApp}MyDontDeadStrip.cp.o" ¶		"{ObjApp}dnr.c.o" ¶#MakeAutoMakeObj+ ¶		"{ObjApp}ExitToShellPatch.cp.o" ¶		"{ObjApp}FastBits.cp.o" ¶		"{ObjApp}FileTools.cp.o" ¶		"{ObjApp}FontTools.cp.o" ¶		"{ObjApp}ISO2022Conversion.cp.o" ¶		"{ObjApp}MNuntius.cp.o" ¶		"{ObjApp}NetAsciiTools.cp.o" ¶		"{ObjApp}PreferencesList.cp.o" ¶		"{ObjApp}ProcessTools.cp.o" ¶		"{ObjApp}StreamTools.cp.o" ¶		"{ObjApp}TCPfprintf.cp.o" ¶		"{ObjApp}TestCode.cp.o" ¶		"{ObjApp}Tools.cp.o" ¶		"{ObjApp}UAppleScriptCmds.cp.o" ¶		"{ObjApp}UArticle.cp.o" ¶		"{ObjApp}UArticleCache.cp.o" ¶		"{ObjApp}UArticleCmds.cp.o" ¶		"{ObjApp}UArticleEntry.cp.o" ¶		"{ObjApp}UArticleListView.cp.o" ¶		"{ObjApp}UArticleManageView.cp.o" ¶		"{ObjApp}UArticlePrintHandler.cp.o" ¶		"{ObjApp}UArticleStatus.cp.o" ¶		"{ObjApp}UArticleTextCache.cp.o" ¶		"{ObjApp}UArticleView.cp.o" ¶		"{ObjApp}UArticleViewCache.cp.o" ¶		"{ObjApp}UAsyncFile.cp.o" ¶		"{ObjApp}UBinariesCmds.cp.o" ¶		"{ObjApp}UBinDecoders.cp.o" ¶		"{ObjApp}UBufferedFileStream.cp.o" ¶		"{ObjApp}UDiscBase.cp.o" ¶		"{ObjApp}UDiscListCmds.cp.o" ¶		"{ObjApp}UDiscListView.cp.o" ¶		"{ObjApp}UDynDynArray.cp.o" ¶		"{ObjApp}UFakeNntp.cp.o" ¶		"{ObjApp}UFatalError.cp.o" ¶		"{ObjApp}UFolderSelectView.cp.o" ¶		"{ObjApp}UGroupDoc.cp.o" ¶		"{ObjApp}UGroupDocCmds.cp.o" ¶		"{ObjApp}UGroupList.cp.o" ¶		"{ObjApp}UGroupListCmds.cp.o" ¶		"{ObjApp}UGroupListDoc.cp.o" ¶		"{ObjApp}UGroupListView.cp.o" ¶		"{ObjApp}UGroupTree.cp.o" ¶		"{ObjApp}UGroupTreeCmds.cp.o" ¶		"{ObjApp}UGroupTreeDoc.cp.o" ¶		"{ObjApp}UGroupTreeView.cp.o" ¶		"{ObjApp}UGroupViewCmds.cp.o" ¶		"{ObjApp}UHashTable.cp.o" ¶		"{ObjApp}UHeaderFetcher.cp.o" ¶		"{ObjApp}UHeaderList.cp.o" ¶		"{ObjApp}UIDDictionary.cp.o" ¶		"{ObjApp}UMacTcp.cp.o" ¶		"{ObjApp}UNavigatorView.cp.o" ¶		"{ObjApp}UNetAsciiProtocol.cp.o" ¶		"{ObjApp}UNewsAppl.cp.o" ¶		"{ObjApp}UNewsApplCmds.cp.o" ¶		"{ObjApp}UNntp.cp.o" ¶		"{ObjApp}UObjectCache.cp.o" ¶		"{ObjApp}UOffsetLengthList.cp.o" ¶		"{ObjApp}UPassword.cp.o" ¶		"{ObjApp}UPeriodic.cp.o" ¶		"{ObjApp}UPostArticleCmds.cp.o" ¶		"{ObjApp}UPostArticleView.cp.o" ¶		"{ObjApp}UPreferencesView.cp.o" ¶		"{ObjApp}UPrefsDatabase.cp.o" ¶		"{ObjApp}UPrefsFileMgr.cp.o" ¶		"{ObjApp}UProgress.cp.o" ¶		"{ObjApp}UProgressCache.cp.o" ¶		"{ObjApp}URealNntp.cp.o" ¶		"{ObjApp}URowSelection.cp.o" ¶		"{ObjApp}UStructureInspectors.cp.o" ¶		"{ObjApp}UTextScroller.cp.o" ¶		"{ObjApp}UTextView.cp.o" ¶		"{ObjApp}UThread.a.cp.o" ¶		"{ObjApp}UThread.cp.o" ¶		"{ObjApp}UThreadApple.cp.o" ¶		"{ObjApp}UThreadLongJmp.cp.o" ¶		"{ObjApp}UThreadStackSwap.cp.o" ¶		"{ObjApp}UTriangleControl.cp.o" ¶		"{ObjApp}UViewListView.cp.o" ¶		"{ObjApp}ViewTools.cp.o" ¶#MakeAutoMakeObj- ¶#last line#---------------------------------------------------------------------------------------------------#	Express any additional dependencies for separate compilations.#	Include dependencies for the MacApp and Building block interfaces#	if you are dependent on them# "{ObjApp}UBetterFeedbackCmd.p.o"	Ä ¶#							"{SrcApp}UBetterFeedbackCmd.inc1.p" ¶#							{MacAppIntf} ¶#							{BuildingBlocksIntf}#MakeAutoMakeDep+ ¶"{ObjApp}ExitToShellPatch.cp.o" Ä ¶		"{SrcApp}ExitToShellPatch.cp"  ¶		"{SrcApp}ExitToShellPatch.h" "{ObjApp}FastBits.cp.o" Ä ¶		"{SrcApp}FastBits.cp"  ¶		"{SrcApp}FastBits.h"  ¶		"{SrcApp}Tools.h" "{ObjApp}FileTools.cp.o" Ä ¶		"{SrcApp}FileTools.cp"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}UASyncFile.h"  ¶		"{SrcApp}Tools.h" "{ObjApp}FontTools.cp.o" Ä ¶		"{SrcApp}FontTools.cp"  ¶		"{SrcApp}FontTools.h" "{ObjApp}ISO2022Conversion.cp.o" Ä ¶		"{SrcApp}ISO2022Conversion.cp"  ¶		"{SrcApp}ISO2022Conversion.h"  ¶		"{SrcApp}UDynDynArray.h" "{ObjApp}MNuntius.cp.o" Ä ¶		"{SrcApp}MNuntius.cp"  ¶		"{SrcApp}UNewsAppl.h"  ¶		"{SrcApp}UMacTcp.h"  ¶		"{SrcApp}UNntp.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}FastBits.h"  ¶		"{SrcApp}MyDontDeadStrip.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UFatalError.h"  ¶		"{SrcApp}ExitToShellPatch.h"  ¶		"{SrcApp}MenuGlobals.h" "{ObjApp}NetAsciiTools.cp.o" Ä ¶		"{SrcApp}NetAsciiTools.cp"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UPrefsDatabase.h" "{ObjApp}PreferencesList.cp.o" Ä ¶		"{SrcApp}PreferencesList.cp" "{ObjApp}ProcessTools.cp.o" Ä ¶		"{SrcApp}ProcessTools.cp"  ¶		"{SrcApp}ProcessTools.h"  ¶		"{SrcApp}UAsyncFile.h" "{ObjApp}StreamTools.cp.o" Ä ¶		"{SrcApp}StreamTools.cp"  ¶		"{SrcApp}StreamTools.h" "{ObjApp}TCPfprintf.cp.o" Ä ¶		"{SrcApp}TCPfprintf.cp" "{ObjApp}TestCode.cp.o" Ä ¶		"{SrcApp}TestCode.cp"  ¶		"{SrcApp}TestCode.h"  ¶		"{SrcApp}UThread.h" "{ObjApp}Tools.cp.o" Ä ¶		"{SrcApp}Tools.cp"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}UFatalError.h" "{ObjApp}UAppleScriptCmds.cp.o" Ä ¶		"{SrcApp}UAppleScriptCmds.cp"  ¶		"{SrcApp}UAppleScriptCmds.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UArticleListView.h"  ¶		"{SrcApp}UViewListView.h"  ¶		"{SrcApp}UArticleStatus.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UArticle.h"  ¶		"{SrcApp}UArticleCache.h"  ¶		"{SrcApp}UGroupDoc.h"  ¶		"{SrcApp}ProcessTools.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}UPrefsFileMgr.h"  ¶		"{SrcApp}UGroupDocCmds.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}UASyncFile.h"  ¶		"{SrcApp}UNewsAppl.h" "{ObjApp}UArticle.cp.o" Ä ¶		"{SrcApp}UArticle.cp"  ¶		"{SrcApp}UArticle.h"  ¶		"{SrcApp}UArticleTextCache.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}UOffsetLengthList.h"  ¶		"{SrcApp}ISO2022Conversion.h"  ¶		"{SrcApp}UDynDynArray.h"  ¶		"{SrcApp}Tools.h" "{ObjApp}UArticleCache.cp.o" Ä ¶		"{SrcApp}UArticleCache.cp"  ¶		"{SrcApp}UArticleCache.h"  ¶		"{SrcApp}UArticle.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UFatalError.h" "{ObjApp}UArticleCmds.cp.o" Ä ¶		"{SrcApp}UArticleCmds.cp"  ¶		"{SrcApp}UArticleCmds.h"  ¶		"{SrcApp}UArticleStatus.h"  ¶		"{SrcApp}UArticleListView.h"  ¶		"{SrcApp}UViewListView.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}UASyncFile.h"  ¶		"{SrcApp}UGroupDoc.h"  ¶		"{SrcApp}UPrefsDatabase.h" "{ObjApp}UArticleEntry.cp.o" Ä ¶		"{SrcApp}UArticleEntry.cp"  ¶		"{SrcApp}UArticleEntry.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UHeaderFetcher.h"  ¶		"{SrcApp}UIDDictionary.h"  ¶		"{SrcApp}NetAsciiTools.h" "{ObjApp}UArticleListView.cp.o" Ä ¶		"{SrcApp}UArticleListView.cp"  ¶		"{SrcApp}UArticleListView.h"  ¶		"{SrcApp}UViewListView.h"  ¶		"{SrcApp}UArticleStatus.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UArticlePrintHandler.h"  ¶		"{SrcApp}UArticleManageView.h"  ¶		"{SrcApp}UArticleView.h"  ¶		"{SrcApp}UTextView.h"  ¶		"{SrcApp}UArticleCache.h"  ¶		"{SrcApp}UArticleViewCache.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}UArticle.h"  ¶		"{SrcApp}UArticleEntry.h"  ¶		"{SrcApp}UDiscBase.h"  ¶		"{SrcApp}UDiscListView.h"  ¶		"{SrcApp}UArticleCmds.h"  ¶		"{SrcApp}UBinariesCmds.h"  ¶		"{SrcApp}UAppleScriptCmds.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}UGroupDoc.h"  ¶		"{SrcApp}UNewsAppl.h"  ¶		"{SrcApp}UPostArticleCmds.h"  ¶		"{SrcApp}UPostArticleView.h"  ¶		"{SrcApp}UTextScroller.h"  ¶		"{SrcApp}UNavigatorView.h"  ¶		"{SrcApp}FastBits.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UFatalError.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}UDynDynArray.h" "{ObjApp}UArticleManageView.cp.o" Ä ¶		"{SrcApp}UArticleManageView.cp"  ¶		"{SrcApp}UArticleManageView.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UArticleView.h"  ¶		"{SrcApp}UTextView.h"  ¶		"{SrcApp}UArticleCache.h"  ¶		"{SrcApp}UArticleViewCache.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}UArticleEntry.h"  ¶		"{SrcApp}UTriangleControl.h"  ¶		"{SrcApp}UGroupDoc.h"  ¶		"{SrcApp}UArticleStatus.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}Tools.h" "{ObjApp}UArticlePrintHandler.cp.o" Ä ¶		"{SrcApp}UArticlePrintHandler.cp"  ¶		"{SrcApp}UArticlePrintHandler.h"  ¶		"{SrcApp}UArticleListView.h"  ¶		"{SrcApp}UViewListView.h"  ¶		"{SrcApp}UArticleStatus.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}Tools.h" "{ObjApp}UArticleStatus.cp.o" Ä ¶		"{SrcApp}UArticleStatus.cp"  ¶		"{SrcApp}UArticleStatus.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}StreamTools.h" "{ObjApp}UArticleTextCache.cp.o" Ä ¶		"{SrcApp}UArticleTextCache.cp"  ¶		"{SrcApp}UArticleTextCache.h"  ¶		"{SrcApp}UNntp.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}UGroupDoc.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}Tools.h" "{ObjApp}UArticleView.cp.o" Ä ¶		"{SrcApp}UArticleView.cp"  ¶		"{SrcApp}UArticleView.h"  ¶		"{SrcApp}UTextView.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UArticleStatus.h"  ¶		"{SrcApp}UArticle.h"  ¶		"{SrcApp}UArticleEntry.h"  ¶		"{SrcApp}UArticleCache.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}UGroupDoc.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}ViewTools.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}UAppleScriptCmds.h" "{ObjApp}UArticleViewCache.cp.o" Ä ¶		"{SrcApp}UArticleViewCache.cp"  ¶		"{SrcApp}UArticleViewCache.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}UArticleView.h"  ¶		"{SrcApp}UTextView.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UArticleManageView.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}ViewTools.h"  ¶		"{SrcApp}UPrefsDatabase.h" "{ObjApp}UAsyncFile.cp.o" Ä ¶		"{SrcApp}UAsyncFile.cp"  ¶		"{SrcApp}UASyncFile.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}ExitToShellPatch.h" "{ObjApp}UBinariesCmds.cp.o" Ä ¶		"{SrcApp}UBinariesCmds.cp"  ¶		"{SrcApp}UBinariesCmds.h"  ¶		"{SrcApp}UBinDecoders.h"  ¶		"{SrcApp}UArticleCache.h"  ¶		"{SrcApp}UArticle.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}UProgress.h"  ¶		"{SrcApp}UGroupDoc.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UAsyncFile.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}ProcessTools.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}UDynDynArray.h" "{ObjApp}UBinDecoders.cp.o" Ä ¶		"{SrcApp}UBinDecoders.cp"  ¶		"{SrcApp}UBinDecoders.h"  ¶		"{SrcApp}UAsyncFile.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UPrefsDatabase.h" "{ObjApp}UBufferedFileStream.cp.o" Ä ¶		"{SrcApp}UBufferedFileStream.cp"  ¶		"{SrcApp}UBufferedFileStream.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}Tools.h" "{ObjApp}UDiscBase.cp.o" Ä ¶		"{SrcApp}UDiscBase.cp"  ¶		"{SrcApp}UDiscBase.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}StreamTools.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}UIDDictionary.h"  ¶		"{SrcApp}UArticleEntry.h"  ¶		"{SrcApp}UPrefsDatabase.h" "{ObjApp}UDiscListCmds.cp.o" Ä ¶		"{SrcApp}UDiscListCmds.cp"  ¶		"{SrcApp}UDiscListCmds.h"  ¶		"{SrcApp}UArticleListView.h"  ¶		"{SrcApp}UViewListView.h"  ¶		"{SrcApp}UArticleStatus.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UArticleViewCache.h"  ¶		"{SrcApp}UObjectCache.h" "{ObjApp}UDiscListView.cp.o" Ä ¶		"{SrcApp}UDiscListView.cp"  ¶		"{SrcApp}UDiscListView.h"  ¶		"{SrcApp}UArticleStatus.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UDiscBase.h"  ¶		"{SrcApp}UArticleEntry.h"  ¶		"{SrcApp}UDiscListCmds.h"  ¶		"{SrcApp}UBinariesCmds.h"  ¶		"{SrcApp}UPostArticleCmds.h"  ¶		"{SrcApp}UPostArticleView.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}UNewsAppl.h"  ¶		"{SrcApp}UGroupDoc.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}URowSelection.h"  ¶		"{SrcApp}UTextScroller.h"  ¶		"{SrcApp}ViewTools.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UDynDynArray.h"  ¶		"{SrcApp}MenuGlobals.h" "{ObjApp}UDynDynArray.cp.o" Ä ¶		"{SrcApp}UDynDynArray.cp"  ¶		"{SrcApp}UDynDynArray.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}StreamTools.h" "{ObjApp}UFakeNntp.cp.o" Ä ¶		"{SrcApp}UFakeNntp.cp"  ¶		"{SrcApp}UFakeNntp.h"  ¶		"{SrcApp}UNntp.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}UProgress.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}UAsyncFile.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}UPassword.h"  ¶		"{SrcApp}UThread.h" "{ObjApp}UFatalError.cp.o" Ä ¶		"{SrcApp}UFatalError.cp"  ¶		"{SrcApp}UFatalError.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}ExitToShellPatch.h"  ¶		"{SrcApp}UPrefsDatabase.h" "{ObjApp}UFolderSelectView.cp.o" Ä ¶		"{SrcApp}UFolderSelectView.cp"  ¶		"{SrcApp}UFolderSelectView.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UASyncFile.h"  ¶		"{SrcApp}UPrefsDatabase.h" "{ObjApp}UGroupDoc.cp.o" Ä ¶		"{SrcApp}UGroupDoc.cp"  ¶		"{SrcApp}UGroupDoc.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}UDiscListView.h"  ¶		"{SrcApp}UArticleStatus.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UDiscBase.h"  ¶		"{SrcApp}UGroupDocCmds.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}UNewsAppl.h"  ¶		"{SrcApp}StreamTools.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}UBufferedFileStream.h"  ¶		"{SrcApp}UAsyncFile.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}FileTools.h" "{ObjApp}UGroupDocCmds.cp.o" Ä ¶		"{SrcApp}UGroupDocCmds.cp"  ¶		"{SrcApp}UGroupDocCmds.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}UNewsAppl.h"  ¶		"{SrcApp}UNntp.h"  ¶		"{SrcApp}UProgress.h"  ¶		"{SrcApp}UGroupDoc.h"  ¶		"{SrcApp}UDiscBase.h"  ¶		"{SrcApp}UDiscListView.h"  ¶		"{SrcApp}UArticleStatus.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UGroupTree.h"  ¶		"{SrcApp}UHeaderFetcher.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}UPrefsFileMgr.h"  ¶		"{SrcApp}UPrefsDatabase.h" "{ObjApp}UGroupList.cp.o" Ä ¶		"{SrcApp}UGroupList.cp"  ¶		"{SrcApp}UGroupList.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}StreamTools.h" "{ObjApp}UGroupListCmds.cp.o" Ä ¶		"{SrcApp}UGroupListCmds.cp"  ¶		"{SrcApp}UGroupListCmds.h"  ¶		"{SrcApp}UGroupViewCmds.h"  ¶		"{SrcApp}UPeriodic.h"  ¶		"{SrcApp}UGroupListView.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UGroupList.h"  ¶		"{SrcApp}UGroupListDoc.h"  ¶		"{SrcApp}UGroupTree.h"  ¶		"{SrcApp}UNewsAppl.h"  ¶		"{SrcApp}UGroupDocCmds.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}UNntp.h"  ¶		"{SrcApp}UProgress.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}UFatalError.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}UThread.h" "{ObjApp}UGroupListDoc.cp.o" Ä ¶		"{SrcApp}UGroupListDoc.cp"  ¶		"{SrcApp}UGroupListDoc.h"  ¶		"{SrcApp}UGroupListView.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UGroupList.h"  ¶		"{SrcApp}UGroupListCmds.h"  ¶		"{SrcApp}UGroupViewCmds.h"  ¶		"{SrcApp}UPeriodic.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}UFatalError.h"  ¶		"{SrcApp}StreamTools.h"  ¶		"{SrcApp}UBufferedFileStream.h"  ¶		"{SrcApp}UNewsAppl.h" "{ObjApp}UGroupListView.cp.o" Ä ¶		"{SrcApp}UGroupListView.cp"  ¶		"{SrcApp}UGroupListView.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UGroupListCmds.h"  ¶		"{SrcApp}UGroupViewCmds.h"  ¶		"{SrcApp}UPeriodic.h"  ¶		"{SrcApp}UGroupListDoc.h"  ¶		"{SrcApp}UGroupList.h"  ¶		"{SrcApp}UNewsAppl.h"  ¶		"{SrcApp}UGroupDocCmds.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UThread.h" "{ObjApp}UGroupTree.cp.o" Ä ¶		"{SrcApp}UGroupTree.cp"  ¶		"{SrcApp}UGroupTree.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}UProgress.h"  ¶		"{SrcApp}UDynDynArray.h"  ¶		"{SrcApp}UGrouplist.h"  ¶		"{SrcApp}StreamTools.h"  ¶		"{SrcApp}NetAsciiTools.h" "{ObjApp}UGroupTreeCmds.cp.o" Ä ¶		"{SrcApp}UGroupTreeCmds.cp"  ¶		"{SrcApp}UGroupTreeCmds.h"  ¶		"{SrcApp}UGroupViewCmds.h"  ¶		"{SrcApp}UGroupTreeView.h"  ¶		"{SrcApp}FastBits.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UNewsAppl.h"  ¶		"{SrcApp}UGroupTreeDoc.h"  ¶		"{SrcApp}UGroupTree.h"  ¶		"{SrcApp}UGroupList.h"  ¶		"{SrcApp}UProgress.h" "{ObjApp}UGroupTreeDoc.cp.o" Ä ¶		"{SrcApp}UGroupTreeDoc.cp"  ¶		"{SrcApp}UGroupTreeDoc.h"  ¶		"{SrcApp}UGroupTreeView.h"  ¶		"{SrcApp}FastBits.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UGroupTree.h"  ¶		"{SrcApp}UGroupListDoc.h"  ¶		"{SrcApp}UGroupList.h"  ¶		"{SrcApp}UNewsAppl.h"  ¶		"{SrcApp}UNntp.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}UProgress.h"  ¶		"{SrcApp}UPrefsFileMgr.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}StreamTools.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}UBufferedFileStream.h" "{ObjApp}UGroupTreeView.cp.o" Ä ¶		"{SrcApp}UGroupTreeView.cp"  ¶		"{SrcApp}UGroupTreeView.h"  ¶		"{SrcApp}FastBits.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UGroupViewCmds.h"  ¶		"{SrcApp}UGroupTreeCmds.h"  ¶		"{SrcApp}UGroupDocCmds.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}UDiscListView.h"  ¶		"{SrcApp}UArticleStatus.h"  ¶		"{SrcApp}UDynDynArray.h"  ¶		"{SrcApp}UGroupList.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}UNewsAppl.h"  ¶		"{SrcApp}UGroupTreeDoc.h"  ¶		"{SrcApp}UGroupTree.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}StreamTools.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}ViewTools.h" "{ObjApp}UGroupViewCmds.cp.o" Ä ¶		"{SrcApp}UGroupViewCmds.cp"  ¶		"{SrcApp}UGroupViewCmds.h"  ¶		"{SrcApp}UGroupTreeDoc.h"  ¶		"{SrcApp}UGroupTree.h"  ¶		"{SrcApp}UGroupTreeView.h"  ¶		"{SrcApp}FastBits.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UGroupList.h"  ¶		"{SrcApp}UGroupListView.h"  ¶		"{SrcApp}UNewsAppl.h"  ¶		"{SrcApp}UGroupDoc.h"  ¶		"{SrcApp}UGroupListDoc.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}ViewTools.h" "{ObjApp}UHashTable.cp.o" Ä ¶		"{SrcApp}UHashTable.cp"  ¶		"{SrcApp}UHashTable.h"  ¶		"{SrcApp}StreamTools.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UThread.h" "{ObjApp}UHeaderFetcher.cp.o" Ä ¶		"{SrcApp}UHeaderFetcher.cp"  ¶		"{SrcApp}UHeaderFetcher.h"  ¶		"{SrcApp}UHeaderList.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}UNntp.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}UFatalError.h" "{ObjApp}UHeaderList.cp.o" Ä ¶		"{SrcApp}UHeaderList.cp"  ¶		"{SrcApp}UHeaderList.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}UNntp.h"  ¶		"{SrcApp}UObjectCache.h" "{ObjApp}UIDDictionary.cp.o" Ä ¶		"{SrcApp}UIDDictionary.cp"  ¶		"{SrcApp}UIDDictionary.h"  ¶		"{SrcApp}UHashTable.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}StreamTools.h"  ¶		"{SrcApp}UFatalError.h"  ¶		"{SrcApp}UThread.h" "{ObjApp}UMacTcp.cp.o" Ä ¶		"{SrcApp}UMacTcp.cp"  ¶		"{SrcApp}UMacTcp.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}UProgress.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UFatalError.h"  ¶		"{SrcApp}ExitToShellPatch.h" "{ObjApp}UNavigatorView.cp.o" Ä ¶		"{SrcApp}UNavigatorView.cp"  ¶		"{SrcApp}UNavigatorView.h"  ¶		"{SrcApp}FastBits.h"  ¶		"{SrcApp}UFatalError.h" "{ObjApp}UNetAsciiProtocol.cp.o" Ä ¶		"{SrcApp}UNetAsciiProtocol.cp"  ¶		"{SrcApp}UNetAsciiProtocol.h"  ¶		"{SrcApp}UMacTcp.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}UProgress.h"  ¶		"{SrcApp}UPrefsDatabase.h" "{ObjApp}UNewsAppl.cp.o" Ä ¶		"{SrcApp}UNewsAppl.cp"  ¶		"{SrcApp}UNewsAppl.h"  ¶		"{SrcApp}UNewsApplCmds.h"  ¶		"{SrcApp}UGroupDoc.h"  ¶		"{SrcApp}UGroupListDoc.h"  ¶		"{SrcApp}UGroupTreeDoc.h"  ¶		"{SrcApp}UPrefsFileMgr.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}UPreferencesView.h"  ¶		"{SrcApp}UGroupTree.h"  ¶		"{SrcApp}UArticleStatus.h"  ¶		"{SrcApp}TestCode.h"  ¶		"{SrcApp}UProgressCache.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}UAsyncFile.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UFatalError.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UGroupTreeCmds.h"  ¶		"{SrcApp}UGroupViewCmds.h"  ¶		"{SrcApp}UPassword.h"  ¶		"{SrcApp}UNntp.h"  ¶		"{SrcApp}UAppleScriptCmds.h"  ¶		"{SrcApp}ViewTools.h"  ¶		"{SrcApp}UArticleTextCache.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}MenuGlobals.h" "{ObjApp}UNewsApplCmds.cp.o" Ä ¶		"{SrcApp}UNewsApplCmds.cp"  ¶		"{SrcApp}UNewsApplCmds.h"  ¶		"{SrcApp}UNewsAppl.h"  ¶		"{SrcApp}UGroupTreeDoc.h"  ¶		"{SrcApp}UGroupTree.h"  ¶		"{SrcApp}UGroupTreeCmds.h"  ¶		"{SrcApp}UGroupViewCmds.h"  ¶		"{SrcApp}UPrefsFileMgr.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}UProgress.h"  ¶		"{SrcApp}UProgressCache.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}UArticleCache.h"  ¶		"{SrcApp}UArticleTextCache.h"  ¶		"{SrcApp}UArticleViewCache.h"  ¶		"{SrcApp}UNntp.h"  ¶		"{SrcApp}UMacTCP.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UAsyncFile.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}UPassword.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}UPreferencesView.h"  ¶		"{SrcApp}ViewTools.h"  ¶		"{SrcApp}UGroupDocCmds.h"  ¶		"{SrcApp}UAppleScriptCmds.h" "{ObjApp}UNntp.cp.o" Ä ¶		"{SrcApp}UNntp.cp"  ¶		"{SrcApp}UNntp.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}URealNntp.h"  ¶		"{SrcApp}UFakeNntp.h"  ¶		"{SrcApp}UNewsAppl.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}UProgress.h"  ¶		"{SrcApp}UFatalError.h" "{ObjApp}UObjectCache.cp.o" Ä ¶		"{SrcApp}UObjectCache.cp"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UFatalError.h" "{ObjApp}UOffsetLengthList.cp.o" Ä ¶		"{SrcApp}UOffsetLengthList.cp"  ¶		"{SrcApp}UOffsetLengthList.h"  ¶		"{SrcApp}StreamTools.h"  ¶		"{SrcApp}Tools.h" "{ObjApp}UPassword.cp.o" Ä ¶		"{SrcApp}UPassword.cp"  ¶		"{SrcApp}UPassword.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UNntp.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}ViewTools.h" "{ObjApp}UPeriodic.cp.o" Ä ¶		"{SrcApp}UPeriodic.cp"  ¶		"{SrcApp}UPeriodic.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}UFatalError.h" "{ObjApp}UPostArticleCmds.cp.o" Ä ¶		"{SrcApp}UPostArticleCmds.cp"  ¶		"{SrcApp}UPostArticleCmds.h"  ¶		"{SrcApp}UPostArticleView.h"  ¶		"{SrcApp}UArticle.h"  ¶		"{SrcApp}UArticleCache.h"  ¶		"{SrcApp}UGroupDoc.h"  ¶		"{SrcApp}UDiscBase.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}UAsyncFile.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UNntp.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}UMacTCP.h"  ¶		"{SrcApp}UProgress.h"  ¶		"{SrcApp}ProcessTools.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}ISO2022Conversion.h"  ¶		"{SrcApp}UDynDynArray.h"  ¶		"{SrcApp}UBufferedFileStream.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}UFolderSelectView.h" "{ObjApp}UPostArticleView.cp.o" Ä ¶		"{SrcApp}UPostArticleView.cp"  ¶		"{SrcApp}UPostArticleView.h"  ¶		"{SrcApp}UPostArticleCmds.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}UThread.h" "{ObjApp}UPreferencesView.cp.o" Ä ¶		"{SrcApp}UPreferencesView.cp"  ¶		"{SrcApp}UPreferencesView.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}UNntp.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}UFolderSelectView.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UArticleTextCache.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}ViewTools.h"  ¶		"{SrcApp}ProcessTools.h"  ¶		"{SrcApp}UAppleScriptCmds.h"  ¶		"{SrcApp}Rsrcglobals.h"  ¶		"{SrcApp}MenuGlobals.h" "{ObjApp}UPrefsDatabase.cp.o" Ä ¶		"{SrcApp}UPrefsDatabase.cp"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}UDynDynArray.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}StreamTools.h"  ¶		"{SrcApp}UAsyncFile.h"  ¶		"{SrcApp}FontTools.h" "{ObjApp}UPrefsFileMgr.cp.o" Ä ¶		"{SrcApp}UPrefsFileMgr.cp"  ¶		"{SrcApp}UPrefsFileMgr.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}UAsyncFile.h"  ¶		"{SrcApp}FileTools.h"  ¶		"{SrcApp}UBufferedFileStream.h"  ¶		"{SrcApp}UNntp.h"  ¶		"{SrcApp}UObjectCache.h" "{ObjApp}UProgress.cp.o" Ä ¶		"{SrcApp}UProgress.cp"  ¶		"{SrcApp}UProgress.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}Tools.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}UFatalError.h" "{ObjApp}UProgressCache.cp.o" Ä ¶		"{SrcApp}UProgressCache.cp"  ¶		"{SrcApp}UProgressCache.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}UProgress.h" "{ObjApp}URealNntp.cp.o" Ä ¶		"{SrcApp}URealNntp.cp"  ¶		"{SrcApp}URealNntp.h"  ¶		"{SrcApp}UNntp.h"  ¶		"{SrcApp}UObjectCache.h"  ¶		"{SrcApp}UNetAsciiProtocol.h"  ¶		"{SrcApp}UProgress.h"  ¶		"{SrcApp}UPrefsDatabase.h"  ¶		"{SrcApp}UPassword.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}Tools.h" "{ObjApp}URowSelection.cp.o" Ä ¶		"{SrcApp}URowSelection.cp"  ¶		"{SrcApp}URowSelection.h" "{ObjApp}UStructureInspectors.cp.o" Ä ¶		"{SrcApp}UStructureInspectors.cp"  ¶		"{SrcApp}UStructureInspectors.h" "{ObjApp}UTextScroller.cp.o" Ä ¶		"{SrcApp}UTextScroller.cp"  ¶		"{SrcApp}UTextScroller.h" "{ObjApp}UTextView.cp.o" Ä ¶		"{SrcApp}UTextView.cp"  ¶		"{SrcApp}UTextView.h"  ¶		"{SrcApp}FontTools.h"  ¶		"{SrcApp}NetAsciiTools.h"  ¶		"{SrcApp}ViewTools.h"  ¶		"{SrcApp}Tools.h" "{ObjApp}UThread.a.cp.o" Ä ¶		"{SrcApp}UThread.a.cp"  ¶		"{SrcApp}UFatalError.h" "{ObjApp}UThread.cp.o" Ä ¶		"{SrcApp}UThread.cp"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}UThreadStackSwap.h"  ¶		"{SrcApp}UThreadLongJmp.h"  ¶		"{SrcApp}UThreadApple.h"  ¶		"{SrcApp}UFatalError.h"  ¶		"{SrcApp}UProgress.h"  ¶		"{SrcApp}UProgressCache.h"  ¶		"{SrcApp}UObjectCache.h" "{ObjApp}UThreadApple.cp.o" Ä ¶		"{SrcApp}UThreadApple.cp"  ¶		"{SrcApp}UThreadApple.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}UFatalError.h" "{ObjApp}UThreadLongJmp.cp.o" Ä ¶		"{SrcApp}UThreadLongJmp.cp"  ¶		"{SrcApp}UThreadLongJmp.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}UFatalError.h"  ¶		"{SrcApp}Tools.h" "{ObjApp}UThreadStackSwap.cp.o" Ä ¶		"{SrcApp}UThreadStackSwap.cp"  ¶		"{SrcApp}UThreadStackSwap.h"  ¶		"{SrcApp}UThread.h"  ¶		"{SrcApp}UFatalError.h" "{ObjApp}UTriangleControl.cp.o" Ä ¶		"{SrcApp}UTriangleControl.cp"  ¶		"{SrcApp}UTriangleControl.h"  ¶		"{SrcApp}ViewTools.h" "{ObjApp}UViewListView.cp.o" Ä ¶		"{SrcApp}UViewListView.cp"  ¶		"{SrcApp}UViewListView.h" "{ObjApp}ViewTools.cp.o" Ä ¶		"{SrcApp}ViewTools.cp"  ¶		"{SrcApp}ViewTools.h"  ¶		"{SrcApp}Tools.h" #MakeAutoMakeDep- ¶#......................................................................."{ObjApp}dnr.c.o" Ä ¶		"{SrcApp}dnr.c"	{MAEcho} {EchoOptions} "Compiling:     dnr.c"	quote {MAC} ¶		{COptions} ¶		{CPlusCPUOptions} ¶		{OtherCOptions} ¶		-i "{SrcApp}" ¶		-i "{CIncludes}" ¶		-i "{MACPlusIncludes}" ¶		-o {ObjApp}dnr.c.o ¶		{SrcApp}dnr.c	{MAC} ¶		{COptions} ¶		{CPlusCPUOptions} ¶		{OtherCOptions} ¶		-i "{SrcApp}" ¶		-i "{CIncludes}" ¶		-i "{MACPlusIncludes}" ¶		-o {ObjApp}dnr.c.o ¶		{SrcApp}dnr.c"{ObjApp}MyDontDeadStrip.cp.o" Ä ¶		"{SrcApp}MyDontDeadStrip.cp"  ¶		"{SrcApp}MyDontDeadStrip.h" "{ObjApp}UThread.a.o" Ä ¶		"{SrcApp}UThread.a"  ¶"{ObjApp}MacAppRsrc.rsrc" Ä ¶		"{SrcApp}MacAppRsrc.r""{ObjApp}Misc.rsrc" Ä ¶		"{SrcApp}Misc.r" ¶		"{SrcApp}Menus.r" ¶		"{SrcApp}Views.r" ¶		"{SrcApp}Errors.r" ¶		"{SrcApp}ErrorGlobals.h" ¶		"{ObjApp}MacAppRsrc.rsrc""{ObjApp}Strings.rsrc" Ä ¶		"{SrcApp}Strings.r"		{MAEcho} {EchoOptions} "String-rez:    Strings.r"		rez	-d _DATETIME_="¶"`date -n`¶"" ¶				-d _DATESTR_="¶"`date -s`¶"" ¶				-c RSED -t rsrc ¶				"{SrcApp}Strings.r" -o "{ObjApp}Strings.rsrc"FAQname = nuntius-faq.txt.cpFAQsrc = {SrcApp}:docs:{FAQname}"{SrcApp}faq.rsrc" Ä {FAQsrc}		{MAEcho} {EchoOptions} "String-rez:    {FAQname}"		begin			echo "data 'TEXT' (4110, ¶"Frequently Asked Questions¶") ¶{"			StreamEdit -d ¶				-e '¥ || ° || /¥¶/¶*/ || /¥¶*¶// next' ¶				-e '!/Å/ set PRE PRE"¶n";next' ¶				-e '/Å/ pr PRE .;set PRE ""' ¶				< "{FAQsrc}" > {tmp}			DumpFile -a -o {tmp} | see '7,$ pr "$¶""."¶""'			echo "};"		end | rez -c RSED -t rsrc -o "faq.rsrc"#---------------------------------------------------------------------------------------------------#	List resource files that the Rez file includes if you want to include#	more or less than the standard set# OtherRsrcFiles = ¶#	"{MAObj}Printing.rsrc" ¶#	"{MAObj}FloatWindow.rsrc"OtherRsrcFiles = ¶	"{SrcApp}Nuntius.AdLib" ¶	"{SrcApp}Nuntius.ResEdit" ¶	"{ObjApp}Strings.rsrc" ¶	"{ObjApp}Misc.rsrc" ¶	"{SrcApp}faq.rsrc"#MakeAutoSegMap+XSegmentMappings = ¶	-sn AActivate=MacApp&Nuntius¶	-sn AClipboard=MacApp&Nuntius¶	-sn AClose=MacApp&Nuntius¶	-sn ADebug=MacApp&Nuntius¶	-sn ADoCommand=MacApp&Nuntius¶	-sn AEClose=MacApp&Nuntius¶	-sn AEInitialize=MacApp&Nuntius¶	-sn AEAttributes=MacApp&Nuntius¶	-sn AENonRes=MacApp&Nuntius¶	-sn AEReadWrite=MacApp&Nuntius¶	-sn AERes=MacApp&Nuntius¶	-sn AESend=MacApp&Nuntius¶	-sn AFile=MacApp&Nuntius¶	-sn AFinder=MacApp&Nuntius¶	-sn AHelp=MacApp&Nuntius¶	-sn AInit=GInit ¶	-sn ANonRes=MacApp&Nuntius¶	-sn AOpen=MacApp&Nuntius¶	-sn AReadFile=MacApp&Nuntius¶	-sn ASelCommand=MacApp&Nuntius¶	-sn ATerminate=MacApp&Nuntius¶	-sn AWriteFile=MacApp&Nuntius¶	-sn ConstructorRes=MacApp&Nuntius¶	-sn DepInit=GInit ¶	-sn DepRes=MacApp&Nuntius¶	-sn Disassembler=MacApp&Nuntius¶	-sn DlgClose=MacApp&Nuntius¶	-sn DlgInit=GInit ¶	-sn DlgNonRes=MacApp&Nuntius¶	-sn DlgOpen=MacApp&Nuntius¶	-sn DlgReadResource=MacApp&Nuntius¶	-sn DlgWriteResource=MacApp&Nuntius¶	-sn DlgRes=MacApp&Nuntius¶	-sn GCRes=MacApp&Nuntius¶	-sn GrabberDoCommand=MacApp&Nuntius¶	-sn GVClose=MacApp&Nuntius¶	-sn GVDoCommand=MacApp&Nuntius¶	-sn GVInit=GInit ¶	-sn GVNonRes=MacApp&Nuntius¶	-sn GVOpen=MacApp&Nuntius¶	-sn GVReadResource=MacApp&Nuntius¶	-sn GVWriteResource=MacApp&Nuntius¶	-sn GVRes=MacApp&Nuntius¶	-sn GVSelCommand=MacApp&Nuntius¶	-sn INTENV=MacApp&Nuntius¶	-sn ListDebug=MacApp&Nuntius¶	-sn ListRes=MacApp&Nuntius¶	-sn ListNonRes=MacApp&Nuntius¶	-sn IteratorRes=MacApp&Nuntius¶	-sn MAAboutApp=MacApp&Nuntius¶	-sn MAActivate=MacApp&Nuntius¶	-sn MAAdornerRes=MacApp&Nuntius¶	-sn MAAdornerNonRes=MacApp&Nuntius¶	-sn MAApplicationRes=MacApp&Nuntius¶	-sn MAAssociationRes=MacApp&Nuntius¶	-sn MAAssociationNonRes=MacApp&Nuntius¶	-sn MABehaviorRes=MacApp&Nuntius¶	-sn MABehaviorNonRes=MacApp&Nuntius¶	-sn MABusyCursorRes=MacApp&Nuntius¶	-sn MAClipboard=MacApp&Nuntius¶	-sn MAClose=MacApp&Nuntius¶	-sn MACommandRes=MacApp&Nuntius¶	-sn MACommandNonRes=MacApp&Nuntius¶	-sn MAControlRes=MacApp&Nuntius¶	-sn MAControlNonRes=MacApp&Nuntius¶	-sn MADebug=MacApp&Nuntius¶	-sn MADebug2=MacApp&Nuntius¶	-sn MADebugger=Main ¶	-sn MADesignatorNonRes=MacApp&Nuntius¶	-sn MADesignatorRead=MacApp&Nuntius¶	-sn MADesignatorRes=MacApp&Nuntius¶	-sn MADesignatorWrite=MacApp&Nuntius¶	-sn MADoCommand=MacApp&Nuntius¶	-sn MADocumentRes=MacApp&Nuntius¶	-sn MADocumentNonRes=MacApp&Nuntius¶	-sn MAError=MacApp&Nuntius¶	-sn MAEvtHandlerRes=MacApp&Nuntius¶	-sn MAEvtHandlerNonRes=MacApp&Nuntius¶	-sn MAFailureRes=MAMain ¶	-sn MAFile=MacApp&Nuntius¶	-sn MAFileClose=MacApp&Nuntius¶	-sn MAFileOpen=MacApp&Nuntius¶	-sn MAFileRead=MacApp&Nuntius¶	-sn MAFileWrite=MacApp&Nuntius¶	-sn MAFileRes=MacApp&Nuntius¶	-sn MAFileNonRes=MacApp&Nuntius¶	-sn MAFinder=MacApp&Nuntius¶	-sn MAGeometryRes=MacApp&Nuntius¶	-sn MAGlobalsRes=MAMain ¶	-sn MAHelp=MacApp&Nuntius¶	-sn MAInit=GInit ¶	-sn MAMemoryRes=MAMain ¶	-sn HeapSeg=MacApp&Nuntius¶	-sn MAMenuInit=GInit ¶	-sn MAMenuNever=MacApp&Nuntius¶	-sn MAMenuRes=MacApp&Nuntius¶	-sn MANonRes=MacApp&Nuntius¶	-sn MAObjectRes=MacApp&Nuntius¶	-sn MAOpen=MacApp&Nuntius¶	-sn MAPatchRes=MAMain ¶	-sn MAPrint=MacApp&Nuntius¶	-sn MAPrintingRes=MacApp&Nuntius¶	-sn MAReadFile=MacApp&Nuntius¶	-sn MAReadResource=MacApp&Nuntius¶	-sn MARes=MacApp&Nuntius¶	-sn MAScroll=MacApp&Nuntius¶	-sn MAScrollerRes=MacApp&Nuntius¶	-sn MAScrollerNonRes=MacApp&Nuntius¶	-sn MASectionRes=MacApp&Nuntius¶	-sn MASectionNonRes=MacApp&Nuntius¶	-sn MASectionClose=MacApp&Nuntius¶	-sn MASectionRead=MacApp&Nuntius¶	-sn MASectionWrite=MacApp&Nuntius¶	-sn MASelCommand=MacApp&Nuntius¶	-sn MAStreamNever=MacApp&Nuntius¶	-sn MAStreamUtil=MacApp&Nuntius¶	-sn MAStreamFree=MacApp&Nuntius¶	-sn MAStreamCreate=MacApp&Nuntius¶	-sn MAStreamRead=MacApp&Nuntius¶	-sn MAStreamWrite=MacApp&Nuntius¶	-sn MATabBehaviorRes=MacApp&Nuntius¶	-sn MATerminate=MacApp&Nuntius¶	-sn MAUtilitiesRes=MAMain ¶	-sn MAViewRes=MacApp&Nuntius¶	-sn MAViewNonRes=MacApp&Nuntius¶	-sn MAWindowRes=MacApp&Nuntius¶	-sn MAWindowNonRes=MacApp&Nuntius¶	-sn MAWriteFile=MacApp&Nuntius¶	-sn MAWriteResource=MacApp&Nuntius¶	-sn PerfInit=MacApp&Nuntius¶	-sn PerfMain=MacApp&Nuntius¶	-sn PerfTerm=MacApp&Nuntius¶	-sn PrintActual=MacApp&Nuntius¶	-sn PrintClose=MacApp&Nuntius¶	-sn PrintDebug=MacApp&Nuntius¶	-sn PrintDoCommand=MacApp&Nuntius¶	-sn PrintFinder=MacApp&Nuntius¶	-sn PrintImage=MacApp&Nuntius¶	-sn PrintInit=GInit ¶	-sn PrintMain=MacApp&Nuntius¶	-sn PrintNonRes=MacApp&Nuntius¶	-sn PrintOpen=MacApp&Nuntius¶	-sn PrintRes=MacApp&Nuntius¶	-sn PrintSelCommand=MacApp&Nuntius¶	-sn PrintSpool=MacApp&Nuntius¶	-sn SACONSOL=MacApp&Nuntius¶	-sn SACONSOLE=MacApp&Nuntius¶	-sn SADEV=MacApp&Nuntius¶	-sn STDIO=MacApp&Nuntius¶	-sn SyncScrollInit=GInit ¶	-sn SyncScrollRes=MacApp&Nuntius¶	-sn SyncScrollNonRes=MacApp&Nuntius¶	-sn TInit=GInit ¶	-sn TRes=MacApp&Nuntius¶	-sn TearOffClose=MacApp&Nuntius¶	-sn TearOffDoCommand=MacApp&Nuntius¶	-sn TearOffInit=GInit ¶	-sn TearOffRes=MacApp&Nuntius¶	-sn TEClipboard=MacApp&Nuntius¶	-sn TEClose=MacApp&Nuntius¶	-sn TEDebug=MacApp&Nuntius¶	-sn TEDoCommand=MacApp&Nuntius¶	-sn TEInit=GInit ¶	-sn TENonRes=MacApp&Nuntius¶	-sn TEOpen=MacApp&Nuntius¶	-sn TEReadResource=MacApp&Nuntius¶	-sn TEWriteResource=MacApp&Nuntius¶	-sn TEPrint=MacApp&Nuntius¶	-sn TERes=MacApp&Nuntius¶	-sn TEDocClose=MacApp&Nuntius¶	-sn TEDocDoCommand=MacApp&Nuntius¶	-sn TEDocSelCommand=MacApp&Nuntius¶	-sn TEDocNonRes=MacApp&Nuntius¶	-sn TEDocOpen=MacApp&Nuntius¶	-sn TEDocReadFile=MacApp&Nuntius¶	-sn TEDocRes=MacApp&Nuntius¶	-sn TEDocWriteFile=MacApp&Nuntius¶	-sn WWInit=GInit ¶	-sn WWSeg=MacApp&Nuntius¶	-sn SCSTDIO=MacApp&Nuntius¶	-sn SCSTRING=MacApp&Nuntius¶	-sn SCPP=MacApp&Nuntius¶	-sn ZSTRING=MacApp&Nuntius¶#MakeAutoSegMap- ¶	-sn ClassDescRes=MAMiniInit ¶	-sn Static_Destructors=MacApp&Nuntius ¶	-sn Static_Constructors=MAMiniInit ¶	-sn MANever=MacApp&Nuntius ¶	-sn WWSeg=MacApp&Nuntius ¶	-sn STDCLIB=Main ¶	-sn TESelCommand=MacApp&Nuntius ¶	-sn SANELIB=MacApp&Nuntius ¶#Don't touch MAMinitInit - is needed in init and gets unloadedXOtherSegMappings = ¶	-sn MyViewTools=MacApp&Nuntius ¶	-sn A5Ref=MacApp&Nuntius ¶	-sn MyArray=MacApp&Nuntius ¶	-sn MyArticle=MacApp&Nuntius ¶	-sn MyComm=MacApp&Nuntius ¶	-sn MyDialogs=MacApp&Nuntius ¶	-sn MyGroup=MacApp&Nuntius ¶	-sn MyGroupList=MacApp&Nuntius ¶	-sn MyMisc=MacApp&Nuntius ¶	-sn MyThread=MacApp&Nuntius ¶	-sn MyTools=MacApp&Nuntius ¶#end
+#********************************************************************************
+#																																								*
+#	File:			Nuntius.MAMake																			 								*
+#																																								*
+#	Description:	Makefile for Nuntius.																						*
+#																																								*
+#																																								*
+#********************************************************************************
+# Taget fra DrawShapes.MAMake
+#---------------------------------------------------------------------------------------------------
+#	List here the Application's Name
+AppName = Nuntius
+
+OtherCPlusOptions = -i {SrcApp}MacTCP_Stuff:
+
+#---------------------------------------------------------------------------------------------------
+#	Name any other object files to link in
+# OtherLinkFiles = ¶
+#	"{ObjApp}UBetterFeedbackCmd.p.o"
+
+OtherLinkFiles = ¶
+		"{ObjApp}UThread.a.o" ¶
+		"{ObjApp}MyDontDeadStrip.cp.o" ¶
+		"{ObjApp}dnr.c.o" ¶
+#MakeAutoMakeObj+ ¶
+		"{ObjApp}ExitToShellPatch.cp.o" ¶
+		"{ObjApp}FastBits.cp.o" ¶
+		"{ObjApp}FileTools.cp.o" ¶
+		"{ObjApp}FontTools.cp.o" ¶
+		"{ObjApp}ISO2022Conversion.cp.o" ¶
+		"{ObjApp}MNuntius.cp.o" ¶
+		"{ObjApp}NetAsciiTools.cp.o" ¶
+		"{ObjApp}PreferencesList.cp.o" ¶
+		"{ObjApp}ProcessTools.cp.o" ¶
+		"{ObjApp}StreamTools.cp.o" ¶
+		"{ObjApp}TCPfprintf.cp.o" ¶
+		"{ObjApp}TestCode.cp.o" ¶
+		"{ObjApp}Tools.cp.o" ¶
+		"{ObjApp}UAppleScriptCmds.cp.o" ¶
+		"{ObjApp}UArticle.cp.o" ¶
+		"{ObjApp}UArticleCache.cp.o" ¶
+		"{ObjApp}UArticleCmds.cp.o" ¶
+		"{ObjApp}UArticleEntry.cp.o" ¶
+		"{ObjApp}UArticleListView.cp.o" ¶
+		"{ObjApp}UArticleManageView.cp.o" ¶
+		"{ObjApp}UArticlePrintHandler.cp.o" ¶
+		"{ObjApp}UArticleStatus.cp.o" ¶
+		"{ObjApp}UArticleTextCache.cp.o" ¶
+		"{ObjApp}UArticleView.cp.o" ¶
+		"{ObjApp}UArticleViewCache.cp.o" ¶
+		"{ObjApp}UAsyncFile.cp.o" ¶
+		"{ObjApp}UBinariesCmds.cp.o" ¶
+		"{ObjApp}UBinDecoders.cp.o" ¶
+		"{ObjApp}UBufferedFileStream.cp.o" ¶
+		"{ObjApp}UDiscBase.cp.o" ¶
+		"{ObjApp}UDiscListCmds.cp.o" ¶
+		"{ObjApp}UDiscListView.cp.o" ¶
+		"{ObjApp}UDynDynArray.cp.o" ¶
+		"{ObjApp}UFakeNntp.cp.o" ¶
+		"{ObjApp}UFatalError.cp.o" ¶
+		"{ObjApp}UFolderSelectView.cp.o" ¶
+		"{ObjApp}UGroupDoc.cp.o" ¶
+		"{ObjApp}UGroupDocCmds.cp.o" ¶
+		"{ObjApp}UGroupList.cp.o" ¶
+		"{ObjApp}UGroupListCmds.cp.o" ¶
+		"{ObjApp}UGroupListDoc.cp.o" ¶
+		"{ObjApp}UGroupListView.cp.o" ¶
+		"{ObjApp}UGroupTree.cp.o" ¶
+		"{ObjApp}UGroupTreeCmds.cp.o" ¶
+		"{ObjApp}UGroupTreeDoc.cp.o" ¶
+		"{ObjApp}UGroupTreeView.cp.o" ¶
+		"{ObjApp}UGroupViewCmds.cp.o" ¶
+		"{ObjApp}UHashTable.cp.o" ¶
+		"{ObjApp}UHeaderFetcher.cp.o" ¶
+		"{ObjApp}UHeaderList.cp.o" ¶
+		"{ObjApp}UIDDictionary.cp.o" ¶
+		"{ObjApp}UMacTcp.cp.o" ¶
+		"{ObjApp}UNavigatorView.cp.o" ¶
+		"{ObjApp}UNetAsciiProtocol.cp.o" ¶
+		"{ObjApp}UNewsAppl.cp.o" ¶
+		"{ObjApp}UNewsApplCmds.cp.o" ¶
+		"{ObjApp}UNntp.cp.o" ¶
+		"{ObjApp}UObjectCache.cp.o" ¶
+		"{ObjApp}UOffsetLengthList.cp.o" ¶
+		"{ObjApp}UPassword.cp.o" ¶
+		"{ObjApp}UPeriodic.cp.o" ¶
+		"{ObjApp}UPostArticleCmds.cp.o" ¶
+		"{ObjApp}UPostArticleView.cp.o" ¶
+		"{ObjApp}UPreferencesView.cp.o" ¶
+		"{ObjApp}UPrefsDatabase.cp.o" ¶
+		"{ObjApp}UPrefsFileMgr.cp.o" ¶
+		"{ObjApp}UProgress.cp.o" ¶
+		"{ObjApp}UProgressCache.cp.o" ¶
+		"{ObjApp}URealNntp.cp.o" ¶
+		"{ObjApp}URowSelection.cp.o" ¶
+		"{ObjApp}UStructureInspectors.cp.o" ¶
+		"{ObjApp}UTextScroller.cp.o" ¶
+		"{ObjApp}UTextView.cp.o" ¶
+		"{ObjApp}UThread.a.cp.o" ¶
+		"{ObjApp}UThread.cp.o" ¶
+		"{ObjApp}UThreadApple.cp.o" ¶
+		"{ObjApp}UThreadLongJmp.cp.o" ¶
+		"{ObjApp}UThreadStackSwap.cp.o" ¶
+		"{ObjApp}UTriangleControl.cp.o" ¶
+		"{ObjApp}UViewListView.cp.o" ¶
+		"{ObjApp}ViewTools.cp.o" ¶
+#MakeAutoMakeObj- ¶
+
+#last line
+#---------------------------------------------------------------------------------------------------
+#	Express any additional dependencies for separate compilations.
+#	Include dependencies for the MacApp and Building block interfaces
+#	if you are dependent on them
+# "{ObjApp}UBetterFeedbackCmd.p.o"	Ä ¶
+#							"{SrcApp}UBetterFeedbackCmd.inc1.p" ¶
+#							{MacAppIntf} ¶
+#							{BuildingBlocksIntf}
+#MakeAutoMakeDep+ ¶
+"{ObjApp}ExitToShellPatch.cp.o" Ä ¶
+		"{SrcApp}ExitToShellPatch.cp"  ¶
+		"{SrcApp}ExitToShellPatch.h" 
+
+"{ObjApp}FastBits.cp.o" Ä ¶
+		"{SrcApp}FastBits.cp"  ¶
+		"{SrcApp}FastBits.h"  ¶
+		"{SrcApp}Tools.h" 
+
+"{ObjApp}FileTools.cp.o" Ä ¶
+		"{SrcApp}FileTools.cp"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}UASyncFile.h"  ¶
+		"{SrcApp}Tools.h" 
+
+"{ObjApp}FontTools.cp.o" Ä ¶
+		"{SrcApp}FontTools.cp"  ¶
+		"{SrcApp}FontTools.h" 
+
+"{ObjApp}ISO2022Conversion.cp.o" Ä ¶
+		"{SrcApp}ISO2022Conversion.cp"  ¶
+		"{SrcApp}ISO2022Conversion.h"  ¶
+		"{SrcApp}UDynDynArray.h" 
+
+"{ObjApp}MNuntius.cp.o" Ä ¶
+		"{SrcApp}MNuntius.cp"  ¶
+		"{SrcApp}UNewsAppl.h"  ¶
+		"{SrcApp}UMacTcp.h"  ¶
+		"{SrcApp}UNntp.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}FastBits.h"  ¶
+		"{SrcApp}MyDontDeadStrip.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UFatalError.h"  ¶
+		"{SrcApp}ExitToShellPatch.h"  ¶
+		"{SrcApp}MenuGlobals.h" 
+
+"{ObjApp}NetAsciiTools.cp.o" Ä ¶
+		"{SrcApp}NetAsciiTools.cp"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UPrefsDatabase.h" 
+
+"{ObjApp}PreferencesList.cp.o" Ä ¶
+		"{SrcApp}PreferencesList.cp" 
+
+"{ObjApp}ProcessTools.cp.o" Ä ¶
+		"{SrcApp}ProcessTools.cp"  ¶
+		"{SrcApp}ProcessTools.h"  ¶
+		"{SrcApp}UAsyncFile.h" 
+
+"{ObjApp}StreamTools.cp.o" Ä ¶
+		"{SrcApp}StreamTools.cp"  ¶
+		"{SrcApp}StreamTools.h" 
+
+"{ObjApp}TCPfprintf.cp.o" Ä ¶
+		"{SrcApp}TCPfprintf.cp" 
+
+"{ObjApp}TestCode.cp.o" Ä ¶
+		"{SrcApp}TestCode.cp"  ¶
+		"{SrcApp}TestCode.h"  ¶
+		"{SrcApp}UThread.h" 
+
+"{ObjApp}Tools.cp.o" Ä ¶
+		"{SrcApp}Tools.cp"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}UFatalError.h" 
+
+"{ObjApp}UAppleScriptCmds.cp.o" Ä ¶
+		"{SrcApp}UAppleScriptCmds.cp"  ¶
+		"{SrcApp}UAppleScriptCmds.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UArticleListView.h"  ¶
+		"{SrcApp}UViewListView.h"  ¶
+		"{SrcApp}UArticleStatus.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UArticle.h"  ¶
+		"{SrcApp}UArticleCache.h"  ¶
+		"{SrcApp}UGroupDoc.h"  ¶
+		"{SrcApp}ProcessTools.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}UPrefsFileMgr.h"  ¶
+		"{SrcApp}UGroupDocCmds.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}UASyncFile.h"  ¶
+		"{SrcApp}UNewsAppl.h" 
+
+"{ObjApp}UArticle.cp.o" Ä ¶
+		"{SrcApp}UArticle.cp"  ¶
+		"{SrcApp}UArticle.h"  ¶
+		"{SrcApp}UArticleTextCache.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}UOffsetLengthList.h"  ¶
+		"{SrcApp}ISO2022Conversion.h"  ¶
+		"{SrcApp}UDynDynArray.h"  ¶
+		"{SrcApp}Tools.h" 
+
+"{ObjApp}UArticleCache.cp.o" Ä ¶
+		"{SrcApp}UArticleCache.cp"  ¶
+		"{SrcApp}UArticleCache.h"  ¶
+		"{SrcApp}UArticle.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UFatalError.h" 
+
+"{ObjApp}UArticleCmds.cp.o" Ä ¶
+		"{SrcApp}UArticleCmds.cp"  ¶
+		"{SrcApp}UArticleCmds.h"  ¶
+		"{SrcApp}UArticleStatus.h"  ¶
+		"{SrcApp}UArticleListView.h"  ¶
+		"{SrcApp}UViewListView.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}UASyncFile.h"  ¶
+		"{SrcApp}UGroupDoc.h"  ¶
+		"{SrcApp}UPrefsDatabase.h" 
+
+"{ObjApp}UArticleEntry.cp.o" Ä ¶
+		"{SrcApp}UArticleEntry.cp"  ¶
+		"{SrcApp}UArticleEntry.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UHeaderFetcher.h"  ¶
+		"{SrcApp}UIDDictionary.h"  ¶
+		"{SrcApp}NetAsciiTools.h" 
+
+"{ObjApp}UArticleListView.cp.o" Ä ¶
+		"{SrcApp}UArticleListView.cp"  ¶
+		"{SrcApp}UArticleListView.h"  ¶
+		"{SrcApp}UViewListView.h"  ¶
+		"{SrcApp}UArticleStatus.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UArticlePrintHandler.h"  ¶
+		"{SrcApp}UArticleManageView.h"  ¶
+		"{SrcApp}UArticleView.h"  ¶
+		"{SrcApp}UTextView.h"  ¶
+		"{SrcApp}UArticleCache.h"  ¶
+		"{SrcApp}UArticleViewCache.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}UArticle.h"  ¶
+		"{SrcApp}UArticleEntry.h"  ¶
+		"{SrcApp}UDiscBase.h"  ¶
+		"{SrcApp}UDiscListView.h"  ¶
+		"{SrcApp}UArticleCmds.h"  ¶
+		"{SrcApp}UBinariesCmds.h"  ¶
+		"{SrcApp}UAppleScriptCmds.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}UGroupDoc.h"  ¶
+		"{SrcApp}UNewsAppl.h"  ¶
+		"{SrcApp}UPostArticleCmds.h"  ¶
+		"{SrcApp}UPostArticleView.h"  ¶
+		"{SrcApp}UTextScroller.h"  ¶
+		"{SrcApp}UNavigatorView.h"  ¶
+		"{SrcApp}FastBits.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UFatalError.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}UDynDynArray.h" 
+
+"{ObjApp}UArticleManageView.cp.o" Ä ¶
+		"{SrcApp}UArticleManageView.cp"  ¶
+		"{SrcApp}UArticleManageView.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UArticleView.h"  ¶
+		"{SrcApp}UTextView.h"  ¶
+		"{SrcApp}UArticleCache.h"  ¶
+		"{SrcApp}UArticleViewCache.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}UArticleEntry.h"  ¶
+		"{SrcApp}UTriangleControl.h"  ¶
+		"{SrcApp}UGroupDoc.h"  ¶
+		"{SrcApp}UArticleStatus.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}Tools.h" 
+
+"{ObjApp}UArticlePrintHandler.cp.o" Ä ¶
+		"{SrcApp}UArticlePrintHandler.cp"  ¶
+		"{SrcApp}UArticlePrintHandler.h"  ¶
+		"{SrcApp}UArticleListView.h"  ¶
+		"{SrcApp}UViewListView.h"  ¶
+		"{SrcApp}UArticleStatus.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}Tools.h" 
+
+"{ObjApp}UArticleStatus.cp.o" Ä ¶
+		"{SrcApp}UArticleStatus.cp"  ¶
+		"{SrcApp}UArticleStatus.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}StreamTools.h" 
+
+"{ObjApp}UArticleTextCache.cp.o" Ä ¶
+		"{SrcApp}UArticleTextCache.cp"  ¶
+		"{SrcApp}UArticleTextCache.h"  ¶
+		"{SrcApp}UNntp.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}UGroupDoc.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}Tools.h" 
+
+"{ObjApp}UArticleView.cp.o" Ä ¶
+		"{SrcApp}UArticleView.cp"  ¶
+		"{SrcApp}UArticleView.h"  ¶
+		"{SrcApp}UTextView.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UArticleStatus.h"  ¶
+		"{SrcApp}UArticle.h"  ¶
+		"{SrcApp}UArticleEntry.h"  ¶
+		"{SrcApp}UArticleCache.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}UGroupDoc.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}ViewTools.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}UAppleScriptCmds.h" 
+
+"{ObjApp}UArticleViewCache.cp.o" Ä ¶
+		"{SrcApp}UArticleViewCache.cp"  ¶
+		"{SrcApp}UArticleViewCache.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}UArticleView.h"  ¶
+		"{SrcApp}UTextView.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UArticleManageView.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}ViewTools.h"  ¶
+		"{SrcApp}UPrefsDatabase.h" 
+
+"{ObjApp}UAsyncFile.cp.o" Ä ¶
+		"{SrcApp}UAsyncFile.cp"  ¶
+		"{SrcApp}UASyncFile.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}ExitToShellPatch.h" 
+
+"{ObjApp}UBinariesCmds.cp.o" Ä ¶
+		"{SrcApp}UBinariesCmds.cp"  ¶
+		"{SrcApp}UBinariesCmds.h"  ¶
+		"{SrcApp}UBinDecoders.h"  ¶
+		"{SrcApp}UArticleCache.h"  ¶
+		"{SrcApp}UArticle.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}UProgress.h"  ¶
+		"{SrcApp}UGroupDoc.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UAsyncFile.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}ProcessTools.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}UDynDynArray.h" 
+
+"{ObjApp}UBinDecoders.cp.o" Ä ¶
+		"{SrcApp}UBinDecoders.cp"  ¶
+		"{SrcApp}UBinDecoders.h"  ¶
+		"{SrcApp}UAsyncFile.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UPrefsDatabase.h" 
+
+"{ObjApp}UBufferedFileStream.cp.o" Ä ¶
+		"{SrcApp}UBufferedFileStream.cp"  ¶
+		"{SrcApp}UBufferedFileStream.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}Tools.h" 
+
+"{ObjApp}UDiscBase.cp.o" Ä ¶
+		"{SrcApp}UDiscBase.cp"  ¶
+		"{SrcApp}UDiscBase.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}StreamTools.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}UIDDictionary.h"  ¶
+		"{SrcApp}UArticleEntry.h"  ¶
+		"{SrcApp}UPrefsDatabase.h" 
+
+"{ObjApp}UDiscListCmds.cp.o" Ä ¶
+		"{SrcApp}UDiscListCmds.cp"  ¶
+		"{SrcApp}UDiscListCmds.h"  ¶
+		"{SrcApp}UArticleListView.h"  ¶
+		"{SrcApp}UViewListView.h"  ¶
+		"{SrcApp}UArticleStatus.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UArticleViewCache.h"  ¶
+		"{SrcApp}UObjectCache.h" 
+
+"{ObjApp}UDiscListView.cp.o" Ä ¶
+		"{SrcApp}UDiscListView.cp"  ¶
+		"{SrcApp}UDiscListView.h"  ¶
+		"{SrcApp}UArticleStatus.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UDiscBase.h"  ¶
+		"{SrcApp}UArticleEntry.h"  ¶
+		"{SrcApp}UDiscListCmds.h"  ¶
+		"{SrcApp}UBinariesCmds.h"  ¶
+		"{SrcApp}UPostArticleCmds.h"  ¶
+		"{SrcApp}UPostArticleView.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}UNewsAppl.h"  ¶
+		"{SrcApp}UGroupDoc.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}URowSelection.h"  ¶
+		"{SrcApp}UTextScroller.h"  ¶
+		"{SrcApp}ViewTools.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UDynDynArray.h"  ¶
+		"{SrcApp}MenuGlobals.h" 
+
+"{ObjApp}UDynDynArray.cp.o" Ä ¶
+		"{SrcApp}UDynDynArray.cp"  ¶
+		"{SrcApp}UDynDynArray.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}StreamTools.h" 
+
+"{ObjApp}UFakeNntp.cp.o" Ä ¶
+		"{SrcApp}UFakeNntp.cp"  ¶
+		"{SrcApp}UFakeNntp.h"  ¶
+		"{SrcApp}UNntp.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}UProgress.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}UAsyncFile.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}UPassword.h"  ¶
+		"{SrcApp}UThread.h" 
+
+"{ObjApp}UFatalError.cp.o" Ä ¶
+		"{SrcApp}UFatalError.cp"  ¶
+		"{SrcApp}UFatalError.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}ExitToShellPatch.h"  ¶
+		"{SrcApp}UPrefsDatabase.h" 
+
+"{ObjApp}UFolderSelectView.cp.o" Ä ¶
+		"{SrcApp}UFolderSelectView.cp"  ¶
+		"{SrcApp}UFolderSelectView.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UASyncFile.h"  ¶
+		"{SrcApp}UPrefsDatabase.h" 
+
+"{ObjApp}UGroupDoc.cp.o" Ä ¶
+		"{SrcApp}UGroupDoc.cp"  ¶
+		"{SrcApp}UGroupDoc.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}UDiscListView.h"  ¶
+		"{SrcApp}UArticleStatus.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UDiscBase.h"  ¶
+		"{SrcApp}UGroupDocCmds.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}UNewsAppl.h"  ¶
+		"{SrcApp}StreamTools.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}UBufferedFileStream.h"  ¶
+		"{SrcApp}UAsyncFile.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}FileTools.h" 
+
+"{ObjApp}UGroupDocCmds.cp.o" Ä ¶
+		"{SrcApp}UGroupDocCmds.cp"  ¶
+		"{SrcApp}UGroupDocCmds.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}UNewsAppl.h"  ¶
+		"{SrcApp}UNntp.h"  ¶
+		"{SrcApp}UProgress.h"  ¶
+		"{SrcApp}UGroupDoc.h"  ¶
+		"{SrcApp}UDiscBase.h"  ¶
+		"{SrcApp}UDiscListView.h"  ¶
+		"{SrcApp}UArticleStatus.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UGroupTree.h"  ¶
+		"{SrcApp}UHeaderFetcher.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}UPrefsFileMgr.h"  ¶
+		"{SrcApp}UPrefsDatabase.h" 
+
+"{ObjApp}UGroupList.cp.o" Ä ¶
+		"{SrcApp}UGroupList.cp"  ¶
+		"{SrcApp}UGroupList.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}StreamTools.h" 
+
+"{ObjApp}UGroupListCmds.cp.o" Ä ¶
+		"{SrcApp}UGroupListCmds.cp"  ¶
+		"{SrcApp}UGroupListCmds.h"  ¶
+		"{SrcApp}UGroupViewCmds.h"  ¶
+		"{SrcApp}UPeriodic.h"  ¶
+		"{SrcApp}UGroupListView.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UGroupList.h"  ¶
+		"{SrcApp}UGroupListDoc.h"  ¶
+		"{SrcApp}UGroupTree.h"  ¶
+		"{SrcApp}UNewsAppl.h"  ¶
+		"{SrcApp}UGroupDocCmds.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}UNntp.h"  ¶
+		"{SrcApp}UProgress.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}UFatalError.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}UThread.h" 
+
+"{ObjApp}UGroupListDoc.cp.o" Ä ¶
+		"{SrcApp}UGroupListDoc.cp"  ¶
+		"{SrcApp}UGroupListDoc.h"  ¶
+		"{SrcApp}UGroupListView.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UGroupList.h"  ¶
+		"{SrcApp}UGroupListCmds.h"  ¶
+		"{SrcApp}UGroupViewCmds.h"  ¶
+		"{SrcApp}UPeriodic.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}UFatalError.h"  ¶
+		"{SrcApp}StreamTools.h"  ¶
+		"{SrcApp}UBufferedFileStream.h"  ¶
+		"{SrcApp}UNewsAppl.h" 
+
+"{ObjApp}UGroupListView.cp.o" Ä ¶
+		"{SrcApp}UGroupListView.cp"  ¶
+		"{SrcApp}UGroupListView.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UGroupListCmds.h"  ¶
+		"{SrcApp}UGroupViewCmds.h"  ¶
+		"{SrcApp}UPeriodic.h"  ¶
+		"{SrcApp}UGroupListDoc.h"  ¶
+		"{SrcApp}UGroupList.h"  ¶
+		"{SrcApp}UNewsAppl.h"  ¶
+		"{SrcApp}UGroupDocCmds.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UThread.h" 
+
+"{ObjApp}UGroupTree.cp.o" Ä ¶
+		"{SrcApp}UGroupTree.cp"  ¶
+		"{SrcApp}UGroupTree.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}UProgress.h"  ¶
+		"{SrcApp}UDynDynArray.h"  ¶
+		"{SrcApp}UGrouplist.h"  ¶
+		"{SrcApp}StreamTools.h"  ¶
+		"{SrcApp}NetAsciiTools.h" 
+
+"{ObjApp}UGroupTreeCmds.cp.o" Ä ¶
+		"{SrcApp}UGroupTreeCmds.cp"  ¶
+		"{SrcApp}UGroupTreeCmds.h"  ¶
+		"{SrcApp}UGroupViewCmds.h"  ¶
+		"{SrcApp}UGroupTreeView.h"  ¶
+		"{SrcApp}FastBits.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UNewsAppl.h"  ¶
+		"{SrcApp}UGroupTreeDoc.h"  ¶
+		"{SrcApp}UGroupTree.h"  ¶
+		"{SrcApp}UGroupList.h"  ¶
+		"{SrcApp}UProgress.h" 
+
+"{ObjApp}UGroupTreeDoc.cp.o" Ä ¶
+		"{SrcApp}UGroupTreeDoc.cp"  ¶
+		"{SrcApp}UGroupTreeDoc.h"  ¶
+		"{SrcApp}UGroupTreeView.h"  ¶
+		"{SrcApp}FastBits.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UGroupTree.h"  ¶
+		"{SrcApp}UGroupListDoc.h"  ¶
+		"{SrcApp}UGroupList.h"  ¶
+		"{SrcApp}UNewsAppl.h"  ¶
+		"{SrcApp}UNntp.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}UProgress.h"  ¶
+		"{SrcApp}UPrefsFileMgr.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}StreamTools.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}UBufferedFileStream.h" 
+
+"{ObjApp}UGroupTreeView.cp.o" Ä ¶
+		"{SrcApp}UGroupTreeView.cp"  ¶
+		"{SrcApp}UGroupTreeView.h"  ¶
+		"{SrcApp}FastBits.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UGroupViewCmds.h"  ¶
+		"{SrcApp}UGroupTreeCmds.h"  ¶
+		"{SrcApp}UGroupDocCmds.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}UDiscListView.h"  ¶
+		"{SrcApp}UArticleStatus.h"  ¶
+		"{SrcApp}UDynDynArray.h"  ¶
+		"{SrcApp}UGroupList.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}UNewsAppl.h"  ¶
+		"{SrcApp}UGroupTreeDoc.h"  ¶
+		"{SrcApp}UGroupTree.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}StreamTools.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}ViewTools.h" 
+
+"{ObjApp}UGroupViewCmds.cp.o" Ä ¶
+		"{SrcApp}UGroupViewCmds.cp"  ¶
+		"{SrcApp}UGroupViewCmds.h"  ¶
+		"{SrcApp}UGroupTreeDoc.h"  ¶
+		"{SrcApp}UGroupTree.h"  ¶
+		"{SrcApp}UGroupTreeView.h"  ¶
+		"{SrcApp}FastBits.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UGroupList.h"  ¶
+		"{SrcApp}UGroupListView.h"  ¶
+		"{SrcApp}UNewsAppl.h"  ¶
+		"{SrcApp}UGroupDoc.h"  ¶
+		"{SrcApp}UGroupListDoc.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}ViewTools.h" 
+
+"{ObjApp}UHashTable.cp.o" Ä ¶
+		"{SrcApp}UHashTable.cp"  ¶
+		"{SrcApp}UHashTable.h"  ¶
+		"{SrcApp}StreamTools.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UThread.h" 
+
+"{ObjApp}UHeaderFetcher.cp.o" Ä ¶
+		"{SrcApp}UHeaderFetcher.cp"  ¶
+		"{SrcApp}UHeaderFetcher.h"  ¶
+		"{SrcApp}UHeaderList.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}UNntp.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}UFatalError.h" 
+
+"{ObjApp}UHeaderList.cp.o" Ä ¶
+		"{SrcApp}UHeaderList.cp"  ¶
+		"{SrcApp}UHeaderList.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}UNntp.h"  ¶
+		"{SrcApp}UObjectCache.h" 
+
+"{ObjApp}UIDDictionary.cp.o" Ä ¶
+		"{SrcApp}UIDDictionary.cp"  ¶
+		"{SrcApp}UIDDictionary.h"  ¶
+		"{SrcApp}UHashTable.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}StreamTools.h"  ¶
+		"{SrcApp}UFatalError.h"  ¶
+		"{SrcApp}UThread.h" 
+
+"{ObjApp}UMacTcp.cp.o" Ä ¶
+		"{SrcApp}UMacTcp.cp"  ¶
+		"{SrcApp}UMacTcp.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}UProgress.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UFatalError.h"  ¶
+		"{SrcApp}ExitToShellPatch.h" 
+
+"{ObjApp}UNavigatorView.cp.o" Ä ¶
+		"{SrcApp}UNavigatorView.cp"  ¶
+		"{SrcApp}UNavigatorView.h"  ¶
+		"{SrcApp}FastBits.h"  ¶
+		"{SrcApp}UFatalError.h" 
+
+"{ObjApp}UNetAsciiProtocol.cp.o" Ä ¶
+		"{SrcApp}UNetAsciiProtocol.cp"  ¶
+		"{SrcApp}UNetAsciiProtocol.h"  ¶
+		"{SrcApp}UMacTcp.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}UProgress.h"  ¶
+		"{SrcApp}UPrefsDatabase.h" 
+
+"{ObjApp}UNewsAppl.cp.o" Ä ¶
+		"{SrcApp}UNewsAppl.cp"  ¶
+		"{SrcApp}UNewsAppl.h"  ¶
+		"{SrcApp}UNewsApplCmds.h"  ¶
+		"{SrcApp}UGroupDoc.h"  ¶
+		"{SrcApp}UGroupListDoc.h"  ¶
+		"{SrcApp}UGroupTreeDoc.h"  ¶
+		"{SrcApp}UPrefsFileMgr.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}UPreferencesView.h"  ¶
+		"{SrcApp}UGroupTree.h"  ¶
+		"{SrcApp}UArticleStatus.h"  ¶
+		"{SrcApp}TestCode.h"  ¶
+		"{SrcApp}UProgressCache.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}UAsyncFile.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UFatalError.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UGroupTreeCmds.h"  ¶
+		"{SrcApp}UGroupViewCmds.h"  ¶
+		"{SrcApp}UPassword.h"  ¶
+		"{SrcApp}UNntp.h"  ¶
+		"{SrcApp}UAppleScriptCmds.h"  ¶
+		"{SrcApp}ViewTools.h"  ¶
+		"{SrcApp}UArticleTextCache.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}MenuGlobals.h" 
+
+"{ObjApp}UNewsApplCmds.cp.o" Ä ¶
+		"{SrcApp}UNewsApplCmds.cp"  ¶
+		"{SrcApp}UNewsApplCmds.h"  ¶
+		"{SrcApp}UNewsAppl.h"  ¶
+		"{SrcApp}UGroupTreeDoc.h"  ¶
+		"{SrcApp}UGroupTree.h"  ¶
+		"{SrcApp}UGroupTreeCmds.h"  ¶
+		"{SrcApp}UGroupViewCmds.h"  ¶
+		"{SrcApp}UPrefsFileMgr.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}UProgress.h"  ¶
+		"{SrcApp}UProgressCache.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}UArticleCache.h"  ¶
+		"{SrcApp}UArticleTextCache.h"  ¶
+		"{SrcApp}UArticleViewCache.h"  ¶
+		"{SrcApp}UNntp.h"  ¶
+		"{SrcApp}UMacTCP.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UAsyncFile.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}UPassword.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}UPreferencesView.h"  ¶
+		"{SrcApp}ViewTools.h"  ¶
+		"{SrcApp}UGroupDocCmds.h"  ¶
+		"{SrcApp}UAppleScriptCmds.h" 
+
+"{ObjApp}UNntp.cp.o" Ä ¶
+		"{SrcApp}UNntp.cp"  ¶
+		"{SrcApp}UNntp.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}URealNntp.h"  ¶
+		"{SrcApp}UFakeNntp.h"  ¶
+		"{SrcApp}UNewsAppl.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}UProgress.h"  ¶
+		"{SrcApp}UFatalError.h" 
+
+"{ObjApp}UObjectCache.cp.o" Ä ¶
+		"{SrcApp}UObjectCache.cp"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UFatalError.h" 
+
+"{ObjApp}UOffsetLengthList.cp.o" Ä ¶
+		"{SrcApp}UOffsetLengthList.cp"  ¶
+		"{SrcApp}UOffsetLengthList.h"  ¶
+		"{SrcApp}StreamTools.h"  ¶
+		"{SrcApp}Tools.h" 
+
+"{ObjApp}UPassword.cp.o" Ä ¶
+		"{SrcApp}UPassword.cp"  ¶
+		"{SrcApp}UPassword.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UNntp.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}ViewTools.h" 
+
+"{ObjApp}UPeriodic.cp.o" Ä ¶
+		"{SrcApp}UPeriodic.cp"  ¶
+		"{SrcApp}UPeriodic.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}UFatalError.h" 
+
+"{ObjApp}UPostArticleCmds.cp.o" Ä ¶
+		"{SrcApp}UPostArticleCmds.cp"  ¶
+		"{SrcApp}UPostArticleCmds.h"  ¶
+		"{SrcApp}UPostArticleView.h"  ¶
+		"{SrcApp}UArticle.h"  ¶
+		"{SrcApp}UArticleCache.h"  ¶
+		"{SrcApp}UGroupDoc.h"  ¶
+		"{SrcApp}UDiscBase.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}UAsyncFile.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UNntp.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}UMacTCP.h"  ¶
+		"{SrcApp}UProgress.h"  ¶
+		"{SrcApp}ProcessTools.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}ISO2022Conversion.h"  ¶
+		"{SrcApp}UDynDynArray.h"  ¶
+		"{SrcApp}UBufferedFileStream.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}UFolderSelectView.h" 
+
+"{ObjApp}UPostArticleView.cp.o" Ä ¶
+		"{SrcApp}UPostArticleView.cp"  ¶
+		"{SrcApp}UPostArticleView.h"  ¶
+		"{SrcApp}UPostArticleCmds.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}UThread.h" 
+
+"{ObjApp}UPreferencesView.cp.o" Ä ¶
+		"{SrcApp}UPreferencesView.cp"  ¶
+		"{SrcApp}UPreferencesView.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}UNntp.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}UFolderSelectView.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UArticleTextCache.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}ViewTools.h"  ¶
+		"{SrcApp}ProcessTools.h"  ¶
+		"{SrcApp}UAppleScriptCmds.h"  ¶
+		"{SrcApp}Rsrcglobals.h"  ¶
+		"{SrcApp}MenuGlobals.h" 
+
+"{ObjApp}UPrefsDatabase.cp.o" Ä ¶
+		"{SrcApp}UPrefsDatabase.cp"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}UDynDynArray.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}StreamTools.h"  ¶
+		"{SrcApp}UAsyncFile.h"  ¶
+		"{SrcApp}FontTools.h" 
+
+"{ObjApp}UPrefsFileMgr.cp.o" Ä ¶
+		"{SrcApp}UPrefsFileMgr.cp"  ¶
+		"{SrcApp}UPrefsFileMgr.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}UAsyncFile.h"  ¶
+		"{SrcApp}FileTools.h"  ¶
+		"{SrcApp}UBufferedFileStream.h"  ¶
+		"{SrcApp}UNntp.h"  ¶
+		"{SrcApp}UObjectCache.h" 
+
+"{ObjApp}UProgress.cp.o" Ä ¶
+		"{SrcApp}UProgress.cp"  ¶
+		"{SrcApp}UProgress.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}Tools.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}UFatalError.h" 
+
+"{ObjApp}UProgressCache.cp.o" Ä ¶
+		"{SrcApp}UProgressCache.cp"  ¶
+		"{SrcApp}UProgressCache.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}UProgress.h" 
+
+"{ObjApp}URealNntp.cp.o" Ä ¶
+		"{SrcApp}URealNntp.cp"  ¶
+		"{SrcApp}URealNntp.h"  ¶
+		"{SrcApp}UNntp.h"  ¶
+		"{SrcApp}UObjectCache.h"  ¶
+		"{SrcApp}UNetAsciiProtocol.h"  ¶
+		"{SrcApp}UProgress.h"  ¶
+		"{SrcApp}UPrefsDatabase.h"  ¶
+		"{SrcApp}UPassword.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}Tools.h" 
+
+"{ObjApp}URowSelection.cp.o" Ä ¶
+		"{SrcApp}URowSelection.cp"  ¶
+		"{SrcApp}URowSelection.h" 
+
+"{ObjApp}UStructureInspectors.cp.o" Ä ¶
+		"{SrcApp}UStructureInspectors.cp"  ¶
+		"{SrcApp}UStructureInspectors.h" 
+
+"{ObjApp}UTextScroller.cp.o" Ä ¶
+		"{SrcApp}UTextScroller.cp"  ¶
+		"{SrcApp}UTextScroller.h" 
+
+"{ObjApp}UTextView.cp.o" Ä ¶
+		"{SrcApp}UTextView.cp"  ¶
+		"{SrcApp}UTextView.h"  ¶
+		"{SrcApp}FontTools.h"  ¶
+		"{SrcApp}NetAsciiTools.h"  ¶
+		"{SrcApp}ViewTools.h"  ¶
+		"{SrcApp}Tools.h" 
+
+"{ObjApp}UThread.a.cp.o" Ä ¶
+		"{SrcApp}UThread.a.cp"  ¶
+		"{SrcApp}UFatalError.h" 
+
+"{ObjApp}UThread.cp.o" Ä ¶
+		"{SrcApp}UThread.cp"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}UThreadStackSwap.h"  ¶
+		"{SrcApp}UThreadLongJmp.h"  ¶
+		"{SrcApp}UThreadApple.h"  ¶
+		"{SrcApp}UFatalError.h"  ¶
+		"{SrcApp}UProgress.h"  ¶
+		"{SrcApp}UProgressCache.h"  ¶
+		"{SrcApp}UObjectCache.h" 
+
+"{ObjApp}UThreadApple.cp.o" Ä ¶
+		"{SrcApp}UThreadApple.cp"  ¶
+		"{SrcApp}UThreadApple.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}UFatalError.h" 
+
+"{ObjApp}UThreadLongJmp.cp.o" Ä ¶
+		"{SrcApp}UThreadLongJmp.cp"  ¶
+		"{SrcApp}UThreadLongJmp.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}UFatalError.h"  ¶
+		"{SrcApp}Tools.h" 
+
+"{ObjApp}UThreadStackSwap.cp.o" Ä ¶
+		"{SrcApp}UThreadStackSwap.cp"  ¶
+		"{SrcApp}UThreadStackSwap.h"  ¶
+		"{SrcApp}UThread.h"  ¶
+		"{SrcApp}UFatalError.h" 
+
+"{ObjApp}UTriangleControl.cp.o" Ä ¶
+		"{SrcApp}UTriangleControl.cp"  ¶
+		"{SrcApp}UTriangleControl.h"  ¶
+		"{SrcApp}ViewTools.h" 
+
+"{ObjApp}UViewListView.cp.o" Ä ¶
+		"{SrcApp}UViewListView.cp"  ¶
+		"{SrcApp}UViewListView.h" 
+
+"{ObjApp}ViewTools.cp.o" Ä ¶
+		"{SrcApp}ViewTools.cp"  ¶
+		"{SrcApp}ViewTools.h"  ¶
+		"{SrcApp}Tools.h" 
+
+#MakeAutoMakeDep- ¶
+#.......................................................................
+
+"{ObjApp}dnr.c.o" Ä ¶
+		"{SrcApp}dnr.c"
+	{MAEcho} {EchoOptions} "Compiling:     dnr.c"
+	quote {MAC} ¶
+		{COptions} ¶
+		{CPlusCPUOptions} ¶
+		{OtherCOptions} ¶
+		-i "{SrcApp}" ¶
+		-i "{CIncludes}" ¶
+		-i "{MACPlusIncludes}" ¶
+		-o {ObjApp}dnr.c.o ¶
+		{SrcApp}dnr.c
+	{MAC} ¶
+		{COptions} ¶
+		{CPlusCPUOptions} ¶
+		{OtherCOptions} ¶
+		-i "{SrcApp}" ¶
+		-i "{CIncludes}" ¶
+		-i "{MACPlusIncludes}" ¶
+		-o {ObjApp}dnr.c.o ¶
+		{SrcApp}dnr.c
+
+
+"{ObjApp}MyDontDeadStrip.cp.o" Ä ¶
+		"{SrcApp}MyDontDeadStrip.cp"  ¶
+		"{SrcApp}MyDontDeadStrip.h" 
+
+"{ObjApp}UThread.a.o" Ä ¶
+		"{SrcApp}UThread.a"  ¶
+
+"{ObjApp}MacAppRsrc.rsrc" Ä ¶
+		"{SrcApp}MacAppRsrc.r"
+
+"{ObjApp}Misc.rsrc" Ä ¶
+		"{SrcApp}Misc.r" ¶
+		"{SrcApp}Menus.r" ¶
+		"{SrcApp}Views.r" ¶
+		"{SrcApp}Errors.r" ¶
+		"{SrcApp}ErrorGlobals.h" ¶
+		"{ObjApp}MacAppRsrc.rsrc"
+
+"{ObjApp}Strings.rsrc" Ä ¶
+		"{SrcApp}Strings.r"
+		{MAEcho} {EchoOptions} "String-rez:    Strings.r"
+		rez	-d _DATETIME_="¶"`date -n`¶"" ¶
+				-d _DATESTR_="¶"`date -s`¶"" ¶
+				-c RSED -t rsrc ¶
+				"{SrcApp}Strings.r" -o "{ObjApp}Strings.rsrc"
+
+FAQname = nuntius-faq.txt.cp
+FAQsrc = {SrcApp}:docs:{FAQname}
+
+"{SrcApp}faq.rsrc" Ä {FAQsrc}
+		{MAEcho} {EchoOptions} "String-rez:    {FAQname}"
+		begin
+			echo "data 'TEXT' (4110, ¶"Frequently Asked Questions¶") ¶{"
+			StreamEdit -d ¶
+				-e '¥ || ° || /¥¶/¶*/ || /¥¶*¶// next' ¶
+				-e '!/Å/ set PRE PRE"¶n";next' ¶
+				-e '/Å/ pr PRE .;set PRE ""' ¶
+				< "{FAQsrc}" > {tmp}
+			DumpFile -a -o {tmp} | see '7,$ pr "$¶""."¶""'
+			echo "};"
+		end | rez -c RSED -t rsrc -o "faq.rsrc"
+
+#---------------------------------------------------------------------------------------------------
+#	List resource files that the Rez file includes if you want to include
+#	more or less than the standard set
+# OtherRsrcFiles = ¶
+#	"{MAObj}Printing.rsrc" ¶
+#	"{MAObj}FloatWindow.rsrc"
+
+OtherRsrcFiles = ¶
+	"{SrcApp}Nuntius.AdLib" ¶
+	"{SrcApp}Nuntius.ResEdit" ¶
+	"{ObjApp}Strings.rsrc" ¶
+	"{ObjApp}Misc.rsrc" ¶
+	"{SrcApp}faq.rsrc"
+
+
+#MakeAutoSegMap+
+XSegmentMappings = ¶
+	-sn AActivate=MacApp&Nuntius¶
+	-sn AClipboard=MacApp&Nuntius¶
+	-sn AClose=MacApp&Nuntius¶
+	-sn ADebug=MacApp&Nuntius¶
+	-sn ADoCommand=MacApp&Nuntius¶
+	-sn AEClose=MacApp&Nuntius¶
+	-sn AEInitialize=MacApp&Nuntius¶
+	-sn AEAttributes=MacApp&Nuntius¶
+	-sn AENonRes=MacApp&Nuntius¶
+	-sn AEReadWrite=MacApp&Nuntius¶
+	-sn AERes=MacApp&Nuntius¶
+	-sn AESend=MacApp&Nuntius¶
+	-sn AFile=MacApp&Nuntius¶
+	-sn AFinder=MacApp&Nuntius¶
+	-sn AHelp=MacApp&Nuntius¶
+	-sn AInit=GInit ¶
+	-sn ANonRes=MacApp&Nuntius¶
+	-sn AOpen=MacApp&Nuntius¶
+	-sn AReadFile=MacApp&Nuntius¶
+	-sn ASelCommand=MacApp&Nuntius¶
+	-sn ATerminate=MacApp&Nuntius¶
+	-sn AWriteFile=MacApp&Nuntius¶
+	-sn ConstructorRes=MacApp&Nuntius¶
+	-sn DepInit=GInit ¶
+	-sn DepRes=MacApp&Nuntius¶
+	-sn Disassembler=MacApp&Nuntius¶
+	-sn DlgClose=MacApp&Nuntius¶
+	-sn DlgInit=GInit ¶
+	-sn DlgNonRes=MacApp&Nuntius¶
+	-sn DlgOpen=MacApp&Nuntius¶
+	-sn DlgReadResource=MacApp&Nuntius¶
+	-sn DlgWriteResource=MacApp&Nuntius¶
+	-sn DlgRes=MacApp&Nuntius¶
+	-sn GCRes=MacApp&Nuntius¶
+	-sn GrabberDoCommand=MacApp&Nuntius¶
+	-sn GVClose=MacApp&Nuntius¶
+	-sn GVDoCommand=MacApp&Nuntius¶
+	-sn GVInit=GInit ¶
+	-sn GVNonRes=MacApp&Nuntius¶
+	-sn GVOpen=MacApp&Nuntius¶
+	-sn GVReadResource=MacApp&Nuntius¶
+	-sn GVWriteResource=MacApp&Nuntius¶
+	-sn GVRes=MacApp&Nuntius¶
+	-sn GVSelCommand=MacApp&Nuntius¶
+	-sn INTENV=MacApp&Nuntius¶
+	-sn ListDebug=MacApp&Nuntius¶
+	-sn ListRes=MacApp&Nuntius¶
+	-sn ListNonRes=MacApp&Nuntius¶
+	-sn IteratorRes=MacApp&Nuntius¶
+	-sn MAAboutApp=MacApp&Nuntius¶
+	-sn MAActivate=MacApp&Nuntius¶
+	-sn MAAdornerRes=MacApp&Nuntius¶
+	-sn MAAdornerNonRes=MacApp&Nuntius¶
+	-sn MAApplicationRes=MacApp&Nuntius¶
+	-sn MAAssociationRes=MacApp&Nuntius¶
+	-sn MAAssociationNonRes=MacApp&Nuntius¶
+	-sn MABehaviorRes=MacApp&Nuntius¶
+	-sn MABehaviorNonRes=MacApp&Nuntius¶
+	-sn MABusyCursorRes=MacApp&Nuntius¶
+	-sn MAClipboard=MacApp&Nuntius¶
+	-sn MAClose=MacApp&Nuntius¶
+	-sn MACommandRes=MacApp&Nuntius¶
+	-sn MACommandNonRes=MacApp&Nuntius¶
+	-sn MAControlRes=MacApp&Nuntius¶
+	-sn MAControlNonRes=MacApp&Nuntius¶
+	-sn MADebug=MacApp&Nuntius¶
+	-sn MADebug2=MacApp&Nuntius¶
+	-sn MADebugger=Main ¶
+	-sn MADesignatorNonRes=MacApp&Nuntius¶
+	-sn MADesignatorRead=MacApp&Nuntius¶
+	-sn MADesignatorRes=MacApp&Nuntius¶
+	-sn MADesignatorWrite=MacApp&Nuntius¶
+	-sn MADoCommand=MacApp&Nuntius¶
+	-sn MADocumentRes=MacApp&Nuntius¶
+	-sn MADocumentNonRes=MacApp&Nuntius¶
+	-sn MAError=MacApp&Nuntius¶
+	-sn MAEvtHandlerRes=MacApp&Nuntius¶
+	-sn MAEvtHandlerNonRes=MacApp&Nuntius¶
+	-sn MAFailureRes=MAMain ¶
+	-sn MAFile=MacApp&Nuntius¶
+	-sn MAFileClose=MacApp&Nuntius¶
+	-sn MAFileOpen=MacApp&Nuntius¶
+	-sn MAFileRead=MacApp&Nuntius¶
+	-sn MAFileWrite=MacApp&Nuntius¶
+	-sn MAFileRes=MacApp&Nuntius¶
+	-sn MAFileNonRes=MacApp&Nuntius¶
+	-sn MAFinder=MacApp&Nuntius¶
+	-sn MAGeometryRes=MacApp&Nuntius¶
+	-sn MAGlobalsRes=MAMain ¶
+	-sn MAHelp=MacApp&Nuntius¶
+	-sn MAInit=GInit ¶
+	-sn MAMemoryRes=MAMain ¶
+	-sn HeapSeg=MacApp&Nuntius¶
+	-sn MAMenuInit=GInit ¶
+	-sn MAMenuNever=MacApp&Nuntius¶
+	-sn MAMenuRes=MacApp&Nuntius¶
+	-sn MANonRes=MacApp&Nuntius¶
+	-sn MAObjectRes=MacApp&Nuntius¶
+	-sn MAOpen=MacApp&Nuntius¶
+	-sn MAPatchRes=MAMain ¶
+	-sn MAPrint=MacApp&Nuntius¶
+	-sn MAPrintingRes=MacApp&Nuntius¶
+	-sn MAReadFile=MacApp&Nuntius¶
+	-sn MAReadResource=MacApp&Nuntius¶
+	-sn MARes=MacApp&Nuntius¶
+	-sn MAScroll=MacApp&Nuntius¶
+	-sn MAScrollerRes=MacApp&Nuntius¶
+	-sn MAScrollerNonRes=MacApp&Nuntius¶
+	-sn MASectionRes=MacApp&Nuntius¶
+	-sn MASectionNonRes=MacApp&Nuntius¶
+	-sn MASectionClose=MacApp&Nuntius¶
+	-sn MASectionRead=MacApp&Nuntius¶
+	-sn MASectionWrite=MacApp&Nuntius¶
+	-sn MASelCommand=MacApp&Nuntius¶
+	-sn MAStreamNever=MacApp&Nuntius¶
+	-sn MAStreamUtil=MacApp&Nuntius¶
+	-sn MAStreamFree=MacApp&Nuntius¶
+	-sn MAStreamCreate=MacApp&Nuntius¶
+	-sn MAStreamRead=MacApp&Nuntius¶
+	-sn MAStreamWrite=MacApp&Nuntius¶
+	-sn MATabBehaviorRes=MacApp&Nuntius¶
+	-sn MATerminate=MacApp&Nuntius¶
+	-sn MAUtilitiesRes=MAMain ¶
+	-sn MAViewRes=MacApp&Nuntius¶
+	-sn MAViewNonRes=MacApp&Nuntius¶
+	-sn MAWindowRes=MacApp&Nuntius¶
+	-sn MAWindowNonRes=MacApp&Nuntius¶
+	-sn MAWriteFile=MacApp&Nuntius¶
+	-sn MAWriteResource=MacApp&Nuntius¶
+	-sn PerfInit=MacApp&Nuntius¶
+	-sn PerfMain=MacApp&Nuntius¶
+	-sn PerfTerm=MacApp&Nuntius¶
+	-sn PrintActual=MacApp&Nuntius¶
+	-sn PrintClose=MacApp&Nuntius¶
+	-sn PrintDebug=MacApp&Nuntius¶
+	-sn PrintDoCommand=MacApp&Nuntius¶
+	-sn PrintFinder=MacApp&Nuntius¶
+	-sn PrintImage=MacApp&Nuntius¶
+	-sn PrintInit=GInit ¶
+	-sn PrintMain=MacApp&Nuntius¶
+	-sn PrintNonRes=MacApp&Nuntius¶
+	-sn PrintOpen=MacApp&Nuntius¶
+	-sn PrintRes=MacApp&Nuntius¶
+	-sn PrintSelCommand=MacApp&Nuntius¶
+	-sn PrintSpool=MacApp&Nuntius¶
+	-sn SACONSOL=MacApp&Nuntius¶
+	-sn SACONSOLE=MacApp&Nuntius¶
+	-sn SADEV=MacApp&Nuntius¶
+	-sn STDIO=MacApp&Nuntius¶
+	-sn SyncScrollInit=GInit ¶
+	-sn SyncScrollRes=MacApp&Nuntius¶
+	-sn SyncScrollNonRes=MacApp&Nuntius¶
+	-sn TInit=GInit ¶
+	-sn TRes=MacApp&Nuntius¶
+	-sn TearOffClose=MacApp&Nuntius¶
+	-sn TearOffDoCommand=MacApp&Nuntius¶
+	-sn TearOffInit=GInit ¶
+	-sn TearOffRes=MacApp&Nuntius¶
+	-sn TEClipboard=MacApp&Nuntius¶
+	-sn TEClose=MacApp&Nuntius¶
+	-sn TEDebug=MacApp&Nuntius¶
+	-sn TEDoCommand=MacApp&Nuntius¶
+	-sn TEInit=GInit ¶
+	-sn TENonRes=MacApp&Nuntius¶
+	-sn TEOpen=MacApp&Nuntius¶
+	-sn TEReadResource=MacApp&Nuntius¶
+	-sn TEWriteResource=MacApp&Nuntius¶
+	-sn TEPrint=MacApp&Nuntius¶
+	-sn TERes=MacApp&Nuntius¶
+	-sn TEDocClose=MacApp&Nuntius¶
+	-sn TEDocDoCommand=MacApp&Nuntius¶
+	-sn TEDocSelCommand=MacApp&Nuntius¶
+	-sn TEDocNonRes=MacApp&Nuntius¶
+	-sn TEDocOpen=MacApp&Nuntius¶
+	-sn TEDocReadFile=MacApp&Nuntius¶
+	-sn TEDocRes=MacApp&Nuntius¶
+	-sn TEDocWriteFile=MacApp&Nuntius¶
+	-sn WWInit=GInit ¶
+	-sn WWSeg=MacApp&Nuntius¶
+	-sn SCSTDIO=MacApp&Nuntius¶
+	-sn SCSTRING=MacApp&Nuntius¶
+	-sn SCPP=MacApp&Nuntius¶
+	-sn ZSTRING=MacApp&Nuntius¶
+#MakeAutoSegMap- ¶
+	-sn ClassDescRes=MAMiniInit ¶
+	-sn Static_Destructors=MacApp&Nuntius ¶
+	-sn Static_Constructors=MAMiniInit ¶
+	-sn MANever=MacApp&Nuntius ¶
+	-sn WWSeg=MacApp&Nuntius ¶
+	-sn STDCLIB=Main ¶
+	-sn TESelCommand=MacApp&Nuntius ¶
+	-sn SANELIB=MacApp&Nuntius ¶
+
+
+#Don't touch MAMinitInit - is needed in init and gets unloaded
+
+XOtherSegMappings = ¶
+	-sn MyViewTools=MacApp&Nuntius ¶
+	-sn A5Ref=MacApp&Nuntius ¶
+	-sn MyArray=MacApp&Nuntius ¶
+	-sn MyArticle=MacApp&Nuntius ¶
+	-sn MyComm=MacApp&Nuntius ¶
+	-sn MyDialogs=MacApp&Nuntius ¶
+	-sn MyGroup=MacApp&Nuntius ¶
+	-sn MyGroupList=MacApp&Nuntius ¶
+	-sn MyMisc=MacApp&Nuntius ¶
+	-sn MyThread=MacApp&Nuntius ¶
+	-sn MyTools=MacApp&Nuntius ¶
+
+#end

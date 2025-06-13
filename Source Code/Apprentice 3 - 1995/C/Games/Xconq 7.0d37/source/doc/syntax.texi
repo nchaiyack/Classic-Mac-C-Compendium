@@ -1,1 +1,200 @@
-@c Syntax chart for GDL@c This might be standalone or an appendix, so don't say which here,@c rely on including file to do the right thing.Whitespace is never significant, except to separate two symbols or withina string or escaped symbols.[describe rest of lexical stuff?]@example@i{form} ::= @i{module-form}           | ( include [ if-needed ] @i{module-name} [ @i{variant-set} ] * )           | ( if test-form [ symbol ] )	   | ( else [ symbol ] )	   | ( end-if [ symbol ] )	   | @i{world-form}	   | @i{area-form}	   | @i{side-form}	   | side-defaults-form	   | independent-units-form	   | doctrine-form	   | player-form	   | agreement-form	   | unit-form	   | unit-defaults-form	   | scorekeeper-form	   | exu-form	   | evt-form	   | battle-form	   | unit-type-form	   | terrain-type-form	   | material-type-form	   | namer-form       | table-form       | add-form       | ( define symbol value )       | ( set symbol value )       | ( undefine symbol value )       | value@end example@examplemodule-form ::= ( game-module [ module-name ]                   [ game-module-property-binding ] * )module-name ::= stringgame-module-property-binding ::= ( game-module-property-name value )game-module-property-name ::= title | blurb | picture-name | base-game	| instructions | notes | design-notes | version | program-version	| base-module | default-base-modulevariant-definition ::=    ( [ string ] var-type [ var-default ] [ var-range ] [ var-clause ] * )var-type ::= world-size | world-seen | see-all                 | sequential | real-time | symbolvar-default ::= valuevar-range ::= ( value value )var-clause ::= ( [ string ] value [ form ] * )@end example@examplevariant-set ::= ( var-type value )@end example@exampleworld-form ::= ( world [ circumference ] [ world-property-binding ] * )world-property-binding ::= ( world-property-name value )world-property-name ::= circumference | axial-tilt@end example@examplearea-form ::= ( area [ width [ height ] ] [ area-restriction ]                 [ area-property-binding ] * )area-restriction ::= ( restrict width height x y )area-property-binding ::= ( area-property-name value )		| ( terrain [ layer-subform ] * [ string ] * )		| ( aux-terrain terrain-type [ layer-subform ] * [ string ] * )		| ( features feature-list [ layer-subform ] * [ string ] * )		| ( material material-type [ layer-subform ] * [ string ] * )		| ( people-sides [ layer-subform ] * [ string ] * )		| ( elevations [ layer-subform ] * [ string ] * )		| ( temperatures [ layer-subform ] * [ string ] * )		| ( winds [ layer-subform ] * [ string ] * )		| ( clouds [ layer-subform ] * [ string ] * )		| ( cloud-bottoms [ layer-subform ] * [ string ] * )		| ( cloud-heights [ layer-subform ] * [ string ] * )area-property-name ::= width | height | latitude | longitude | cell-widthlayer-subform ::= ( constant n )        | ( subarea x y w h )		| ( xform mul add )		| ( by-bits )		| ( by-char string )		| ( by-name name-list )@end example@exampleside-form ::= ( side [ side-id ] [ side-property-binding ] * )side-defaults-form ::= ( side-defaults [ side-property-binding ] * )side-property-binding ::= ( side-property-name value )side-property-name ::= name | long-name | short-name | noun | plural-noun        | adjective | color-scheme | color | emblem-name | names-locked	| class | active | status | advantage | advantage-min | advantage-max	| controlled-by | trusts | trades | next-numbers | unit-namers	| feature-namers | tech | init-tech | terrain-view | unit-view	| unit-view-dates | turn-time-used | total-time-used | timeouts	| timeouts-used | finished-turn | willing-to-draw | respect-neutrality	| real-timeout | task-limit | doctrines | doctrines-locked	| self-unit | priority | scores | ui-data | ai-data | playerplayer-form ::= ( player [ player-id ] [ player-property-binding ] * )player-id ::= numberplayer-property-binding ::= ( player-property-name value )player-property-name ::= name | config-name | display-name | ai-type-name		| password | initial-advantage@end example@exampleagreement-form ::= ( agreement [ agreement-id ]                        [ agreement-property-binding ] * )agreement-property-binding ::= ( agreement-property-name value )agreement-property-name ::= type-name | title | terms | drafters	| proposers | signers | willing-to-sign | known-to | enforcement	| state@end example@exampleunit-form ::= ( unit [ unit-id ] [ unit-property-binding ] * )unit-defaults-form ::= ( unit-defaults [ reset ] [ unit-property-binding ] * )unit-property-binding ::= ( unit-property-name value )unit-property-name ::= @ | z | s | # | n | nb | cp | hp | cxp | mo		| m | tp | in | opinions | x | act | plan@end example@exampledoctrine-form@end example@exampleexu-formevt-form ::= ( evt turn type observers [ data ] * )@end example@exampletable-form ::= ( table table-name [ table-clause ] * )table-clause ::= value | ( type-or-types type-or-types value )@end example@exampleadd-form ::= ( add type-or-types property-name value )		| ( add table table-name [ table-clause ] * )@end example@exampletype-or-types ::= type | ( [ type ] * )value ::= number         | symbol         | global-variable         | ( [ value ] * )         | ( operation-name [ value ] * )operation-name ::= quote | list | append | removeglobal-constant ::= true | falseglobal-variable ::=		| advantage-min | advantage-max | advantage-default@end example
+@c Syntax chart for GDL
+@c This might be standalone or an appendix, so don't say which here,
+@c rely on including file to do the right thing.
+
+Whitespace is never significant, except to separate two symbols or within
+a string or escaped symbols.
+
+[describe rest of lexical stuff?]
+
+@example
+@i{form} ::= @i{module-form}
+           | ( include [ if-needed ] @i{module-name} [ @i{variant-set} ] * )
+           | ( if test-form [ symbol ] )
+	   | ( else [ symbol ] )
+	   | ( end-if [ symbol ] )
+	   | @i{world-form}
+	   | @i{area-form}
+	   | @i{side-form}
+	   | side-defaults-form
+	   | independent-units-form
+	   | doctrine-form
+	   | player-form
+	   | agreement-form
+	   | unit-form
+	   | unit-defaults-form
+	   | scorekeeper-form
+	   | exu-form
+	   | evt-form
+	   | battle-form
+	   | unit-type-form
+	   | terrain-type-form
+	   | material-type-form
+	   | namer-form
+       | table-form
+       | add-form
+       | ( define symbol value )
+       | ( set symbol value )
+       | ( undefine symbol value )
+       | value
+@end example
+
+
+@example
+module-form ::= ( game-module [ module-name ]
+                   [ game-module-property-binding ] * )
+
+module-name ::= string
+
+game-module-property-binding ::= ( game-module-property-name value )
+
+game-module-property-name ::= title | blurb | picture-name | base-game
+	| instructions | notes | design-notes | version | program-version
+	| base-module | default-base-module
+
+variant-definition ::=
+    ( [ string ] var-type [ var-default ] [ var-range ] [ var-clause ] * )
+
+var-type ::= world-size | world-seen | see-all
+                 | sequential | real-time | symbol
+
+var-default ::= value
+
+var-range ::= ( value value )
+
+var-clause ::= ( [ string ] value [ form ] * )
+@end example
+
+@example
+variant-set ::= ( var-type value )
+@end example
+
+@example
+world-form ::= ( world [ circumference ] [ world-property-binding ] * )
+
+world-property-binding ::= ( world-property-name value )
+
+world-property-name ::= circumference | axial-tilt
+@end example
+
+
+@example
+area-form ::= ( area [ width [ height ] ] [ area-restriction ]
+                 [ area-property-binding ] * )
+
+area-restriction ::= ( restrict width height x y )
+
+area-property-binding ::= ( area-property-name value )
+		| ( terrain [ layer-subform ] * [ string ] * )
+		| ( aux-terrain terrain-type [ layer-subform ] * [ string ] * )
+		| ( features feature-list [ layer-subform ] * [ string ] * )
+		| ( material material-type [ layer-subform ] * [ string ] * )
+		| ( people-sides [ layer-subform ] * [ string ] * )
+		| ( elevations [ layer-subform ] * [ string ] * )
+		| ( temperatures [ layer-subform ] * [ string ] * )
+		| ( winds [ layer-subform ] * [ string ] * )
+		| ( clouds [ layer-subform ] * [ string ] * )
+		| ( cloud-bottoms [ layer-subform ] * [ string ] * )
+		| ( cloud-heights [ layer-subform ] * [ string ] * )
+
+area-property-name ::= width | height | latitude | longitude | cell-width
+
+layer-subform ::= ( constant n )
+        | ( subarea x y w h )
+		| ( xform mul add )
+		| ( by-bits )
+		| ( by-char string )
+		| ( by-name name-list )
+@end example
+
+
+@example
+side-form ::= ( side [ side-id ] [ side-property-binding ] * )
+
+side-defaults-form ::= ( side-defaults [ side-property-binding ] * )
+
+side-property-binding ::= ( side-property-name value )
+
+side-property-name ::= name | long-name | short-name | noun | plural-noun
+        | adjective | color-scheme | color | emblem-name | names-locked
+	| class | active | status | advantage | advantage-min | advantage-max
+	| controlled-by | trusts | trades | next-numbers | unit-namers
+	| feature-namers | tech | init-tech | terrain-view | unit-view
+	| unit-view-dates | turn-time-used | total-time-used | timeouts
+	| timeouts-used | finished-turn | willing-to-draw | respect-neutrality
+	| real-timeout | task-limit | doctrines | doctrines-locked
+	| self-unit | priority | scores | ui-data | ai-data | player
+
+player-form ::= ( player [ player-id ] [ player-property-binding ] * )
+
+player-id ::= number
+
+player-property-binding ::= ( player-property-name value )
+
+player-property-name ::= name | config-name | display-name | ai-type-name
+		| password | initial-advantage
+@end example
+
+@example
+agreement-form ::= ( agreement [ agreement-id ]
+                        [ agreement-property-binding ] * )
+
+agreement-property-binding ::= ( agreement-property-name value )
+
+agreement-property-name ::= type-name | title | terms | drafters
+	| proposers | signers | willing-to-sign | known-to | enforcement
+	| state
+@end example
+
+
+@example
+unit-form ::= ( unit [ unit-id ] [ unit-property-binding ] * )
+
+unit-defaults-form ::= ( unit-defaults [ reset ] [ unit-property-binding ] * )
+
+unit-property-binding ::= ( unit-property-name value )
+
+unit-property-name ::= @ | z | s | # | n | nb | cp | hp | cxp | mo
+		| m | tp | in | opinions | x | act | plan
+@end example
+
+@example
+doctrine-form
+@end example
+
+@example
+exu-form
+
+evt-form ::= ( evt turn type observers [ data ] * )
+@end example
+
+@example
+table-form ::= ( table table-name [ table-clause ] * )
+
+table-clause ::= value | ( type-or-types type-or-types value )
+@end example
+
+
+@example
+add-form ::= ( add type-or-types property-name value )
+		| ( add table table-name [ table-clause ] * )
+@end example
+
+
+@example
+type-or-types ::= type | ( [ type ] * )
+
+value ::= number
+         | symbol
+         | global-variable
+         | ( [ value ] * )
+         | ( operation-name [ value ] * )
+
+operation-name ::= quote | list | append | remove
+
+global-constant ::= true | false
+
+global-variable ::=
+		| advantage-min | advantage-max | advantage-default
+
+@end example

@@ -1,1 +1,17 @@
-				 1			 n			 4		4 	 2		4 	 4	 2			(length)				+-+---------+-+----+----+----+----+----+--+				|n| name... |0|TYPE|AUTH|FLAG|DLEN|RLEN|HC| 		(contents)				+-+---------+-+----+----+----+----+----+--+												DLEN										 2			(length)				+--------------------------------------+--+				| 			DATA FORK 										 |DC| 		(contents)				+--------------------------------------+--+												RLEN										 2			(length)				+--------------------------------------+--+				| 			RESOURCE FORK 								 |RC| 		(contents)				+--------------------------------------+--+When encoding, include two bytes of 0x00 where the CRC should be, and usethem in the calculation of the CRC before writing it to the file. 
+				 1			 n			 4		4 	 2		4 	 4	 2			(length)
+				+-+---------+-+----+----+----+----+----+--+
+				|n| name... |0|TYPE|AUTH|FLAG|DLEN|RLEN|HC| 		(contents)
+				+-+---------+-+----+----+----+----+----+--+
+
+												DLEN										 2			(length)
+				+--------------------------------------+--+
+				| 			DATA FORK 										 |DC| 		(contents)
+				+--------------------------------------+--+
+
+												RLEN										 2			(length)
+				+--------------------------------------+--+
+				| 			RESOURCE FORK 								 |RC| 		(contents)
+				+--------------------------------------+--+
+
+When encoding, include two bytes of 0x00 where the CRC should be, and use
+them in the calculation of the CRC before writing it to the file. 

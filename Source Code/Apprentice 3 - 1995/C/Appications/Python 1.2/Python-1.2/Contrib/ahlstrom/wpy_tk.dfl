@@ -1,1 +1,3 @@
-*Canvas.borderWidth:	2*Canvas.relief:		raised*Button.borderWidth:	4
+*Canvas.borderWidth:	2
+*Canvas.relief:		raised
+*Button.borderWidth:	4

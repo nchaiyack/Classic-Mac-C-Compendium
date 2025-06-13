@@ -1,1 +1,3 @@
-#define SystemSevenOrLater 1INCLUDE "Sim.rsrc";
+#define SystemSevenOrLater 1
+
+INCLUDE "Sim.rsrc";

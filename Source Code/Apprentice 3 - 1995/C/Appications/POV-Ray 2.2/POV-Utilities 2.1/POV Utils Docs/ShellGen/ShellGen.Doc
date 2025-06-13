@@ -1,1 +1,17 @@
- * ShellGen - Snail shell generator * By: ?  Stolen from the following E-mail message  * 	by Eduard [esp] Schwan * #: 44383 S16/Raytrace Sources *     13-Aug-92  11:48:24 * Sb: #44269-#Help! * Fm: Dan Farmer 70703,1632 * To: Jerry Thomaston/DCA Inc. 76004,1655 (X) *  * Jerry, *  * You're doing the snail shell the hard way.  Have you tried * shellgen? I've got a QBasic version for DOS (has a simple * graphics display), but there's a portable c version in the * dkb utilities package.  It uses a logarithmic spiral ala * Clifford Pickover to rotate spheres into a shell.  *     -Dan
+ * ShellGen - Snail shell generator
+ * By: ?  Stolen from the following E-mail message 
+ * 	by Eduard [esp] Schwan
+ * #: 44383 S16/Raytrace Sources
+ *     13-Aug-92  11:48:24
+ * Sb: #44269-#Help!
+ * Fm: Dan Farmer 70703,1632
+ * To: Jerry Thomaston/DCA Inc. 76004,1655 (X)
+ * 
+ * Jerry,
+ * 
+ * You're doing the snail shell the hard way.  Have you tried
+ * shellgen? I've got a QBasic version for DOS (has a simple
+ * graphics display), but there's a portable c version in the
+ * dkb utilities package.  It uses a logarithmic spiral ala
+ * Clifford Pickover to rotate spheres into a shell. 
+ *     -Dan

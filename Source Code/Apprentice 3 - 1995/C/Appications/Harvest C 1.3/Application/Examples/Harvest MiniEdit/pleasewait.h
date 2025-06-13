@@ -1,1 +1,8 @@
-/**** * pleasewait.h * ****/extern	Cursor	waitCursor;int	PleaseWait(void);
+/****
+ * pleasewait.h
+ *
+ ****/
+
+extern	Cursor	waitCursor;
+
+int	PleaseWait(void);

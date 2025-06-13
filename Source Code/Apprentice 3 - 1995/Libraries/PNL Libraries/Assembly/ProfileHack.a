@@ -1,1 +1,52 @@
-	case	on	proc	export	%_ProB	export	%_ProE	export	SETPROFILEPROCS%_ProB	move.l	pbegin,d0	bra.s	both%_ProE	move.l	pexit,d0both	beq.s	over	lea	inproc,a0	tst.b	(a0)	bne.s	over	move.b	#1,(a0)	move.l	a5,-(sp)	lea	mya5,a0	move.l	(a0),a5	move.l	d0,a0	jsr	(a0)	move.l	(sp)+,a5	lea	inproc,a0	clr.b	(a0)over	rts; procedure SetProfileProcs(pbegin,pexit:ProcPtr);SETPROFILEPROCS	move.l	(sp)+,a1	lea	procs,a0	move.l	(sp)+,(a0)+	move.l	(sp)+,(a0)+	move.l	a5,(a0)+	lea	inproc,a0	clr.b	(a0)	jmp	(a1)procspexit	dc.l	0pbegin	dc.l	0mya5	dc.l	0inproc	dc.b	0	endp	endasm -wb "{active}"
+
+	case	on
+
+	proc
+	export	%_ProB
+	export	%_ProE
+	export	SETPROFILEPROCS
+
+%_ProB
+	move.l	pbegin,d0
+	bra.s	both
+%_ProE
+	move.l	pexit,d0
+both
+	beq.s	over
+	lea	inproc,a0
+	tst.b	(a0)
+	bne.s	over
+	move.b	#1,(a0)
+	move.l	a5,-(sp)
+	lea	mya5,a0
+	move.l	(a0),a5
+	move.l	d0,a0
+	jsr	(a0)
+	move.l	(sp)+,a5
+	lea	inproc,a0
+	clr.b	(a0)
+over
+	rts
+
+; procedure SetProfileProcs(pbegin,pexit:ProcPtr);
+SETPROFILEPROCS
+	move.l	(sp)+,a1
+	lea	procs,a0
+	move.l	(sp)+,(a0)+
+	move.l	(sp)+,(a0)+
+	move.l	a5,(a0)+
+	lea	inproc,a0
+	clr.b	(a0)
+	jmp	(a1)
+
+procs
+pexit	dc.l	0
+pbegin	dc.l	0
+mya5	dc.l	0
+inproc	dc.b	0
+
+	endp
+
+	end
+
+asm -wb "{active}"

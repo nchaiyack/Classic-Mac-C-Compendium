@@ -1,1 +1,17 @@
-Things I've used HexEdit for:	Debugging:		Examine other programs' binary output for errors (AIFF, MIDI, etc.)	Spelunking:		Examine/Edit the contents of a MIDI file.		Examine binary files received from the Internet to see what format 		they are in (MacBinary, etc.)	Reverse Engineering:		Figure out how Kanji is encoded in a text file.		Compare MS-Word format to RTF format.		Examine the data fork of MS-Word Application (Owner Name is stored there			in easily decrypted format)	
+Things I've used HexEdit for:
+
+	Debugging:
+		Examine other programs' binary output for errors (AIFF, MIDI, etc.)
+
+	Spelunking:
+		Examine/Edit the contents of a MIDI file.
+		Examine binary files received from the Internet to see what format 
+		they are in (MacBinary, etc.)
+
+	Reverse Engineering:
+		Figure out how Kanji is encoded in a text file.
+		Compare MS-Word format to RTF format.
+		Examine the data fork of MS-Word Application (Owner Name is stored there
+			in easily decrypted format)
+
+	

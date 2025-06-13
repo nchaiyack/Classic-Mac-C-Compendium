@@ -1,1 +1,1323 @@
-/* * rmswin.ri - Microsoft Windows-specific graphics interface code. */#ifdef Graphics#ifndef min#define min(x,y) (((x) < (y))?(x):(y))#define max(x,y) (((x) > (y))?(x):(y))#endif					/* min *//* * pattern symbols */stringint siPatternSyms[] = {  {0, 0}};/* * mix modes (draw ops) */stringint siMixModes[] = {  {0, 0},}; /* * line types */stringint siLineTypes[] = {  {0, 0},};#define NUMSYSCURSORSYMS	0#define NUMCURSORSYMS           0/* * cursor/pointer symbols */stringint siSysCursorSyms[] = {  {0, NUMSYSCURSORSYMS},};stringint siCursorSyms[] = {  {0, NUMCURSORSYMS},};HANDLE mswinInstance;int ncmdShow;/* * wopen */FILE *wopen(char *name, struct b_list *lp, dptr attr, int n, int *err_idx)   {   wbp wb;   wsp ws;   wcp wc;   char answer[128];   int i;   tended struct b_list *tlp;   tended struct descrip attrrslt;   HDC hdc, hdc2;   tlp = lp;   /*    * allocate a binding, a window state, and a context    */   Protect(wb = alc_wbinding(), return NULL);   Protect(wb->window = alc_winstate(), { free_binding(wb); return NULL; });   Protect(wb->context = alc_context(wb), { free_binding(wb); return NULL; });   ws = wb->window;   ws->listp.dword = D_List;   BlkLoc(ws->listp) = (union block *)lp;   ws->width = ws->height = 400;   wc = wb->context;   /*    * process the passed in attributes - by calling wattrib    */   for(i = 0; i < n; i++)      switch (wattrib(wb, StrLoc(attr[i]), StrLen(attr[i]), &attrrslt,			answer)) {      case Failed:	 wclose(wb);	 return NULL;      case Error:	 /* think of something to do here */	 break;	 }   /*    * set the title, defaulting to the "filename" supplied to open()    */   if (ws->windowlabel == NULL) ws->windowlabel = salloc(name);   ws->win = CreateWindow( "iconx", ws->windowlabel, WS_OVERLAPPEDWINDOW,		   ws->posx < 0 ? 0 : ws->posx, ws->posy < 0 ? 0 : ws->posy,		   ws->width, ws->height,		   NULL, NULL, mswinInstance, NULL);   hdc = GetDC(ws->win);   GetTextMetrics(hdc, &(wc->metrics));   wc->leading = wc->metrics.tmHeight;   ws->pix = CreateCompatibleBitmap(hdc, ws->width, ws->height);   ShowWindow(ws->win, ncmdShow);   hdc2 = CreateCompatibleDC(hdc);   SelectObject(hdc2, ws->pix);   BitBlt(hdc2, 0, 0, ws->width, ws->height, hdc, 0, 0, SRCCOPY);   ReleaseDC(ws->win, hdc);   DeleteDC(hdc2);   UpdateWindow(ws->win);   return (FILE *)wb;   }void handle_keypress(wbp wb, UINT msg, WPARAM wp, LPARAM lp, int meta)   {   wsp ws = wb->window;   DWORD dw, t;   WORD x, y;   struct descrip d;   int flags = 0;   StrLen(d) = 1;   StrLoc(d) = (char *)&allchars[FromAscii(wp) & 0xFF];   dw = GetMessagePos();   x = LOWORD(dw);   y = HIWORD(dw);   t = GetMessageTime();   if (GetKeyState(VK_CONTROL) < 0) flags |= ControlMask;   if (GetKeyState(VK_SHIFT) < 0) flags |= ShiftMask;   if (meta) flags |= Mod1Mask;   qevent(&(ws->listp), &d, x, y, t - ws->last_time, flags);   ws->last_time = t;   }LRESULT_CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp){   HDC hdc, hdc2;   PAINTSTRUCT ps;   RECT rect;   wbp wb = NULL;   wsp ws = NULL;   /*    * find a binding associated with the given window.    */   for (wb = wbndngs; wb; wb=wb->next) {      ws = wb->window;      if (((ws->win == hwnd) || (ws->iconwin == hwnd) ||           (ws->pix == hwnd) || (ws->initialPix == hwnd))) break;      }   if (!wb) {      /*        * doesn't look like its for one of our windows, pass it to       * DefWndProc and hope for the best.       */      }   else   switch(msg) {   case WM_PAINT:      hdc = BeginPaint(hwnd, &ps);      hdc2 = CreateCompatibleDC(hdc);      SelectObject(hdc2, ws->pix);      GetClientRect(hwnd, &rect);      BitBlt(hdc, rect.left, rect.top,             rect.right - rect.left + 1, rect.bottom - rect.top + 1,             hdc2, rect.left, rect.top, SRCCOPY);      DeleteDC(hdc2);      EndPaint(hwnd, &ps);      return 0;   case WM_CHAR:      handle_keypress(wb, msg, wp, lp, 0);      return 0;   case WM_SYSCHAR:      handle_keypress(wb, msg, wp, lp, 1);      break;   case WM_DESTROY:      PostQuitMessage(0);      return 0;   }   return DefWindowProc(hwnd, msg, wp, lp);}/* * wclose - make sure the window goes away - no questions asked */int wclose(wbp w)   {   free_binding(w);   return 1;   }int pollevent()   {   wbp w;   MSG m;   /* some while PeekMessage loops here, maybe one per window ? */   while (PeekMessage(&m, NULL, 0, 0, PM_NOREMOVE)) {      GetMessage(&m, NULL, 0, 0);      if (TranslateMessage(&m) == 0) {         DispatchMessage(&m);	 }      }   return 400;   }/* * write some text to both the window and the pixmap */novalue xdis(w,s,n)register wbp w;char *s;int n;   {   XPoint pt;   STDLOCALS(w);   if (stddc) {      if (wc->fg != RGB(0, 0, 0)) SetTextColor(stddc, wc->fg);      if (wc->bg != RGB(255, 255, 255)) SetBkColor(stddc, wc->bg);      TextOut(stddc, ws->x, ws->y, s, n);      }   if (wc->fg != RGB(0, 0, 0)) SetTextColor(pixdc, wc->fg);   if (wc->bg != RGB(255, 255, 255)) SetBkColor(pixdc, wc->bg);   TextOut(pixdc, ws->x, ws->y, s, n);   FREE_STDLOCALS;   ws->x += TEXTWIDTH(w, s, n);   }/* * wputc */int wputc(int ci, wbp wb)   {   char c = (char)ci;   wsp ws = wb->window;   wcp wc = wb->context;   int y_plus_descent;   switch (c) {   case '\n':      ws->y += LEADING(wb);      if (ws->y + DESCENT(wb) > ws->height) {         RECT r;         STDLOCALS(wb);         ws->y -= LEADING(wb);         y_plus_descent = ws->y + DESCENT(wb);	 BitBlt(pixdc, MARGIN, MARGIN + LEADING(wb),	        ws->width, y_plus_descent - MARGIN,	        pixdc, MARGIN, MARGIN, SRCCOPY);         r.left = 0;	 r.top = y_plus_descent - FHEIGHT(wb);	 r.right = ws->width;	 r.bottom = ws->height;         FillRect(pixdc, &r, wc->brush);	 if (stddc) BitBlt(stddc, 0, 0, ws->width, ws->height,	                   pixdc, 0, 0, SRCCOPY);	 FREE_STDLOCALS;         }      /* intended fall-through */    case '\r':      /*       * set the new position x position       */      ws->x = MARGIN;      break;   case '\t':      xdis(wb, "        ", 8 - (XTOCOL(wb,ws->x) & 7));      break;      /*       * Handle backspaces.  This implements cooked mode echo handling.       */   case '\177':   case '\010': {      int i = 0, pre_x;       /*       * Start with the last character queued up.       */      i--;      /*       * Trot back to the control-H itself.       */      while ((i>-EQUEUELEN) && (EVQUESUB(wb,i) != c)) {         i--;	 }      if (i == -EQUEUELEN) break;      /*       * Go past the control-H.       */      i--;      /*       * Go back through any number of control-H's from prior lifetimes.       */      while((i > -EQUEUELEN) && !isprint(EVQUESUB(wb,i))) {         i--;	 }      if (i == -EQUEUELEN) break;      /*       * OK, here's the character we're actually rubbing out.  Back up.       */      c = EVQUESUB(wb,i);      pre_x = ws->x;      ws->x -= TEXTWIDTH(wb, &c, 1);      /*       * Physically erase the character from the queue.  This results in       * two control-H's present in the queue.       */      *evquesub(wb,i) = '\010';      /*       * Save the backed-up position, and draw spaces through the erased.       */      i = ws->x;      while(ws->x < pre_x) {         xdis(wb, " ",1);	 }      ws->x = i;      break;      }    /*     * bell (control-G)     */    case '\007':      break;   default:      xdis(wb, &c, 1);      }   /*    * turn the cursor back on    */   return 0;   }/* * Get a window that has an event pending (queued) */wsp getactivewindow(void){  static LONG next = 0;  LONG i;  wsp ws, ptr, stdws = NULL;  return NULL;}/* * wgetq - get event from pending queue */int wgetq(wbp w, dptr res)   {   MSG m;   wsp ws;   int first = 0;   if (!w || !(ws = w->window) || !(ws->win)) {      return -1;      }   while (1) {      /*       * grab the built up queue       */      if (!EVQUEEMPTY(ws)) {	 EVQUEGET(ws, *res);	 return 1;	 }      GetMessage(&m, NULL, 0, 0);      if (TranslateMessage(&m) == 0) {         DispatchMessage(&m);	 }      }   return -1;   }/* * determine the new size of the client */int setheight(w, height)wbp w;int height;   {   wsp ws = w->window;   ws->height = height;   return Succeeded;   }/* * determine new size of client */int setwidth(w, width)wbp w;SHORT width;   {   wsp ws = w->window;   ws->width = width;   return Succeeded;   }int setgeometry(w, geo)wbp w;char *geo;   {   wsp ws = w->window;   return Succeeded;   }int setcanvas(w,s)wbp w;char *s;   {   return Failed;   }int seticonicstate(w, val)wbp w;char *val;   {   int height;   return Succeeded;   }int seticonlabel(w, val)wbp w;char *val;   {   wsp ws = w->window;   return Succeeded;   }int seticonpos(w, val)wbp w;char *val;   {   return Failed;   }int setwindowlabel(w, val)wbp w;char *val;   {   wsp ws = w->window;   char *tmp;   /*    * plug in the new string    */   /* done (flip) this way to avoid a race condition */   tmp = ws->windowlabel;   ws->windowlabel = salloc(val);   free(tmp);   /*    * if we have to update, do it    */   return Succeeded;   }int setcursor(w, on)wbp w;int on;   {   wsp ws = w->window;   return Succeeded;   }/* * Set the window's font by name. */int setfont(w, s)wbp w;char **s;   {   char buf[64];   return Succeeded;   }/* * rebind() - bind w's context to that of w2. */int rebind(w, w2)wbp w, w2;   {   wsp ws = w->window;   wcp wc;   w->context = wc = w2->context;   return Succeeded;   }novalue setclip(w)wbp w;   {   } int lowerWindow(wbp w)   {   STDLOCALS(w);   FREE_STDLOCALS;   }int raiseWindow(wbp w)   {   STDLOCALS(w);   FREE_STDLOCALS;   }int nativecolor(w, s, r, g, b)wbp w;char *s;int *r, *g, *b;   {   return 0;			/* no new colors beyond those of Icon */   }novalue warpPointer(w, x, y)wbp w;int x, y;   {   }/* * Set the context's fill style by name. */int setfillstyle(w, s)wbp w;char *s;   {   STDLOCALS(w);   if (!strcmp(s, "solid")) {      }   else {      if (!strcmp(s, "masked")      || !strcmp(s, "stippled") || !strcmp(s, "patterned")) {	 }      else if (!strcmp(s, "textured")      || !strcmp(s, "opaquestippled") || !strcmp(s, "opaquepatterned")) {	 }      else {         FREE_STDLOCALS;         return Error;	 }      }   FREE_STDLOCALS;   return Succeeded;   }/* * Set the context's line style by name. */int setlinestyle(w, s)wbp w;char *s;   {   SHORT ltype;   if ((ltype = si_s2i(siLineTypes, s)) < 0)      return Error;   {   STDLOCALS(w);   FREE_STDLOCALS;   return Succeeded;   }   }/* * Set the context's line width */int setlinewidth(wbp w, LONG linewid)   {   STDLOCALS(w);   FREE_STDLOCALS;   return Succeeded;   }/* * Set the foreground to draw in a mutable color (not supported under PM) */int isetfg(wbp w, int i)   {   return Failed;   }/* * Set the context's foreground color */int setfg(wbp wb, char *val)   {   int r, g, b;   wcp wc = wb->context;   HPEN temppen = wc->pen;   HBRUSH tempbrush = wc->brush;   LOGBRUSH lb;   if (parsecolor(wb, val, &r, &g, &b) == Succeeded) {      wc->fg = RGB(r >> 8, g >> 8, b >> 8);      wc->fgname = salloc(val);      wc->pen = CreatePen(wc->linestyle, wc->linewidth, wc->fg);      DeleteObject(temppen);      lb.lbStyle = BS_SOLID;      lb.lbColor = wc->fg;      wc->brush = CreateBrushIndirect(&lb);      return Succeeded;      }   return Failed;   }/* * Set the window context's background color */int setbg(wbp wb, char *val)   {   int r, g, b;   wcp wc = wb->context;   if (parsecolor(wb, val, &r, &g, &b) == Succeeded) {      wc->bg = RGB(r >> 8, g >> 8, b >> 8);      wc->bgname = salloc(val);      return Succeeded;      }   return Failed;   }/* * Set the context's background color by color cell. */int isetbg(w,bg)wbp w;int bg;   {   return 0;   }/* * Set the gamma correction factor  (not supported yet). */int setgamma(w, gamma)wbp w;double gamma;   {   return 0;				/* fail */   }/* * setpointer() - define a mouse pointer shape */int setpointer(w, val)wbp w;char *val;   {   wsp ws = w->window;   int id;   return Succeeded;   }/* * setdrawop() - set the drawing operation */int setdrawop(w, val)wbp w;char *val;   {   wcp wc = w->context;   return Succeeded;   }setdisplay(wbp w, char *val)   {   return Failed;   }setimage(w, val)wbp w;char *val;   {   wsp ws = w->window;   int width, height;   return Succeeded;   }setleading(w, i)wbp w;int i;   {   wcp wc = w->context;   wc->leading = i;   }novalue toggle_fgbg(w)wbp w;   {   LONG tmp;   wcp wc = w->context;   }int getvisual(w, answer)wbp w;char *answer;   {   return Failed;   }/* * getpos() - update the window state's notion of its current position *  (a no-op under OS/2). */int getpos(w)wbp w;   {   return Succeeded;   }novalue getfg(w, answer)wbp w;char *answer;   {   strcpy(answer, "fg=");   }novalue getbg(w, answer)wbp w;char *answer;   {   strcpy(answer, "bg=");   }int getlinestyle(w, answer)wbp w;char *answer;   {   char *ptr;   return Succeeded;   }novalue getfntnam(w, answer)wbp w;char *answer;   {   strcpy(answer, "font=");   }getpointername(w, answer)wbp w;char *answer;   {   char *s;   wsp ws = w->window;   return Succeeded;   }int getdisplay(wbp w, char *answer)   {   return Failed;   }int getdrawop(w, answer)wbp w;char *answer;   {   char *s;   return Succeeded;   }novalue geticonic(w, answer)wbp w;char *answer;   {   sprintf(answer, "iconic=");   }int getcanvas(w, answer)wbp w;char *answer;   {   return Failed;   }int geticonpos(w, val)wbp w;char *val;   {   return Failed;   }/* * erase an area */novalue eraseArea(w,x,y,width,height)wbp w;int x, y, width, height;   {   STDLOCALS(w);   FREE_STDLOCALS;   }/* * copy an area */int copyArea(w,w2,x,y,width,height,x2,y2)wbp w, w2;int x, y, width, height, x2, y2;   {   HDC srcdc, srcpixdc;   STDLOCALS(w2);   srcdc = GetDC(w->window->win);   srcpixdc = CreateCompatibleDC(srcdc);   SelectObject(srcpixdc, w->window->pix);   BitBlt(stdpix, x2, y2, width, height, srcpixdc, x, y, SRCCOPY);   if (stdwin) BitBlt(stdwin, x2, y2, width, height, srcpixdc, x, y, SRCCOPY);   ReleaseDC(w->window->win, srcdc);   DeleteDC(srcpixdc);   FREE_STDLOCALS;   return Succeeded;   }int getdefault(w, prog, opt, answer)wbp w;char *prog, *opt, *answer;   {   return Failed;   }/* * Draw a bilevel image.  (stub)  */int blimage(w, x, y, width, height, ch, s, len)wbp w;int x, y, width, height, ch;unsigned char *s;word len;   {   return Error;   }/* * Draw a character-per-pixel image.  (stub) */int strimage(w, x, y, width, height, e, s, len)wbp w;int x, y, width, height;struct palentry *e;unsigned char *s;word len;   {   return -1;   }/* * Get an image as a string.  (stub) */int getimstr(w, x, y, width, height, paltbl, data)wbp w;int x, y, width, height;struct palentry paltbl[DMAXCOLORS];unsigned char *data;   {   return 0;   }readimage(w, filename, x, y, status)wbp w;char *filename;int x, y, *status;   {   STDLOCALS(w);   FREE_STDLOCALS;   return Failed;   }/* * Initialize client for producing pixels from a window, usually a no-op. */int getpixel_init(w, x, y, width, height)wbp w;int x, y, width, height;   {   return Succeeded;   }/* * Return pixel (x,y) from a window */int getpixel(wbp w, int x, int y, long *rv)   {   return Succeeded;   }int query_pointer(w, pp)wbp w;XPoint *pp;   {   wsp ws = w->window;   return Succeeded;   }query_rootpointer(pp)XPoint *pp;   {   }int seticonimage(w, dp)wbp w;dptr dp;   {   wsp ws = w->window;   return Succeeded;   }/* * dumpimage -- write an image to a disk file.  Return 0 on failure. */int dumpimage(wbp wb, char *filename, int x, int y, int width,int height)   {   int result = 0;   FILE *fp;   STDLOCALS(wb);   FREE_STDLOCALS;   return result;   }/* * loadimage */HBITMAP loadimage(wbp w, char *filename, int *width, int *height)   {   FILE *fp;   STDLOCALS(w);   FREE_STDLOCALS;   return NULL;   }char *get_mutable_name(wbp w, int mute_index)   {   return NULL;   }set_mutable(wbp w, int i, char *s)   {   return Failed;   }novalue free_mutable(wbp w, int mute_index)   {   }int mutable_color(wbp w, dptr argv, int argc, int *retval)   {   return Failed;   }freecolor(wbp w, char *s)   {   }/* * drawarcs() - assumes x and y are already fixed up for the bitmap */void drawarcs(wbp wb, XArc *arcs, int narcs)   {   int i, diff, bheight;   STDLOCALS(wb);   FREE_STDLOCALS;   return;   }/* * drawlines - Support routine for XDrawLine */void drawlines(wbinding *wb, XPoint *points, int npoints)   {   int i, diff, bheight;   STDLOCALS(wb);   if (stddc) Polyline(stddc, points, npoints);   Polyline(pixdc, points, npoints);   FREE_STDLOCALS;   return;   }/* * drawpoints() -  *  Parameters - the window binding for output, an array of points (assumed *               to be fixed up for bitmap) and the number of points */void drawpoints(wbinding *wb, XPoint *points, int npoints)    {   int i, diff, bheight;   XPoint *p;   STDLOCALS(wb);   for(i = 0, p = points; i < npoints; i++, p++) {      if (stddc) SetPixel(stddc, p->x, p->y, wc->fg);      SetPixel(pixdc, p->x, p->y, wc->fg);      }   FREE_STDLOCALS;   return;   }/* * drawsegments() - */void drawsegments(wbinding *wb, XSegment *segs, int nsegs)    {   int i, diff, bheight;   XPoint ps[2];   STDLOCALS(wb);   for (i = 0; i < nsegs; i++) {      if (stddc) Polyline(stddc, (POINT *)(segs+i), 2);      Polyline(pixdc, (POINT *)(segs+i), 2);      }   FREE_STDLOCALS;   return;   }/* * drawstring() */void drawstring(wbinding *wb, int x, int y, char *s, int slen)    {   STDLOCALS(wb);   if (stddc) {      SetBkMode(stddc, TRANSPARENT);      if (wc->fg != RGB(0, 0, 0)) SetTextColor(stddc, wc->fg);      if (wc->bg != RGB(255, 255, 255)) SetBkColor(stddc, wc->bg);      TextOut(stddc, x, y, s, slen);      }   SetBkMode(pixdc, TRANSPARENT);   if (wc->fg != RGB(0, 0, 0)) SetTextColor(pixdc, wc->fg);   if (wc->bg != RGB(255, 255, 255)) SetBkColor(pixdc, wc->bg);   TextOut(pixdc, x, y, s, slen);    FREE_STDLOCALS;   return;   }/* * fillarcs */void fillarcs(wbp wb, XArc *arcs, int narcs)    {   int i, diff, bheight;   STDLOCALS(wb);   FREE_STDLOCALS;   return;   }/* * fillrectangles */void fillrectangles(wbp wb, XRectangle *recs, int nrecs)   {   int i, diff, bheight;   STDLOCALS(wb);   for (i = 0; i < nrecs; i++) {      recs[i].right += recs[i].left;      recs[i].bottom += recs[i].top;      if (stddc) FillRect(stddc, (recs+i), wc->brush);      FillRect(pixdc, (recs+i), wc->brush);      }   FREE_STDLOCALS;   return;   }/* * drawrectangles *  Parameters - the window binding for output, an array of rectangle *               a count of the number of structures -> the number of *               rectangles */void drawrectangles(wbp wb, XRectangle *recs, int nrecs)   {   int i, diff, bheight;   STDLOCALS(wb);   for (i = 0; i < nrecs; i++) {      recs[i].right += recs[i].left;      recs[i].bottom += recs[i].top;      if (stddc) FrameRect(stddc, (recs+i), wc->brush);      FrameRect(pixdc, (recs+i), wc->brush);      }   FREE_STDLOCALS;   return;   }/* * fillpolygon */void fillpolygon(wbp wb, XPoint *pts, int npts)   {   int i, diff, bheight = wb->window->pixheight;   STDLOCALS(wb);   Polygon(stddc, pts, npts);   FREE_STDLOCALS;   return;   }LONG NumWindows = 0;/* * allocate a context.  Can't be called until w has a display and window. */wcp alc_context(w)wbp w;   {   int i;   wcp wc;   LOGBRUSH lb;   VIX_ALLOC(wc, _wcontext);   wc->linestyle = PS_SOLID;   wc->linewidth = 1;   wc->fg = RGB(0,0,0);   wc->bg = RGB(255,255,255);   wc->fgname = salloc("black");   wc->bgname = salloc("white");   wc->pen = CreatePen(PS_SOLID, 1, wc->fg);   lb.lbStyle = BS_SOLID;   lb.lbColor = wc->fg;   wc->brush = CreateBrushIndirect(&lb);   wc->gamma = GammaCorrection;   VIX_LINK(wc, wcntxts);   return wc;   }/* * allocate a context, cloning attributes from an existing context */wcp clone_context(w)wbp w;   {   wcp wc, wc2 = w->context;   wsp ws = w->window;   Protect(wc = alc_context(w), return NULL);   /*    * copy over some stuff    */   wc->gamma = wc2->gamma;   return wc;   }/* * allocate a window state structure */wsp alc_winstate()   {   int i;   wsp ws;      VIX_ALLOC(ws, _wstate);   ws->bits = 1024;				/* echo ON; others OFF */   ws->filep = nulldesc;   ws->listp = nulldesc;   VIX_LINK(ws, wstates);   return ws;   }/* * free a window state */free_window(ws)wsp ws;   {   ws->refcount--;   if(ws->refcount == 0) {      VIX_UNLINK(ws, wstates);      }   return 0;   }/* * free a window context */novalue free_context(wc)wcp wc;   {   wc->refcount--;   if(wc->refcount == 0) {      VIX_UNLINK(wc, wcntxts);      }   }int walert(wbp w, int volume)   {   MessageBeep(0);   }/* * SetPattern */int SetPattern(w, name, len)wbp w;char *name;int len;   {   return Failed;   }/* * UpdateCursorPos */void UpdateCursorPos(wsp ws, wcp wc){}int pixmap_init(w)wbp w;   {   wsp ws = w->window;   resizePixmap(ws, ws->width, ws->height);   return Succeeded;   }int pixmap_open(w, attribs, argc)wbp w;dptr attribs;int argc;   {   }int do_config(w, status)wbp w;int status;   {   wsp ws = w->window;   return Failed;   }int resizePixmap(wbp w, int width, int height)   {   HDC hdc, hdc2, hdc3;   HBITMAP newpix;   wsp ws = w->window;   int x = ws->pixwidth, y = ws->pixheight;   if (ws->pixwidth >= width && ws->pixheight >= height) return 1;   ws->pixheight = max(ws->pixheight, height);   ws->pixwidth = max(ws->pixwidth, width);   hdc = GetDC(ws->win);   newpix = CreateCompatibleBitmap (hdc, ws->pixwidth, ws->pixheight);   hdc2 = CreateCompatibleDC(hdc);   SelectObject(hdc2, ws->pix);   hdc3 = CreateCompatibleDC(hdc);   SelectObject(hdc3, newpix);   /*    * initialize the new pixmap, including areas not in the old pixmap.    */   if (width > x) {      XRectangle rect;      rect.left = x; rect.right = width;      rect.top = 0; rect.bottom = ws->pixheight;      FillRect(hdc3, &rect, w->context->brush);      if (ws->win)         FillRect(hdc, &rect, w->context->brush);      }   if (height > y) {      XRectangle rect;      rect.left = 0; rect.right = ws->pixwidth;      rect.top = y; rect.bottom = height;      FillRect(hdc3, &rect, w->context->brush);      if (ws->win)         FillRect(hdc, &rect, w->context->brush);      }   BitBlt(hdc3, 0, 0, x, y, hdc2, 0, 0, SRCCOPY);   DeleteDC(hdc3);   DeleteDC(hdc2);   DeleteObject(ws->pix);   ws->pix = newpix;      return 1;   }HDC CreateWinDC(wbp w)   {   HDC hdc = GetDC(w->window->win);   SelectObject(hdc, w->context->pen);   SelectObject(hdc, w->context->brush);   SetBkColor(hdc, w->context->bg);   return hdc;   }HDC CreatePixDC(wbp w, HDC hdc)   {   HDC hdc2 = CreateCompatibleDC(hdc);   SelectObject(hdc2, w->window->pix);   SelectObject(hdc2, w->context->pen);   SelectObject(hdc2, w->context->brush);   SetBkColor(hdc2, w->context->bg);   return hdc2;   }int textWidth(wbp w, char *s, int n)   {   int rv;   SIZE sz;   STDLOCALS(w);   GetTextExtentPoint32(pixdc, s, n, &sz);   rv = sz.cx;   FREE_STDLOCALS;   return rv;   }#else					/* Graphics */  static char aaa;#endif					/* Graphics */
+/*
+ * rmswin.ri - Microsoft Windows-specific graphics interface code.
+ */
+#ifdef Graphics
+
+#ifndef min
+#define min(x,y) (((x) < (y))?(x):(y))
+#define max(x,y) (((x) > (y))?(x):(y))
+#endif					/* min */
+
+/*
+ * pattern symbols
+ */
+stringint siPatternSyms[] = {
+  {0, 0}
+};
+
+/*
+ * mix modes (draw ops)
+ */
+stringint siMixModes[] = {
+  {0, 0},
+};
+ 
+/*
+ * line types
+ */
+stringint siLineTypes[] = {
+  {0, 0},
+};
+
+
+#define NUMSYSCURSORSYMS	0
+#define NUMCURSORSYMS           0
+
+/*
+ * cursor/pointer symbols
+ */
+stringint siSysCursorSyms[] = {
+  {0, NUMSYSCURSORSYMS},
+};
+
+stringint siCursorSyms[] = {
+  {0, NUMCURSORSYMS},
+};
+
+
+HANDLE mswinInstance;
+int ncmdShow;
+
+/*
+ * wopen
+ */
+FILE *wopen(char *name, struct b_list *lp, dptr attr, int n, int *err_idx)
+   {
+   wbp wb;
+   wsp ws;
+   wcp wc;
+   char answer[128];
+   int i;
+   tended struct b_list *tlp;
+   tended struct descrip attrrslt;
+   HDC hdc, hdc2;
+
+   tlp = lp;
+
+   /*
+    * allocate a binding, a window state, and a context
+    */
+   Protect(wb = alc_wbinding(), return NULL);
+   Protect(wb->window = alc_winstate(), { free_binding(wb); return NULL; });
+   Protect(wb->context = alc_context(wb), { free_binding(wb); return NULL; });
+   ws = wb->window;
+   ws->listp.dword = D_List;
+   BlkLoc(ws->listp) = (union block *)lp;
+   ws->width = ws->height = 400;
+   wc = wb->context;
+
+   /*
+    * process the passed in attributes - by calling wattrib
+    */
+   for(i = 0; i < n; i++)
+      switch (wattrib(wb, StrLoc(attr[i]), StrLen(attr[i]), &attrrslt,
+			answer)) {
+      case Failed:
+	 wclose(wb);
+	 return NULL;
+      case Error:
+	 /* think of something to do here */
+	 break;
+	 }
+
+   /*
+    * set the title, defaulting to the "filename" supplied to open()
+    */
+   if (ws->windowlabel == NULL) ws->windowlabel = salloc(name);
+
+   ws->win = CreateWindow( "iconx", ws->windowlabel, WS_OVERLAPPEDWINDOW,
+		   ws->posx < 0 ? 0 : ws->posx, ws->posy < 0 ? 0 : ws->posy,
+		   ws->width, ws->height,
+		   NULL, NULL, mswinInstance, NULL);
+   hdc = GetDC(ws->win);
+   GetTextMetrics(hdc, &(wc->metrics));
+   wc->leading = wc->metrics.tmHeight;
+   ws->pix = CreateCompatibleBitmap(hdc, ws->width, ws->height);
+   ShowWindow(ws->win, ncmdShow);
+
+   hdc2 = CreateCompatibleDC(hdc);
+   SelectObject(hdc2, ws->pix);
+   BitBlt(hdc2, 0, 0, ws->width, ws->height, hdc, 0, 0, SRCCOPY);
+
+   ReleaseDC(ws->win, hdc);
+   DeleteDC(hdc2);
+   UpdateWindow(ws->win);
+
+   return (FILE *)wb;
+   }
+
+void handle_keypress(wbp wb, UINT msg, WPARAM wp, LPARAM lp, int meta)
+   {
+   wsp ws = wb->window;
+   DWORD dw, t;
+   WORD x, y;
+   struct descrip d;
+   int flags = 0;
+   StrLen(d) = 1;
+   StrLoc(d) = (char *)&allchars[FromAscii(wp) & 0xFF];
+   dw = GetMessagePos();
+   x = LOWORD(dw);
+   y = HIWORD(dw);
+   t = GetMessageTime();
+   if (GetKeyState(VK_CONTROL) < 0) flags |= ControlMask;
+   if (GetKeyState(VK_SHIFT) < 0) flags |= ShiftMask;
+
+   if (meta) flags |= Mod1Mask;
+   qevent(&(ws->listp), &d, x, y, t - ws->last_time, flags);
+   ws->last_time = t;
+   }
+
+LRESULT_CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
+{
+   HDC hdc, hdc2;
+   PAINTSTRUCT ps;
+   RECT rect;
+   wbp wb = NULL;
+   wsp ws = NULL;
+
+   /*
+    * find a binding associated with the given window.
+    */
+   for (wb = wbndngs; wb; wb=wb->next) {
+      ws = wb->window;
+
+      if (((ws->win == hwnd) || (ws->iconwin == hwnd) ||
+           (ws->pix == hwnd) || (ws->initialPix == hwnd))) break;
+      }
+   if (!wb) {
+      /* 
+       * doesn't look like its for one of our windows, pass it to
+       * DefWndProc and hope for the best.
+       */
+      }
+   else
+   switch(msg) {
+   case WM_PAINT:
+      hdc = BeginPaint(hwnd, &ps);
+      hdc2 = CreateCompatibleDC(hdc);
+      SelectObject(hdc2, ws->pix);
+      GetClientRect(hwnd, &rect);
+      BitBlt(hdc, rect.left, rect.top,
+             rect.right - rect.left + 1, rect.bottom - rect.top + 1,
+             hdc2, rect.left, rect.top, SRCCOPY);
+      DeleteDC(hdc2);
+      EndPaint(hwnd, &ps);
+      return 0;
+   case WM_CHAR:
+      handle_keypress(wb, msg, wp, lp, 0);
+      return 0;
+   case WM_SYSCHAR:
+      handle_keypress(wb, msg, wp, lp, 1);
+      break;
+   case WM_DESTROY:
+      PostQuitMessage(0);
+      return 0;
+   }
+   return DefWindowProc(hwnd, msg, wp, lp);
+}
+
+/*
+ * wclose - make sure the window goes away - no questions asked
+ */
+int wclose(wbp w)
+   {
+   free_binding(w);
+   return 1;
+   }
+
+int pollevent()
+   {
+   wbp w;
+   MSG m;
+
+   /* some while PeekMessage loops here, maybe one per window ? */
+   while (PeekMessage(&m, NULL, 0, 0, PM_NOREMOVE)) {
+      GetMessage(&m, NULL, 0, 0);
+      if (TranslateMessage(&m) == 0) {
+         DispatchMessage(&m);
+	 }
+      }
+   return 400;
+   }
+
+/*
+ * write some text to both the window and the pixmap
+ */
+novalue xdis(w,s,n)
+register wbp w;
+char *s;
+int n;
+   {
+   XPoint pt;
+   STDLOCALS(w);
+   if (stddc) {
+      if (wc->fg != RGB(0, 0, 0)) SetTextColor(stddc, wc->fg);
+      if (wc->bg != RGB(255, 255, 255)) SetBkColor(stddc, wc->bg);
+      TextOut(stddc, ws->x, ws->y, s, n);
+      }
+   if (wc->fg != RGB(0, 0, 0)) SetTextColor(pixdc, wc->fg);
+   if (wc->bg != RGB(255, 255, 255)) SetBkColor(pixdc, wc->bg);
+   TextOut(pixdc, ws->x, ws->y, s, n);
+   FREE_STDLOCALS;
+   ws->x += TEXTWIDTH(w, s, n);
+   }
+/*
+ * wputc
+ */
+int wputc(int ci, wbp wb)
+   {
+   char c = (char)ci;
+   wsp ws = wb->window;
+   wcp wc = wb->context;
+   int y_plus_descent;
+
+   switch (c) {
+   case '\n':
+      ws->y += LEADING(wb);
+      if (ws->y + DESCENT(wb) > ws->height) {
+         RECT r;
+         STDLOCALS(wb);
+         ws->y -= LEADING(wb);
+         y_plus_descent = ws->y + DESCENT(wb);
+	 BitBlt(pixdc, MARGIN, MARGIN + LEADING(wb),
+	        ws->width, y_plus_descent - MARGIN,
+	        pixdc, MARGIN, MARGIN, SRCCOPY);
+         r.left = 0;
+	 r.top = y_plus_descent - FHEIGHT(wb);
+	 r.right = ws->width;
+	 r.bottom = ws->height;
+         FillRect(pixdc, &r, wc->brush);
+	 if (stddc) BitBlt(stddc, 0, 0, ws->width, ws->height,
+	                   pixdc, 0, 0, SRCCOPY);
+	 FREE_STDLOCALS;
+         }
+      /* intended fall-through */
+    case '\r':
+      /*
+       * set the new position x position
+       */
+      ws->x = MARGIN;
+      break;
+   case '\t':
+      xdis(wb, "        ", 8 - (XTOCOL(wb,ws->x) & 7));
+      break;
+      /*
+       * Handle backspaces.  This implements cooked mode echo handling.
+       */
+   case '\177':
+   case '\010': {
+      int i = 0, pre_x;
+ 
+      /*
+       * Start with the last character queued up.
+       */
+      i--;
+      /*
+       * Trot back to the control-H itself.
+       */
+      while ((i>-EQUEUELEN) && (EVQUESUB(wb,i) != c)) {
+         i--;
+	 }
+      if (i == -EQUEUELEN) break;
+      /*
+       * Go past the control-H.
+       */
+      i--;
+      /*
+       * Go back through any number of control-H's from prior lifetimes.
+       */
+      while((i > -EQUEUELEN) && !isprint(EVQUESUB(wb,i))) {
+         i--;
+	 }
+      if (i == -EQUEUELEN) break;
+
+      /*
+       * OK, here's the character we're actually rubbing out.  Back up.
+       */
+      c = EVQUESUB(wb,i);
+      pre_x = ws->x;
+      ws->x -= TEXTWIDTH(wb, &c, 1);
+      /*
+       * Physically erase the character from the queue.  This results in
+       * two control-H's present in the queue.
+       */
+      *evquesub(wb,i) = '\010';
+      /*
+       * Save the backed-up position, and draw spaces through the erased.
+       */
+      i = ws->x;
+      while(ws->x < pre_x) {
+         xdis(wb, " ",1);
+	 }
+      ws->x = i;
+      break;
+      }
+    /*
+     * bell (control-G)
+     */
+    case '\007':
+      break;
+   default:
+      xdis(wb, &c, 1);
+      }
+   /*
+    * turn the cursor back on
+    */
+   return 0;
+   }
+
+/*
+ * Get a window that has an event pending (queued)
+ */
+wsp getactivewindow(void)
+{
+  static LONG next = 0;
+  LONG i;
+  wsp ws, ptr, stdws = NULL;
+  return NULL;
+}
+
+
+/*
+ * wgetq - get event from pending queue
+ */
+int wgetq(wbp w, dptr res)
+   {
+   MSG m;
+   wsp ws;
+   int first = 0;
+
+   if (!w || !(ws = w->window) || !(ws->win)) {
+      return -1;
+      }
+   while (1) {
+      /*
+       * grab the built up queue
+       */
+      if (!EVQUEEMPTY(ws)) {
+	 EVQUEGET(ws, *res);
+	 return 1;
+	 }
+      GetMessage(&m, NULL, 0, 0);
+      if (TranslateMessage(&m) == 0) {
+         DispatchMessage(&m);
+	 }
+      }
+   return -1;
+   }
+
+/*
+ * determine the new size of the client
+ */
+int setheight(w, height)
+wbp w;
+int height;
+   {
+   wsp ws = w->window;
+   ws->height = height;
+   return Succeeded;
+   }
+
+/*
+ * determine new size of client
+ */
+int setwidth(w, width)
+wbp w;
+SHORT width;
+   {
+   wsp ws = w->window;
+   ws->width = width;
+   return Succeeded;
+   }
+
+int setgeometry(w, geo)
+wbp w;
+char *geo;
+   {
+   wsp ws = w->window;
+   return Succeeded;
+   }
+
+int setcanvas(w,s)
+wbp w;
+char *s;
+   {
+   return Failed;
+   }
+int seticonicstate(w, val)
+wbp w;
+char *val;
+   {
+   int height;
+   return Succeeded;
+   }
+
+int seticonlabel(w, val)
+wbp w;
+char *val;
+   {
+   wsp ws = w->window;
+   return Succeeded;
+   }
+
+int seticonpos(w, val)
+wbp w;
+char *val;
+   {
+   return Failed;
+   }
+
+
+int setwindowlabel(w, val)
+wbp w;
+char *val;
+   {
+   wsp ws = w->window;
+   char *tmp;
+   /*
+    * plug in the new string
+    */
+   /* done (flip) this way to avoid a race condition */
+   tmp = ws->windowlabel;
+   ws->windowlabel = salloc(val);
+   free(tmp);
+   /*
+    * if we have to update, do it
+    */
+   return Succeeded;
+   }
+
+int setcursor(w, on)
+wbp w;
+int on;
+   {
+   wsp ws = w->window;
+   return Succeeded;
+   }
+
+/*
+ * Set the window's font by name.
+ */
+int setfont(w, s)
+wbp w;
+char **s;
+   {
+   char buf[64];
+   return Succeeded;
+   }
+
+/*
+ * rebind() - bind w's context to that of w2.
+ */
+int rebind(w, w2)
+wbp w, w2;
+   {
+   wsp ws = w->window;
+   wcp wc;
+   w->context = wc = w2->context;
+   return Succeeded;
+   }
+
+novalue setclip(w)
+wbp w;
+   {
+   }
+
+ int lowerWindow(wbp w)
+   {
+   STDLOCALS(w);
+   FREE_STDLOCALS;
+   }
+
+int raiseWindow(wbp w)
+   {
+   STDLOCALS(w);
+   FREE_STDLOCALS;
+   }
+
+int nativecolor(w, s, r, g, b)
+wbp w;
+char *s;
+int *r, *g, *b;
+   {
+   return 0;			/* no new colors beyond those of Icon */
+   }
+
+novalue warpPointer(w, x, y)
+wbp w;
+int x, y;
+   {
+   }
+
+/*
+ * Set the context's fill style by name.
+ */
+int setfillstyle(w, s)
+wbp w;
+char *s;
+   {
+   STDLOCALS(w);
+
+   if (!strcmp(s, "solid")) {
+      }
+   else {
+      if (!strcmp(s, "masked")
+      || !strcmp(s, "stippled") || !strcmp(s, "patterned")) {
+	 }
+      else if (!strcmp(s, "textured")
+      || !strcmp(s, "opaquestippled") || !strcmp(s, "opaquepatterned")) {
+	 }
+      else {
+         FREE_STDLOCALS;
+         return Error;
+	 }
+      }
+   FREE_STDLOCALS;
+   return Succeeded;
+   }
+
+/*
+ * Set the context's line style by name.
+ */
+int setlinestyle(w, s)
+wbp w;
+char *s;
+   {
+   SHORT ltype;
+
+   if ((ltype = si_s2i(siLineTypes, s)) < 0)
+      return Error;
+   {
+   STDLOCALS(w);
+   FREE_STDLOCALS;
+   return Succeeded;
+   }
+   }
+
+/*
+ * Set the context's line width
+ */
+int setlinewidth(wbp w, LONG linewid)
+   {
+   STDLOCALS(w);
+
+   FREE_STDLOCALS;
+   return Succeeded;
+   }
+
+
+/*
+ * Set the foreground to draw in a mutable color (not supported under PM)
+ */
+int isetfg(wbp w, int i)
+   {
+   return Failed;
+   }
+
+
+/*
+ * Set the context's foreground color
+ */
+int setfg(wbp wb, char *val)
+   {
+   int r, g, b;
+   wcp wc = wb->context;
+   HPEN temppen = wc->pen;
+   HBRUSH tempbrush = wc->brush;
+   LOGBRUSH lb;
+   if (parsecolor(wb, val, &r, &g, &b) == Succeeded) {
+      wc->fg = RGB(r >> 8, g >> 8, b >> 8);
+      wc->fgname = salloc(val);
+      wc->pen = CreatePen(wc->linestyle, wc->linewidth, wc->fg);
+      DeleteObject(temppen);
+      lb.lbStyle = BS_SOLID;
+      lb.lbColor = wc->fg;
+      wc->brush = CreateBrushIndirect(&lb);
+      return Succeeded;
+      }
+   return Failed;
+   }
+
+/*
+ * Set the window context's background color
+ */
+int setbg(wbp wb, char *val)
+   {
+   int r, g, b;
+   wcp wc = wb->context;
+   if (parsecolor(wb, val, &r, &g, &b) == Succeeded) {
+      wc->bg = RGB(r >> 8, g >> 8, b >> 8);
+      wc->bgname = salloc(val);
+      return Succeeded;
+      }
+   return Failed;
+   }
+
+/*
+ * Set the context's background color by color cell.
+ */
+int isetbg(w,bg)
+wbp w;
+int bg;
+   {
+   return 0;
+   }
+
+/*
+ * Set the gamma correction factor  (not supported yet).
+ */
+int setgamma(w, gamma)
+wbp w;
+double gamma;
+   {
+   return 0;				/* fail */
+   }
+
+/*
+ * setpointer() - define a mouse pointer shape
+ */
+int setpointer(w, val)
+wbp w;
+char *val;
+   {
+   wsp ws = w->window;
+   int id;
+   return Succeeded;
+   }
+
+/*
+ * setdrawop() - set the drawing operation
+ */
+int setdrawop(w, val)
+wbp w;
+char *val;
+   {
+   wcp wc = w->context;
+   return Succeeded;
+   }
+
+setdisplay(wbp w, char *val)
+   {
+   return Failed;
+   }
+
+setimage(w, val)
+wbp w;
+char *val;
+   {
+   wsp ws = w->window;
+   int width, height;
+
+   return Succeeded;
+   }
+
+setleading(w, i)
+wbp w;
+int i;
+   {
+   wcp wc = w->context;
+   wc->leading = i;
+   }
+
+novalue toggle_fgbg(w)
+wbp w;
+   {
+   LONG tmp;
+   wcp wc = w->context;
+   }
+
+int getvisual(w, answer)
+wbp w;
+char *answer;
+   {
+   return Failed;
+   }
+
+/*
+ * getpos() - update the window state's notion of its current position
+ *  (a no-op under OS/2).
+ */
+int getpos(w)
+wbp w;
+   {
+   return Succeeded;
+   }
+
+novalue getfg(w, answer)
+wbp w;
+char *answer;
+   {
+   strcpy(answer, "fg=");
+   }
+
+novalue getbg(w, answer)
+wbp w;
+char *answer;
+   {
+   strcpy(answer, "bg=");
+   }
+
+int getlinestyle(w, answer)
+wbp w;
+char *answer;
+   {
+   char *ptr;
+   return Succeeded;
+   }
+
+novalue getfntnam(w, answer)
+wbp w;
+char *answer;
+   {
+   strcpy(answer, "font=");
+   }
+
+getpointername(w, answer)
+wbp w;
+char *answer;
+   {
+   char *s;
+   wsp ws = w->window;
+   return Succeeded;
+   }
+
+int getdisplay(wbp w, char *answer)
+   {
+   return Failed;
+   }
+
+int getdrawop(w, answer)
+wbp w;
+char *answer;
+   {
+   char *s;
+   return Succeeded;
+   }
+
+novalue geticonic(w, answer)
+wbp w;
+char *answer;
+   {
+   sprintf(answer, "iconic=");
+   }
+
+int getcanvas(w, answer)
+wbp w;
+char *answer;
+   {
+   return Failed;
+   }
+
+int geticonpos(w, val)
+wbp w;
+char *val;
+   {
+   return Failed;
+   }
+
+/*
+ * erase an area
+ */
+novalue eraseArea(w,x,y,width,height)
+wbp w;
+int x, y, width, height;
+   {
+   STDLOCALS(w);
+   FREE_STDLOCALS;
+   }
+
+/*
+ * copy an area
+ */
+int copyArea(w,w2,x,y,width,height,x2,y2)
+wbp w, w2;
+int x, y, width, height, x2, y2;
+   {
+   HDC srcdc, srcpixdc;
+   STDLOCALS(w2);
+   srcdc = GetDC(w->window->win);
+   srcpixdc = CreateCompatibleDC(srcdc);
+   SelectObject(srcpixdc, w->window->pix);
+   BitBlt(stdpix, x2, y2, width, height, srcpixdc, x, y, SRCCOPY);
+   if (stdwin) BitBlt(stdwin, x2, y2, width, height, srcpixdc, x, y, SRCCOPY);
+   ReleaseDC(w->window->win, srcdc);
+   DeleteDC(srcpixdc);
+   FREE_STDLOCALS;
+   return Succeeded;
+   }
+
+int getdefault(w, prog, opt, answer)
+wbp w;
+char *prog, *opt, *answer;
+   {
+   return Failed;
+   }
+
+/*
+ * Draw a bilevel image.  (stub)
+  */
+int blimage(w, x, y, width, height, ch, s, len)
+wbp w;
+int x, y, width, height, ch;
+unsigned char *s;
+word len;
+   {
+   return Error;
+   }
+
+/*
+ * Draw a character-per-pixel image.  (stub)
+ */
+int strimage(w, x, y, width, height, e, s, len)
+wbp w;
+int x, y, width, height;
+struct palentry *e;
+unsigned char *s;
+word len;
+   {
+   return -1;
+   }
+
+/*
+ * Get an image as a string.  (stub)
+ */
+int getimstr(w, x, y, width, height, paltbl, data)
+wbp w;
+int x, y, width, height;
+struct palentry paltbl[DMAXCOLORS];
+unsigned char *data;
+   {
+   return 0;
+   }
+
+readimage(w, filename, x, y, status)
+wbp w;
+char *filename;
+int x, y, *status;
+   {
+   STDLOCALS(w);
+   FREE_STDLOCALS;
+   return Failed;
+   }
+
+
+/*
+ * Initialize client for producing pixels from a window, usually a no-op.
+ */
+int getpixel_init(w, x, y, width, height)
+wbp w;
+int x, y, width, height;
+   {
+   return Succeeded;
+   }
+
+/*
+ * Return pixel (x,y) from a window
+ */
+int getpixel(wbp w, int x, int y, long *rv)
+   {
+   return Succeeded;
+   }
+
+int query_pointer(w, pp)
+wbp w;
+XPoint *pp;
+   {
+   wsp ws = w->window;
+   return Succeeded;
+   }
+
+query_rootpointer(pp)
+XPoint *pp;
+   {
+   }
+
+int seticonimage(w, dp)
+wbp w;
+dptr dp;
+   {
+   wsp ws = w->window;
+   return Succeeded;
+   }
+
+/*
+ * dumpimage -- write an image to a disk file.  Return 0 on failure.
+ */
+int dumpimage(wbp wb, char *filename, int x, int y, int width,int height)
+   {
+   int result = 0;
+   FILE *fp;
+   STDLOCALS(wb);
+   FREE_STDLOCALS;
+   return result;
+   }
+
+
+/*
+ * loadimage
+ */
+HBITMAP loadimage(wbp w, char *filename, int *width, int *height)
+   {
+   FILE *fp;
+   STDLOCALS(w);
+
+   FREE_STDLOCALS;
+   return NULL;
+   }
+
+
+char *get_mutable_name(wbp w, int mute_index)
+   {
+   return NULL;
+   }
+
+set_mutable(wbp w, int i, char *s)
+   {
+   return Failed;
+   }
+
+novalue free_mutable(wbp w, int mute_index)
+   {
+   }
+
+int mutable_color(wbp w, dptr argv, int argc, int *retval)
+   {
+   return Failed;
+   }
+
+freecolor(wbp w, char *s)
+   {
+   }
+
+/*
+ * drawarcs() - assumes x and y are already fixed up for the bitmap
+ */
+void drawarcs(wbp wb, XArc *arcs, int narcs)
+   {
+   int i, diff, bheight;
+   STDLOCALS(wb);
+
+   FREE_STDLOCALS;
+   return;
+   }
+
+
+/*
+ * drawlines - Support routine for XDrawLine
+ */
+void drawlines(wbinding *wb, XPoint *points, int npoints)
+   {
+   int i, diff, bheight;
+   STDLOCALS(wb);
+   if (stddc) Polyline(stddc, points, npoints);
+   Polyline(pixdc, points, npoints);
+   FREE_STDLOCALS;
+   return;
+   }
+
+
+/*
+ * drawpoints() - 
+ *  Parameters - the window binding for output, an array of points (assumed
+ *               to be fixed up for bitmap) and the number of points
+ */
+void drawpoints(wbinding *wb, XPoint *points, int npoints) 
+   {
+   int i, diff, bheight;
+   XPoint *p;
+   STDLOCALS(wb);
+   for(i = 0, p = points; i < npoints; i++, p++) {
+      if (stddc) SetPixel(stddc, p->x, p->y, wc->fg);
+      SetPixel(pixdc, p->x, p->y, wc->fg);
+      }
+   FREE_STDLOCALS;
+   return;
+   }
+
+
+/*
+ * drawsegments() -
+ */
+void drawsegments(wbinding *wb, XSegment *segs, int nsegs) 
+   {
+   int i, diff, bheight;
+   XPoint ps[2];
+   STDLOCALS(wb);
+   for (i = 0; i < nsegs; i++) {
+      if (stddc) Polyline(stddc, (POINT *)(segs+i), 2);
+      Polyline(pixdc, (POINT *)(segs+i), 2);
+      }
+   FREE_STDLOCALS;
+   return;
+   }
+
+
+/*
+ * drawstring()
+ */
+void drawstring(wbinding *wb, int x, int y, char *s, int slen) 
+   {
+   STDLOCALS(wb);
+   if (stddc) {
+      SetBkMode(stddc, TRANSPARENT);
+      if (wc->fg != RGB(0, 0, 0)) SetTextColor(stddc, wc->fg);
+      if (wc->bg != RGB(255, 255, 255)) SetBkColor(stddc, wc->bg);
+      TextOut(stddc, x, y, s, slen);
+      }
+   SetBkMode(pixdc, TRANSPARENT);
+   if (wc->fg != RGB(0, 0, 0)) SetTextColor(pixdc, wc->fg);
+   if (wc->bg != RGB(255, 255, 255)) SetBkColor(pixdc, wc->bg);
+   TextOut(pixdc, x, y, s, slen);
+ 
+   FREE_STDLOCALS;
+   return;
+   }
+
+
+/*
+ * fillarcs
+ */
+void fillarcs(wbp wb, XArc *arcs, int narcs) 
+   {
+   int i, diff, bheight;
+   STDLOCALS(wb);
+   FREE_STDLOCALS;
+   return;
+   }
+
+/*
+ * fillrectangles
+ */
+void fillrectangles(wbp wb, XRectangle *recs, int nrecs)
+   {
+   int i, diff, bheight;
+   STDLOCALS(wb);
+   for (i = 0; i < nrecs; i++) {
+      recs[i].right += recs[i].left;
+      recs[i].bottom += recs[i].top;
+      if (stddc) FillRect(stddc, (recs+i), wc->brush);
+      FillRect(pixdc, (recs+i), wc->brush);
+      }
+   FREE_STDLOCALS;
+   return;
+   }
+
+
+/*
+ * drawrectangles
+ *  Parameters - the window binding for output, an array of rectangle
+ *               a count of the number of structures -> the number of
+ *               rectangles
+ */
+void drawrectangles(wbp wb, XRectangle *recs, int nrecs)
+   {
+   int i, diff, bheight;
+   STDLOCALS(wb);
+   for (i = 0; i < nrecs; i++) {
+      recs[i].right += recs[i].left;
+      recs[i].bottom += recs[i].top;
+      if (stddc) FrameRect(stddc, (recs+i), wc->brush);
+      FrameRect(pixdc, (recs+i), wc->brush);
+      }
+   FREE_STDLOCALS;
+   return;
+   }
+
+
+/*
+ * fillpolygon
+ */
+void fillpolygon(wbp wb, XPoint *pts, int npts)
+   {
+   int i, diff, bheight = wb->window->pixheight;
+   STDLOCALS(wb);
+   Polygon(stddc, pts, npts);
+   FREE_STDLOCALS;
+   return;
+   }
+
+LONG NumWindows = 0;
+
+
+/*
+ * allocate a context.  Can't be called until w has a display and window.
+ */
+wcp alc_context(w)
+wbp w;
+   {
+   int i;
+   wcp wc;
+   LOGBRUSH lb;
+
+   VIX_ALLOC(wc, _wcontext);
+
+   wc->linestyle = PS_SOLID;
+   wc->linewidth = 1;
+   wc->fg = RGB(0,0,0);
+   wc->bg = RGB(255,255,255);
+   wc->fgname = salloc("black");
+   wc->bgname = salloc("white");
+   wc->pen = CreatePen(PS_SOLID, 1, wc->fg);
+   lb.lbStyle = BS_SOLID;
+   lb.lbColor = wc->fg;
+   wc->brush = CreateBrushIndirect(&lb);
+   wc->gamma = GammaCorrection;
+
+   VIX_LINK(wc, wcntxts);
+   return wc;
+   }
+
+/*
+ * allocate a context, cloning attributes from an existing context
+ */
+wcp clone_context(w)
+wbp w;
+   {
+   wcp wc, wc2 = w->context;
+   wsp ws = w->window;
+
+   Protect(wc = alc_context(w), return NULL);
+
+   /*
+    * copy over some stuff
+    */
+   wc->gamma = wc2->gamma;
+
+   return wc;
+   }
+
+/*
+ * allocate a window state structure
+ */
+wsp alc_winstate()
+   {
+   int i;
+   wsp ws;
+   
+   VIX_ALLOC(ws, _wstate);
+   ws->bits = 1024;				/* echo ON; others OFF */
+   ws->filep = nulldesc;
+   ws->listp = nulldesc;
+
+   VIX_LINK(ws, wstates);
+   return ws;
+   }
+
+/*
+ * free a window state
+ */
+free_window(ws)
+wsp ws;
+   {
+   ws->refcount--;
+   if(ws->refcount == 0) {
+      VIX_UNLINK(ws, wstates);
+      }
+   return 0;
+   }
+
+/*
+ * free a window context
+ */
+novalue free_context(wc)
+wcp wc;
+   {
+   wc->refcount--;
+   if(wc->refcount == 0) {
+
+      VIX_UNLINK(wc, wcntxts);
+      }
+   }
+
+int walert(wbp w, int volume)
+   {
+   MessageBeep(0);
+   }
+
+/*
+ * SetPattern
+ */
+int SetPattern(w, name, len)
+wbp w;
+char *name;
+int len;
+   {
+   return Failed;
+   }
+
+/*
+ * UpdateCursorPos
+ */
+void UpdateCursorPos(wsp ws, wcp wc)
+{
+}
+
+int pixmap_init(w)
+wbp w;
+   {
+   wsp ws = w->window;
+   resizePixmap(ws, ws->width, ws->height);
+   return Succeeded;
+   }
+
+int pixmap_open(w, attribs, argc)
+wbp w;
+dptr attribs;
+int argc;
+   {
+   }
+
+
+int do_config(w, status)
+wbp w;
+int status;
+   {
+   wsp ws = w->window;
+   return Failed;
+   }
+
+int resizePixmap(wbp w, int width, int height)
+   {
+   HDC hdc, hdc2, hdc3;
+   HBITMAP newpix;
+   wsp ws = w->window;
+   int x = ws->pixwidth, y = ws->pixheight;
+   if (ws->pixwidth >= width && ws->pixheight >= height) return 1;
+   ws->pixheight = max(ws->pixheight, height);
+   ws->pixwidth = max(ws->pixwidth, width);
+   hdc = GetDC(ws->win);
+   newpix = CreateCompatibleBitmap (hdc, ws->pixwidth, ws->pixheight);
+   hdc2 = CreateCompatibleDC(hdc);
+   SelectObject(hdc2, ws->pix);
+   hdc3 = CreateCompatibleDC(hdc);
+   SelectObject(hdc3, newpix);
+   /*
+    * initialize the new pixmap, including areas not in the old pixmap.
+    */
+   if (width > x) {
+      XRectangle rect;
+      rect.left = x; rect.right = width;
+      rect.top = 0; rect.bottom = ws->pixheight;
+      FillRect(hdc3, &rect, w->context->brush);
+      if (ws->win)
+         FillRect(hdc, &rect, w->context->brush);
+      }
+   if (height > y) {
+      XRectangle rect;
+      rect.left = 0; rect.right = ws->pixwidth;
+      rect.top = y; rect.bottom = height;
+      FillRect(hdc3, &rect, w->context->brush);
+      if (ws->win)
+         FillRect(hdc, &rect, w->context->brush);
+      }
+   BitBlt(hdc3, 0, 0, x, y, hdc2, 0, 0, SRCCOPY);
+   DeleteDC(hdc3);
+   DeleteDC(hdc2);
+   DeleteObject(ws->pix);
+   ws->pix = newpix;   
+   return 1;
+   }
+
+HDC CreateWinDC(wbp w)
+   {
+   HDC hdc = GetDC(w->window->win);
+   SelectObject(hdc, w->context->pen);
+   SelectObject(hdc, w->context->brush);
+   SetBkColor(hdc, w->context->bg);
+   return hdc;
+   }
+
+HDC CreatePixDC(wbp w, HDC hdc)
+   {
+   HDC hdc2 = CreateCompatibleDC(hdc);
+   SelectObject(hdc2, w->window->pix);
+   SelectObject(hdc2, w->context->pen);
+   SelectObject(hdc2, w->context->brush);
+   SetBkColor(hdc2, w->context->bg);
+   return hdc2;
+   }
+
+int textWidth(wbp w, char *s, int n)
+   {
+   int rv;
+   SIZE sz;
+   STDLOCALS(w);
+   GetTextExtentPoint32(pixdc, s, n, &sz);
+   rv = sz.cx;
+   FREE_STDLOCALS;
+   return rv;
+   }
+
+#else					/* Graphics */
+  static char aaa;
+#endif					/* Graphics */

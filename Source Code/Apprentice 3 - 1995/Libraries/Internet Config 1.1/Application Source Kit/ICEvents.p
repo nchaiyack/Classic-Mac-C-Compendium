@@ -1,1 +1,320 @@
-unit ICEvents;interface	const		M_Apple = 128;	procedure HandleEvents;implementation	uses		EPPC, AppleEvents, ICGlobals, ICDocument, ICWindows, ICMiscSubs, ICInstall;	procedure DoDiskEvent (message: longInt);		var			pt: point;			oe: OSErr;	begin		if (HiWord(message) <> noErr) then begin			pt.h := ((screenbits.bounds.Right - screenbits.bounds.Left - 304) div 2);			pt.v := ((screenbits.bounds.Bottom - screenbits.bounds.Top - 156) div 3);			InitCursor;			oe := DIBadMount(pt, message);		end;	end;	procedure DoActivateDeactivate (window: WindowPtr; activate: boolean);	begin		if activate then begin			SelectWindow(window);		end; (* if *)		WindowActivateDeactivate(window, activate);	end;	procedure DoSuspendResume (resume: boolean);	begin		in_foreground := resume;		if FrontWindow <> nil then begin			DoActivateDeactivate(FrontWindow, resume);		end;		InitCursor;	end;	procedure DoUpdate (window: WindowPtr);	begin		BeginUpdate(window);(* *)		EndUpdate(window);	end;	procedure DoKey (er: EventRecord);	begin		WindowsDoKey(er);	end;	procedure DoAutoKey (er: EventRecord);	begin		DoKey(er);	end;	procedure AdjustMenus;	begin		WindowsAdjustMenus;	end; (* AdjustMenus *)	procedure AdjustAllMenus;	begin		AdjustMenus;		SetItemEnable(GetMHandle(M_File), FM_Close, IsDocOpen or (GetWindowType(FrontWindow) = WT_About));		SetItemEnable(GetMHandle(M_File), FM_Save, IsDocDirty or IsDocNew);		SetItemEnable(GetMHandle(M_File), FM_SaveAs, IsDocOpen);		AdjustInstalMenu(M_Install);		if IsDocOpen then begin			SetItem(GetMHandle(M_Windows), 1, GetDocumentName);		end		else begin			SetItem(GetMHandle(M_Windows), 1, GetAString(128, 15));		end; (* if *)	end;	procedure DoIdle;	begin		WindowsIdle;	end;	procedure DoMenu (menu: integer; item: integer);		var			DAName: Str255;			junk: OSErr;			loe: longint;			err: OSErr;	begin		case menu of			M_Apple:  begin				case item of					1: 						DisplayError(acOpenWindow, WindowsOpen(WT_About));					2: 						;					otherwise begin						GetItem(GetMHandle(M_apple), item, DAName);						junk := OpenDeskAcc(DAName);					end				end; (* case *)			end;			M_File:  begin				case item of					FM_New:  begin						DisplayError(acNewDocument, DoNewDoc);					end;					FM_Open: 						DisplayError(acOpenDocument, DoSFOpen);					FM_OpenInternetPreferences: 						DisplayError(acOpenDocument, DoOpenInternetPreferences);					FM_Close: 						DisplayError(acCloseWindow, DoCloseDocWindow(FrontWindow));					FM_Save: 						DisplayError(acSave, DoSave);					FM_SaveAs: 						DisplayError(acSave, DoSaveAs);					FM_Quit: 						DisplayError(acQuit, DoQuit);					otherwise						;				end; (* case *)			end;			M_Edit:  begin				case item of					EM_Undo, EM_Cut, EM_Copy, EM_Paste, EM_Clear, EM_SelectAll:  begin						WindowsDoEditMenu(item);					end;					otherwise						;				end;			end;			M_Install:  begin				DoInstallMenu(menu, item);			end;			M_Windows:  begin				DisplayError(acOpenWindow, WindowsOpen(WindowType(ord(WT_Main) + item - 1)));			end;			otherwise				;		end; (* case *)		if not quitNow then begin			HiliteMenu(0);		end;	end; (* DoMenu *)	procedure DoMainClick (er: eventRecord; wp: windowPtr; code: integer);		var			mResult: longInt;			needsselect: boolean;			tempRect: Rect;	begin		needsselect := (wp <> nil) & (wp <> FrontWindow);		if needsselect & not (code in [inDrag, inContent]) then begin			SelectWindow(wp);		end;		case code of			inMenuBar:  begin				AdjustAllMenus;				mResult := MenuSelect(er.where);				if mResult <> 0 then begin					DoMenu(HiWord(mResult), LoWord(mResult));				end; (* if *)				if not quitNow then begin					HiliteMenu(0);				end; (* if *)			end;			InDrag:  begin				if needsselect and (BAND(er.modifiers, cmdKey) = 0) then begin					SelectWindow(wp);				end; (* if *)				SetPort(wp);				tempRect := GetGrayRgn^^.rgnBBox;				DragWindow(wp, er.where, tempRect);			end;			inGrow: 				;			inZoomIn, inZoomOut: 				;			inGoAway:  begin				if TrackGoAway(wp, er.where) then begin					DisplayError(acCloseWindow, DoCloseDocWindow(wp));				end;			end;			inContent:  begin				if needsselect then begin					SelectWindow(wp);				end;			end;			inSysWindow: 				SystemClick(er, wp);			otherwise		end;	end;	procedure DimMenuTitles;		var			mh: MenuHandle;			flags: longint;			i: integer;			old_enable_title: boolean;			enable_title: boolean;			menu_bar_redraw: boolean;	begin		AdjustMenus;		(* edit *)		mh := GetMHandle(M_Edit);		flags := mh^^.enableFlags;		old_enable_title := btst(flags, 0);		enable_title := false;		for i := 1 to CountMItems(mh) do begin			if btst(flags, i) then begin				enable_title := true;				leave;			end; (* if *)		end; (* for *)		SetItemEnable(mh, 0, enable_title);		menu_bar_redraw := (enable_title <> old_enable_title);		(* windows *)		mh := GetMHandle(M_Windows);		flags := mh^^.enableFlags;		old_enable_title := btst(flags, 0);		enable_title := IsDocOpen;		SetItemEnable(mh, 0, enable_title);		menu_bar_redraw := menu_bar_redraw or (enable_title <> old_enable_title);		(*  *)		if menu_bar_redraw then begin			DrawMenuBar;		end; (* if *)	end; (* DimMenuTitles *)	procedure HandleEvents;		var			junkbool: boolean;			er: EventRecord;			code: integer;			wp: WindowPtr;			ch: char;			mResult: longint;			junk: OSErr;			b: boolean;			item: integer;	begin		DimMenuTitles;		junkbool := WaitNextEvent(everyEvent, er, 10, nil);		if er.what = mouseDown then begin			er := er;		end;		ch := chr(BAND(er.message, CharCodeMask));		DoIdle;		b := true;		if WindowsEarlyHandleEvent(er) then begin			b := false;		end;		if b & ((er.what = keyDown) or (er.what = autoKey)) then begin			if BAND(er.modifiers, CmdKey) <> 0 then begin				AdjustAllMenus;				mResult := MenuKey(ch);				if mResult <> 0 then begin					DoMenu(HiWord(mResult), LoWord(mResult));					b := false;				end;			end;			if b & WindowsEarlyHandleKey(er) then begin				b := false;			end;		end;		if b & IsDialogEvent(er) then begin			if DialogSelect(er, wp, item) then begin				WindowItemWhere(wp, er, item);				b := false;			end;		end;		if b then begin			case er.what of				MouseDown:  begin					code := FindWindow(er.where, wp);					if wp = nil then begin						wp := FrontWindow;					end;					DoMainClick(er, wp, code);				end;				KeyDown:  begin					DoKey(er);				end;				AutoKey: 					DoAutoKey(er);				UpdateEvt: 					DoUpdate(windowPtr(er.message));				ActivateEvt: 					DoActivateDeactivate(windowPtr(er.message), odd(er.modifiers));				kOSEvent: 					if BAND(BROTL(er.message, 8), $FF) = kSuspendResumeMessage then begin						DoSuspendResume(BAnd(er.message, kResumeMask) <> 0);					end;				DiskEvt: 					DoDiskEvent(er.message);				kHighLevelEvent: 					if has_AppleEvents then begin						junk := AEProcessAppleEvent(er);					end; (* if *)				otherwise			 (* do nothing *)			end; (* case *)		end;	end; (* HandleEvents *)end. (* ICEvents *)
+unit ICEvents;
+
+interface
+
+	const
+		M_Apple = 128;
+
+	procedure HandleEvents;
+
+implementation
+
+	uses
+		EPPC, AppleEvents, ICGlobals, ICDocument, ICWindows, ICMiscSubs, ICInstall;
+
+	procedure DoDiskEvent (message: longInt);
+		var
+			pt: point;
+			oe: OSErr;
+	begin
+		if (HiWord(message) <> noErr) then begin
+			pt.h := ((screenbits.bounds.Right - screenbits.bounds.Left - 304) div 2);
+			pt.v := ((screenbits.bounds.Bottom - screenbits.bounds.Top - 156) div 3);
+			InitCursor;
+			oe := DIBadMount(pt, message);
+		end;
+	end;
+
+	procedure DoActivateDeactivate (window: WindowPtr; activate: boolean);
+	begin
+		if activate then begin
+			SelectWindow(window);
+		end; (* if *)
+		WindowActivateDeactivate(window, activate);
+	end;
+
+	procedure DoSuspendResume (resume: boolean);
+	begin
+		in_foreground := resume;
+		if FrontWindow <> nil then begin
+			DoActivateDeactivate(FrontWindow, resume);
+		end;
+		InitCursor;
+	end;
+
+	procedure DoUpdate (window: WindowPtr);
+	begin
+		BeginUpdate(window);
+(* *)
+		EndUpdate(window);
+	end;
+
+	procedure DoKey (er: EventRecord);
+	begin
+		WindowsDoKey(er);
+	end;
+
+	procedure DoAutoKey (er: EventRecord);
+	begin
+		DoKey(er);
+	end;
+
+	procedure AdjustMenus;
+	begin
+		WindowsAdjustMenus;
+	end; (* AdjustMenus *)
+
+	procedure AdjustAllMenus;
+	begin
+		AdjustMenus;
+		SetItemEnable(GetMHandle(M_File), FM_Close, IsDocOpen or (GetWindowType(FrontWindow) = WT_About));
+		SetItemEnable(GetMHandle(M_File), FM_Save, IsDocDirty or IsDocNew);
+		SetItemEnable(GetMHandle(M_File), FM_SaveAs, IsDocOpen);
+		AdjustInstalMenu(M_Install);
+		if IsDocOpen then begin
+			SetItem(GetMHandle(M_Windows), 1, GetDocumentName);
+		end
+		else begin
+			SetItem(GetMHandle(M_Windows), 1, GetAString(128, 15));
+		end; (* if *)
+	end;
+
+	procedure DoIdle;
+	begin
+		WindowsIdle;
+	end;
+
+	procedure DoMenu (menu: integer; item: integer);
+		var
+			DAName: Str255;
+			junk: OSErr;
+			loe: longint;
+			err: OSErr;
+	begin
+		case menu of
+			M_Apple:  begin
+				case item of
+					1: 
+						DisplayError(acOpenWindow, WindowsOpen(WT_About));
+					2: 
+						;
+					otherwise begin
+						GetItem(GetMHandle(M_apple), item, DAName);
+						junk := OpenDeskAcc(DAName);
+					end
+				end; (* case *)
+			end;
+			M_File:  begin
+				case item of
+					FM_New:  begin
+						DisplayError(acNewDocument, DoNewDoc);
+					end;
+					FM_Open: 
+						DisplayError(acOpenDocument, DoSFOpen);
+					FM_OpenInternetPreferences: 
+						DisplayError(acOpenDocument, DoOpenInternetPreferences);
+					FM_Close: 
+						DisplayError(acCloseWindow, DoCloseDocWindow(FrontWindow));
+					FM_Save: 
+						DisplayError(acSave, DoSave);
+					FM_SaveAs: 
+						DisplayError(acSave, DoSaveAs);
+					FM_Quit: 
+						DisplayError(acQuit, DoQuit);
+					otherwise
+						;
+				end; (* case *)
+			end;
+			M_Edit:  begin
+				case item of
+					EM_Undo, EM_Cut, EM_Copy, EM_Paste, EM_Clear, EM_SelectAll:  begin
+						WindowsDoEditMenu(item);
+					end;
+					otherwise
+						;
+				end;
+			end;
+			M_Install:  begin
+				DoInstallMenu(menu, item);
+			end;
+			M_Windows:  begin
+				DisplayError(acOpenWindow, WindowsOpen(WindowType(ord(WT_Main) + item - 1)));
+			end;
+			otherwise
+				;
+		end; (* case *)
+		if not quitNow then begin
+			HiliteMenu(0);
+		end;
+	end; (* DoMenu *)
+
+	procedure DoMainClick (er: eventRecord; wp: windowPtr; code: integer);
+		var
+			mResult: longInt;
+			needsselect: boolean;
+			tempRect: Rect;
+	begin
+		needsselect := (wp <> nil) & (wp <> FrontWindow);
+		if needsselect & not (code in [inDrag, inContent]) then begin
+			SelectWindow(wp);
+		end;
+		case code of
+			inMenuBar:  begin
+				AdjustAllMenus;
+				mResult := MenuSelect(er.where);
+				if mResult <> 0 then begin
+					DoMenu(HiWord(mResult), LoWord(mResult));
+				end; (* if *)
+				if not quitNow then begin
+					HiliteMenu(0);
+				end; (* if *)
+			end;
+			InDrag:  begin
+				if needsselect and (BAND(er.modifiers, cmdKey) = 0) then begin
+					SelectWindow(wp);
+				end; (* if *)
+				SetPort(wp);
+				tempRect := GetGrayRgn^^.rgnBBox;
+				DragWindow(wp, er.where, tempRect);
+			end;
+			inGrow: 
+				;
+			inZoomIn, inZoomOut: 
+				;
+			inGoAway:  begin
+				if TrackGoAway(wp, er.where) then begin
+					DisplayError(acCloseWindow, DoCloseDocWindow(wp));
+				end;
+			end;
+			inContent:  begin
+				if needsselect then begin
+					SelectWindow(wp);
+				end;
+			end;
+			inSysWindow: 
+				SystemClick(er, wp);
+			otherwise
+
+		end;
+	end;
+
+	procedure DimMenuTitles;
+		var
+			mh: MenuHandle;
+			flags: longint;
+			i: integer;
+			old_enable_title: boolean;
+			enable_title: boolean;
+			menu_bar_redraw: boolean;
+	begin
+		AdjustMenus;
+		(* edit *)
+		mh := GetMHandle(M_Edit);
+		flags := mh^^.enableFlags;
+		old_enable_title := btst(flags, 0);
+		enable_title := false;
+		for i := 1 to CountMItems(mh) do begin
+			if btst(flags, i) then begin
+				enable_title := true;
+				leave;
+			end; (* if *)
+		end; (* for *)
+		SetItemEnable(mh, 0, enable_title);
+		menu_bar_redraw := (enable_title <> old_enable_title);
+		(* windows *)
+		mh := GetMHandle(M_Windows);
+		flags := mh^^.enableFlags;
+		old_enable_title := btst(flags, 0);
+		enable_title := IsDocOpen;
+		SetItemEnable(mh, 0, enable_title);
+		menu_bar_redraw := menu_bar_redraw or (enable_title <> old_enable_title);
+		(*  *)
+		if menu_bar_redraw then begin
+			DrawMenuBar;
+		end; (* if *)
+	end; (* DimMenuTitles *)
+
+	procedure HandleEvents;
+		var
+			junkbool: boolean;
+			er: EventRecord;
+			code: integer;
+			wp: WindowPtr;
+			ch: char;
+			mResult: longint;
+			junk: OSErr;
+			b: boolean;
+			item: integer;
+	begin
+		DimMenuTitles;
+		junkbool := WaitNextEvent(everyEvent, er, 10, nil);
+		if er.what = mouseDown then begin
+			er := er;
+		end;
+		ch := chr(BAND(er.message, CharCodeMask));
+		DoIdle;
+		b := true;
+		if WindowsEarlyHandleEvent(er) then begin
+			b := false;
+		end;
+		if b & ((er.what = keyDown) or (er.what = autoKey)) then begin
+			if BAND(er.modifiers, CmdKey) <> 0 then begin
+				AdjustAllMenus;
+				mResult := MenuKey(ch);
+				if mResult <> 0 then begin
+					DoMenu(HiWord(mResult), LoWord(mResult));
+					b := false;
+				end;
+			end;
+			if b & WindowsEarlyHandleKey(er) then begin
+				b := false;
+			end;
+		end;
+		if b & IsDialogEvent(er) then begin
+			if DialogSelect(er, wp, item) then begin
+				WindowItemWhere(wp, er, item);
+				b := false;
+			end;
+		end;
+		if b then begin
+			case er.what of
+				MouseDown:  begin
+					code := FindWindow(er.where, wp);
+					if wp = nil then begin
+						wp := FrontWindow;
+					end;
+					DoMainClick(er, wp, code);
+				end;
+
+				KeyDown:  begin
+					DoKey(er);
+				end;
+
+				AutoKey: 
+					DoAutoKey(er);
+
+				UpdateEvt: 
+					DoUpdate(windowPtr(er.message));
+
+				ActivateEvt: 
+					DoActivateDeactivate(windowPtr(er.message), odd(er.modifiers));
+
+				kOSEvent: 
+					if BAND(BROTL(er.message, 8), $FF) = kSuspendResumeMessage then begin
+						DoSuspendResume(BAnd(er.message, kResumeMask) <> 0);
+					end;
+
+				DiskEvt: 
+					DoDiskEvent(er.message);
+
+				kHighLevelEvent: 
+					if has_AppleEvents then begin
+						junk := AEProcessAppleEvent(er);
+					end; (* if *)
+				otherwise
+			 (* do nothing *)
+			end; (* case *)
+		end;
+	end; (* HandleEvents *)
+
+end. (* ICEvents *)

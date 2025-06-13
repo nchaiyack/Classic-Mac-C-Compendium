@@ -1,1 +1,36 @@
-WARNING:  Swoop v0.1b is a BETA version of the program.  Therefore it          can be expected to have bugs and rough spots.  By using this          program, you will have become a beta tester.Swoop.exe and swoop.c are Copyrighted 1992, By Douglas OtwellThis archive contains the following files:README.SWP    This fileSWOOP.EXE     The swoop executableSWOOP.DOC     Swoop DocumentationSWOOP.C       C source codeEXAMPLE1.TXT  An example Swoop source fileEXAMPLE2.TXT  An example Swoop source fileEXAMPLE3.TXT  An example Swoop source fileEXAMPLE4.TXT  An example Swoop source fileEXAMPLES.GIF  A GIF montage showing the four examples rendered with PolyrayYou may use and/or modify the program for your own use.You may freely distribute this complete archive of files to friends or BBS's.You may not charge more than a reasonable diskette and handling charge todistribute these files.Do not distribute any portion of these files separately from the completeset, listed above.DO NOT distribute any modified version of these files.  If you have comments,suggestions, or changes to the source code, please send them to me forinclusion in the code and distribution.  I can be reached:on CompuServe, ID # 76236,1121on You Can Call Me Ray graphics BBS, 708-358-5611More examples of Swoop output can be found on CompuServe in the COMART Forum,or on YCCMR, in the following images:SWOOP1.GIF STORM.GIF CURIOS.GIF LILY.GIF and PETALS.GIF
+WARNING:  Swoop v0.1b is a BETA version of the program.  Therefore it
+          can be expected to have bugs and rough spots.  By using this
+          program, you will have become a beta tester.
+
+Swoop.exe and swoop.c are Copyrighted 1992, By Douglas Otwell
+
+This archive contains the following files:
+README.SWP    This file
+SWOOP.EXE     The swoop executable
+SWOOP.DOC     Swoop Documentation
+SWOOP.C       C source code
+EXAMPLE1.TXT  An example Swoop source file
+EXAMPLE2.TXT  An example Swoop source file
+EXAMPLE3.TXT  An example Swoop source file
+EXAMPLE4.TXT  An example Swoop source file
+EXAMPLES.GIF  A GIF montage showing the four examples rendered with Polyray
+
+You may use and/or modify the program for your own use.
+
+You may freely distribute this complete archive of files to friends or BBS's.
+
+You may not charge more than a reasonable diskette and handling charge to
+distribute these files.
+
+Do not distribute any portion of these files separately from the complete
+set, listed above.
+
+DO NOT distribute any modified version of these files.  If you have comments,
+suggestions, or changes to the source code, please send them to me for
+inclusion in the code and distribution.  I can be reached:
+on CompuServe, ID # 76236,1121
+on You Can Call Me Ray graphics BBS, 708-358-5611
+
+More examples of Swoop output can be found on CompuServe in the COMART Forum,
+or on YCCMR, in the following images:
+SWOOP1.GIF STORM.GIF CURIOS.GIF LILY.GIF and PETALS.GIF

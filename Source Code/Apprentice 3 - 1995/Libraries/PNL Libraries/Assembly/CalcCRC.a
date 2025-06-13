@@ -1,1 +1,246 @@
-	macro	PUSH	move.l	&SYSLIST[1],-(sp)	endm			macro	POP	move.l	(sp)+,&SYSLIST[1]	endmmagic	proc	export	dc.w	$0000,$1021,$2042,$3063,$4084,$50a5,$60c6,$70e7	dc.w	$8108,$9129,$a14a,$b16b,$c18c,$d1ad,$e1ce,$f1ef	dc.w	$1231,$0210,$3273,$2252,$52b5,$4294,$72f7,$62d6	dc.w	$9339,$8318,$b37b,$a35a,$d3bd,$c39c,$f3ff,$e3de	dc.w	$2462,$3443,$0420,$1401,$64e6,$74c7,$44a4,$5485	dc.w	$a56a,$b54b,$8528,$9509,$e5ee,$f5cf,$c5ac,$d58d	dc.w	$3653,$2672,$1611,$0630,$76d7,$66f6,$5695,$46b4	dc.w	$b75b,$a77a,$9719,$8738,$f7df,$e7fe,$d79d,$c7bc	dc.w	$48c4,$58e5,$6886,$78a7,$0840,$1861,$2802,$3823	dc.w	$c9cc,$d9ed,$e98e,$f9af,$8948,$9969,$a90a,$b92b	dc.w	$5af5,$4ad4,$7ab7,$6a96,$1a71,$0a50,$3a33,$2a12	dc.w	$dbfd,$cbdc,$fbbf,$eb9e,$9b79,$8b58,$bb3b,$ab1a	dc.w	$6ca6,$7c87,$4ce4,$5cc5,$2c22,$3c03,$0c60,$1c41	dc.w	$edae,$fd8f,$cdec,$ddcd,$ad2a,$bd0b,$8d68,$9d49	dc.w	$7e97,$6eb6,$5ed5,$4ef4,$3e13,$2e32,$1e51,$0e70	dc.w	$ff9f,$efbe,$dfdd,$cffc,$bf1b,$af3a,$9f59,$8f78	dc.w	$9188,$81a9,$b1ca,$a1eb,$d10c,$c12d,$f14e,$e16f	dc.w	$1080,$00a1,$30c2,$20e3,$5004,$4025,$7046,$6067	dc.w	$83b9,$9398,$a3fb,$b3da,$c33d,$d31c,$e37f,$f35e	dc.w	$02b1,$1290,$22f3,$32d2,$4235,$5214,$6277,$7256	dc.w	$b5ea,$a5cb,$95a8,$8589,$f56e,$e54f,$d52c,$c50d	dc.w	$34e2,$24c3,$14a0,$0481,$7466,$6447,$5424,$4405	dc.w	$a7db,$b7fa,$8799,$97b8,$e75f,$f77e,$c71d,$d73c	dc.w	$26d3,$36f2,$0691,$16b0,$6657,$7676,$4615,$5634	dc.w	$d94c,$c96d,$f90e,$e92f,$99c8,$89e9,$b98a,$a9ab	dc.w	$5844,$4865,$7806,$6827,$18c0,$08e1,$3882,$28a3	dc.w	$cb7d,$db5c,$eb3f,$fb1e,$8bf9,$9bd8,$abbb,$bb9a	dc.w	$4a75,$5a54,$6a37,$7a16,$0af1,$1ad0,$2ab3,$3a92	dc.w	$fd2e,$ed0f,$dd6c,$cd4d,$bdaa,$ad8b,$9de8,$8dc9	dc.w	$7c26,$6c07,$5c64,$4c45,$3ca2,$2c83,$1ce0,$0cc1	dc.w	$ef1f,$ff3e,$cf5d,$df7c,$af9b,$bfba,$8fd9,$9ff8	dc.w	$6e17,$7e36,$4e55,$5e74,$2e93,$3eb2,$0ed1,$1ef0	endpCalcCRCStack	record	0Return	ds.l	1dummy	ds.b	1v	ds.b	1crcp	ds.l	1	endr; procedure CalcCRC(var crc:integer; v:integer);CalcCRC	proc	export	with	CalcCRCStack		move.l	crcp(sp),a0	move.w	#0,d0	move.b	(a0),d0				; crc high byte	add.w	d0,d0	lea	magic,a1	move.w	(a1,d0.w),d0	move.b	v(sp),d1	eor.b	d1,d0	move.b	1(a0),d1			; crc low byte	lsl.w	#8,d1	eor.w	d1,d0	move.w	d0,(a0)		move.l	(sp),6(sp)	add.l	#6,sp	rts	endpCalcCRCBlockStack	record	0a2	ds.l	1Return	ds.l	1crcp	ds.l	1len	ds.l	1p	ds.l	1	endr; procedure CalcCRCBlock(p:ptr; len:longInt; var crc:integer);CalcCRCBlock	proc	export	with	CalcCRCBlockStack	move.l	a2,-(sp)	move.l	len(sp),d2	move.l	crcp(sp),a0	lea	magic,a1	move.l	p(sp),a2lop	subq.l	#1,d2	bmi.s	fin	clr.w	d0	move.b	(a0),d0				; crc high byte	add.w	d0,d0	move.w	(a1,d0.w),d0	move.b	(a2)+,d1	eor.b	d1,d0	move.b	1(a0),d1			; crc low byte	lsl.w	#8,d1	eor.w	d1,d0	move.w	d0,(a0)		bra	lopfin	move.l	(sp)+,a2	move.l	(sp),12(sp)	add.l	#12,sp	rts	endp; procedure CalcMBCRC(var crc:integer; v:integer);CalcMBCRC	proc	export	with	CalcCRCStack		move.l	crcp(sp),a0	move.w	#0,d0	move.b	(a0),d0				; crc high byte	move.b	v(sp),d1	eor.b	d1,d0	add.w	d0,d0	lea	magic,a1	move.w	(a1,d0.w),d0	move.b	1(a0),d1			; crc low byte	lsl.w	#8,d1	eor.w	d1,d0	move.w	d0,(a0)		move.l	(sp),6(sp)	add.l	#6,sp	rts	endpCalcMBCRCBlockStack	record	0a2	ds.l	1Return	ds.l	1crcp	ds.l	1len	ds.l	1p	ds.l	1	endr; procedure CalcMBCRCBlock(p:ptr; len:longInt; var crc:integer);CalcMBCRCBlock	proc	export	with	CalcMBCRCBlockStack		move.l	a2,-(sp)	move.l	len(sp),d2	move.l	crcp(sp),a0	lea	magic,a1	move.l	p(sp),a2lop	subq.l	#1,d2	bmi.s	fin	clr.w	d0	move.b	(a0),d0				; crc high byte	move.b	(a2)+,d1	eor.b	d1,d0	add.w	d0,d0	move.w	(a1,d0.w),d0	move.b	1(a0),d1			; crc low byte	lsl.w	#8,d1	eor.w	d1,d0	move.w	d0,(a0)		bra	lopfin	move.l	(sp)+,a2	move.l	(sp),12(sp)	add.l	#12,sp	rts	endp; function GetMagic:magicPtr;GetMagic	proc	export	lea	magic,a0	move.l	a0,4(sp)	rts	endp		END	regspc	equ		16rtsoff	equ		regspc+0voff	equ		regspc+4crcoff	equ		regspc+6; procedure CalcCRC(var crc:integer; v:integer);; @crc		@a0 = d0; v			d1; @rtsOldCRC	proc	export	MOVEM.L	A0/D0-D2,-(SP)	;Save all regs. except D0	move.l	crcoff(sp),a0	move.w	(a0),d0	move.w	voff(sp),d1		move.w	#7,d2loop	lsl.b	#1,d1	roxl.w	#1,d0	bcc		noxor	eor.w	#$1021,d0noxor	dbf		d2,loop		move.w	d0,(a0)		MOVEM.L	(SP)+,A0/D0-D2	move.l	(sp),6(sp)	add.l	#6,sp	RTS	endp	procedure CalcCRC (v: integer);	var		temp: boolean;		i: integer;begin	for i := 1 to 8 do begin		temp := BAND(crc, $8000) <> 0;		crc := BOR(BSL(crc, 1), BSR(v, 7));		if temp then			crc := BXOR(crc, $1021);		v := BAND(BSL(v, 1), $FF);	end;end;asm -wb "{active}"(evaluate "{active}" =~ /(?*):(?*)¨1.a/ )> dev:null(evaluate "{active}" =~ "/(?*)¨2.a/" )> dev:nulllink -sn CalcCRC="{¨1}" "{active}.o" -o "{¨2}"dumpcode "{¨2}"
+	macro
+	PUSH
+	move.l	&SYSLIST[1],-(sp)
+	endm
+		
+	macro
+	POP
+	move.l	(sp)+,&SYSLIST[1]
+	endm
+
+magic	proc	export
+	dc.w	$0000,$1021,$2042,$3063,$4084,$50a5,$60c6,$70e7
+	dc.w	$8108,$9129,$a14a,$b16b,$c18c,$d1ad,$e1ce,$f1ef
+	dc.w	$1231,$0210,$3273,$2252,$52b5,$4294,$72f7,$62d6
+	dc.w	$9339,$8318,$b37b,$a35a,$d3bd,$c39c,$f3ff,$e3de
+	dc.w	$2462,$3443,$0420,$1401,$64e6,$74c7,$44a4,$5485
+	dc.w	$a56a,$b54b,$8528,$9509,$e5ee,$f5cf,$c5ac,$d58d
+	dc.w	$3653,$2672,$1611,$0630,$76d7,$66f6,$5695,$46b4
+	dc.w	$b75b,$a77a,$9719,$8738,$f7df,$e7fe,$d79d,$c7bc
+	dc.w	$48c4,$58e5,$6886,$78a7,$0840,$1861,$2802,$3823
+	dc.w	$c9cc,$d9ed,$e98e,$f9af,$8948,$9969,$a90a,$b92b
+	dc.w	$5af5,$4ad4,$7ab7,$6a96,$1a71,$0a50,$3a33,$2a12
+	dc.w	$dbfd,$cbdc,$fbbf,$eb9e,$9b79,$8b58,$bb3b,$ab1a
+	dc.w	$6ca6,$7c87,$4ce4,$5cc5,$2c22,$3c03,$0c60,$1c41
+	dc.w	$edae,$fd8f,$cdec,$ddcd,$ad2a,$bd0b,$8d68,$9d49
+	dc.w	$7e97,$6eb6,$5ed5,$4ef4,$3e13,$2e32,$1e51,$0e70
+	dc.w	$ff9f,$efbe,$dfdd,$cffc,$bf1b,$af3a,$9f59,$8f78
+	dc.w	$9188,$81a9,$b1ca,$a1eb,$d10c,$c12d,$f14e,$e16f
+	dc.w	$1080,$00a1,$30c2,$20e3,$5004,$4025,$7046,$6067
+	dc.w	$83b9,$9398,$a3fb,$b3da,$c33d,$d31c,$e37f,$f35e
+	dc.w	$02b1,$1290,$22f3,$32d2,$4235,$5214,$6277,$7256
+	dc.w	$b5ea,$a5cb,$95a8,$8589,$f56e,$e54f,$d52c,$c50d
+	dc.w	$34e2,$24c3,$14a0,$0481,$7466,$6447,$5424,$4405
+	dc.w	$a7db,$b7fa,$8799,$97b8,$e75f,$f77e,$c71d,$d73c
+	dc.w	$26d3,$36f2,$0691,$16b0,$6657,$7676,$4615,$5634
+	dc.w	$d94c,$c96d,$f90e,$e92f,$99c8,$89e9,$b98a,$a9ab
+	dc.w	$5844,$4865,$7806,$6827,$18c0,$08e1,$3882,$28a3
+	dc.w	$cb7d,$db5c,$eb3f,$fb1e,$8bf9,$9bd8,$abbb,$bb9a
+	dc.w	$4a75,$5a54,$6a37,$7a16,$0af1,$1ad0,$2ab3,$3a92
+	dc.w	$fd2e,$ed0f,$dd6c,$cd4d,$bdaa,$ad8b,$9de8,$8dc9
+	dc.w	$7c26,$6c07,$5c64,$4c45,$3ca2,$2c83,$1ce0,$0cc1
+	dc.w	$ef1f,$ff3e,$cf5d,$df7c,$af9b,$bfba,$8fd9,$9ff8
+	dc.w	$6e17,$7e36,$4e55,$5e74,$2e93,$3eb2,$0ed1,$1ef0
+	endp
+
+CalcCRCStack	record	0
+Return	ds.l	1
+dummy	ds.b	1
+v	ds.b	1
+crcp	ds.l	1
+	endr
+
+; procedure CalcCRC(var crc:integer; v:integer);
+CalcCRC	proc	export
+	with	CalcCRCStack
+	
+	move.l	crcp(sp),a0
+	move.w	#0,d0
+	move.b	(a0),d0				; crc high byte
+	add.w	d0,d0
+	lea	magic,a1
+	move.w	(a1,d0.w),d0
+	move.b	v(sp),d1
+	eor.b	d1,d0
+	move.b	1(a0),d1			; crc low byte
+	lsl.w	#8,d1
+	eor.w	d1,d0
+	move.w	d0,(a0)	
+
+	move.l	(sp),6(sp)
+	add.l	#6,sp
+	rts
+
+	endp
+
+CalcCRCBlockStack	record	0
+a2	ds.l	1
+Return	ds.l	1
+crcp	ds.l	1
+len	ds.l	1
+p	ds.l	1
+	endr
+
+; procedure CalcCRCBlock(p:ptr; len:longInt; var crc:integer);
+CalcCRCBlock	proc	export
+	with	CalcCRCBlockStack
+
+	move.l	a2,-(sp)
+	move.l	len(sp),d2
+	move.l	crcp(sp),a0
+	lea	magic,a1
+	move.l	p(sp),a2
+
+lop
+	subq.l	#1,d2
+	bmi.s	fin
+
+	clr.w	d0
+	move.b	(a0),d0				; crc high byte
+	add.w	d0,d0
+	move.w	(a1,d0.w),d0
+	move.b	(a2)+,d1
+	eor.b	d1,d0
+	move.b	1(a0),d1			; crc low byte
+	lsl.w	#8,d1
+	eor.w	d1,d0
+	move.w	d0,(a0)	
+	bra	lop
+
+fin
+	move.l	(sp)+,a2
+	move.l	(sp),12(sp)
+	add.l	#12,sp
+	rts
+
+	endp
+
+; procedure CalcMBCRC(var crc:integer; v:integer);
+CalcMBCRC	proc	export
+	with	CalcCRCStack
+	
+	move.l	crcp(sp),a0
+	move.w	#0,d0
+	move.b	(a0),d0				; crc high byte
+	move.b	v(sp),d1
+	eor.b	d1,d0
+	add.w	d0,d0
+	lea	magic,a1
+	move.w	(a1,d0.w),d0
+	move.b	1(a0),d1			; crc low byte
+	lsl.w	#8,d1
+	eor.w	d1,d0
+	move.w	d0,(a0)	
+
+	move.l	(sp),6(sp)
+	add.l	#6,sp
+	rts
+
+	endp
+
+CalcMBCRCBlockStack	record	0
+a2	ds.l	1
+Return	ds.l	1
+crcp	ds.l	1
+len	ds.l	1
+p	ds.l	1
+	endr
+
+; procedure CalcMBCRCBlock(p:ptr; len:longInt; var crc:integer);
+CalcMBCRCBlock	proc	export
+	with	CalcMBCRCBlockStack
+	
+	move.l	a2,-(sp)
+	move.l	len(sp),d2
+	move.l	crcp(sp),a0
+	lea	magic,a1
+	move.l	p(sp),a2
+lop
+	subq.l	#1,d2
+	bmi.s	fin
+
+	clr.w	d0
+	move.b	(a0),d0				; crc high byte
+	move.b	(a2)+,d1
+	eor.b	d1,d0
+	add.w	d0,d0
+	move.w	(a1,d0.w),d0
+	move.b	1(a0),d1			; crc low byte
+	lsl.w	#8,d1
+	eor.w	d1,d0
+	move.w	d0,(a0)	
+	bra	lop
+
+fin
+	move.l	(sp)+,a2
+	move.l	(sp),12(sp)
+	add.l	#12,sp
+	rts
+
+	endp
+
+; function GetMagic:magicPtr;
+GetMagic	proc	export
+	lea	magic,a0
+	move.l	a0,4(sp)
+	rts
+
+	endp
+	
+	END
+	
+regspc	equ		16
+rtsoff	equ		regspc+0
+voff	equ		regspc+4
+crcoff	equ		regspc+6
+
+; procedure CalcCRC(var crc:integer; v:integer);
+; @crc		@a0 = d0
+; v			d1
+; @rts
+OldCRC	proc	export
+	MOVEM.L	A0/D0-D2,-(SP)	;Save all regs. except D0
+
+	move.l	crcoff(sp),a0
+	move.w	(a0),d0
+	move.w	voff(sp),d1
+	
+	move.w	#7,d2
+loop
+	lsl.b	#1,d1
+	roxl.w	#1,d0
+	bcc		noxor
+	eor.w	#$1021,d0
+noxor
+	dbf		d2,loop
+	
+	move.w	d0,(a0)
+	
+	MOVEM.L	(SP)+,A0/D0-D2
+	move.l	(sp),6(sp)
+	add.l	#6,sp
+	RTS
+	endp
+	
+
+procedure CalcCRC (v: integer);
+	var
+		temp: boolean;
+		i: integer;
+begin
+	for i := 1 to 8 do begin
+		temp := BAND(crc, $8000) <> 0;
+		crc := BOR(BSL(crc, 1), BSR(v, 7));
+		if temp then
+			crc := BXOR(crc, $1021);
+		v := BAND(BSL(v, 1), $FF);
+	end;
+end;
+
+asm -wb "{active}"
+
+
+(evaluate "{active}" =~ /(?*):(?*)¨1.a/ )> dev:null
+(evaluate "{active}" =~ "/(?*)¨2.a/" )> dev:null
+link -sn CalcCRC="{¨1}" "{active}.o" -o "{¨2}"
+dumpcode "{¨2}"

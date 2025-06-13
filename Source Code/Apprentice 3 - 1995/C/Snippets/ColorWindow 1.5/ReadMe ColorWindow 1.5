@@ -1,1 +1,45 @@
-ColorWindow 1.5Copyright © 1995 Appalachian Trail Solutions.  All rights reserved.What it does:ColorWindow is an example program of how to set up a color table and change the window colors and control colors.  It will put up a window and allow the user to change any of the 13 window color elements defined in Inside Macintosh, Macintosh Toolbox Essentials.  Version 1.5 also creates a control color table for the scroll bars.  This only works with System 7.0 or later and requires color quickdraw and a monitor cabable for displaying thousands of colors.  I hope the source code shows the proper way to do some other things also.  My code is fully commented and was developed using MetroWerks CodeWarrior 6 but should compile under Symantec Think C as well.Enjoy!Ken ElrodThe Other Poop:This file has its roots in and some routines from Color Window Demo by Jim Griffin circa 1990.  This is an excellent program but the version that is posted on AOL is dated.  I spent about two hours getting it to compile under Think C 7.0.  I intended to port it to CodeWarrior but ran into major problems and decided to do a complete rewrite.I borrowed some functions from ColorTutor and some other Mac Primer programs by Dave Mark and Cartwright Reed.  You may want to check out their excellent books.  They are available from MacTech or in the computer section of your favorite bookstore.  Look for Macintosh Programming Primer and others.No royalties are required to use this program subject to the following conditions:  1. You may not sell this program or include it on any media which is sold for profit without permission in writing.2. It is intended as an example of how to use System 7 window  and control color tables.  You may use the routines in your programs but must give credit to the authors in your final work.  After all, they did all the hard work for you.3. If you like this please send me a postcard or picture from your town.  I am curious to see how far this gets.Ken Elrod Appalachain Trail Solutions147 Kare-Fre Blvd.West Union, SC  29696Send all bug reports, suggestions, comments, questions, etc via E-mail to me at elrodk@aol.com.Revision History:Version 1.0:Initial release - May 29, 1995Developed on PowerMacintosh 6100/60AV using MetroWerks CodeWarrior 5.  I have not tested this on other machines as I have access only to my Mac Version 1.5:Released - June 26, 19951. Added scroll bars and activated the menu to update the control colors.  I did this in a nonstandard way because I just wanted the scroll bars so we could change the color.  This is not how scroll bars are supposed to be used.  Scroll bars are supposed to move you around in a document.  The routine I used here just pages between all the open PICT resources on your machine.  I again borrowed this from Show Pict in the Mac Primer. 2. Also included are some minor changes to make the program work with multiple windows.  This is mainly a bunch of calls to SetPort and handling activate evts.3. This version was developed using MetroWerks CodeWarrior 6.Known Bugs & Incompatabilities:Windows and controls are drawn in black & white with some settings.  The less  colors you have your monitor set to the more often this occurs.  I believe it has something to do with the way the window manager mixes colors to color some of the window parts.  As soon as I can track down the problem I will issue an update.  If anyone finds the answer please let me know. Next version wish list:1. Save user color choices and restore as the default.2. Allow color changes in our about box so we can see the results of the dialog colors.3. E-mail yours to me at elrodk@aol.com
+ColorWindow 1.5
+Copyright © 1995 Appalachian Trail Solutions.  All rights reserved.
+
+What it does:
+ColorWindow is an example program of how to set up a color table and change the window colors and control colors.  It will put up a window and allow the user to change any of the 13 window color elements defined in Inside Macintosh, Macintosh Toolbox Essentials.  Version 1.5 also creates a control color table for the scroll bars.  This only works with System 7.0 or later and requires color quickdraw and a monitor cabable for displaying thousands of colors.  I hope the source code shows the proper way to do some other things also.  My code is fully commented and was developed using MetroWerks CodeWarrior 6 but should compile under Symantec Think C as well.
+
+Enjoy!
+Ken Elrod
+
+The Other Poop:
+This file has its roots in and some routines from Color Window Demo by Jim Griffin circa 1990.  This is an excellent program but the version that is posted on AOL is dated.  I spent about two hours getting it to compile under Think C 7.0.  I intended to port it to CodeWarrior but ran into major problems and decided to do a complete rewrite.
+
+I borrowed some functions from ColorTutor and some other Mac Primer programs by Dave Mark and Cartwright Reed.  You may want to check out their excellent books.  They are available from MacTech or in the computer section of your favorite bookstore.  Look for Macintosh Programming Primer and others.
+
+No royalties are required to use this program subject to the following 
+conditions:
+  1. You may not sell this program or include it on any media which is sold for profit without permission in writing.
+2. It is intended as an example of how to use System 7 window  and control color tables.  You may use the routines in your programs but must give credit to the authors in your final work.  After all, they did all the hard work for you.
+3. If you like this please send me a postcard or picture from your town.  I am curious to see how far this gets.
+
+Ken Elrod 
+Appalachain Trail Solutions
+147 Kare-Fre Blvd.
+West Union, SC  29696
+
+Send all bug reports, suggestions, comments, questions, etc via E-mail to me at elrodk@aol.com.
+
+Revision History:
+Version 1.0:
+Initial release - May 29, 1995
+Developed on PowerMacintosh 6100/60AV using MetroWerks CodeWarrior 5.  I have not tested this on other machines as I have access only to my Mac 
+
+Version 1.5:
+Released - June 26, 1995
+1. Added scroll bars and activated the menu to update the control colors.  I did this in a nonstandard way because I just wanted the scroll bars so we could change the color.  This is not how scroll bars are supposed to be used.  Scroll bars are supposed to move you around in a document.  The routine I used here just pages between all the open PICT resources on your machine.  I again borrowed this from Show Pict in the Mac Primer. 
+2. Also included are some minor changes to make the program work with multiple windows.  This is mainly a bunch of calls to SetPort and handling activate evts.
+3. This version was developed using MetroWerks CodeWarrior 6.
+
+Known Bugs & Incompatabilities:
+Windows and controls are drawn in black & white with some settings.  The less  colors you have your monitor set to the more often this occurs.  I believe it has something to do with the way the window manager mixes colors to color some of the window parts.  As soon as I can track down the problem I will issue an update.  If anyone finds the answer please let me know. 
+
+Next version wish list:
+1. Save user color choices and restore as the default.
+2. Allow color changes in our about box so we can see the results of the dialog colors.
+3. E-mail yours to me at elrodk@aol.com

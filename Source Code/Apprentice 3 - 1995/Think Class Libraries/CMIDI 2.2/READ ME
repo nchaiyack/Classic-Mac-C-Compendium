@@ -1,1 +1,24 @@
-Name: CMIDIVersion: 2.2Catagory: classesContributor: Paul Ferguson <pferguson@aol.com>Date: 94-01TCL-Version: 1.1.3TCL-Language: C++Copyright: Copyright (C) 1991-94 Paul D. Ferguson. All rights reserved.Apple’s MIDI Manager is the future of MIDI programming on the Macintosh. The MIDI Manager allows applications to exchange MIDI messages with external devices as well as with other MIDI Manager compatible applications. Using PatchBay, MIDI musicians can connect multiple MIDI Manager applications under MultiFinder.The CMIDI class library provides an interface to the MIDI Manager. A wide range of MIDI applications, from simple editors and librarians to sophisticated real-time musical tools, lend themselves to object oriented design.Built on the OOP extensions in Symantec Corporation's Symantec C++ 6.0 compiler, CMIDI defines a set of classes integrated into the THINK Class Library (TCL). CMIDI classes define MIDI Manager objects including input, output, and time ports.
+Name: CMIDI
+Version: 2.2
+Catagory: classes
+Contributor: Paul Ferguson <pferguson@aol.com>
+Date: 94-01
+TCL-Version: 1.1.3
+TCL-Language: C++
+Copyright: Copyright (C) 1991-94 Paul D. Ferguson. All rights reserved.
+
+Apple’s MIDI Manager is the future of MIDI programming on the Macintosh. 
+The MIDI Manager allows applications to exchange MIDI messages with 
+external devices as well as with other MIDI Manager compatible 
+applications. Using PatchBay, MIDI musicians can connect multiple MIDI 
+Manager applications under MultiFinder.
+
+The CMIDI class library provides an interface to the MIDI Manager. A wide 
+range of MIDI applications, from simple editors and librarians to 
+sophisticated real-time musical tools, lend themselves to object oriented 
+design.
+
+Built on the OOP extensions in Symantec Corporation's Symantec C++ 6.0 
+compiler, CMIDI defines a set of classes integrated into the THINK Class 
+Library (TCL). CMIDI classes define MIDI Manager objects including input, 
+output, and time ports.

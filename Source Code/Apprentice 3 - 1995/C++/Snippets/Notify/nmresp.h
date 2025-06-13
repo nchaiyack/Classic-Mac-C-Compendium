@@ -1,1 +1,1 @@
-pascal void main( struct NMRec *theNMRec);
+pascal void main( struct NMRec *theNMRec);

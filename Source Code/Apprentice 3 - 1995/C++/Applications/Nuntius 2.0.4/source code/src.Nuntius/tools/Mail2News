@@ -1,1 +1,82 @@
-# filen med mail skal være en compacted Eudora mailboxif {#} != 2	echo "Usage: Mail2News MailFile NuntiusName" ∑∑ dev:stderr	exitendset exit 1set mail {1}set NuntiusName {2}set NuntiusFolder scratch:csm:{NuntiusName}:# Code:set OldDir "``pwd``"set SlashNuntiusName "`echo {NuntiusName} | tr '.' '/'`"setfile -c 'MPS ' -t TEXT {mail}set news {TmpDir}NewsFileset exit 0mkdir {NuntiusFolder} ∑∑ dev:nullset exit 1StreamEdit ∂	-e '1,$ Replace / +∞/ ""' ∂	-e '/•References: / Delete;next' ∂	-e '/•Message-id: / Print "X-Nuntius-Recent-" . ;Delete;next' ∂	< {mail} | ∂tr ∂/∂?∂"∂' ∂∫∂¿∂”∂’ > {news}target {news}find • {news}set exit 0set msgid 1loop	echo "@@@@ /usr/spool/news/comp/sys/mac/{SlashNuntiusName} {msgid}∂nMessage-id: <{msgid}>" > {news}.§	find /∂n∂n/ {news}	find ∆/•'From ¿¿¿@¿¿¿ '/ {news}	break if {status} != 0	ev msgid+=1endset exit 1StreamEdit -d ∂	-e '• Set msgid "ThisWasBad"' ∂	-e '/•Message-id: ∂<([0-9]+)®1∂>/ Set msgid ®1;next' ∂	-e '/•Subject: (Re:[ ∂>]*)* *([¬ ]≈)®6 *∞/ Print msgid "†" ®6;next' ∂	< {news} ∂	> {tmp}sort -fs "†" -f 2 -unique -r < {tmp} > {tmp2}	target {news}target {tmp2}set msgid 1000find • {tmp2}find • {news}set exit 0replace -c ∞ /•([¬:∂n∂ ø]+ (?)«75,85»)®1 / ®1∂n {news}set exit 1StreamEdit -d ∂	-e '• Set msgid "ThisWasNotGood"' ∂	-e '/•Message-id: ∂<([0-9]+)®1∂>/ Set msgid ®1' ∂	-e "/•([0-9]+)®1∂†(≈)®2/ Print ∂"/'∂" ®2 ∂"'[ ∂t]*∞/ Print 'References: <∂" ®1 ∂">';next∂"" ∂	< {tmp2} ∂	> {tmp}# /'ADSP'/ Print 'References: <1234>';nextStreamEdit ∂	-e '!/•Subject: / next' ∂	-s {tmp} ∂	< {news} ∂	| ∂tr ÆØÅæøå∂∫∂¿∂”∂’ '[\]{|}'∂/∂?∂"∂' > {NuntiusFolder}articlescd {NuntiusFolder}MakeArticleIndexsetfile -c 'MPS ' q≈cd {OldDir}
+# filen med mail skal være en compacted Eudora mailbox
+
+if {#} != 2
+	echo "Usage: Mail2News MailFile NuntiusName" ∑∑ dev:stderr
+	exit
+end
+set exit 1
+
+set mail {1}
+set NuntiusName {2}
+
+set NuntiusFolder scratch:csm:{NuntiusName}:
+
+# Code:
+set OldDir "``pwd``"
+
+set SlashNuntiusName "`echo {NuntiusName} | tr '.' '/'`"
+setfile -c 'MPS ' -t TEXT {mail}
+set news {TmpDir}NewsFile
+set exit 0
+mkdir {NuntiusFolder} ∑∑ dev:null
+set exit 1
+
+
+StreamEdit ∂
+	-e '1,$ Replace / +∞/ ""' ∂
+	-e '/•References: / Delete;next' ∂
+	-e '/•Message-id: / Print "X-Nuntius-Recent-" . ;Delete;next' ∂
+	< {mail} | ∂
+tr ∂/∂?∂"∂' ∂∫∂¿∂”∂’ > {news}
+
+target {news}
+find • {news}
+set exit 0
+set msgid 1
+loop
+	echo "@@@@ /usr/spool/news/comp/sys/mac/{SlashNuntiusName} {msgid}∂nMessage-id: <{msgid}>" > {news}.§
+	find /∂n∂n/ {news}
+	find ∆/•'From ¿¿¿@¿¿¿ '/ {news}
+	break if {status} != 0
+	ev msgid+=1
+end
+set exit 1
+
+StreamEdit -d ∂
+	-e '• Set msgid "ThisWasBad"' ∂
+	-e '/•Message-id: ∂<([0-9]+)®1∂>/ Set msgid ®1;next' ∂
+	-e '/•Subject: (Re:[ ∂>]*)* *([¬ ]≈)®6 *∞/ Print msgid "†" ®6;next' ∂
+	< {news} ∂
+	> {tmp}
+sort -fs "†" -f 2 -unique -r < {tmp} > {tmp2}
+	
+target {news}
+target {tmp2}
+set msgid 1000
+find • {tmp2}
+
+find • {news}
+set exit 0
+replace -c ∞ /•([¬:∂n∂ ø]+ (?)«75,85»)®1 / ®1∂n {news}
+set exit 1
+
+StreamEdit -d ∂
+	-e '• Set msgid "ThisWasNotGood"' ∂
+	-e '/•Message-id: ∂<([0-9]+)®1∂>/ Set msgid ®1' ∂
+	-e "/•([0-9]+)®1∂†(≈)®2/ Print ∂"/'∂" ®2 ∂"'[ ∂t]*∞/ Print 'References: <∂" ®1 ∂">';next∂"" ∂
+	< {tmp2} ∂
+	> {tmp}
+
+# /'ADSP'/ Print 'References: <1234>';next
+
+
+StreamEdit ∂
+	-e '!/•Subject: / next' ∂
+	-s {tmp} ∂
+	< {news} ∂
+	| ∂
+tr ÆØÅæøå∂∫∂¿∂”∂’ '[\]{|}'∂/∂?∂"∂' > {NuntiusFolder}articles
+cd {NuntiusFolder}
+MakeArticleIndex
+setfile -c 'MPS ' q≈
+cd {OldDir}

@@ -1,1 +1,90 @@
-Perl -Sx "{0}" {"Parameters"}Exit#!/usr/local/bin/perl$in = shift ARGV;unlink("MacPerl Help") if -e "MacPerl Help";dbmopen(HELP, "MacPerl Help", 0);open(IN, $in) || die "Couldn't open \"$in\"";$lastpos = 0;while (<IN>) {	if (/^¾KY\s+(\S+)/) {		while ($key = shift @keys) {			$HELP{"\000" . $key} = pack("LL", $startpos, $lastpos);		}		@keys = ($1);		$startpos = tell(IN);		while (<IN>) {			last unless /^([^ \t¾]\S+)/;			push(@keys, $1);			$startpos = tell(IN);		}	}	if (/^¾C\s+(\S.+)/) {		do {			&additem($1);			$_ = <IN>;		} while (/^(\S.+)/);	}} continue {	$lastpos = tell(IN);}foreach $key (keys HELP) {	next if $key =~ /^\000/;		@items = split(/\n/, $HELP{$key});		push(@items, " ") while ($#items < 5);		$HELP{$key} = join("\n", @items);}dbmclose(HELP);$offset = (stat("MacPerl Help"))[7];dbmopen(HELP, "MacPerl Help", 0);foreach $key (keys HELP) {	next unless $key =~ /^\000/;		($startpos, $lastpos) = unpack("LL", $HELP{$key});		$startpos += $offset;	$lastpos += $offset;		$HELP{$key} = pack("LL", $startpos, $lastpos);}dbmclose(HELP);open(HELP, ">>MacPerl Help");seek(HELP, 0, 2);seek(IN, 0, 0);print HELP <IN>;close(HELP);sub additem {	local($item) = @_;	local($key);		if ($item =~ /^([A-Za-z]+)/) {		$key = $1;	} elsif ($item =~ /^&([A-Za-z]+)/) {		$key = $1;	} else {		$key = substr($item, 0, 1);	}	if (defined $HELP{$key}) {		@items = split(/\n/, $HELP{$key});		push(items, $item);		$HELP{$key} = join("\n", sort {length($b) <=> length($a)} @items);	} else {		$HELP{$key} = $item;	}}
+Perl -Sx "{0}" {"Parameters"}
+Exit
+
+#!/usr/local/bin/perl
+
+$in = shift ARGV;
+
+unlink("MacPerl Help") if -e "MacPerl Help";
+dbmopen(HELP, "MacPerl Help", 0);
+open(IN, $in) || die "Couldn't open \"$in\"";
+
+$lastpos = 0;
+
+while (<IN>) {
+	if (/^¾KY\s+(\S+)/) {
+		while ($key = shift @keys) {
+			$HELP{"\000" . $key} = pack("LL", $startpos, $lastpos);
+		}
+		@keys = ($1);
+		$startpos = tell(IN);
+		while (<IN>) {
+			last unless /^([^ \t¾]\S+)/;
+			push(@keys, $1);
+			$startpos = tell(IN);
+		}
+	}
+	if (/^¾C\s+(\S.+)/) {
+		do {
+			&additem($1);
+			$_ = <IN>;
+		} while (/^(\S.+)/);
+	}
+} continue {
+	$lastpos = tell(IN);
+}
+
+foreach $key (keys HELP) {
+	next if $key =~ /^\000/;
+	
+	@items = split(/\n/, $HELP{$key});
+	
+	push(@items, " ") while ($#items < 5);
+	
+	$HELP{$key} = join("\n", @items);
+}
+
+dbmclose(HELP);
+
+$offset = (stat("MacPerl Help"))[7];
+
+dbmopen(HELP, "MacPerl Help", 0);
+foreach $key (keys HELP) {
+	next unless $key =~ /^\000/;
+	
+	($startpos, $lastpos) = unpack("LL", $HELP{$key});
+	
+	$startpos += $offset;
+	$lastpos += $offset;
+	
+	$HELP{$key} = pack("LL", $startpos, $lastpos);
+}
+dbmclose(HELP);
+
+open(HELP, ">>MacPerl Help");
+seek(HELP, 0, 2);
+seek(IN, 0, 0);
+
+print HELP <IN>;
+
+close(HELP);
+
+sub additem {
+	local($item) = @_;
+	local($key);
+	
+	if ($item =~ /^([A-Za-z]+)/) {
+		$key = $1;
+	} elsif ($item =~ /^&([A-Za-z]+)/) {
+		$key = $1;
+	} else {
+		$key = substr($item, 0, 1);
+	}
+	if (defined $HELP{$key}) {
+		@items = split(/\n/, $HELP{$key});
+		push(items, $item);
+		$HELP{$key} = join("\n", sort {length($b) <=> length($a)} @items);
+	} else {
+		$HELP{$key} = $item;
+	}
+}

@@ -1,1 +1,388 @@
-Version History---------------* 1.0 950608 (public distribution)	- What I thought was a bug under UniFinder was not a bug in Thread	Library, but probably an incorrect startup disk or an error in	the build script. When I rebuilt the library, and started up with	a copy of System 6.0.5 on my hard disk, Thread Library ran fine on	my Macintosh Plus running System 6.0.5 with both UniFinder and	MultiFinder.* 1.0d4.8 950608 (limited distribution)	- Wrapped headers in "extern C" so they can be used in C++ source code.	- Tested TLM layer by using it in Apple's ThreadedSort example program.	It took very little time to convert to TLM and the PPC and 68K versions	ran perfectly.	- Added macros to "ThreadLibraryManager.h" to simplify using the library	with Thread Manager.	- Added more detailed information on adding TLM to an existing application.	- Discovered that Thread Library does not work under UniFinder in System 6.0.5.* 1.0d4.7 950531 (limited distribution)	- Added PowerPC shared libraries "ThreadLibrary-PPC.lib" and 	"ThreadLibrary-PPC-Dbg.lib".	- Added note about using WaitNextEvent.	- Removed "Stop" buttons from demo dialogs.* 1.0d4.6 950513 (limited distribution)	- Added ThreadLibraryManager interface.	- Added AppleScript to automate build procedure.	- Improved test application (can now display multiple windows).	- Put back the function ThreadStackFrame.	- Removed special VBL task due to spurious breaks into the debugger	caused by the stack sniffer VBL task and the sentinel value placed	at the end of a thread's stack.		- Added missing check to exclude disabled threads from calculation	of yield interval in ThreadYieldInterval.		- Added memory allocation callbacks.		- Expanded, formatted, and generally improved documentation.		- Added ThreadStackSize function.	- Made native PowerPC version.	- Removed ThreadSaveFPU and ThreadSaveFPUSet.	* 1.0d4.5 941212 (limited distribution)In brief, version 1.0d4.5:	- Fixes an error in v1.0d4.4 in the call to the suspend	callback function.		- Changes the existing functional specification that may	affect applications that installed a suspend callback	function; applications that did not install a suspend	callback function will not be affected by this change.	- Adds definitions for macros and functions that may	be used to stub out calls to Thread Library.		- Several callback functions were added to provide	greater control to an application using Thread Library.		- Error codes are stored with each thread.		- Changed return value for ThreadCount from 'short' to 'long'.		- Removed the function ThreadStackFrame and the typedef for	ThreadStackFrameType.	- Saves floating pointer registers if there is a floating point	unit.		- Separated register saving and restoring code to simplify port to	native PowerPC version.		- Removed most compiler dependencies.		- Added functions for enabling and disabling a thread.	In greater detail, these changes are:- The suspend procedure for a thread was being passed thedata parameter for the thread being resumed, instead ofthe data parameter for the thread being suspended.- I've added a couple of files, "ThreadStubsLib.c"and "ThreadStubLib.h". You can use these filesto stub out the calls to Thread Library. Seethe comment in ThreadStubLib.h for more details.- Two new callback functions, called "begin" and "end",have been added. These functions are called before athread is first executed and before a thread is disposedof, respectively. Functions for getting and settingall of the callback functions have been added tothe interface to Thread Library.- The sequence of calls, over the lifetime of a thread,of the callback functions installed by the applicationhas been defined more precisely. There is some redundancyin the new sequence, but it is symmetrical and is nearlyfully compatible with prior versions of Thread Library.The new sequence of calls is:	( begin, resume, entry ( suspend, resume ) x Ntimes, suspend, endThis new sequence is described in greater detail in the documentation.The old sequence was:	resume, entry ( suspend, resume ) x NtimesThis old sequence had an assymetry, which meant that the resumefunction could be called one more time than the suspend function.The new sequence ensures that the suspend function is calledthe exact same number of times as the resume function.For existing applications that installed a suspend function, youwill have to verify that the suspend function can be called evenafter the entry point has returned, and that your application doesnot otherwise rely on this assymetric behavior of Thread Library.- The error code from the last call to a Thread Library functionis stored with the thread that was active at the time of thecall. In addition, a global error variable is used if thereare no threads in existence (including the main thread)at the time of the call to Thread Library. This should notaffect any existing applications, but was done as aninternal enhancement to support preemptive threads (ifI ever add preemptive thread support).- Most of the compiler dependencies have been removed. Thread Libraryhas been successfully compiled using THINK C 7.0.3, MPW 3.3.1, andCodeWarrior DR4.- Two functions, ThreadEnabled and ThreadEnabledSet, allow youto determine whether a thread is enabled and to enable or disablea thread. Only enabled threads are scheduled for execution. Themain thread cannot be disabled.* 1.0d4.4 940907 (limited distribution)Version 1.0d4.4 adds the function ThreadEndAll. From the READMEfile:ThreadEndAll disposes of all threads, including the main thread.ThreadEndAll is useful when your application is terminating andyou want to dispose of any threads that may still exist.ThreadEndAll can be called only from within the main thread.* 1.0d4.3 940715 (limited distribution)Version 1.0d4.3 fixes a problem with compiling with Apple's old(non-universal) headers. I'd just forgotten to put in an ifdefaround the VBLUPP stuff.* 1.0d4.2 940706 (limited distribution)Version 1.0d4.2 fixes one bug, adds a few optimizations, and slightlyalters the functional interface to Thread Library.- Fixed error in detecting events that was introduced in 1.0d4.1.- Fixed order of execution of actions taken when a threadis resumed (the stack sniffer was being resumed beforethe low-memory globals were restored)- Removed the functions ThreadStatus and ThreadStatusSet, and theassociated type definitions. The same functionality that wasprovided by these functions can be accomplished using the thread'sdata field, or using an application's global variables.- Added support for the universal headers. If you need to recompile thedemo applications, note that the calls to InitDialogs may cause a typeerror if you're using the old headers. Just change the parameter toInitDialogs from zero to NULL.- Added ThreadErrorType and defined an error code.* 1.0d4.1 940609 (limited distribution)Version 1.0d4.1 fixes one bug. It does not alter the functional interfaceto Thread Library.- ThreadSchedule and ThreadYield no longer call EventAvail to test forevents. Instead, they look at low-memory globals and call CheckUpdate.This was necessary since calling EventAvail within a thread allowedthe application to be switched out while the ApplLimit, HeapEnd, andCurStackBase low-memory globals were set to non-standard values. Thisdidn't cause any major problems, but Barry Kirsch noticed that theFinder's About window would display an incorrect value for theapplication, as if the application had used its entire memory partition.Removing the call to EventAvail solved this problem.* 1.0d4 940316 (public distribution)Version 1.0d4 of Thread Library is primarily a bug-fix release. Thefunctional interface has not changed since v1.0d2.2.- Writing the sentinel value in v1.0d3 introduced a bug that corruptedthe application's heap. This was caused by writing the sentinel valueto the application's main stack at the location pointed to by ApplLimit.Apparently, there are some important data about the heap at that location,and overwriting them caused the heap to become corrupted. This was themost serious error yet in any released version of Thread Library andonly slipped through because I didn't adequately test v1.0d3. The sentinelvalue is still written to the stacks of threads other than the mainthread. I spent more time testing the current release, and it seems towork ok.- The ThreadsTest application had some errors in the way it handledevents in its simple event loop. This could have resulted in errorshandling mouse clicks and in handling update events. The currentversion should fix those problems.- The variables gThread and gThreadStackSniffer, defined in the file"ThreadLib.c", were declared with global scope, and could haveconflicted with other variables in an application. These variables arenow declared with static scope to eliminate such conflicts.- Made the type ThreadSNType a synonym for the type ThreadType.Applications should refer to threads using variables of typeThreadType. The type ThreadSNType is included for compatabilitywith versions 1.0d2.2 through 1.0d3. New applications should nolonger use the type ThreadSNType.- Increased the running time of tests in the ThreadsTest applicationfrom 30 seconds to 45 seconds. The time remaining to each test isnow displayed in seconds rather than in ticks.- The ThreadsTest application includes code to enable heap checkingand discipline in TMON or MacsBug. To enable the code, you need todefine DEBUGGER_CHECKS as 1 in the file "ThreadsTest.c".* 1.0d3 940301 (limited public distribution, only posted to theBoston Computer Society's Mac BBS)- A sentinel value is written to the bottom of the stack to help the stacksniffer VBL task catch stack overrun.- The ThreadsTest application uses WaitNextEvent if it's available.- Made some minor changes to the code, updated some of the documentation andthe terms of use, and updated the results for the ThreadTimed application.- Did some minor editing to the "Distribution" document so that I coulduse it for other free utilities I've released.* 1.0d2.2 940225 (limited distribution)- Added ifdef around the defines for the macros for accessing low-memoryglobals so that the code can be compiled using either "SysEqu.h" orTHINK C's "LoMem.h".* 1.0d2.2 940222 (limited distribution)- All threads are referred to using thread serial numbers instead of threadpointers. This makes the functional interface more robust without affectingthe speed of calls to ThreadYield and the other context switching routines.Most type definitions were made private and removed from the interface file"ThreadLib.h".- Added the functions ThreadSleepSet, ThreadData, ThreadDataSet.- Threads are stored in a doubly-linked circular queue of threads.- When a thread is activated it is moved to the end of the queue of threads,so that the round-robbin scheduling is fairer (since the main thread has thehighest priority).- Fixed the problem encountered by some users that prevented the ThreadsTestapplication from updating the counters. Certain low-memory globals are savedand restored on context switches (these are the same low-memory globals thatThread Manager saves and restores). This fixes the update problem, which Isuspect was due to some routines in QuickDraw making certain undocumentedassumptions about the location of the stack relative to the location of heap.* 1.0d2.1 940218 (limited distribution)This release is intended primarily to help catch an update problem in theThreadsTest application.- The ThreadsTest application now runs first using Thread Manager, then usingThread Library. Added a "Stop" button to skip a test.- Put back the code to save and restore certain low-memory globals duringcontext switches in "ThreadLib.c"- Minor improvements to error reporting: "ThreadLib.c" will display a simplestring in the debugger if an assertion fails; "ThreadTimed.c" will displayerrors using printf instead of DebugStr.- Minor additions to the documentation and to the description of thefunctional interface.- Removed the compiled libraries; anyway they probably wouldn't work withTHINK C 6.0 or MPW and it's too much work to try to keep them synchronizedevery time I modify the code (I need a scriptable interface).- Added "reserved" field to the ThreadType structure (this is a privatefield reserved for future use).- To reduce the possibility of conflict with user-defined types,uses ThreadLinkType instead of LLType, ThreadTicksType insteadof TicksType, THREAD_TICKS_MAX instead of TICKS_MAX, andTHREAD_TICKS_SEC instead of TICKS_SEC. Now every type and functiondefined in "ThreadLib.h" is preceded with the prefix "Thread", andevery constant is preceded with the prefix "THREAD_".- "ThreadLib.c" includes actual header files instead of using THINK C'snon-standard MacHeaders. This was done primarily so I could use"SysEqu.h" instead of "LoMem.h", but it will also make porting toanother compiler easier.- Added THREAD_DEBUG so thread debug code can be selectively disabledwithout defining NDEBUG and surrounded debug functions with conditionalcompile directives to reduce dead-code size in non-debug version.					 	* 1.0d2 940217 (public distribution)- Added thread serial number field, and the functions ThreadSN andThreadFromSN to access the field. Each thread is assigned a uniqueserial number to avoid the possibility of disposing of a threadmore than once.- Fixed problem with the "defer and combine stack adjusts" optionto the THINK C optimizer.- Added a stack sniffer VBL task to help detect stack overflow.- Added the functions ThreadStackMinimum and ThreadStackDefault fordetermining the minimum and the default stack sizes for threads andremoved the constant THREAD_STACK_SIZE.- Added ThreadTimed test application.- Improved documentation.- For efficiency, defined TickCount as Ticks low-memory global, and made afew other changes.- For greater ease in adding ThreadLib to other people's applications,removed use of exceptions. This also increases the efficiency of contextswitches in applications that don't use exceptions.- ThreadLib.c now compiles into under 2K (instead of 4.5K) when all debugcode is disabled and all optimizations are enabled.- Removed THREAD_SAVE_GLOBALS code since it didn't seem to be needed.- Added compiled debug and optimized libraries.* 1.0.d1.1 (limited distribution)- Threads are allocated as pointers instead of handles, making them moreefficient.- Fixed a possible bug in the way ThreadSchedule called EventAvail.- Added status field to threads and ThreadStatus/ThreadStatusSet functionsto get and set the value of the field.- The test application uses a modeless dialog so it can be put into thebackground, the size flags were set so the system won't complain on 32-bitsystems, and it will display an alert if there's an error.* 1.0d1 940211 (public distribution)First release.
+Version History
+---------------
+
+* 1.0 950608 (public distribution)
+
+	- What I thought was a bug under UniFinder was not a bug in Thread
+	Library, but probably an incorrect startup disk or an error in
+	the build script. When I rebuilt the library, and started up with
+	a copy of System 6.0.5 on my hard disk, Thread Library ran fine on
+	my Macintosh Plus running System 6.0.5 with both UniFinder and
+	MultiFinder.
+
+* 1.0d4.8 950608 (limited distribution)
+
+	- Wrapped headers in "extern C" so they can be used in C++ source code.
+
+	- Tested TLM layer by using it in Apple's ThreadedSort example program.
+	It took very little time to convert to TLM and the PPC and 68K versions
+	ran perfectly.
+
+	- Added macros to "ThreadLibraryManager.h" to simplify using the library
+	with Thread Manager.
+
+	- Added more detailed information on adding TLM to an existing application.
+
+	- Discovered that Thread Library does not work under UniFinder in System 6.0.5.
+
+* 1.0d4.7 950531 (limited distribution)
+
+	- Added PowerPC shared libraries "ThreadLibrary-PPC.lib" and 
+	"ThreadLibrary-PPC-Dbg.lib".
+
+	- Added note about using WaitNextEvent.
+
+	- Removed "Stop" buttons from demo dialogs.
+
+* 1.0d4.6 950513 (limited distribution)
+
+	- Added ThreadLibraryManager interface.
+
+	- Added AppleScript to automate build procedure.
+
+	- Improved test application (can now display multiple windows).
+
+	- Put back the function ThreadStackFrame.
+
+	- Removed special VBL task due to spurious breaks into the debugger
+	caused by the stack sniffer VBL task and the sentinel value placed
+	at the end of a thread's stack.
+	
+	- Added missing check to exclude disabled threads from calculation
+	of yield interval in ThreadYieldInterval.
+	
+	- Added memory allocation callbacks.
+	
+	- Expanded, formatted, and generally improved documentation.
+	
+	- Added ThreadStackSize function.
+
+	- Made native PowerPC version.
+
+	- Removed ThreadSaveFPU and ThreadSaveFPUSet.
+	
+* 1.0d4.5 941212 (limited distribution)
+
+In brief, version 1.0d4.5:
+
+	- Fixes an error in v1.0d4.4 in the call to the suspend
+	callback function.
+	
+	- Changes the existing functional specification that may
+	affect applications that installed a suspend callback
+	function; applications that did not install a suspend
+	callback function will not be affected by this change.
+
+	- Adds definitions for macros and functions that may
+	be used to stub out calls to Thread Library.
+	
+	- Several callback functions were added to provide
+	greater control to an application using Thread Library.
+	
+	- Error codes are stored with each thread.
+	
+	- Changed return value for ThreadCount from 'short' to 'long'.
+	
+	- Removed the function ThreadStackFrame and the typedef for
+	ThreadStackFrameType.
+
+	- Saves floating pointer registers if there is a floating point
+	unit.
+	
+	- Separated register saving and restoring code to simplify port to
+	native PowerPC version.
+	
+	- Removed most compiler dependencies.
+	
+	- Added functions for enabling and disabling a thread.
+	
+In greater detail, these changes are:
+
+- The suspend procedure for a thread was being passed the
+data parameter for the thread being resumed, instead of
+the data parameter for the thread being suspended.
+
+- I've added a couple of files, "ThreadStubsLib.c"
+and "ThreadStubLib.h". You can use these files
+to stub out the calls to Thread Library. See
+the comment in ThreadStubLib.h for more details.
+
+- Two new callback functions, called "begin" and "end",
+have been added. These functions are called before a
+thread is first executed and before a thread is disposed
+of, respectively. Functions for getting and setting
+all of the callback functions have been added to
+the interface to Thread Library.
+
+- The sequence of calls, over the lifetime of a thread,
+of the callback functions installed by the application
+has been defined more precisely. There is some redundancy
+in the new sequence, but it is symmetrical and is nearly
+fully compatible with prior versions of Thread Library.
+The new sequence of calls is:
+
+	( begin, resume, entry ( suspend, resume ) x Ntimes, suspend, end
+
+This new sequence is described in greater detail in the documentation.
+
+The old sequence was:
+
+	resume, entry ( suspend, resume ) x Ntimes
+
+This old sequence had an assymetry, which meant that the resume
+function could be called one more time than the suspend function.
+The new sequence ensures that the suspend function is called
+the exact same number of times as the resume function.
+
+For existing applications that installed a suspend function, you
+will have to verify that the suspend function can be called even
+after the entry point has returned, and that your application does
+not otherwise rely on this assymetric behavior of Thread Library.
+
+- The error code from the last call to a Thread Library function
+is stored with the thread that was active at the time of the
+call. In addition, a global error variable is used if there
+are no threads in existence (including the main thread)
+at the time of the call to Thread Library. This should not
+affect any existing applications, but was done as an
+internal enhancement to support preemptive threads (if
+I ever add preemptive thread support).
+
+- Most of the compiler dependencies have been removed. Thread Library
+has been successfully compiled using THINK C 7.0.3, MPW 3.3.1, and
+CodeWarrior DR4.
+
+- Two functions, ThreadEnabled and ThreadEnabledSet, allow you
+to determine whether a thread is enabled and to enable or disable
+a thread. Only enabled threads are scheduled for execution. The
+main thread cannot be disabled.
+
+* 1.0d4.4 940907 (limited distribution)
+
+Version 1.0d4.4 adds the function ThreadEndAll. From the README
+file:
+
+ThreadEndAll disposes of all threads, including the main thread.
+ThreadEndAll is useful when your application is terminating and
+you want to dispose of any threads that may still exist.
+ThreadEndAll can be called only from within the main thread.
+
+* 1.0d4.3 940715 (limited distribution)
+
+Version 1.0d4.3 fixes a problem with compiling with Apple's old
+(non-universal) headers. I'd just forgotten to put in an ifdef
+around the VBLUPP stuff.
+
+* 1.0d4.2 940706 (limited distribution)
+
+Version 1.0d4.2 fixes one bug, adds a few optimizations, and slightly
+alters the functional interface to Thread Library.
+
+- Fixed error in detecting events that was introduced in 1.0d4.1.
+
+- Fixed order of execution of actions taken when a thread
+is resumed (the stack sniffer was being resumed before
+the low-memory globals were restored)
+
+- Removed the functions ThreadStatus and ThreadStatusSet, and the
+associated type definitions. The same functionality that was
+provided by these functions can be accomplished using the thread's
+data field, or using an application's global variables.
+
+- Added support for the universal headers. If you need to recompile the
+demo applications, note that the calls to InitDialogs may cause a type
+error if you're using the old headers. Just change the parameter to
+InitDialogs from zero to NULL.
+
+- Added ThreadErrorType and defined an error code.
+
+* 1.0d4.1 940609 (limited distribution)
+
+Version 1.0d4.1 fixes one bug. It does not alter the functional interface
+to Thread Library.
+
+- ThreadSchedule and ThreadYield no longer call EventAvail to test for
+events. Instead, they look at low-memory globals and call CheckUpdate.
+This was necessary since calling EventAvail within a thread allowed
+the application to be switched out while the ApplLimit, HeapEnd, and
+CurStackBase low-memory globals were set to non-standard values. This
+didn't cause any major problems, but Barry Kirsch noticed that the
+Finder's About window would display an incorrect value for the
+application, as if the application had used its entire memory partition.
+Removing the call to EventAvail solved this problem.
+
+* 1.0d4 940316 (public distribution)
+
+Version 1.0d4 of Thread Library is primarily a bug-fix release. The
+functional interface has not changed since v1.0d2.2.
+
+- Writing the sentinel value in v1.0d3 introduced a bug that corrupted
+the application's heap. This was caused by writing the sentinel value
+to the application's main stack at the location pointed to by ApplLimit.
+Apparently, there are some important data about the heap at that location,
+and overwriting them caused the heap to become corrupted. This was the
+most serious error yet in any released version of Thread Library and
+only slipped through because I didn't adequately test v1.0d3. The sentinel
+value is still written to the stacks of threads other than the main
+thread. I spent more time testing the current release, and it seems to
+work ok.
+
+- The ThreadsTest application had some errors in the way it handled
+events in its simple event loop. This could have resulted in errors
+handling mouse clicks and in handling update events. The current
+version should fix those problems.
+
+- The variables gThread and gThreadStackSniffer, defined in the file
+"ThreadLib.c", were declared with global scope, and could have
+conflicted with other variables in an application. These variables are
+now declared with static scope to eliminate such conflicts.
+
+- Made the type ThreadSNType a synonym for the type ThreadType.
+Applications should refer to threads using variables of type
+ThreadType. The type ThreadSNType is included for compatability
+with versions 1.0d2.2 through 1.0d3. New applications should no
+longer use the type ThreadSNType.
+
+- Increased the running time of tests in the ThreadsTest application
+from 30 seconds to 45 seconds. The time remaining to each test is
+now displayed in seconds rather than in ticks.
+
+- The ThreadsTest application includes code to enable heap checking
+and discipline in TMON or MacsBug. To enable the code, you need to
+define DEBUGGER_CHECKS as 1 in the file "ThreadsTest.c".
+
+* 1.0d3 940301 (limited public distribution, only posted to the
+Boston Computer Society's Mac BBS)
+
+- A sentinel value is written to the bottom of the stack to help the stack
+sniffer VBL task catch stack overrun.
+
+- The ThreadsTest application uses WaitNextEvent if it's available.
+
+- Made some minor changes to the code, updated some of the documentation and
+the terms of use, and updated the results for the ThreadTimed application.
+
+- Did some minor editing to the "Distribution" document so that I could
+use it for other free utilities I've released.
+
+* 1.0d2.2 940225 (limited distribution)
+
+- Added ifdef around the defines for the macros for accessing low-memory
+globals so that the code can be compiled using either "SysEqu.h" or
+THINK C's "LoMem.h".
+
+* 1.0d2.2 940222 (limited distribution)
+
+- All threads are referred to using thread serial numbers instead of thread
+pointers. This makes the functional interface more robust without affecting
+the speed of calls to ThreadYield and the other context switching routines.
+Most type definitions were made private and removed from the interface file
+"ThreadLib.h".
+
+- Added the functions ThreadSleepSet, ThreadData, ThreadDataSet.
+
+- Threads are stored in a doubly-linked circular queue of threads.
+
+- When a thread is activated it is moved to the end of the queue of threads,
+so that the round-robbin scheduling is fairer (since the main thread has the
+highest priority).
+
+- Fixed the problem encountered by some users that prevented the ThreadsTest
+application from updating the counters. Certain low-memory globals are saved
+and restored on context switches (these are the same low-memory globals that
+Thread Manager saves and restores). This fixes the update problem, which I
+suspect was due to some routines in QuickDraw making certain undocumented
+assumptions about the location of the stack relative to the location of heap.
+
+* 1.0d2.1 940218 (limited distribution)
+
+This release is intended primarily to help catch an update problem in the
+ThreadsTest application.
+
+- The ThreadsTest application now runs first using Thread Manager, then using
+Thread Library. Added a "Stop" button to skip a test.
+
+- Put back the code to save and restore certain low-memory globals during
+context switches in "ThreadLib.c"
+
+- Minor improvements to error reporting: "ThreadLib.c" will display a simple
+string in the debugger if an assertion fails; "ThreadTimed.c" will display
+errors using printf instead of DebugStr.
+
+- Minor additions to the documentation and to the description of the
+functional interface.
+
+- Removed the compiled libraries; anyway they probably wouldn't work with
+THINK C 6.0 or MPW and it's too much work to try to keep them synchronized
+every time I modify the code (I need a scriptable interface).
+
+- Added "reserved" field to the ThreadType structure (this is a private
+field reserved for future use).
+
+- To reduce the possibility of conflict with user-defined types,
+uses ThreadLinkType instead of LLType, ThreadTicksType instead
+of TicksType, THREAD_TICKS_MAX instead of TICKS_MAX, and
+THREAD_TICKS_SEC instead of TICKS_SEC. Now every type and function
+defined in "ThreadLib.h" is preceded with the prefix "Thread", and
+every constant is preceded with the prefix "THREAD_".
+
+- "ThreadLib.c" includes actual header files instead of using THINK C's
+non-standard MacHeaders. This was done primarily so I could use
+"SysEqu.h" instead of "LoMem.h", but it will also make porting to
+another compiler easier.
+
+- Added THREAD_DEBUG so thread debug code can be selectively disabled
+without defining NDEBUG and surrounded debug functions with conditional
+compile directives to reduce dead-code size in non-debug version.
+					 	
+* 1.0d2 940217 (public distribution)
+
+- Added thread serial number field, and the functions ThreadSN and
+ThreadFromSN to access the field. Each thread is assigned a unique
+serial number to avoid the possibility of disposing of a thread
+more than once.
+
+- Fixed problem with the "defer and combine stack adjusts" option
+to the THINK C optimizer.
+
+- Added a stack sniffer VBL task to help detect stack overflow.
+
+- Added the functions ThreadStackMinimum and ThreadStackDefault for
+determining the minimum and the default stack sizes for threads and
+removed the constant THREAD_STACK_SIZE.
+
+- Added ThreadTimed test application.
+
+- Improved documentation.
+
+- For efficiency, defined TickCount as Ticks low-memory global, and made a
+few other changes.
+
+- For greater ease in adding ThreadLib to other people's applications,
+removed use of exceptions. This also increases the efficiency of context
+switches in applications that don't use exceptions.
+
+- ThreadLib.c now compiles into under 2K (instead of 4.5K) when all debug
+code is disabled and all optimizations are enabled.
+
+- Removed THREAD_SAVE_GLOBALS code since it didn't seem to be needed.
+
+- Added compiled debug and optimized libraries.
+
+* 1.0.d1.1 (limited distribution)
+
+- Threads are allocated as pointers instead of handles, making them more
+efficient.
+
+- Fixed a possible bug in the way ThreadSchedule called EventAvail.
+
+- Added status field to threads and ThreadStatus/ThreadStatusSet functions
+to get and set the value of the field.
+
+- The test application uses a modeless dialog so it can be put into the
+background, the size flags were set so the system won't complain on 32-bit
+systems, and it will display an alert if there's an error.
+
+* 1.0d1 940211 (public distribution)
+
+First release.

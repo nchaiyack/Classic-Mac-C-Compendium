@@ -1,1 +1,53 @@
-THINGS TO DO(These should be resolved before releasing the next version.)--GeneralMplayer should not resign if outnumbered, if starting out game that way;only resign if much weaker than at beginning.Add a basic "try going sideways" to movement task; push movementtask go 90 degrees from original direction, distance 1/4 of totaldistance, if fails, try 1/2 of distance, then full distancesideways, then go at 150 deg by same range of distances.Fix so that AI in ww2-eur-42 doesn't try to build fleetsin Tabriz.Fill in unit loss/gain records in statistics file.--X11 InterfaceMake sample resource files consistent with compiled-in fallbacks.Fix surveying in unknown terrain so that cell erasure doesn'tdraw actual terrain.Fix info window to show info about units of other sidesconsistently.Fix map opening to actually make the new maps appear.Fix mistakes in sizing and drawing panner.Extend selection of unit types to include multi-char names.--Macintosh Interface--Curses InterfaceFix where extra side is added to restored game because defaultside/player is not being used.Survey->move switch should keep curunit unchanged if occupant.Fix cursor so not always in bottom corner of screen!  (Only happenson some machines, like sun4). (check global name conflicts...)Check player specs for validity in curses context. (?)Extend selection of unit types to include multi-char names.Instead of scrolling to new screen, ask about units already visible,skipping through others until time to scroll.
+THINGS TO DO
+
+(These should be resolved before releasing the next version.)
+
+--General
+
+Mplayer should not resign if outnumbered, if starting out game that way;
+only resign if much weaker than at beginning.
+
+Add a basic "try going sideways" to movement task; push movement
+task go 90 degrees from original direction, distance 1/4 of total
+distance, if fails, try 1/2 of distance, then full distance
+sideways, then go at 150 deg by same range of distances.
+
+Fix so that AI in ww2-eur-42 doesn't try to build fleets
+in Tabriz.
+
+Fill in unit loss/gain records in statistics file.
+
+--X11 Interface
+
+Make sample resource files consistent with compiled-in fallbacks.
+
+Fix surveying in unknown terrain so that cell erasure doesn't
+draw actual terrain.
+
+Fix info window to show info about units of other sides
+consistently.
+
+Fix map opening to actually make the new maps appear.
+
+Fix mistakes in sizing and drawing panner.
+
+Extend selection of unit types to include multi-char names.
+
+--Macintosh Interface
+
+--Curses Interface
+
+Fix where extra side is added to restored game because default
+side/player is not being used.
+
+Survey->move switch should keep curunit unchanged if occupant.
+
+Fix cursor so not always in bottom corner of screen!  (Only happens
+on some machines, like sun4). (check global name conflicts...)
+
+Check player specs for validity in curses context. (?)
+
+Extend selection of unit types to include multi-char names.
+
+Instead of scrolling to new screen, ask about units already visible,
+skipping through others until time to scroll.

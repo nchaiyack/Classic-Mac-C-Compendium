@@ -1,1 +1,4 @@
-/* mlib.c */int get_one(void);int get_one(void);
+
+/* mlib.c */
+int get_one(void);
+int get_one(void);

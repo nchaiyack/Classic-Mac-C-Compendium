@@ -1,1 +1,43 @@
-AppLauncher-----------A small C++ macintosh application with complete source codewhich shows how to launch,  open with document, hide and quit remote applications, as well as how to open a control panel from within an application.In detail:How to send AppleEvents to the finder to launch an applicationHow to send AE's to running applications to open a documentHow to do both of the above in the foreground/backgroundHow to send a quit AE to a running applicationHow to 'Hide' a running process using the OSLHow to open a control panel from within an applicationThe bulk of the code was based on that by:Peter Lewis, [ peter@kagi.com ]  (original Pascal source)Gilles Dignard, [ gdignard@hookup.net ]  (initial translation of 																																          the above into C++)Their original postings to 'alt.sources.mac' have been included.#####Note:    This code relies on the OSL and other advanced features of theSystem/Finder.  You really need System 7.5 and AT LEAST the'Finder Scripting Extension' installed in order to makeuse of this code.  (Come-on guys, it's 1995 already!)Also, for 'AppLauncher' to work, you need to have a copy of 'TeachText' or 'SimpleText' somewhere on one of your drives.Furthermore, do not delete this 'READ_ME' file!  It is used by 'AppLauncher' to show how to open documents remotely!#####Andrew Nemeth::nem(eng);azn@nemeng.mpx.com.au14 Mar 94
+AppLauncher
+-----------
+
+A small C++ macintosh application with complete source code
+which shows how to launch,  open with document, hide and quit 
+remote applications, as well as how to open a control panel from 
+within an application.
+
+In detail:
+
+How to send AppleEvents to the finder to launch an application
+How to send AE's to running applications to open a document
+How to do both of the above in the foreground/background
+How to send a quit AE to a running application
+How to 'Hide' a running process using the OSL
+How to open a control panel from within an application
+
+The bulk of the code was based on that by:
+Peter Lewis, [ peter@kagi.com ]  (original Pascal source)
+Gilles Dignard, [ gdignard@hookup.net ]  (initial translation of 
+																																          the above into C++)
+Their original postings to 'alt.sources.mac' have been included.
+
+#####
+Note:    
+
+This code relies on the OSL and other advanced features of the
+System/Finder.  You really need System 7.5 and AT LEAST the
+'Finder Scripting Extension' installed in order to make
+use of this code.  (Come-on guys, it's 1995 already!)
+
+Also, for 'AppLauncher' to work, you need to have a copy of 
+'TeachText' or 'SimpleText' somewhere on one of your drives.
+
+Furthermore, do not delete this 'READ_ME' file!  It is used 
+by 'AppLauncher' to show how to open documents remotely!
+#####
+
+
+Andrew Nemeth
+::nem(eng);
+azn@nemeng.mpx.com.au
+14 Mar 94

@@ -1,1 +1,13 @@
-File: POVMAC.SEATitle: POV-Ray 2.2 Mac-Regular FPU AppKeywords: POV POVRAY POVMAC MACDescr: Macintosh version of POVMAC.SEA,the application/executable archive for thePersistence of Vision Ray Tracer POV-Rayversion 2.2.  It contains the POV-RayMacintosh application for any 68020 orbetter Mac *with* an FPU.  For the slowerPOV-Ray application that does not requirean FPU, see the POVMNF.SEA archive.See Also POVINF.DOC, and the POVSCN.SEA,POVDOC.SEA, and POVSRC.SEA archives.
+File: POVMAC.SEA
+Title: POV-Ray 2.2 Mac-Regular FPU App
+Keywords: POV POVRAY POVMAC MAC
+Descr: Macintosh version of POVMAC.SEA,
+the application/executable archive for the
+Persistence of Vision Ray Tracer POV-Ray
+version 2.2.  It contains the POV-Ray
+Macintosh application for any 68020 or
+better Mac *with* an FPU.  For the slower
+POV-Ray application that does not require
+an FPU, see the POVMNF.SEA archive.
+See Also POVINF.DOC, and the POVSCN.SEA,
+POVDOC.SEA, and POVSRC.SEA archives.

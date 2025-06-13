@@ -1,1 +1,123 @@
-===========================================================================Number 1 - Building Commands Using CodeWarriorRevisions:	Aug. 26, 1994nShell(tm) Technical Note===========================================================================Early releases of the nShell contained sample code for the Think C development environment.  This Note describes the changes required to build these commands under the CodeWarrior environment.Examples========Example projects have been released in a package called "nShell(tm) CodeWarrior Examples".  This package contains source code as well as CodeWarrior project files set up to generate nShell resources.The Project File================Recommended "Preferences" are as follows:Language--------Factory SettingsWarnings--------Factory SettingsProcessor---------Code Model: SmallStruct Alignment: 68K(no boxes checked)Linker------MacsBugs Symbols: New Style( ) Generate SYM File( ) Generate Link Map(*) Generate A6 Stack Frames( ) The Debugger(tm) Aware(*) Link Single Segment(*) Fast LinkProject-------Project Type: Code ResourceFile Name: command_nameSym Name:Resource name: commandHeader Type: Standard( ) Multi Segment(*) Display Dialog( ) Merge to FileResType: NSHC  ResID: 16000Creator: NSHA  TYPE:  NSHCResource Flags: noneSource Changes==============CodeWarrior resources need a couple lines to set up and restore the A4 register.  We recommend adding these lines with #ifdef(s), so that source code can be built under Think C, as well as CodeWarrior:Headers:#ifdef __MWERKS__#include <A4Stuff.h>#endifMain:void main(t_nshc_parms *nshc_parms, t_nshc_calls *nshc_calls){#ifdef __MWERKS__	long oldA4  = SetCurrentA4();#endif	( code for the command )#ifdef __MWERKS__	SetA4(oldA4);#endif}It is vital that the "SetA4" line execute before exiting.  This means that "return" statements should be avoided in the main, or that they be combined with a "SetA4":if (error) {    #ifdef __MWERKS__    SetA4(oldA4);    #endif    return;    }An alternative is to use goto(s) and labels:If (error) goto Exit;....Exit:#ifdef __MWERKS__	SetA4(oldA4);#else	;#endifThe #else clause is included so that Think C won't choke on an empty label.In other aspects, commands are identical to the Think C versions.  See the nShell Programmer's Guide for more information.
+===========================================================================
+
+Number 1 - Building Commands Using CodeWarrior
+
+Revisions:	Aug. 26, 1994
+
+nShell(tm) Technical Note
+
+===========================================================================
+
+Early releases of the nShell contained sample code for the Think C development environment.  This Note describes the changes required to build these commands under the CodeWarrior environment.
+
+Examples
+========
+
+Example projects have been released in a package called "nShell(tm) CodeWarrior Examples".  This package contains source code as well as CodeWarrior project files set up to generate nShell resources.
+
+The Project File
+================
+
+Recommended "Preferences" are as follows:
+
+Language
+--------
+
+Factory Settings
+
+Warnings
+--------
+
+Factory Settings
+
+Processor
+---------
+
+Code Model: Small
+Struct Alignment: 68K
+
+(no boxes checked)
+
+Linker
+------
+
+MacsBugs Symbols: New Style
+
+( ) Generate SYM File
+( ) Generate Link Map
+(*) Generate A6 Stack Frames
+( ) The Debugger(tm) Aware
+
+(*) Link Single Segment
+(*) Fast Link
+
+Project
+-------
+
+Project Type: Code Resource
+
+File Name: command_name
+Sym Name:
+Resource name: command
+Header Type: Standard
+
+( ) Multi Segment
+(*) Display Dialog
+( ) Merge to File
+
+ResType: NSHC  ResID: 16000
+Creator: NSHA  TYPE:  NSHC
+
+Resource Flags: none
+
+Source Changes
+==============
+
+CodeWarrior resources need a couple lines to set up and restore the A4 register.  We recommend adding these lines with #ifdef(s), so that source code can be built under Think C, as well as CodeWarrior:
+
+Headers:
+
+#ifdef __MWERKS__
+#include <A4Stuff.h>
+#endif
+
+Main:
+
+void main(t_nshc_parms *nshc_parms, t_nshc_calls *nshc_calls)
+{
+#ifdef __MWERKS__
+	long oldA4  = SetCurrentA4();
+#endif
+	
+( code for the command )
+
+#ifdef __MWERKS__
+	SetA4(oldA4);
+#endif
+}
+
+It is vital that the "SetA4" line execute before exiting.  This means that "return" statements should be avoided in the main, or that they be combined with a "SetA4":
+
+if (error) {
+    #ifdef __MWERKS__
+    SetA4(oldA4);
+    #endif
+    return;
+    }
+
+An alternative is to use goto(s) and labels:
+
+If (error) goto Exit;
+
+....
+Exit:
+#ifdef __MWERKS__
+	SetA4(oldA4);
+#else
+	;
+#endif
+
+The #else clause is included so that Think C won't choke on an empty label.
+
+In other aspects, commands are identical to the Think C versions.  See the nShell Programmer's Guide for more information.
+

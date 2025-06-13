@@ -1,1 +1,180 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Project  :  GUSI        -  Grand Unified Socket Interface%  File     :  GUSI.web    -  Documentation%  Author   :  Matthias Neeracher%  Language :  C SpiderWeb%  %  $Log: GUSI.web,v $%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%=head1 Installing and using GUSIThis section discusses how you can installC<GUSI> on your disk and use it for your programs.To install C<GUSI>, change in the MPW Shell to its directory and type:   BuildProgram Install <Enter>This will install all necessary files in C<{CIncludes}>, C<{CLibraries}>, andC<{RIncludes}>, respectively. It will also install C</etc/services> in your preferencesfolder, prompting you if you have an older version there.This requires that you have MPW Perl installed, which is available in the same ftp directory as C<GUSI>.To use C<GUSI>, include one or more of the following header files in yourprogram:=over 4=item C<GUSI.h>The main file. This includes almost everything else.=item C<TFileSpec.h>C<FSSpec> manipulation routines.=item C<dirent.h>Routines to access all entries in a directory.=item C<netdb.h>Looking up TCP/IP host names.=item C<netinet/in.h>The address format for TCP/IP sockets.=item C<sys/errno.h>The errors codes returned by GUSI routines.=item C<sys/ioctl.h>Codes to pass to C<ioctl()>.=item C<sys/socket.h>Data types for socket calls.=item C<sys/stat.h>Getting information about files.=item C<sys/types.h>More data types.=item C<sys/uio.h>Data types for scatter/gather calls.=item C<sys/un.h>The address format for Unix domain sockets.=item C<unistd.h>Prototypes for most routines defined in GUSI.=backGUSI expects the Macintosh Toolbox to be initialized. This will happen automaticallyunder some circumstances (if you're writing an C<MPW> tool with the non-CodeWarriorcompilers or if you are linking with C<SIOW> and are forcing a write to standard output or standard error before you are using any non-file C<GUSI> routines, butit's often wiser to do an explicit initialization anyway.You should init the Toolbox in the following way:      InitGraf((Ptr) &qd.thePort);      InitFonts();      InitWindows();      InitMenus();      TEInit();      InitDialogs(nil);      InitCursor();You have to link your program with the C<GUSI> library. The exact procedure differsslightly between the C<MPW C> version, the C<PPCC> version, and the C<CodeWarrior>version. =head2 Linking with MPW C GUSIFor the  C<MPW C> version, you should link with C<{CLibraries}GUSI.o>, and optionally one or several I<configuration files>. Currently, the followingconfiguration files exist:=over 4=item C<GUSI_Everything.cfg>Include code for everything defined in C<GUSI>.=item C<GUSI_Appletalk.cfg>Include code for AppleTalk sockets.=item C<GUSI_Internet.cfg>Include code for MacTCP sockets.=item C<GUSI_PAP.cfg>Include code for PAP sockets.=item C<GUSI_PPC.cfg>Include code for PPC sockets.=item C<GUSI_Unix.cfg>Include code for Unix domain sockets.=backIf you don't specify any configuration files, only the file related routines will beincluded. It's important that these files appear I<before> all other libraries.Linking with C<GUSI> doesn't free you from linking in the standard libraries,typically:    {Libraries}Runtime.o    {Libraries}Interface.o    {CLibraries}StdCLib.o    {Libraries}ToolLibs.o=head2 Linking with PPCC GUSIFor the C<PPCC> version, you should link with C<{PPCLibraries}GUSI.xcoff> and if you are linking with SIOW, also with C<{PPCLibraries}GUSI.xcoff>. The C<PPCC>version currently doesn't support flexible configuration. Like with the C<MPW C> version, C<GUSI> should be first in your link, and you have to link with the standard libraries.C<GUSI> for C<PPCC> makes use of Code Fragment Manager version numbers,therefore you have to specify the correct version number for C<MakePEF> with the C<-l>option.   -l "GUSI.xcoff=GUSI#0x01508000-0x01508000"In case you were wondering, this encodes the version number (1.5.0) the same way as the header of a C<'vers'> resource.=head2 Linking with CodeWarrior GUSIThe easiest way to get started with a C<CodeWarrior> C<GUSI> application is bycloning from the appropriate project stationery in the Lib directory. The principleof operation is the same as with the other versions: First C<GUSI.Lib>, and thenthe standard libraries have to be specified. To create an MPW tool with theCodeWarrior compilers, you additionally have to link with C<GUSIMPW.Lib> beforeC<GUSI.Lib>The C<CodeWarrior> version uses a new configuration mechanism that will eventually be adapted in the other versions as well: At the beginning of your application,call C<GUSISetup> for the components you need. Currently, the following components are defined:=over 4=item C<GUSISetup(GUSIwithSIOUXSockets)>Allows use of the C<SIOUX> library for standard I/O.=item C<GUSISetup(GUSIwithAppleTalkSockets)>Includes ADSP sockets.=item C<GUSISetup(GUSIwithInternetSockets)>Includes TCP and UDP sockets.=item C<GUSISetup(GUSIwithPAPSockets)>Includes PAP sockets.=item C<GUSISetup(GUSIwithPPCSockets)>Includes PPC sockets.=item C<GUSISetup(GUSIwithUnixSockets)>Includes Unix domain sockets.=backIf you call C<GUSIDefaultSetup()> instead, all of the above will be included.These calls should be included right at the beginning of your C<main()> procedure.=head2 Warning messages, RezzingYou will get lots of warning messages about duplicate definitions, but that's ok (Which means I can't do anything about it).You should also rez your program with C<GUSI.r>. The section L<GUSI_Advanced/Resources>discusses when and how to add your own configuration resource to customize C<GUSI>defaults. Don't forget that your C<PowerPC> programs also need a C<cfrg> resource.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Project  :  GUSI        -  Grand Unified Socket Interface
+%  File     :  GUSI.web    -  Documentation
+%  Author   :  Matthias Neeracher
+%  Language :  C SpiderWeb
+%  
+%  $Log: GUSI.web,v $
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+=head1 Installing and using GUSI
+
+This section discusses how you can install
+C<GUSI> on your disk and use it for your programs.
+
+To install C<GUSI>, change in the MPW Shell to its directory and type:
+
+   BuildProgram Install <Enter>
+
+This will install all necessary files in C<{CIncludes}>, C<{CLibraries}>, and
+C<{RIncludes}>, respectively. It will also install C</etc/services> in your preferences
+folder, prompting you if you have an older version there.
+
+This requires that you have MPW Perl installed, which is available in the same ftp 
+directory as C<GUSI>.
+
+To use C<GUSI>, include one or more of the following header files in your
+program:
+
+=over 4
+
+=item C<GUSI.h>
+The main file. This includes almost everything else.
+
+=item C<TFileSpec.h>
+C<FSSpec> manipulation routines.
+
+=item C<dirent.h>
+Routines to access all entries in a directory.
+
+=item C<netdb.h>
+Looking up TCP/IP host names.
+
+=item C<netinet/in.h>
+The address format for TCP/IP sockets.
+
+=item C<sys/errno.h>
+The errors codes returned by GUSI routines.
+
+=item C<sys/ioctl.h>
+Codes to pass to C<ioctl()>.
+
+=item C<sys/socket.h>
+Data types for socket calls.
+
+=item C<sys/stat.h>
+Getting information about files.
+
+=item C<sys/types.h>
+More data types.
+
+=item C<sys/uio.h>
+Data types for scatter/gather calls.
+
+=item C<sys/un.h>
+The address format for Unix domain sockets.
+
+=item C<unistd.h>
+Prototypes for most routines defined in GUSI.
+
+=back
+
+GUSI expects the Macintosh Toolbox to be initialized. This will happen automatically
+under some circumstances (if you're writing an C<MPW> tool with the non-CodeWarrior
+compilers or if you are linking with C<SIOW> and are forcing a write to standard 
+output or standard error before you are using any non-file C<GUSI> routines, but
+it's often wiser to do an explicit initialization anyway.
+
+You should init the Toolbox in the following way:
+
+      InitGraf((Ptr) &qd.thePort);
+      InitFonts();
+      InitWindows();
+      InitMenus();
+      TEInit();
+      InitDialogs(nil);
+      InitCursor();
+
+You have to link your program with the C<GUSI> library. The exact procedure differs
+slightly between the C<MPW C> version, the C<PPCC> version, and the C<CodeWarrior>
+version. 
+
+=head2 Linking with MPW C GUSI
+
+For the  C<MPW C> version, you should link with C<{CLibraries}GUSI.o>, 
+and optionally one or several I<configuration files>. Currently, the following
+configuration files exist:
+
+=over 4
+=item C<GUSI_Everything.cfg>
+Include code for everything defined in C<GUSI>.
+=item C<GUSI_Appletalk.cfg>
+Include code for AppleTalk sockets.
+=item C<GUSI_Internet.cfg>
+Include code for MacTCP sockets.
+=item C<GUSI_PAP.cfg>
+Include code for PAP sockets.
+=item C<GUSI_PPC.cfg>
+Include code for PPC sockets.
+=item C<GUSI_Unix.cfg>
+Include code for Unix domain sockets.
+=back
+
+If you don't specify any configuration files, only the file related routines will be
+included. It's important that these files appear I<before> all other libraries.
+
+Linking with C<GUSI> doesn't free you from linking in the standard libraries,
+typically:
+
+    {Libraries}Runtime.o
+    {Libraries}Interface.o
+    {CLibraries}StdCLib.o
+    {Libraries}ToolLibs.o
+
+=head2 Linking with PPCC GUSI
+
+For the C<PPCC> version, you should link with C<{PPCLibraries}GUSI.xcoff> and 
+if you are linking with SIOW, also with C<{PPCLibraries}GUSI.xcoff>. The C<PPCC>
+version currently doesn't support flexible configuration. Like with the C<MPW C> 
+version, C<GUSI> should be first in your link, and you have to link with the 
+standard libraries.
+
+C<GUSI> for C<PPCC> makes use of Code Fragment Manager version numbers,
+therefore you have to specify the correct version number for C<MakePEF> with the C<-l>
+option.
+
+   -l "GUSI.xcoff=GUSI#0x01508000-0x01508000"
+
+In case you were wondering, this encodes the version number (1.5.0) the same way as the 
+header of a C<'vers'> resource.
+
+=head2 Linking with CodeWarrior GUSI
+
+The easiest way to get started with a C<CodeWarrior> C<GUSI> application is by
+cloning from the appropriate project stationery in the Lib directory. The principle
+of operation is the same as with the other versions: First C<GUSI.Lib>, and then
+the standard libraries have to be specified. To create an MPW tool with the
+CodeWarrior compilers, you additionally have to link with C<GUSIMPW.Lib> before
+C<GUSI.Lib>
+
+The C<CodeWarrior> version uses a new configuration mechanism that will eventually be 
+adapted in the other versions as well: At the beginning of your application,
+call C<GUSISetup> for the components you need. Currently, the following 
+components are defined:
+
+=over 4
+=item C<GUSISetup(GUSIwithSIOUXSockets)>
+Allows use of the C<SIOUX> library for standard I/O.
+=item C<GUSISetup(GUSIwithAppleTalkSockets)>
+Includes ADSP sockets.
+=item C<GUSISetup(GUSIwithInternetSockets)>
+Includes TCP and UDP sockets.
+=item C<GUSISetup(GUSIwithPAPSockets)>
+Includes PAP sockets.
+=item C<GUSISetup(GUSIwithPPCSockets)>
+Includes PPC sockets.
+=item C<GUSISetup(GUSIwithUnixSockets)>
+Includes Unix domain sockets.
+=back
+
+If you call C<GUSIDefaultSetup()> instead, all of the above will be included.
+These calls should be included right at the beginning of your C<main()> procedure.
+
+=head2 Warning messages, Rezzing
+
+You will get lots of warning messages about duplicate definitions, but that's ok 
+(Which means I can't do anything about it).
+
+You should also rez your program with C<GUSI.r>. The section L<GUSI_Advanced/Resources>
+discusses when and how to add your own configuration resource to customize C<GUSI>
+defaults. Don't forget that your C<PowerPC> programs also need a C<cfrg> resource.

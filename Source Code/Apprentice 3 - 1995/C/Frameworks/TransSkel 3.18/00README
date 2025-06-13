@@ -1,1 +1,61 @@
-This is TransSkel release 3.18Installation instructions may be found below. These are copied from the Distribution section of the Reference Manual (found in the Documents folder).You should read the various release notes (in the Release Notes folder inside the Documents folder) if you've programmed with earlier releases of TransSkel. Changes made to recent releases sometimes result in incompatiblities with applications written with earlier releases.*** As of release 3.11, the Pascal-compatible interface is now the default, indeed only, interface available. Be sure to read the 3.11 Release Notes and TransSkel Programmer's Note 11. ****** As of release 3.18, TransSkel compiles cleanly with the Universal headers.  It also compiles under Metrowerks C (either M680x0 or PowerPC code). ***Release 3.18 THINK C projects are intended for THINK C 7. If you have THINK C 6, you cannot open the projects. In that case, look in the Project Listings folder, which contains text listings of the files that should be included in each project document.  You can use these listings to recreate the projects for your compiler.THINK C Note: Apparently you must turn off the Modern Memory Manager on Power Macintoshes if you run THINK C 6 or early versions fo THINK C 7.  THINK C 7.0.4 does not have this problem. You may also encounter memory problems with pre-7.0.4 if you use RAM Doubler.Paul DuBoisdubois@primate.wisc.eduRelease Dates07 Jan 94 Release 3.0626 Jan 94 Release 3.0731 Jan 94 Release 3.0803 Feb 94 Release 3.0914 Feb 94 Release 3.1026 Feb 94 Release 3.1118 Apr 94 Release 3.1202 May 94 Release 3.1302 May 94 Release 3.1403 May 94 Release 3.1504 May 94 Release 3.1601 Jun 94 Release 3.1719 Nov 94 Release 3.18_____________________________________Installing TransSkelTransSkel can be used either from THINK C, Metrowerks C, or THINK Pascal.Interface Installation for THINK CIn order for the TransSkel header files and library to be easily accessible to your projects, you should install them inside the same folder as that in which the THINK Project Manager is located. I do this by creating folders named “Local Headers” and “Local Libraries”. This makes it clear that their contents are not part of Symantec’s distribution.Make a copy of TransSkel.h from the TransSkel “Interface” folder and put it in “Local Headers”. To build the library, open TransSkel.π (located in the TransSkel folder) and update it. You can install the library two ways, as a copy of updated project document, or as a library. To install it as a copy of the updated project, just make a copy and put it in “Local Libraries” and rename the copy to TransSkel. To install the project as a library, copy TransSkel from the “Interface” folder into the “Local Libraries” folder.  (Or select Project/Build Library after updating TransSkel.π, and install the library as TransSkel in the “Local Libraries” folder.)  You can then add TransSkel to your application project documents.The advantage of installing the project as a library is that library documents are smaller than project documents. This reduces the disk space required. The advantage of installing a copy of the project document is that if no functions are referenced for a given file in the project, the object code for that file isn’t linked into your application, resulting in smaller applications. If you install the project as a library, all the code is linked in, whether you use it all or not.Interface Installation for Metrowerks CIn order for the TransSkel header files and libraries to be easily accessible to your projects, you should install them inside the same folder as that in which the Metrowerks C compilers are located. I do this by creating folders named “Local Headers” and “Local Libraries”. This makes it clear that their contents are not part of the Metrowerks distribution.Make a copy of TransSkel.h from the TransSkel “Interface” folder and put it in “Local Headers”. You can copy the libraries TransSkel/MW-68K and TransSkel/MW-PPC from the “Interface” folder to “Local Libraries”.  You can then add TransSkel/MW-68K to 680x0 applications and TransSkel/MW-PPC to Power Macintosh applications.To build the libraries from scratch, open TransSkel/MW-68K.µ and TransSkel/MW-PPC.µ (located in the TransSkel folder) and make them. This generates the library files TransSkel/MW-68K and TransSkel/MW-PPC.Interface Installation for THINK PascalThe Pascal interface consists of two files in the “Interface” folder, the interface file .i.TransSkel.intf; and the library document TransSkel/TP. The latter is included in the distribution in precompiled form as a library document, because you cannot use THINK C project documents from THINK Pascal projects. Copy TransSkel.intf and TransSkel/TP and put them in a location that’s convenient for your projects to be able to access them.If you wish to recompile the library, you may do so using the project TransSkel/TP.π located at the top level of the TransSkel distribution.
+This is TransSkel release 3.18
+
+Installation instructions may be found below. These are copied from the Distribution section of the Reference Manual (found in the Documents folder).
+
+You should read the various release notes (in the Release Notes folder inside the Documents folder) if you've programmed with earlier releases of TransSkel. Changes made to recent releases sometimes result in incompatiblities with applications written with earlier releases.
+
+*** As of release 3.11, the Pascal-compatible interface is now the default, indeed only, interface available. Be sure to read the 3.11 Release Notes and TransSkel Programmer's Note 11. ***
+
+*** As of release 3.18, TransSkel compiles cleanly with the Universal headers.  It also compiles under Metrowerks C (either M680x0 or PowerPC code). ***
+
+Release 3.18 THINK C projects are intended for THINK C 7. If you have THINK C 6, you cannot open the projects. In that case, look in the Project Listings folder, which contains text listings of the files that should be included in each project document.  You can use these listings to recreate the projects for your compiler.
+
+THINK C Note: Apparently you must turn off the Modern Memory Manager on Power Macintoshes if you run THINK C 6 or early versions fo THINK C 7.  THINK C 7.0.4 does not have this problem. You may also encounter memory problems with pre-7.0.4 if you use RAM Doubler.
+
+Paul DuBois
+dubois@primate.wisc.edu
+
+Release Dates
+
+07 Jan 94 Release 3.06
+26 Jan 94 Release 3.07
+31 Jan 94 Release 3.08
+03 Feb 94 Release 3.09
+14 Feb 94 Release 3.10
+26 Feb 94 Release 3.11
+18 Apr 94 Release 3.12
+02 May 94 Release 3.13
+02 May 94 Release 3.14
+03 May 94 Release 3.15
+04 May 94 Release 3.16
+01 Jun 94 Release 3.17
+19 Nov 94 Release 3.18
+
+
+_____________________________________
+
+Installing TransSkel
+
+TransSkel can be used either from THINK C, Metrowerks C, or THINK Pascal.
+
+Interface Installation for THINK C
+
+In order for the TransSkel header files and library to be easily accessible to your projects, you should install them inside the same folder as that in which the THINK Project Manager is located. I do this by creating folders named “Local Headers” and “Local Libraries”. This makes it clear that their contents are not part of Symantec’s distribution.
+
+Make a copy of TransSkel.h from the TransSkel “Interface” folder and put it in “Local Headers”. To build the library, open TransSkel.π (located in the TransSkel folder) and update it. You can install the library two ways, as a copy of updated project document, or as a library. To install it as a copy of the updated project, just make a copy and put it in “Local Libraries” and rename the copy to TransSkel. To install the project as a library, copy TransSkel from the “Interface” folder into the “Local Libraries” folder.  (Or select Project/Build Library after updating TransSkel.π, and install the library as TransSkel in the “Local Libraries” folder.)  You can then add TransSkel to your application project documents.
+
+The advantage of installing the project as a library is that library documents are smaller than project documents. This reduces the disk space required. The advantage of installing a copy of the project document is that if no functions are referenced for a given file in the project, the object code for that file isn’t linked into your application, resulting in smaller applications. If you install the project as a library, all the code is linked in, whether you use it all or not.
+
+Interface Installation for Metrowerks C
+
+In order for the TransSkel header files and libraries to be easily accessible to your projects, you should install them inside the same folder as that in which the Metrowerks C compilers are located. I do this by creating folders named “Local Headers” and “Local Libraries”. This makes it clear that their contents are not part of the Metrowerks distribution.
+
+Make a copy of TransSkel.h from the TransSkel “Interface” folder and put it in “Local Headers”. You can copy the libraries TransSkel/MW-68K and TransSkel/MW-PPC from the “Interface” folder to “Local Libraries”.  You can then add TransSkel/MW-68K to 680x0 applications and TransSkel/MW-PPC to Power Macintosh applications.
+
+To build the libraries from scratch, open TransSkel/MW-68K.µ and TransSkel/MW-PPC.µ (located in the TransSkel folder) and make them. This generates the library files TransSkel/MW-68K and TransSkel/MW-PPC.
+
+Interface Installation for THINK Pascal
+
+The Pascal interface consists of two files in the “Interface” folder, the interface file .i.TransSkel.intf; and the library document TransSkel/TP. The latter is included in the distribution in precompiled form as a library document, because you cannot use THINK C project documents from THINK Pascal projects. Copy TransSkel.intf and TransSkel/TP and put them in a location that’s convenient for your projects to be able to access them.
+
+If you wish to recompile the library, you may do so using the project TransSkel/TP.π located at the top level of the TransSkel distribution.

@@ -1,1 +1,289 @@
-unit ICFontWhats;interface	uses		ICWindowGlobals;	function WhatOpenFont (wt: WindowType; item: integer): OSErr;	function WhatFlushFont (wt: WindowType; item: integer): OSErr;	function WhatClickFont (wt: WindowType; item: integer; er: eventRecord): OSErr;	function WhatClickFontSize (wt: WindowType; item: integer; er: eventRecord): OSErr;implementation	uses		Script, 		ICStrH, 		ICKeys, ICAPI, ICDialogs, ICMiscSubs, ICSubs, ICDocUtils, ICMovableModal;	procedure SetSizeOutlines (sizemenu: MenuHandle; font_num: integer);		var			tmpstr: Str255;			i: integer;			the_size: longint;	begin		for i := 1 to CountMItems(sizemenu) do begin			GetItem(sizemenu, i, tmpstr);			StringToNum(tmpstr, the_size);			if RealFont(font_num, the_size) then begin				SetItemStyle(sizemenu, i, [outline]);			end			else begin				SetItemStyle(sizemenu, i, []);			end; (* if *)		end; (* for *)	end; (* SetSizeOutlines *)	function FindMenuItem (mh: MenuHandle; item: Str255; var index: integer): boolean;		var			i: integer;			test_name: Str255;	begin		FindMenuItem := false;		for i := 1 to CountMItems(mh) do begin			GetItem(mh, i, test_name);			if IUEqualString(test_name, item) = 0 then begin				index := i;				FindMenuItem := true;			end; (* if *)		end; (* for *)	end;	function ValidateSize (size: longInt): longInt;	begin		if (size > 0) and (size < 32767) then begin			ValidateSize := size;		end		else begin			ValidateSize := GetDefFontSize;		end; (* if *)	end;	function GetSizeMenuValue (dlg: DialogPtr; item: integer): longInt;		var			tmpstr: Str255;			tmpint: longint;			sizemenu: MenuHandle;	begin		sizemenu := GetPopupMHandle(dlg, item);		GetItem(sizemenu, GetDCtlValue(dlg, item), tmpstr);		StringToNum(tmpstr, tmpint);		GetSizeMenuValue := ValidateSize(tmpint);	end;	procedure GetCurrentSetting (dlg: DialogPtr; item: integer; var font_setting: ICFontRecord; var font_num: integer);	begin		font_setting.face := [];		GetItem(GetPopupMHandle(dlg, item), GetDCtlValue(dlg, item), font_setting.font);		GetFNum(font_setting.font, font_num);		font_setting.size := GetSizeMenuValue(dlg, item + 1);	end;	procedure DisplayFontProc (dlg: DialogPtr; item: integer);		var			font_setting: ICFontRecord;			saved: SavedWindowInfo;			font: integer;			r: rect;			s: str255;			name: Str255;	begin		SetPort(dlg);		GetCurrentSetting(dlg, item - 2, font_setting, font);		EnterWindow(dlg, font, font_setting.size, [], saved);		GetDItemRect(dlg, item, r);		PenPat(gray);		FrameRect(r);		PenPat(black);		GetFontName(font, name);		if (name = 'Chicago') & ((font_setting.size <> 12) | (item = 9)) then begin			s := GetIndStr(128, 16);		end		else begin			s := GetIndStr(128, 14);		end; (* if *)		InsetRect(r, 3, 3);		TextBox(@s[1], length(s), r, teJustLeft);		ExitWindow(saved);	end;	function WhatOpenFont (wt: WindowType; item: integer): OSErr;		var			dlg: WindowPtr;			fontmenu: MenuHandle;			sizemenu: MenuHandle;			font_setting: ICFontRecord;			attr: longint;			i: integer;			tmpstr: Str255;			test_name: Str255;			count: longint;			font_num: integer;	begin		dlg := windowinfo[wt].window;		fontmenu := GetPopupMHandle(dlg, item);		count := sizeof(font_setting);		if (ICMapErr(ICGetPref(GetInstance, windowinfo[wt].items[item]^.key, attr, @font_setting, count)) <> noErr) | (count <> sizeof(font_setting)) then begin			GetFontName(GetAppFont, font_setting.font);			font_setting.face := [];			font_setting.size := GetDefFontSize;		end; (* if *)		ProcessAttributes(wt, item, attr);		GetFNum(font_setting.font, font_num);		if font_num = 0 then begin			GetFontName(GetAppFont, font_setting.font);			GetFNum(font_setting.font, font_num);		end; (* if *)		if FindMenuItem(fontmenu, font_setting.font, i) then begin			SetDCtlValue(dlg, item, i);		end;		NumToString(font_setting.size, tmpstr);		sizemenu := GetPopupMHandle(dlg, item + 1);		if FindMenuItem(sizemenu, tmpstr, i) then begin			SetDCtlValue(dlg, item + 1, i);		end;		windowinfo[wt].items[item + 1]^.spare_data := ptr(font_setting.size);		SetSizeOutlines(sizemenu, font_num);		SetDCtlEnable(dlg, item, not IsLocked(wt, item));		SetDCtlEnable(dlg, item + 1, not IsLocked(wt, item));		SetDItemHandle(dlg, item + 2, handle(@DisplayFontProc));		WhatOpenFont := noErr;	end; (* WhatOpenFont *)	function WhatClickFont (wt: WindowType; item: integer; er: eventRecord): OSErr;		var			dlg: DialogPtr;			font_setting: ICFontRecord;			font_num: integer;	begin		dlg := windowinfo[wt].window;		GetCurrentSetting(dlg, item, font_setting, font_num);		SetSizeOutlines(GetPopupMHandle(dlg, item + 1), font_num);		DisplayFontProc(dlg, item + 2);		WhatClickFont := noErr;	end;  (* WhatClickFont *)	function MyModalFilter (dlg: DialogPtr; var er: EventRecord; var item: integer): boolean;		const			bs = chr(8);		var			ch: char;	begin		MyModalFilter := false;		if CancelModalFilter(dlg, er, item) then begin			MyModalFilter := true;		end		else if (er.what = keyDown) or (er.what = autoKey) then begin			if BAND(er.modifiers, cmdKey) = 0 then begin				ch := chr(BAND(er.message, $FF));				if DirtyKey(ch) & not (ch in [bs, '0'..'9']) then begin					SysBeep(1);					er.what := nullEvent;				end;			end;		end;	end;	function GetOtherSize (var size: longInt): boolean;		var			dlg: DialogPtr;			item: integer;			s: Str255;			saved_state: Ptr;	begin		dlg := GetNewDialog(500, nil, POINTER(-1));		NumToString(size, s);		SetItemText(dlg, 4, s);		SelIText(dlg, 4, 0, 255);		SetUpDefaultOutline(dlg, 1, 3);		ShowWindow(dlg);		DisableMenuBar(saved_state, -1);		InitCursor;		repeat			MovableModalDialog(@MyModalFilter, item);		until item in [1, 2];		GetOtherSize := item = 1;		if item = 1 then begin			GetItemText(dlg, 4, s);			StringToNum(s, size);			size := ValidateSize(size);		end;		ReEnableMenuBar(saved_state);		DisposeDialog(dlg);	end;	function WhatClickFontSize (wt: WindowType; item: integer; er: eventRecord): OSErr;		var			dlg: DialogPtr;			control: ControlHandle;			sizemenu: MenuHandle;			n: longInt;			tmpstr: Str255;			i: integer;			dummy: boolean;	begin		dlg := windowinfo[wt].window;		control := GetDControlHandle(dlg, item);		sizemenu := GetPopupMHandle(dlg, item);		if GetCtlValue(control) = CountMItems(sizemenu) then begin			n := ord(windowinfo[wt].items[item]^.spare_data);			dummy := GetOtherSize(n);		end		else begin			n := GetSizeMenuValue(dlg, item);		end;		if not BTST(sizemenu^^.enableFlags, 2) then begin { has initial strange number }			DelMenuItem(sizemenu, 1);			DelMenuItem(sizemenu, 1);		end;		windowinfo[wt].items[item]^.spare_data := Ptr(n);		NumToString(n, tmpstr);		if not FindMenuItem(sizemenu, tmpstr, i) then begin			InsMenuItem(sizemenu, '(-;fred', 0);			SetItem(sizemenu, 1, tmpstr);			i := 1;		end;		SetCtlMax(control, CountMItems(sizemenu));		SetCtlValue(control, i);		DisplayFontProc(windowinfo[wt].window, item + 1);		WhatClickFontSize := noErr;	end;	function WhatFlushFont (wt: WindowType; item: integer): OSErr;		var			dlg: DialogPtr;			err: OSErr;			font_setting: ICFontRecord;			old_font_setting: ICFontRecord;			attr: longint;			count: longint;			font: integer;	begin		dlg := windowinfo[wt].window;		GetCurrentSetting(dlg, item, font_setting, font);		(* get old values *)		count := sizeof(old_font_setting);		if (ICMapErr(ICGetPref(GetInstance, windowinfo[wt].items[item]^.key, attr, @old_font_setting, count)) <> noErr) | (count <> sizeof(old_font_setting)) then begin			old_font_setting.font := '';		end; (* if *)		(* write it back if changed *)		err := noErr;		if (old_font_setting.size <> font_setting.size) or (old_font_setting.face <> font_setting.face) or (IUEqualString(old_font_setting.font, font_setting.font) <> 0) then begin			if not IsLocked(wt, item) then begin				err := ICMapErr(ICSetPref(GetInstance, windowinfo[wt].items[item]^.key, ICattr_no_change, @font_setting, sizeof(font_setting)));				if err = noErr then begin					DirtyDocument;				end; (* if *)			end; (* if *)		end; (* if *)		WhatFlushFont := err;	end; (* WhatFlushFont *)end. (* ICFontWhats *)AddResMenu(fontmenu, 'FONT');CalcMenuSize(fontmenu);SetCtlMax(GetDControlHandle(dlg, item), CountMItems(fontmenu));DebugStr(StringOf(fontmenu, CountMItems(fontmenu)));
+unit ICFontWhats;
+
+interface
+
+	uses
+		ICWindowGlobals;
+
+	function WhatOpenFont (wt: WindowType; item: integer): OSErr;
+	function WhatFlushFont (wt: WindowType; item: integer): OSErr;
+	function WhatClickFont (wt: WindowType; item: integer; er: eventRecord): OSErr;
+	function WhatClickFontSize (wt: WindowType; item: integer; er: eventRecord): OSErr;
+
+implementation
+
+	uses
+		Script, 
+
+		ICStrH, 
+
+		ICKeys, ICAPI, ICDialogs, ICMiscSubs, ICSubs, ICDocUtils, ICMovableModal;
+
+	procedure SetSizeOutlines (sizemenu: MenuHandle; font_num: integer);
+		var
+			tmpstr: Str255;
+			i: integer;
+			the_size: longint;
+	begin
+		for i := 1 to CountMItems(sizemenu) do begin
+			GetItem(sizemenu, i, tmpstr);
+			StringToNum(tmpstr, the_size);
+			if RealFont(font_num, the_size) then begin
+				SetItemStyle(sizemenu, i, [outline]);
+			end
+			else begin
+				SetItemStyle(sizemenu, i, []);
+			end; (* if *)
+		end; (* for *)
+	end; (* SetSizeOutlines *)
+
+	function FindMenuItem (mh: MenuHandle; item: Str255; var index: integer): boolean;
+		var
+			i: integer;
+			test_name: Str255;
+	begin
+		FindMenuItem := false;
+		for i := 1 to CountMItems(mh) do begin
+			GetItem(mh, i, test_name);
+			if IUEqualString(test_name, item) = 0 then begin
+				index := i;
+				FindMenuItem := true;
+			end; (* if *)
+		end; (* for *)
+	end;
+
+	function ValidateSize (size: longInt): longInt;
+	begin
+		if (size > 0) and (size < 32767) then begin
+			ValidateSize := size;
+		end
+		else begin
+			ValidateSize := GetDefFontSize;
+		end; (* if *)
+	end;
+
+	function GetSizeMenuValue (dlg: DialogPtr; item: integer): longInt;
+		var
+			tmpstr: Str255;
+			tmpint: longint;
+			sizemenu: MenuHandle;
+	begin
+		sizemenu := GetPopupMHandle(dlg, item);
+		GetItem(sizemenu, GetDCtlValue(dlg, item), tmpstr);
+		StringToNum(tmpstr, tmpint);
+		GetSizeMenuValue := ValidateSize(tmpint);
+	end;
+
+	procedure GetCurrentSetting (dlg: DialogPtr; item: integer; var font_setting: ICFontRecord; var font_num: integer);
+	begin
+		font_setting.face := [];
+		GetItem(GetPopupMHandle(dlg, item), GetDCtlValue(dlg, item), font_setting.font);
+		GetFNum(font_setting.font, font_num);
+		font_setting.size := GetSizeMenuValue(dlg, item + 1);
+	end;
+
+	procedure DisplayFontProc (dlg: DialogPtr; item: integer);
+		var
+			font_setting: ICFontRecord;
+			saved: SavedWindowInfo;
+			font: integer;
+			r: rect;
+			s: str255;
+			name: Str255;
+	begin
+		SetPort(dlg);
+		GetCurrentSetting(dlg, item - 2, font_setting, font);
+		EnterWindow(dlg, font, font_setting.size, [], saved);
+		GetDItemRect(dlg, item, r);
+		PenPat(gray);
+		FrameRect(r);
+		PenPat(black);
+		GetFontName(font, name);
+		if (name = 'Chicago') & ((font_setting.size <> 12) | (item = 9)) then begin
+			s := GetIndStr(128, 16);
+		end
+		else begin
+			s := GetIndStr(128, 14);
+		end; (* if *)
+		InsetRect(r, 3, 3);
+		TextBox(@s[1], length(s), r, teJustLeft);
+		ExitWindow(saved);
+	end;
+
+	function WhatOpenFont (wt: WindowType; item: integer): OSErr;
+		var
+			dlg: WindowPtr;
+			fontmenu: MenuHandle;
+			sizemenu: MenuHandle;
+			font_setting: ICFontRecord;
+			attr: longint;
+			i: integer;
+			tmpstr: Str255;
+			test_name: Str255;
+			count: longint;
+			font_num: integer;
+	begin
+		dlg := windowinfo[wt].window;
+		fontmenu := GetPopupMHandle(dlg, item);
+		count := sizeof(font_setting);
+		if (ICMapErr(ICGetPref(GetInstance, windowinfo[wt].items[item]^.key, attr, @font_setting, count)) <> noErr) | (count <> sizeof(font_setting)) then begin
+			GetFontName(GetAppFont, font_setting.font);
+			font_setting.face := [];
+			font_setting.size := GetDefFontSize;
+		end; (* if *)
+		ProcessAttributes(wt, item, attr);
+		GetFNum(font_setting.font, font_num);
+		if font_num = 0 then begin
+			GetFontName(GetAppFont, font_setting.font);
+			GetFNum(font_setting.font, font_num);
+		end; (* if *)
+		if FindMenuItem(fontmenu, font_setting.font, i) then begin
+			SetDCtlValue(dlg, item, i);
+		end;
+		NumToString(font_setting.size, tmpstr);
+		sizemenu := GetPopupMHandle(dlg, item + 1);
+		if FindMenuItem(sizemenu, tmpstr, i) then begin
+			SetDCtlValue(dlg, item + 1, i);
+		end;
+		windowinfo[wt].items[item + 1]^.spare_data := ptr(font_setting.size);
+		SetSizeOutlines(sizemenu, font_num);
+		SetDCtlEnable(dlg, item, not IsLocked(wt, item));
+		SetDCtlEnable(dlg, item + 1, not IsLocked(wt, item));
+		SetDItemHandle(dlg, item + 2, handle(@DisplayFontProc));
+		WhatOpenFont := noErr;
+	end; (* WhatOpenFont *)
+
+	function WhatClickFont (wt: WindowType; item: integer; er: eventRecord): OSErr;
+		var
+			dlg: DialogPtr;
+			font_setting: ICFontRecord;
+			font_num: integer;
+	begin
+		dlg := windowinfo[wt].window;
+		GetCurrentSetting(dlg, item, font_setting, font_num);
+		SetSizeOutlines(GetPopupMHandle(dlg, item + 1), font_num);
+		DisplayFontProc(dlg, item + 2);
+		WhatClickFont := noErr;
+	end;  (* WhatClickFont *)
+
+	function MyModalFilter (dlg: DialogPtr; var er: EventRecord; var item: integer): boolean;
+		const
+			bs = chr(8);
+		var
+			ch: char;
+	begin
+		MyModalFilter := false;
+		if CancelModalFilter(dlg, er, item) then begin
+			MyModalFilter := true;
+		end
+		else if (er.what = keyDown) or (er.what = autoKey) then begin
+			if BAND(er.modifiers, cmdKey) = 0 then begin
+				ch := chr(BAND(er.message, $FF));
+				if DirtyKey(ch) & not (ch in [bs, '0'..'9']) then begin
+					SysBeep(1);
+					er.what := nullEvent;
+				end;
+			end;
+		end;
+	end;
+
+	function GetOtherSize (var size: longInt): boolean;
+		var
+			dlg: DialogPtr;
+			item: integer;
+			s: Str255;
+			saved_state: Ptr;
+	begin
+		dlg := GetNewDialog(500, nil, POINTER(-1));
+		NumToString(size, s);
+		SetItemText(dlg, 4, s);
+		SelIText(dlg, 4, 0, 255);
+		SetUpDefaultOutline(dlg, 1, 3);
+		ShowWindow(dlg);
+		DisableMenuBar(saved_state, -1);
+		InitCursor;
+		repeat
+			MovableModalDialog(@MyModalFilter, item);
+		until item in [1, 2];
+		GetOtherSize := item = 1;
+		if item = 1 then begin
+			GetItemText(dlg, 4, s);
+			StringToNum(s, size);
+			size := ValidateSize(size);
+		end;
+		ReEnableMenuBar(saved_state);
+		DisposeDialog(dlg);
+	end;
+
+	function WhatClickFontSize (wt: WindowType; item: integer; er: eventRecord): OSErr;
+		var
+			dlg: DialogPtr;
+			control: ControlHandle;
+			sizemenu: MenuHandle;
+			n: longInt;
+			tmpstr: Str255;
+			i: integer;
+			dummy: boolean;
+	begin
+		dlg := windowinfo[wt].window;
+		control := GetDControlHandle(dlg, item);
+		sizemenu := GetPopupMHandle(dlg, item);
+		if GetCtlValue(control) = CountMItems(sizemenu) then begin
+			n := ord(windowinfo[wt].items[item]^.spare_data);
+			dummy := GetOtherSize(n);
+		end
+		else begin
+			n := GetSizeMenuValue(dlg, item);
+		end;
+		if not BTST(sizemenu^^.enableFlags, 2) then begin { has initial strange number }
+			DelMenuItem(sizemenu, 1);
+			DelMenuItem(sizemenu, 1);
+		end;
+		windowinfo[wt].items[item]^.spare_data := Ptr(n);
+		NumToString(n, tmpstr);
+		if not FindMenuItem(sizemenu, tmpstr, i) then begin
+			InsMenuItem(sizemenu, '(-;fred', 0);
+			SetItem(sizemenu, 1, tmpstr);
+			i := 1;
+		end;
+		SetCtlMax(control, CountMItems(sizemenu));
+		SetCtlValue(control, i);
+		DisplayFontProc(windowinfo[wt].window, item + 1);
+		WhatClickFontSize := noErr;
+	end;
+
+	function WhatFlushFont (wt: WindowType; item: integer): OSErr;
+		var
+			dlg: DialogPtr;
+			err: OSErr;
+			font_setting: ICFontRecord;
+			old_font_setting: ICFontRecord;
+			attr: longint;
+			count: longint;
+			font: integer;
+	begin
+		dlg := windowinfo[wt].window;
+		GetCurrentSetting(dlg, item, font_setting, font);
+		(* get old values *)
+		count := sizeof(old_font_setting);
+		if (ICMapErr(ICGetPref(GetInstance, windowinfo[wt].items[item]^.key, attr, @old_font_setting, count)) <> noErr) | (count <> sizeof(old_font_setting)) then begin
+			old_font_setting.font := '';
+		end; (* if *)
+		(* write it back if changed *)
+		err := noErr;
+		if (old_font_setting.size <> font_setting.size) or (old_font_setting.face <> font_setting.face) or (IUEqualString(old_font_setting.font, font_setting.font) <> 0) then begin
+			if not IsLocked(wt, item) then begin
+				err := ICMapErr(ICSetPref(GetInstance, windowinfo[wt].items[item]^.key, ICattr_no_change, @font_setting, sizeof(font_setting)));
+				if err = noErr then begin
+					DirtyDocument;
+				end; (* if *)
+			end; (* if *)
+		end; (* if *)
+		WhatFlushFont := err;
+	end; (* WhatFlushFont *)
+
+end. (* ICFontWhats *)
+AddResMenu(fontmenu, 'FONT');
+CalcMenuSize(fontmenu);
+SetCtlMax(GetDControlHandle(dlg, item), CountMItems(fontmenu));
+DebugStr(StringOf(fontmenu, CountMItems(fontmenu)));

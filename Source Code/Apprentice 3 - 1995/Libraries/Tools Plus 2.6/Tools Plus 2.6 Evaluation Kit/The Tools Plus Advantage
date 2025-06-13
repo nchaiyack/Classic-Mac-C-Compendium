@@ -1,1 +1,79 @@
-[Display using Geneva 12]The Tools Plus Advantage~~~~~~~~~~~~~~~~~~~~  There are many advantages to using Tools Plus when you are writing a Macintosh application:Tools Plus routines work seamlessly with System 5 and System 6 (when running under Finder and MultiFinder), System 7, and Power Macintoshes (in emulation or native mode).Tools Plus library routines are reusable, self-maintaining components.  They promote code reusability by being reusable themselves, and provide a solid application foundation.  Applications written with Tools Plus are more maintainable than conventional applications.Unlike “code generators,” Tools Plus does not demand that you adhere to a rigid design or cumbersome application constraints, nor does it create thousands of lines of code, or demand that you learn complex class libraries.  Tools Plus fits in with your programming style, whether your code is procedural or object-oriented.  It’s also easy to learn, and easy to use.Unlike object oriented class libraries that add thousands of lines of code to your application, Tools Plus reduces the need for most of your user interface and event managing code.You can use the same Tools Plus libraries and support files regardless if you are compiling your application for a plain 68000 processor, or optimizing it for 68020, 68030, or 68040 processors, and/or optimizing it for a math co-processor (68881, 68882 or 68040).Tools Plus for PowerPC is identical to Tools Plus for 680x0 processors.Instead of using many routines in the Macintosh’s toolbox or class library, you’ll use relatively few Tools Plus routines.  You’ll find it easier to program when you can accomplish a given task with fewer routines.With a single Tools Plus routine you can typically create any element of the Macintosh’s user interface, such as a window, a tool bar, floating palette, button, picture button, check box, scroll bar, menu (pull-down, hierarchical and pop-up), list box, editing field, etc.  Creating a user interface becomes a breeze.The interrelationship between Tools Plus user interface elements is automatically maintained.  An illustration of this is when the user is typing in a field in your application, goes to the Apple menu and selects the calculator, performs some calculations and selects the Edit menu’s Copy command, then goes back to your application and chooses the Paste command to paste the calculator’s answer into the field.  You, as a programmer, don’t have to code anything to account for the interdependencies between your application’s editing fields, the Edit menu, the Clipboard, the Apple menu, and the calculator.Tools Plus makes it easier to work with user interface elements by referencing them by number.  In contrast, Macintosh toolbox routines use pointers to reference windows and handles to reference buttons and scroll bars.  Your application will be easier to write with Tools Plus because there will be less to remember.Tools Plus routines are safer to use than Macintosh toolbox routines because they shield you from potential pointer and handle dereferencing problems, and from numerous logical errors.All Tools Plus routines are self-maintaining.  For example, once you have created a button, you can forget it.  Tools Plus will let you know when that button is selected by the user, and it will take care of all the work necessary to make the button work (i.e., detecting the event, highlighting the button, tracking the cursor in and out of the button, unhighlighting the button, and reporting the button’s selection).The revolutionary Event Translator in Tools Plus reports usable events.  An example of this is telling your application “the Cancel button in the Search dialog was selected.”  This is much simpler than decoding event messages and tracking controls, handles and pointers, as required with ordinary C or Pascal.Tools Plus routines do a lot of work for you.  A single routine can save you writing hundreds of lines of source code making dozens of calls to Macintosh toolbox routines, so you’ll end up writing considerably less source code.  They also eliminate the need for thousands of lines of code and numerous complex source files created by a code generator.Tools Plus takes care of most of the Macintosh’s user interface “housekeeping” by automatically handling desk accessories, mouse and keyboard activity, translating and processing events, and telling your application what the user and system are doing.  You can focus on writing your application instead of maintaining the user interface.With Tools Plus, you will have far fewer bugs because you’ll be writing considerably less code.  Applications written with Tools Plus are shorter and simpler to debug and modify, and they also have more readable source code.Tools Plus is efficient: it requires little memory or disk space, and it executes quickly.Macintosh standards have been observed as described in Inside Macintosh.  This helps ensure that your finished application behaves in a way that all Macintosh applications should.Tools Plus is easy to learn and use.  If you can program in either C/C++ or Pascal, you can use Tools Plus.Many aspects of the Macintosh’s impeccable user interface, which you may otherwise have to exclude due to their complexity, can be easily incorporated into your application with Tools Plus.There are no runtime costs for Tools Plus.  That means registered users can distribute applications they have written with Tools Plus without having to pay additional fees or royalties.The Tools Plus libraries are constantly being expanded, enhanced and optimized, based largely on our users’ requests, so you’ll be benefiting from others’ innovations.Tools plus is identical for both C/C++ and Pascal, so if you get involved with the other language, you can take your knowledge of Tools Plus with you.
+[Display using Geneva 12]
+
+
+
+The Tools Plus Advantage
+~~~~~~~~~~~~~~~~~~~~
+
+  There are many advantages to using Tools Plus when you are writing a Macintosh application:
+
+
+
+
+Tools Plus routines work seamlessly with System 5 and System 6 (when running under Finder and MultiFinder), System 7, and Power Macintoshes (in emulation or native mode).
+
+
+Tools Plus library routines are reusable, self-maintaining components.  They promote code reusability by being reusable themselves, and provide a solid application foundation.  Applications written with Tools Plus are more maintainable than conventional applications.
+
+
+Unlike “code generators,” Tools Plus does not demand that you adhere to a rigid design or cumbersome application constraints, nor does it create thousands of lines of code, or demand that you learn complex class libraries.  Tools Plus fits in with your programming style, whether your code is procedural or object-oriented.  It’s also easy to learn, and easy to use.
+
+
+Unlike object oriented class libraries that add thousands of lines of code to your application, Tools Plus reduces the need for most of your user interface and event managing code.
+
+
+You can use the same Tools Plus libraries and support files regardless if you are compiling your application for a plain 68000 processor, or optimizing it for 68020, 68030, or 68040 processors, and/or optimizing it for a math co-processor (68881, 68882 or 68040).
+
+
+Tools Plus for PowerPC is identical to Tools Plus for 680x0 processors.
+
+
+Instead of using many routines in the Macintosh’s toolbox or class library, you’ll use relatively few Tools Plus routines.  You’ll find it easier to program when you can accomplish a given task with fewer routines.
+
+
+With a single Tools Plus routine you can typically create any element of the Macintosh’s user interface, such as a window, a tool bar, floating palette, button, picture button, check box, scroll bar, menu (pull-down, hierarchical and pop-up), list box, editing field, etc.  Creating a user interface becomes a breeze.
+
+
+The interrelationship between Tools Plus user interface elements is automatically maintained.  An illustration of this is when the user is typing in a field in your application, goes to the Apple menu and selects the calculator, performs some calculations and selects the Edit menu’s Copy command, then goes back to your application and chooses the Paste command to paste the calculator’s answer into the field.  You, as a programmer, don’t have to code anything to account for the interdependencies between your application’s editing fields, the Edit menu, the Clipboard, the Apple menu, and the calculator.
+
+
+Tools Plus makes it easier to work with user interface elements by referencing them by number.  In contrast, Macintosh toolbox routines use pointers to reference windows and handles to reference buttons and scroll bars.  Your application will be easier to write with Tools Plus because there will be less to remember.
+
+
+Tools Plus routines are safer to use than Macintosh toolbox routines because they shield you from potential pointer and handle dereferencing problems, and from numerous logical errors.
+
+
+All Tools Plus routines are self-maintaining.  For example, once you have created a button, you can forget it.  Tools Plus will let you know when that button is selected by the user, and it will take care of all the work necessary to make the button work (i.e., detecting the event, highlighting the button, tracking the cursor in and out of the button, unhighlighting the button, and reporting the button’s selection).
+
+
+The revolutionary Event Translator in Tools Plus reports usable events.  An example of this is telling your application “the Cancel button in the Search dialog was selected.”  This is much simpler than decoding event messages and tracking controls, handles and pointers, as required with ordinary C or Pascal.
+
+
+Tools Plus routines do a lot of work for you.  A single routine can save you writing hundreds of lines of source code making dozens of calls to Macintosh toolbox routines, so you’ll end up writing considerably less source code.  They also eliminate the need for thousands of lines of code and numerous complex source files created by a code generator.
+
+
+Tools Plus takes care of most of the Macintosh’s user interface “housekeeping” by automatically handling desk accessories, mouse and keyboard activity, translating and processing events, and telling your application what the user and system are doing.  You can focus on writing your application instead of maintaining the user interface.
+
+
+With Tools Plus, you will have far fewer bugs because you’ll be writing considerably less code.  Applications written with Tools Plus are shorter and simpler to debug and modify, and they also have more readable source code.
+
+
+Tools Plus is efficient: it requires little memory or disk space, and it executes quickly.
+
+
+Macintosh standards have been observed as described in Inside Macintosh.  This helps ensure that your finished application behaves in a way that all Macintosh applications should.
+
+
+Tools Plus is easy to learn and use.  If you can program in either C/C++ or Pascal, you can use Tools Plus.
+
+
+Many aspects of the Macintosh’s impeccable user interface, which you may otherwise have to exclude due to their complexity, can be easily incorporated into your application with Tools Plus.
+
+
+There are no runtime costs for Tools Plus.  That means registered users can distribute applications they have written with Tools Plus without having to pay additional fees or royalties.
+
+
+The Tools Plus libraries are constantly being expanded, enhanced and optimized, based largely on our users’ requests, so you’ll be benefiting from others’ innovations.
+
+
+Tools plus is identical for both C/C++ and Pascal, so if you get involved with the other language, you can take your knowledge of Tools Plus with you.

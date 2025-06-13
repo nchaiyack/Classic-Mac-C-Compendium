@@ -1,1 +1,2 @@
-exit		real_exitatexit		real_atexit
+exit		real_exit
+atexit		real_atexit
