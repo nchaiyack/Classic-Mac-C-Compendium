@@ -14,7 +14,15 @@ for context.
 
 # Directory
 
+## Books
+
 ## Source Code
+
+### 68k Assembly codebases
+
+- **SuperMario ROM (1994), Apple.** Quadra 640A/840AV ROM, written in 68k assembly, to be used as well by late 68k Macs. It is the largest 68k ROM ever produced: 2MB. It incorporates certain parts of System 7 (QuickTime 1.5, DMA based peripheral drivers, ADB manager, chipset ASIC managers (e.g. CUDA, EGRET), HFS, Slot Mannger). However, it is not a complete Systme 7: it is missing much of the Toolbox (UI amangers, Resource Manager, etc.) Written mostly in 68k assembler.
+
+### "Apprentice" example source code CDs
 
 - **Apprentice (1994), Celestin Company.** Via Macintosh Garden. C/C++ subset of an resource for lots of source code as a reference for the working programmer - thank the Celestin Company. Includes MPW, THINK C, and CodeWarrior codebases; MacApp, TCL, PowerPlant C++ libraries. Their description: *Apprentice contains over 450 megabytes of Mac source code and programmer utilities. Most of the source code is in C, C++, and Pascal. You'll find complete working examples of full-blown applications, games, control panels, extensions, utilities, and much more.* 
 
@@ -55,6 +63,17 @@ from their names... although these aren't necessarily the most substantial codeb
 
 	-	`C\Frameworks`: `Extension Shell`, `Argus Starter`, `ControlStripShell`
 
+	-	`C\Games`: `Glypha III`
+
+	-	`C\System`: `AsyncSysBeep INIT`, `Control Panel Project`, `Debugger FKEY`, `Sleep Deprivation`
+
+-	`C++` - assorted examples.
+
+	-	`C++\Applications`: `Nuntius`
+
+	-	`C++\Code Resources`: `3D Buttons CDEF`
+
+	-	`C++\Frameworks`: `CodeWarrior CDEV Framework`
 
 -	`Addons`: example After Dark screensavers and BBEdit addons;
 
