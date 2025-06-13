@@ -1,0 +1,104 @@
+transmtx.icn :   11  | main; co-expression_1 : &null @ co-expression_4
+transmtx.icn :   10  | output()
+transmtx.icn :   27  | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :    8  | | word()
+transmtx.icn :   17  | | | word; co-expression_2 : &null @ co-expression_3
+transmtx.icn :    9  | | | reader()
+transmtx.icn :   23  | | | | reader; co-expression_3 : "Version 7 of Ico..." @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "Version" @ co-expression_4
+Version
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "of" @ co-expression_4
+of
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "Icon" @ co-expression_4
+Icon
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "corrects" @ co-expression_4
+corrects
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "a" @ co-expression_4
+a
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "number" @ co-expression_4
+number
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "of" @ co-expression_4
+of
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "problems" @ co-expression_4
+problems
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   17  | | | | word; co-expression_2 : &null @ co-expression_3
+transmtx.icn :   23  | | | | reader; co-expression_3 : "with co-expressi..." @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "with" @ co-expression_4
+with
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "co" @ co-expression_4
+co
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "expressions" @ co-expression_4
+expressions
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "that" @ co-expression_4
+that
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "existed" @ co-expression_4
+existed
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "in" @ co-expression_4
+in
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "previous" @ co-expression_4
+previous
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   17  | | | | word; co-expression_2 : &null @ co-expression_3
+transmtx.icn :   23  | | | | reader; co-expression_3 : "versions. The mo..." @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "versions" @ co-expression_4
+versions
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "The" @ co-expression_4
+The
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "most" @ co-expression_4
+most
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "significant" @ co-expression_4
+significant
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "one" @ co-expression_4
+one
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "is" @ co-expression_4
+is
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "proper" @ co-expression_4
+proper
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   17  | | | | word; co-expression_2 : &null @ co-expression_3
+transmtx.icn :   23  | | | | reader; co-expression_3 : "handling of co-e..." @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "handling" @ co-expression_4
+handling
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "of" @ co-expression_4
+of
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "co" @ co-expression_4
+co
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "expression" @ co-expression_4
+expression
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "return" @ co-expression_4
+return
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   19  | | | | word; co-expression_2 : "points" @ co-expression_4
+points
+transmtx.icn :   27  | | | | output; co-expression_4 : &null @ co-expression_2
+transmtx.icn :   17  | | | | word; co-expression_2 : &null @ co-expression_3
+transmtx.icn :   24  | | | reader failed
+transmtx.icn :    9  | | | main; co-expression_3 failed to co-expression_2
+transmtx.icn :   20  | | word failed
+transmtx.icn :    8  | | main; co-expression_2 failed to co-expression_4
+transmtx.icn :   28  | | output; co-expression_4 : &null @ co-expression_1
+transmtx.icn :   12  | main failed

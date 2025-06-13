@@ -1,0 +1,1 @@
+void SendCallBack(void);void InitChan(void);void IdleSounds(void);void FinishSounds(void);void PlaySounds (Handle theSound);void PlaySoundsID (short id);void PlayResFromDisk(short soundID, short bufSize);Boolean SoundsDone(void);void KillSounds(void);void TellChanWait(short halfMilliSecs);void ErrorAlert(short errNumber);

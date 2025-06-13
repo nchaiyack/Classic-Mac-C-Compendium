@@ -1,0 +1,10 @@
+
+(defconst geneva 3)
+
+(defconst monaco 4)
+
+(defconst times 20)
+
+(defconst courier 22)
+
+(deftrap GetFNum ("a900") ((name address) (familyID address)) nil)

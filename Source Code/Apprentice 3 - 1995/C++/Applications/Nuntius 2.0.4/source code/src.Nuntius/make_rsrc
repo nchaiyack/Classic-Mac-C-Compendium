@@ -1,0 +1,1 @@
+set applname NuntiusNeedMacAppset exit 1setfile -m . Strings.r # to get updated the compile dateMABuildRsrc -ModelFar {applname} -debug {"parameters"}Move -y :$S7NmDbDmPeRaTefCfD:{applname}.π.rsrc   {applname}.π.debug.rsrcMABuildRsrc -ModelFar {applname} {"parameters"}Move -y :$NoDebug≈:{applname}.π.rsrc {applname}.π.nodebug.rsrc

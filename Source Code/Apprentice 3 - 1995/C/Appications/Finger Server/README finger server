@@ -1,0 +1,1 @@
+finger server has a self-explanatory namewhen someone fingers "name@yourhost.yourdomain.whatever", finger server returns the contents of a text file "name" in your system folder.  This is meant to demo my tcp code, not be a useful utility (-:Darrell Anderson, poet@cif.rochester.edu

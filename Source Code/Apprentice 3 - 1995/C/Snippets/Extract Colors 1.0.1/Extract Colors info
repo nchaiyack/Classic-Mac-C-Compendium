@@ -1,0 +1,1 @@
+Extract Colorsby Steve Wagy70471.1640@compuserve.comThis code shows how use the Picture Utilities Package to extract the colors from a PICT file. Not much error checking is done, but it works.

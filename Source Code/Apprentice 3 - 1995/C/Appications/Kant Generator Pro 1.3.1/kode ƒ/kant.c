@@ -1,0 +1,1 @@
+Boolean			gAlwaysResolve;short			gSpeedDelay;FSSpec			gModuleFS;Boolean			gUseDefault;Boolean			gDynamicScroll;Boolean			gShowAllRefs;Boolean			gIconifyMenus;Boolean			gShowToolbar;Boolean			gShowMessageBox;Boolean			gFastResolve;Boolean			gIgnoreErrors;

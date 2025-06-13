@@ -1,0 +1,1 @@
+.SH "SEE ALSO".br.IR cconq(6), xconq(6).br.IR "Xconq - the Penultimate Strategy Game".SH DIAGNOSTICS.PPIf the world is too small for the desired number of players,\fI[cx]conq\fP will complain about not being able to place units.

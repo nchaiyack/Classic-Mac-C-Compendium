@@ -1,0 +1,1 @@
+#!/usr/bin/perlprint &MacPerl'Pick("What's your favorite colour baby ?", "red", "green", "blue"), "\n";

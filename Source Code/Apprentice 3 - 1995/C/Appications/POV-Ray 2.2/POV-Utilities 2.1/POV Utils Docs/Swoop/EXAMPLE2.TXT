@@ -1,0 +1,1 @@
+outfile test.incname testoutput_type 1segments 30vertex  1 0  1vertex -1 0  1vertex -1 0 -1vertex  1 0 -1var 1 1 0var 1 0 360var 1 0 8scale &1 &1 &1rotate 0 &2 0translate 0 &3 0

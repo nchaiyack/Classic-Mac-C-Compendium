@@ -1,0 +1,1 @@
+set exit 0for p in `catenate {1}.lst`   delete -i :local:{p}.out   echo Translating {p}   :::bin:icont -s {p}.icn   echo Running {p}   if `exists -f {p}.dat`      :::bin:iconx {p} < {p}.dat · :local:{p}.out   else      :::bin:iconx {p} · :local:{p}.out   end   echo Checking {p}   compare :local:{p}.out :stand:{p}.out   delete -i {p}end

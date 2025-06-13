@@ -1,0 +1,18 @@
+
+(defconst normal 0)
+
+(defconst bold 1)
+
+(defconst italic 2)
+
+(defconst underline 4)
+
+(defconst outline 8)
+
+(defconst shadow 16)
+
+(defconst condense 32)
+
+(defconst extend 64)
+
+(c:typedef Boolean short)

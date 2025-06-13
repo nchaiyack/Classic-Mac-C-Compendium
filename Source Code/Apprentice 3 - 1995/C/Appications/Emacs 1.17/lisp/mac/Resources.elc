@@ -1,0 +1,6 @@
+
+(deftrap GetResource ("a9a0") ((theType immediate-string) (theID short)) long)
+
+(deftrap DetachResource ("a992") ((h long)) nil)
+
+(deftrap HomeResFile ("a9a4") ((h long)) short)

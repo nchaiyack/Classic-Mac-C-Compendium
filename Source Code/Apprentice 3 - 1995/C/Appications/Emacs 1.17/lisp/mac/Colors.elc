@@ -1,0 +1,2 @@
+
+(deftrap GetColor ("3f3c" "0009" "a82e") ((where immediate-string) (prompt address) (inColor address) (outColor address)) char)

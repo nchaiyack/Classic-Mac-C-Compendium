@@ -1,0 +1,1 @@
+Perl -Sx "{0}" {"Parameters"}Exit#!/usr/local/bin/perl$| = 1;open(PRINTER, "+>Dev:Printer") || die "couldn't open connection to laserwriter";select((select(PRINTER), $|=1, $/="\012")[0]);while (<>) {	print PRINTER;}shutdown(PRINTER,1);while (<PRINTER>) {	s/\012/\015/g;	print;}

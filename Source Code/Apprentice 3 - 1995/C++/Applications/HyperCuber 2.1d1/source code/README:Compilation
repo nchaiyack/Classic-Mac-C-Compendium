@@ -1,0 +1,18 @@
+Hi,
+
+The only file which I know is missing from this source is the "HyperCuber 
+TCLHeaders++" file.  This is a precompiled version of the Think Class 
+Libary 2.0 headers, using HyperCuber's compiler settings.  I didn't 
+include it because it's 1.6 Meg and you can make on with little hassle.
+Here's how:
+
+  1.  Open HyperCuber.pi  (the project file)
+  2.  Open "TCL #includes.cpp".  It's in the Think Class Library 2.0
+      folder, in the "Symantec C++ for Macintosh" folder.
+  3.  Choose "Precompile..." from the Source menu.
+  4.  Save the precompiled header file as "HyperCuber TCLHeaders++" in the
+      HyperCuber source code directory.
+
+That's it!
+
+  -Greg Ferrar (ferrar@uxa.cso.uiuc.edu) 

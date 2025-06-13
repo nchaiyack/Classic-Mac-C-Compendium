@@ -1,0 +1,1 @@
+# /bin/cc is less than useful for our purposes.  Always use GCCCC = /bin/gcc

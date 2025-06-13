@@ -1,0 +1,1 @@
+#!/usr/local/bin/perlprint &MacPerl'Ask("Say yeah !", "Yeah !"), "\n";print &MacPerl'Ask("What's up ?"), "\n";

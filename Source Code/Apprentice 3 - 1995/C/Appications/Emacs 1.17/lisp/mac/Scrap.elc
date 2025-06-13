@@ -1,0 +1,8 @@
+
+(deftrap ZeroScrap ("a9fc") nil long)
+
+(deftrap PutScrap ("a9fe") ((length long) (theType immediate-string) (source address)) long)
+
+(deftrap GetScrap ("a9fd") ((hDest long) (theType immediate-string) (offset address)) long)
+
+(deftrap InfoScrap ("a9f9") nil long)

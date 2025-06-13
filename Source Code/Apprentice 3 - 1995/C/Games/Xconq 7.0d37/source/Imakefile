@@ -1,0 +1,1 @@
+# Main Xconq Imakefile.#define IHaveSubdirs#define PassCDebugFlags 'CDEBUGFLAGS=$(CDEBUGFLAGS)'SUBDIRS = kernel x11 cursesMakeSubdirs($(SUBDIRS))DependSubdirs($(SUBDIRS))

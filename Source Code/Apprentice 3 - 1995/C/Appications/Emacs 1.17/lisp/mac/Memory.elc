@@ -1,0 +1,26 @@
+
+(deftrap NewPtr ("a11e") ((byteCount long d0)) (long a0) t)
+
+(deftrap NewPtrClear ("a31e") ((byteCount long d0)) (long a0) t)
+
+(deftrap NewHandle ("a122") ((byteCount long d0)) (long a0) t)
+
+(deftrap NewHandleClear ("a322") ((byteCount long d0)) (long a0) t)
+
+(deftrap DisposPtr ("a01f") ((p long a0)) nil t)
+
+(deftrap DisposHandle ("a023") ((h long a0)) nil t)
+
+(deftrap HLock ("a029") ((h long a0)) nil t)
+
+(deftrap HUnlock ("a02a") ((h long a0)) nil t)
+
+(deftrap GetHandleSize ("a025") ((h long a0)) (long d0) t)
+
+(deftrap SetHandleSize ("a024") ((h long a0) (newSize long d0)) nil t)
+
+(defun MemError nil (byte-code "‡" [elisp-MemError] 1))
+
+(deftrap HGetState ("a069") ((h long a0)) (char d0) t)
+
+(deftrap HSetState ("a06a") ((h long a0) (flags char d0)) nil t)

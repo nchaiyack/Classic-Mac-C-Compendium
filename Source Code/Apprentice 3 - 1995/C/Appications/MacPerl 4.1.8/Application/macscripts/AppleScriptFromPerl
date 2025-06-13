@@ -1,0 +1,1 @@
+#!/usr/local/bin/perl&MacPerl'DoAppleScript(<<'END_SCRIPT');tell application "MacPerl"	make new Window	copy "Inserting text the hard way." to character 1 of front Windowend tellEND_SCRIPT

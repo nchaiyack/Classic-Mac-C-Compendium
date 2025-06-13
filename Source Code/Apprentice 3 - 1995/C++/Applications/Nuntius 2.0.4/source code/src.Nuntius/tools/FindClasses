@@ -1,0 +1,1 @@
+s -s -q class `{Nuntius}Tools:MyFiles` | see '/¥(class[ ¶t]+[a-zA-Z]+)¨1[ ¶t]+[¶:¶{]/ pr ¨1' | sort

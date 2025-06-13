@@ -1,0 +1,2 @@
+
+(deftrap OpenDeskAcc ("a9b6") ((deskAccName address)) short)

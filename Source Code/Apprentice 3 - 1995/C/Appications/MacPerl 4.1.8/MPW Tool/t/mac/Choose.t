@@ -1,0 +1,1 @@
+#!/usr/local/bin/perlrequire "GUSI.ph";print &MacPerl'Choose(&GUSI'AF_FILE, 0, "", &GUSI'pack_sa_constr_file("OBJ ", "TEXT")), "\n";print &MacPerl'Choose(&GUSI'AF_FILE, 0, "Which folder", "", &GUSI'CHOOSE_DIR), "\n";print &MacPerl'Choose(&GUSI'AF_FILE, 0, "", "", &GUSI'CHOOSE_NEW + &GUSI'CHOOSE_DEFAULT, "yo"), "\n";

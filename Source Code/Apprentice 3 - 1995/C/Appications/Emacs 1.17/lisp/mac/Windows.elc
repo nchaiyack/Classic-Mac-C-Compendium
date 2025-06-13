@@ -1,0 +1,8 @@
+
+(deftrap ShowWindow ("a915") ((theWindow long)) nil)
+
+(deftrap MoveWindow ("a91b") ((theWindow long) (hGlobal short) (vGlobal short) (front short)) nil)
+
+(deftrap InvalRect ("a928") ((badRect address)) nil)
+
+(deftrap SetWinColor ("aa41") ((theWindow long) (newColorTable long)) nil)

@@ -1,0 +1,2 @@
+
+(deftrap HandToHand ("2077" "0151" "a9e1" "225f" "2288") ((theHndl address)) (short d0))

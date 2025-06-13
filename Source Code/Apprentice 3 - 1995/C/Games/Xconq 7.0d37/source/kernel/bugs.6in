@@ -1,0 +1,1 @@
+.SH BUGS.PPSpecifying multiple games on the command line is usually askingfor trouble. .PPUsing \fB-D\fP for debugging results in spectacular but useless displays..PPSome annoying behaviors are actually features.

@@ -1,0 +1,1 @@
+# Curses Imakefile.GLIBDIR = ../lib        DEFINES = -DUNIX -DUSE_CONSOLE -DXCONQLIB=\"$(GLIBDIR)\"\"       INCLUDES = -I../x11 -I../kernelLOCAL_LIBRARIES = XawClientLibs	  SRCS1 = cconq.c	  OBJS  = cconq.o \		  ccmd.o \		  cdraw.o       PROGRAMS = cconqComplexProgramTarget_1(cconq,$(OBJS) $(LOCAL_LIBRARIES),../kernel/libconq.a ../kernel/libconqlow.a)

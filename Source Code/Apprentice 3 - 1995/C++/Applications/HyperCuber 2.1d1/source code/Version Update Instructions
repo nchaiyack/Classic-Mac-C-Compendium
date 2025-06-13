@@ -1,0 +1,1 @@
+To create a new version:1.  Change the number in the 'vers' resource (three times places)2.  Change the number in "AboutDialog.c"3.  Set the memory to minimum4.  Build the application (change name to new version)5.  Change suggested memory for application6.  Change the version number in the README7.  Change the version number in the Manual

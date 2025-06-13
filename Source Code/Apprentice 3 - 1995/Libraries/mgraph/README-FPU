@@ -1,0 +1,1 @@
+For the cube3d application, be sure to select 68020/68881 codegeneration to take advantage of your FPU -- if you have one!This speeds things up quite a bit.

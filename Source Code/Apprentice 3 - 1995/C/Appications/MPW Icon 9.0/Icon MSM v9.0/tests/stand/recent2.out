@@ -1,0 +1,120 @@
+oops -- function char(-65536) 
+oops -- function char(-337) 
+oops -- function char(-1) 
+oops -- function char(256) 
+oops -- function char(4713) 
+oops -- function char(65536) 
+oops -- function char(123456) 
+oops -- function char("abc") 
+oops -- function char(&lcase) 
+oops -- function char(&errout) 
+oops -- function char(list_1(0)) 
+oops -- function ord("") 
+oops -- function ord("ab") 
+oops -- function ord("antidisestablishmentarianism") 
+oops -- function ord(47) 
+oops -- function ord(&output) 
+oops -- function ord(table_1(0)) 
+getenv failed
+getenv failed
+getenv failed
+getenv failed
+&ascii
+&cset
+&digits
+'123456789'
+&letters
+&letters
+&lcase
+list_2(1)
+list_3(2)
+list_4(3)
+list_5(4)
+list_6(0)
+p(1):
+   image(a):1
+   image(b):&null
+   image(c):list_9(0)
+   every write("\t", !c):
+p(1, 2):
+   image(a):1
+   image(b):2
+   image(c):list_10(0)
+   every write("\t", !c):
+p(1, 2, 3):
+   image(a):1
+   image(b):2
+   image(c):list_11(1)
+   every write("\t", !c):
+	3
+p(1, 2, 3, 4, 5):
+   image(a):1
+   image(b):2
+   image(c):list_12(3)
+   every write("\t", !c):
+	3
+	4
+	5
+q(1, 2):
+   every write("\t", !a):
+	1
+	2
+t := table("default") --> table_2(0)
+   *t --> 0
+   t["xyz"] --> "default"
+   member(t, "xyz") --> failure
+   contents of t:
+
+insert(t, 3, 4) --> table_2(1)
+insert(t, "xyz", "abc") --> table_2(2)
+insert(t, &digits) --> table_2(3)
+   *t --> 3
+   t["xyz"] --> "abc"
+   member(t, "xyz") --> "xyz"
+   contents of t:
+	3 : 4
+	"xyz" : "abc"
+	&digits : &null
+
+t["xyz"] := "new value" --> "new value"
+   *t --> 3
+   t["xyz"] --> "new value"
+   member(t, "xyz") --> "xyz"
+   contents of t:
+	3 : 4
+	"xyz" : "new value"
+	&digits : &null
+
+insert(t, "xyz", "def") --> table_2(3)
+   *t --> 3
+   t["xyz"] --> "def"
+   member(t, "xyz") --> "xyz"
+   contents of t:
+	3 : 4
+	"xyz" : "def"
+	&digits : &null
+
+delete(t, "xyz") -- > table_2(2)
+   *t --> 2
+   t["xyz"] --> "default"
+   member(t, "xyz") --> failure
+   contents of t:
+	3 : 4
+	&digits : &null
+
+delete(t, "xyz") -- > table_2(2)
+   *t --> 2
+   t["xyz"] --> "default"
+   member(t, "xyz") --> failure
+   contents of t:
+	3 : 4
+	&digits : &null
+
+t := table("default") --> table_3(0)
+t["one"] := 1 --> 1
+t[] --> "default"
+x := r1([t, [1, [2, 3]]]) --> record r1_1(1)
+x[1, 1, "one"] --> 1
+x[1, 2, 2, 2] --> 3
+x[1, 2] := ["abcd", "defg"] --> list_23(2)
+x[1, 2, 2, 2] --> "e"

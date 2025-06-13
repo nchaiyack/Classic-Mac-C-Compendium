@@ -1,0 +1,2276 @@
+{\rtf0\mac\deff21{\fonttbl{\f0 \fswiss Chicago;}{\f22 \fmodern Courier;}{\f14836 \fnil Futura;}{\f3 \fswiss Geneva;}{\f14834 \fnil H Futura Heavy;}{\f21 \fswiss Helvetica;}{\f4 \fmodern Monaco;}{\f5735 \fnil MPW;}{\f2 \froman New York;}{\f16 \froman Palatino;}{\f23 \ftech Symbol;}{\f20 \froman Times;}{\f4950 \fnil TTYFont;}{\f202 \fnil Voyager;}{\f13 \ftech Zapf Dingbats;}{\f32525 \fnil VT100;}}
+{\colortbl\red255\green255\blue255;\red0\green0\blue0;\red255\green0\blue0;\red0\green255\blue0;\red0\green0\blue255;\red0\green255\blue255;\red255\green0\blue255;\red255\green255\blue0;}
+{\stylesheet{\sbasedon222\snext Normal;}}
+\paperw12240\paperh15840\margt1440\margb1440\margl1800\margr1800\widowctrl\ftnbj\ftnrestart\ftnstart1\pgnstart1\deftab720\sectd\linemod0\linex0\cols1\colsx0
+\pard\plain\pard\ql\li700{\plain\f16\fs144\cf1 \tab }
+{\plain\b\f16\fs144\cf1 G}
+{\plain\f16\fs96\cf1 rand\par }
+\pard\ql\li1420{\plain\f16\fs144\cf1 \tab }
+{\plain\b\f16\fs144\cf1 U}
+{\plain\f16\fs96\cf1 nified\par }
+\pard\ql\li2160{\plain\b\f16\fs144\cf1 S}
+{\plain\f16\fs96\cf1 ocket\par }
+\pard\ql\li2860{\plain\b\f16\fs144\cf1 I}
+{\plain\f16\fs96\cf1 nterface\par }
+\pard\ql{\plain\f20\fs72\cf1 \par }
+\pard\qc{\plain\b\f16\fs96\cf1 User\'d5s Manual\par }
+\pard\qc\tqc\tx2520\tx3140{\plain\f16\fs36\cf1 \par }
+\pard\qc\tqc\tx2520\tx3140{\plain\f16\fs48\cf1 Version 1.55\par }
+\pard\qc\tqc\tx2520\tx3140{\plain\f16\fs48\cf1 Last Updated\: 20Apr95\par }
+\pard\qc\tqc\tx2520\tx3140{\plain\f16\fs48\cf1 \par }
+\pard\qc\tqc\tx2520\tx3140{\plain\f16\fs36\cf1 Matthias Neeracher <neeri@iis.ee.ethz.ch>\par }
+\pard\qc\tqc\tx2520\tx3140{\plain\f16\fs36\cf1 \page }
+\pard\ql\sb240\sa240{\plain\b\f16\fs48\cf1 Introduction\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  is an extension and partial replacement of the }
+{\plain\f22\fs20\cf1 MPW}
+{\plain\f16\fs24\cf1  runtime library. Its main objective is to provide a more or less simple and consistent interface across the following }
+{\plain\i\f16\fs24\cf1 communication domains}
+{\plain\f16\fs24\cf1 \:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  Files }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Ordinary Macintosh files and }
+{\plain\f22\fs20\cf1 MPW}
+{\plain\f16\fs24\cf1  pseudo devices.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  Unix }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Memory based communication within a single machine (This name exists for historical reasons).\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  Appletalk }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f22\fs20\cf1 ADSP}
+{\plain\f16\fs24\cf1  (and possibly in the future }
+{\plain\f22\fs20\cf1 DDP}
+{\plain\f16\fs24\cf1 ) communication over a network.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  PPC }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Local and remote connections with the System 7 PPC Toolbox\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  Internet }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f22\fs20\cf1 TCP}
+{\plain\f16\fs24\cf1  and }
+{\plain\f22\fs20\cf1 UDP}
+{\plain\f16\fs24\cf1  connections over }
+{\plain\f22\fs20\cf1 MacTCP}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  PAP }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Connections with the }
+{\plain\f22\fs20\cf1 Printer Access Protocol}
+{\plain\f16\fs24\cf1 , typically to a networked PostScript printer.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Additionally, }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  adds some }
+{\plain\f22\fs20\cf1 UNIX}
+{\plain\f16\fs24\cf1  library calls dealing with files which were missing, like }
+{\plain\i\f22\fs20\cf1 chdir()}
+{\plain\f16\fs24\cf1 , }
+{\plain\i\f22\fs20\cf1 getcwd()}
+{\plain\f16\fs24\cf1 , }
+{\plain\i\f22\fs20\cf1 symlink()}
+{\plain\f16\fs24\cf1 , and }
+{\plain\i\f22\fs20\cf1 readlink()}
+{\plain\f16\fs24\cf1 , and changes a few other library calls to behave more like their }
+{\plain\f22\fs20\cf1 UNIX}
+{\plain\f16\fs24\cf1  counterparts.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 The most recent version of }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  may be obtained by anonymous ftp from }
+{\plain\f22\fs20\cf1 ftp.switch.ch}
+{\plain\f16\fs24\cf1  in the directory }
+{\plain\f22\fs20\cf1 software/mac/src/mpw_c}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 There is also a mailing list devoted to discussions about }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1 . You can join the list by sending email to <}
+{\plain\i\f16\fs24\cf1 gusi-request@iis.ee.ethz.ch}
+{\plain\f16\fs24\cf1 >.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 \page }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 User's Manual\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 For ease of access, the manual has been split up into a number of sections\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab GUSI_Install Installing and using the GUSI headers and libraries\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab GUSI_Common Routines common to all GUSI socket families\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab GUSI_Files Routines specific to the file system\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab GUSI_Unix Routines specific to memory based (UNIX) sockets\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab GUSI_Appletalk Routines specific to AppleTalk sockets\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab GUSI_PPC Routines specific to PPC Toolbox sockets\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab GUSI_INET Routines specific to internet sockets\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab GUSI_PAP Routines specific to PAP sockets\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab GUSI_Misc Miscellaneous routines\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab GUSI_Advanced Advanced techniques\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Copying\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Copyright (C) 1992-1995 Matthias Neeracher\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Permission is granted to anyone to use this software for any purpose on any computer system, and to redistribute it freely, subject to the following restrictions\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab The author is not responsible for the consequences of use of this software, no matter how awful, even if they arise from defects in it.\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab The origin of this software must not be misrepresented, either by explicit claim or by omission.\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab Altered versions must be plainly marked as such, and must not be misrepresented as being the original software.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 \page }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Design Objectives\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  was developed according to at least three mutually conflicting standards\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab The definition of the existing C library.\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab The behavior of the corresponding UNIX calls. While my original guideline was a set of discarded SunOS manuals, my current reference point is the ANSI/IEEE POSIX standard (A borrowed copy of the 1988 edition, if you really want to know; feel free to donat}
+{\plain\f16\fs24\cf1 e me a copy of the 1992 edition). The behaviour of the socket calls is, of course, modeled after their BSD implementation.\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab The author's judgement, prejudices, laziness, and limited resources.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 In general, the behavior of the corresponding POSIX/BSD library call was implemented, since this faciliates porting UNIXish utilities to the Macintosh.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Acknowledgements\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 I would like to thank all who have agreed to beta test this code and who have provided feedback.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 The TCP/IP code in }
+{\plain\f22\fs20\cf1 GUSIINET.cp}
+{\plain\f16\fs24\cf1 , }
+{\plain\f22\fs20\cf1 GUSITCP.cp}
+{\plain\f16\fs24\cf1 , and }
+{\plain\f22\fs20\cf1 GUSIUDP.cp}
+{\plain\f16\fs24\cf1  is derived from a socket library written by Charlie Reiman <}
+{\plain\i\f16\fs24\cf1 reiman@talisman.kaleida.com}
+{\plain\f16\fs24\cf1 >, which in turn is based on code written by Tom Milligan <}
+{\plain\i\f16\fs24\cf1 milligan@madhaus.utcs.utoronto.ca}
+{\plain\f16\fs24\cf1 >.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 The PAP code in }
+{\plain\f22\fs20\cf1 GUSIPAP.cp}
+{\plain\f16\fs24\cf1  is derived from code written by Sak Wathanasin <}
+{\plain\i\f16\fs24\cf1 sw@nan.co.uk}
+{\plain\f16\fs24\cf1 >.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Martin Heller <}
+{\plain\i\f16\fs24\cf1 heller@gis.geogr.unizh.ch}
+{\plain\f16\fs24\cf1 > suggested to move the documentation to HTML and wrote the HTML to RTF converter. Ed Draper <}
+{\plain\i\f16\fs24\cf1 draper@usis.com}
+{\plain\f16\fs24\cf1 > provided the PDF translation.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Many of the header files in the }
+{\plain\f22\fs20\cf1 \:include\:}
+{\plain\f16\fs24\cf1  subdirectory are borrowed from BSD 4.4-lite, therefore\: This product includes software developed by the University of California, Berkeley and its contributors.\par }
+\pard\ql\sa360{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa360{\plain\f16\fs24\cf1 \page }
+\pard\ql\sb240\sa240{\plain\b\f16\fs48\cf1 Installing and using GUSI\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 This section discusses how you can install }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  on your disk and use it for your programs.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 To install }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1 , change in the MPW Shell to its directory and type\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    BuildProgram Install <Enter>\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 This will install all necessary files in }
+{\plain\f22\fs20\cf1 \{CIncludes\}}
+{\plain\f16\fs24\cf1 , }
+{\plain\f22\fs20\cf1 \{CLibraries\}}
+{\plain\f16\fs24\cf1 , and }
+{\plain\f22\fs20\cf1 \{RIncludes\}}
+{\plain\f16\fs24\cf1 , respectively. It will also install }
+{\plain\f22\fs20\cf1 /etc/services}
+{\plain\f16\fs24\cf1  in your preferences folder, prompting you if you have an older version there.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 This requires that you have MPW Perl installed, which is available in the same ftp directory as }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 To use }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1 , include one or more of the following header files in your program\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  GUSI.h }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The main file. This includes almost everything else.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  TFileSpec.h }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f22\fs20\cf1 FSSpec}
+{\plain\f16\fs24\cf1  manipulation routines.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  dirent.h }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Routines to access all entries in a directory.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  netdb.h }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Looking up TCP/IP host names.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  netinet/in.h }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The address format for TCP/IP sockets.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  sys/errno.h }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The errors codes returned by GUSI routines.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  sys/ioctl.h }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Codes to pass to }
+{\plain\i\f22\fs20\cf1 ioctl()}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  sys/socket.h }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Data types for socket calls.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  sys/stat.h }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Getting information about files.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  sys/types.h }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 More data types.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  sys/uio.h }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Data types for scatter/gather calls.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  sys/un.h }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The address format for Unix domain sockets.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  unistd.h }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Prototypes for most routines defined in GUSI.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 GUSI expects the Macintosh Toolbox to be initialized. This will happen automatically under some circumstances (if you're writing an }
+{\plain\f22\fs20\cf1 MPW}
+{\plain\f16\fs24\cf1  tool with the non-CodeWarrior compilers or if you are linking with }
+{\plain\f22\fs20\cf1 SIOW}
+{\plain\f16\fs24\cf1  and are forcing a write to standard output or standard error before you are using any non-file }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  routines, but it's often wiser to do an explicit initialization anyway.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 You should init the Toolbox in the following way\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       InitGraf((Ptr) &qd.thePort);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       InitFonts();\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       InitWindows();\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       InitMenus();\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       TEInit();\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       InitDialogs(nil);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       InitCursor();\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 You have to link your program with the }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  library. The exact procedure differs slightly between the }
+{\plain\f22\fs20\cf1 MPW C}
+{\plain\f16\fs24\cf1  version, the }
+{\plain\f22\fs20\cf1 PPCC}
+{\plain\f16\fs24\cf1  version, and the }
+{\plain\f22\fs20\cf1 CodeWarrior}
+{\plain\f16\fs24\cf1  version.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Linking with MPW C GUSI\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 For the }
+{\plain\f22\fs20\cf1 MPW C}
+{\plain\f16\fs24\cf1  version, you should link with }
+{\plain\f22\fs20\cf1 \{CLibraries\}GUSI.o}
+{\plain\f16\fs24\cf1 , and optionally one or several }
+{\plain\i\f16\fs24\cf1 configuration files}
+{\plain\f16\fs24\cf1 . Currently, the following configuration files exist\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  GUSI_Everything.cfg }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Include code for everything defined in }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  GUSI_Appletalk.cfg }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Include code for AppleTalk sockets.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  GUSI_Internet.cfg }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Include code for MacTCP sockets.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  GUSI_PAP.cfg }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Include code for PAP sockets.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  GUSI_PPC.cfg }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Include code for PPC sockets.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  GUSI_Unix.cfg }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Include code for Unix domain sockets.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 If you don't specify any configuration files, only the file related routines will be included. It's important that these files appear }
+{\plain\i\f16\fs24\cf1 before}
+{\plain\f16\fs24\cf1  all other libraries.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Linking with }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  doesn't free you from linking in the standard libraries, typically\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \{Libraries\}Runtime.o\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \{Libraries\}Interface.o\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \{CLibraries\}StdCLib.o\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \{Libraries\}ToolLibs.o\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Linking with PPCC GUSI\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 For the }
+{\plain\f22\fs20\cf1 PPCC}
+{\plain\f16\fs24\cf1  version, you should link with }
+{\plain\f22\fs20\cf1 \{PPCLibraries\}GUSI.xcoff}
+{\plain\f16\fs24\cf1  and if you are linking with SIOW, also with }
+{\plain\f22\fs20\cf1 \{PPCLibraries\}GUSI.xcoff}
+{\plain\f16\fs24\cf1 . The }
+{\plain\f22\fs20\cf1 PPCC}
+{\plain\f16\fs24\cf1  version currently doesn't support flexible configuration. Like with the }
+{\plain\f22\fs20\cf1 MPW C}
+{\plain\f16\fs24\cf1  version, }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  should be first in your link, and you have to link with the standard libraries.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  for }
+{\plain\f22\fs20\cf1 PPCC}
+{\plain\f16\fs24\cf1  makes use of Code Fragment Manager version numbers, therefore you have to specify the correct version number for }
+{\plain\f22\fs20\cf1 MakePEF}
+{\plain\f16\fs24\cf1  with the }
+{\plain\f22\fs20\cf1 -l}
+{\plain\f16\fs24\cf1  option.\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    -l "GUSI.xcoff=GUSI#0x01508000-0x01508000"\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 In case you were wondering, this encodes the version number (1.5.0) the same way as the header of a }
+{\plain\f22\fs20\cf1 'vers'}
+{\plain\f16\fs24\cf1  resource.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Linking with CodeWarrior GUSI\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 The easiest way to get started with a }
+{\plain\f22\fs20\cf1 CodeWarrior}
+{\plain\f16\fs24\cf1  }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  application is by cloning from the appropriate project stationery in the Lib directory. The principle of operation is the same as with the other versions\: First }
+{\plain\f22\fs20\cf1 GUSI.Lib}
+{\plain\f16\fs24\cf1 , and then the standard libraries have to be specified. To create an MPW tool with the CodeWarrior compilers, you additionally have to link with }
+{\plain\f22\fs20\cf1 GUSIMPW.Lib}
+{\plain\f16\fs24\cf1  before }
+{\plain\f22\fs20\cf1 GUSI.Lib}
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 The }
+{\plain\f22\fs20\cf1 CodeWarrior}
+{\plain\f16\fs24\cf1  version uses a new configuration mechanism that will eventually be adapted in the other versions as well\: At the beginning of your application, call }
+{\plain\f22\fs20\cf1 GUSISetup}
+{\plain\f16\fs24\cf1  for the components you need. Currently, the following components are defined\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  GUSISetup(GUSIwithSIOUXSockets) }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Allows use of the }
+{\plain\f22\fs20\cf1 SIOUX}
+{\plain\f16\fs24\cf1  library for standard I/O.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  GUSISetup(GUSIwithAppleTalkSockets) }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Includes ADSP sockets.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  GUSISetup(GUSIwithInternetSockets) }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Includes TCP and UDP sockets.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  GUSISetup(GUSIwithPAPSockets) }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Includes PAP sockets.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  GUSISetup(GUSIwithPPCSockets) }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Includes PPC sockets.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  GUSISetup(GUSIwithUnixSockets) }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Includes Unix domain sockets.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 If you call }
+{\plain\i\f22\fs20\cf1 GUSIDefaultSetup()}
+{\plain\f16\fs24\cf1  instead, all of the above will be included. These calls should be included right at the beginning of your }
+{\plain\i\f22\fs20\cf1 main()}
+{\plain\f16\fs24\cf1  procedure.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Warning messages, Rezzing\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 You will get lots of warning messages about duplicate definitions, but that's ok (Which means I can't do anything about it).\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 You should also rez your program with }
+{\plain\f22\fs20\cf1 GUSI.r}
+{\plain\f16\fs24\cf1 . The section }
+{\plain\i\f16\fs24\cf1 GUSI_Advanced/Resources}
+{\plain\f16\fs24\cf1  discusses when and how to add your own configuration resource to customize }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  defaults. Don't forget that your }
+{\plain\f22\fs20\cf1 PowerPC}
+{\plain\f16\fs24\cf1  programs also need a }
+{\plain\f22\fs20\cf1 cfrg}
+{\plain\f16\fs24\cf1  resource.\par }
+\pard\ql\sa360{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa360{\plain\f16\fs24\cf1 \page }
+\pard\ql\sb240\sa240{\plain\b\f16\fs48\cf1 Overview\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 This section discusses the routines common to all, or almost all communication domains. These routines return }
+{\plain\f22\fs20\cf1 -1}
+{\plain\f16\fs24\cf1  if an error occurred, and set the variable }
+{\plain\f22\fs20\cf1 errno}
+{\plain\f16\fs24\cf1  to an error code. On success, the routines return }
+{\plain\f22\fs20\cf1 0}
+{\plain\f16\fs24\cf1  or some positive value.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Here's a list of all error codes and their typical explanations. The most important of them are repeated for the individual calls.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EACCES }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Permission denied\: An attempt was made to access a file in a way forbidden by its file access permissions, e.g., to }
+{\plain\i\f22\fs20\cf1 open()}
+{\plain\f16\fs24\cf1  a locked file for writing.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EADDRINUSE }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Address already in use\: }
+{\plain\i\f22\fs20\cf1 bind()}
+{\plain\f16\fs24\cf1  was called with an address already in use by another socket.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EADDRNOTAVAIL }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Can't assign requested address\: }
+{\plain\i\f22\fs20\cf1 bind()}
+{\plain\f16\fs24\cf1  was called with an address which this socket can't assume, e.g., a TCP/IP address whose }
+{\plain\f22\fs20\cf1 in_addr}
+{\plain\f16\fs24\cf1  specifies a different host.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EAFNOSUPPORT }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Address family not supported\: You haven't linked with this socket family or have specified a nonexisting family, e.g., AF_CHAOS.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EALREADY }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Operation already in progress, e.g., }
+{\plain\i\f22\fs20\cf1 connect()}
+{\plain\f16\fs24\cf1  was called twice in a row for a nonblocking socket.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EBADF }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Bad file descriptor\: The file descriptor you specified is not open.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EBUSY }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Request for a system resource already in incompatible use, e.g., attempt to delete an open file.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ECONNREFUSED }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Connection refused, e.g. you specified an unused port for a }
+{\plain\i\f22\fs20\cf1 connect()}
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EEXIST }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 File exists, and you tried to open it with }
+{\plain\f22\fs20\cf1 O_EXCL}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EHOSTDOWN }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Remote host is down.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EHOSTUNREACH }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 No route to host.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EINPROGRESS }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Operation now in progress. This is *not* an error, but returned from nonblocking operations, e.g., nonblocking }
+{\plain\i\f22\fs20\cf1 connect()}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EINTR }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Interrupted system call\: The user pressed Command-. or }
+{\plain\i\f22\fs20\cf1 alarm()}
+{\plain\f16\fs24\cf1  timed out.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EINVAL }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Invalid argument or various other error conditions.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EIO }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Input/output error.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EISCONN }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Socket is already connected.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EISDIR }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Is a directory, e.g. you tried to }
+{\plain\i\f22\fs20\cf1 open()}
+{\plain\f16\fs24\cf1  a directory.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EMFILE }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Too many open files.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EMSGSIZE }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Message too long, e.g. for an UDP }
+{\plain\i\f22\fs20\cf1 send()}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ENAMETOOLONG }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 File name too long.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ENETDOWN }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Network is down, e.g., Appletalk is turned off in the chooser.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ENFILE }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Too many open files in system.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ENOBUFS }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 No buffer space available.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ENOENT }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 No such file or directory.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ENOEXEC }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Severe error with the PowerPC standard library.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ENOMEM }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Cannot allocate memory.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ENOSPC }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 No space left on device.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ENOTCONN }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Socket is not connected, e.g., neither }
+{\plain\i\f22\fs20\cf1 connect()}
+{\plain\f16\fs24\cf1  nor }
+{\plain\i\f22\fs20\cf1 accept()}
+{\plain\f16\fs24\cf1  has been called successfully for it.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ENOTDIR }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Not a directory.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ENOTEMPTY }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Directory not empty, e.g., attempt to delete nonempty directory.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ENXIO }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Device not configured, e.g., MacTCP control panel misconfigured.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EOPNOTSUPP }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Operation not supported on socket, e.g., }
+{\plain\i\f22\fs20\cf1 sendto()}
+{\plain\f16\fs24\cf1  on a stream socket.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EPFNOSUPPORT }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Protocol family not supported, i.e., attempted use of ADSP on a machine that has AppleTalk but not ADSP.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EPROTONOSUPPORT }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Protocol not supported, e.g., you called }
+{\plain\i\f22\fs20\cf1 getprotobyname()}
+{\plain\f16\fs24\cf1  with neither "tcp" nor "udp" specified.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ERANGE }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Result too large, e.g., }
+{\plain\i\f22\fs20\cf1 getcwd()}
+{\plain\f16\fs24\cf1  called with insufficient buffer.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EROFS }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Read-only file system.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ESHUTDOWN }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Can't send after socket shutdown.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ESOCKTNOSUPPORT }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Socket type not supported, e.g., datagram PPC toolbox sockets.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ESPIPE }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Illegal seek, e.g., }
+{\plain\i\f22\fs20\cf1 lseek()}
+{\plain\f16\fs24\cf1  called for a TCP socket.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EWOULDBLOCK }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Nonblocking operation would block.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EXDEV }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Cross-device link, e.g. }
+{\plain\i\f22\fs20\cf1 FSpSmartMove()}
+{\plain\f16\fs24\cf1  attempted to move file to a different volume.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Creating and destroying sockets\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 A socket is created with }
+{\plain\i\f22\fs20\cf1 socket()}
+{\plain\f16\fs24\cf1  and destroyed with }
+{\plain\i\f22\fs20\cf1 close()}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int socket(int af, int type, int protocol)}
+{\plain\f16\fs24\cf1  creates an endpoint for communication and returns a descriptor. }
+{\plain\f22\fs20\cf1 af}
+{\plain\f16\fs24\cf1  specifies the communication domain to be used. Valid values are\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  AF_UNIX }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Communication internal to a single Mac.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  AF_INET }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 TCP/IP, using }
+{\plain\f22\fs20\cf1 MacTCP}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  AF_APPLETALK }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Appletalk, using ADSP.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  AF_PPC }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The Program-to-Program Communication Toolbox.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 type}
+{\plain\f16\fs24\cf1  specifies the semantics of the communication. The following two types are available\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  SOCK_STREAM }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 A two way, reliable, connection based byte stream.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  SOCK_DGRAM }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Connectionless, unreliable messages of a fixed maximum length.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 protocol}
+{\plain\f16\fs24\cf1  would be used to specify an alternate protocol to be used with a socket. In }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1 , however, this parameter is always ignored.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Error codes\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EINVAL }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The }
+{\plain\f22\fs20\cf1 af}
+{\plain\f16\fs24\cf1  you specified doesn't exist.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EMFILE }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The descriptor table is full.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 void close(int fd)}
+{\plain\f16\fs24\cf1  removes the access path associated with the descriptor, and closes the file or socket if the last access path referring to it was removed.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Prompting the user for an address\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 To give the user the opportunity of entering an address for a socket to be bound or connected to, the }
+{\plain\i\f22\fs20\cf1 choose()}
+{\plain\f16\fs24\cf1  routine was introduced in }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1 . This routine has no counterpart in UNIX implementations.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 C puts up a modal dialog prompting the user to choose an address. }
+{\plain\f22\fs20\cf1 dom}
+{\plain\f16\fs24\cf1  specifies the communication domain, like in }
+{\plain\f22\fs20\cf1 socket}
+{\plain\f16\fs24\cf1 . }
+{\plain\f22\fs20\cf1 type}
+{\plain\f16\fs24\cf1  may be used by future communication domains to further differentiate within a domain, but is ignored by current domains. }
+{\plain\f22\fs20\cf1 prompt}
+{\plain\f16\fs24\cf1  is a message that will appear in the dialog. }
+{\plain\f22\fs20\cf1 constraint}
+{\plain\f16\fs24\cf1  may be used to restrict the types of acceptable addresses (For more information, consult the section of the communication domain). The following two }
+{\plain\f22\fs20\cf1 flags}
+{\plain\f16\fs24\cf1  are defined for most socket types\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  CHOOSE_DEFAULT }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Offer the contents passed in }
+{\plain\f22\fs20\cf1 name}
+{\plain\f16\fs24\cf1  as the default choice.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  CHOOSE_NEW }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Prompt for a new address, suitable for passing to }
+{\plain\i\f22\fs20\cf1 bind()}
+{\plain\f16\fs24\cf1 . Default is prompting for an existing address, to be used by }
+{\plain\i\f22\fs20\cf1 connect()}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 name}
+{\plain\f16\fs24\cf1  on input contains a default address if CHOOSE_DEFAULT is set. On output, it is set to the address chosen.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Error codes\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EINVAL }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 One of the }
+{\plain\f22\fs20\cf1 flags}
+{\plain\f16\fs24\cf1  is not (yet) supported by this communications domain. This error is never reported for CHOOSE_DEFAULT , which might get silently ignored.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EINTR }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The user chose "Cancel" in the dialog.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Establishing connections between sockets\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Before you can transmit data on a stream socket, it must be connected to a peer socket. Connection establishment is asymmetrical\: The server socket registers its address with }
+{\plain\i\f22\fs20\cf1 bind()}
+{\plain\f16\fs24\cf1 , calls }
+{\plain\i\f22\fs20\cf1 listen()}
+{\plain\f16\fs24\cf1  to indicate its willingness to accept connections and accepts them by calling }
+{\plain\i\f22\fs20\cf1 accept()}
+{\plain\f16\fs24\cf1 . The client socket, after possibly having registered its address with }
+{\plain\i\f22\fs20\cf1 bind()}
+{\plain\f16\fs24\cf1  (This is not necessary for all socket families as some will automatically assign an address) calls }
+{\plain\i\f22\fs20\cf1 connect()}
+{\plain\f16\fs24\cf1  to establish a connection with a server.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 It is possible, but not required, to call }
+{\plain\i\f22\fs20\cf1 connect()}
+{\plain\f16\fs24\cf1  for datagram sockets.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int bind(int s, const struct sockaddr *name, int namelen)}
+{\plain\f16\fs24\cf1  binds a socket to its address. The format of the address is different for every socket family. For some families, you may ask the user for an address by calling }
+{\plain\i\f22\fs20\cf1 choose()}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Error codes\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EAFNOSUPPORT }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f22\fs20\cf1 name}
+{\plain\f16\fs24\cf1  specifies an illegal address family for this socket.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EADDRINUSE }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 There is already another socket with this address.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int listen(int s, int qlen)}
+{\plain\f16\fs24\cf1  turns a socket into a listener. }
+{\plain\f22\fs20\cf1 qlen}
+{\plain\f16\fs24\cf1  determines how many sockets can concurrently wait for a connection, but is ignored for almost all socket families.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int accept(int s, struct sockaddr *addr, int *addrlen)}
+{\plain\f16\fs24\cf1  accepts a connection for a socket }
+{\plain\i\f16\fs24\cf1 on a new socket}
+{\plain\f16\fs24\cf1  and returns the descriptor of the new socket. If }
+{\plain\f22\fs20\cf1 addr}
+{\plain\f16\fs24\cf1  is not }
+{\plain\f22\fs20\cf1 NULL}
+{\plain\f16\fs24\cf1 , the address of the connecting socket will be assigned to it.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 You can find out if a connection is pending by calling }
+{\plain\i\f22\fs20\cf1 select()}
+{\plain\f16\fs24\cf1  to find out if the socket is ready for }
+{\plain\i\f16\fs24\cf1 reading}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Error codes\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ENOTCONN }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 You did not call }
+{\plain\i\f22\fs20\cf1 listen()}
+{\plain\f16\fs24\cf1  for this socket.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EWOULDBLOCK }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The socket is nonblocking and no socket is trying to connect.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int connect(int s, const struct sockaddr *addr, int addrlen)}
+{\plain\f16\fs24\cf1  tries to connect to the socket whose address is in }
+{\plain\f22\fs20\cf1 addr}
+{\plain\f16\fs24\cf1 . If the socket is nonblocking and the connection cannot be made immediately, }
+{\plain\i\f22\fs20\cf1 connect()}
+{\plain\f16\fs24\cf1  returns EINPROGRESS . You can find out if the connection has been established by calling }
+{\plain\i\f22\fs20\cf1 select()}
+{\plain\f16\fs24\cf1  to find out if the socket is ready for }
+{\plain\i\f16\fs24\cf1 writing}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Error codes\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EAFNOSUPPORT }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f22\fs20\cf1 name}
+{\plain\f16\fs24\cf1  specifies an illegal address family for this socket.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EISCONN }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The socket is already connected.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EADDRNOAVAIL }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 There is no socket with the given address.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ECONNREFUSED }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The socket refused the connection.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EINPROGRESS }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The socket is nonblocking and the connection is being established.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Transmitting data between sockets\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 You can write data to a socket using }
+{\plain\i\f22\fs20\cf1 write()}
+{\plain\f16\fs24\cf1 , }
+{\plain\i\f22\fs20\cf1 writev()}
+{\plain\f16\fs24\cf1 , }
+{\plain\i\f22\fs20\cf1 send()}
+{\plain\f16\fs24\cf1 , }
+{\plain\i\f22\fs20\cf1 sendto()}
+{\plain\f16\fs24\cf1 , or }
+{\plain\i\f22\fs20\cf1 sendmsg()}
+{\plain\f16\fs24\cf1 . You can read data from a socket using }
+{\plain\i\f22\fs20\cf1 read()}
+{\plain\f16\fs24\cf1 , }
+{\plain\i\f22\fs20\cf1 readv()}
+{\plain\f16\fs24\cf1 , }
+{\plain\i\f22\fs20\cf1 recv()}
+{\plain\f16\fs24\cf1 , }
+{\plain\i\f22\fs20\cf1 recvfrom()}
+{\plain\f16\fs24\cf1 , or }
+{\plain\i\f22\fs20\cf1 recvmsg()}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int read(int s, char *buffer, unsigned buflen)}
+{\plain\f16\fs24\cf1  reads up to }
+{\plain\f22\fs20\cf1 buflen}
+{\plain\f16\fs24\cf1  bytes from the socket. }
+{\plain\i\f22\fs20\cf1 read()}
+{\plain\f16\fs24\cf1  for sockets differs from }
+{\plain\i\f22\fs20\cf1 read()}
+{\plain\f16\fs24\cf1  for files mainly in that it may read fewer than the requested number of bytes without waiting for the rest to arrive.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Error codes\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EWOULDBLOCK }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The socket is nonblocking and there is no data immediately available.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int readv(int s, const struct iovec *iov, int count)}
+{\plain\f16\fs24\cf1  performs the same action, but scatters the input data into the }
+{\plain\f22\fs20\cf1 count}
+{\plain\f16\fs24\cf1  buffers of the }
+{\plain\f22\fs20\cf1 iov}
+{\plain\f16\fs24\cf1 Jarray, always filling one buffer completely before proceeding to the next. }
+{\plain\f22\fs20\cf1 iovec}
+{\plain\f16\fs24\cf1  is defined as follows\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     struct iovec \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       caddr_t  iov_base;   /* Address of this buffer */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       int   iov_len;       /* Length of the buffer */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \};\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int recv(int s, void *buffer, int buflen, int flags)}
+{\plain\f16\fs24\cf1  is identical to }
+{\plain\i\f22\fs20\cf1 read()}
+{\plain\f16\fs24\cf1 , except for the }
+{\plain\f22\fs20\cf1 flags}
+{\plain\f16\fs24\cf1  parameter. If the }
+{\plain\f22\fs20\cf1 MSG_OOB}
+{\plain\f16\fs24\cf1  flag is set for a stream socket that supports out-of-band data, }
+{\plain\i\f22\fs20\cf1 recv()}
+{\plain\f16\fs24\cf1  reads out-of-band data.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int recvfrom(int s, void *buffer, int buflen, int flags, void *from, int *fromlen)}
+{\plain\f16\fs24\cf1  is the equivalent of }
+{\plain\i\f22\fs20\cf1 recv()}
+{\plain\f16\fs24\cf1  for unconnected datagram sockets. If }
+{\plain\f22\fs20\cf1 from}
+{\plain\f16\fs24\cf1  is not }
+{\plain\f22\fs20\cf1 NULL}
+{\plain\f16\fs24\cf1 , it will be set to the address of the sender of the message.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int recvmsg(int s, struct msghdr *msg, int flags)}
+{\plain\f16\fs24\cf1  is the most general routine, combining the possibilities of }
+{\plain\i\f22\fs20\cf1 readv()}
+{\plain\f16\fs24\cf1  and }
+{\plain\i\f22\fs20\cf1 recvfrom()}
+{\plain\f16\fs24\cf1 . }
+{\plain\f22\fs20\cf1 msghdr}
+{\plain\f16\fs24\cf1  is defined as follows\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     struct msghdr \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       caddr_t  msg_name;            /* Like from in recvfrom() */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       int      msg_namelen;         /* Like fromlen in recvfrom() */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       struct   iovec *msg_iov;      /* Scatter/gather array */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       int      msg_iovlen;          /* Number of elements in msg_iov */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       caddr_t  msg_accrights;       /* Access rights sent/received. Not used in GUSI */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       int      msg_accrightslen;\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \};\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int write(int s, char *buffer, unsigned buflen)}
+{\plain\f16\fs24\cf1  writes up to }
+{\plain\f22\fs20\cf1 buflen}
+{\plain\f16\fs24\cf1  bytes to the socket. As opposed to }
+{\plain\i\f22\fs20\cf1 read()}
+{\plain\f16\fs24\cf1 , }
+{\plain\i\f22\fs20\cf1 write()}
+{\plain\f16\fs24\cf1  for nonblocking sockets always blocks until all bytes are written or an error occurs.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Error codes\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EWOULDBLOCK }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The socket is nonblocking and data can't be immediately written.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int writev(int s, const struct iovec *iov, int count)}
+{\plain\f16\fs24\cf1  performs the same action, but gathers the output data from the }
+{\plain\f22\fs20\cf1 count}
+{\plain\f16\fs24\cf1  buffers of the }
+{\plain\f22\fs20\cf1 iov}
+{\plain\f16\fs24\cf1 Jarray, always sending one buffer completely before proceeding to the next.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int send(int s, void *buffer, int buflen, int flags)}
+{\plain\f16\fs24\cf1  is identical to }
+{\plain\i\f22\fs20\cf1 write()}
+{\plain\f16\fs24\cf1 , except for the }
+{\plain\f22\fs20\cf1 flags}
+{\plain\f16\fs24\cf1  parameter. If the }
+{\plain\f22\fs20\cf1 MSG_OOB}
+{\plain\f16\fs24\cf1  flag is set for a stream socket that supports out-of-band data, }
+{\plain\i\f22\fs20\cf1 send()}
+{\plain\f16\fs24\cf1  sends an out-of-band message.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int sendto(int s, void *buffer, int buflen, int flags, void *to, int *tolen)}
+{\plain\f16\fs24\cf1  is the equivalent of }
+{\plain\i\f22\fs20\cf1 send()}
+{\plain\f16\fs24\cf1  for unconnected datagram sockets. The message will be sent to the socket whose address is given in }
+{\plain\f22\fs20\cf1 to}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int sendmsg(int s, const struct msghdr *msg, int flags)}
+{\plain\f16\fs24\cf1  combines the possibilities of }
+{\plain\i\f22\fs20\cf1 writev()}
+{\plain\f16\fs24\cf1  and }
+{\plain\i\f22\fs20\cf1 sendto()}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 I/O multiplexing\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 int select(int width, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout) examines the I/O descriptors specified by the bit masks }
+{\plain\f22\fs20\cf1 readfs}
+{\plain\f16\fs24\cf1 , }
+{\plain\f22\fs20\cf1 writefs}
+{\plain\f16\fs24\cf1 , and }
+{\plain\f22\fs20\cf1 exceptfs}
+{\plain\f16\fs24\cf1  to see if they are ready for reading, writing, or have an exception pending. }
+{\plain\f22\fs20\cf1 width}
+{\plain\f16\fs24\cf1  is the number of significant bits in the bit mask. }
+{\plain\i\f22\fs20\cf1 select()}
+{\plain\f16\fs24\cf1  replaces the bit masks with masks of those descriptors which are ready and returns the total number of ready descriptors. }
+{\plain\f22\fs20\cf1 timeout}
+{\plain\f16\fs24\cf1 , if not }
+{\plain\f22\fs20\cf1 NULL}
+{\plain\f16\fs24\cf1 , specifies the maximum time to wait for a descriptor to become ready. If }
+{\plain\f22\fs20\cf1 timeout}
+{\plain\f16\fs24\cf1  is }
+{\plain\f22\fs20\cf1 NULL}
+{\plain\f16\fs24\cf1 , }
+{\plain\i\f22\fs20\cf1 select()}
+{\plain\f16\fs24\cf1  waits indefinitely. To do a poll, pass a pointer to a zero }
+{\plain\f22\fs20\cf1 timeval}
+{\plain\f16\fs24\cf1  value in }
+{\plain\f22\fs20\cf1 timeout}
+{\plain\f16\fs24\cf1 . Any of }
+{\plain\f22\fs20\cf1 readfds}
+{\plain\f16\fs24\cf1 , }
+{\plain\f22\fs20\cf1 writefds}
+{\plain\f16\fs24\cf1 , or }
+{\plain\f22\fs20\cf1 exceptfds}
+{\plain\f16\fs24\cf1  may be given as }
+{\plain\f22\fs20\cf1 NULL}
+{\plain\f16\fs24\cf1  if no descriptors are of interest.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Error codes\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EBADF }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 One of the bit masks specified an invalid descriptor.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 The descriptor bit masks can be manipulated with the following macros\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     FD_ZERO(fds);    /* Clear all bits in *fds */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     FD_SET(n, fds);  /* Set bit n in *fds */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     FD_CLR(n, fds);  /* Clear bit n in *fds */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     FD_ISSET(n, fds);   /* Return 1 if bit n in *fds is set, else 0 */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Getting and changing properties of sockets\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 You can obtain the address of a socket and the socket it is connected to by calling }
+{\plain\i\f22\fs20\cf1 getsockname()}
+{\plain\f16\fs24\cf1  and }
+{\plain\i\f22\fs20\cf1 getpeername()}
+{\plain\f16\fs24\cf1  respectively. You can query and manipulate other properties of a socket by calling }
+{\plain\i\f22\fs20\cf1 ioctl()}
+{\plain\f16\fs24\cf1 , }
+{\plain\i\f22\fs20\cf1 fcntl()}
+{\plain\f16\fs24\cf1 , }
+{\plain\i\f22\fs20\cf1 getsockopt()}
+{\plain\f16\fs24\cf1 , and }
+{\plain\i\f22\fs20\cf1 setsockopt()}
+{\plain\f16\fs24\cf1 . You can create additional descriptors for a socket by calling }
+{\plain\i\f22\fs20\cf1 dup()}
+{\plain\f16\fs24\cf1  or }
+{\plain\i\f22\fs20\cf1 dup2()}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int getsockname(int s, struct sockaddr *name, int *namelen)}
+{\plain\f16\fs24\cf1  returns in }
+{\plain\f22\fs20\cf1 *name}
+{\plain\f16\fs24\cf1  the address the socket is bound to. }
+{\plain\f22\fs20\cf1 *namelen}
+{\plain\f16\fs24\cf1  should be set to the maximum length of }
+{\plain\f22\fs20\cf1 name}
+{\plain\f16\fs24\cf1  and will be set by }
+{\plain\i\f22\fs20\cf1 getsockname()}
+{\plain\f16\fs24\cf1  to the actual length of the name.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int getpeername(int s, struct sockaddr *name, int *namelen)}
+{\plain\f16\fs24\cf1  returns in }
+{\plain\f22\fs20\cf1 *name}
+{\plain\f16\fs24\cf1  the address of the socket that this socket is connected to. }
+{\plain\f22\fs20\cf1 *namelen}
+{\plain\f16\fs24\cf1  should be set to the maximum length of }
+{\plain\f22\fs20\cf1 name}
+{\plain\f16\fs24\cf1  and will be set by }
+{\plain\i\f22\fs20\cf1 getpeername()}
+{\plain\f16\fs24\cf1  to the actual length of the name.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int ioctl(int d, unsigned int request, long *argp)}
+{\plain\f16\fs24\cf1  performs various operations on the socket, depending on the }
+{\plain\f22\fs20\cf1 request}
+{\plain\f16\fs24\cf1 . The following codes are valid for all socket families\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  FIONBIO }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Make the socket blocking if the }
+{\plain\f22\fs20\cf1 long}
+{\plain\f16\fs24\cf1  pointed to by argp is }
+{\plain\f22\fs20\cf1 0}
+{\plain\f16\fs24\cf1 , else make it nonblocking.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  FIONREAD }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Set }
+{\plain\f22\fs20\cf1 *argp}
+{\plain\f16\fs24\cf1  to the number of bytes waiting to be read.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Error codes\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EOPNOTSUPP }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The operation you requested with }
+{\plain\f22\fs20\cf1 request}
+{\plain\f16\fs24\cf1  is not supported by this socket family.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int fcntl(int s, unsigned int cmd, int arg)}
+{\plain\f16\fs24\cf1  provides additional control over a socket. The following values of }
+{\plain\f22\fs20\cf1 cmd}
+{\plain\f16\fs24\cf1  are defined for all socket families\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  F_DUPFD }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Return a new descriptor greater than or equal to }
+{\plain\f22\fs20\cf1 arg}
+{\plain\f16\fs24\cf1  which refers to the same socket.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  F_GETFL }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Return descriptor status flags.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  F_SETFL }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Set descriptor status flags to }
+{\plain\f22\fs20\cf1 arg}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 The only status flag implemented is }
+{\plain\f22\fs20\cf1 FNDELAY}
+{\plain\f16\fs24\cf1  which is true if the socket is nonblocking.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Error codes\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  EOPNOTSUPP }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The operation you requested with }
+{\plain\f22\fs20\cf1 cmd}
+{\plain\f16\fs24\cf1  is not supported by this socket family.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int getsockopt(int s, int level, int optname, void *optval, int * optlen)}
+{\plain\f16\fs24\cf1  is used to request information about sockets. It is not implemented in }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int setsockopt(int s, int level, int optname, void *optval, int optlen)}
+{\plain\f16\fs24\cf1  is used to set options associated with a socket. It is not implemented in }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int dup(int fd)}
+{\plain\f16\fs24\cf1  returns a new descriptor referring to the same socket as }
+{\plain\f22\fs20\cf1 fd}
+{\plain\f16\fs24\cf1 . The old and new descriptors are indistinguishible. The new descriptor will always be the smallest free descriptor.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int dup2(int oldfd, int newfd)}
+{\plain\f16\fs24\cf1  closes }
+{\plain\f22\fs20\cf1 newfd}
+{\plain\f16\fs24\cf1  if it was open and makes it a duplicate of }
+{\plain\f22\fs20\cf1 oldfd}
+{\plain\f16\fs24\cf1 . The old and new descriptors are indistinguishible.\par }
+\pard\ql\sa360{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa360{\plain\f16\fs24\cf1 \page }
+\pard\ql\sb240\sa240{\plain\b\f16\fs48\cf1 File system calls\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Files are unlike sockets in many respects\: Their length is never changed by other processes, they can be rewound. There are also many calls which are specific to files.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Differences to generic behavior\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 The following calls make no sense for files and return an error of }
+{\plain\f22\fs20\cf1 EOPNOTSUPP}
+{\plain\f16\fs24\cf1 \:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     socket()\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     bind()\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     listen()\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     accept()\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     connect()\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     getsockname()\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     getpeername()\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     getsockopt()\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     setsockopt()\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 The following calls }
+{\plain\i\f16\fs24\cf1 will}
+{\plain\f16\fs24\cf1  work, but might be frowned upon by your friends (besides, UNIX systems generally wouldn't like them)\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     recv()\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     recvfrom()\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     recvmsg()\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     send()\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     sendto()\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     sendmsg()\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\i\f22\fs20\cf1 choose()}
+{\plain\f16\fs24\cf1  returns zero terminated C strings in }
+{\plain\f22\fs20\cf1 name}
+{\plain\f16\fs24\cf1 . It accepts an additional flag }
+{\plain\f22\fs20\cf1 CHOOSE_DIR}
+{\plain\f16\fs24\cf1 . If this is set, }
+{\plain\i\f22\fs20\cf1 choose()}
+{\plain\f16\fs24\cf1  will select directories instead of files.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 You may restrict the files presented for choosing by passing a pointer to the following structure for the }
+{\plain\f22\fs20\cf1 constraint}
+{\plain\f16\fs24\cf1  argument\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     typedef struct \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       short       numTypes;   /* Number of legitimate file types */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       SFTypeList  types;      /* The types, like 'TEXT' */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \}sa_constr_file;\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\i\f22\fs20\cf1 select()}
+{\plain\f16\fs24\cf1  will give boring results. File descriptors are }
+{\plain\i\f16\fs24\cf1 always}
+{\plain\f16\fs24\cf1  considered ready to read or write, and }
+{\plain\i\f16\fs24\cf1 never}
+{\plain\f16\fs24\cf1  give exceptions.\par }
+\pard\ql\sa120{\plain\i\f22\fs20\cf1 ioctl()}
+{\plain\f16\fs24\cf1  and }
+{\plain\i\f22\fs20\cf1 fcntl()}
+{\plain\f16\fs24\cf1  don't support manipulating the blocking state of a file descriptor or reading the number of bytes available for reading, but will accept lots of other requests---Check with your trusty MPW C documentation.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Routines specific to the file system\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 In this section, you'll meet lots of good old friends. Some of these routines also exist in the standard MPW libraries, but the }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  versions have a few differences\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab File names are relative to the directory specified by }
+{\plain\i\f16\fs24\cf1 chdir()}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab You can define special treatment for some file names (See below under "Adding your own file families").\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab You can pass }
+{\plain\f22\fs20\cf1 FSSpec}
+{\plain\f16\fs24\cf1  values to the routines by encoding them with }
+{\plain\i\f22\fs20\cf1 FSp2Encoding()}
+{\plain\f16\fs24\cf1  (See "FSSpec routines" below).\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int stat(const char * path, struct stat * buf)}
+{\plain\f16\fs24\cf1  returns information about a file. }
+{\plain\f22\fs20\cf1 struct stat}
+{\plain\f16\fs24\cf1  is defined as follows\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     struct stat   \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       dev_t    st_dev;     /* Volume reference number of file  */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       ino_t    st_ino;     /* File or directory ID             */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       u_short  st_mode;    /* Type and permission of file      */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       short    st_nlink;   /* Always 1             */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       short    st_uid;     /* Set to 0             */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       short    st_gid;     /* Set to 0             */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       dev_t    st_rdev;    /* Set to 0             */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       off_t    st_size;\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       time_t   st_atime;   /* Set to st_mtime    */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       time_t   st_mtime;\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       time_t   st_ctime;\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       long     st_blksize;\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       long     st_blocks;\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \};\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 st_mode}
+{\plain\f16\fs24\cf1  is composed of a file type and of file permissions. The file type may be one of the following\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  S_IFREG }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 A regular file.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  S_IFDIR }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 A directory.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  S_IFLNK }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 A finder alias file.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  S_IFCHR }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 A console file under MPW or SIOW.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  S_IFSOCK }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 A file representing a UNIX domain socket.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Permissions consist of an octal digit repeated three times. The three bits in the digit have the following meaning\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  4 }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 File can be read.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  2 }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 File can be written.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  1 }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 File can be executed, i.e., its type is `APPL' or 'appe'. The definition of executability can be customized with the }
+{\plain\f22\fs20\cf1 GUSI_ExecHook}
+{\plain\f16\fs24\cf1  discussed in the advanced section.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int lstat(const char * path, struct stat * buf)}
+{\plain\f16\fs24\cf1  works just like }
+{\plain\i\f22\fs20\cf1 stat()}
+{\plain\f16\fs24\cf1 , but if }
+{\plain\f22\fs20\cf1 path}
+{\plain\f16\fs24\cf1  is a symbolic link, }
+{\plain\i\f22\fs20\cf1 lstat()}
+{\plain\f16\fs24\cf1  will return information about the link and not about the file it points to.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int fstat(int fd, struct stat * buf)}
+{\plain\f16\fs24\cf1  is the equivalent of }
+{\plain\i\f22\fs20\cf1 stat()}
+{\plain\f16\fs24\cf1  for descriptors representing open files. While it is legal to call }
+{\plain\i\f22\fs20\cf1 fstat()}
+{\plain\f16\fs24\cf1  for sockets, the information returned is not really interesting. The file type in }
+{\plain\f22\fs20\cf1 st_mode}
+{\plain\f16\fs24\cf1  will be S_IFSOCK for sockets.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int chmod(const char * filename, mode_t mode)}
+{\plain\f16\fs24\cf1  changes the mode returned by }
+{\plain\i\f22\fs20\cf1 stat()}
+{\plain\f16\fs24\cf1 . Currently, the only thing you can do with }
+{\plain\i\f22\fs20\cf1 chmod()}
+{\plain\f16\fs24\cf1  is to turn the write permission off an on. This is translated to setting and clearing the file lock bit.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int utime(const char * file, const struct utimbuf * tim)}
+{\plain\f16\fs24\cf1  changes the modification time of a file. }
+{\plain\f22\fs20\cf1 struct utimbuf}
+{\plain\f16\fs24\cf1  is defined as\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     struct utimbuf \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       time_t actime;       /* Access time */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       time_t modtime;      /* Modification time */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \};\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 actime}
+{\plain\f16\fs24\cf1  is ignored, as the Macintosh doesn't store access times. The modification of }
+{\plain\f22\fs20\cf1 file}
+{\plain\f16\fs24\cf1  is set to }
+{\plain\f22\fs20\cf1 modtime}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int isatty(int fd)}
+{\plain\f16\fs24\cf1  returns 1 if }
+{\plain\f22\fs20\cf1 fd}
+{\plain\f16\fs24\cf1  represents a terminal (i.e. is connected to }
+{\plain\f22\fs20\cf1 "Dev\:Stdin"}
+{\plain\f16\fs24\cf1  and the like), }
+{\plain\f22\fs20\cf1 0}
+{\plain\f16\fs24\cf1  otherwise.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 long lseek(int, long, int)}
+{\plain\f16\fs24\cf1  works the same as the }
+{\plain\f22\fs20\cf1 MPW}
+{\plain\f16\fs24\cf1  routine, and will return }
+{\plain\f22\fs20\cf1 ESPIPE}
+{\plain\f16\fs24\cf1  if called for a socket.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int remove(const char *filename)}
+{\plain\f16\fs24\cf1  removes the named file. If }
+{\plain\f22\fs20\cf1 filename}
+{\plain\f16\fs24\cf1  is a symbolic link, the link will be removed and not the file.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int unlink(const char *filename)}
+{\plain\f16\fs24\cf1  is identical to }
+{\plain\i\f22\fs20\cf1 remove()}
+{\plain\f16\fs24\cf1 . Note that on the Mac, }
+{\plain\i\f22\fs20\cf1 unlink()}
+{\plain\f16\fs24\cf1  on open files behaves differently from }
+{\plain\f22\fs20\cf1 UNIX}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int rename(const char *oldname, const char *newname)}
+{\plain\f16\fs24\cf1  renames and/or moves a file. }
+{\plain\f22\fs20\cf1 oldname}
+{\plain\f16\fs24\cf1  and }
+{\plain\f22\fs20\cf1 newname}
+{\plain\f16\fs24\cf1  must specify the same volume, but as opposed to the standard }
+{\plain\f22\fs20\cf1 MPW}
+{\plain\f16\fs24\cf1  routine, they may specify different folders.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int open(const char*, int flags)}
+{\plain\f16\fs24\cf1  opens a named file. The }
+{\plain\f22\fs20\cf1 flags}
+{\plain\f16\fs24\cf1  consist of one of the following modes\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  O_RDONLY }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Open for reading only.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  WR_ONLY }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Open for writing only.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  O_RDWR }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Open for reading and writing.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Optionally combined with one or more of\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  O_APPEND }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The file pointer is set to the end of the file before each write.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  O_RSRC }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Open resource fork.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  O_CREAT }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 If the file does not exist, it is created.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  O_EXCL }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 In combination with O_CREAT , return an error if file already exists.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  O_TRUNC }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 If the file exists, its length is truncated to 0; the mode is unchanged.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  O_ALIAS }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 If the named file is a symbolic link, open the link, not the file it points to (This is most likely an incredibly bad idea).\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int creat(const char * name)}
+{\plain\f16\fs24\cf1  is identical to }
+{\plain\f22\fs20\cf1 open(name, O_WRONLY+O_TRUNC+O_CREAT)}
+{\plain\f16\fs24\cf1 . If the file didn't exist before, }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  determines its file type and creator of the according to rules outlined in the section "Resources" below.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int faccess(const char *filename, unsigned int cmd, long *arg)}
+{\plain\f16\fs24\cf1  works the same as the corresponding }
+{\plain\f22\fs20\cf1 MPW}
+{\plain\f16\fs24\cf1  routine, but respects calls to }
+{\plain\i\f22\fs20\cf1 chdir()}
+{\plain\f16\fs24\cf1  for partial filenames.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 void fgetfileinfo(char *filename, unsigned long *newcreator, unsigned long *newtype)}
+{\plain\f16\fs24\cf1  returns the file type and creator of a file.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 void fsetfileinfo(char *filename, unsigned long newcreator, unsigned long newtype)}
+{\plain\f16\fs24\cf1  sets the file type and creator of a file to the given values.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int symlink(const char* linkto, const char* linkname)}
+{\plain\f16\fs24\cf1  creates a file named }
+{\plain\f22\fs20\cf1 linkname}
+{\plain\f16\fs24\cf1  that contains an alias resource pointing to }
+{\plain\f22\fs20\cf1 linkto}
+{\plain\f16\fs24\cf1 . The created file should be indistinguishible from an alias file created by the System 7 Finder. Note that aliases bear only superficial similiarities to }
+{\plain\f22\fs20\cf1 UNIX}
+{\plain\f16\fs24\cf1  symbolic links, especially once you start renaming files.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int readlink(const char* path, char* buf, int bufsiz)}
+{\plain\f16\fs24\cf1  returns in }
+{\plain\f22\fs20\cf1 buf}
+{\plain\f16\fs24\cf1  the name of the file that }
+{\plain\f22\fs20\cf1 path}
+{\plain\f16\fs24\cf1  points to.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int truncate(const char * path, off_t length)}
+{\plain\f16\fs24\cf1  causes a file to have a size equal to }
+{\plain\f22\fs20\cf1 length}
+{\plain\f16\fs24\cf1  bytes, shortening it or extending it with zero bytes as necessary.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int ftruncate(int fd, off_t length)}
+{\plain\f16\fs24\cf1  does the same thing with an open file.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int access(const char * path, int mode)}
+{\plain\f16\fs24\cf1  tests if you have the specified access rights to a file. }
+{\plain\f22\fs20\cf1 mode}
+{\plain\f16\fs24\cf1  may be either }
+{\plain\f22\fs20\cf1 F_OK}
+{\plain\f16\fs24\cf1 , in which case the file is tested for existence, or a combination of the following\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  R_OK }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Tests if file is readable.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  W_OK }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Tests if file is writeable.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  X_OK }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Tests if file is executable. As with }
+{\plain\i\f22\fs20\cf1 stat()}
+{\plain\f16\fs24\cf1 , the definition of executability may be customized.\par }
+\pard\ql\sa120{\plain\i\f22\fs20\cf1 access()}
+{\plain\f16\fs24\cf1  returns 0 if the specified access rights exist, otherwise it sets }
+{\plain\f22\fs20\cf1 errno}
+{\plain\f16\fs24\cf1  and returns -1.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int mkdir(const char * path)}
+{\plain\f16\fs24\cf1  creates a new directory.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int rmdir(const char * path)}
+{\plain\f16\fs24\cf1  deletes an empty directory.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int chdir(const char * path)}
+{\plain\f16\fs24\cf1  makes all future partial pathnames relative to this directory.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 char * getcwd(const char * buf, int size)}
+{\plain\f16\fs24\cf1  returns a pointer to the current directory pathname. If }
+{\plain\f22\fs20\cf1 buf}
+{\plain\f16\fs24\cf1  is }
+{\plain\f22\fs20\cf1 NULL}
+{\plain\f16\fs24\cf1 , }
+{\plain\f22\fs20\cf1 size}
+{\plain\f16\fs24\cf1  bytes will be allocated using }
+{\plain\i\f22\fs20\cf1 malloc()}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Error codes\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ENAMETOOLONG }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The pathname of the current directory is greater than }
+{\plain\f22\fs20\cf1 size}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ENOMEM }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f22\fs20\cf1 buf}
+{\plain\f16\fs24\cf1  was }
+{\plain\f22\fs20\cf1 NULL}
+{\plain\f16\fs24\cf1  and }
+{\plain\i\f22\fs20\cf1 malloc()}
+{\plain\f16\fs24\cf1  failed.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 A number of calls facilitate scanning directories. Directory entries are represented by following structure\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     struct dirent \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       u_long   d_fileno;      /* file number of entry */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       u_short  d_reclen;      /* length of this record */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       u_short  d_namlen;      /* length of string in d_name */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     #define MAXNAMLEN   255\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       char  d_name[MAXNAMLEN + 1];  /* name must be no longer than this */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \};\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 DIR * opendir(const char * dirname)}
+{\plain\f16\fs24\cf1  opens a directory stream and returns a pointer or }
+{\plain\f22\fs20\cf1 NULL}
+{\plain\f16\fs24\cf1  if the call failed.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 struct dirent * readdir(DIR * dirp)}
+{\plain\f16\fs24\cf1  returns the next entry from the directory or }
+{\plain\f22\fs20\cf1 NULL}
+{\plain\f16\fs24\cf1  if all entries have been processed.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 long telldir(const DIR * dirp)}
+{\plain\f16\fs24\cf1  returns the position in the directory.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 void seekdir(DIR * dirp, long loc)}
+{\plain\f16\fs24\cf1  changes the position.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 void rewinddir(DIR * dirp)}
+{\plain\f16\fs24\cf1  restarts a scan at the beginning.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int closedir(DIR * dirp)}
+{\plain\f16\fs24\cf1  closes the directory stream.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int scandir(const char * path, struct dirent *** entries, int (*want)(struct dirent *), int (*sort)(const void *, const void *))}
+{\plain\f16\fs24\cf1  scans a whole directory at once and returns a possibly sorted list of entries. If }
+{\plain\f22\fs20\cf1 want}
+{\plain\f16\fs24\cf1  is not }
+{\plain\f22\fs20\cf1 NULL}
+{\plain\f16\fs24\cf1 , only entries for which }
+{\plain\f22\fs20\cf1 want}
+{\plain\f16\fs24\cf1  returns 1 are returned. If }
+{\plain\f22\fs20\cf1 sort}
+{\plain\f16\fs24\cf1  is not }
+{\plain\f22\fs20\cf1 NULL}
+{\plain\f16\fs24\cf1 , the list is sorted using }
+{\plain\i\f22\fs20\cf1 qsort()}
+{\plain\f16\fs24\cf1  with sort as a comparison function. If sort is }
+{\plain\f22\fs20\cf1 NULL}
+{\plain\f16\fs24\cf1 , the list will be sorted alphabetically on a Mac, but not necessarily on other machines.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Unix domain sockets\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 This domain is quite regular and supports all calls that work on any domain, except for out-of-band data.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Differences to generic behavior\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Addresses are file system pathnames. }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  complies to the Unix implementation in that it doesn't require the name to be terminated by a zero. Names that are generated by }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1 , however, will always be zero terminated (but the zero won't be included in the count).\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     struct sockaddr_un \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       short    sun_family;    /* Always AF_UNIX     */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       char     sun_path[108]; /* A pathname to a file */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \};\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 C<choose()> works both for existing and new addresses, and no restriction\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 is possible (or necessary).\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa360{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa360{\plain\f16\fs24\cf1 \page }
+\pard\ql\sb240\sa240{\plain\b\f16\fs48\cf1 Appletalk sockets\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Currently, only stream sockets (including out-of-band data) are supported. Appletalk sockets should work between all networked Macintoshes and between applications on a single Mac, provided the SetSelfSend flag is turned on. However, PPC sockets have a bet}
+{\plain\f16\fs24\cf1 ter performance for interapplication communication on a single Machine.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Differences to generic behavior\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Two classes of addresses are supported for AppleTalk. The main address type specifies numeric addresses.\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     struct sockaddr_atlk \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       short       family;     /* Always AF_APPLETALK                  */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       AddrBlock   addr;       /* The numeric AppleTalk socket address   */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \};\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 For }
+{\plain\i\f22\fs20\cf1 bind()}
+{\plain\f16\fs24\cf1  and }
+{\plain\i\f22\fs20\cf1 connect()}
+{\plain\f16\fs24\cf1 , however, you are also allowed to specify symbolic addresses. }
+{\plain\i\f22\fs20\cf1 bind()}
+{\plain\f16\fs24\cf1  registers an NBP address, and }
+{\plain\i\f22\fs20\cf1 connect()}
+{\plain\f16\fs24\cf1  performs an NBP lookup. Registered NBP adresses are automatically released when the socket is closed. No call ever }
+{\plain\i\f16\fs24\cf1 returns}
+{\plain\f16\fs24\cf1  a symbolic address.\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     struct sockaddr_atlk_sym \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       short       family;     /* Always ATALK_SYMADDR     */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       EntityName  name;       /* The symbolic NBP address   */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \};\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\i\f22\fs20\cf1 choose()}
+{\plain\f16\fs24\cf1  currently only works for existing sockets. The peer must have registered a symbolic address. To restrict the choice of addresses presented, pass a pointer to the following structure for the }
+{\plain\f22\fs20\cf1 constraint}
+{\plain\f16\fs24\cf1  argument\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     typedef struct \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       short       numTypes;   /* Number of allowed types */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       NLType      types;      /* List of types */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \}sa_constr_atlk;\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa360{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa360{\plain\f16\fs24\cf1 \page }
+\pard\ql\sb240\sa240{\plain\b\f16\fs48\cf1 PPC sockets\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 These provide authenticated stream sockets without out-of-band data. PPC sockets should work between all networked Macintoshes running System 7, and between applications on a single Macintosh running System 7.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Differences to generic behavior\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 PPC socket addresses have the following format\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     struct sockaddr_ppc \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       short             family;     /* Always AF_PPC                     */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       LocationNameRec   location;   /* Check your trusty Inside Macintosh  */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       PPCPortRec        port;\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \};\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\i\f22\fs20\cf1 choose()}
+{\plain\f16\fs24\cf1  currently only works for existing sockets. To restrict the choice of addresses presented, pass a pointer to the following structure for the }
+{\plain\f22\fs20\cf1 constraint}
+{\plain\f16\fs24\cf1  argument\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     typedef struct   \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       short       flags;\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       Str32       nbpType;\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       PPCPortRec  match;\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \}sa_constr_ppc;\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 flags}
+{\plain\f16\fs24\cf1  is obtained by or'ing one or several of the following constants\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  PPC_CON_NEWSTYLE }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Always required for compatibility reasons.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  PPC_CON_MATCH_NBP }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Only display machines that have registered an entity of type }
+{\plain\f22\fs20\cf1 nbpType}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  PPC_CON_MATCH_NAME }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Only display ports whose name matches }
+{\plain\f22\fs20\cf1 match.name}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  PPC_CON_MATCH_TYPE }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Only display ports whose type matches }
+{\plain\f22\fs20\cf1 match.u.portType}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 nbpType}
+{\plain\f16\fs24\cf1  specifies the machines to be displayed, as explained above. }
+{\plain\f22\fs20\cf1 match}
+{\plain\f16\fs24\cf1  contains the name and/or type to match against.\par }
+\pard\ql\sa120{\plain\i\f22\fs20\cf1 connect()}
+{\plain\f16\fs24\cf1  will block even if the socket is nonblocking. In practice, however, delays are likely to be quite short, as it never has to block on a higher level protocol and the PPC ToolBox will automatically establish the connection.\par }
+\pard\ql\sa360{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa360{\plain\f16\fs24\cf1 \page }
+\pard\ql\sb240\sa240{\plain\b\f16\fs48\cf1 Internet sockets\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 These are the real thing for real programmers. Out-of-band data only works for sending. Both stream (TCP) and datagram (UDP) sockets are supported. Internet sockets are also suited for interapplication communication on a single machine, provided it runs Ma}
+{\plain\f16\fs24\cf1 cTCP.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Differences to generic behavior\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Internet socket addresses have the following format\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     struct in_addr \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       u_long s_addr;\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \};\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     struct sockaddr_in \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1        u_char   sin_len;          /* Ignored */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1        u_char   sin_family;       /* Always C<AF_INET> */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1        u_short  sin_port;         /* Port number */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1        struct   in_addr sin_addr; /* Host ID */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1        char     sin_zero[8];\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \};\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Routines specific to TCP/IP sockets\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 There are several routines to convert between numeric and symbolic addresses.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Hosts are represented by the following structure\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     struct hostent \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       char *h_name;        /* Official name of the host              */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       char **h_aliases;    /* A zero terminated array of alternate names for the host     */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       int  h_addrtype;     /* Always AF_INET                       */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       int  h_length;       /* The length, in bytes, of the address   */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       char **h_addr_list;  /* A zero terminated array of network addresses for the host   */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \};\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 struct hostent * gethostbyname(char *name)}
+{\plain\f16\fs24\cf1  returns an entry for the host with the given }
+{\plain\f22\fs20\cf1 name}
+{\plain\f16\fs24\cf1  or }
+{\plain\f22\fs20\cf1 NULL}
+{\plain\f16\fs24\cf1  if a host with this name can't be found.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 struct hostent * gethostbyaddr(const char *addrP, int, int)}
+{\plain\f16\fs24\cf1  returns an entry for the host with the given address or }
+{\plain\f22\fs20\cf1 NULL}
+{\plain\f16\fs24\cf1  if a host with this name can't be found. }
+{\plain\f22\fs20\cf1 addrP}
+{\plain\f16\fs24\cf1  in fact has to be a }
+{\plain\f22\fs20\cf1 struct in_addr *}
+{\plain\f16\fs24\cf1 . The last two parameters are ignored.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 char * inet_ntoa(struct in_addr inaddr)}
+{\plain\f16\fs24\cf1  converts an internet address into the usual numeric string representation (e.g., 0x8184023C is converted to "129.132.2.60")\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 struct in_addr inet_addr(char *address)}
+{\plain\f16\fs24\cf1  converts a numeric string into an internet address (If }
+{\plain\f22\fs20\cf1 x}
+{\plain\f16\fs24\cf1  is a valid address, }
+{\plain\f22\fs20\cf1 inet_addr(inet_ntoa(x)) == x}
+{\plain\f16\fs24\cf1 ).\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int gethostname(char *machname, long buflen)}
+{\plain\f16\fs24\cf1  gets our name into }
+{\plain\f22\fs20\cf1 buffer}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Services are represented by the following data structure\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     struct  servent \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       char  *s_name;       /* official service name */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       char  **s_aliases;   /* alias list  */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       int   s_port;        /* port number */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       char  *s_proto;      /* protocol to use ("tcp" or "udp") */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \};\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 void setservent(int stayopen)}
+{\plain\f16\fs24\cf1  rewinds the file of services. If }
+{\plain\f22\fs20\cf1 stayopen}
+{\plain\f16\fs24\cf1  is set, the file will remain open until }
+{\plain\i\f22\fs20\cf1 endservent()}
+{\plain\f16\fs24\cf1  is called, else it will be closed after the next call to }
+{\plain\i\f22\fs20\cf1 getservbyname()}
+{\plain\f16\fs24\cf1  or }
+{\plain\i\f22\fs20\cf1 getservbyport()}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 void }
+{\plain\i\f22\fs20\cf1 endservent()}
+{\plain\f16\fs24\cf1  closes the file of services.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 struct servent * }
+{\plain\i\f22\fs20\cf1 getservent()}
+{\plain\f16\fs24\cf1  returns the next service from the file of services, opening the file first if necessary. If the file is not found (}
+{\plain\f22\fs20\cf1 /etc/services}
+{\plain\f16\fs24\cf1  in the preferences folder), a small built-in list is consulted. If there are no more services, }
+{\plain\i\f22\fs20\cf1 getservent()}
+{\plain\f16\fs24\cf1  returns }
+{\plain\f22\fs20\cf1 NULL}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 struct servent * getservbyname (const char * name, const char * proto)}
+{\plain\f16\fs24\cf1  finds a named service by calling }
+{\plain\i\f22\fs20\cf1 getservent()}
+{\plain\f16\fs24\cf1  until the protocol matches }
+{\plain\f22\fs20\cf1 proto}
+{\plain\f16\fs24\cf1  and either the name or one of the aliases matches }
+{\plain\f22\fs20\cf1 name}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 struct servent * getservbyport (int port, const char * proto)}
+{\plain\f16\fs24\cf1  finds a service by calling }
+{\plain\i\f22\fs20\cf1 getservent()}
+{\plain\f16\fs24\cf1  until the protocol matches }
+{\plain\f22\fs20\cf1 proto}
+{\plain\f16\fs24\cf1  and the port matches }
+{\plain\f22\fs20\cf1 port}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Protocols are represented by the following data structure\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     struct  protoent \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       char  *p_name;       /* official protocol name */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       char  **p_aliases;   /* alias list (always NULL for GUSI)*/\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       int   p_proto;       /* protocol number */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \};\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 struct protoent * getprotobyname(char * name)}
+{\plain\f16\fs24\cf1  finds a named protocol. This call is rather unexciting.\par }
+\pard\ql\sa360{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa360{\plain\f16\fs24\cf1 \page }
+\pard\ql\sb240\sa240{\plain\b\f16\fs48\cf1 PAP sockets\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 PAP, the AppleTalk Printer Access Protocol is a protocol which is almost exclusively used to access networked printers. The current implementation of PAP in }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  is quite narrow in that it only implements the workstation side of PAP and only in communication to the currently selected LaserWriter. It is also doomed, as it depends on Apple system resources that probably are not supported anymore in Apple's Quickdraw}
+{\plain\f16\fs24\cf1  GX printing architecture, but if there is enough interest, the current implementation might be replaced some time.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Routines specific to PAP sockets\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 While PAP sockets behave in most respects like other sockets, they can currently not be created with the }
+{\plain\i\f22\fs20\cf1 socket()}
+{\plain\f16\fs24\cf1  call, but are opened with }
+{\plain\i\f22\fs20\cf1 open()}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int open("Dev\:Printer", int flags)}
+{\plain\f16\fs24\cf1  opens a connection to the last selected LaserWriter. }
+{\plain\f22\fs20\cf1 flags}
+{\plain\f16\fs24\cf1  is currently ignored.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Communication with LaserWriters is somewhat strange. The three main uses of PAP sockets are probably interactive sessions, queries, and downloads, which will be discussed in the following sections. As in all other socket families, }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  does no filtering of the transmitted data, which means that lines sent by the LaserWriter will be separated by linefeeds (ASCII 10) rather than carriage returns (ASCII 13), which are used for this purpose in most other Mac contexts. For data you }
+{\plain\i\f16\fs24\cf1 send}
+{\plain\f16\fs24\cf1 , it doesn't matter which one you use.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 You start an }
+{\plain\i\f16\fs24\cf1 interactive session}
+{\plain\f16\fs24\cf1  by sending a line }
+{\plain\f22\fs20\cf1 "executive"}
+{\plain\f16\fs24\cf1  after opening the socket. This will put lots of LaserWriters (certainly all manufactured by Apple, but probably not a Linotronic) into interactive mode. If you want to, you can now play terminal emulator and use your LaserWriter as an expensive desk calcu}
+{\plain\f16\fs24\cf1 lator.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 A }
+{\plain\i\f16\fs24\cf1 query}
+{\plain\f16\fs24\cf1  is some PostScript code you send to a LaserWriter that you expect to be answered. This is quite straightforward, except that LaserWriters don't seem to answer until you have indicated to them that no more data from you will be coming. Therefore, you have }
+{\plain\f16\fs24\cf1 to call }
+{\plain\f22\fs20\cf1 shutdown(s,1)}
+{\plain\f16\fs24\cf1  to shut the socket down for writing after you have written your query and before you try to read the answer. The following code demonstrates how to send a query to the printer\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     int s = open("Dev\:Printer", O_RDWR);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     write(s, "FontDirectory /Gorilla-SemiBold exch known...", len);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     /* We won't write any more */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     shutdown(s, 1);   \par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     while(read(s, buf, len) > 0)\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1        do_something();\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     close(s);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 If you want to simply }
+{\plain\i\f16\fs24\cf1 download}
+{\plain\f16\fs24\cf1  a file, you can also ignore the LaserWriter's response and simply close the socket after downloading.\par }
+\pard\ql\sa360{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa360{\plain\f16\fs24\cf1 \page }
+\pard\ql\sb240\sa240{\plain\b\f16\fs48\cf1 Miscellaneous\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 BSD memory routines\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 These are implemented as macros if you\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    #include <compat.h>\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 void bzero(void * from, int len)}
+{\plain\f16\fs24\cf1  zeroes }
+{\plain\f22\fs20\cf1 len}
+{\plain\f16\fs24\cf1  bytes, starting at }
+{\plain\f22\fs20\cf1 from}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 void bfill(void * from, int len, int x)}
+{\plain\f16\fs24\cf1  fills }
+{\plain\f22\fs20\cf1 len}
+{\plain\f16\fs24\cf1  bytes, starting at }
+{\plain\f22\fs20\cf1 from}
+{\plain\f16\fs24\cf1  with }
+{\plain\f22\fs20\cf1 x}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 void bcopy(void * from, void * to, int len)}
+{\plain\f16\fs24\cf1  copies }
+{\plain\f22\fs20\cf1 len}
+{\plain\f16\fs24\cf1  bytes from }
+{\plain\f22\fs20\cf1 from}
+{\plain\f16\fs24\cf1  to }
+{\plain\f22\fs20\cf1 to}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 int bcmp(void * s1, void * s2, int len)}
+{\plain\f16\fs24\cf1  compares }
+{\plain\f22\fs20\cf1 len}
+{\plain\f16\fs24\cf1  bytes at }
+{\plain\f22\fs20\cf1 s1}
+{\plain\f16\fs24\cf1  against }
+{\plain\f22\fs20\cf1 len}
+{\plain\f16\fs24\cf1  bytes at }
+{\plain\f22\fs20\cf1 s2}
+{\plain\f16\fs24\cf1 , returning zero if the two areas are equal, nonzero otherwise.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Hooks\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 You can override some of GUSI's behaviour by providing hooks to GUSI. Note that these often get called from deep within GUSI, so be sure you understand what is required of a hook before overriding it.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 GUSI hooks can be accessed with the following routines\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1         typedef void (*GUSIHook)(void);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1         void GUSISetHook(GUSIHookCode code, GUSIHook hook);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1         GUSIHook GUSIGetHook(GUSIHookCode code);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Currently, two hooks are defined. The }
+{\plain\f22\fs20\cf1 GUSI_SpinHook}
+{\plain\f16\fs24\cf1  is defined in the next section. The }
+{\plain\f22\fs20\cf1 GUSI_ExecHook}
+{\plain\f16\fs24\cf1  is used by GUSI to decide whether a file or folder is to be considered "executable" or not. The default hook considers all folders and all applications (i.e., files of type }
+{\plain\f22\fs20\cf1 'APPL'}
+{\plain\f16\fs24\cf1  and }
+{\plain\f22\fs20\cf1 'appe'}
+{\plain\f16\fs24\cf1  to be executable. To provide your own hook, call\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1         GUSISetHook(GUSI_ExecHook, (GUSIHook) my_exec_hook);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 where }
+{\plain\f22\fs20\cf1 my_exec_hook}
+{\plain\f16\fs24\cf1  is defined as\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1         Boolean my_exec_hook(const GUSIFileRef & ref);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 The old value is available as\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1         Boolean (*)(const GUSIFileRef & ref)GUSIgetHook(GUSI_ExecHook);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Blocking calls\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Since the Macintosh doesn't have preemptive task switching, it is important that other applications get a chance to run during blocking calls. This section discusses the mechanism }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  uses for that purpose.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 While a routine is waiting for a blocking call to terminate, it repeatedly calls a spin routine with the following parameters\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    typedef enum spin_msg\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       SP_MISC,          /* some weird thing, usually just return immediately if you get this */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       SP_SELECT,        /* in a select call, passes ticks the program is prepared to wait */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       SP_NAME,          /* getting a host by name */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       SP_ADDR,          /* getting a host by address */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       SP_STREAM_READ,   /* Stream read call */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       SP_STREAM_WRITE,  /* Stream write call */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       SP_DGRAM_READ,    /* Datagram read call */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       SP_DGRAM_WRITE,   /* Datagram write call */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       SP_SLEEP,         /* sleeping, passes ticks left to sleep */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       SP_AUTO_SPIN      /* Automatically spinning, passes spin count */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    \}spin_msg;\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    typedef int (*GUSISpinFn)(spin_msg msg, long param);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 If the spin routine returns a nonzero value, the call is interrupted and }
+{\plain\f22\fs20\cf1 EINTR}
+{\plain\f16\fs24\cf1  returned. You can modify the spin routine with the following calls\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1         GUSISetHook(GUSI_SpinHook, (GUSIHook) my_spin_hook);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1         (GUSISpinFn)GUSIGetHook(GUSI_SpinHook);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 (For backward compatibility, GUSI also defines the equivalents\:)\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1         int GUSISetSpin(GUSISpinFn routine);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1         GUSISpinFn GUSIGetSpin(void);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Often, however, the default spin routine will do what you want\: It spins a cursor and occasionally calls }
+{\plain\i\f22\fs20\cf1 GetNextEvent()}
+{\plain\f16\fs24\cf1  or }
+{\plain\i\f22\fs20\cf1 WaitNextEvent()}
+{\plain\f16\fs24\cf1 . By default, only mouse down and suspend/resume events are handled, but you can change that by passing your own }
+{\plain\f22\fs20\cf1 GUSIEvtTable}
+{\plain\f16\fs24\cf1  to }
+{\plain\i\f22\fs20\cf1 GUSISetEvents()}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    int GUSISetEvents(GUSIEvtTable table);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    GUSIEvtHandler * GUSIGetEvents(void);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 A }
+{\plain\f22\fs20\cf1 GUSIEvtTable}
+{\plain\f16\fs24\cf1  is a table of }
+{\plain\f22\fs20\cf1 GUSIEvtHandlers}
+{\plain\f16\fs24\cf1 , indexed by event code. Presence of a non-nil entry in the table will cause that event class to be allowed for }
+{\plain\i\f22\fs20\cf1 GetNextEvent()}
+{\plain\f16\fs24\cf1  or }
+{\plain\i\f22\fs20\cf1 WaitNextEvent()}
+{\plain\f16\fs24\cf1 . }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  for }
+{\plain\f22\fs20\cf1 MPW C}
+{\plain\f16\fs24\cf1  and }
+{\plain\f22\fs20\cf1 PPCC}
+{\plain\f16\fs24\cf1  includes one event table to be used with the }
+{\plain\f22\fs20\cf1 SIOW}
+{\plain\f16\fs24\cf1  library.\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    typedef void (*GUSIEvtHandler)(EventRecord * ev);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    typedef GUSIEvtHandler GUSIEvtTable[24];\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    extern GUSIEvtHandler   GUSISIOWEvents[];\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  also supports three POSIX/BSD routines\: }
+{\plain\f22\fs20\cf1 alarm(unsigned sec)}
+{\plain\f16\fs24\cf1  will after }
+{\plain\f22\fs20\cf1 sec}
+{\plain\f16\fs24\cf1  seconds cancel the current call, raise }
+{\plain\f22\fs20\cf1 SIGALRM}
+{\plain\f16\fs24\cf1 , and return }
+{\plain\f22\fs20\cf1 EINTR}
+{\plain\f16\fs24\cf1 . Note that the default handler for }
+{\plain\f22\fs20\cf1 SIGALRM}
+{\plain\f16\fs24\cf1  terminates the program, so be sure to install your own handler. }
+{\plain\f22\fs20\cf1 alarm(0)}
+{\plain\f16\fs24\cf1  cancels an alarm and returns the remaining seconds. As opposed to POSIX systems, the }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  version of }
+{\plain\i\f22\fs20\cf1 alarm()}
+{\plain\f16\fs24\cf1  does not use real clock interrupts and merely interrupts during a blocking call.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 sleep(unsigned sec)}
+{\plain\f16\fs24\cf1  sleeps for }
+{\plain\f22\fs20\cf1 sec}
+{\plain\f16\fs24\cf1  seconds, and }
+{\plain\f22\fs20\cf1 usleep(unsigned usec)}
+{\plain\f16\fs24\cf1  does the same for }
+{\plain\f22\fs20\cf1 usec}
+{\plain\f16\fs24\cf1  micorseconds (rounded to 60ths of a tick).\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Resources\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 A few }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  routines (currently primarily }
+{\plain\i\f16\fs24\cf1 choose()}
+{\plain\f16\fs24\cf1 ) need resources to work correctly. These are added if you Rez your program with }
+{\plain\f22\fs20\cf1 GUSI.r}
+{\plain\f16\fs24\cf1 . On startup, }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  also looks for a }
+{\plain\i\f16\fs24\cf1 preference}
+{\plain\f16\fs24\cf1  resource with type }
+{\plain\f22\fs20\cf1 'GUZI'}
+{\plain\f16\fs24\cf1  (the }
+{\plain\f22\fs20\cf1 'Z'}
+{\plain\f16\fs24\cf1  actually must be a capital Sigma) and ID }
+{\plain\f22\fs20\cf1 GUSIRsrcID}
+{\plain\f16\fs24\cf1 , which is currently defined as follows\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    #ifndef GUSI_PREF_VERSION\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    #define GUSI_PREF_VERSION '0102'\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    #endif\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    type 'GUZI' \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       literal longint   text  =  'TEXT';  /* Type for creat'ed files             */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       literal longint   mpw   =  'MPS ';  /* Creator for creat'ed files          */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       byte     noAutoSpin, autoSpin;      /* Automatically spin cursor ?         */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    #if GUSI_PREF_VERSION >= '0110'\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       boolean  useChdir, dontUseChdir;    /* Use chdir() ?                    */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       boolean  approxStat, accurateStat;  /* statbuf.st_nlink = # of subdirectories ? */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       boolean  noTCPDaemon, isTCPDaemon;  /* Inetd client ?                   */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       boolean  noUDPDaemon, isUDPDaemon;\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    #if GUSI_PREF_VERSION >= '0150'\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       boolean  noConsole, hasConsole;     /* Are we providing our own dev\:console ? */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       fill     bit[3];\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    #else\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       fill     bit[4];\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    #endif\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       literal longint = GUSI_PREF_VERSION;\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    #if GUSI_PREF_VERSION >= '0120'\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       integer = @t$$@>Countof(SuffixArray);\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       wide array SuffixArray \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1             literal longint;              /* Suffix of file */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1             literal longint;              /* Type for file */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1             literal longint;              /* Creator for file */\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       \};\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    #endif\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    #endif\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1    \};\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 To keep backwards compatible, the preference version is included, and you are free to use whatever version of the preferences you want by defining }
+{\plain\f22\fs20\cf1 GUSI_PREF_VERSION}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 The first two fields define the file type and creator, respectively, to be used for files created by }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1 . The type and creator of existing files will never be changed unless explicitely requested with }
+{\plain\i\f16\fs24\cf1 fsetfileinfo()}
+{\plain\f16\fs24\cf1 . The default is to create text files (type `TEXT') owned by the }
+{\plain\f22\fs20\cf1 MPW Shell}
+{\plain\f16\fs24\cf1  (creator `MPS '). If you request a preference version of 1.2.0 and higher, you are also allowed to specify a list of suffixes that are given different types. An example of such a list would be\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \{'SYM ', 'MPSY', 'sade'  \}\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 The }
+{\plain\f22\fs20\cf1 autoSpin}
+{\plain\f16\fs24\cf1  value, if nonzero, makes }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  call the spin routine for every call to }
+{\plain\i\f22\fs20\cf1 read()}
+{\plain\f16\fs24\cf1 , }
+{\plain\i\f22\fs20\cf1 write()}
+{\plain\f16\fs24\cf1 , }
+{\plain\i\f22\fs20\cf1 send()}
+{\plain\f16\fs24\cf1 , or }
+{\plain\i\f22\fs20\cf1 recv()}
+{\plain\f16\fs24\cf1 . This is useful for making an I/O bound program MultiFinder friendly without having to insert explicit calls to }
+{\plain\i\f22\fs20\cf1 SpinCursor()}
+{\plain\f16\fs24\cf1 . If you don't specify a preference resource, }
+{\plain\f22\fs20\cf1 autoSpin}
+{\plain\f16\fs24\cf1  is assumed to be }
+{\plain\f22\fs20\cf1 1}
+{\plain\f16\fs24\cf1 . You may specify arbitrary values greater than one to make your program even friendlier; note, however, that this will hurt performance.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 The }
+{\plain\f22\fs20\cf1 useChdir}
+{\plain\f16\fs24\cf1  flag tells }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  whether you change directories with the toolbox calls }
+{\plain\i\f22\fs20\cf1 PBSetVol()}
+{\plain\f16\fs24\cf1  or }
+{\plain\i\f22\fs20\cf1 PBHSetVol()}
+{\plain\f16\fs24\cf1  or with the }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  call }
+{\plain\i\f22\fs20\cf1 chdir()}
+{\plain\f16\fs24\cf1 . The current directory will start with the directory your application resides in or the current }
+{\plain\f22\fs20\cf1 MPW}
+{\plain\f16\fs24\cf1  directory, if you're running an }
+{\plain\f22\fs20\cf1 MPW}
+{\plain\f16\fs24\cf1  tool. If }
+{\plain\f22\fs20\cf1 useChdir}
+{\plain\f16\fs24\cf1  is specified, the current directory will only change with }
+{\plain\i\f22\fs20\cf1 chdir()}
+{\plain\f16\fs24\cf1  calls. If }
+{\plain\f22\fs20\cf1 dontUseChdir}
+{\plain\f16\fs24\cf1  is specified, the current directory will change with toolbox calls, until you call }
+{\plain\i\f22\fs20\cf1 chdir()}
+{\plain\f16\fs24\cf1  the first time. This behaviour is more consistent with the standard }
+{\plain\f22\fs20\cf1 MPW}
+{\plain\f16\fs24\cf1  library, but has IMHO no other redeeming value. If you don't specify a preference resource, }
+{\plain\f22\fs20\cf1 useChdir}
+{\plain\f16\fs24\cf1  is assumed.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 If }
+{\plain\f22\fs20\cf1 approxStat}
+{\plain\f16\fs24\cf1  is specified, }
+{\plain\i\f22\fs20\cf1 stat()}
+{\plain\f16\fs24\cf1  and }
+{\plain\i\f22\fs20\cf1 lstat()}
+{\plain\f16\fs24\cf1  for directories return in }
+{\plain\f22\fs20\cf1 st_nlink}
+{\plain\f16\fs24\cf1  the number of }
+{\plain\i\f16\fs24\cf1 items}
+{\plain\f16\fs24\cf1  in the directory }
+{\plain\f22\fs20\cf1 + 2}
+{\plain\f16\fs24\cf1 . If }
+{\plain\f22\fs20\cf1 accurateStat}
+{\plain\f16\fs24\cf1  is specified, they return the number of }
+{\plain\i\f16\fs24\cf1 subdirectories}
+{\plain\f16\fs24\cf1  in the directory. The latter has probably the best chances of being compatible with some Unix software, but the former is often a sufficient upper bound, is much faster, and most programs don't care about this value anyway. If you don't specify a preferen}
+{\plain\f16\fs24\cf1 ce resource, }
+{\plain\f22\fs20\cf1 approxStat}
+{\plain\f16\fs24\cf1  is assumed.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 The }
+{\plain\f22\fs20\cf1 isTCPDaemon}
+{\plain\f16\fs24\cf1  and }
+{\plain\f22\fs20\cf1 isUDPDaemon}
+{\plain\f16\fs24\cf1  flags turn }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  programs into clients for David Petersons }
+{\plain\f22\fs20\cf1 inetd}
+{\plain\f16\fs24\cf1 , as discussed below. If you don't specify a preference resource, }
+{\plain\f22\fs20\cf1 noTCPDaemon}
+{\plain\f16\fs24\cf1  and }
+{\plain\f22\fs20\cf1 noUDPDaemon}
+{\plain\f16\fs24\cf1  are assumed.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 The }
+{\plain\f22\fs20\cf1 hasConsole}
+{\plain\f16\fs24\cf1  flag should be set if you are overriding the default "dev\:console", as discussed below.\par }
+\pard\ql\sa360{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa360{\plain\f16\fs24\cf1 \page }
+\pard\ql\sb240\sa240{\plain\b\f16\fs48\cf1 Advanced techniques\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 This section discusses a few techniques that probably not every user of }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  needs.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 FSSpec routines\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 If you need to do complicated things with the Mac file system, the normal }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  routines are probably not sufficient, but you still might want to use the internal mechanism }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  uses. This mechanism is provided in the header file }
+{\plain\f22\fs20\cf1 TFileSpec.h}
+{\plain\f16\fs24\cf1 , which defines both }
+{\plain\f22\fs20\cf1 C}
+{\plain\f16\fs24\cf1  and }
+{\plain\f22\fs20\cf1 C++}
+{\plain\f16\fs24\cf1  interfaces. In the following, the }
+{\plain\f22\fs20\cf1 C++}
+{\plain\f16\fs24\cf1  member functions will be discussed and }
+{\plain\f22\fs20\cf1 C}
+{\plain\f16\fs24\cf1  equivalents will be mentioned where available.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 OSErr TFileSpec\:\:}
+{\plain\i\f22\fs20\cf1 Error()}
+{\plain\f16\fs24\cf1  returns the last error provoked by a }
+{\plain\f22\fs20\cf1 TFileSpec}
+{\plain\f16\fs24\cf1  member function.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 TFileSpec\:\:TFileSpec(const FSSpec & spec, Boolean useAlias = false)}
+{\plain\f16\fs24\cf1  constructs a }
+{\plain\f22\fs20\cf1 TFileSpec}
+{\plain\f16\fs24\cf1  from an }
+{\plain\f22\fs20\cf1 FSSpec}
+{\plain\f16\fs24\cf1  and resolves alias files unless }
+{\plain\f22\fs20\cf1 useAlias}
+{\plain\f16\fs24\cf1  is }
+{\plain\f22\fs20\cf1 true}
+{\plain\f16\fs24\cf1 . (The }
+{\plain\f22\fs20\cf1 useAlias}
+{\plain\f16\fs24\cf1  parameter is also present in the following routines, but will not be shown anymore).\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 TFileSpec(short vRefNum, long parID, ConstStr31Param name)}
+{\plain\f16\fs24\cf1  constructs a }
+{\plain\f22\fs20\cf1 TFileSpec}
+{\plain\f16\fs24\cf1  from its components.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 TFileSpec(short wd, ConstStr31Param name)}
+{\plain\f16\fs24\cf1  constructs a }
+{\plain\f22\fs20\cf1 TFileSpec}
+{\plain\f16\fs24\cf1  from a working directory reference number and a path component.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 This routine is available to }
+{\plain\f22\fs20\cf1 C}
+{\plain\f16\fs24\cf1  users as }
+{\plain\f22\fs20\cf1 OSErr WD2FSSpec(short wd, ConstStr31Param name, FSSpec * desc)}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 TFileSpec(const char * path)}
+{\plain\f16\fs24\cf1  constructs a }
+{\plain\f22\fs20\cf1 TFileSpec}
+{\plain\f16\fs24\cf1  from a full or relative path name. This routine is available to }
+{\plain\f22\fs20\cf1 C}
+{\plain\f16\fs24\cf1  users as }
+{\plain\f22\fs20\cf1 OSErr Path2FSSpec(const char * path, FSSpec * desc)}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 TFileSpec(OSType object, short vol = kOnSystemDisk, long dir = 0)}
+{\plain\f16\fs24\cf1  constructs special }
+{\plain\f22\fs20\cf1 TFileSpec}
+{\plain\f16\fs24\cf1 s, depending on }
+{\plain\f22\fs20\cf1 object}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 This routine is available to }
+{\plain\f22\fs20\cf1 C}
+{\plain\f16\fs24\cf1  users as }
+{\plain\f22\fs20\cf1 OSErr Special2FSSpec(OSType object, short vol, long dirID, FSSpec * desc)}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 All constants in }
+{\plain\f22\fs20\cf1 Folders.h}
+{\plain\f16\fs24\cf1  acceptable for }
+{\plain\i\f22\fs20\cf1 FindFolder()}
+{\plain\f16\fs24\cf1  can be passed, e.g. the following\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  }
+{\plain\b\i\f16\fs24\cf1 kSystemFolderType }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The system folder.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  }
+{\plain\b\i\f16\fs24\cf1 kDesktopFolderType }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 The desktop folder; objects in this folder show on the desk top.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  }
+{\plain\b\i\f16\fs24\cf1 kExtensionFolderType }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Finder extensions go here.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  }
+{\plain\b\i\f16\fs24\cf1 kPreferencesFolderType }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Preferences for applications go here.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Furthermore, the value }
+{\plain\f22\fs20\cf1 kTempFileType}
+{\plain\f16\fs24\cf1  is defined, which creates a temporary file in the temporary folder, or, if }
+{\plain\f22\fs20\cf1 dir}
+{\plain\f16\fs24\cf1  is nonzero, in the directory you specify.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 TFileSpec(short fRefNum)}
+{\plain\f16\fs24\cf1  constructs a }
+{\plain\f22\fs20\cf1 TFileSpec}
+{\plain\f16\fs24\cf1  from the file reference number of an open file.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 In principle, a }
+{\plain\f22\fs20\cf1 TFileSpec}
+{\plain\f16\fs24\cf1  should be compatible with an }
+{\plain\f22\fs20\cf1 FSSpec}
+{\plain\f16\fs24\cf1 . However, to be absolutely sure, you can call }
+{\plain\f22\fs20\cf1 TFileSpec\:\:}
+{\plain\i\f22\fs20\cf1 Bless()}
+{\plain\f16\fs24\cf1  which will call }
+{\plain\i\f22\fs20\cf1 FSMakeFSSpec()}
+{\plain\f16\fs24\cf1  before passing the TFileSpec to a }
+{\plain\f22\fs20\cf1 FSp}
+{\plain\f16\fs24\cf1  file system routine.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 char * TFileSpec\:\:}
+{\plain\i\f22\fs20\cf1 FullPath()}
+{\plain\f16\fs24\cf1  returns the full path name of the file. The address returned points to a static buffer, so it will be overwritten on further calls. This routine is available to }
+{\plain\f22\fs20\cf1 C}
+{\plain\f16\fs24\cf1  users as }
+{\plain\f22\fs20\cf1 char * FSp2FullPath(const FSSpec * desc)}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 char * TFileSpec\:\:}
+{\plain\i\f22\fs20\cf1 RelPath()}
+{\plain\f16\fs24\cf1  works like }
+{\plain\i\f22\fs20\cf1 FullPath()}
+{\plain\f16\fs24\cf1 , but when the current folder given by }
+{\plain\i\f22\fs20\cf1 chdir()}
+{\plain\f16\fs24\cf1  is a pparent folder of the object, a relative path name will be returned. The address returned points to a static buffer, so it will be overwritten on further calls. This routine is available to }
+{\plain\f22\fs20\cf1 C}
+{\plain\f16\fs24\cf1  users as }
+{\plain\f22\fs20\cf1 char * FSp2RelPath(const FSSpec * desc)}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 char * TFileSpec\:\:}
+{\plain\i\f22\fs20\cf1 Encode()}
+{\plain\f16\fs24\cf1  returns an ASCII encoding which may be passed to all }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  routines taking path names. The address returned points to a static buffer, so it will be overwritten on further calls. This generates short names which may be parsed rather quickly. This routine is available to }
+{\plain\f22\fs20\cf1 C}
+{\plain\f16\fs24\cf1  users as }
+{\plain\f22\fs20\cf1 char * FSp2Encoding(const FSSpec * desc)}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 OSErr TFileSpec\:\:CatInfo(CInfoPBRec & info, Boolean dirInfo = false)}
+{\plain\f16\fs24\cf1  Gives information about the current object. If }
+{\plain\f22\fs20\cf1 dirInfo}
+{\plain\f16\fs24\cf1  is }
+{\plain\f22\fs20\cf1 true}
+{\plain\f16\fs24\cf1 , gives information about the current object's directory. This routine is available to }
+{\plain\f22\fs20\cf1 C}
+{\plain\f16\fs24\cf1  users as }
+{\plain\f22\fs20\cf1 OSErr FSpCatInfo(const FSSpec * desc, CInfoPBRec * info)}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 OSErr TFileSpec\:\:Resolve(Boolean gently = true)}
+{\plain\f16\fs24\cf1  resolve the object if it is an alias file. If gently is }
+{\plain\f22\fs20\cf1 true}
+{\plain\f16\fs24\cf1  (the default), nonexisting files are tolerated.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Boolean TFileSpec\:\:}
+{\plain\i\f16\fs24\cf1 Exists()}
+{\plain\f16\fs24\cf1  returns }
+{\plain\f22\fs20\cf1 true}
+{\plain\f16\fs24\cf1  if the object exists.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Boolean TFileSpec\:\:IsParentOf(const TFileSpec & other) returns }
+{\plain\f22\fs20\cf1 true}
+{\plain\f16\fs24\cf1  if the object is a parent of }
+{\plain\f22\fs20\cf1 other}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 TFileSpec TFileSpec\:\:operator--()}
+{\plain\f16\fs24\cf1  replaces the object with its parent directory. This routine is available to }
+{\plain\f22\fs20\cf1 C}
+{\plain\f16\fs24\cf1  users as }
+{\plain\f22\fs20\cf1 OSErr FSpUp(FSSpec * desc)}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 TFileSpec FileSpec\:\:operator-=(int levels)}
+{\plain\f16\fs24\cf1  is equivalent to calling }
+{\plain\f22\fs20\cf1 --}
+{\plain\f16\fs24\cf1  }
+{\plain\f22\fs20\cf1 levels}
+{\plain\f16\fs24\cf1  times and }
+{\plain\f22\fs20\cf1 TFileSpec FileSpec\:\:operator-(int levels)}
+{\plain\f16\fs24\cf1  is equivalent to calling }
+{\plain\f22\fs20\cf1 -=}
+{\plain\f16\fs24\cf1  on a }
+{\plain\i\f16\fs24\cf1 copy}
+{\plain\f16\fs24\cf1  of the current object.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 TFileSpec TFileSpec\:\:operator+=(ConstStr31Param name)}
+{\plain\f16\fs24\cf1 , }
+{\plain\f22\fs20\cf1 TFileSpec TFileSpec\:\:operator+=(const char * name)}
+{\plain\f16\fs24\cf1 , and their non-destructive counterparts }
+{\plain\f22\fs20\cf1 +}
+{\plain\f16\fs24\cf1  add a further component to the current object, which must be an existing directory.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 This routine is available to }
+{\plain\f22\fs20\cf1 C}
+{\plain\f16\fs24\cf1  users as }
+{\plain\f22\fs20\cf1 OSErr FSpDown(FSSpec * desc, ConstStr31Param name)}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 TFileSpec TFileSpec\:\:operator[](short index)}
+{\plain\f16\fs24\cf1  returns the }
+{\plain\f22\fs20\cf1 index}
+{\plain\f16\fs24\cf1 th object in the parent folder of the current object.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 A destructive version of this routine is available to }
+{\plain\f22\fs20\cf1 C}
+{\plain\f16\fs24\cf1  users as }
+{\plain\f22\fs20\cf1 OSErr FSpIndex(FSSpec * desc, short index)}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Furthermore, the }
+{\plain\f22\fs20\cf1 ==}
+{\plain\f16\fs24\cf1  and }
+{\plain\f22\fs20\cf1 !=}
+{\plain\f16\fs24\cf1  operators are defined to test }
+{\plain\f22\fs20\cf1 TFileSpec}
+{\plain\f16\fs24\cf1 s for equality.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 OSErr FSpSmartMove(const FSSpec * from, const FSSpec * to)}
+{\plain\f16\fs24\cf1  does all the work of moving and renaming a file (within the same volume), handling (I hope) all special cases (You might be surprised how many there are).\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 File pattern iterators\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 Sometimes you might find it useful to find all files ending in }
+{\plain\f22\fs20\cf1 .h}
+{\plain\f16\fs24\cf1  or all directories starting with }
+{\plain\f22\fs20\cf1 MW}
+{\plain\f16\fs24\cf1 . For this purpose, }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  offers a mechanism in the header file }
+{\plain\f22\fs20\cf1 TFileGlob.h}
+{\plain\f16\fs24\cf1 , which defines both }
+{\plain\f22\fs20\cf1 C}
+{\plain\f16\fs24\cf1  and }
+{\plain\f22\fs20\cf1 C++}
+{\plain\f16\fs24\cf1  interfaces.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 You start a search by constructing a file pattern iterator with }
+{\plain\f22\fs20\cf1 TFileGlob\:\:TFileGlob(const char * pattern, const TFileSpec * startDir = nil)}
+{\plain\f16\fs24\cf1 . }
+{\plain\f22\fs20\cf1 pattern}
+{\plain\f16\fs24\cf1  is an absolute or relative path name, with the following characters getting a special interpretation\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  ? }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Matches an arbitrary single character.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  }
+{\plain\b\f22\fs20\cf1 *}
+{\plain\b\f16\fs24\cf1  }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Matches any number of characters (including none).\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  \\}
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Suppresses the special interpretation of the following character.\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 startDir}
+{\plain\f16\fs24\cf1  provides a nonstandard starting directory for relative patterns. After you have constructed the iterator, you can check whether a file was found by calling Boolean TFileGlob\:\:}
+{\plain\i\f16\fs24\cf1 Valid()}
+{\plain\f16\fs24\cf1  . If one was found, you can use the . To get the next file, call Boolean TFileGlob\:\:}
+{\plain\i\f16\fs24\cf1 Next()}
+{\plain\f16\fs24\cf1  , which again returns }
+{\plain\f22\fs20\cf1 true}
+{\plain\f16\fs24\cf1  if another match was found.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 To call the file pattern iterator routines from }
+{\plain\f22\fs20\cf1 C}
+{\plain\f16\fs24\cf1 , you have the following routines\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  FileGlobRef NewFileGlob(const char * pattern) }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Constructs an iterator.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  Boolean NextFileGlob(FileGlobRef glob) }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Advances the iterator.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  Boolean FileGlob2FSSpec(FileGlobRef glob, FSSpec * spec) }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Copies the file specification to }
+{\plain\f22\fs20\cf1 spec}
+{\plain\f16\fs24\cf1  and returns whether the iterator is valid.\par }
+\pard\ql\sa120{\plain\b\f16\fs24\cf1  void DisposeFileGlob(FileGlobRef glob) }
+{\plain\f16\fs24\cf1 \par }
+\pard\ql\li700\sa120{\plain\f16\fs24\cf1 Destructs the iterator.\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Adding your own socket families\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 It is rather easy to add your own socket types to }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1 \:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab Pick an unused number between 17 and }
+{\plain\f22\fs20\cf1 GUSI_MAX_DOMAINS}
+{\plain\f16\fs24\cf1  to use for your address family.\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab Include }
+{\plain\f22\fs20\cf1 GUSI_P.h}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab Write a subclass of }
+{\plain\f22\fs20\cf1 SocketDomain}
+{\plain\f16\fs24\cf1  and override }
+{\plain\i\f22\fs20\cf1 socket()}
+{\plain\f16\fs24\cf1  and optionally }
+{\plain\i\f22\fs20\cf1 choose()}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab Write a subclass of }
+{\plain\f22\fs20\cf1 Socket}
+{\plain\f16\fs24\cf1  and override whatever you want. If you override }
+{\plain\i\f22\fs20\cf1 recvfrom()}
+{\plain\f16\fs24\cf1  and }
+{\plain\i\f22\fs20\cf1 sendto()}
+{\plain\f16\fs24\cf1 , }
+{\plain\i\f22\fs20\cf1 read()}
+{\plain\f16\fs24\cf1  and }
+{\plain\i\f22\fs20\cf1 write()}
+{\plain\f16\fs24\cf1  are automatically defined.\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab For more information, study the code in }
+{\plain\f22\fs20\cf1 GUSIDispatch.cp}
+{\plain\f16\fs24\cf1  and }
+{\plain\f22\fs20\cf1 GUSISocket.cp}
+{\plain\f16\fs24\cf1 , which implement the generic socket code. The easiest actual socket implementation to study is probably }
+{\plain\f22\fs20\cf1 GUSIUnix.cp}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\sb120\sa120{\plain\b\f16\fs36\cf1 Adding your own file families\par }
+\pard\ql\sa120{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  also supports adding special treatment for certain file names to almost all (tell me if I have forgotten one) standard }
+{\plain\f22\fs20\cf1 C}
+{\plain\f16\fs24\cf1  library routines dealing with file names. To avoid countless rescanning of file names, }
+{\plain\f22\fs20\cf1 GUSI}
+{\plain\f16\fs24\cf1  preprocesses the names\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab If the file name starts with }
+{\plain\f22\fs20\cf1 "Dev\:"}
+{\plain\f16\fs24\cf1  (case insensitive), the file name is considered a }
+{\plain\i\f16\fs24\cf1 device name}
+{\plain\f16\fs24\cf1 , and the rest of the name can have any structure you like.\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab Otherwise, the name is translated into a }
+{\plain\f22\fs20\cf1 FSSpec}
+{\plain\f16\fs24\cf1 , and therefore should refer to a real file system object (all intermediate path name components should refer to existing directories).\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 To create a file family\:\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 \par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab Pick an address family, as described above. However, if you don't plan on creating sockets of this family with }
+{\plain\i\f16\fs24\cf1 socket()}
+{\plain\f16\fs24\cf1 , just specify }
+{\plain\f22\fs20\cf1 AF_UNSPEC}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab Include }
+{\plain\f22\fs20\cf1 GUSIFile_P.h}
+{\plain\f16\fs24\cf1 .\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab Write a subclass of }
+{\plain\f22\fs20\cf1 FileSocketDomain}
+{\plain\f16\fs24\cf1 , specifying whether you are interested in device names, file names, or both, and override }
+{\plain\i\f22\fs20\cf1 Yours()}
+{\plain\f16\fs24\cf1  and other calls.\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab Write a subclass of }
+{\plain\f22\fs20\cf1 Socket}
+{\plain\f16\fs24\cf1  and override whatever you want.\par }
+\pard\ql\tx800\li800\fi-300\sa120{\plain\f16\fs24\cf1 \tab For more information, study the code in }
+{\plain\f22\fs20\cf1 GUSIFile.cp}
+{\plain\f16\fs24\cf1 , which implements the generic file socket code.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 In your }
+{\plain\i\f22\fs20\cf1 Yours()}
+{\plain\f16\fs24\cf1  member function, you specify whether you are prepared to handle one of the following functions for a given file name\:\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     enum Request \{\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       willOpen,\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       willRemove,\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       willRename,\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       willGetFileInfo,\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       willSetFileInfo,\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       willFAccess,\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       willStat,\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       willChmod,\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1       willUTime,\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1                 willAccess\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1     \};\par }
+\pard\ql\tx880\tx1740\tx2620\tx3480\tx4320\tx5220\tx6060\tx6940\tx7780{\plain\f22\fs20\cf1 \par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 If you return }
+{\plain\f22\fs20\cf1 true}
+{\plain\f16\fs24\cf1  for a request, your corresponding member function will be called. Member functions are similar to the corresponding }
+{\plain\f22\fs20\cf1 C}
+{\plain\f16\fs24\cf1  library functions, except that their first parameter is a }
+{\plain\f22\fs20\cf1 GUSIFileRef &}
+{\plain\f16\fs24\cf1  instead of a }
+{\plain\f22\fs20\cf1 const char *}
+{\plain\f16\fs24\cf1  (but further file name parameters, as in }
+{\plain\i\f22\fs20\cf1 rename()}
+{\plain\f16\fs24\cf1 , will be left untouched). You might also return }
+{\plain\f22\fs20\cf1 true}
+{\plain\f16\fs24\cf1  but }
+{\plain\i\f16\fs24\cf1 not}
+{\plain\f16\fs24\cf1  override the member function to indicate that standard file treatment (}
+{\plain\f22\fs20\cf1 EINVAL}
+{\plain\f16\fs24\cf1  for many routines) is OK.\par }
+\pard\ql\sa120{\plain\f16\fs24\cf1 The member function will always be called immediately after the }
+{\plain\i\f22\fs20\cf1 Yours()}
+{\plain\f16\fs24\cf1  function, so you may want to pre-parse the file name in the }
+{\plain\i\f22\fs20\cf1 Yours()}
+{\plain\f16\fs24\cf1  function and keep the information for the member function.\par }
+}

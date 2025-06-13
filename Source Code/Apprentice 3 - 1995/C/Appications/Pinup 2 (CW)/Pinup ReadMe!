@@ -1,0 +1,1 @@
+Pinup shows a picture in a window.Freeware by Darrell Anderson, poet@cif.rochester.eduTo configure:  Use ResEdit to replace PICT ID 128 in Pinup's resource fork with the picture you want!Pinup makes use of Troy Gaul’s marvelous “Infinity Windoid.”

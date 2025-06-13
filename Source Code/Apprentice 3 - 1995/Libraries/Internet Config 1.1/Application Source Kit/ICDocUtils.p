@@ -1,0 +1,1 @@
+unit ICDocUtils;interface	uses		ICTypes;	function GetInstance: ICInstance;	procedure DirtyDocument;	function IsDocLocked: boolean;implementationend. (* ICDocUtils *)

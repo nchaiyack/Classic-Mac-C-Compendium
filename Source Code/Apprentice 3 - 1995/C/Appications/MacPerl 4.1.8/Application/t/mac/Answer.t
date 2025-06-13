@@ -1,0 +1,1 @@
+#!/usr/local/bin/perlprint &MacPerl'Answer("You lose !", "OK", "Really ?", "Oh yeah?"), "\n";print &MacPerl'Answer("Install System 7 ?", "OK", "Cancel"), "\n";

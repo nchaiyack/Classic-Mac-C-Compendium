@@ -1,0 +1,1 @@
+GWorldThomas Reedreed@medicine.wustl.eduGWorld handles preparing a GWorld for drawing and also handles the un-preparing of it. Most of the code herein handles allocating and de-allocating B&W GrafPorts.

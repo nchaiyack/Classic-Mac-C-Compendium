@@ -1,0 +1,7 @@
+
+(defconst gestaltQuickdrawVersion "qd  ")
+
+(defconst gestalt8BitQD 256 "\
+0x100")
+
+(deftrap Gestalt ("201f" "a1ad" "2288") ((selector immediate-string) (response address a1)) (short d0))

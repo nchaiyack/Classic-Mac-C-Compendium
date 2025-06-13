@@ -1,0 +1,54 @@
+
+(defconst pmCouteous 0)
+
+(defconst pmTolerant 2)
+
+(defconst pmAnimated 4)
+
+(defconst pmExplicit 8)
+
+(defconst pmNoUpdates (hex-string-to-int "8000"))
+
+(defconst pmBkUpdates (hex-string-to-int "a000"))
+
+(defconst pmFgUpdates (hex-string-to-int "c000"))
+
+(defconst pmAllUpdates (hex-string-to-int "e000"))
+
+(c:defstruct ColorInfo ((RGBColor ciRGB) (short ciUsage) (short ciTolerance) ((array short 3) ciDataFields)))
+
+(c:defstruct Palette ((short pmEntries) ((array short 7) pmDataFields) ((array ColorInfo 1) pmInfo)))
+
+(c:typedef PalettePtr (ptr . Palette))
+
+(c:typedef PaletteHandle (ptr ptr . Palette))
+
+(deftrap NewPalette ("aa91") ((entries short) (srcColors long) (srcUsage short) (srcTolerance short)) long)
+
+(deftrap DisposePalette ("aa93") ((srcPalette long)) nil)
+
+(deftrap ActivatePalette ("aa94") ((srcWindow long)) nil)
+
+(deftrap GetPalette ("aa96") ((srcWindow address)) long)
+
+(deftrap CopyPalette ("aaa1") ((srcPalette long) (dstPalette long) (srcEntry short) (dstEntry short) (dstLength short)) nil)
+
+(deftrap SetPalette ("aa95") ((dstWindow long) (srcPalette long) (cUpdates char)) nil)
+
+(deftrap GetEntryColor ("aa9b") ((srcPalette long) (srcEntry short) (dstRGB address)) nil)
+
+(deftrap SetEntryColor ("aa9c") ((dstPalette long) (dstEntry short) (srcRGB address)) nil)
+
+(deftrap NSetPalette ("aa95") ((dstWindow long) (srcPalette long) (nCUpdates short)) nil)
+
+(deftrap PmForeColor ("aa97") ((dstEntry short)) nil)
+
+(deftrap PmBackColor ("aa98") ((dstEntry short)) nil)
+
+(deftrap SetEntryUsage ("aa9e") ((dstPalette long) (dstEntry short) (srcUsage short) (srcTolerance short)) nil)
+
+(deftrap AnimateEntry ("aa99") ((dstWindow long) (dstEntry short) (srcRGB address)) nil)
+
+(deftrap ResizePalette ("7003" "aaa2") ((p long) (size short)) nil)
+
+(deftrap GetNewPalette ("aa92") ((PaletteID short)) long)
