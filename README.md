@@ -16,7 +16,7 @@ for context.
 
 ## Source Code
 
-- **Apprentice (1994), Celestin Company.** Via Macintosh Garden. Invaluable resource for lots of source as a reference for the working programmer - thank the Celestin Company. Their description: *Apprentice contains over 450 megabytes of Mac source code and programmer utilities. Most of the source code is in C, C++, and Pascal. You'll find complete working examples of full-blown applications, games, control panels, extensions, utilities, and much more.* Only C codebases are attached here.
+- **Apprentice (1994), Celestin Company.** Via Macintosh Garden. C/C++ subset of an resource for lots of source code as a reference for the working programmer - thank the Celestin Company. Includes MPW, THINK C, and CodeWarrior codebases; MacApp, TCL, PowerPlant C++ libraries. Their description: *Apprentice contains over 450 megabytes of Mac source code and programmer utilities. Most of the source code is in C, C++, and Pascal. You'll find complete working examples of full-blown applications, games, control panels, extensions, utilities, and much more.* 
 
 Copyright (c) 1994 by Celestin Company, except for codebases as mentioned/GPL'd/reserved by origina
 
@@ -47,7 +47,18 @@ from their names... although these aren't necessarily the most substantial codeb
 
 -	`Roy Wood`: `binhex`, `MandelNet`
 
+- **Apprentice 3 (1995)), Celestin Company.** via Macintosh Garden. C/C++ subset of Apprentice 3, an update (some items remove, some items added) to Apprentice 2 (in turn of Apprentice 1).  Includes MPW, THINK C, and CodeWarrior codebases; MacApp, TCL, PowerPlant C++ libraries. Fun examples (but not ncessarily the most pedagogically best) not seen in Apprentice 1:
 
+-	`C` - assorted examples.
+
+	-	`C\Applications`: `DropFTP`, `Emacs`, `Harvest C`, `nShell`;
+
+	-	`C\Frameworks`: `Extension Shell`, `Argus Starter`, `ControlStripShell`
+
+
+-	`Addons`: example After Dark screensavers and BBEdit addons;
+
+-	`Libraries`: `Berkeley Sockets`, `JPEG Library`, `Spinning Cursor Library`, `ThreadLibrary`
 
 
 # Handy reference: timeline of (selected) Macintosh Systems and models
